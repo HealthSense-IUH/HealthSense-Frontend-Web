@@ -1,67 +1,97 @@
-# HeathSense Frontend Web
+# HealthSense Frontend Web
 
-A modern frontend application for **HeathSense**, built with React, TypeScript, and Vite.
+## Tiếng Việt
 
-## 🚀 Tech Stack
+**HealthSense Frontend Web** là giao diện người dùng (web application) cho hệ thống theo dõi sức khỏe HealthSense, được phát triển bằng React + TypeScript.
 
-- **Framework:** [React 19](https://react.dev/)
-- **Language:** [TypeScript](https://www.typescriptlang.org/)
-- **Build Tool:** [Vite](https://vitejs.dev/)
-- **Styling:** [Tailwind CSS v4](https://tailwindcss.com/)
-- **Routing:** [React Router](https://reactrouter.com/)
-- **HTTP Client:** [Axios](https://axios-http.com/)
-- **Animations:** [Framer Motion](https://www.framer.com/motion/)
-- **Icons:** [Lucide React](https://lucide.dev/) & [React Icons](https://react-icons.github.io/react-icons/)
-- **Linting & Formatting:** ESLint & Prettier
+### Chức năng chính
+- Hiển thị dữ liệu nhịp tim (BPM) và nồng độ oxy trong máu (SpO2) theo thời gian thực.
+- Trực quan hóa các chỉ số biến thiên nhịp tim (HRV) bằng biểu đồ.
+- Hiển thị kết quả dự đoán trạng thái sức khỏe từ AI Service.
+- Giao diện responsive, hỗ trợ cả desktop và mobile.
 
-## 📂 Project Structure
+### Công nghệ
+- **Framework:** React 19 + TypeScript
+- **Build Tool:** Vite 8
+- **Styling:** Tailwind CSS 4
+- **State Management:** Zustand
+- **Data Fetching:** TanStack Query (React Query)
+- **HTTP Client:** Axios
+- **Animation:** Framer Motion
+- **Routing:** React Router DOM 7
+- **Icons:** Lucide React, React Icons
+- **Linting:** ESLint + Prettier
 
-```text
-heathsense-frontend-web/
-├── public/           # Static assets (images, icons)
-├── src/              # Source code
-│   ├── constants/    # Global constants and config
-│   ├── hooks/        # Custom React hooks
-│   ├── pages/        # Route components (Pages)
-│   ├── router/       # Routing configuration
-│   ├── services/     # API services and Axios instances
-│   ├── utils/        # Utility/helper functions
-│   ├── App.tsx       # Main application component
-│   └── main.tsx      # Application entry point
-├── eslint.config.js  # ESLint configuration
-├── vite.config.ts    # Vite configuration
-└── package.json      # Dependencies and scripts
-```
+### Cấu trúc dự án
+- `src/`: Mã nguồn chính của ứng dụng.
+- `public/`: Tài nguyên tĩnh (hình ảnh, favicon, ...).
+- `index.html`: File HTML gốc.
+- `vite.config.ts`: Cấu hình Vite.
+- `tsconfig.json`: Cấu hình TypeScript.
 
-## 🛠️ Getting Started
+### Cài đặt và Sử dụng
+1. Cài đặt thư viện:
+   ```bash
+   npm install
+   ```
+2. Chạy server phát triển:
+   ```bash
+   npm run dev
+   ```
+3. Build production:
+   ```bash
+   npm run build
+   ```
+4. Xem trước bản build:
+   ```bash
+   npm run preview
+   ```
 
-### Prerequisites
+---
 
-- [Node.js](https://nodejs.org/) (v18 or higher recommended)
-- npm (or yarn/pnpm)
+## English
 
-### Installation
+**HealthSense Frontend Web** is the user interface (web application) for the HealthSense health monitoring system, built with React + TypeScript.
 
-1. Clone the repository and navigate to the project folder.
-2. Install dependencies:
+### Key Features
+- Displays real-time heart rate (BPM) and blood oxygen saturation (SpO2) data.
+- Visualizes Heart Rate Variability (HRV) metrics through interactive charts.
+- Shows health status predictions from the AI Service.
+- Responsive design supporting both desktop and mobile devices.
 
-```bash
-npm install
-```
+### Tech Stack
+- **Framework:** React 19 + TypeScript
+- **Build Tool:** Vite 8
+- **Styling:** Tailwind CSS 4
+- **State Management:** Zustand
+- **Data Fetching:** TanStack Query (React Query)
+- **HTTP Client:** Axios
+- **Animation:** Framer Motion
+- **Routing:** React Router DOM 7
+- **Icons:** Lucide React, React Icons
+- **Linting:** ESLint + Prettier
 
-### Development
+### Project Structure
+- `src/`: Main application source code.
+- `public/`: Static assets (images, favicon, ...).
+- `index.html`: Root HTML file.
+- `vite.config.ts`: Vite configuration.
+- `tsconfig.json`: TypeScript configuration.
 
-Start the development server with Hot Module Replacement (HMR):
-
-```bash
-npm run dev
-```
-
-The application will be available at `http://localhost:5173`.
-
-## 📜 Available Scripts
-
-- `npm run dev`: Starts the Vite development server.
-- `npm run build`: Compiles TypeScript and builds the app for production.
-- `npm run preview`: Previews the production build locally.
-- `npm run lint`: Runs ESLint to identify code issues.
+### Installation and Usage
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
+2. Start development server:
+   ```bash
+   npm run dev
+   ```
+3. Build for production:
+   ```bash
+   npm run build
+   ```
+4. Preview production build:
+   ```bash
+   npm run preview
+   ```
