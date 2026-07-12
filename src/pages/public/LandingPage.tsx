@@ -1,4 +1,4 @@
-import React from "react"
+
 import { ArrowRight, Activity, ShieldCheck, HeartPulse } from "lucide-react"
 import { Link } from "react-router-dom"
 
