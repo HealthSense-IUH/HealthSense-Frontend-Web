@@ -1,5 +1,4 @@
-import React from "react"
-import { Activity, Heart, Thermometer, Wind } from "lucide-react"
+import { Activity, Heart, Wind } from "lucide-react"
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
