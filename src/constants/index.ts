@@ -12,12 +12,13 @@ export const APP_INFO = {
 export const ROUTES = {
   PUBLIC: {
     HOME: "/",
+    LOGIN: "/login",
+    REGISTER: "/register",
   },
-  GENERAL: {
-    DASHBOARD: "/general",
-  },
-  MANAGEMENT: {
-    ADMIN: "/management",
+  APP: {
+    ROOT: "/app",
+    DASHBOARD: "/app/dashboard",
+    MANAGEMENT: "/app/management",
   },
 } as const
 
