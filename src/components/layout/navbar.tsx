@@ -1,8 +1,9 @@
 
 import { Link } from "react-router-dom"
-import { Activity, Shield, User, LogIn } from "lucide-react"
+import { Activity, LogIn, Shield, User } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
+import { ROUTES } from "@/constants"
 
 export function Navbar() {
   return (
@@ -14,19 +15,19 @@ export function Navbar() {
             <span>HealthSense</span>
           </Link>
           <div className="hidden md:flex gap-4">
-            <Link to="/general" className="text-sm font-medium text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-50 transition-colors">
+            <Link to={ROUTES.APP.DASHBOARD} className="text-sm font-medium text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-50 transition-colors">
               <span className="flex items-center gap-2"><User className="h-4 w-4" /> Dashboard</span>
             </Link>
-            <Link to="/management" className="text-sm font-medium text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-50 transition-colors">
+            <Link to={ROUTES.APP.MANAGEMENT} className="text-sm font-medium text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-50 transition-colors">
               <span className="flex items-center gap-2"><Shield className="h-4 w-4" /> Management</span>
             </Link>
           </div>
         </div>
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" asChild>
-            <Link to="/general">
+            <Link to={ROUTES.PUBLIC.LOGIN}>
               <LogIn className="mr-2 h-4 w-4" />
-              Sign In Mock
+              Sign In
             </Link>
           </Button>
         </div>

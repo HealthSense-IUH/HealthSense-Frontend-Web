@@ -1,18 +1,33 @@
-import { Link, useLocation } from "react-router-dom"
-import { Activity, Calendar, User, Home, Settings } from "lucide-react"
+import { Link, useLocation, useNavigate } from "react-router-dom"
+import { Activity, Calendar, Home, LogOut, Settings, User } from "lucide-react"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
+import { authApi } from "@/services/authentication"
+import { useAuthStore } from "@/features/auth/auth-store"
 
 export function Sidebar() {
   const location = useLocation()
+  const navigate = useNavigate()
+  const clearAuth = useAuthStore((state) => state.clearAuth)
+  const userSession = useAuthStore((state) => state.userSession)
 
   const navItems = [
-    { icon: Activity, path: "/general", label: "Dashboard" },
+    { icon: Activity, path: "/app/dashboard", label: "Dashboard" },
     { icon: Calendar, path: "/calendar", label: "Calendar" },
-    { icon: User, path: "/management", label: "Management" },
+    { icon: User, path: "/app/management", label: "Management" },
     { icon: Home, path: "/", label: "Home" },
     { icon: Settings, path: "/settings", label: "Settings" },
   ]
+
+  async function handleLogout() {
+    try {
+      await authApi.logout()
+    } finally {
+      clearAuth()
+      navigate("/login", { replace: true })
+    }
+  }
 
   return (
     <aside className="fixed left-0 top-0 z-40 flex flex-col items-center justify-between bg-primary py-8 text-primary-foreground w-20 sm:w-24 m-4 rounded-[2rem] h-[calc(100vh-32px)] shadow-xl">
@@ -51,14 +66,23 @@ export function Sidebar() {
         </nav>
       </div>
 
-      {/* User Profile */}
-      <div className="relative">
-        <div className="absolute -right-1 -top-1 z-10 flex h-4 w-4 items-center justify-center rounded-full border-2 border-primary bg-red-500 text-[10px] font-bold text-white">
-          8
-        </div>
-        <Avatar className="h-12 w-12 border-2 border-white/20 cursor-pointer transition-transform hover:scale-105">
+      <div className="flex flex-col items-center gap-4">
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          className="h-12 w-12 rounded-2xl text-primary-foreground/80 hover:bg-white/10 hover:text-white"
+          onClick={handleLogout}
+          title="Logout"
+        >
+          <LogOut />
+        </Button>
+
+        <Avatar className="h-12 w-12 border-2 border-white/20">
           <AvatarImage src="https://i.pravatar.cc/150?img=47" alt="User" />
-          <AvatarFallback>DK</AvatarFallback>
+          <AvatarFallback>
+            {userSession?.fullName?.slice(0, 2).toUpperCase() ?? "HS"}
+          </AvatarFallback>
         </Avatar>
       </div>
     </aside>
