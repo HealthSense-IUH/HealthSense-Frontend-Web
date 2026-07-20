@@ -23,11 +23,24 @@
 - **Linting:** ESLint + Prettier
 
 ### Cấu trúc dự án
-- `src/`: Mã nguồn chính của ứng dụng.
-- `public/`: Tài nguyên tĩnh (hình ảnh, favicon, ...).
-- `index.html`: File HTML gốc.
-- `vite.config.ts`: Cấu hình Vite.
-- `tsconfig.json`: Cấu hình TypeScript.
+- `src/App.tsx`: Root component của ứng dụng.
+- `src/app/`: Provider cấp ứng dụng.
+- `src/router/`: Khai báo route React Router.
+- `src/pages/public-routes-page/`: Page public như landing, login, register.
+- `src/pages/app-routes-page/`: Page yêu cầu đăng nhập như dashboard, management.
+- `src/pages/commons/`: Route guard và helper dùng chung cho route.
+- `src/features/`: State/domain logic như auth store.
+- `src/services/`: API module theo domain.
+- `src/types/`: DTO/type theo domain.
+- `src/types/base/`: Kiểu response dùng chung như `ApiResponse<T>`, `PageResponse<T>`.
+- `src/components/ui/`: Component shadcn/ui.
+- `src/components/layout/`: Layout dùng chung.
+- Xem thêm quy ước chi tiết trong `ARCHITECTURE.md`.
+
+### Auth API
+- Backend mặc định: `http://localhost:8080` (`VITE_API_BASE_URL` để override).
+- Web frontend dùng `POST /api/auth/login`, `POST /api/auth/refresh`, `POST /api/auth/logout`, `POST /api/auth/register`, `GET /api/auth/me`.
+- Axios đã bật `withCredentials` và tự refresh access token một lần khi private API trả `401`.
 
 ### Cài đặt và Sử dụng
 1. Cài đặt thư viện:
@@ -72,11 +85,24 @@
 - **Linting:** ESLint + Prettier
 
 ### Project Structure
-- `src/`: Main application source code.
-- `public/`: Static assets (images, favicon, ...).
-- `index.html`: Root HTML file.
-- `vite.config.ts`: Vite configuration.
-- `tsconfig.json`: TypeScript configuration.
+- `src/App.tsx`: Root application component.
+- `src/app/`: App-level providers.
+- `src/router/`: React Router route declarations.
+- `src/pages/public-routes-page/`: Public pages such as landing, login, and register.
+- `src/pages/app-routes-page/`: Authenticated pages such as dashboard and management.
+- `src/pages/commons/`: Route guards and route-level shared helpers.
+- `src/features/`: State/domain logic such as the auth store.
+- `src/services/`: API modules grouped by domain.
+- `src/types/`: DTOs and types grouped by domain.
+- `src/types/base/`: Shared response contracts such as `ApiResponse<T>` and `PageResponse<T>`.
+- `src/components/ui/`: shadcn/ui components.
+- `src/components/layout/`: Shared layouts.
+- See `ARCHITECTURE.md` for detailed placement rules.
+
+### Auth API
+- Default backend: `http://localhost:8080`; override with `VITE_API_BASE_URL`.
+- Web frontend uses `POST /api/auth/login`, `POST /api/auth/refresh`, `POST /api/auth/logout`, `POST /api/auth/register`, and `GET /api/auth/me`.
+- Axios uses `withCredentials` and refreshes the access token once when a private API returns `401`.
 
 ### Installation and Usage
 1. Install dependencies:
