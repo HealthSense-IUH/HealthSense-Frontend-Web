@@ -4,8 +4,8 @@
  */
 
 export const env = {
-  // Base URL cho AI Service (FastAPI)
-  API_BASE_URL: import.meta.env.VITE_API_BASE_URL || "http://localhost:8000/api/v1",
+  // Base URL cho HealthSense API Service
+  API_BASE_URL: import.meta.env.VITE_API_BASE_URL || "http://localhost:8080",
   
   // Môi trường chạy
   NODE_ENV: import.meta.env.MODE || "development",
