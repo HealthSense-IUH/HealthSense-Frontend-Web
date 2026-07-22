@@ -6,12 +6,17 @@ import { LazyElement } from "@/components/custom/LazyElement"
 import { GuestOnlyRoute } from "@/pages/commons/GuestOnlyRoute"
 import { ProtectedRoute } from "@/pages/commons/ProtectedRoute"
 
-const AppRoutesPage = lazy(() => import("@/pages/app-routes-page"))
-const DashboardPage = lazy(() => import("@/pages/app-routes-page/dashboard-page"))
-const ManagementPage = lazy(() => import("@/pages/app-routes-page/management-page"))
-const LandingPage = lazy(() => import("@/pages/public-routes-page/landing-page"))
-const LoginPage = lazy(() => import("@/pages/public-routes-page/login-page"))
-const RegisterPage = lazy(() => import("@/pages/public-routes-page/register-page"))
+const MemberLayout = lazy(() => import("@/pages/member"))
+const DashboardPage = lazy(() => import("@/pages/member/dashboard"))
+const WorkoutsPage = lazy(() => import("@/pages/member/workouts"))
+const AfibHistoryPage = lazy(() => import("@/pages/member/afib-history"))
+const ReportsPage = lazy(() => import("@/pages/member/reports"))
+const SleepPage = lazy(() => import("@/pages/member/sleep"))
+
+const ManagementPage = lazy(() => import("@/pages/admin/management-page"))
+const LandingPage = lazy(() => import("@/pages/public/landing-page"))
+const LoginPage = lazy(() => import("@/pages/auth/login-page"))
+const RegisterPage = lazy(() => import("@/pages/auth/register-page"))
 
 export const router = createBrowserRouter([
   {
@@ -51,7 +56,7 @@ export const router = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <LazyElement>
-          <AppRoutesPage />
+          <MemberLayout />
         </LazyElement>
       </ProtectedRoute>
     ),
@@ -65,6 +70,38 @@ export const router = createBrowserRouter([
         element: (
           <LazyElement>
             <DashboardPage />
+          </LazyElement>
+        ),
+      },
+      {
+        path: "workouts",
+        element: (
+          <LazyElement>
+            <WorkoutsPage />
+          </LazyElement>
+        ),
+      },
+      {
+        path: "afib-history",
+        element: (
+          <LazyElement>
+            <AfibHistoryPage />
+          </LazyElement>
+        ),
+      },
+      {
+        path: "reports",
+        element: (
+          <LazyElement>
+            <ReportsPage />
+          </LazyElement>
+        ),
+      },
+      {
+        path: "sleep",
+        element: (
+          <LazyElement>
+            <SleepPage />
           </LazyElement>
         ),
       },
@@ -87,3 +124,4 @@ export const router = createBrowserRouter([
     element: <Navigate to="/app/management" replace />,
   },
 ])
+

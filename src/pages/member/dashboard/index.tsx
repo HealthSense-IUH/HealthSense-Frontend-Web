@@ -11,7 +11,7 @@ export default function DashboardPage() {
       {/* Top Bar matching Figma */}
       <div className="flex items-center justify-between gap-4">
         <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-primary/70" />
           <Input 
             type="search" 
             placeholder="Search anything..." 
@@ -19,11 +19,11 @@ export default function DashboardPage() {
           />
         </div>
         <div className="flex items-center gap-3">
-          <Button variant="outline" size="icon" className="h-12 w-12 rounded-2xl border-0 bg-white dark:bg-card shadow-sm">
-            <Bell className="h-5 w-5 text-foreground" />
+          <Button variant="outline" size="icon" className="h-12 w-12 rounded-2xl border-0 bg-white dark:bg-card shadow-sm hover:text-primary hover:bg-primary/10 text-muted-foreground">
+            <Bell className="h-5 w-5" />
           </Button>
-          <Button variant="outline" size="icon" className="h-12 w-12 rounded-2xl border-0 bg-white dark:bg-card shadow-sm">
-            <Mail className="h-5 w-5 text-foreground" />
+          <Button variant="outline" size="icon" className="h-12 w-12 rounded-2xl border-0 bg-white dark:bg-card shadow-sm hover:text-primary hover:bg-primary/10 text-muted-foreground">
+            <Mail className="h-5 w-5" />
           </Button>
         </div>
       </div>
@@ -115,9 +115,9 @@ export default function DashboardPage() {
           <CardContent>
             <Tabs defaultValue="analytics" className="w-full">
               <TabsList className="mb-4 bg-muted/50 rounded-xl">
-                <TabsTrigger value="analytics" className="rounded-lg">Real-time PPG</TabsTrigger>
-                <TabsTrigger value="overview" className="rounded-lg">HRV Overview</TabsTrigger>
-                <TabsTrigger value="history" className="rounded-lg">History</TabsTrigger>
+                <TabsTrigger value="analytics" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Real-time PPG</TabsTrigger>
+                <TabsTrigger value="overview" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">HRV Overview</TabsTrigger>
+                <TabsTrigger value="history" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">History</TabsTrigger>
               </TabsList>
               <TabsContent value="analytics" className="space-y-4">
                 <div className="h-[250px] w-full bg-blue-50 dark:bg-blue-950/20 rounded-2xl border-2 border-dashed border-blue-200 dark:border-blue-900 flex items-center justify-center">

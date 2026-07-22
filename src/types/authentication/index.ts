@@ -1,4 +1,4 @@
-export type UserRole = "MEMBER" | "ADMIN" | string
+export type UserRole = "MEMBER" | "ADMIN" | "DOCTOR" | string
 
 export type AccountStatus = "ACTIVE" | "DISABLED" | string
 

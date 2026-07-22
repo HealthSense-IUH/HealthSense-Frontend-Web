@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from "react-router-dom"
-import { Activity, Calendar, Home, LogOut, Settings, User } from "lucide-react"
+import { LayoutDashboard, Flame, HeartPulse, FileText, Moon, LogOut, Activity } from "lucide-react"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
@@ -13,11 +13,11 @@ export function Sidebar() {
   const userSession = useAuthStore((state) => state.userSession)
 
   const navItems = [
-    { icon: Activity, path: "/app/dashboard", label: "Dashboard" },
-    { icon: Calendar, path: "/calendar", label: "Calendar" },
-    { icon: User, path: "/app/management", label: "Management" },
-    { icon: Home, path: "/", label: "Home" },
-    { icon: Settings, path: "/settings", label: "Settings" },
+    { icon: LayoutDashboard, path: "/app/dashboard", label: "Tổng quan" },
+    { icon: Flame, path: "/app/workouts", label: "Tập luyện" },
+    { icon: HeartPulse, path: "/app/afib-history", label: "Tầm soát Rung nhĩ" },
+    { icon: FileText, path: "/app/reports", label: "Nhật ký & Báo cáo" },
+    { icon: Moon, path: "/app/sleep", label: "Giấc ngủ" },
   ]
 
   async function handleLogout() {
@@ -54,7 +54,7 @@ export function Sidebar() {
                 title={item.label}
               >
                 <item.icon className="h-6 w-6" />
-                {isActive && item.label === "Dashboard" && (
+                {isActive && item.label === "Tổng quan" && (
                   <span className="absolute -right-1 top-2 flex h-3 w-3">
                     <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></span>
                     <span className="relative inline-flex h-3 w-3 rounded-full bg-red-500"></span>
