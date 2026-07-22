@@ -1,17 +1,25 @@
 /**
  * Application Configuration
- * Khởi tạo các thiết lập chạy 1 lần khi boot app
+ * Khoi tao cac thiet lap chay 1 lan khi boot app
  */
+
+function readBooleanEnv(value: string | undefined, fallback: boolean) {
+  if (value === undefined) {
+    return fallback
+  }
+
+  return value.toLowerCase() === "true"
+}
 
 export const env = {
   // Base URL cho HealthSense API Service
   API_BASE_URL: import.meta.env.VITE_API_BASE_URL || "http://localhost:8080",
-  
-  // Môi trường chạy
+
+  // Moi truong chay
   NODE_ENV: import.meta.env.MODE || "development",
-  
+
   // Feature flags
-  ENABLE_MOCK_DATA: true,
+  ENABLE_MOCK_DATA: readBooleanEnv(import.meta.env.VITE_ENABLE_MOCK_DATA, false),
 }
 
 export const queryClientConfig = {

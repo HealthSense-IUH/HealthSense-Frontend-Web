@@ -51,6 +51,9 @@ jobs:
       with:
         context: .
         push: true
+        build-args: |
+          VITE_API_BASE_URL=${{ secrets.VITE_API_BASE_URL }}
+          VITE_ENABLE_MOCK_DATA=${{ secrets.VITE_ENABLE_MOCK_DATA }}
         tags: |
           ${{ env.IMAGE_NAME }}:latest
           ${{ env.IMAGE_NAME }}:${{ github.sha }}

@@ -15,6 +15,13 @@ RUN npm ci || npm install
 # Copy toàn bộ source code
 COPY . .
 
+# Vite injects env vars at build time, so production values must be passed
+# before `npm run build` instead of only at container runtime.
+ARG VITE_API_BASE_URL=http://localhost:8080
+ARG VITE_ENABLE_MOCK_DATA=false
+ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
+ENV VITE_ENABLE_MOCK_DATA=$VITE_ENABLE_MOCK_DATA
+
 # Build ứng dụng Vite ra thư mục dist
 RUN npm run build
 
