@@ -70,7 +70,7 @@ export default function DashboardPage() {
               </CardContent>
             </Card>
 
-            <Card className="rounded-3xl border-0 shadow-sm bg-health-heart text-white flex flex-col">
+            <Card className="rounded-3xl border-0 shadow-sm bg-health-spo2 text-white flex flex-col">
               <CardHeader className="flex flex-row items-center justify-between pb-2">
                 <CardTitle className="text-base font-semibold text-white/90">SpO2</CardTitle>
                 <Wind className="h-5 w-5 text-white" />
