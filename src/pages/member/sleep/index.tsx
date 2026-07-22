@@ -113,7 +113,7 @@ export default function SleepPage() {
                 <Tooltip
                   contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
                   labelFormatter={(val) => `Thời gian: ${val}`}
-                  formatter={(_value: number, _name: string, props: any) => [props.payload.name, "Giai đoạn"]}
+                  formatter={(_value: any, _name: any, props: any) => [props.payload.name, "Giai đoạn"]}
                 />
                 <Area type="stepAfter" dataKey="stage" stroke="var(--color-health-sleep)" strokeWidth={3} fillOpacity={1} fill="url(#colorStage)" />
               </AreaChart>
