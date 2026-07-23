@@ -1,9 +1,9 @@
-import { HeartPulse, ArrowRight, Play, CheckCircle2, Pause } from "lucide-react"
+import { HeartPulse, ArrowRight, Play, CheckCircle2 } from "lucide-react"
 import { Link } from "react-router-dom"
 import { useState, useRef } from "react"
 
 export default function LandingPage() {
-  const [isPlaying, setIsPlaying] = useState(false)
+  const [isPlaying, setIsPlaying] = useState(true)
   const videoRef = useRef<HTMLVideoElement>(null)
 
   const togglePlay = () => {
@@ -16,7 +16,7 @@ export default function LandingPage() {
       setIsPlaying(!isPlaying)
     }
   }
-  
+
   return (
     <div className="min-h-screen bg-background text-foreground font-sans overflow-hidden flex flex-col relative selection:bg-primary/20">
 
@@ -85,19 +85,6 @@ export default function LandingPage() {
                 Bắt đầu Trải nghiệm
                 <ArrowRight className="w-5 h-5" />
               </Link>
-              <button 
-                onClick={togglePlay}
-                className="flex items-center gap-3 font-bold text-slate-700 hover:text-primary transition-colors px-6 py-4"
-              >
-                <div className="w-12 h-12 rounded-full bg-white shadow-md flex items-center justify-center border border-slate-100 text-primary hover:scale-105 transition-transform">
-                  {isPlaying ? (
-                    <Pause className="w-4 h-4 fill-current ml-0.5" />
-                  ) : (
-                    <Play className="w-4 h-4 fill-current ml-0.5" />
-                  )}
-                </div>
-                {isPlaying ? "Tạm dừng" : "Xem giới thiệu"}
-              </button>
             </div>
           </div>
 
@@ -108,7 +95,7 @@ export default function LandingPage() {
             <div className="absolute bottom-1/4 left-1/4 w-64 h-64 bg-health-heart/10 rounded-full blur-[80px] -z-10" />
 
             {/* Dark modern device mockup for the video */}
-            <div 
+            <div
               className="relative w-full aspect-[16/9] bg-slate-900 rounded-[2.5rem] shadow-[0_30px_80px_-15px_rgba(0,0,0,0.4)] p-4 overflow-hidden transform hover:-translate-y-2 transition-all duration-500 border-8 border-slate-800 ring-1 ring-black/10 cursor-pointer group"
               onClick={togglePlay}
             >
@@ -127,9 +114,10 @@ export default function LandingPage() {
                   ref={videoRef}
                   src="/video/video_720.webm"
                   poster="/video/poster.png"
+                  autoPlay
+                  loop
                   muted
                   playsInline
-                  onEnded={() => setIsPlaying(false)}
                   className="w-full h-full object-cover"
                 />
               </div>
