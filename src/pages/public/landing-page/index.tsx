@@ -1,22 +1,7 @@
-import { HeartPulse, ArrowRight, Play, CheckCircle2 } from "lucide-react"
+import { HeartPulse, ArrowRight, CheckCircle2 } from "lucide-react"
 import { Link } from "react-router-dom"
-import { useState, useRef } from "react"
 
 export default function LandingPage() {
-  const [isPlaying, setIsPlaying] = useState(true)
-  const videoRef = useRef<HTMLVideoElement>(null)
-
-  const togglePlay = () => {
-    if (videoRef.current) {
-      if (isPlaying) {
-        videoRef.current.pause()
-      } else {
-        videoRef.current.play()
-      }
-      setIsPlaying(!isPlaying)
-    }
-  }
-
   return (
     <div className="min-h-screen bg-background text-foreground font-sans overflow-hidden flex flex-col relative selection:bg-primary/20">
 
@@ -89,43 +74,15 @@ export default function LandingPage() {
           </div>
 
           {/* Center Content (Video Mockup) */}
-          <div className="col-span-1 lg:col-span-7 relative h-auto flex items-center justify-center order-1 lg:order-2 w-full max-w-[850px] mx-auto">
+          <div className="col-span-1 lg:col-span-7 relative h-auto flex flex-col items-center justify-center order-1 lg:order-2 w-full max-w-[850px] mx-auto gap-8 pt-4">
+            
             {/* Ambient Background Glows */}
             <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-primary/20 rounded-full blur-[80px] -z-10" />
             <div className="absolute bottom-1/4 left-1/4 w-64 h-64 bg-health-heart/10 rounded-full blur-[80px] -z-10" />
 
-            {/* Dark modern device mockup for the video */}
-            <div
-              className="relative w-full aspect-[16/9] bg-slate-900 rounded-[2.5rem] shadow-[0_30px_80px_-15px_rgba(0,0,0,0.4)] p-4 overflow-hidden transform hover:-translate-y-2 transition-all duration-500 border-8 border-slate-800 ring-1 ring-black/10 cursor-pointer group"
-              onClick={togglePlay}
-            >
-              {/* Play Button Overlay */}
-              {!isPlaying && (
-                <div className="absolute inset-0 z-10 flex items-center justify-center bg-slate-900/10 group-hover:bg-slate-900/30 transition-colors">
-                  <div className="w-16 h-16 rounded-full bg-primary text-white flex items-center justify-center shadow-2xl scale-90 group-hover:scale-110 transition-transform">
-                    <Play className="w-7 h-7 fill-current ml-1" />
-                  </div>
-                </div>
-              )}
-
-              {/* Video Element */}
-              <div className="w-full h-full rounded-[1.5rem] overflow-hidden bg-white relative shadow-inner">
-                <video
-                  ref={videoRef}
-                  src="/video/video_720.webm"
-                  poster="/video/poster.png"
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            </div>
-
-            {/* Floating Tags (Glassmorphism Light) */}
-            <div className="absolute top-[15%] -left-[5%] z-20 animate-[bounce_4s_ease-in-out_infinite]">
-              <div className="bg-white/90 backdrop-blur-xl px-5 py-3 rounded-2xl shadow-xl border border-slate-100/50 flex items-center gap-3">
+            {/* Top Tags (Under header, above video) */}
+            <div className="flex flex-wrap items-center justify-center gap-6 w-full px-4 z-20 -mt-8 md:-mt-12">
+              <div className="bg-white/90 backdrop-blur-xl px-5 py-3 rounded-2xl shadow-xl border border-slate-100/50 flex items-center gap-3 animate-[bounce_4s_ease-in-out_infinite]">
                 <div className="w-10 h-10 rounded-full bg-health-heart/10 flex items-center justify-center">
                   <HeartPulse className="w-5 h-5 text-health-heart" />
                 </div>
@@ -133,10 +90,8 @@ export default function LandingPage() {
                   <span className="text-sm font-bold text-slate-800">Cảnh báo AFib</span>
                 </div>
               </div>
-            </div>
 
-            <div className="absolute bottom-[20%] -right-[5%] z-20 animate-[bounce_5s_ease-in-out_infinite_reverse]">
-              <div className="bg-white/90 backdrop-blur-xl px-5 py-3 rounded-2xl shadow-xl border border-slate-100/50 flex items-center gap-3">
+              <div className="bg-white/90 backdrop-blur-xl px-5 py-3 rounded-2xl shadow-xl border border-slate-100/50 flex items-center gap-3 animate-[bounce_5s_ease-in-out_infinite_reverse]">
                 <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
                   <div className="w-2 h-2 rounded-full bg-primary animate-ping absolute" />
                   <div className="w-2 h-2 rounded-full bg-primary relative" />
@@ -145,6 +100,24 @@ export default function LandingPage() {
                   <span className="text-sm font-bold text-slate-800">Telemedicine</span>
                   <span className="text-xs font-semibold text-slate-500">Bác sĩ trực tuyến</span>
                 </div>
+              </div>
+            </div>
+
+            {/* Dark modern device mockup for the video */}
+            <div
+              className="relative w-full bg-slate-900 rounded-[2.5rem] shadow-[0_30px_80px_-15px_rgba(0,0,0,0.4)] p-4 overflow-hidden transform hover:-translate-y-2 transition-all duration-500 border-8 border-slate-800 ring-1 ring-black/10 group"
+            >
+              {/* Video Element */}
+              <div className="w-full aspect-[16/9] rounded-[1.5rem] overflow-hidden bg-black relative shadow-inner pointer-events-none">
+                <iframe 
+                  className="absolute inset-0 w-full h-full"
+                  src="https://www.youtube.com/embed/_5ibr_-CpFg?enablejsapi=1&autoplay=1&mute=1&controls=0&loop=1&playlist=_5ibr_-CpFg&playsinline=1&modestbranding=1&rel=0&iv_load_policy=3&disablekb=1&vq=hd1080" 
+                  title="" 
+                  frameBorder="0" 
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                  referrerPolicy="strict-origin-when-cross-origin" 
+                  allowFullScreen
+                ></iframe>
               </div>
             </div>
           </div>
