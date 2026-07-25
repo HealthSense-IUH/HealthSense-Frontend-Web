@@ -1,4 +1,11 @@
-export type UserRole = "MEMBER" | "ADMIN" | "DOCTOR" | string
+export const USER_ROLES = {
+  SUPER_ADMIN: "SUPER_ADMIN",
+  ADMIN: "ADMIN",
+  DOCTOR: "DOCTOR",
+  MEMBER: "MEMBER",
+} as const
+
+export type UserRole = (typeof USER_ROLES)[keyof typeof USER_ROLES] | string
 
 export type AccountStatus = "ACTIVE" | "DISABLED" | string
 
