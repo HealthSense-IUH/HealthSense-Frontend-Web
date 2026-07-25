@@ -12,6 +12,20 @@ import { UserFormModal } from "../components/user-form-modal"
 import { UserDetailDrawer } from "../components/user-detail-drawer"
 import { UserDeleteDialog } from "../components/user-delete-dialog"
 
+function normalizeUserPage(pageData: UserPageResponse | undefined, selectedRole: UserRole, size: number) {
+  const serverList = pageData?.content ?? pageData?.items ?? []
+  const userList = selectedRole
+    ? serverList.filter((user) => user.role === selectedRole)
+    : serverList
+  const hasMixedRoles = userList.length !== serverList.length
+  const total = hasMixedRoles ? userList.length : pageData?.totalElements ?? userList.length
+  const pages = hasMixedRoles
+    ? Math.ceil(total / size) || 1
+    : pageData?.totalPages ?? (Math.ceil(total / size) || 1)
+
+  return { userList, total, pages }
+}
+
 export function UserManagementPage() {
   const { effectiveRole } = useAppShell()
 
@@ -44,18 +58,7 @@ export function UserManagementPage() {
     try {
       const response = await userManagementApi.listUsers({ role: selectedRole, page, size })
       const pageData: UserPageResponse | undefined = response.data
-
-      // Defensive pagination unwrapping & Environment bug mitigation
-      let userList = pageData?.content ?? pageData?.items ?? []
-      
-      // Chốt chặn Frontend: Nếu backend Dockploy (do lỗi Nginx ngắt query param) 
-      // trả về full user (cả Admin/Super Admin), ta sẽ tự động filter chuẩn lại trên UI!
-      if (selectedRole) {
-        userList = userList.filter((user) => user.role === selectedRole)
-      }
-
-      const total = pageData?.totalElements ?? userList.length
-      const pages = pageData?.totalPages ?? (Math.ceil(total / size) || 1)
+      const { userList, total, pages } = normalizeUserPage(pageData, selectedRole, size)
 
       setRawUsers(userList)
       setTotalElements(total)
@@ -84,9 +87,7 @@ export function UserManagementPage() {
       .then((response) => {
         if (isMounted) {
           const pageData: UserPageResponse | undefined = response.data
-          const userList = pageData?.content ?? pageData?.items ?? []
-          const total = pageData?.totalElements ?? userList.length
-          const pages = pageData?.totalPages ?? (Math.ceil(total / size) || 1)
+          const { userList, total, pages } = normalizeUserPage(pageData, selectedRole, size)
           setRawUsers(userList)
           setTotalElements(total)
           setTotalPages(pages)
