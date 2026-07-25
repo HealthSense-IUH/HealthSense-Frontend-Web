@@ -45,8 +45,15 @@ export function UserManagementPage() {
       const response = await userManagementApi.listUsers({ role: selectedRole, page, size })
       const pageData: UserPageResponse | undefined = response.data
 
-      // Defensive pagination unwrapping
-      const userList = pageData?.content ?? pageData?.items ?? []
+      // Defensive pagination unwrapping & Environment bug mitigation
+      let userList = pageData?.content ?? pageData?.items ?? []
+      
+      // Chốt chặn Frontend: Nếu backend Dockploy (do lỗi Nginx ngắt query param) 
+      // trả về full user (cả Admin/Super Admin), ta sẽ tự động filter chuẩn lại trên UI!
+      if (selectedRole) {
+        userList = userList.filter((user) => user.role === selectedRole)
+      }
+
       const total = pageData?.totalElements ?? userList.length
       const pages = pageData?.totalPages ?? (Math.ceil(total / size) || 1)
 
