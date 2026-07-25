@@ -7,16 +7,17 @@ import { GuestOnlyRoute } from "@/pages/commons/GuestOnlyRoute"
 import { ProtectedRoute } from "@/pages/commons/ProtectedRoute"
 
 const MemberLayout = lazy(() => import("@/pages/member"))
-const DashboardPage = lazy(() => import("@/pages/member/dashboard"))
+const DashboardPage = lazy(() => import("@/features/dashboard/pages/dashboard-page"))
 const WorkoutsPage = lazy(() => import("@/pages/member/workouts"))
 const AfibHistoryPage = lazy(() => import("@/pages/member/afib-history"))
 const ReportsPage = lazy(() => import("@/pages/member/reports"))
 const SleepPage = lazy(() => import("@/pages/member/sleep"))
 
 const ManagementPage = lazy(() => import("@/pages/admin/management-page"))
+const UserManagementPage = lazy(() => import("@/features/user-management/pages/user-management-page"))
+const ProfilePage = lazy(() => import("@/features/profile/pages/profile-page"))
 const LandingPage = lazy(() => import("@/pages/public/landing-page"))
-const LoginPage = lazy(() => import("@/pages/auth/login-page"))
-const RegisterPage = lazy(() => import("@/pages/auth/register-page"))
+const ForgotPasswordPage = lazy(() => import("@/features/forgot-password/pages/forgot-password-page"))
 
 export const router = createBrowserRouter([
   {
@@ -36,15 +37,31 @@ export const router = createBrowserRouter([
         path: "/login",
         element: (
           <LazyElement>
-            <LoginPage />
+            <LandingPage />
           </LazyElement>
         ),
       },
       {
-        path: "/register",
+        path: "/forgot-password",
         element: (
           <LazyElement>
-            <RegisterPage />
+            <ForgotPasswordPage />
+          </LazyElement>
+        ),
+      },
+      {
+        path: "/forgot-password/verify",
+        element: (
+          <LazyElement>
+            <ForgotPasswordPage />
+          </LazyElement>
+        ),
+      },
+      {
+        path: "/reset-password",
+        element: (
+          <LazyElement>
+            <ForgotPasswordPage />
           </LazyElement>
         ),
       },
@@ -113,6 +130,22 @@ export const router = createBrowserRouter([
           </LazyElement>
         ),
       },
+      {
+        path: "users",
+        element: (
+          <LazyElement>
+            <UserManagementPage />
+          </LazyElement>
+        ),
+      },
+      {
+        path: "profile",
+        element: (
+          <LazyElement>
+            <ProfilePage />
+          </LazyElement>
+        ),
+      },
     ],
   },
   {
@@ -122,6 +155,14 @@ export const router = createBrowserRouter([
   {
     path: "/management",
     element: <Navigate to="/app/management" replace />,
+  },
+  {
+    path: "/admin/users",
+    element: <Navigate to="/app/users" replace />,
+  },
+  {
+    path: "/profile",
+    element: <Navigate to="/app/profile" replace />,
   },
 ])
 
