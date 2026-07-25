@@ -5,10 +5,27 @@ import { useAuthStore } from "@/features/auth/auth-store"
 import type { ApiResponse, ErrorResponse } from "@/types/base"
 import type { LoginResponse } from "@/types/authentication"
 
+function preserveUnsafeIntegers(json: string) {
+  return json.replace(/:\s*(-?\d{16,})(?=\s*[,}\]])/g, ': "$1"')
+}
+
+function parseJsonPreservingUnsafeIntegers(data: unknown) {
+  if (typeof data !== "string" || !data.trim()) {
+    return data
+  }
+
+  try {
+    return JSON.parse(preserveUnsafeIntegers(data))
+  } catch {
+    return data
+  }
+}
+
 const axiosClient = axios.create({
   baseURL: env.API_BASE_URL,
   timeout: 10000,
   withCredentials: true,
+  transformResponse: [parseJsonPreservingUnsafeIntegers],
   headers: {
     "Content-Type": "application/json",
   },
@@ -33,6 +50,7 @@ async function refreshAccessToken() {
   refreshPromise ??= axios
     .post<ApiResponse<LoginResponse>>(`${env.API_BASE_URL}/api/auth/refresh`, undefined, {
       withCredentials: true,
+      transformResponse: [parseJsonPreservingUnsafeIntegers],
       headers: {
         "Content-Type": "application/json",
       },

@@ -10,7 +10,7 @@ export type UserRole = (typeof USER_ROLES)[keyof typeof USER_ROLES] | string
 export type AccountStatus = "ACTIVE" | "DISABLED" | string
 
 export type UserSession = {
-  userId: number
+  userId: string | number
   email: string
   fullName?: string
   role: UserRole

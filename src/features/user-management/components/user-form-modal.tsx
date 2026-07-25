@@ -99,7 +99,6 @@ function UserFormModalContent({
     try {
       if (isEditMode) {
         const updatePayload: UserUpdateRequest = {
-          role,
           status,
           displayName: displayName.trim(),
           phone: phone.trim() || undefined,
@@ -107,6 +106,7 @@ function UserFormModalContent({
           gender: gender || undefined,
           address: address.trim() || undefined,
         }
+
         await onSave(updatePayload)
       } else {
         const createPayload: UserCreateRequest = {
@@ -176,10 +176,10 @@ function UserFormModalContent({
             <select
               id="user-role-select"
               aria-label="Account Role Select"
-              disabled={loading}
+              disabled={isEditMode || loading}
               value={role}
               onChange={(e) => setRole(e.target.value as UserRole)}
-              className="w-full h-10 rounded-xl border border-slate-200 bg-white px-3 text-xs font-extrabold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+              className="w-full h-10 rounded-xl border border-slate-200 bg-white px-3 text-xs font-extrabold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer disabled:bg-slate-100 disabled:text-slate-500 disabled:cursor-not-allowed"
             >
               <option value={USER_ROLES.MEMBER}>MEMBER - Patient Account</option>
               <option value={USER_ROLES.DOCTOR}>DOCTOR - Clinical Diagnostic</option>

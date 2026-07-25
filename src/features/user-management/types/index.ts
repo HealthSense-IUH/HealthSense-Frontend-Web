@@ -28,7 +28,6 @@ export interface UserCreateRequest {
 
 export interface UserUpdateRequest {
   email?: string
-  role?: UserRole
   status?: AccountStatus
   displayName?: string
   phone?: string
