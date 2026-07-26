@@ -145,15 +145,10 @@ export function ProfilePage() {
         </div>
       )}
 
-      {/* Loaded Content: 2-Column Desktop Grid */}
+      {/* Loaded Content: Single Column */}
       {!loading && user && (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-          <div className="lg:col-span-4 sticky top-24">
-            <ProfileSummaryCard user={user} />
-          </div>
-          <div className="lg:col-span-8">
-            <ProfileForm user={user} onSave={handleSave} loading={saving} />
-          </div>
+        <div className="max-w-4xl mx-auto">
+          <ProfileForm user={user} onSave={handleSave} loading={saving} />
         </div>
       )}
     </div>
