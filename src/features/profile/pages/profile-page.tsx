@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { profileApi } from "../services/profile-api"
 import type { UserResponse, ProfileUpdateRequest } from "../types"
 import { ProfileForm } from "../components/profile-form"
+import { ProfileSummaryCard } from "../components/profile-summary-card"
 
 export function ProfilePage() {
   const [user, setUser] = useState<UserResponse | null>(null)
@@ -23,6 +24,12 @@ export function ProfilePage() {
       const userData: UserResponse = response.data || {}
       setUser(userData)
       setError(null)
+      if (userSession && setUserSession && userData.avatarUrl !== userSession.avatarUrl) {
+        setUserSession({
+          ...userSession,
+          avatarUrl: userData.avatarUrl,
+        })
+      }
     } catch (err: unknown) {
       const anyErr = err as { message?: string; response?: { data?: { message?: string } } }
       console.error("Failed to load profile data:", anyErr)
@@ -34,7 +41,7 @@ export function ProfilePage() {
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, [userSession, setUserSession])
 
   useEffect(() => {
     let isMounted = true
@@ -45,6 +52,12 @@ export function ProfilePage() {
           const userData: UserResponse = response.data || {}
           setUser(userData)
           setError(null)
+          if (userSession && setUserSession && userData.avatarUrl !== userSession.avatarUrl) {
+            setUserSession({
+              ...userSession,
+              avatarUrl: userData.avatarUrl,
+            })
+          }
         }
       })
       .catch((err: unknown) => {
@@ -66,12 +79,18 @@ export function ProfilePage() {
     return () => {
       isMounted = false
     }
-  }, [])
+  }, [userSession, setUserSession])
 
   const handleRetry = () => {
     setLoading(true)
     setError(null)
     fetchProfile()
+  }
+
+  const handleAvatarUpdate = (newAvatarUrl: string) => {
+    if (user) {
+      setUser({ ...user, avatarUrl: newAvatarUrl })
+    }
   }
 
   const handleSave = async (payload: ProfileUpdateRequest) => {
@@ -89,6 +108,7 @@ export function ProfilePage() {
           fullName: nextFullName,
           email: updatedUser.email || userSession.email,
           role: updatedUser.role || userSession.role,
+          avatarUrl: updatedUser.avatarUrl || userSession.avatarUrl,
         })
       }
     } finally {
@@ -146,8 +166,13 @@ export function ProfilePage() {
 
       {/* Loaded Content: Single Column */}
       {!loading && user && (
-        <div className="max-w-4xl mx-auto">
-          <ProfileForm user={user} onSave={handleSave} loading={saving} />
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          <div className="lg:col-span-4 sticky top-24">
+            <ProfileSummaryCard user={user} onAvatarUpdate={handleAvatarUpdate} />
+          </div>
+          <div className="lg:col-span-8">
+            <ProfileForm user={user} onSave={handleSave} loading={saving} />
+          </div>
         </div>
       )}
     </div>

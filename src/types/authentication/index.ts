@@ -15,6 +15,7 @@ export type UserSession = {
   fullName?: string
   role: UserRole
   accountStatus?: AccountStatus
+  avatarUrl?: string
 }
 
 export type CurrentUser = Pick<UserSession, "userId" | "email" | "role">

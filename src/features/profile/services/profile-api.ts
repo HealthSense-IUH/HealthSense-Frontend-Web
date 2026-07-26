@@ -1,6 +1,12 @@
+import axios from "axios"
 import axiosClient from "@/lib/axiosClient"
 import type { ApiResponse } from "@/types/base"
-import type { ProfileUpdateRequest, UserResponse } from "../types"
+import type {
+  AvatarPresignedUrlRequest,
+  AvatarPresignedUrlResponse,
+  ProfileUpdateRequest,
+  UserResponse,
+} from "../types"
 
 export const profileApi = {
   /**
@@ -20,5 +26,27 @@ export const profileApi = {
       "/api/users/me",
       payload
     )
+  },
+
+  /**
+   * Generate S3 Presigned URL for uploading avatar
+   * POST /api/users/me/avatar/presigned-url
+   */
+  generateAvatarPresignedUrl(payload: AvatarPresignedUrlRequest) {
+    return axiosClient.post<
+      ApiResponse<AvatarPresignedUrlResponse>,
+      ApiResponse<AvatarPresignedUrlResponse>
+    >("/api/users/me/avatar/presigned-url", payload)
+  },
+
+  /**
+   * Upload file directly to S3 Presigned URL
+   */
+  uploadFileToS3(uploadUrl: string, file: File, contentType?: string) {
+    return axios.put(uploadUrl, file, {
+      headers: {
+        "Content-Type": contentType || file.type || "application/octet-stream",
+      },
+    })
   },
 }

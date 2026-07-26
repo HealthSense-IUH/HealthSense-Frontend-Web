@@ -139,7 +139,7 @@ export function Topbar() {
               className="flex items-center gap-2.5 pl-1 pr-2 py-1 rounded-full hover:bg-slate-100 transition-colors border border-transparent hover:border-slate-200"
             >
               <Avatar className="h-8 w-8 border border-slate-200 shadow-xs">
-                <AvatarImage src="https://i.pravatar.cc/150?img=47" alt={userEmail} />
+                <AvatarImage src={userSession?.avatarUrl || "https://i.pravatar.cc/150?img=47"} alt={userEmail} className="object-cover" />
                 <AvatarFallback className="bg-blue-600 text-white font-bold text-xs">
                   {userInitials}
                 </AvatarFallback>
