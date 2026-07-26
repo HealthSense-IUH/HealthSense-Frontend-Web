@@ -23,6 +23,7 @@ export default function LandingPage() {
   const [showLogin, setShowLogin] = useState(location.pathname === "/login")
   
   const setAuthenticatedSession = useAuthStore((state) => state.setAuthenticatedSession)
+  const userSession = useAuthStore((state) => state.userSession)
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [errorMessage, setErrorMessage] = useState("")
@@ -90,15 +91,25 @@ export default function LandingPage() {
           </div>
 
           <div className="flex items-center gap-4 text-sm font-semibold">
-            <button 
-              onClick={() => {
-                if (!showLogin) handleToggleLogin();
-              }}
-              className="bg-white text-primary hover:bg-slate-50 transition-colors px-6 py-2.5 rounded-full shadow-sm font-bold flex items-center gap-2"
-            >
-              Đăng nhập
-              <ArrowRight className="w-4 h-4" />
-            </button>
+            {userSession ? (
+              <button 
+                onClick={() => navigate('/app/dashboard')}
+                className="bg-white text-primary hover:bg-slate-50 transition-colors px-6 py-2.5 rounded-full shadow-sm font-bold flex items-center gap-2"
+              >
+                Dashboard
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            ) : (
+              <button 
+                onClick={() => {
+                  if (!showLogin) handleToggleLogin();
+                }}
+                className="bg-white text-primary hover:bg-slate-50 transition-colors px-6 py-2.5 rounded-full shadow-sm font-bold flex items-center gap-2"
+              >
+                Đăng nhập
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            )}
           </div>
         </nav>
       </div>
@@ -138,11 +149,15 @@ export default function LandingPage() {
             <div className="flex items-center gap-4">
               <button 
                 onClick={() => {
-                  if (!showLogin) handleToggleLogin();
+                  if (userSession) {
+                    navigate('/app/dashboard');
+                  } else if (!showLogin) {
+                    handleToggleLogin();
+                  }
                 }}
                 className="bg-primary text-primary-foreground font-bold px-8 py-4 rounded-full hover:bg-primary/90 transition-colors shadow-lg shadow-primary/25 flex items-center gap-2"
               >
-                Bắt đầu Trải nghiệm
+                {userSession ? "Đi đến Dashboard" : "Bắt đầu Trải nghiệm"}
                 <ArrowRight className="w-5 h-5" />
               </button>
             </div>
