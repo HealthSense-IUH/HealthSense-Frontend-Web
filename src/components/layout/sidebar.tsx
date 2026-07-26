@@ -79,7 +79,7 @@ export function Sidebar() {
         </Button>
 
         <Avatar className="h-12 w-12 border-2 border-white/20">
-          <AvatarImage src="https://i.pravatar.cc/150?img=47" alt="User" />
+          <AvatarImage src={userSession?.avatarUrl || "https://i.pravatar.cc/150?img=47"} alt="User" className="object-cover" />
           <AvatarFallback>
             {userSession?.fullName?.slice(0, 2).toUpperCase() ?? "HS"}
           </AvatarFallback>

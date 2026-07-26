@@ -1,9 +1,14 @@
-import { Phone, Calendar, MapPin, User, Clock } from "lucide-react"
+import { useState, useRef, type ChangeEvent } from "react"
+import { Phone, Calendar, MapPin, User, Clock, Camera, Loader2 } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { useToast } from "@/hooks/use-toast"
+import { useAuthStore } from "@/features/auth/auth-store"
+import { profileApi } from "../services/profile-api"
 import type { UserResponse, ProfileAccountStatus } from "../types"
 
 interface ProfileSummaryCardProps {
   user: UserResponse
+  onAvatarUpdate?: (newAvatarUrl: string) => void
 }
 
 function StatusBadge({ status }: { status?: ProfileAccountStatus }) {
@@ -34,7 +39,13 @@ function StatusBadge({ status }: { status?: ProfileAccountStatus }) {
   )
 }
 
-export function ProfileSummaryCard({ user }: ProfileSummaryCardProps) {
+export function ProfileSummaryCard({ user, onAvatarUpdate }: ProfileSummaryCardProps) {
+  const { toast } = useToast()
+  const [uploading, setUploading] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const userSession = useAuthStore((state) => state.userSession)
+  const setUserSession = useAuthStore((state) => state.setUserSession)
+
   // Defensive display name fallback
   const displayName = user.displayName || user.fullName || user.email || "Current User"
   const initials = displayName
@@ -55,17 +66,136 @@ export function ProfileSummaryCard({ user }: ProfileSummaryCardProps) {
     }
   }
 
+  const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    const fileName = file.name.trim()
+    const lowerName = fileName.toLowerCase()
+    let contentType = file.type && file.type.trim() ? file.type.trim().toLowerCase() : ""
+
+    const validExtensions = [
+      ".jpg", ".jpeg", ".jfif", ".pjpeg", ".png", ".webp", ".gif", 
+      ".bmp", ".svg", ".heic", ".heif", ".avif", ".tiff", ".tif", ".ico"
+    ]
+    const hasValidExt = validExtensions.some((ext) => lowerName.endsWith(ext))
+    const isImageType = contentType.startsWith("image/")
+
+    if (!isImageType && !hasValidExt) {
+      toast({
+        variant: "destructive",
+        title: "Invalid File Format",
+        description: "Please select a valid image file (.jpg, .png, .webp, .gif, .heic...).",
+      })
+      return
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast({
+        variant: "destructive",
+        title: "File Too Large",
+        description: "Avatar image size must not exceed 5MB.",
+      })
+      return
+    }
+
+    // Resolve accurate content type if browser returns empty or octet-stream
+    if (!contentType.startsWith("image/") || contentType === "application/octet-stream") {
+      if (lowerName.endsWith(".jpg") || lowerName.endsWith(".jpeg") || lowerName.endsWith(".jfif") || lowerName.endsWith(".pjpeg")) contentType = "image/jpeg"
+      else if (lowerName.endsWith(".png")) contentType = "image/png"
+      else if (lowerName.endsWith(".webp")) contentType = "image/webp"
+      else if (lowerName.endsWith(".gif")) contentType = "image/gif"
+      else if (lowerName.endsWith(".bmp")) contentType = "image/bmp"
+      else if (lowerName.endsWith(".svg")) contentType = "image/svg+xml"
+      else if (lowerName.endsWith(".heic") || lowerName.endsWith(".heif")) contentType = "image/heic"
+      else if (lowerName.endsWith(".avif")) contentType = "image/avif"
+      else if (lowerName.endsWith(".tiff") || lowerName.endsWith(".tif")) contentType = "image/tiff"
+      else if (lowerName.endsWith(".ico")) contentType = "image/x-icon"
+      else contentType = "image/jpeg"
+    }
+
+    setUploading(true)
+    try {
+      // Step 1: Request Presigned URL from Backend
+      const presignRes = await profileApi.generateAvatarPresignedUrl({
+        fileName: fileName,
+        contentType: contentType,
+      })
+      const { uploadUrl, publicUrl } = presignRes.data || {}
+      if (!uploadUrl || !publicUrl) {
+        throw new Error("Failed to obtain presigned upload link from server.")
+      }
+
+      // Step 2: Upload file directly to S3 with resolved contentType matching presigned signature
+      await profileApi.uploadFileToS3(uploadUrl, file, contentType)
+
+      // Step 3: Update Profile in Backend (triggers auto deletion of old avatar on S3)
+      await profileApi.updateMe({ avatarUrl: publicUrl })
+
+      // Step 4: Sync local & global auth store state
+      onAvatarUpdate?.(publicUrl)
+      if (userSession && setUserSession) {
+        setUserSession({
+          ...userSession,
+          avatarUrl: publicUrl,
+        })
+      }
+
+      toast({
+        title: "Avatar Updated Successfully!",
+        description: "Your new profile photo is saved and old avatar was removed from storage.",
+      })
+    } catch (err: unknown) {
+      const anyErr = err as { message?: string; response?: { data?: { message?: string } } }
+      console.error("Failed to upload avatar:", anyErr)
+      toast({
+        variant: "destructive",
+        title: "Upload Failed",
+        description: anyErr?.response?.data?.message || anyErr?.message || "Could not update avatar photo.",
+      })
+    } finally {
+      setUploading(false)
+      if (fileInputRef.current) {
+        fileInputRef.current.value = ""
+      }
+    }
+  }
+
   return (
     <div className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-xs flex flex-col h-full justify-between gap-6">
       <div className="space-y-6">
         {/* Header with Avatar & Status */}
         <div className="flex items-center gap-4 border-b border-slate-100 pb-5">
-          <Avatar className="h-16 w-16 border-2 border-slate-100 shadow-sm shrink-0">
-            <AvatarImage src="https://i.pravatar.cc/150?img=47" alt={displayName} />
-            <AvatarFallback className="bg-blue-600 text-white font-black text-lg">
-              {initials || "U"}
-            </AvatarFallback>
-          </Avatar>
+          <div className="relative group shrink-0">
+            <Avatar className="h-16 w-16 border-2 border-slate-100 shadow-sm transition-opacity group-hover:opacity-90">
+              <AvatarImage src={user.avatarUrl || "https://i.pravatar.cc/150?img=47"} alt={displayName} className="object-cover" />
+              <AvatarFallback className="bg-blue-600 text-white font-black text-lg">
+                {initials || "U"}
+              </AvatarFallback>
+            </Avatar>
+
+            <button
+              type="button"
+              disabled={uploading}
+              onClick={() => fileInputRef.current?.click()}
+              className="absolute inset-0 flex items-center justify-center rounded-full bg-black/40 text-white opacity-0 group-hover:opacity-100 transition-all cursor-pointer disabled:opacity-100 disabled:cursor-wait"
+              title="Change Avatar Photo"
+            >
+              {uploading ? (
+                <Loader2 className="w-5 h-5 animate-spin text-white" />
+              ) : (
+                <Camera className="w-5 h-5 text-white" />
+              )}
+            </button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*,.jpg,.jpeg,.png,.webp,.gif,.bmp,.svg,.heic,.heif,.avif,.tiff,.ico"
+              className="hidden"
+              onChange={handleFileChange}
+              disabled={uploading}
+            />
+          </div>
 
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2 mb-1 flex-wrap">
