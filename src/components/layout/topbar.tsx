@@ -2,7 +2,6 @@ import { useLocation, useNavigate } from "react-router-dom"
 import {
   PanelLeftClose,
   PanelLeftOpen,
-  Search,
   Bell,
   ChevronRight,
   LogOut,
@@ -18,7 +17,6 @@ import { authApi } from "@/services/authentication"
 import { useAuthStore } from "@/features/auth/auth-store"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import {
   Popover,
   PopoverContent,

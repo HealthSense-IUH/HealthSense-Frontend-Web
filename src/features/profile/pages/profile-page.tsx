@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button"
 
 import { profileApi } from "../services/profile-api"
 import type { UserResponse, ProfileUpdateRequest } from "../types"
-import { ProfileSummaryCard } from "../components/profile-summary-card"
 import { ProfileForm } from "../components/profile-form"
 
 export function ProfilePage() {

@@ -1,9 +1,6 @@
 import {
   LayoutDashboard,
   Users,
-  Stethoscope,
-  UserCheck,
-  User,
   ShieldCheck,
   Activity,
   AlertTriangle,

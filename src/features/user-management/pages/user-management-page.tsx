@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { ShieldAlert, Sparkles, CheckCircle2, AlertCircle } from "lucide-react"
 import { useDebounce } from "@/hooks/use-debounce"
 import { useAppShell } from "@/components/layout/app-shell-context"
