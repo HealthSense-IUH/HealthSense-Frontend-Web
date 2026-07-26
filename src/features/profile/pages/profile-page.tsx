@@ -5,8 +5,7 @@ import { Button } from "@/components/ui/button"
 
 import { profileApi } from "../services/profile-api"
 import type { UserResponse, ProfileUpdateRequest } from "../types"
-import { ProfileForm } from "../components/profile-form"
-import { ProfileSummaryCard } from "../components/profile-summary-card"
+import { UnifiedProfileCard } from "../components/unified-profile-card"
 
 export function ProfilePage() {
   const [user, setUser] = useState<UserResponse | null>(null)
@@ -164,15 +163,10 @@ export function ProfilePage() {
         </div>
       )}
 
-      {/* Loaded Content: Single Column */}
+      {/* Loaded Content: Unified View/Edit Profile Card */}
       {!loading && user && (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-          <div className="lg:col-span-4 sticky top-24">
-            <ProfileSummaryCard user={user} onAvatarUpdate={handleAvatarUpdate} />
-          </div>
-          <div className="lg:col-span-8">
-            <ProfileForm user={user} onSave={handleSave} loading={saving} />
-          </div>
+        <div className="max-w-4xl mx-auto">
+          <UnifiedProfileCard user={user} onSave={handleSave} onAvatarUpdate={handleAvatarUpdate} loading={saving} />
         </div>
       )}
     </div>

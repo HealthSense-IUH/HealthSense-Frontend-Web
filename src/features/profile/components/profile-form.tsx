@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from "react"
-import { Loader2, Lock, Save, RotateCcw, AlertCircle, CheckCircle2, Edit2 } from "lucide-react"
+import { Loader2, Save, RotateCcw, AlertCircle, CheckCircle2, Edit2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -128,42 +128,6 @@ function ProfileFormContent({ user, onSave, loading = false }: ProfileFormProps)
           </div>
         )}
 
-        {/* Read-only system account credentials */}
-        <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/80 space-y-3">
-          <div className="flex items-center justify-between text-xs font-bold text-slate-500">
-            <span>Read-Only Account Identifiers</span>
-            <span className="flex items-center gap-1 text-[11px] font-semibold text-slate-400">
-              <Lock className="w-3.5 h-3.5" />
-              <span>Managed by Admin</span>
-            </span>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div className="space-y-1">
-              <Label className="text-[11px] font-bold text-slate-500">Email Address</Label>
-              <Input
-                disabled
-                value={user.email || "—"}
-                className="h-9 text-xs bg-white text-slate-600 font-mono font-semibold border-slate-200 cursor-not-allowed"
-              />
-            </div>
-            <div className="space-y-1">
-              <Label className="text-[11px] font-bold text-slate-500">Assigned Role</Label>
-              <Input
-                disabled
-                value={user.role || "MEMBER"}
-                className="h-9 text-xs bg-white text-slate-600 font-extrabold border-slate-200 cursor-not-allowed"
-              />
-            </div>
-            <div className="space-y-1">
-              <Label className="text-[11px] font-bold text-slate-500">Account Status</Label>
-              <Input
-                disabled
-                value={user.status || "ACTIVE"}
-                className="h-9 text-xs bg-white text-slate-600 font-extrabold border-slate-200 cursor-not-allowed"
-              />
-            </div>
-          </div>
-        </div>
 
         {/* Editable fields */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
