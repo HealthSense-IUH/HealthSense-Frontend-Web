@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from "react"
-import { Loader2, Lock, Save, RotateCcw, AlertCircle, CheckCircle2 } from "lucide-react"
+import { Loader2, Lock, Save, RotateCcw, AlertCircle, CheckCircle2, Edit2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -24,6 +24,7 @@ function ProfileFormContent({ user, onSave, loading = false }: ProfileFormProps)
 
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
   const [successMsg, setSuccessMsg] = useState<string | null>(null)
+  const [isEditing, setIsEditing] = useState(false)
 
   const validate = (): boolean => {
     setErrorMsg(null)
@@ -70,6 +71,7 @@ function ProfileFormContent({ user, onSave, loading = false }: ProfileFormProps)
       }
       await onSave(payload)
       setSuccessMsg("Profile updated successfully.")
+      setIsEditing(false)
     } catch (err: unknown) {
       const anyErr = err as { message?: string; response?: { data?: { message?: string } } }
       setErrorMsg(anyErr?.response?.data?.message || anyErr?.message || "Failed to update profile.")
@@ -84,17 +86,31 @@ function ProfileFormContent({ user, onSave, loading = false }: ProfileFormProps)
     setAddress(user.address || "")
     setErrorMsg(null)
     setSuccessMsg(null)
+    setIsEditing(false)
   }
 
   return (
     <div className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-xs">
-      <div className="border-b border-slate-100 pb-4 mb-6">
-        <h3 className="text-base font-extrabold text-slate-900 tracking-tight">
-          Personal Information
-        </h3>
-        <p className="text-xs text-slate-500 font-medium mt-0.5">
-          Update your contact details and demographic profile information.
-        </p>
+      <div className="border-b border-slate-100 pb-4 mb-6 flex justify-between items-start gap-4">
+        <div>
+          <h3 className="text-base font-extrabold text-slate-900 tracking-tight">
+            Personal Information
+          </h3>
+          <p className="text-xs text-slate-500 font-medium mt-0.5">
+            Update your contact details and demographic profile information.
+          </p>
+        </div>
+        {!isEditing && (
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => setIsEditing(true)}
+            className="h-9 rounded-xl border-slate-200 font-bold text-slate-700 text-xs px-4 hover:bg-slate-50 cursor-pointer"
+          >
+            <Edit2 className="w-3.5 h-3.5 mr-2" />
+            Edit Profile
+          </Button>
+        )}
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-5">
@@ -157,13 +173,13 @@ function ProfileFormContent({ user, onSave, loading = false }: ProfileFormProps)
             </Label>
             <Input
               id="display-name-input"
-              disabled={loading}
+              disabled={loading || !isEditing}
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
               placeholder="Enter your full display name"
               maxLength={120}
               required
-              className="h-10 rounded-xl border-slate-200 text-xs font-semibold"
+              className="h-10 rounded-xl border-slate-200 text-xs font-semibold disabled:opacity-60"
             />
           </div>
 
@@ -173,12 +189,12 @@ function ProfileFormContent({ user, onSave, loading = false }: ProfileFormProps)
             </Label>
             <Input
               id="phone-input"
-              disabled={loading}
+              disabled={loading || !isEditing}
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               placeholder="+84 909 123 456"
               maxLength={30}
-              className="h-10 rounded-xl border-slate-200 text-xs font-mono font-semibold"
+              className="h-10 rounded-xl border-slate-200 text-xs font-mono font-semibold disabled:opacity-60"
             />
           </div>
         </div>
@@ -191,10 +207,10 @@ function ProfileFormContent({ user, onSave, loading = false }: ProfileFormProps)
             <Input
               id="dob-input"
               type="date"
-              disabled={loading}
+              disabled={loading || !isEditing}
               value={dateOfBirth}
               onChange={(e) => setDateOfBirth(e.target.value)}
-              className="h-10 rounded-xl border-slate-200 text-xs font-mono font-semibold cursor-pointer"
+              className="h-10 rounded-xl border-slate-200 text-xs font-mono font-semibold cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
             />
           </div>
 
@@ -205,10 +221,10 @@ function ProfileFormContent({ user, onSave, loading = false }: ProfileFormProps)
             <select
               id="gender-select"
               aria-label="Gender selection"
-              disabled={loading}
+              disabled={loading || !isEditing}
               value={gender}
               onChange={(e) => setGender(e.target.value)}
-              className="w-full h-10 rounded-xl border border-slate-200 bg-white px-3 text-xs font-extrabold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+              className="w-full h-10 rounded-xl border border-slate-200 bg-white px-3 text-xs font-extrabold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed disabled:bg-slate-50"
             >
               <option value="MALE">Male</option>
               <option value="FEMALE">Female</option>
@@ -223,35 +239,37 @@ function ProfileFormContent({ user, onSave, loading = false }: ProfileFormProps)
           </Label>
           <Input
             id="address-input"
-            disabled={loading}
+            disabled={loading || !isEditing}
             value={address}
             onChange={(e) => setAddress(e.target.value)}
             placeholder="Enter residential or practice address"
             maxLength={500}
-            className="h-10 rounded-xl border-slate-200 text-xs font-medium"
+            className="h-10 rounded-xl border-slate-200 text-xs font-medium disabled:opacity-60"
           />
         </div>
 
-        <div className="pt-4 border-t border-slate-100 flex items-center justify-end gap-3">
-          <Button
-            type="button"
-            variant="outline"
-            disabled={loading}
-            onClick={handleReset}
-            className="h-10 rounded-xl border-slate-200 font-bold text-slate-600 text-xs px-4 hover:bg-slate-50 cursor-pointer"
-          >
-            <RotateCcw className="w-3.5 h-3.5 mr-1.5" />
-            <span>Cancel</span>
-          </Button>
-          <Button
-            type="submit"
-            disabled={loading}
-            className="h-10 rounded-xl bg-blue-600 hover:bg-blue-700 font-extrabold text-white text-xs px-5 shadow-sm shadow-blue-500/25 flex items-center gap-2 cursor-pointer transition-transform active:scale-95"
-          >
-            {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-            <span>Save Changes</span>
-          </Button>
-        </div>
+        {isEditing && (
+          <div className="pt-4 border-t border-slate-100 flex items-center justify-end gap-3">
+            <Button
+              type="button"
+              variant="outline"
+              disabled={loading}
+              onClick={handleReset}
+              className="h-10 rounded-xl border-slate-200 font-bold text-slate-600 text-xs px-4 hover:bg-slate-50 cursor-pointer"
+            >
+              <RotateCcw className="w-3.5 h-3.5 mr-1.5" />
+              <span>Cancel</span>
+            </Button>
+            <Button
+              type="submit"
+              disabled={loading}
+              className="h-10 rounded-xl bg-blue-600 hover:bg-blue-700 font-extrabold text-white text-xs px-5 shadow-sm shadow-blue-500/25 flex items-center gap-2 cursor-pointer transition-transform active:scale-95"
+            >
+              {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+              <span>Save Changes</span>
+            </Button>
+          </div>
+        )}
       </form>
     </div>
   )
