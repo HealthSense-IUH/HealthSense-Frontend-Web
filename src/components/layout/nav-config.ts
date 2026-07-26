@@ -51,18 +51,6 @@ export const navigationGroups: NavigationGroup[] = [
         ],
         exact: true,
       },
-      {
-        id: "profile",
-        title: "My Profile",
-        href: "/app/profile",
-        icon: User,
-        allowedRoles: [
-          USER_ROLES.SUPER_ADMIN,
-          USER_ROLES.ADMIN,
-          USER_ROLES.DOCTOR,
-          USER_ROLES.MEMBER,
-        ],
-      },
     ],
   },
   {
@@ -75,21 +63,6 @@ export const navigationGroups: NavigationGroup[] = [
         href: "/app/users",
         icon: Users,
         allowedRoles: [USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN],
-      },
-      {
-        id: "doctor-management",
-        title: "Doctors",
-        href: "/app/doctors",
-        icon: Stethoscope,
-        allowedRoles: [USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN],
-        badge: "18",
-      },
-      {
-        id: "member-management",
-        title: "Members",
-        href: "/app/members",
-        icon: UserCheck,
-        allowedRoles: [USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN, USER_ROLES.DOCTOR],
       },
       {
         id: "admin-management",

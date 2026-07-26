@@ -85,18 +85,6 @@ export function Topbar() {
 
       {/* Right section: Global Search, Role Switcher (DEV only), Notifications, User Menu */}
       <div className="flex items-center gap-3">
-        {/* Global Search box */}
-        <div className="relative w-64 xl:w-80">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-          <Input
-            type="search"
-            placeholder="Search patients, doctors, alerts..."
-            className="w-full pl-10 pr-4 h-9 rounded-xl border border-slate-200 bg-slate-50/70 text-xs font-medium text-slate-900 placeholder:text-slate-400 focus-visible:bg-white focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:border-transparent transition-all shadow-inner"
-          />
-          <kbd className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border border-slate-200 bg-white px-1.5 font-mono text-[10px] font-medium text-slate-400 opacity-100 shadow-2xs">
-            ⌘K
-          </kbd>
-        </div>
 
         <div className="h-5 w-px bg-slate-200/80 mx-1" />
 
