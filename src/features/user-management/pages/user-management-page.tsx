@@ -1,10 +1,11 @@
 import { useState, useEffect, useCallback, useMemo } from "react"
 import { ShieldAlert, Sparkles, CheckCircle2, AlertCircle } from "lucide-react"
+import { useDebounce } from "@/hooks/use-debounce"
 import { useAppShell } from "@/components/layout/app-shell-context"
 import { USER_ROLES, type UserRole } from "@/types/authentication"
 
 import { userManagementApi } from "../services/user-api"
-import type { UserItem, UserCreateRequest, UserUpdateRequest, UserPageResponse } from "../types"
+import type { UserItem, UserCreateRequest, UserUpdateRequest, UserPageResponse, AccountStatus } from "../types"
 import { UserRoleTabs } from "../components/user-role-tabs"
 import { UserTableHeader } from "../components/user-table-header"
 import { UserTable } from "../components/user-table"
@@ -35,9 +36,15 @@ export function UserManagementPage() {
 
   // Filter & Pagination State (Default to MEMBER as 'role' query parameter is REQUIRED)
   const [selectedRole, setSelectedRole] = useState<UserRole>(USER_ROLES.MEMBER)
+  const [statusFilter, setStatusFilter] = useState<string>("ALL")
   const [page, setPage] = useState(1)
   const [size, setSize] = useState(10)
   const [searchQuery, setSearchQuery] = useState("")
+  const debouncedSearchQuery = useDebounce(searchQuery, 400)
+
+  useEffect(() => {
+    setPage(1)
+  }, [debouncedSearchQuery])
 
   // Data & Loading state
   const [rawUsers, setRawUsers] = useState<UserItem[]>([])
@@ -56,7 +63,9 @@ export function UserManagementPage() {
   const fetchUsers = useCallback(async () => {
     if (!isAuthorized) return
     try {
-      const response = await userManagementApi.listUsers({ role: selectedRole, page, size })
+      const filterStatus = statusFilter !== "ALL" ? (statusFilter as AccountStatus) : undefined
+      const filterKeyword = debouncedSearchQuery.trim() || undefined
+      const response = await userManagementApi.listUsers({ role: selectedRole, status: filterStatus, keyword: filterKeyword, page, size })
       const pageData: UserPageResponse | undefined = response.data
       const { userList, total, pages } = normalizeUserPage(pageData, selectedRole, size)
 
@@ -77,13 +86,15 @@ export function UserManagementPage() {
     } finally {
       setLoading(false)
     }
-  }, [selectedRole, page, size, isAuthorized])
+  }, [selectedRole, statusFilter, debouncedSearchQuery, page, size, isAuthorized])
 
   useEffect(() => {
     if (!isAuthorized) return
     let isMounted = true
+    const filterStatus = statusFilter !== "ALL" ? (statusFilter as AccountStatus) : undefined
+    const filterKeyword = debouncedSearchQuery.trim() || undefined
     userManagementApi
-      .listUsers({ role: selectedRole, page, size })
+      .listUsers({ role: selectedRole, status: filterStatus, keyword: filterKeyword, page, size })
       .then((response) => {
         if (isMounted) {
           const pageData: UserPageResponse | undefined = response.data
@@ -114,19 +125,7 @@ export function UserManagementPage() {
     return () => {
       isMounted = false
     }
-  }, [selectedRole, page, size, isAuthorized])
-
-  // Local UI Text Search filtering
-  const filteredUsers = useMemo(() => {
-    if (!searchQuery.trim()) return rawUsers
-    const q = searchQuery.toLowerCase()
-    return rawUsers.filter(
-      (u) =>
-        u.email.toLowerCase().includes(q) ||
-        (u.displayName && u.displayName.toLowerCase().includes(q)) ||
-        (u.phone && u.phone.toLowerCase().includes(q))
-    )
-  }, [rawUsers, searchQuery])
+  }, [selectedRole, statusFilter, debouncedSearchQuery, page, size, isAuthorized])
 
   // Role Tab switch handler
   const handleSelectRole = (role: UserRole) => {
@@ -135,6 +134,7 @@ export function UserManagementPage() {
     setSelectedRole(role)
     setPage(1)
     setSearchQuery("")
+    setStatusFilter("ALL")
     setStatusAlert(null)
   }
 
@@ -270,6 +270,11 @@ export function UserManagementPage() {
         <UserTableHeader
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
+          statusFilter={statusFilter}
+          onStatusFilterChange={(val) => {
+            setStatusFilter(val)
+            setPage(1)
+          }}
           onOpenCreate={handleOpenCreate}
           totalElements={totalElements}
           currentRoleLabel={getRoleDisplayLabel()}
@@ -277,7 +282,7 @@ export function UserManagementPage() {
         />
 
         <UserTable
-          users={filteredUsers}
+          users={rawUsers}
           loading={loading}
           page={page}
           size={size}

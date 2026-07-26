@@ -1,6 +1,6 @@
 import type { UserRole } from "@/types/authentication"
 
-export type AccountStatus = "ACTIVE" | "INACTIVE" | "BANNED" | "LOCKED" | "PENDING_VERIFY"
+export type AccountStatus = "ACTIVE" | "INACTIVE" | "PENDING_VERIFY"
 
 export interface UserItem {
   id: string | number
@@ -38,6 +38,8 @@ export interface UserUpdateRequest {
 
 export interface UserListFilterParams {
   role: UserRole // REQUIRED by Backend specification
+  status?: AccountStatus // OPTIONAL filter by status
+  keyword?: string // OPTIONAL search by id, email, or phone
   page?: number // default 1
   size?: number // default 10
 }

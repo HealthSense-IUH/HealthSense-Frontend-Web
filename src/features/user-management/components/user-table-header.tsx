@@ -1,10 +1,19 @@
 import { Search, Plus, UserCheck } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 interface UserTableHeaderProps {
   searchQuery: string
   onSearchChange: (query: string) => void
+  statusFilter?: string
+  onStatusFilterChange?: (status: string) => void
   onOpenCreate: () => void
   totalElements?: number
   currentRoleLabel: string
@@ -14,6 +23,8 @@ interface UserTableHeaderProps {
 export function UserTableHeader({
   searchQuery,
   onSearchChange,
+  statusFilter = "ALL",
+  onStatusFilterChange,
   onOpenCreate,
   totalElements = 0,
   currentRoleLabel,
@@ -44,10 +55,25 @@ export function UserTableHeader({
           <Input
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
-            placeholder="Filter table by email, name or phone..."
+            placeholder="Filter by ID, email or phone..."
             className="pl-9 h-10 bg-white border-slate-200/80 rounded-xl text-xs font-medium shadow-3xs focus:border-blue-500 transition-all"
           />
         </div>
+
+        <Select
+          value={statusFilter}
+          onValueChange={onStatusFilterChange}
+        >
+          <SelectTrigger className="w-[160px] h-10 bg-white border-slate-200/80 rounded-xl text-xs font-medium shadow-3xs">
+            <SelectValue placeholder="All Status" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="ALL">All Status</SelectItem>
+            <SelectItem value="ACTIVE">Active</SelectItem>
+            <SelectItem value="INACTIVE">Inactive</SelectItem>
+            <SelectItem value="PENDING_VERIFY">Pending Verify</SelectItem>
+          </SelectContent>
+        </Select>
 
         <Button
           onClick={onOpenCreate}
