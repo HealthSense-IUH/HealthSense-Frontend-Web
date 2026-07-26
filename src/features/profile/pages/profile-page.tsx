@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { profileApi } from "../services/profile-api"
 import type { UserResponse, ProfileUpdateRequest } from "../types"
 import { ProfileForm } from "../components/profile-form"
+import { ProfileSummaryCard } from "../components/profile-summary-card"
 
 export function ProfilePage() {
   const [user, setUser] = useState<UserResponse | null>(null)
