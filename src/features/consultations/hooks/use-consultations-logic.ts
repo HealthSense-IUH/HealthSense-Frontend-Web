@@ -103,7 +103,7 @@ export function useConsultationsLogic() {
   }, [])
 
   const { status: socketStatus, sendSocketMessage } = useConsultationSocket(
-    selectedSession?.id ?? null,
+    !isAdmin && selectedSession ? selectedSession.id : null,
     handleIncomingMessage
   )
 
@@ -146,7 +146,7 @@ export function useConsultationsLogic() {
   }, [loadData])
 
   useEffect(() => {
-    if (!selectedSession) {
+    if (!selectedSession || isAdmin) {
       return
     }
 
@@ -172,14 +172,15 @@ export function useConsultationsLogic() {
   }, [selectedSession])
 
   useEffect(() => {
+    if (isAdmin) return
     const lastMessage = sortedMessages.at(-1)
     if (selectedSession?.status === "ACTIVE" && lastMessage?.id) {
       void consultationApi.markRead(selectedSession.id, lastMessage.id).catch(() => undefined)
     }
-  }, [selectedSession, sortedMessages])
+  }, [selectedSession, sortedMessages, isAdmin])
 
   const handleLoadMoreMessages = useCallback(async () => {
-    if (!selectedSession || loadingMoreMessages || !hasMoreMessages || messages.length === 0) {
+    if (isAdmin || !selectedSession || loadingMoreMessages || !hasMoreMessages || messages.length === 0) {
       return
     }
 

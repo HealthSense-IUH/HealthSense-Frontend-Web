@@ -204,6 +204,23 @@ export function UserManagementPage() {
     }
   }
 
+  const handleFakeRecord = async (user: UserItem) => {
+    setActionLoading(true)
+    setStatusAlert(null)
+    try {
+      await userManagementApi.createFakeHealthRecord({ memberId: user.id })
+      setStatusAlert({ type: "success", text: `Fake health record generated for ${user.displayName || user.email}.` })
+    } catch (error: unknown) {
+      const err = error as { message?: string; response?: { data?: { message?: string } } }
+      setStatusAlert({
+        type: "error",
+        text: err?.response?.data?.message || "Failed to generate fake health record.",
+      })
+    } finally {
+      setActionLoading(false)
+    }
+  }
+
   // Unauthorized screen for DOCTOR and MEMBER roles
   if (!isAuthorized) {
     return (
@@ -296,6 +313,7 @@ export function UserManagementPage() {
           onView={handleOpenView}
           onEdit={handleOpenEdit}
           onDelete={handleOpenDelete}
+          onFakeRecord={handleFakeRecord}
         />
       </section>
 

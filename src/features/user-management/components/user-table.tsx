@@ -1,6 +1,7 @@
-import { Eye, Edit3, Trash2, ChevronLeft, ChevronRight, Inbox, Loader2 } from "lucide-react"
+import { Eye, Edit3, Trash2, ChevronLeft, ChevronRight, Inbox, Loader2, FilePlus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { UserStatusBadge } from "./user-status-badge"
+import { USER_ROLES } from "@/types/authentication"
 import type { UserItem } from "../types"
 
 interface UserTableProps {
@@ -15,6 +16,7 @@ interface UserTableProps {
   onView: (user: UserItem) => void
   onEdit: (user: UserItem) => void
   onDelete: (user: UserItem) => void
+  onFakeRecord?: (user: UserItem) => void
 }
 
 export function UserTable({
@@ -29,6 +31,7 @@ export function UserTable({
   onView,
   onEdit,
   onDelete,
+  onFakeRecord,
 }: UserTableProps) {
   const startItem = totalElements === 0 ? 0 : (page - 1) * size + 1
   const endItem = Math.min(page * size, totalElements)
@@ -131,6 +134,16 @@ export function UserTable({
                       >
                         <Eye className="w-4 h-4" />
                       </button>
+                      {item.role === USER_ROLES.MEMBER && onFakeRecord && (
+                        <button
+                          type="button"
+                          onClick={() => onFakeRecord(item)}
+                          title="Generate Fake Health Record"
+                          className="p-2 rounded-lg text-slate-500 hover:text-emerald-600 hover:bg-emerald-50/80 transition-colors cursor-pointer"
+                        >
+                          <FilePlus className="w-4 h-4" />
+                        </button>
+                      )}
                       <button
                         type="button"
                         onClick={() => onEdit(item)}
