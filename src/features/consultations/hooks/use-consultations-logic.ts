@@ -65,6 +65,8 @@ export function useConsultationsLogic() {
   const [messages, setMessages] = useState<ConsultationMessageItem[]>([])
   const [messageDraft, setMessageDraft] = useState("")
   const [attachmentUrl, setAttachmentUrl] = useState("")
+  const [loadingMoreMessages, setLoadingMoreMessages] = useState(false)
+  const [hasMoreMessages, setHasMoreMessages] = useState(false)
   const [requestForm, setRequestForm] = useState({
     healthRecordId: "",
     reason: "",
@@ -154,6 +156,7 @@ export function useConsultationsLogic() {
       .then((response) => {
         if (mounted) {
           setMessages(response.data.content)
+          setHasMoreMessages(response.data.content.length === DEFAULT_CHAT_SIZE)
         }
       })
       .catch((error) => {
@@ -174,6 +177,36 @@ export function useConsultationsLogic() {
       void consultationApi.markRead(selectedSession.id, lastMessage.id).catch(() => undefined)
     }
   }, [selectedSession, sortedMessages])
+
+  const handleLoadMoreMessages = useCallback(async () => {
+    if (!selectedSession || loadingMoreMessages || !hasMoreMessages || messages.length === 0) {
+      return
+    }
+
+    const oldestMessageId = sortedMessages[0]?.id
+    if (!oldestMessageId) {
+      return
+    }
+
+    setLoadingMoreMessages(true)
+    try {
+      const response = await consultationApi.listMessagesBefore(selectedSession.id, oldestMessageId, {
+        page: 1,
+        size: DEFAULT_CHAT_SIZE,
+      })
+      if (response.data.content.length > 0) {
+        setMessages((prev) => {
+          const newItems = response.data.content.filter((msg) => !prev.some((p) => p.id === msg.id))
+          return [...prev, ...newItems]
+        })
+      }
+      setHasMoreMessages(response.data.content.length === DEFAULT_CHAT_SIZE)
+    } catch (error) {
+      setAlert({ type: "error", text: readError(error, "Failed to load older messages.") })
+    } finally {
+      setLoadingMoreMessages(false)
+    }
+  }, [selectedSession, loadingMoreMessages, hasMoreMessages, messages.length, sortedMessages])
 
   async function handleCreateRequest(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -377,6 +410,8 @@ export function useConsultationsLogic() {
     selectedSession,
     setSelectedSession,
     sortedMessages,
+    loadingMoreMessages,
+    hasMoreMessages,
     socketStatus,
     messageDraft,
     setMessageDraft,
@@ -409,5 +444,6 @@ export function useConsultationsLogic() {
     handleAdminDialogSubmit,
     handleExpireOverdue,
     handleSendMessage,
+    handleLoadMoreMessages,
   }
 }

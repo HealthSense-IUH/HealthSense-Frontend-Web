@@ -79,7 +79,7 @@ export function ConsultationsPage() {
           {!logic.isDoctor && <TabsTrigger value={logic.isAdmin ? "admin-requests" : "my-requests"}>{logic.isAdmin ? "Requests Management" : "My Consultation Requests"}</TabsTrigger>}
           {logic.isAdmin && <TabsTrigger value="create-session">Create Consultation Session</TabsTrigger>}
           <TabsTrigger value="sessions">{logic.isAdmin ? "Sessions Management" : "My Consultations"}</TabsTrigger>
-          <TabsTrigger value="chat">Chat Room</TabsTrigger>
+          {!logic.isAdmin && <TabsTrigger value="chat">Chat Room</TabsTrigger>}
         </TabsList>
 
         {logic.isMember && (
@@ -143,22 +143,27 @@ export function ConsultationsPage() {
           />
         </TabsContent>
 
-        <TabsContent value="chat" className="m-0">
-          <ChatPanel
-            sessions={logic.sessions}
-            selectedSession={logic.selectedSession}
-            messages={logic.sortedMessages}
-            socketStatus={logic.socketStatus}
-            messageDraft={logic.messageDraft}
-            attachmentUrl={logic.attachmentUrl}
-            loading={logic.actionLoading}
-            currentUserId={logic.userSession?.userId}
-            onSelectSession={logic.setSelectedSession}
-            onMessageChange={logic.setMessageDraft}
-            onAttachmentChange={logic.setAttachmentUrl}
-            onSubmit={logic.handleSendMessage}
-          />
-        </TabsContent>
+        {!logic.isAdmin && (
+          <TabsContent value="chat" className="m-0">
+            <ChatPanel
+              sessions={logic.sessions}
+              selectedSession={logic.selectedSession}
+              messages={logic.sortedMessages}
+              socketStatus={logic.socketStatus}
+              messageDraft={logic.messageDraft}
+              attachmentUrl={logic.attachmentUrl}
+              loading={logic.actionLoading}
+              loadingMoreMessages={logic.loadingMoreMessages}
+              hasMoreMessages={logic.hasMoreMessages}
+              currentUserId={logic.userSession?.userId}
+              onSelectSession={logic.setSelectedSession}
+              onMessageChange={logic.setMessageDraft}
+              onAttachmentChange={logic.setAttachmentUrl}
+              onSubmit={logic.handleSendMessage}
+              onLoadMore={logic.handleLoadMoreMessages}
+            />
+          </TabsContent>
+        )}
       </Tabs>
 
       <AdminActionDialog

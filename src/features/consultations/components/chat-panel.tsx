@@ -20,11 +20,14 @@ export function ChatPanel({
   messageDraft,
   attachmentUrl,
   loading,
+  loadingMoreMessages,
+  hasMoreMessages,
   currentUserId,
   onSelectSession,
   onMessageChange,
   onAttachmentChange,
   onSubmit,
+  onLoadMore,
 }: {
   sessions: ConsultationSessionItem[]
   selectedSession: ConsultationSessionItem | null
@@ -33,11 +36,14 @@ export function ChatPanel({
   messageDraft: string
   attachmentUrl: string
   loading: boolean
+  loadingMoreMessages?: boolean
+  hasMoreMessages?: boolean
   currentUserId?: string | number
   onSelectSession: (session: ConsultationSessionItem) => void
   onMessageChange: (value: string) => void
   onAttachmentChange: (value: string) => void
   onSubmit: (event: FormEvent<HTMLFormElement>) => void
+  onLoadMore?: () => void
 }) {
   const canSend = selectedSession?.status === "ACTIVE"
 
@@ -85,6 +91,13 @@ export function ChatPanel({
             <div className="flex flex-col gap-3 pr-4">
               {!selectedSession && <p className="py-20 text-center text-sm text-neutral-500">Select a session to view messages.</p>}
               {selectedSession && messages.length === 0 && <p className="py-20 text-center text-sm text-neutral-500">No messages in this session yet.</p>}
+              {hasMoreMessages && (
+                <div className="flex justify-center pb-2">
+                  <Button variant="outline" size="sm" onClick={onLoadMore} disabled={loadingMoreMessages}>
+                    {loadingMoreMessages ? "Loading..." : "Load previous messages"}
+                  </Button>
+                </div>
+              )}
               {messages.map((message) => {
                 const mine = String(message.senderId) === String(currentUserId)
                 return (
