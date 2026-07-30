@@ -15,6 +15,7 @@ const SleepPage = lazy(() => import("@/pages/member/sleep"))
 
 const ManagementPage = lazy(() => import("@/pages/admin/management-page"))
 const UserManagementPage = lazy(() => import("@/features/user-management/pages/user-management-page"))
+const ConsultationsPage = lazy(() => import("@/features/consultations/pages/consultations-page"))
 const ProfilePage = lazy(() => import("@/features/profile/pages/profile-page"))
 const LandingPage = lazy(() => import("@/pages/public/landing-page"))
 const ForgotPasswordPage = lazy(() => import("@/features/forgot-password/pages/forgot-password-page"))
@@ -135,6 +136,14 @@ export const router = createBrowserRouter([
         element: (
           <LazyElement>
             <UserManagementPage />
+          </LazyElement>
+        ),
+      },
+      {
+        path: "consultations",
+        element: (
+          <LazyElement>
+            <ConsultationsPage />
           </LazyElement>
         ),
       },
