@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react
 import { useAuthStore } from "@/features/auth/auth-store"
 import { useAppShell } from "@/components/layout/app-shell-context"
 import { USER_ROLES } from "@/types/authentication"
+import { useToast } from "@/hooks/use-toast"
 
 import { useConsultationSocket } from "./use-consultation-socket"
 import { consultationApi } from "../services/consultation-api"
@@ -54,6 +55,7 @@ export function useConsultationsLogic() {
   const isAdmin = effectiveRole === USER_ROLES.ADMIN || effectiveRole === USER_ROLES.SUPER_ADMIN
   const isDoctor = effectiveRole === USER_ROLES.DOCTOR
   const isMember = effectiveRole === USER_ROLES.MEMBER
+  const { toast } = useToast()
 
   const [alert, setAlert] = useState<AlertState | null>(null)
   const [loading, setLoading] = useState(true)
@@ -259,9 +261,26 @@ export function useConsultationsLogic() {
       })
       setSelectedSession(response.data)
       setAlert({ type: "success", text: `Created session #${response.data.id}.` })
+      toast({
+        title: "Session Created",
+        description: `Successfully created direct consultation session #${response.data.id}.`,
+      })
+      setAdminSessionForm({
+        memberId: "",
+        doctorId: "",
+        healthRecordId: "",
+        endsAt: localDateTimeIn(30),
+        supportEndsAt: localDateTimeIn(33),
+        initialSystemMessage: "Admin creates direct consultation session",
+      })
       await loadData()
     } catch (error) {
       setAlert({ type: "error", text: readError(error, "Failed to create direct session.") })
+      toast({
+        variant: "destructive",
+        title: "Failed to create session",
+        description: readError(error, "An error occurred while creating the session."),
+      })
     } finally {
       setActionLoading(false)
     }
