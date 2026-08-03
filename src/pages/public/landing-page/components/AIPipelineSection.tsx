@@ -1,5 +1,6 @@
-import { motion } from "framer-motion"
-import { Database, Filter, ActivitySquare, Scale, Brain, ArrowDownCircle, Network, Code2, Binary } from "lucide-react"
+import { useRef } from "react"
+import { motion, useScroll, useTransform } from "framer-motion"
+import { Database, Filter, ActivitySquare, Scale, Brain, Binary, Network } from "lucide-react"
 
 const codeSnippets = {
   filter: `peaks, _ = find_peaks(
@@ -21,29 +22,202 @@ stack = StackingClassifier(
 )`
 }
 
-export function AIPipelineSection() {
+const steps = [
+  {
+    id: 1,
+    title: "Thu thập dữ liệu",
+    description: "Tập dữ liệu MIMIC-III PERform AFib Dataset với hơn 5.25 triệu điểm dữ liệu sóng điện tim (ECG) nguyên bản chưa qua xử lý.",
+    icon: Database,
+    color: "text-blue-500",
+    bg: "bg-blue-50",
+    border: "border-blue-200",
+  },
+  {
+    id: 2,
+    title: "Tiền xử lý & Khử nhiễu",
+    description: "Áp dụng Cửa sổ trượt (Sliding Window) 30s. Bắt đỉnh R-peaks và loại bỏ nhiễu bằng thuật toán find_peaks của SciPy.",
+    icon: Filter,
+    color: "text-sky-500",
+    bg: "bg-sky-50",
+    border: "border-sky-200",
+    code: codeSnippets.filter,
+  },
+  {
+    id: 3,
+    title: "Trích xuất đặc trưng",
+    description: "Trích xuất 16 chỉ số sinh học HRV bao phủ 3 miền: Thời gian, Tần số, và Phi tuyến tính (RMSSD, SampEn, LF/HF...).",
+    icon: ActivitySquare,
+    color: "text-cyan-500",
+    bg: "bg-cyan-50",
+    border: "border-cyan-200",
+    code: codeSnippets.hrv,
+  },
+  {
+    id: 4,
+    title: "Chuẩn hóa kép",
+    description: "Sử dụng cả Z-Score và Min-Max Scaling để tối ưu không gian vector cho nhiều loại thuật toán học máy khác nhau.",
+    icon: Scale,
+    color: "text-teal-500",
+    bg: "bg-teal-50",
+    border: "border-teal-200",
+    code: codeSnippets.scaling,
+  },
+  {
+    id: 5,
+    title: "Huấn luyện Base Models",
+    description: "Phân luồng dữ liệu để huấn luyện độc lập các thuật toán (Logistic Reg, SVM, XGBoost, RF) với ưu thế riêng biệt.",
+    icon: Brain,
+    color: "text-emerald-500",
+    bg: "bg-emerald-50",
+    border: "border-emerald-200",
+  },
+  {
+    id: 6,
+    title: "Stacking Ensemble",
+    description: "Kết hợp sức mạnh qua Meta-Learner để khử nhiễu, tối đa hóa độ nhạy phát hiện Rung nhĩ. (Độ chính xác: 98.71%)",
+    icon: Binary,
+    color: "text-green-500",
+    bg: "bg-green-50",
+    border: "border-green-200",
+    code: codeSnippets.stacking,
+  },
+]
+
+const CurveRow = ({ step, index, isEven }: { step: any, index: number, isEven: boolean }) => {
+  const ref = useRef<HTMLDivElement>(null)
+  
+  // Ánh xạ tiến trình cuộn của từng thẻ. Bắt đầu khi ĐỈNH thẻ chạm GIỮA màn hình, kết thúc khi ĐÁY thẻ chạm GIỮA màn hình.
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start center", "end center"]
+  })
+
+  // ClipPath sẽ chạy từ 100% (ẩn hoàn toàn từ dưới lên) đến 0% (hiện hoàn toàn)
+  const clipPath = useTransform(scrollYProgress, [0, 1], ["inset(0% 0% 100% 0%)", "inset(0% 0% 0% 0%)"])
+
+  // Hiệu ứng "pop" cho vòng tròn Node khi tia sáng chạy đến giữa thẻ (50% tiến trình)
+  const circleScale = useTransform(scrollYProgress, [0.4, 0.5, 0.6], [0, 1.2, 1])
+  const circleOpacity = useTransform(scrollYProgress, [0.4, 0.5], [0, 1])
+
   return (
-    <section className="w-full py-24 relative bg-transparent text-slate-900 overflow-hidden">
-      {/* Background Decorators */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-[100px]" />
-      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-emerald-500/5 rounded-full blur-[100px]" />
+    <div ref={ref} className={`relative flex items-stretch w-full min-h-[250px] ${index > 0 ? 'md:-mt-[3px]' : ''}`}>
       
-      {/* Animated Flow Lines (Background) */}
-      <div className="absolute inset-0 pointer-events-none opacity-20 hidden lg:block">
-        <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-           <path d="M 200 200 C 500 200, 500 500, 800 500" stroke="url(#blue-emerald)" strokeWidth="2" fill="none" strokeDasharray="5,5" className="animate-pulse" />
-           <defs>
-            <linearGradient id="blue-emerald" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#3b82f6" />
-              <stop offset="100%" stopColor="#10b981" />
-            </linearGradient>
-          </defs>
-        </svg>
+      {/* ================= MOBILE VIEW (Straight Line) ================= */}
+      {/* Base Line */}
+      <div className="md:hidden absolute left-[28px] top-0 bottom-0 w-[3px] bg-slate-200/50 z-0" />
+      {/* Animated Glowing Line */}
+      <motion.div 
+        style={{ clipPath, filter: 'drop-shadow(0 0 8px rgba(45, 212, 191, 0.8))' }}
+        className="md:hidden absolute left-[28px] top-0 bottom-0 w-[3px] bg-teal-400 z-0" 
+      />
+      
+      {/* ================= DESKTOP S-CURVE (CSS Borders) ================= */}
+      {/* Base Curve (Ngầm) */}
+      <div className={`hidden md:block absolute top-0 bottom-0 ${
+        isEven 
+        ? 'left-1/2 w-[35%] border-t-[3px] border-r-[3px] border-b-[3px] rounded-r-[150px]' 
+        : 'right-1/2 w-[35%] border-t-[3px] border-l-[3px] border-b-[3px] rounded-l-[150px]'
+      } border-slate-200/50 z-0`} />
+
+      {/* Glowing Animated Curve (Chảy theo thanh cuộn) */}
+      <motion.div 
+        style={{ clipPath, filter: 'drop-shadow(0 0 12px rgba(45, 212, 191, 0.9))' }}
+        className={`hidden md:block absolute top-0 bottom-0 ${
+        isEven 
+        ? 'left-1/2 w-[35%] border-t-[3px] border-r-[3px] border-b-[3px] rounded-r-[150px]' 
+        : 'right-1/2 w-[35%] border-t-[3px] border-l-[3px] border-b-[3px] rounded-l-[150px]'
+      } border-teal-400 z-0`} />
+
+      {/* ================= NODE CIRCLES ================= */}
+      {/* Desktop Node Circle */}
+      <motion.div 
+        style={{ scale: circleScale, opacity: circleOpacity }}
+        className={`hidden md:flex absolute top-1/2 -translate-y-1/2 ${
+        isEven ? 'left-[85%] -translate-x-1/2' : 'left-[15%] -translate-x-1/2'
+      } w-14 h-14 bg-white rounded-full items-center justify-center border-4 border-white shadow-xl z-20`}>
+        <div className={`w-full h-full rounded-full ${step.bg} border ${step.border} flex items-center justify-center ${step.color}`}>
+          <step.icon className="w-5 h-5" />
+        </div>
+      </motion.div>
+
+      {/* Mobile Node Circle */}
+      <motion.div 
+        style={{ scale: circleScale, opacity: circleOpacity }}
+        className="flex md:hidden absolute left-[28px] top-1/2 -translate-x-1/2 -translate-y-1/2 w-14 h-14 bg-white rounded-full items-center justify-center border-4 border-white shadow-xl z-20">
+        <div className={`w-full h-full rounded-full ${step.bg} border ${step.border} flex items-center justify-center ${step.color}`}>
+          <step.icon className="w-5 h-5" />
+        </div>
+      </motion.div>
+
+      {/* ================= CONTENT WRAPPERS ================= */}
+      {/* DESKTOP CONTENT WRAPPER */}
+      <div className={`hidden md:flex w-1/2 ${isEven ? 'pr-20 justify-end mr-auto' : 'pl-20 justify-start ml-auto'} py-12 relative z-10`}>
+        <motion.div 
+          initial={{ opacity: 0, x: isEven ? -30 : 30 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          className="bg-white/60 backdrop-blur-xl p-8 rounded-3xl border border-white shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all w-full max-w-xl text-left relative group overflow-hidden"
+        >
+          <div className={`absolute top-0 ${isEven ? 'right-0' : 'left-0'} w-24 h-24 ${step.bg} rounded-full blur-3xl opacity-50 group-hover:opacity-80 transition-opacity`} />
+          <span className={`text-sm font-bold uppercase tracking-wider mb-2 block ${step.color}`}>Bước {step.id}</span>
+          <h3 className="text-2xl font-bold text-slate-900 mb-3">{step.title}</h3>
+          <p className="text-slate-600 text-sm leading-relaxed">{step.description}</p>
+          {step.code && (
+            <pre className="mt-5 p-4 bg-slate-900 text-slate-300 text-[11px] font-mono rounded-2xl overflow-x-auto shadow-inner border border-slate-800">
+                {step.code}
+            </pre>
+          )}
+        </motion.div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-6 lg:px-8 relative z-10">
+      {/* MOBILE CONTENT WRAPPER */}
+      <div className="flex md:hidden w-full pl-20 pr-4 py-8 relative z-10">
+        <motion.div 
+          initial={{ opacity: 0, x: 20 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          className="bg-white/60 backdrop-blur-xl p-6 rounded-3xl border border-white shadow-lg w-full text-left relative overflow-hidden"
+        >
+          <div className={`absolute top-0 left-0 w-24 h-24 ${step.bg} rounded-full blur-3xl opacity-50`} />
+          <span className={`text-sm font-bold uppercase tracking-wider mb-2 block ${step.color}`}>Bước {step.id}</span>
+          <h3 className="text-xl font-bold text-slate-900 mb-3">{step.title}</h3>
+          <p className="text-slate-600 text-sm leading-relaxed">{step.description}</p>
+          {step.code && (
+            <pre className="mt-5 p-4 bg-slate-900 text-slate-300 text-[10px] font-mono rounded-2xl overflow-x-auto shadow-inner border border-slate-800">
+                {step.code}
+            </pre>
+          )}
+        </motion.div>
+      </div>
+
+    </div>
+  )
+}
+
+export function AIPipelineSection() {
+  const topTailRef = useRef<HTMLDivElement>(null)
+  const bottomTailRef = useRef<HTMLDivElement>(null)
+
+  const { scrollYProgress: topProgress } = useScroll({
+    target: topTailRef,
+    offset: ["start center", "end center"]
+  })
+
+  const { scrollYProgress: bottomProgress } = useScroll({
+    target: bottomTailRef,
+    offset: ["start center", "end center"]
+  })
+
+  return (
+    <section className="w-full py-32 relative bg-transparent text-slate-900 overflow-hidden">
+      
+      {/* Background Decorators */}
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-emerald-500/5 rounded-full blur-[100px] pointer-events-none" />
+
+      <div className="max-w-7xl mx-auto px-4 lg:px-8 relative z-10">
         
-        <div className="text-center mb-16">
+        <div className="text-center mb-24">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -69,218 +243,41 @@ export function AIPipelineSection() {
             transition={{ delay: 0.2 }}
             className="text-lg text-slate-600 max-w-2xl mx-auto"
           >
-            Quy trình công nghệ tinh gọn từ Dữ liệu thô (Raw Data) đến Hệ thống Chẩn đoán Stacking Ensemble đạt độ chính xác vô tiền khoáng hậu.
+            Quy trình luân chuyển luồng dữ liệu (Data Flow) từ dữ liệu thô nguyên bản đến Hệ thống Chẩn đoán Stacking Ensemble siêu nhạy.
           </motion.p>
         </div>
 
-        {/* Bento Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+        {/* ================= THE GLOWING S-CURVE ================= */}
+        <div className="relative w-full max-w-6xl mx-auto pb-24 overflow-hidden md:overflow-visible">
           
-          {/* Step 1: Raw Data (Col 5) */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="col-span-1 md:col-span-5 bg-slate-50/80 backdrop-blur-sm rounded-3xl p-8 border border-slate-200 shadow-sm relative overflow-hidden group hover:bg-white hover:shadow-md transition-all flex flex-col justify-center"
-          >
-            <div className="absolute -right-4 -top-4 w-24 h-24 bg-blue-100/50 rounded-full blur-2xl group-hover:bg-blue-100 transition-colors" />
-            <div className="w-12 h-12 bg-blue-100/50 text-blue-600 rounded-xl flex items-center justify-center mb-6 relative border border-blue-200/50">
-              <Database className="w-6 h-6" />
-            </div>
-            <div className="relative">
-              <span className="text-xs font-bold text-blue-500 uppercase tracking-wider mb-2 block">Bước 1</span>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">Sóng điện tim thô</h3>
-              <p className="text-slate-600 text-sm">
-                Tập dữ liệu MIMIC-III PERform AFib Dataset với hơn <strong>5.25 triệu điểm dữ liệu</strong> sóng điện tim (ECG) nguyên bản chưa qua xử lý.
-              </p>
-            </div>
-          </motion.div>
+          {/* Top Tail (Starts from Title) */}
+          <div ref={topTailRef} className="hidden md:block w-[3px] h-12 mx-auto relative">
+            <div className="absolute inset-0 bg-slate-200/50" />
+            <motion.div 
+              style={{ scaleY: topProgress, transformOrigin: 'top', filter: 'drop-shadow(0 0 12px rgba(45, 212, 191, 0.9))' }} 
+              className="absolute inset-0 bg-teal-400" 
+            />
+          </div>
 
-          {/* Step 2: Preprocessing (Col 7) */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="col-span-1 md:col-span-7 bg-slate-50/80 backdrop-blur-sm rounded-3xl p-8 border border-slate-200 shadow-sm relative overflow-hidden group hover:bg-white hover:shadow-md transition-all flex flex-col justify-center"
-          >
-            {/* Code Watermark */}
-            <pre className="absolute top-4 right-4 text-[10px] text-slate-900/[0.04] font-mono font-bold whitespace-pre-wrap text-right pointer-events-none select-none overflow-hidden">
-              {codeSnippets.filter}
-            </pre>
-            
-            <div className="w-12 h-12 bg-sky-100/50 text-sky-600 rounded-xl flex items-center justify-center mb-6 relative border border-sky-200/50">
-              <Filter className="w-6 h-6" />
-            </div>
-            <div className="relative z-10 w-full md:w-5/6">
-              <span className="text-xs font-bold text-sky-500 uppercase tracking-wider mb-2 block">Bước 2</span>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">Tiền xử lý & Khử nhiễu</h3>
-              <p className="text-slate-600 text-sm leading-relaxed">
-                Áp dụng Cửa sổ trượt (Sliding Window) 30s. Bắt đỉnh R-peaks và loại bỏ nhiễu tín hiệu (baseline/sóng T nhô cao) bằng thuật toán <strong>find_peaks</strong> của SciPy (sử dụng ngưỡng chiều cao & khoảng cách tối thiểu).
-              </p>
-            </div>
-          </motion.div>
+          <div className="relative z-10">
+            {steps.map((step, index) => (
+              <CurveRow key={step.id} step={step} index={index} isEven={index % 2 === 0} />
+            ))}
+          </div>
 
-          {/* Step 3: HRV Features (Col 12 - Full Width) */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="col-span-1 md:col-span-12 bg-slate-50/80 backdrop-blur-sm rounded-3xl p-8 lg:p-10 border border-slate-200 shadow-sm relative overflow-hidden group hover:bg-white hover:shadow-md transition-all"
-          >
-            <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-              {/* Left Column: Text */}
-              <div>
-                <div className="w-12 h-12 bg-cyan-100/50 text-cyan-600 rounded-xl flex items-center justify-center mb-6 relative border border-cyan-200/50">
-                  <ActivitySquare className="w-6 h-6" />
-                </div>
-                <span className="text-xs font-bold text-cyan-500 uppercase tracking-wider mb-2 block">Bước 3</span>
-                <h3 className="text-2xl font-bold text-slate-900 mb-3">Trích xuất 16 Đặc trưng (HRV)</h3>
-                <p className="text-slate-600 text-sm mb-6 leading-relaxed">
-                  Từ các đỉnh R, trích xuất 16 chỉ số sinh học quan trọng bao phủ 3 miền phân tích không gian: <strong>Thời gian (Time-Domain)</strong>, <strong>Tần số (Frequency-Domain)</strong>, và <strong>Phi tuyến tính (Non-linear)</strong>.
-                </p>
-                <div className="flex gap-2 flex-wrap">
-                  <span className="px-3 py-1 rounded-full bg-white text-slate-700 text-xs font-semibold border border-slate-200 shadow-sm">RMSSD</span>
-                  <span className="px-3 py-1 rounded-full bg-white text-slate-700 text-xs font-semibold border border-slate-200 shadow-sm">LF/HF Ratio</span>
-                  <span className="px-3 py-1 rounded-full bg-white text-slate-700 text-xs font-semibold border border-slate-200 shadow-sm">SampEn</span>
-                </div>
-              </div>
-
-              {/* Right Column: Visual Feature Breakdown to fill empty space */}
-              <div className="hidden md:block bg-white rounded-2xl p-6 border border-slate-200 shadow-sm relative overflow-hidden">
-                <pre className="absolute -right-4 -bottom-4 text-[100px] text-slate-900/[0.02] font-mono font-bold leading-none pointer-events-none select-none">
-                  {`{}`}
-                </pre>
-                <div className="grid grid-cols-2 gap-6 relative z-10">
-                  <div>
-                    <h4 className="text-xs font-bold text-slate-400 uppercase mb-2 flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-blue-400"></span> Time-Domain (7)</h4>
-                    <ul className="text-xs text-slate-600 font-medium space-y-1">
-                      <li>Mean_NN, SDNN</li>
-                      <li>RMSSD, pNN50</li>
-                    </ul>
-                  </div>
-                  <div>
-                    <h4 className="text-xs font-bold text-slate-400 uppercase mb-2 flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-emerald-400"></span> Freq-Domain (6)</h4>
-                    <ul className="text-xs text-slate-600 font-medium space-y-1">
-                      <li>LF, HF, LF/HF</li>
-                      <li>Total Power</li>
-                    </ul>
-                  </div>
-                  <div className="col-span-2 pt-2 border-t border-slate-100">
-                    <h4 className="text-xs font-bold text-slate-400 uppercase mb-2 flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-purple-400"></span> Non-Linear (3)</h4>
-                    <div className="flex gap-2">
-                      <span className="px-2 py-1 bg-slate-50 text-slate-600 rounded text-[10px] font-mono border border-slate-100">SD1</span>
-                      <span className="px-2 py-1 bg-slate-50 text-slate-600 rounded text-[10px] font-mono border border-slate-100">SD2</span>
-                      <span className="px-2 py-1 bg-slate-50 text-slate-600 rounded text-[10px] font-mono border border-slate-100">SampEn</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Step 4: Scaling (Col 4) */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.3 }}
-            className="col-span-1 md:col-span-4 bg-slate-50/80 backdrop-blur-sm rounded-3xl p-8 border border-slate-200 shadow-sm relative overflow-hidden group hover:bg-white hover:shadow-md transition-all flex flex-col justify-center"
-          >
-            <pre className="absolute top-4 right-4 text-[10px] text-slate-900/[0.04] font-mono font-bold whitespace-pre-wrap pointer-events-none select-none text-right">
-              {codeSnippets.scaling}
-            </pre>
-            <div className="w-12 h-12 bg-teal-100/50 text-teal-600 rounded-xl flex items-center justify-center mb-6 relative border border-teal-200/50">
-              <Scale className="w-6 h-6" />
-            </div>
-            <div className="relative">
-              <span className="text-xs font-bold text-teal-500 uppercase tracking-wider mb-2 block">Bước 4</span>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">Chuẩn hóa Kép</h3>
-              <p className="text-slate-600 text-sm leading-relaxed">
-                Sử dụng cả <strong>Z-Score</strong> và <strong>Min-Max Scaling</strong> để tối ưu không gian vector cho nhiều loại thuật toán.
-              </p>
-            </div>
-          </motion.div>
-
-          {/* Step 5: Base Models (Col 8) */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.4 }}
-            className="col-span-1 md:col-span-8 bg-slate-50/80 backdrop-blur-sm rounded-3xl p-8 border border-slate-200 shadow-sm relative overflow-hidden group hover:bg-white hover:shadow-md transition-all flex flex-col justify-center"
-          >
-            <div className="w-12 h-12 bg-emerald-100/50 text-emerald-600 rounded-xl flex items-center justify-center mb-6 relative border border-emerald-200/50">
-              <Brain className="w-6 h-6" />
-            </div>
-            <div className="relative flex flex-col md:flex-row md:items-center gap-6">
-              <div className="md:w-1/2">
-                <span className="text-xs font-bold text-emerald-500 uppercase tracking-wider mb-2 block">Bước 5</span>
-                <h3 className="text-xl font-bold text-slate-900 mb-3">Huấn luyện Base Models</h3>
-                <p className="text-slate-600 text-sm leading-relaxed">
-                  Phân luồng dữ liệu thông minh để huấn luyện độc lập các thuật toán (Base Estimators) với ưu thế riêng biệt.
-                </p>
-              </div>
-              <div className="md:w-1/2 flex flex-col gap-3 w-full">
-                <div className="bg-white p-3 rounded-xl border border-slate-200 shadow-sm flex justify-between items-center">
-                  <div className="text-xs text-slate-400 font-bold">Z-Score</div>
-                  <div className="text-sm font-semibold text-slate-700">Logistic Reg, SVM</div>
-                </div>
-                <div className="bg-white p-3 rounded-xl border border-slate-200 shadow-sm flex justify-between items-center">
-                  <div className="text-xs text-slate-400 font-bold">Min-Max</div>
-                  <div className="text-sm font-semibold text-slate-700">XGBoost, RF, MLP</div>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Step 6: Stacking Ensemble (Col 12 - Hero Card) */}
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.5 }}
-            className="col-span-1 md:col-span-12 bg-gradient-to-br from-emerald-500 to-teal-700 rounded-[2.5rem] p-8 md:p-12 shadow-2xl shadow-emerald-500/20 relative overflow-hidden mt-4"
-          >
-            {/* Code Background Overlay */}
-            <div className="absolute inset-0 opacity-10 font-mono text-[10px] md:text-sm text-white overflow-hidden p-8 pointer-events-none mix-blend-overlay">
-              {Array(5).fill(codeSnippets.stacking).join('\n\n')}
-            </div>
-
-            <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
-              <div className="md:w-2/3">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 bg-white/20 backdrop-blur-md text-white rounded-2xl flex items-center justify-center border border-white/20">
-                    <Binary className="w-6 h-6" />
-                  </div>
-                  <span className="text-emerald-100 font-bold tracking-wider uppercase text-sm">Bước Cuối Cùng</span>
-                </div>
-                <h3 className="text-3xl md:text-4xl font-black text-white mb-4">
-                  Soft Voting & Stacking Ensemble
-                </h3>
-                <p className="text-emerald-50 text-lg leading-relaxed mb-6">
-                  Kết hợp sức mạnh phân tích của các thuật toán Base thông qua Meta-Learner (Logistic Regression) để khử nhiễu dự đoán, tối đa hóa độ nhạy phát hiện Rung nhĩ.
-                </p>
-                <div className="flex items-center gap-2 text-white bg-black/20 w-fit px-4 py-2 rounded-full border border-white/10 backdrop-blur-sm">
-                  <Code2 className="w-4 h-4" />
-                  <span className="text-sm font-medium">Meta_Learner = LogisticRegression()</span>
-                </div>
-              </div>
-              
-              {/* Highlight Result Circle */}
-              <div className="md:w-1/3 flex justify-center">
-                <div className="w-48 h-48 rounded-full bg-white flex flex-col items-center justify-center shadow-2xl shadow-black/20 border-8 border-emerald-400/30">
-                  <ArrowDownCircle className="w-8 h-8 text-emerald-500 mb-2" />
-                  <span className="text-4xl font-black text-slate-900">98.71%</span>
-                  <span className="text-xs font-bold text-slate-500 uppercase mt-1">Accuracy</span>
-                </div>
-              </div>
-            </div>
-          </motion.div>
+          {/* Bottom Tail */}
+          <div ref={bottomTailRef} className="hidden md:block w-[3px] h-24 mx-auto -mt-[3px] relative">
+            <div className="absolute inset-0 bg-slate-200/50" />
+            <motion.div 
+              style={{ scaleY: bottomProgress, transformOrigin: 'top', filter: 'drop-shadow(0 0 12px rgba(45, 212, 191, 0.9))' }} 
+              className="absolute inset-0 bg-teal-400" 
+            />
+          </div>
 
         </div>
+
       </div>
     </section>
   )
 }
+
