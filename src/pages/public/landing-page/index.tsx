@@ -2,6 +2,11 @@ import { useState, type FormEvent, useEffect } from "react"
 import { HeartPulse, ArrowRight, CheckCircle2, LogIn, Mail, Lock, ArrowLeft, AlertCircle } from "lucide-react"
 import { useLocation, useNavigate, Link } from "react-router-dom"
 
+import { AIBenchmarkSection } from "./components/AIBenchmarkSection"
+import { AIPipelineSection } from "./components/AIPipelineSection"
+import { AIDatasetSection } from "./components/AIDatasetSection"
+import { AIFeaturesSection } from "./components/AIFeaturesSection"
+import { AIClinicalSection } from "./components/AIClinicalSection"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -310,6 +315,12 @@ export default function LandingPage() {
           </div>
         </div>
       </main>
+
+      <AIPipelineSection />
+      <AIDatasetSection />
+      <AIFeaturesSection />
+      <AIBenchmarkSection />
+      <AIClinicalSection />
 
       {/* Bottom Stats Section */}
       <footer className="relative z-10 w-full px-8 lg:px-16 pb-10 pt-10 bg-white/50 border-t border-slate-100 mt-auto">
