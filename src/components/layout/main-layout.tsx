@@ -16,7 +16,7 @@ function AppShellInner() {
         }`}
       >
         <Topbar />
-        <main className="flex-1 container mx-auto px-6 py-8 max-w-[1600px]">
+        <main className="flex-1 flex flex-col container mx-auto px-6 py-8 max-w-[1600px]">
           <Outlet />
         </main>
         <footer className="py-6 px-6 text-left text-xs font-medium text-slate-400 border-t border-slate-200/60 bg-white/50 flex items-center justify-between">
