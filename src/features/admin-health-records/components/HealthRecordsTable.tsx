@@ -10,10 +10,9 @@ interface HealthRecordsTableProps {
   records: HealthRecord[]
   isLoading: boolean
   onView: (record: HealthRecord) => void
-  onEdit: (record: HealthRecord) => void
 }
 
-export function HealthRecordsTable({ records, isLoading, onView, onEdit }: HealthRecordsTableProps) {
+export function HealthRecordsTable({ records, isLoading, onView }: HealthRecordsTableProps) {
   const renderStatusBadge = (status: HealthRecord['status']) => {
     switch (status) {
       case 'COMPLETED':
@@ -85,9 +84,6 @@ export function HealthRecordsTable({ records, isLoading, onView, onEdit }: Healt
               <TableCell className="text-right space-x-2">
                 <Button variant="ghost" size="icon" onClick={() => onView(record)} title="View Detail">
                   <Eye className="h-4 w-4" />
-                </Button>
-                <Button variant="ghost" size="icon" onClick={() => onEdit(record)} title="Edit Record">
-                  <Edit className="h-4 w-4" />
                 </Button>
               </TableCell>
             </TableRow>
