@@ -1,10 +1,23 @@
 import type { PageResponse } from "@/types/base"
 
-export type ConsultationRequestStatus = "PENDING" | "APPROVED" | "REJECTED" | "CANCELLED" | string
+export type ConsultationRequestStatus = "PENDING_REVIEW" | "NEED_MORE_INFO" | "WAITING_PAYMENT" | "APPROVED" | "REJECTED" | "CANCELLED" | "EXPIRED" | "PENDING" | string
 export type ConsultationStatus = "ACTIVE" | "EXPIRED" | "CLOSED" | "CANCELLED" | "PENDING" | string
 export type ConsultationSourceType = "REQUEST" | "ADMIN_DIRECT" | string
 export type ConsultationMessageType = "TEXT" | "IMAGE" | "FILE" | string
 export type ConsultationParticipantRole = "MEMBER" | "DOCTOR" | "ADMIN" | "SYSTEM" | string
+export type CareServicePackageStatus = "ACTIVE" | "INACTIVE" | "RETIRED" | string
+
+export interface CareServicePackage {
+  id: number
+  code: string
+  name: string
+  description?: string | null
+  priceAmount: number
+  currency?: string | null
+  durationDays: number
+  renewable: boolean
+  status: CareServicePackageStatus
+}
 
 export interface ConsultationRequestItem {
   id: string | number
@@ -18,6 +31,11 @@ export interface ConsultationRequestItem {
   reviewedByAdminId?: string | number | null
   reviewedAt?: string | null
   rejectionReason?: string | null
+  packageId?: number | null
+  moreInfoReason?: string | null
+  memberAdditionalNote?: string | null
+  paymentDeadline?: string | null
+  doctorReservedAt?: string | null
   createdAt?: string | null
   updatedAt?: string | null
 }
@@ -81,16 +99,14 @@ export interface HealthRecordItem {
 }
 
 export interface CreateConsultationRequestPayload {
-  healthRecordId?: string | number | null
+  packageId: number
   reason: string
-  preferredDoctorId?: string | number | null
+  preferredDoctorId?: number | null
+  healthRecordId?: number | null
 }
 
 export interface ApproveConsultationRequestPayload {
-  doctorId: string | number
-  startedAt?: string | null
-  endsAt: string
-  supportEndsAt?: string | null
+  doctorId: number
 }
 
 export interface RejectConsultationRequestPayload {
