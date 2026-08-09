@@ -6,7 +6,6 @@ import { HealthRecordsTable } from "../components/HealthRecordsTable"
 import { HealthRecordsFilters } from "../components/HealthRecordsFilters"
 import { HealthRecordDetailDialog } from "../components/HealthRecordDetailDialog"
 import { HealthRecordCreateDialog } from "../components/HealthRecordCreateDialog"
-import { HealthRecordEditDialog } from "../components/HealthRecordEditDialog"
 import { adminHealthRecordApi } from "../services"
 import type { HealthRecord, GetHealthRecordsParams, PaginatedResponse, HealthRecordStatus, PredictionLabel } from "../types"
 
@@ -25,7 +24,6 @@ export default function AdminHealthRecordsPage() {
 
   // Dialog state
   const [selectedRecordForView, setSelectedRecordForView] = useState<HealthRecord | null>(null)
-  const [selectedRecordForEdit, setSelectedRecordForEdit] = useState<HealthRecord | null>(null)
   const [isCreateOpen, setIsCreateOpen] = useState(false)
 
   const fetchRecords = async () => {
@@ -75,7 +73,6 @@ export default function AdminHealthRecordsPage() {
         records={data?.content || []}
         isLoading={isLoading}
         onView={setSelectedRecordForView}
-        onEdit={setSelectedRecordForEdit}
       />
 
       <div className="flex items-center justify-between">
@@ -112,13 +109,6 @@ export default function AdminHealthRecordsPage() {
       <HealthRecordCreateDialog
         open={isCreateOpen}
         onOpenChange={setIsCreateOpen}
-        onSuccess={fetchRecords}
-      />
-
-      <HealthRecordEditDialog
-        record={selectedRecordForEdit}
-        open={!!selectedRecordForEdit}
-        onOpenChange={(open) => !open && setSelectedRecordForEdit(null)}
         onSuccess={fetchRecords}
       />
     </div>
