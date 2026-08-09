@@ -14,6 +14,7 @@ interface UserFormModalProps {
   initialData?: UserItem | null
   defaultRole: UserRole
   loading?: boolean
+  effectiveRole?: UserRole
 }
 
 /**
@@ -26,6 +27,7 @@ function UserFormModalContent({
   initialData,
   defaultRole,
   loading = false,
+  effectiveRole,
 }: Omit<UserFormModalProps, "isOpen">) {
   const isEditMode = Boolean(initialData)
 
@@ -183,8 +185,10 @@ function UserFormModalContent({
             >
               <option value={USER_ROLES.MEMBER}>MEMBER - Patient Account</option>
               <option value={USER_ROLES.DOCTOR}>DOCTOR - Clinical Diagnostic</option>
-              <option value={USER_ROLES.ADMIN}>ADMIN - Tenant Manager</option>
-              <option value={USER_ROLES.SUPER_ADMIN}>SUPER_ADMIN - Root Architecture</option>
+              <option value={USER_ROLES.CARE_COORDINATOR}>CARE_COORDINATOR - Consultation Manager</option>
+              {effectiveRole === USER_ROLES.SUPER_ADMIN && (
+                <option value={USER_ROLES.ADMIN}>ADMIN - Tenant Manager</option>
+              )}
             </select>
           </div>
         </div>
@@ -332,7 +336,7 @@ function UserFormModalContent({
   )
 }
 
-export function UserFormModal({ isOpen, onClose, onSave, initialData, defaultRole, loading = false }: UserFormModalProps) {
+export function UserFormModal({ isOpen, onClose, onSave, initialData, defaultRole, loading = false, effectiveRole }: UserFormModalProps) {
   // Compute clean key to remount form content only when initialData identity changes or modal opens
   const formKey = initialData ? String(initialData.id) : `create-${defaultRole}`
 
@@ -347,6 +351,7 @@ export function UserFormModal({ isOpen, onClose, onSave, initialData, defaultRol
             initialData={initialData}
             defaultRole={defaultRole}
             loading={loading}
+            effectiveRole={effectiveRole}
           />
         )}
       </DialogContent>

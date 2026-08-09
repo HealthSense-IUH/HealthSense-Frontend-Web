@@ -1,10 +1,11 @@
-import { Users, Stethoscope, ShieldCheck, Crown } from "lucide-react"
+import { Users, Stethoscope, ShieldCheck, Crown, CalendarHeart } from "lucide-react"
 import { USER_ROLES, type UserRole } from "@/types/authentication"
 
 interface UserRoleTabsProps {
   selectedRole: UserRole
   onSelectRole: (role: UserRole) => void
   loading?: boolean
+  effectiveRole?: UserRole
 }
 
 interface RoleTabConfig {
@@ -15,7 +16,7 @@ interface RoleTabConfig {
   activeColor: string
 }
 
-export function UserRoleTabs({ selectedRole, onSelectRole, loading }: UserRoleTabsProps) {
+export function UserRoleTabs({ selectedRole, onSelectRole, loading, effectiveRole }: UserRoleTabsProps) {
   const tabs: RoleTabConfig[] = [
     {
       role: USER_ROLES.MEMBER,
@@ -30,6 +31,13 @@ export function UserRoleTabs({ selectedRole, onSelectRole, loading }: UserRoleTa
       description: "Verified telemetry diagnostic doctors",
       icon: <Stethoscope className="w-4 h-4 text-teal-600 shrink-0" />,
       activeColor: "border-teal-600 bg-teal-50/70 text-teal-950 shadow-sm",
+    },
+    {
+      role: USER_ROLES.CARE_COORDINATOR,
+      label: "Care Coordinators",
+      description: "Consultation coordination",
+      icon: <CalendarHeart className="w-4 h-4 text-fuchsia-600 shrink-0" />,
+      activeColor: "border-fuchsia-600 bg-fuchsia-50/70 text-fuchsia-950 shadow-sm",
     },
     {
       role: USER_ROLES.ADMIN,
@@ -47,9 +55,18 @@ export function UserRoleTabs({ selectedRole, onSelectRole, loading }: UserRoleTa
     },
   ]
 
+  const visibleTabs = tabs.filter(tab => {
+    if (effectiveRole !== USER_ROLES.SUPER_ADMIN) {
+      if (tab.role === USER_ROLES.SUPER_ADMIN || tab.role === USER_ROLES.ADMIN) {
+        return false
+      }
+    }
+    return true
+  })
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3.5">
-      {tabs.map((tab) => {
+      {visibleTabs.map((tab) => {
         const isSelected = selectedRole === tab.role
         return (
           <button
