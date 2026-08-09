@@ -289,8 +289,6 @@ export function useConsultationsLogic() {
   function openApproveDialog(request: ConsultationRequestItem) {
     setTargetRequest(request)
     setDoctorId(String(request.preferredDoctorId ?? ""))
-    setEndsAt(localDateTimeIn(30))
-    setSupportEndsAt(localDateTimeIn(33))
     setReason("")
     setAdminDialogMode("approve")
   }
@@ -321,13 +319,16 @@ export function useConsultationsLogic() {
     setAlert(null)
     try {
       if (adminDialogMode === "approve" && targetRequest) {
+        const numericDoctorId = Number(doctorId.trim())
+        if (!doctorId.trim() || Number.isNaN(numericDoctorId)) {
+          setAlert({ type: "error", text: "Doctor ID must be a valid number." })
+          setActionLoading(false)
+          return
+        }
         await consultationApi.approveRequest(targetRequest.id, {
-          doctorId: doctorId.trim(),
-          startedAt: null,
-          endsAt: new Date(endsAt).toISOString(),
-          supportEndsAt: toIsoOrNull(supportEndsAt),
+          doctorId: numericDoctorId,
         })
-        setAlert({ type: "success", text: `Approved request #${targetRequest.id} and created session.` })
+        setAlert({ type: "success", text: `Reserved doctor for request #${targetRequest.id}. Status moved to WAITING_PAYMENT.` })
       }
 
       if (adminDialogMode === "reject" && targetRequest) {
