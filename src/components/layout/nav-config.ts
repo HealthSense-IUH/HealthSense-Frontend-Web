@@ -44,6 +44,7 @@ export const navigationGroups: NavigationGroup[] = [
         allowedRoles: [
           USER_ROLES.SUPER_ADMIN,
           USER_ROLES.ADMIN,
+          USER_ROLES.CARE_COORDINATOR,
           USER_ROLES.DOCTOR,
           USER_ROLES.MEMBER,
         ],
@@ -60,6 +61,13 @@ export const navigationGroups: NavigationGroup[] = [
         title: "User Management",
         href: "/app/users",
         icon: Users,
+        allowedRoles: [USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN],
+      },
+      {
+        id: "health-records-management",
+        title: "Health Records",
+        href: "/app/health-records",
+        icon: Activity,
         allowedRoles: [USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN],
       },
       {
@@ -105,6 +113,7 @@ export const navigationGroups: NavigationGroup[] = [
         allowedRoles: [
           USER_ROLES.SUPER_ADMIN,
           USER_ROLES.ADMIN,
+          USER_ROLES.CARE_COORDINATOR,
           USER_ROLES.DOCTOR,
           USER_ROLES.MEMBER,
         ],
