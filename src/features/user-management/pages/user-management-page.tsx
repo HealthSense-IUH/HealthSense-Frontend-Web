@@ -244,6 +244,7 @@ export function UserManagementPage() {
     switch (selectedRole) {
       case USER_ROLES.MEMBER: return "Patient Member"
       case USER_ROLES.DOCTOR: return "Clinical Doctor"
+      case USER_ROLES.CARE_COORDINATOR: return "Care Coordinator"
       case USER_ROLES.ADMIN: return "Tenant Admin"
       case USER_ROLES.SUPER_ADMIN: return "Super Admin"
       default: return String(selectedRole)
@@ -253,7 +254,7 @@ export function UserManagementPage() {
   return (
     <div className="space-y-6 pb-12">
       {/* Role Switcher Tabs (Fulfilling required API role parameter) */}
-      <UserRoleTabs selectedRole={selectedRole} onSelectRole={handleSelectRole} loading={loading} />
+      <UserRoleTabs selectedRole={selectedRole} onSelectRole={handleSelectRole} loading={loading} effectiveRole={effectiveRole} />
 
       {/* Status Alert feedback box */}
       {statusAlert && (
@@ -325,6 +326,7 @@ export function UserManagementPage() {
         initialData={targetUser}
         defaultRole={selectedRole}
         loading={actionLoading}
+        effectiveRole={effectiveRole}
       />
 
       <UserDetailDrawer
