@@ -12,6 +12,8 @@ export function DashboardPage() {
       return <SuperAdminDashboard />
     case USER_ROLES.ADMIN:
       return <PlaceholderDashboard role={USER_ROLES.ADMIN} />
+    case USER_ROLES.CARE_COORDINATOR:
+      return <PlaceholderDashboard role={USER_ROLES.CARE_COORDINATOR} />
     case USER_ROLES.DOCTOR:
       return <PlaceholderDashboard role={USER_ROLES.DOCTOR} />
     case USER_ROLES.MEMBER:
