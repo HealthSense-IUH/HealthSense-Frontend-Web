@@ -41,8 +41,8 @@ export function AdminActionDialog({
   onOpenChange: (open: boolean) => void
 }) {
   const isOpen = mode !== null
-  const title = mode === "approve" ? `Approve request #${request?.id}` : mode === "reject" ? `Reject request #${request?.id}` : mode === "extend" ? `Extend session #${session?.id}` : `Close session #${session?.id}`
-  const needsDate = mode === "approve" || mode === "extend"
+  const title = mode === "approve" ? `Reserve doctor for request #${request?.id}` : mode === "reject" ? `Reject request #${request?.id}` : mode === "extend" ? `Extend session #${session?.id}` : `Close session #${session?.id}`
+  const needsDate = mode === "extend"
   const needsReason = mode === "reject" || mode === "extend" || mode === "close"
 
   return (
