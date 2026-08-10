@@ -115,6 +115,13 @@ export const navigationGroups: NavigationGroup[] = [
         allowedRoles: [USER_ROLES.SUPER_ADMIN, USER_ROLES.DOCTOR, USER_ROLES.MEMBER],
       },
       {
+        id: "doctor-consultations",
+        title: "Phiên chăm sóc",
+        href: "/app/doctor/consultations",
+        icon: MessagesSquare,
+        allowedRoles: [USER_ROLES.DOCTOR],
+      },
+      {
         id: "consultations",
         title: "Consultations",
         href: "/app/consultations",
