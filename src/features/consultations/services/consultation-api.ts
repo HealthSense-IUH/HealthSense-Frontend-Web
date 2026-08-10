@@ -1,21 +1,29 @@
 import axiosClient from "@/lib/axiosClient"
-import type { ApiResponse } from "@/types/base"
+import type { ApiResponse, PageResponse } from "@/types/base"
 import type {
   AdminCreateConsultationSessionPayload,
+  AdminListRequestsParams,
   ApproveConsultationRequestPayload,
+  CareServicePackage,
   CloseConsultationPayload,
   ConsultationMessageItem,
   ConsultationMessagePage,
   ConsultationParticipantItem,
   ConsultationRequestItem,
   ConsultationRequestPage,
+  ConsultationRequestReviewResponse,
   ConsultationSessionItem,
   ConsultationSessionPage,
   CreateConsultationRequestPayload,
+  DoctorCandidateResponse,
+  DoctorCareProfilePayload,
+  DoctorCareProfileResponse,
   ExtendConsultationPayload,
   HealthRecordPage,
   RejectConsultationRequestPayload,
   SendConsultationMessagePayload,
+  CreateCareServicePackagePayload,
+  UpdateCareServicePackagePayload,
 } from "../types"
 
 type PageParams = {
@@ -37,10 +45,14 @@ export const consultationApi = {
     )
   },
   listMyRequests(params: PageParams = {}) {
-    return axiosClient.get<ApiResponse<ConsultationRequestPage>, ApiResponse<ConsultationRequestPage>>(
-      "/api/consultation-requests",
-      { params }
-    )
+    return axiosClient.get<ApiResponse<ConsultationRequestPage>, ApiResponse<ConsultationRequestPage>>("/api/consultation-requests", {
+      params,
+    })
+  },
+  listAdminRequests(params: AdminListRequestsParams = {}) {
+    return axiosClient.get<ApiResponse<ConsultationRequestPage>, ApiResponse<ConsultationRequestPage>>("/api/admin/consultation-requests", {
+      params,
+    })
   },
   getMyRequest(requestId: string | number) {
     return axiosClient.get<ApiResponse<ConsultationRequestItem>, ApiResponse<ConsultationRequestItem>>(
@@ -132,6 +144,89 @@ export const consultationApi = {
     return axiosClient.patch<ApiResponse<ConsultationParticipantItem>, ApiResponse<ConsultationParticipantItem>>(
       `/api/consultation-sessions/${sessionId}/messages/read`,
       { lastReadMessageId }
+    )
+  },
+  listCareServicePackages(params: PageParams = {}) {
+    return axiosClient.get<ApiResponse<PageResponse<CareServicePackage>>, ApiResponse<PageResponse<CareServicePackage>>>(
+      "/api/care-service-packages",
+      { params }
+    )
+  },
+  getCareServicePackage(packageId: string | number) {
+    return axiosClient.get<ApiResponse<CareServicePackage>, ApiResponse<CareServicePackage>>(
+      `/api/care-service-packages/${packageId}`
+    )
+  },
+  submitMoreInfo(requestId: string | number, payload: { additionalNote: string }) {
+    return axiosClient.patch<ApiResponse<ConsultationRequestItem>, ApiResponse<ConsultationRequestItem>>(
+      `/api/consultation-requests/${requestId}/more-info`,
+      payload
+    )
+  },
+  getRequestDetail(requestId: string | number) {
+    return axiosClient.get<ApiResponse<ConsultationRequestReviewResponse>, ApiResponse<ConsultationRequestReviewResponse>>(
+      `/api/admin/consultation-requests/${requestId}`
+    )
+  },
+  requestMoreInfo(requestId: string | number, payload: { reason: string }) {
+    return axiosClient.patch<ApiResponse<ConsultationRequestReviewResponse>, ApiResponse<ConsultationRequestReviewResponse>>(
+      `/api/admin/consultation-requests/${requestId}/need-more-info`,
+      payload
+    )
+  },
+  listDoctorCandidates(requestId: string | number, params: { specialty?: string; keyword?: string; eligibleOnly?: boolean; page?: number; size?: number } = {}) {
+    return axiosClient.get<ApiResponse<PageResponse<DoctorCandidateResponse>>, ApiResponse<PageResponse<DoctorCandidateResponse>>>(
+      `/api/admin/consultation-requests/${requestId}/doctor-candidates`,
+      { params }
+    )
+  },
+  getDoctorCareProfile(doctorId: string | number) {
+    return axiosClient.get<ApiResponse<DoctorCareProfileResponse>, ApiResponse<DoctorCareProfileResponse>>(
+      `/api/admin/doctors/${doctorId}/care-profile`
+    )
+  },
+  updateDoctorCareProfile(doctorId: string | number, payload: DoctorCareProfilePayload) {
+    return axiosClient.put<ApiResponse<DoctorCareProfileResponse>, ApiResponse<DoctorCareProfileResponse>>(
+      `/api/admin/doctors/${doctorId}/care-profile`,
+      payload
+    )
+  },
+  listAdminCareServicePackages(params: { status?: string; page?: number; size?: number } = {}) {
+    return axiosClient.get<ApiResponse<PageResponse<CareServicePackage>>, ApiResponse<PageResponse<CareServicePackage>>>(
+      "/api/admin/care-service-packages",
+      { params }
+    )
+  },
+  getAdminCareServicePackage(packageId: string | number) {
+    return axiosClient.get<ApiResponse<CareServicePackage>, ApiResponse<CareServicePackage>>(
+      `/api/admin/care-service-packages/${packageId}`
+    )
+  },
+  createCareServicePackage(payload: CreateCareServicePackagePayload) {
+    return axiosClient.post<ApiResponse<CareServicePackage>, ApiResponse<CareServicePackage>>(
+      "/api/admin/care-service-packages",
+      payload
+    )
+  },
+  updateCareServicePackage(packageId: string | number, payload: UpdateCareServicePackagePayload) {
+    return axiosClient.patch<ApiResponse<CareServicePackage>, ApiResponse<CareServicePackage>>(
+      `/api/admin/care-service-packages/${packageId}`,
+      payload
+    )
+  },
+  activateCareServicePackage(packageId: string | number) {
+    return axiosClient.patch<ApiResponse<CareServicePackage>, ApiResponse<CareServicePackage>>(
+      `/api/admin/care-service-packages/${packageId}/activate`
+    )
+  },
+  deactivateCareServicePackage(packageId: string | number) {
+    return axiosClient.patch<ApiResponse<CareServicePackage>, ApiResponse<CareServicePackage>>(
+      `/api/admin/care-service-packages/${packageId}/deactivate`
+    )
+  },
+  retireCareServicePackage(packageId: string | number) {
+    return axiosClient.patch<ApiResponse<CareServicePackage>, ApiResponse<CareServicePackage>>(
+      `/api/admin/care-service-packages/${packageId}/retire`
     )
   },
 }
