@@ -2,8 +2,7 @@ import { CheckCircle2, RefreshCw, ShieldAlert, Stethoscope, XCircle } from "luci
 import { useSearchParams } from "react-router-dom"
 
 import { Button } from "@/components/ui/button"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
+import { Tabs, TabsContent } from "@/components/ui/tabs"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Textarea } from "@/components/ui/textarea"
 import { cn } from "@/lib/utils"
@@ -118,7 +117,6 @@ export function ConsultationsPage() {
               loading={logic.loading || logic.actionLoading}
               onCancel={logic.handleCancelRequest}
               onApprove={logic.openAdminRequestDetail}
-              onReject={logic.openRejectDialog}
               onSubmitMoreInfo={logic.openMoreInfoDialog}
               adminFilters={logic.adminFilters}
               onAdminFilterChange={logic.setAdminFilters}

@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react"
-import { Search, Stethoscope, Star, AlertTriangle, UserCog } from "lucide-react"
+import { Search, Star, AlertTriangle, UserCog } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
@@ -44,7 +44,7 @@ export function DoctorCandidatesDialog({
       size: 10, // Avoid too large size in case backend throws 500
     })
       .then(res => setCandidates(res.data?.content || []))
-      .catch(err => toast({ variant: "destructive", description: "Failed to load doctor candidates." }))
+      .catch(() => toast({ variant: "destructive", description: "Failed to load doctor candidates." }))
       .finally(() => setLoading(false))
   }, [requestId, open, keyword, specialty, eligibleOnly, toast])
 

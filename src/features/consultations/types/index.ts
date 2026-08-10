@@ -170,11 +170,7 @@ export interface DoctorCandidateResponse {
   ineligibleReasons: string[]
 }
 
-export type DoctorSpecialty =
-  | "CARDIOLOGY"
-  | "INTERNAL_MEDICINE"
-  | "GENERAL_PRACTICE"
-  | "OTHER"
+
 
 export type DayOfWeek =
   | "MONDAY"

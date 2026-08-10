@@ -5,7 +5,11 @@ import { ShieldAlert, CheckCircle2, Clock, XCircle, AlertTriangle, RefreshCw, Ar
 import { Button } from "@/components/ui/button"
 import { consultationApi } from "../services/consultation-api"
 import type { ConsultationPaymentResponse } from "../types"
-import { readError } from "@/utils/error"
+
+function readError(error: unknown, fallback: string) {
+  const err = error as { response?: { data?: { message?: string } }; message?: string }
+  return err.response?.data?.message || err.message || fallback
+}
 
 export default function PaymentResultPage() {
   const navigate = useNavigate()

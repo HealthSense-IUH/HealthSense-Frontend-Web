@@ -65,12 +65,7 @@ export const consultationApi = {
       `/api/consultation-requests/${requestId}/cancel`
     )
   },
-  listAdminRequests(params: PageParams = {}) {
-    return axiosClient.get<ApiResponse<ConsultationRequestPage>, ApiResponse<ConsultationRequestPage>>(
-      "/api/admin/consultation-requests",
-      { params }
-    )
-  },
+
   approveRequest(requestId: string | number, payload: ApproveConsultationRequestPayload) {
     return axiosClient.patch<ApiResponse<ConsultationRequestItem>, ApiResponse<ConsultationRequestItem>>(
       `/api/admin/consultation-requests/${requestId}/approve`,

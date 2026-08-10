@@ -16,7 +16,6 @@ export function RequestsPanel({
   loading,
   onCancel,
   onApprove,
-  onReject,
   onOpenSession,
   onSubmitMoreInfo,
   adminFilters,
@@ -29,7 +28,6 @@ export function RequestsPanel({
   loading: boolean
   onCancel: (requestId: string | number) => void
   onApprove: (request: ConsultationRequestItem) => void
-  onReject: (request: ConsultationRequestItem) => void
   onOpenSession: (sessionId: string | number) => void
   onSubmitMoreInfo?: (request: ConsultationRequestItem) => void
   adminFilters?: {

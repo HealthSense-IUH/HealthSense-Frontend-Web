@@ -4,8 +4,6 @@ import { AlertCircle, FileText, CheckCircle2, User, Stethoscope } from "lucide-r
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { useToast } from "@/hooks/use-toast"
-import { Badge } from "@/components/ui/badge"
-import { Separator } from "@/components/ui/separator"
 
 import { consultationApi } from "../services/consultation-api"
 import type { ConsultationRequestReviewResponse } from "../types"
@@ -35,7 +33,7 @@ export function AdminRequestDetailDialog({
       setLoading(true)
       consultationApi.getRequestDetail(requestId)
         .then(res => setDetail(res.data))
-        .catch(err => {
+        .catch(() => {
           toast({ variant: "destructive", description: "Failed to load request detail." })
           onOpenChange(false)
         })
