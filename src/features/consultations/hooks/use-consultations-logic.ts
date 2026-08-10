@@ -13,6 +13,8 @@ import type {
   ConsultationSessionItem,
   HealthRecordItem,
   SendConsultationMessagePayload,
+  CareServicePackage,
+  ConsultationRequestReviewResponse,
 } from "../types"
 
 export type AlertState = {
@@ -52,7 +54,7 @@ function makeClientMessageId() {
 export function useConsultationsLogic() {
   const { effectiveRole } = useAppShell()
   const userSession = useAuthStore((state) => state.userSession)
-  const isAdmin = effectiveRole === USER_ROLES.ADMIN || effectiveRole === USER_ROLES.SUPER_ADMIN
+  const isAdmin = effectiveRole === USER_ROLES.ADMIN || effectiveRole === USER_ROLES.SUPER_ADMIN || effectiveRole === USER_ROLES.CARE_COORDINATOR
   const isDoctor = effectiveRole === USER_ROLES.DOCTOR
   const isMember = effectiveRole === USER_ROLES.MEMBER
   const { toast } = useToast()
@@ -61,6 +63,7 @@ export function useConsultationsLogic() {
   const [loading, setLoading] = useState(true)
   const [actionLoading, setActionLoading] = useState(false)
   const [healthRecords, setHealthRecords] = useState<HealthRecordItem[]>([])
+  const [packages, setPackages] = useState<CareServicePackage[]>([])
   const [requests, setRequests] = useState<ConsultationRequestItem[]>([])
   const [sessions, setSessions] = useState<ConsultationSessionItem[]>([])
   const [selectedSession, setSelectedSession] = useState<ConsultationSessionItem | null>(null)
@@ -70,6 +73,7 @@ export function useConsultationsLogic() {
   const [loadingMoreMessages, setLoadingMoreMessages] = useState(false)
   const [hasMoreMessages, setHasMoreMessages] = useState(false)
   const [requestForm, setRequestForm] = useState({
+    packageId: "",
     healthRecordId: "",
     reason: "",
     preferredDoctorId: "",
@@ -89,6 +93,25 @@ export function useConsultationsLogic() {
   const [endsAt, setEndsAt] = useState(localDateTimeIn(30))
   const [supportEndsAt, setSupportEndsAt] = useState(localDateTimeIn(33))
   const [reason, setReason] = useState("")
+
+  const [adminFilters, setAdminFilters] = useState({
+    status: "",
+    memberId: "",
+    preferredDoctorId: "",
+    assignedDoctorId: "",
+    fromDate: "",
+    toDate: "",
+  })
+
+  const [isAdminRequestDetailOpen, setIsAdminRequestDetailOpen] = useState(false)
+  const [isDoctorCandidatesOpen, setIsDoctorCandidatesOpen] = useState(false)
+  const [isDoctorCareProfileOpen, setIsDoctorCareProfileOpen] = useState(false)
+  const [targetDoctorId, setTargetDoctorId] = useState<number | null>(null)
+  
+  const [isMoreInfoDialogOpen, setIsMoreInfoDialogOpen] = useState(false)
+  const [moreInfoNote, setMoreInfoNote] = useState("")
+  const [isAdminMoreInfoDialogOpen, setIsAdminMoreInfoDialogOpen] = useState(false)
+  const [adminMoreInfoReason, setAdminMoreInfoReason] = useState("")
 
   const sortedMessages = useMemo(
     () => [...messages].sort((a, b) => new Date(a.createdAt || 0).getTime() - new Date(b.createdAt || 0).getTime()),
@@ -114,9 +137,18 @@ export function useConsultationsLogic() {
     setAlert(null)
     try {
       const shouldLoadRecords = isMember
-      const [requestResponse, sessionResponse, healthRecordResponse] = await Promise.all([
+      const [requestResponse, sessionResponse, healthRecordResponse, packageResponse] = await Promise.all([
         isAdmin
-          ? consultationApi.listAdminRequests({ page: 1, size: DEFAULT_PAGE_SIZE })
+          ? consultationApi.listAdminRequests({ 
+              page: 1, 
+              size: DEFAULT_PAGE_SIZE,
+              status: adminFilters.status || undefined,
+              memberId: adminFilters.memberId ? Number(adminFilters.memberId) : undefined,
+              preferredDoctorId: adminFilters.preferredDoctorId ? Number(adminFilters.preferredDoctorId) : undefined,
+              assignedDoctorId: adminFilters.assignedDoctorId ? Number(adminFilters.assignedDoctorId) : undefined,
+              fromDate: adminFilters.fromDate ? new Date(adminFilters.fromDate).toISOString() : undefined,
+              toDate: adminFilters.toDate ? new Date(adminFilters.toDate).toISOString() : undefined,
+            })
           : isMember
             ? consultationApi.listMyRequests({ page: 1, size: DEFAULT_PAGE_SIZE })
             : Promise.resolve(null),
@@ -126,11 +158,15 @@ export function useConsultationsLogic() {
         shouldLoadRecords
           ? consultationApi.listMyHealthRecords({ page: 1, size: DEFAULT_PAGE_SIZE })
           : Promise.resolve(null),
+        isMember
+          ? consultationApi.listCareServicePackages({ page: 1, size: 50 })
+          : Promise.resolve(null),
       ])
 
       setRequests(requestResponse?.data.content ?? [])
       setSessions(sessionResponse.data.content ?? [])
       setHealthRecords(healthRecordResponse?.data.content ?? [])
+      setPackages(packageResponse?.data.content ?? [])
       if (!selectedSession && sessionResponse.data.content.length > 0) {
         setSelectedSession(sessionResponse.data.content[0])
       }
@@ -141,7 +177,7 @@ export function useConsultationsLogic() {
     } finally {
       setLoading(false)
     }
-  }, [isAdmin, isMember, selectedSession])
+  }, [isAdmin, isMember, selectedSession, adminFilters])
 
   useEffect(() => {
     queueMicrotask(() => void loadData())
@@ -216,12 +252,20 @@ export function useConsultationsLogic() {
     setActionLoading(true)
     setAlert(null)
     try {
+      const packageIdStr = requestForm.packageId?.trim()
+      if (!packageIdStr) {
+        setAlert({ type: "error", text: "Please select a valid service package." })
+        setActionLoading(false)
+        return
+      }
+
       await consultationApi.createRequest({
-        healthRecordId: normalizeOptionalId(requestForm.healthRecordId),
+        packageId: packageIdStr,
+        healthRecordId: normalizeOptionalId(requestForm.healthRecordId) || null,
         reason: requestForm.reason.trim(),
-        preferredDoctorId: normalizeOptionalId(requestForm.preferredDoctorId),
+        preferredDoctorId: normalizeOptionalId(requestForm.preferredDoctorId) || null,
       })
-      setRequestForm({ healthRecordId: "", reason: "", preferredDoctorId: "" })
+      setRequestForm({ packageId: "", healthRecordId: "", reason: "", preferredDoctorId: "" })
       setAlert({ type: "success", text: "Consultation request sent for admin approval." })
       await loadData()
     } catch (error) {
@@ -293,10 +337,96 @@ export function useConsultationsLogic() {
     setAdminDialogMode("approve")
   }
 
-  function openRejectDialog(request: ConsultationRequestItem) {
-    setTargetRequest(request)
+  function openRejectDialog(request: ConsultationRequestItem | ConsultationRequestReviewResponse | string | number) {
+    if (typeof request === "string" || typeof request === "number") {
+      const found = requests.find((r) => String(r.id) === String(request))
+      if (found) setTargetRequest(found)
+    } else {
+      setTargetRequest(request as ConsultationRequestItem)
+    }
     setReason("")
     setAdminDialogMode("reject")
+  }
+
+  function openMoreInfoDialog(request: ConsultationRequestItem) {
+    setTargetRequest(request)
+    setMoreInfoNote("")
+    setIsMoreInfoDialogOpen(true)
+  }
+
+  async function handleSubmitMoreInfo() {
+    if (!targetRequest || !moreInfoNote.trim()) return
+    setActionLoading(true)
+    setAlert(null)
+    try {
+      await consultationApi.submitMoreInfo(targetRequest.id, { additionalNote: moreInfoNote.trim() })
+      setAlert({ type: "success", text: `Submitted additional info for request #${targetRequest.id}.` })
+      setIsMoreInfoDialogOpen(false)
+      await loadData()
+    } catch (error) {
+      setAlert({ type: "error", text: readError(error, "Failed to submit additional info.") })
+    } finally {
+      setActionLoading(false)
+    }
+  }
+
+  function openAdminRequestDetail(request: ConsultationRequestItem) {
+    setTargetRequest(request)
+    setIsAdminRequestDetailOpen(true)
+  }
+
+  function openDoctorCandidates(request: ConsultationRequestItem | ConsultationRequestReviewResponse) {
+    setIsAdminRequestDetailOpen(false)
+    setTargetRequest(request as ConsultationRequestItem)
+    // Small delay to allow the first dialog's overlay to unmount gracefully
+    setTimeout(() => {
+      setIsDoctorCandidatesOpen(true)
+    }, 150)
+  }
+
+  function openDoctorCareProfile(doctorId: number) {
+    setTargetDoctorId(doctorId)
+    setIsDoctorCareProfileOpen(true)
+  }
+
+  async function handleReserveDoctor(doctorId: number) {
+    if (!targetRequest) return
+    setActionLoading(true)
+    setAlert(null)
+    try {
+      await consultationApi.approveRequest(targetRequest.id, { doctorId })
+      setAlert({ type: "success", text: "Đã giữ bác sĩ. Yêu cầu chuyển sang chờ thanh toán." })
+      setIsDoctorCandidatesOpen(false)
+      setIsAdminRequestDetailOpen(false)
+      await loadData()
+    } catch (error) {
+      setAlert({ type: "error", text: readError(error, "Failed to reserve doctor.") })
+    } finally {
+      setActionLoading(false)
+    }
+  }
+
+  function openAdminRequestMoreInfo(request: ConsultationRequestReviewResponse) {
+    setTargetRequest(request as unknown as ConsultationRequestItem)
+    setAdminMoreInfoReason("")
+    setIsAdminMoreInfoDialogOpen(true)
+  }
+
+  async function handleAdminSubmitMoreInfoRequest() {
+    if (!targetRequest || !adminMoreInfoReason.trim()) return
+    setActionLoading(true)
+    setAlert(null)
+    try {
+      await consultationApi.requestMoreInfo(targetRequest.id, { reason: adminMoreInfoReason.trim() })
+      setAlert({ type: "success", text: `Đã yêu cầu bổ sung thông tin cho yêu cầu #${targetRequest.id}.` })
+      setIsAdminMoreInfoDialogOpen(false)
+      setIsAdminRequestDetailOpen(false)
+      await loadData()
+    } catch (error) {
+      setAlert({ type: "error", text: readError(error, "Failed to request more info.") })
+    } finally {
+      setActionLoading(false)
+    }
   }
 
   function openExtendDialog(session: ConsultationSessionItem) {
@@ -319,14 +449,13 @@ export function useConsultationsLogic() {
     setAlert(null)
     try {
       if (adminDialogMode === "approve" && targetRequest) {
-        const numericDoctorId = Number(doctorId.trim())
-        if (!doctorId.trim() || Number.isNaN(numericDoctorId)) {
-          setAlert({ type: "error", text: "Doctor ID must be a valid number." })
+        if (!doctorId || !doctorId.trim()) {
+          setAlert({ type: "error", text: "Please select a valid doctor." })
           setActionLoading(false)
           return
         }
         await consultationApi.approveRequest(targetRequest.id, {
-          doctorId: numericDoctorId,
+          doctorId: doctorId.trim(),
         })
         setAlert({ type: "success", text: `Reserved doctor for request #${targetRequest.id}. Status moved to WAITING_PAYMENT.` })
       }
@@ -426,6 +555,7 @@ export function useConsultationsLogic() {
     loading,
     actionLoading,
     healthRecords,
+    packages,
     requests,
     sessions,
     selectedSession,
@@ -466,5 +596,31 @@ export function useConsultationsLogic() {
     handleExpireOverdue,
     handleSendMessage,
     handleLoadMoreMessages,
+    isMoreInfoDialogOpen,
+    setIsMoreInfoDialogOpen,
+    moreInfoNote,
+    setMoreInfoNote,
+    openMoreInfoDialog,
+    handleSubmitMoreInfo,
+    adminFilters,
+    setAdminFilters,
+    isAdminRequestDetailOpen,
+    setIsAdminRequestDetailOpen,
+    isDoctorCandidatesOpen,
+    setIsDoctorCandidatesOpen,
+    isDoctorCareProfileOpen,
+    setIsDoctorCareProfileOpen,
+    targetDoctorId,
+    setTargetDoctorId,
+    openAdminRequestDetail,
+    openDoctorCandidates,
+    openDoctorCareProfile,
+    handleReserveDoctor,
+    isAdminMoreInfoDialogOpen,
+    setIsAdminMoreInfoDialogOpen,
+    adminMoreInfoReason,
+    setAdminMoreInfoReason,
+    openAdminRequestMoreInfo,
+    handleAdminSubmitMoreInfoRequest,
   }
 }
