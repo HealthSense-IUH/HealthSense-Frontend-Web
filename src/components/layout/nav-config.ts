@@ -24,6 +24,7 @@ export interface NavigationItem {
   allowedRoles: UserRole[]
   badge?: string | number
   exact?: boolean
+  subItems?: Omit<NavigationItem, "icon" | "subItems">[]
 }
 
 export interface NavigationGroup {
@@ -124,6 +125,56 @@ export const navigationGroups: NavigationGroup[] = [
           USER_ROLES.CARE_COORDINATOR,
           USER_ROLES.DOCTOR,
           USER_ROLES.MEMBER,
+        ],
+        subItems: [
+          {
+            id: "consultations-records",
+            title: "My Health Records",
+            href: "/app/consultations?tab=records",
+            allowedRoles: [USER_ROLES.MEMBER],
+          },
+          {
+            id: "consultations-create-request",
+            title: "Create Request",
+            href: "/app/consultations?tab=create-request",
+            allowedRoles: [USER_ROLES.MEMBER],
+          },
+          {
+            id: "consultations-my-requests",
+            title: "My Requests",
+            href: "/app/consultations?tab=my-requests",
+            allowedRoles: [USER_ROLES.MEMBER],
+          },
+          {
+            id: "consultations-admin-requests",
+            title: "Requests Management",
+            href: "/app/consultations?tab=admin-requests",
+            allowedRoles: [USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN, USER_ROLES.CARE_COORDINATOR],
+          },
+          {
+            id: "consultations-create-session",
+            title: "Create Session",
+            href: "/app/consultations?tab=create-session",
+            allowedRoles: [USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN, USER_ROLES.CARE_COORDINATOR],
+          },
+          {
+            id: "consultations-sessions",
+            title: "Sessions Management",
+            href: "/app/consultations?tab=sessions",
+            allowedRoles: [USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN, USER_ROLES.CARE_COORDINATOR],
+          },
+          {
+            id: "consultations-my-sessions",
+            title: "My Consultations",
+            href: "/app/consultations?tab=sessions",
+            allowedRoles: [USER_ROLES.DOCTOR, USER_ROLES.MEMBER],
+          },
+          {
+            id: "consultations-chat",
+            title: "Chat Room",
+            href: "/app/consultations?tab=chat",
+            allowedRoles: [USER_ROLES.DOCTOR, USER_ROLES.MEMBER],
+          },
         ],
       },
     ],
