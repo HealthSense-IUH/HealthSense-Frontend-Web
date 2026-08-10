@@ -24,6 +24,7 @@ import type {
   SendConsultationMessagePayload,
   CreateCareServicePackagePayload,
   UpdateCareServicePackagePayload,
+  ConsultationPaymentResponse,
 } from "../types"
 
 type PageParams = {
@@ -227,6 +228,16 @@ export const consultationApi = {
   retireCareServicePackage(packageId: string | number) {
     return axiosClient.patch<ApiResponse<CareServicePackage>, ApiResponse<CareServicePackage>>(
       `/api/admin/care-service-packages/${packageId}/retire`
+    )
+  },
+  createConsultationPayment(requestId: string | number) {
+    return axiosClient.post<ApiResponse<ConsultationPaymentResponse>, ApiResponse<ConsultationPaymentResponse>>(
+      `/api/consultation-requests/${requestId}/payment`
+    )
+  },
+  getConsultationPayment(requestId: string | number) {
+    return axiosClient.get<ApiResponse<ConsultationPaymentResponse>, ApiResponse<ConsultationPaymentResponse>>(
+      `/api/consultation-requests/${requestId}/payment`
     )
   },
 }
