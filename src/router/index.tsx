@@ -19,6 +19,7 @@ const AdminHealthRecordsPage = lazy(() => import("@/features/admin-health-record
 const AdminPackagesPage = lazy(() => import("@/features/care-service-packages/pages/admin-packages-page"))
 const ConsultationsPage = lazy(() => import("@/features/consultations/pages/consultations-page"))
 const PaymentResultPage = lazy(() => import("@/features/consultations/pages/payment-result-page"))
+const DoctorSessionsPage = lazy(() => import("@/features/consultations/pages/doctor-sessions-page"))
 const ProfilePage = lazy(() => import("@/features/profile/pages/profile-page"))
 const LandingPage = lazy(() => import("@/pages/public/landing-page"))
 const ForgotPasswordPage = lazy(() => import("@/features/forgot-password/pages/forgot-password-page"))
@@ -155,6 +156,14 @@ export const router = createBrowserRouter([
         element: (
           <LazyElement>
             <AdminHealthRecordsPage />
+          </LazyElement>
+        ),
+      },
+      {
+        path: "doctor/consultations",
+        element: (
+          <LazyElement>
+            <DoctorSessionsPage />
           </LazyElement>
         ),
       },
