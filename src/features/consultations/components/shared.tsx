@@ -28,9 +28,9 @@ export function statusBadge(status: string) {
       className = "text-orange-500 border-orange-500 bg-orange-50 dark:bg-orange-950/20"
       break
     case "WAITING_PAYMENT":
-      label = "Chờ thanh toán"
-      variant = "secondary"
-      break
+      return <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">Chờ thanh toán</Badge>
+    case "FULFILLED":
+      return <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200">Đã kích hoạt tư vấn</Badge>
     case "REJECTED":
       label = "Đã từ chối"
       variant = "destructive"

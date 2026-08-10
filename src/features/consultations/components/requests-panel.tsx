@@ -1,4 +1,4 @@
-import { MessageCircle } from "lucide-react"
+import { MessageCircle, CreditCard } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -22,6 +22,7 @@ export function RequestsPanel({
   adminFilters,
   onAdminFilterChange,
   onSearchAdminFilters,
+  onInitiatePayment,
 }: {
   isAdmin: boolean
   requests: ConsultationRequestItem[]
@@ -41,6 +42,7 @@ export function RequestsPanel({
   }
   onAdminFilterChange?: (filters: any) => void
   onSearchAdminFilters?: () => void
+  onInitiatePayment?: (requestId: string | number) => void
 }) {
   return (
     <Card>
@@ -173,6 +175,12 @@ export function RequestsPanel({
                       <Button variant="outline" size="sm" onClick={() => onOpenSession(request.consultationSessionId!)}>
                         <MessageCircle data-icon="inline-start" />
                         Chat
+                      </Button>
+                    )}
+                    {!isAdmin && request.status === "WAITING_PAYMENT" && onInitiatePayment && (
+                      <Button size="sm" onClick={() => onInitiatePayment(request.id)} disabled={loading}>
+                        <CreditCard className="mr-2 h-4 w-4" />
+                        Thanh toán
                       </Button>
                     )}
                     {!isAdmin && request.status === "NEED_MORE_INFO" && onSubmitMoreInfo && (
