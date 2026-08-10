@@ -8,6 +8,8 @@ interface ChatComposerProps {
   attachmentUrl: string
   canSend: boolean
   loading: boolean
+  readOnlyMode?: boolean
+  readOnlyReason?: string
   onMessageChange: (value: string) => void
   onSubmit: (e?: any) => void
 }
@@ -17,6 +19,8 @@ export function ChatComposer({
   attachmentUrl,
   canSend,
   loading,
+  readOnlyMode,
+  readOnlyReason,
   onMessageChange,
   onSubmit,
 }: ChatComposerProps) {
@@ -49,11 +53,21 @@ export function ChatComposer({
 
   const hasContent = messageDraft.trim() || attachmentUrl.trim()
 
+  if (readOnlyMode) {
+    return (
+      <div className="flex w-full items-center justify-center border-t border-border bg-muted/30 p-6">
+        <p className="text-sm font-medium text-muted-foreground text-center">
+          {readOnlyReason || "Bạn không thể gửi tin nhắn trong phiên này."}
+        </p>
+      </div>
+    )
+  }
+
   if (!canSend) {
     return (
       <div className="flex w-full items-center justify-center border-t border-border bg-muted/30 p-6">
-        <p className="text-sm font-medium text-muted-foreground">
-          This consultation is not active. You cannot send messages.
+        <p className="text-sm font-medium text-muted-foreground text-center">
+          Phiên tư vấn chưa mở hoặc không còn hoạt động.
         </p>
       </div>
     )
