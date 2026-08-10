@@ -1,15 +1,16 @@
 import {
-  LayoutDashboard,
-  Users,
-  ShieldCheck,
   Activity,
   AlertTriangle,
-  Watch,
-  MessagesSquare,
   Building2,
   FileText,
   History,
+  LayoutDashboard,
+  MessagesSquare,
+  Package,
   Settings,
+  ShieldCheck,
+  Users,
+  Watch,
   type LucideIcon,
 } from "lucide-react"
 
@@ -61,6 +62,13 @@ export const navigationGroups: NavigationGroup[] = [
         title: "User Management",
         href: "/app/users",
         icon: Users,
+        allowedRoles: [USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN],
+      },
+      {
+        id: "care-service-packages",
+        title: "Care Service Packages",
+        href: "/app/packages",
+        icon: Package,
         allowedRoles: [USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN],
       },
       {
