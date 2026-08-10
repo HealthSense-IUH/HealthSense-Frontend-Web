@@ -51,6 +51,38 @@ function makeClientMessageId() {
     : `client-${Date.now()}-${Math.random().toString(16).slice(2)}`
 }
 
+function checkOutsideSupportHours(session: ConsultationSessionItem | null, isMember: boolean): boolean {
+  if (!isMember || !session || session.status !== "ACTIVE") return false
+  const jsonStr = (session as any).supportScheduleSnapshotJson
+  if (!jsonStr) return false
+  
+  try {
+    const schedule = JSON.parse(jsonStr)
+    if (!schedule.weekly || !Array.isArray(schedule.weekly) || schedule.weekly.length === 0) {
+      return false
+    }
+
+    const now = new Date()
+    const days = ["SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"]
+    const currentDay = days[now.getDay()]
+    const currentHour = now.getHours()
+    const currentMinute = now.getMinutes()
+    const currentTimeStr = `${currentHour.toString().padStart(2, "0")}:${currentMinute.toString().padStart(2, "0")}`
+
+    const todaySlots = schedule.weekly.filter((s: any) => s.dayOfWeek === currentDay)
+    if (todaySlots.length === 0) return true
+
+    for (const slot of todaySlots) {
+      if (currentTimeStr >= slot.start && currentTimeStr <= slot.end) {
+        return false
+      }
+    }
+    return true
+  } catch {
+    return false
+  }
+}
+
 export function useConsultationsLogic() {
   const { effectiveRole } = useAppShell()
   const userSession = useAuthStore((state) => state.userSession)
@@ -118,6 +150,8 @@ export function useConsultationsLogic() {
     [messages]
   )
 
+  const isOutsideSupportHours = useMemo(() => checkOutsideSupportHours(selectedSession, isMember), [selectedSession, isMember])
+
   const handleIncomingMessage = useCallback((message: ConsultationMessageItem) => {
     setMessages((current) => {
       if (current.some((item) => item.id === message.id)) {
@@ -167,9 +201,12 @@ export function useConsultationsLogic() {
       setSessions(sessionResponse.data.content ?? [])
       setHealthRecords(healthRecordResponse?.data.content ?? [])
       setPackages(packageResponse?.data.content ?? [])
-      if (!selectedSession && sessionResponse.data.content.length > 0) {
-        setSelectedSession(sessionResponse.data.content[0])
-      }
+      setSelectedSession(prev => {
+        if (!prev && sessionResponse.data.content.length > 0) {
+          return sessionResponse.data.content[0]
+        }
+        return prev
+      })
     } catch (error) {
       setAlert({ type: "error", text: readError(error, "Failed to load consultation data.") })
       setRequests([])
@@ -177,7 +214,7 @@ export function useConsultationsLogic() {
     } finally {
       setLoading(false)
     }
-  }, [isAdmin, isMember, selectedSession, adminFilters])
+  }, [isAdmin, isMember, adminFilters])
 
   useEffect(() => {
     queueMicrotask(() => void loadData())
@@ -185,6 +222,13 @@ export function useConsultationsLogic() {
 
   useEffect(() => {
     if (!selectedSession || isAdmin) {
+      return
+    }
+
+    if (selectedSession.status !== "ACTIVE" && selectedSession.status !== "COMPLETED") {
+      setAlert({ type: "error", text: "Phiên tư vấn chưa mở hoặc không còn hoạt động." })
+      setSelectedSession(null)
+      // If we could clear URL params here we would, but resetting selectedSession hides the chat window.
       return
     }
 
@@ -199,7 +243,12 @@ export function useConsultationsLogic() {
       })
       .catch((error) => {
         if (mounted) {
-          setAlert({ type: "error", text: readError(error, "Failed to load message history.") })
+          if (error?.response?.status === 409 || error?.response?.data?.code === 4003) {
+            setAlert({ type: "error", text: "Phiên tư vấn đã bị hủy hoặc không còn hoạt động." })
+            setSelectedSession(null)
+          } else {
+            setAlert({ type: "error", text: readError(error, "Failed to load message history.") })
+          }
           setMessages([])
         }
       })
@@ -501,6 +550,34 @@ export function useConsultationsLogic() {
     }
   }
 
+  async function handleExpireWaitingPayment() {
+    setActionLoading(true)
+    setAlert(null)
+    try {
+      await consultationApi.expireWaitingPaymentRequests()
+      setAlert({ type: "success", text: "Requested backend to expire waiting payment requests." })
+      await loadData()
+    } catch (error) {
+      setAlert({ type: "error", text: readError(error, "Failed to expire waiting payment requests.") })
+    } finally {
+      setActionLoading(false)
+    }
+  }
+
+  async function handleActivateScheduledSessions() {
+    setActionLoading(true)
+    setAlert(null)
+    try {
+      await consultationApi.activateScheduledSessions()
+      setAlert({ type: "success", text: "Requested backend to activate scheduled sessions." })
+      await loadData()
+    } catch (error) {
+      setAlert({ type: "error", text: readError(error, "Failed to activate scheduled sessions.") })
+    } finally {
+      setActionLoading(false)
+    }
+  }
+
   async function handleSendMessage(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     if (!selectedSession || selectedSession.status !== "ACTIVE") {
@@ -537,8 +614,17 @@ export function useConsultationsLogic() {
       }
       setMessageDraft("")
       setAttachmentUrl("")
-    } catch (error) {
-      setAlert({ type: "error", text: readError(error, "Failed to send message.") })
+    } catch (error: any) {
+      const errStr = String(error?.response?.data?.message || error.message || "")
+      if (error?.response?.status === 409 || error?.response?.data?.code === 4003) {
+        setAlert({ type: "error", text: "Phiên tư vấn chưa mở hoặc không còn hoạt động." })
+        setSelectedSession(null)
+      } else if (errStr.toLowerCase().includes("support hours") || errStr.toLowerCase().includes("support_hours")) {
+        setAlert({ type: "error", text: "Bạn chỉ có thể gửi tin nhắn trong khung giờ hỗ trợ của phiên tư vấn." })
+        // Do not clear message draft so they don't lose their text
+      } else {
+        setAlert({ type: "error", text: readError(error, "Failed to send message.") })
+      }
     } finally {
       setActionLoading(false)
     }
@@ -599,6 +685,7 @@ export function useConsultationsLogic() {
     setMessageDraft,
     attachmentUrl,
     setAttachmentUrl,
+    isOutsideSupportHours,
     requestForm,
     setRequestForm,
     adminSessionForm,
@@ -625,6 +712,8 @@ export function useConsultationsLogic() {
     openCloseDialog,
     handleAdminDialogSubmit,
     handleExpireOverdue,
+    handleExpireWaitingPayment,
+    handleActivateScheduledSessions,
     handleSendMessage,
     handleLoadMoreMessages,
     isMoreInfoDialogOpen,
