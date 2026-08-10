@@ -25,6 +25,9 @@ import type {
   CreateCareServicePackagePayload,
   UpdateCareServicePackagePayload,
   ConsultationPaymentResponse,
+  DoctorConsultationSessionResponse,
+  DoctorConsultationDetailResponse,
+  DoctorScopedHealthRecordResponse,
 } from "../types"
 
 type PageParams = {
@@ -116,6 +119,16 @@ export const consultationApi = {
   expireOverdueSessions() {
     return axiosClient.post<ApiResponse<void>, ApiResponse<void>>(
       "/api/admin/consultation-sessions/expire-overdue"
+    )
+  },
+  activateScheduledSessions() {
+    return axiosClient.post<ApiResponse<void>, ApiResponse<void>>(
+      "/api/admin/consultation-sessions/activate-scheduled"
+    )
+  },
+  expireWaitingPaymentRequests() {
+    return axiosClient.post<ApiResponse<void>, ApiResponse<void>>(
+      "/api/admin/consultation-requests/expire-waiting-payment"
     )
   },
   listMessages(sessionId: string | number, params: PageParams = {}) {
@@ -233,6 +246,33 @@ export const consultationApi = {
   getConsultationPayment(requestId: string | number) {
     return axiosClient.get<ApiResponse<ConsultationPaymentResponse>, ApiResponse<ConsultationPaymentResponse>>(
       `/api/consultation-requests/${requestId}/payment`
+    )
+  },
+  getDoctorSessions(params: PageParams = {}) {
+    return axiosClient.get<ApiResponse<PageResponse<DoctorConsultationSessionResponse>>, ApiResponse<PageResponse<DoctorConsultationSessionResponse>>>(
+      "/api/doctor/consultation-sessions",
+      { params }
+    )
+  },
+  getDoctorSessionDetail(sessionId: string | number) {
+    return axiosClient.get<ApiResponse<DoctorConsultationDetailResponse>, ApiResponse<DoctorConsultationDetailResponse>>(
+      `/api/doctor/consultation-sessions/${sessionId}`
+    )
+  },
+  getDoctorScopedRecords(sessionId: string | number, params: PageParams = {}) {
+    return axiosClient.get<ApiResponse<PageResponse<DoctorScopedHealthRecordResponse>>, ApiResponse<PageResponse<DoctorScopedHealthRecordResponse>>>(
+      `/api/doctor/consultation-sessions/${sessionId}/health-records`,
+      { params }
+    )
+  },
+  getDoctorScopedRecordDetail(sessionId: string | number, recordId: string | number) {
+    return axiosClient.get<ApiResponse<DoctorScopedHealthRecordResponse>, ApiResponse<DoctorScopedHealthRecordResponse>>(
+      `/api/doctor/consultation-sessions/${sessionId}/health-records/${recordId}`
+    )
+  },
+  reviewDoctorScopedRecordAttention(sessionId: string | number, recordId: string | number) {
+    return axiosClient.patch<ApiResponse<void>, ApiResponse<void>>(
+      `/api/doctor/consultation-sessions/${sessionId}/health-records/${recordId}/attention/review`
     )
   },
 }
