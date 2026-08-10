@@ -122,6 +122,7 @@ export function ConsultationsPage() {
               onAdminFilterChange={logic.setAdminFilters}
               onSearchAdminFilters={logic.loadData}
               onInitiatePayment={logic.handleInitiatePayment}
+              onExpireWaitingPayment={logic.handleExpireWaitingPayment}
               onOpenSession={(sessionId) => {
                 const session = logic.sessions.find((item) => String(item.id) === String(sessionId))
                 if (session) {
@@ -153,6 +154,7 @@ export function ConsultationsPage() {
             onExtend={logic.openExtendDialog}
             onClose={logic.openCloseDialog}
             onExpireOverdue={logic.handleExpireOverdue}
+            onActivateScheduled={logic.handleActivateScheduledSessions}
           />
         </TabsContent>
 
@@ -174,6 +176,7 @@ export function ConsultationsPage() {
               onMessageChange={logic.setMessageDraft}
               onSubmit={logic.handleSendMessage}
               onLoadMore={logic.handleLoadMoreMessages}
+              isOutsideSupportHours={logic.isOutsideSupportHours}
             />
           </TabsContent>
         )}
