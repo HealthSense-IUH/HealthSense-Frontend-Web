@@ -246,7 +246,6 @@ export function useConsultationsLogic() {
       setLoadingMoreMessages(false)
     }
   }, [selectedSession, loadingMoreMessages, hasMoreMessages, messages.length, sortedMessages])
-
   async function handleCreateRequest(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setActionLoading(true)
@@ -545,6 +544,38 @@ export function useConsultationsLogic() {
     }
   }
 
+  const handleInitiatePayment = useCallback(async (requestId: string | number) => {
+    setActionLoading(true)
+    try {
+      const response = await consultationApi.createConsultationPayment(requestId)
+      const data = response.data
+      
+      if (data.status === "PENDING" && data.checkoutUrl) {
+        localStorage.setItem("healthsense.pendingPaymentRequestId", String(requestId))
+        window.location.href = data.checkoutUrl
+      } else if (data.status === "PAID") {
+        toast({
+          title: "Thanh toán thành công",
+          description: "Yêu cầu tư vấn đã được kích hoạt.",
+        })
+        await loadData()
+      } else {
+        toast({
+          title: "Thông báo thanh toán",
+          description: `Trạng thái hiện tại: ${data.status}`,
+        })
+      }
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Lỗi khởi tạo thanh toán",
+        description: readError(error, "Không thể tạo giao dịch thanh toán lúc này. Vui lòng thử lại sau."),
+      })
+    } finally {
+      setActionLoading(false)
+    }
+  }, [loadData, toast])
+
   return {
     isAdmin,
     isDoctor,
@@ -622,5 +653,6 @@ export function useConsultationsLogic() {
     setAdminMoreInfoReason,
     openAdminRequestMoreInfo,
     handleAdminSubmitMoreInfoRequest,
+    handleInitiatePayment,
   }
 }
