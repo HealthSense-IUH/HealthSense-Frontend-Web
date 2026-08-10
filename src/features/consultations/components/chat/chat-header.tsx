@@ -2,6 +2,9 @@ import { User, Phone, Video, MoreHorizontal } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import type { ConsultationSessionItem } from "../../types"
 import { statusBadge } from "../shared"
+import { MemberFinalSummaryDialog } from "../member-final-summary-dialog"
+import { useState } from "react"
+import { FileText } from "lucide-react"
 
 interface ChatHeaderProps {
   session: ConsultationSessionItem
@@ -10,6 +13,8 @@ interface ChatHeaderProps {
 }
 
 export function ChatHeader({ session, isDoctor, isMember }: ChatHeaderProps) {
+  const [isSummaryOpen, setIsSummaryOpen] = useState(false)
+
   return (
     <div className="flex items-center justify-between border-b border-border bg-background/95 px-6 py-4 shadow-sm z-10 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="flex items-center gap-4">
@@ -34,6 +39,17 @@ export function ChatHeader({ session, isDoctor, isMember }: ChatHeaderProps) {
         </div>
       </div>
       <div className="flex items-center gap-2">
+        {isMember && session.status !== "SCHEDULED" && (
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="hidden sm:flex"
+            onClick={() => setIsSummaryOpen(true)}
+          >
+            <FileText className="mr-2 h-4 w-4" />
+            Tổng kết từ bác sĩ
+          </Button>
+        )}
         <Button variant="ghost" size="icon" className="h-9 w-9 text-muted-foreground hover:text-foreground">
           <Phone className="h-4 w-4" />
         </Button>
@@ -44,6 +60,12 @@ export function ChatHeader({ session, isDoctor, isMember }: ChatHeaderProps) {
           <MoreHorizontal className="h-5 w-5" />
         </Button>
       </div>
+
+      <MemberFinalSummaryDialog
+        sessionId={session.id}
+        open={isSummaryOpen}
+        onOpenChange={setIsSummaryOpen}
+      />
     </div>
   )
 }
