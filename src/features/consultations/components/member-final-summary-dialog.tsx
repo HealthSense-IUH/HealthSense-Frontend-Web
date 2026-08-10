@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { AlertCircle, CheckCircle2, FileText, Activity } from "lucide-react"
+import { CheckCircle2, FileText, Activity } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"

@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { useToast } from "@/hooks/use-toast"
-import { useAuthStore } from "@/features/auth/auth-store"
 import { USER_ROLES } from "@/types/authentication"
 import { useAppShell } from "@/components/layout/app-shell-context"
 
