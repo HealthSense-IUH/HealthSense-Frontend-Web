@@ -28,6 +28,8 @@ import type {
   DoctorConsultationSessionResponse,
   DoctorConsultationDetailResponse,
   DoctorScopedHealthRecordResponse,
+  ConsultationFinalSummaryResponse,
+  UpsertConsultationFinalSummaryPayload,
 } from "../types"
 
 type PageParams = {
@@ -273,6 +275,32 @@ export const consultationApi = {
   reviewDoctorScopedRecordAttention(sessionId: string | number, recordId: string | number) {
     return axiosClient.patch<ApiResponse<void>, ApiResponse<void>>(
       `/api/doctor/consultation-sessions/${sessionId}/health-records/${recordId}/attention/review`
+    )
+  },
+  getDoctorFinalSummary(sessionId: string | number) {
+    return axiosClient.get<ApiResponse<ConsultationFinalSummaryResponse>, ApiResponse<ConsultationFinalSummaryResponse>>(
+      `/api/doctor/consultation-sessions/${sessionId}/final-summary`
+    )
+  },
+  updateDoctorFinalSummary(sessionId: string | number, payload: UpsertConsultationFinalSummaryPayload) {
+    return axiosClient.put<ApiResponse<ConsultationFinalSummaryResponse>, ApiResponse<ConsultationFinalSummaryResponse>>(
+      `/api/doctor/consultation-sessions/${sessionId}/final-summary`,
+      payload
+    )
+  },
+  finalizeDoctorFinalSummary(sessionId: string | number) {
+    return axiosClient.patch<ApiResponse<ConsultationFinalSummaryResponse>, ApiResponse<ConsultationFinalSummaryResponse>>(
+      `/api/doctor/consultation-sessions/${sessionId}/final-summary/finalize`
+    )
+  },
+  getMemberFinalSummary(sessionId: string | number) {
+    return axiosClient.get<ApiResponse<ConsultationFinalSummaryResponse>, ApiResponse<ConsultationFinalSummaryResponse>>(
+      `/api/consultation-sessions/${sessionId}/final-summary`
+    )
+  },
+  getAdminFinalSummary(sessionId: string | number) {
+    return axiosClient.get<ApiResponse<ConsultationFinalSummaryResponse>, ApiResponse<ConsultationFinalSummaryResponse>>(
+      `/api/admin/consultation-sessions/${sessionId}/final-summary`
     )
   },
 }
