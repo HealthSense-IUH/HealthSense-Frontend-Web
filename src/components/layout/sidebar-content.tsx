@@ -7,6 +7,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 
 export function SidebarContent() {
   const location = useLocation()
@@ -17,6 +18,16 @@ export function SidebarContent() {
       return location.pathname === item.href
     }
     return location.pathname.startsWith(item.href) && item.href !== "/"
+  }
+
+  function isSubItemActive(sub: Omit<NavigationItem, "icon" | "subItems">, parentHref: string, isFirst: boolean): boolean {
+    const currentUrl = location.pathname + location.search
+    if (currentUrl === sub.href) return true
+    
+    // If we are at the base parent url without search params, and this is the first subItem, consider it active
+    if (location.pathname === parentHref && location.search === "" && isFirst) return true
+    
+    return false
   }
 
   return (
@@ -46,10 +57,59 @@ export function SidebarContent() {
                 {visibleItems.map((item) => {
                   const active = isItemActive(item)
                   const Icon = item.icon
+                  
+                  const visibleSubItems = item.subItems?.filter(sub => sub.allowedRoles.includes(effectiveRole)) || []
+                  const hasVisibleSubItems = visibleSubItems.length > 0
+
+                  if (hasVisibleSubItems && !isCollapsed) {
+                    const isParentActive = active || visibleSubItems.some(sub => isSubItemActive(sub, item.href, false))
+                    
+                    return (
+                      <Accordion type="multiple" defaultValue={isParentActive ? [item.id] : []} key={item.id} className="w-full">
+                        <AccordionItem value={item.id} className="border-none">
+                          <AccordionTrigger className={`group flex items-center justify-between gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200 hover:no-underline [&[data-state=open]>svg]:rotate-180 ${
+                              isParentActive
+                                ? "bg-blue-50 text-blue-700 font-semibold border border-blue-200/60 shadow-xs"
+                                : "text-slate-600 hover:bg-slate-100/80 hover:text-slate-900"
+                            }`}>
+                            <div className="flex items-center gap-3 flex-1">
+                              <Icon
+                                className={`h-5 w-5 shrink-0 transition-colors ${
+                                  isParentActive ? "text-blue-600" : "text-slate-500 group-hover:text-slate-800"
+                                }`}
+                              />
+                              <span className="truncate">{item.title}</span>
+                            </div>
+                          </AccordionTrigger>
+                          <AccordionContent className="pb-0 pt-1">
+                            <div className="flex flex-col space-y-1 ml-[22px] pl-3 mt-1 relative before:absolute before:left-0 before:top-2 before:bottom-2 before:w-px before:bg-slate-200">
+                              {visibleSubItems.map((sub, idx) => {
+                                const subActive = isSubItemActive(sub, item.href, idx === 0)
+                                return (
+                                  <Link
+                                    key={sub.id}
+                                    to={sub.href}
+                                    className={`relative flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 ${
+                                      subActive
+                                        ? "text-blue-700 font-semibold bg-blue-50/50"
+                                        : "text-slate-500 hover:text-slate-900 hover:bg-slate-50"
+                                    }`}
+                                  >
+                                    {subActive && <span className="absolute left-[-1px] top-1/2 -translate-y-1/2 w-[3px] h-4 rounded-full bg-blue-600" />}
+                                    {sub.title}
+                                  </Link>
+                                )
+                              })}
+                            </div>
+                          </AccordionContent>
+                        </AccordionItem>
+                      </Accordion>
+                    )
+                  }
 
                   const linkContent = (
                     <Link
-                      to={item.href}
+                      to={hasVisibleSubItems ? visibleSubItems[0].href : item.href}
                       className={`group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200 ${
                         active
                           ? "bg-blue-50 text-blue-700 font-semibold border border-blue-200/60 shadow-xs"
