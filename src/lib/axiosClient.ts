@@ -46,7 +46,7 @@ function isAuthEndpoint(url?: string) {
   )
 }
 
-async function refreshAccessToken() {
+export async function refreshAccessToken() {
   refreshPromise ??= axios
     .post<ApiResponse<LoginResponse>>(`${env.API_BASE_URL}/api/auth/refresh`, undefined, {
       withCredentials: true,
