@@ -13,15 +13,49 @@ export function formatDate(value?: string | null) {
 }
 
 export function statusBadge(status: string) {
-  const variant =
-    status === "ACTIVE" || status === "APPROVED"
-      ? "default"
-      : status === "PENDING"
-        ? "secondary"
-        : status === "REJECTED" || status === "CLOSED"
-          ? "destructive"
-          : "outline"
-  return <Badge variant={variant}>{status}</Badge>
+  let label = status
+  let variant: "default" | "secondary" | "destructive" | "outline" = "outline"
+  let className = ""
+
+  switch (status) {
+    case "PENDING_REVIEW":
+      label = "Chờ xem xét"
+      variant = "secondary"
+      break
+    case "NEED_MORE_INFO":
+      label = "Cần bổ sung TT"
+      variant = "outline"
+      className = "text-orange-500 border-orange-500 bg-orange-50 dark:bg-orange-950/20"
+      break
+    case "WAITING_PAYMENT":
+      label = "Chờ thanh toán"
+      variant = "secondary"
+      break
+    case "REJECTED":
+      label = "Đã từ chối"
+      variant = "destructive"
+      break
+    case "CANCELLED":
+      label = "Đã hủy"
+      variant = "destructive"
+      break
+    case "EXPIRED":
+      label = "Đã hết hạn"
+      variant = "destructive"
+      break
+    case "ACTIVE":
+    case "APPROVED":
+      variant = "default"
+      break
+    case "PENDING":
+      variant = "secondary"
+      break
+    case "CLOSED":
+      variant = "destructive"
+      break
+  }
+
+  return <Badge variant={variant} className={className || undefined}>{label}</Badge>
 }
 
 export function EmptyRow({ colSpan, text }: { colSpan: number; text: string }) {

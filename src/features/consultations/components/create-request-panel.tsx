@@ -7,19 +7,21 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 
-import type { HealthRecordItem } from "../types"
+import type { HealthRecordItem, CareServicePackage } from "../types"
 
 export function CreateRequestPanel({
   form,
   healthRecords,
+  packages,
   loading,
   onChange,
   onSubmit,
 }: {
-  form: { healthRecordId: string; reason: string; preferredDoctorId: string }
+  form: { packageId: string; healthRecordId: string; reason: string; preferredDoctorId: string }
   healthRecords: HealthRecordItem[]
+  packages: CareServicePackage[]
   loading: boolean
-  onChange: (form: { healthRecordId: string; reason: string; preferredDoctorId: string }) => void
+  onChange: (form: { packageId: string; healthRecordId: string; reason: string; preferredDoctorId: string }) => void
   onSubmit: (event: FormEvent<HTMLFormElement>) => void
 }) {
   return (
@@ -30,6 +32,23 @@ export function CreateRequestPanel({
       </CardHeader>
       <CardContent>
         <form className="flex flex-col gap-4" onSubmit={onSubmit}>
+          <label className="flex flex-col gap-2 text-sm font-medium">
+            Care Service Package <span className="text-red-500">*</span>
+            <Select required value={form.packageId || ""} onValueChange={(value) => onChange({ ...form, packageId: value })}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select a service package" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {packages.map((pkg) => (
+                    <SelectItem key={pkg.id} value={String(pkg.id)}>
+                      {pkg.name} - {pkg.priceAmount.toLocaleString("vi-VN", { style: "currency", currency: pkg.currency || "VND" })} ({pkg.durationDays} days)
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </label>
           <label className="flex flex-col gap-2 text-sm font-medium">
             Health record
             {healthRecords.length > 0 ? (
@@ -60,7 +79,7 @@ export function CreateRequestPanel({
             Reason
             <Textarea value={form.reason} onChange={(event) => onChange({ ...form, reason: event.target.value })} required maxLength={1000} placeholder="I would like further consultation on these measurement results" />
           </label>
-          <Button type="submit" disabled={loading || !form.reason.trim()}>
+          <Button type="submit" disabled={loading || !form.reason.trim() || !form.packageId}>
             <Send data-icon="inline-start" />
             Send request
           </Button>
