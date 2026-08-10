@@ -18,6 +18,7 @@ const UserManagementPage = lazy(() => import("@/features/user-management/pages/u
 const AdminHealthRecordsPage = lazy(() => import("@/features/admin-health-records/pages/admin-health-records-page"))
 const AdminPackagesPage = lazy(() => import("@/features/care-service-packages/pages/admin-packages-page"))
 const ConsultationsPage = lazy(() => import("@/features/consultations/pages/consultations-page"))
+const PaymentResultPage = lazy(() => import("@/features/consultations/pages/payment-result-page"))
 const ProfilePage = lazy(() => import("@/features/profile/pages/profile-page"))
 const LandingPage = lazy(() => import("@/pages/public/landing-page"))
 const ForgotPasswordPage = lazy(() => import("@/features/forgot-password/pages/forgot-password-page"))
@@ -159,11 +160,32 @@ export const router = createBrowserRouter([
       },
       {
         path: "consultations",
-        element: (
-          <LazyElement>
-            <ConsultationsPage />
-          </LazyElement>
-        ),
+        children: [
+          {
+            index: true,
+            element: (
+              <LazyElement>
+                <ConsultationsPage />
+              </LazyElement>
+            ),
+          },
+          {
+            path: "payment/result",
+            element: (
+              <LazyElement>
+                <PaymentResultPage />
+              </LazyElement>
+            ),
+          },
+          {
+            path: "payment/cancel",
+            element: (
+              <LazyElement>
+                <PaymentResultPage />
+              </LazyElement>
+            ),
+          },
+        ],
       },
       {
         path: "profile",
@@ -177,7 +199,7 @@ export const router = createBrowserRouter([
   },
   {
     path: "/general",
-    element: <Navigate to="/app/dashboard" replace />,
+    element: <Navigate to="/app/dashboard" replace />,
   },
   {
     path: "/management",
