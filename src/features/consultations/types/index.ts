@@ -7,6 +7,7 @@ export type ConsultationMessageType = "TEXT" | "IMAGE" | "FILE" | string
 export type ConsultationParticipantRole = "MEMBER" | "DOCTOR" | "ADMIN" | "SYSTEM" | string
 export type CareServicePackageStatus = "ACTIVE" | "INACTIVE" | "RETIRED" | string
 export type DoctorSpecialty = "CARDIOLOGY" | "INTERNAL_MEDICINE" | "GENERAL_PRACTICE" | "OTHER" | string
+export type ConsultationFinalSummaryStatus = "DRAFT" | "FINALIZED" | string
 
 export type ConsultationPaymentStatus = "PENDING" | "PAID" | "EXPIRED" | "CANCELLED" | "FAILED" | "REQUIRES_REVIEW" | string
 
@@ -493,6 +494,27 @@ export interface DoctorConsultationDetailResponse {
   initialHealthRecord?: HealthRecordItem | null
   attentions?: any[]
   unresolvedAttentionCount?: number
+}
+
+export interface ConsultationFinalSummaryResponse {
+  id: string | number
+  sessionId: string | number
+  status: ConsultationFinalSummaryStatus
+  summary: string
+  observations?: string | null
+  recommendations?: string | null
+  followUpRecommendation?: string | null
+  createdByDoctorId: string | number
+  finalizedAt?: string | null
+  createdAt?: string | null
+  updatedAt?: string | null
+}
+
+export interface UpsertConsultationFinalSummaryPayload {
+  summary: string
+  observations?: string | null
+  recommendations?: string | null
+  followUpRecommendation?: string | null
 }
 
 export interface ConsultationAttentionResponse {
