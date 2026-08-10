@@ -2,12 +2,17 @@ import { CheckCircle2, RefreshCw, ShieldAlert, Stethoscope, XCircle } from "luci
 
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Textarea } from "@/components/ui/textarea"
 import { cn } from "@/lib/utils"
 
 import { AdminActionDialog } from "../components/admin-action-dialog"
+import { AdminRequestDetailDialog } from "../components/admin-request-detail-dialog"
 import { ChatWorkspace } from "../components/chat/chat-workspace"
 import { CreateAdminSessionPanel } from "../components/create-admin-session-panel"
 import { CreateRequestPanel } from "../components/create-request-panel"
+import { DoctorCandidatesDialog } from "../components/doctor-candidates-dialog"
+import { DoctorCareProfileDialog } from "../components/doctor-care-profile-dialog"
 import { HealthRecordsPanel } from "../components/health-records-panel"
 import { RequestsPanel } from "../components/requests-panel"
 import { SessionsPanel } from "../components/sessions-panel"
@@ -103,6 +108,7 @@ export function ConsultationsPage() {
             <CreateRequestPanel
               form={logic.requestForm}
               healthRecords={logic.healthRecords}
+              packages={logic.packages}
               loading={logic.actionLoading}
               onChange={logic.setRequestForm}
               onSubmit={logic.handleCreateRequest}
@@ -117,8 +123,12 @@ export function ConsultationsPage() {
               requests={logic.requests}
               loading={logic.loading || logic.actionLoading}
               onCancel={logic.handleCancelRequest}
-              onApprove={logic.openApproveDialog}
+              onApprove={logic.openAdminRequestDetail}
               onReject={logic.openRejectDialog}
+              onSubmitMoreInfo={logic.openMoreInfoDialog}
+              adminFilters={logic.adminFilters}
+              onAdminFilterChange={logic.setAdminFilters}
+              onSearchAdminFilters={logic.loadData}
               onOpenSession={(sessionId) => {
                 const session = logic.sessions.find((item) => String(item.id) === String(sessionId))
                 if (session) {
@@ -197,6 +207,83 @@ export function ConsultationsPage() {
           }
         }}
       />
+
+      <Dialog open={logic.isMoreInfoDialogOpen} onOpenChange={logic.setIsMoreInfoDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Bổ sung thông tin cho yêu cầu #{logic.targetRequest?.id}</DialogTitle>
+            <DialogDescription>
+              Vui lòng cung cấp thêm thông tin theo yêu cầu của điều phối viên.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex flex-col gap-4 py-4">
+            <Textarea
+              placeholder="Nhập thông tin bổ sung tại đây..."
+              value={logic.moreInfoNote}
+              onChange={(e) => logic.setMoreInfoNote(e.target.value)}
+              rows={4}
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => logic.setIsMoreInfoDialogOpen(false)}>
+              Hủy
+            </Button>
+            <Button onClick={() => void logic.handleSubmitMoreInfo()} disabled={logic.actionLoading || !logic.moreInfoNote.trim()}>
+              Gửi thông tin
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <AdminRequestDetailDialog
+        requestId={logic.targetRequest?.id ?? null}
+        open={logic.isAdminRequestDetailOpen}
+        onOpenChange={logic.setIsAdminRequestDetailOpen}
+        onNeedMoreInfo={logic.openAdminRequestMoreInfo}
+        onSelectDoctor={logic.openDoctorCandidates}
+        onReject={logic.openRejectDialog}
+      />
+
+      <DoctorCandidatesDialog
+        requestId={logic.targetRequest?.id ?? null}
+        open={logic.isDoctorCandidatesOpen}
+        onOpenChange={logic.setIsDoctorCandidatesOpen}
+        onReserveDoctor={(doctorId) => void logic.handleReserveDoctor(doctorId)}
+        onOpenCareProfile={logic.openDoctorCareProfile}
+      />
+
+      <DoctorCareProfileDialog
+        doctorId={logic.targetDoctorId}
+        open={logic.isDoctorCareProfileOpen}
+        onOpenChange={logic.setIsDoctorCareProfileOpen}
+      />
+
+      <Dialog open={logic.isAdminMoreInfoDialogOpen} onOpenChange={logic.setIsAdminMoreInfoDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Yêu cầu bổ sung thông tin</DialogTitle>
+            <DialogDescription>
+              Gửi yêu cầu bổ sung thông tin đến thành viên cho yêu cầu #{logic.targetRequest?.id}.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex flex-col gap-4 py-4">
+            <Textarea
+              placeholder="Nhập lý do cần bổ sung..."
+              value={logic.adminMoreInfoReason}
+              onChange={(e) => logic.setAdminMoreInfoReason(e.target.value)}
+              rows={4}
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => logic.setIsAdminMoreInfoDialogOpen(false)}>
+              Hủy
+            </Button>
+            <Button onClick={() => void logic.handleAdminSubmitMoreInfoRequest()} disabled={logic.actionLoading || !logic.adminMoreInfoReason.trim()}>
+              Gửi yêu cầu
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   )
 }
