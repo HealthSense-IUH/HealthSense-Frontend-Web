@@ -1,12 +1,26 @@
 import type { PageResponse } from "@/types/base"
 
-export type ConsultationRequestStatus = "PENDING_REVIEW" | "NEED_MORE_INFO" | "WAITING_PAYMENT" | "APPROVED" | "REJECTED" | "CANCELLED" | "EXPIRED" | "PENDING" | string
+export type ConsultationRequestStatus = "PENDING_REVIEW" | "NEED_MORE_INFO" | "WAITING_PAYMENT" | "FULFILLED" | "REJECTED" | "CANCELLED" | "EXPIRED" | "PENDING" | string
 export type ConsultationStatus = "ACTIVE" | "EXPIRED" | "CLOSED" | "CANCELLED" | "PENDING" | string
 export type ConsultationSourceType = "REQUEST" | "ADMIN_DIRECT" | string
 export type ConsultationMessageType = "TEXT" | "IMAGE" | "FILE" | string
 export type ConsultationParticipantRole = "MEMBER" | "DOCTOR" | "ADMIN" | "SYSTEM" | string
 export type CareServicePackageStatus = "ACTIVE" | "INACTIVE" | "RETIRED" | string
 export type DoctorSpecialty = "CARDIOLOGY" | "INTERNAL_MEDICINE" | "GENERAL_PRACTICE" | "OTHER" | string
+
+export type ConsultationPaymentStatus = "PENDING" | "PAID" | "EXPIRED" | "CANCELLED" | "FAILED" | "REQUIRES_REVIEW" | string
+
+export interface ConsultationPaymentResponse {
+  id: string
+  requestId: string | number
+  orderCode: number
+  paymentLinkId: string
+  checkoutUrl: string
+  amount: number
+  currency: string
+  status: ConsultationPaymentStatus
+  expiresAt: string
+}
 
 export interface CareServicePackage {
   id: number
