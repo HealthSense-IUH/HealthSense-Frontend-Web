@@ -6,6 +6,7 @@ export type ConsultationSourceType = "REQUEST" | "ADMIN_DIRECT" | string
 export type ConsultationMessageType = "TEXT" | "IMAGE" | "FILE" | string
 export type ConsultationParticipantRole = "MEMBER" | "DOCTOR" | "ADMIN" | "SYSTEM" | string
 export type CareServicePackageStatus = "ACTIVE" | "INACTIVE" | "RETIRED" | string
+export type DoctorSpecialty = "CARDIOLOGY" | "INTERNAL_MEDICINE" | "GENERAL_PRACTICE" | "OTHER" | string
 
 export interface CareServicePackage {
   id: number
@@ -13,10 +14,29 @@ export interface CareServicePackage {
   name: string
   description?: string | null
   priceAmount: number
-  currency?: string | null
+  currency: string
   durationDays: number
   renewable: boolean
   status: CareServicePackageStatus
+  createdAt?: string
+  updatedAt?: string
+}
+
+export interface CreateCareServicePackagePayload {
+  code: string
+  name: string
+  description?: string | null
+  priceAmount: number
+  durationDays: number
+  renewable: boolean
+}
+
+export interface UpdateCareServicePackagePayload {
+  name: string
+  description?: string | null
+  priceAmount: number
+  durationDays: number
+  renewable: boolean
 }
 
 export interface ConsultationRequestItem {
@@ -99,14 +119,110 @@ export interface HealthRecordItem {
 }
 
 export interface CreateConsultationRequestPayload {
-  packageId: number
+  packageId: number | string
   reason: string
-  preferredDoctorId?: number | null
-  healthRecordId?: number | null
+  preferredDoctorId?: number | string | null
+  healthRecordId?: number | string | null
 }
 
 export interface ApproveConsultationRequestPayload {
+  doctorId: number | string
+}
+
+export interface AdminListRequestsParams {
+  status?: string
+  memberId?: number
+  preferredDoctorId?: number
+  assignedDoctorId?: number
+  fromDate?: string
+  toDate?: string
+  page?: number
+  size?: number
+}
+
+export interface DoctorCandidateResponse {
   doctorId: number
+  displayName: string
+  email: string
+  phone?: string | null
+  specialty?: string | null
+  acceptsOneOnOneCare: boolean
+  effectiveLoad: number
+  maxActiveConsultations: number | null
+  declaredSupportSchedule?: string | null
+  timezone?: string | null
+  preferredByMember: boolean
+  eligible: boolean
+  ineligibleReasons: string[]
+}
+
+export type DoctorSpecialty =
+  | "CARDIOLOGY"
+  | "INTERNAL_MEDICINE"
+  | "GENERAL_PRACTICE"
+  | "OTHER"
+
+export type DayOfWeek =
+  | "MONDAY"
+  | "TUESDAY"
+  | "WEDNESDAY"
+  | "THURSDAY"
+  | "FRIDAY"
+  | "SATURDAY"
+  | "SUNDAY"
+
+export interface DoctorAvailabilitySlot {
+  dayOfWeek: DayOfWeek
+  start: string // HH:mm
+  end: string   // HH:mm
+}
+
+export interface DoctorAvailability {
+  weekly: DoctorAvailabilitySlot[]
+}
+
+export interface DoctorCareProfilePayload {
+  specialty: DoctorSpecialty
+  acceptsOneOnOneCare: boolean
+  maxActiveConsultations: number
+  timezone: string
+  availability: DoctorAvailability
+}
+
+export interface DoctorCareProfileResponse {
+  id?: number
+  doctorId: number
+  specialty?: DoctorSpecialty | null
+  acceptsOneOnOneCare: boolean
+  maxActiveConsultations: number
+  timezone: string
+  availability?: DoctorAvailability | null
+  availabilityJson?: string | null // legacy fallback
+  createdAt?: string | null
+  updatedAt?: string | null
+}
+
+export interface ConsultationRequestReviewResponse {
+  id: number
+  memberId: number
+  packageId?: number | null
+  packageCodeSnapshot?: string | null
+  packageNameSnapshot?: string | null
+  packagePriceSnapshot?: number | null
+  packageDurationDaysSnapshot?: number | null
+  reason: string
+  status: ConsultationRequestStatus
+  member?: any
+  preferredDoctor?: any
+  assignedDoctor?: any
+  healthRecord?: any
+  moreInfoReason?: string | null
+  memberAdditionalNote?: string | null
+  assignedDoctorId?: number | null
+  doctorReservedAt?: string | null
+  paymentDeadline?: string | null
+  createdAt?: string | null
+  updatedAt?: string | null
 }
 
 export interface RejectConsultationRequestPayload {
