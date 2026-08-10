@@ -6,6 +6,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 
 import type { ConsultationSessionItem } from "../types"
 import { EmptyRow, formatDate, statusBadge } from "./shared"
+import { MemberFinalSummaryDialog } from "./member-final-summary-dialog"
+import { useState } from "react"
 
 export function SessionsPanel({
   isAdmin,
@@ -28,6 +30,8 @@ export function SessionsPanel({
   onExpireOverdue: () => void
   onActivateScheduled?: () => void
 }) {
+  const [summarySessionId, setSummarySessionId] = useState<string | number | null>(null)
+
   return (
     <Card>
       <CardHeader className="flex-row items-start justify-between gap-4">
@@ -100,6 +104,11 @@ export function SessionsPanel({
                         </Button>
                       </>
                     )}
+                    {isAdmin && (session.status === "COMPLETED" || session.status === "ACTIVE") && (
+                      <Button variant="outline" size="sm" onClick={() => setSummarySessionId(session.id)}>
+                        Xem tổng kết
+                      </Button>
+                    )}
                   </div>
                 </TableCell>
               </TableRow>
@@ -107,6 +116,15 @@ export function SessionsPanel({
           </TableBody>
         </Table>
       </CardContent>
+
+      <MemberFinalSummaryDialog
+        sessionId={summarySessionId || ""}
+        open={!!summarySessionId}
+        onOpenChange={(open) => {
+          if (!open) setSummarySessionId(null)
+        }}
+        isAdminView={true}
+      />
     </Card>
   )
 }

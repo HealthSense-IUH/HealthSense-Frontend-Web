@@ -20,6 +20,7 @@ import { consultationApi } from "../services/consultation-api"
 import type { DoctorConsultationDetailResponse } from "../types"
 import { formatDate } from "./shared"
 import { DoctorScopedRecordsTab } from "./doctor-scoped-records-tab"
+import { DoctorFinalSummaryTab } from "./doctor-final-summary-tab"
 
 function readError(error: unknown, fallback: string) {
   const err = error as { response?: { data?: { message?: string } }; message?: string }
@@ -138,9 +139,10 @@ export function DoctorSessionDetailDialog({ sessionId, open, onOpenChange }: Doc
         </DialogHeader>
 
         <Tabs defaultValue="info" className="mt-4">
-          <TabsList className="grid w-full grid-cols-2">
+          <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="info">Thông tin chung</TabsTrigger>
             <TabsTrigger value="records">Hồ sơ trong phạm vi</TabsTrigger>
+            <TabsTrigger value="summary">Tổng kết chăm sóc</TabsTrigger>
           </TabsList>
           
           <TabsContent value="info" className="grid gap-6 py-4 outline-none">
@@ -217,6 +219,10 @@ export function DoctorSessionDetailDialog({ sessionId, open, onOpenChange }: Doc
 
           <TabsContent value="records" className="outline-none">
             <DoctorScopedRecordsTab sessionId={session.id} />
+          </TabsContent>
+
+          <TabsContent value="summary" className="outline-none">
+            <DoctorFinalSummaryTab sessionId={session.id} sessionStatus={session.status} />
           </TabsContent>
         </Tabs>
 
