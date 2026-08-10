@@ -16,6 +16,7 @@ export function SessionsPanel({
   onExtend,
   onClose,
   onExpireOverdue,
+  onActivateScheduled,
 }: {
   isAdmin: boolean
   sessions: ConsultationSessionItem[]
@@ -25,6 +26,7 @@ export function SessionsPanel({
   onExtend: (session: ConsultationSessionItem) => void
   onClose: (session: ConsultationSessionItem) => void
   onExpireOverdue: () => void
+  onActivateScheduled?: () => void
 }) {
   return (
     <Card>
@@ -34,10 +36,26 @@ export function SessionsPanel({
           <CardDescription>Only ACTIVE sessions can send messages.</CardDescription>
         </div>
         {isAdmin && (
-          <Button variant="outline" size="sm" onClick={onExpireOverdue} disabled={loading}>
-            <Clock data-icon="inline-start" />
-            Expire overdue
-          </Button>
+          <div className="flex flex-wrap gap-2 justify-end">
+            {onActivateScheduled && (
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => {
+                  if (window.confirm("Kích hoạt các phiên đã đến giờ?")) {
+                    onActivateScheduled()
+                  }
+                }}
+                disabled={loading}
+              >
+                Kích hoạt phiên đã đến giờ
+              </Button>
+            )}
+            <Button variant="outline" size="sm" onClick={onExpireOverdue} disabled={loading}>
+              <Clock data-icon="inline-start" />
+              Đóng phiên quá hạn
+            </Button>
+          </div>
         )}
       </CardHeader>
       <CardContent>
@@ -67,9 +85,11 @@ export function SessionsPanel({
                 </TableCell>
                 <TableCell className="text-right">
                   <div className="flex justify-end gap-2">
-                    <Button variant="outline" size="sm" onClick={() => onSelect(session)}>
-                      Chat
-                    </Button>
+                    {session.status === "ACTIVE" && (
+                      <Button variant="outline" size="sm" onClick={() => onSelect(session)}>
+                        Chat
+                      </Button>
+                    )}
                     {isAdmin && session.status === "ACTIVE" && (
                       <>
                         <Button variant="outline" size="sm" onClick={() => onExtend(session)} disabled={loading}>

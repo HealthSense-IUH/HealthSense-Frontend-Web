@@ -22,6 +22,7 @@ export function RequestsPanel({
   onAdminFilterChange,
   onSearchAdminFilters,
   onInitiatePayment,
+  onExpireWaitingPayment,
 }: {
   isAdmin: boolean
   requests: ConsultationRequestItem[]
@@ -41,12 +42,29 @@ export function RequestsPanel({
   onAdminFilterChange?: (filters: any) => void
   onSearchAdminFilters?: () => void
   onInitiatePayment?: (requestId: string | number) => void
+  onExpireWaitingPayment?: () => void
 }) {
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>{isAdmin ? "Consultation Requests Management" : "My Consultation Requests"}</CardTitle>
-        <CardDescription>{isAdmin ? "Review and assign doctors for consultation requests." : "Track request status from PENDING to APPROVED to open chat session."}</CardDescription>
+      <CardHeader className="flex flex-row items-center justify-between pb-2">
+        <div>
+          <CardTitle>{isAdmin ? "Consultation Requests Management" : "My Consultation Requests"}</CardTitle>
+          <CardDescription>{isAdmin ? "Review and assign doctors for consultation requests." : "Track request status from PENDING to APPROVED to open chat session."}</CardDescription>
+        </div>
+        {isAdmin && onExpireWaitingPayment && (
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={() => {
+              if (window.confirm("Quét và huỷ các yêu cầu quá hạn thanh toán?")) {
+                onExpireWaitingPayment()
+              }
+            }}
+            disabled={loading}
+          >
+            Quét yêu cầu quá hạn thanh toán
+          </Button>
+        )}
       </CardHeader>
       <CardContent>
         {isAdmin && adminFilters && onAdminFilterChange && onSearchAdminFilters && (
