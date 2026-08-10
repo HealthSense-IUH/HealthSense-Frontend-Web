@@ -16,6 +16,7 @@ const SleepPage = lazy(() => import("@/pages/member/sleep"))
 const ManagementPage = lazy(() => import("@/pages/admin/management-page"))
 const UserManagementPage = lazy(() => import("@/features/user-management/pages/user-management-page"))
 const AdminHealthRecordsPage = lazy(() => import("@/features/admin-health-records/pages/admin-health-records-page"))
+const AdminPackagesPage = lazy(() => import("@/features/care-service-packages/pages/admin-packages-page"))
 const ConsultationsPage = lazy(() => import("@/features/consultations/pages/consultations-page"))
 const ProfilePage = lazy(() => import("@/features/profile/pages/profile-page"))
 const LandingPage = lazy(() => import("@/pages/public/landing-page"))
@@ -137,6 +138,14 @@ export const router = createBrowserRouter([
         element: (
           <LazyElement>
             <UserManagementPage />
+          </LazyElement>
+        ),
+      },
+      {
+        path: "packages",
+        element: (
+          <LazyElement>
+            <AdminPackagesPage />
           </LazyElement>
         ),
       },
