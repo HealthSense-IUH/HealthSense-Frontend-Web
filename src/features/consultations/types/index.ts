@@ -273,3 +273,248 @@ export type ConsultationRequestPage = PageResponse<ConsultationRequestItem>
 export type ConsultationSessionPage = PageResponse<ConsultationSessionItem>
 export type ConsultationMessagePage = PageResponse<ConsultationMessageItem>
 export type HealthRecordPage = PageResponse<HealthRecordItem>
+
+export interface DoctorConsultationSessionResponse {
+  id: string | number
+  requestId: string | number
+  memberId: string | number
+  status: ConsultationSessionStatus
+  startedAt?: string | null
+  endsAt?: string | null
+  supportEndsAt?: string | null
+  lastMessageAt?: string | null
+  supportScheduleSnapshotJson?: string | null
+  supportTimezoneSnapshot?: string | null
+  unresolvedAttentionCount: number
+  createdAt?: string | null
+  updatedAt?: string | null
+}
+
+export interface DoctorConsultationDetailResponse {
+  session: DoctorConsultationSessionResponse
+  member?: any
+  request?: any
+  packageSnapshot?: any
+  initialHealthRecord?: HealthRecordItem | null
+  attentions?: any[]
+  unresolvedAttentionCount?: number
+}
+
+export interface ConsultationAttentionResponse {
+  id: string | number
+  sessionId: string | number
+  healthRecordId: string | number
+  status: "REQUIRES_ATTENTION" | "REVIEWED" | string
+  reason: string
+  reviewedAt?: string | null
+export interface ConsultationParticipantItem {
+  id: string | number
+  sessionId: string | number
+  userId: string | number
+  role: ConsultationParticipantRole
+  lastReadMessageId?: string | null
+  lastReadAt?: string | null
+  joinedAt?: string | null
+  active?: boolean
+}
+
+export interface HealthRecordItem {
+  id: string | number
+  status?: string
+  predictionLabel?: string
+  originalFileName?: string
+  createdAt?: string | null
+  updatedAt?: string | null
+}
+
+export interface CreateConsultationRequestPayload {
+  packageId: number | string
+  reason: string
+  preferredDoctorId?: number | string | null
+  healthRecordId?: number | string | null
+}
+
+export interface ApproveConsultationRequestPayload {
+  doctorId: number | string
+}
+
+export interface AdminListRequestsParams {
+  status?: string
+  memberId?: number
+  preferredDoctorId?: number
+  assignedDoctorId?: number
+  fromDate?: string
+  toDate?: string
+  page?: number
+  size?: number
+}
+
+export interface DoctorCandidateResponse {
+  doctorId: number
+  displayName: string
+  email: string
+  phone?: string | null
+  specialty?: string | null
+  acceptsOneOnOneCare: boolean
+  effectiveLoad: number
+  maxActiveConsultations: number | null
+  declaredSupportSchedule?: string | null
+  timezone?: string | null
+  preferredByMember: boolean
+  eligible: boolean
+  ineligibleReasons: string[]
+}
+
+
+
+export type DayOfWeek =
+  | "MONDAY"
+  | "TUESDAY"
+  | "WEDNESDAY"
+  | "THURSDAY"
+  | "FRIDAY"
+  | "SATURDAY"
+  | "SUNDAY"
+
+export interface DoctorAvailabilitySlot {
+  dayOfWeek: DayOfWeek
+  start: string // HH:mm
+  end: string   // HH:mm
+}
+
+export interface DoctorAvailability {
+  weekly: DoctorAvailabilitySlot[]
+}
+
+export interface DoctorCareProfilePayload {
+  specialty: DoctorSpecialty
+  acceptsOneOnOneCare: boolean
+  maxActiveConsultations: number
+  timezone: string
+  availability: DoctorAvailability
+}
+
+export interface DoctorCareProfileResponse {
+  id?: number
+  doctorId: number
+  specialty?: DoctorSpecialty | null
+  acceptsOneOnOneCare: boolean
+  maxActiveConsultations: number
+  timezone: string
+  availability?: DoctorAvailability | null
+  availabilityJson?: string | null // legacy fallback
+  createdAt?: string | null
+  updatedAt?: string | null
+}
+
+export interface ConsultationRequestReviewResponse {
+  id: number
+  memberId: number
+  packageId?: number | null
+  packageCodeSnapshot?: string | null
+  packageNameSnapshot?: string | null
+  packagePriceSnapshot?: number | null
+  packageDurationDaysSnapshot?: number | null
+  reason: string
+  status: ConsultationRequestStatus
+  member?: any
+  preferredDoctor?: any
+  assignedDoctor?: any
+  healthRecord?: any
+  moreInfoReason?: string | null
+  memberAdditionalNote?: string | null
+  assignedDoctorId?: number | null
+  doctorReservedAt?: string | null
+  paymentDeadline?: string | null
+  createdAt?: string | null
+  updatedAt?: string | null
+}
+
+export interface RejectConsultationRequestPayload {
+  rejectionReason: string
+}
+
+export interface AdminCreateConsultationSessionPayload {
+  memberId: string | number
+  doctorId: string | number
+  healthRecordId?: string | number | null
+  startedAt?: string | null
+  endsAt: string
+  supportEndsAt?: string | null
+  initialSystemMessage?: string | null
+}
+
+export interface ExtendConsultationPayload {
+  endsAt: string
+  supportEndsAt?: string | null
+  reason?: string | null
+}
+
+export interface CloseConsultationPayload {
+  closeReason: string
+}
+
+export interface SendConsultationMessagePayload {
+  type: ConsultationMessageType
+  content?: string
+  attachmentUrl?: string
+  attachmentName?: string
+  attachmentSize?: number
+  attachmentContentType?: string
+  clientMessageId?: string
+}
+
+export type ConsultationRequestPage = PageResponse<ConsultationRequestItem>
+export type ConsultationSessionPage = PageResponse<ConsultationSessionItem>
+export type ConsultationMessagePage = PageResponse<ConsultationMessageItem>
+export type HealthRecordPage = PageResponse<HealthRecordItem>
+
+export interface DoctorConsultationSessionResponse {
+  id: string | number
+  requestId: string | number
+  memberId: string | number
+  status: ConsultationSessionStatus
+  startedAt?: string | null
+  endsAt?: string | null
+  supportEndsAt?: string | null
+  lastMessageAt?: string | null
+  supportScheduleSnapshotJson?: string | null
+  supportTimezoneSnapshot?: string | null
+  unresolvedAttentionCount: number
+  createdAt?: string | null
+  updatedAt?: string | null
+}
+
+export interface DoctorConsultationDetailResponse {
+  session: DoctorConsultationSessionResponse
+  member?: any
+  request?: any
+  packageSnapshot?: any
+  initialHealthRecord?: HealthRecordItem | null
+  attentions?: any[]
+  unresolvedAttentionCount?: number
+}
+
+export interface ConsultationAttentionResponse {
+  id: string | number
+  sessionId: string | number
+  healthRecordId: string | number
+  status: "REQUIRES_ATTENTION" | "REVIEWED" | string
+  reason: string
+  reviewedAt?: string | null
+  reviewedByDoctorId?: number | null
+  createdAt?: string | null
+  updatedAt?: string | null
+}
+
+export interface DoctorScopedHealthRecordResponse {
+  record: HealthRecordItem & {
+    userId?: string | number
+    fileName?: string
+    fileSize?: number
+    predictionLabel?: string
+    confidence?: number
+  }
+  initialAttachedRecord: boolean
+  attention?: ConsultationAttentionResponse | null
+}
