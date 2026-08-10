@@ -1,7 +1,9 @@
 import { CheckCircle2, RefreshCw, ShieldAlert, Stethoscope, XCircle } from "lucide-react"
+import { useSearchParams } from "react-router-dom"
 
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Textarea } from "@/components/ui/textarea"
 import { cn } from "@/lib/utils"
@@ -20,6 +22,10 @@ import { useConsultationsLogic } from "../hooks/use-consultations-logic"
 
 export function ConsultationsPage() {
   const logic = useConsultationsLogic()
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  const defaultTab = logic.isAdmin ? "admin-requests" : logic.isMember ? "create-request" : "sessions"
+  const activeTab = searchParams.get("tab") || defaultTab
 
   const roleLabel = logic.isAdmin ? "Admin" : logic.isDoctor ? "Doctor" : "Member"
 
@@ -35,9 +41,8 @@ export function ConsultationsPage() {
 
   return (
     <>
-      <Tabs defaultValue={logic.isAdmin ? "admin-requests" : logic.isMember ? "create-request" : "sessions"} className="flex flex-col lg:flex-row h-[calc(100vh-220px)] w-full gap-6 pb-2">
-      <div className="w-full lg:w-[280px] xl:w-[320px] flex-shrink-0 flex flex-col gap-6 overflow-y-auto pr-2">
-        <div className="flex flex-col gap-4">
+      <div className="flex flex-col h-[calc(100vh-100px)] w-full gap-4 pb-2">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-background p-4 rounded-2xl shadow-sm border border-border shrink-0">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-muted border border-border/50 text-muted-foreground shadow-sm">
               <Stethoscope className="h-5 w-5" />
@@ -50,16 +55,16 @@ export function ConsultationsPage() {
             </div>
           </div>
           
-          <div className="flex flex-col gap-2">
-            <div className="flex items-center gap-1.5 px-3 py-2 rounded-md border border-border/50 bg-muted/30">
+          <div className="flex flex-wrap items-center gap-3">
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-border/50 bg-muted/30">
               <span className="text-xs font-medium text-muted-foreground">Role:</span>
               <span className="text-xs font-semibold text-foreground">{roleLabel}</span>
             </div>
-            <div className="flex items-center gap-1.5 px-3 py-2 rounded-md border border-border/50 bg-muted/30">
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-border/50 bg-muted/30">
               <span className="text-xs font-medium text-muted-foreground">ID:</span>
               <span className="text-xs font-semibold text-foreground">#{logic.userSession?.userId ?? "-"}</span>
             </div>
-            <Button variant="outline" size="sm" onClick={() => void logic.loadData()} disabled={logic.loading} className="w-full shadow-sm mt-1">
+            <Button variant="outline" size="sm" onClick={() => void logic.loadData()} disabled={logic.loading} className="shadow-sm">
               <RefreshCw className="mr-2 h-4 w-4" />
               Refresh Data
             </Button>
@@ -69,7 +74,7 @@ export function ConsultationsPage() {
         {logic.alert && (
           <div
             className={cn(
-              "flex flex-col gap-2 rounded-lg border p-3 text-sm font-medium",
+              "flex flex-col gap-2 rounded-lg border p-3 text-sm font-medium shrink-0",
               logic.alert.type === "success"
                 ? "border-green-200 bg-green-50 text-green-900"
                 : "border-red-200 bg-red-50 text-red-900"
@@ -85,19 +90,8 @@ export function ConsultationsPage() {
           </div>
         )}
 
-        <TabsList className="flex flex-col items-stretch h-auto bg-transparent p-0 gap-1 border-none w-full">
-          {logic.isMember && <TabsTrigger value="records" className="justify-start px-4 py-2.5 data-[state=active]:bg-muted/60 data-[state=active]:shadow-none hover:bg-muted/40 text-left border border-transparent data-[state=active]:border-border/50">My Health Records</TabsTrigger>}
-          {logic.isMember && <TabsTrigger value="create-request" className="justify-start px-4 py-2.5 data-[state=active]:bg-muted/60 data-[state=active]:shadow-none hover:bg-muted/40 text-left border border-transparent data-[state=active]:border-border/50">Create Request</TabsTrigger>}
-          {!logic.isDoctor && <TabsTrigger value={logic.isAdmin ? "admin-requests" : "my-requests"} className="justify-start px-4 py-2.5 data-[state=active]:bg-muted/60 data-[state=active]:shadow-none hover:bg-muted/40 text-left border border-transparent data-[state=active]:border-border/50">{logic.isAdmin ? "Requests Management" : "My Requests"}</TabsTrigger>}
-          {logic.isAdmin && <TabsTrigger value="create-session" className="justify-start px-4 py-2.5 data-[state=active]:bg-muted/60 data-[state=active]:shadow-none hover:bg-muted/40 text-left border border-transparent data-[state=active]:border-border/50">Create Session</TabsTrigger>}
-          <TabsTrigger value="sessions" className="justify-start px-4 py-2.5 data-[state=active]:bg-muted/60 data-[state=active]:shadow-none hover:bg-muted/40 text-left border border-transparent data-[state=active]:border-border/50">{logic.isAdmin ? "Sessions Management" : "My Consultations"}</TabsTrigger>
-          {!logic.isAdmin && <TabsTrigger value="chat" className="justify-start px-4 py-2.5 data-[state=active]:bg-[#EBF7EE] data-[state=active]:text-[#2E7D32] data-[state=active]:shadow-none hover:bg-muted/40 text-left border border-transparent data-[state=active]:border-[#84D396]">Chat Room</TabsTrigger>}
-        </TabsList>
-      </div>
-
-      {/* Right Content Area */}
-      <div className="flex-1 min-w-0 flex flex-col bg-background rounded-2xl shadow-sm border border-border overflow-hidden h-full">
-        {logic.isMember && (
+        <Tabs value={activeTab} onValueChange={(val) => setSearchParams({ tab: val })} className="flex-1 min-w-0 flex flex-col bg-background rounded-2xl shadow-sm border border-border overflow-hidden h-full">
+          {logic.isMember && (
           <TabsContent value="records" className="m-0 flex-1 min-h-0 overflow-y-auto p-4 sm:p-6">
             <HealthRecordsPanel records={logic.healthRecords} loading={logic.loading} onSelect={(record) => logic.setRequestForm((prev) => ({ ...prev, healthRecordId: String(record.id) }))} />
           </TabsContent>
@@ -129,6 +123,7 @@ export function ConsultationsPage() {
               adminFilters={logic.adminFilters}
               onAdminFilterChange={logic.setAdminFilters}
               onSearchAdminFilters={logic.loadData}
+              onInitiatePayment={logic.handleInitiatePayment}
               onOpenSession={(sessionId) => {
                 const session = logic.sessions.find((item) => String(item.id) === String(sessionId))
                 if (session) {
@@ -184,8 +179,8 @@ export function ConsultationsPage() {
             />
           </TabsContent>
         )}
+        </Tabs>
       </div>
-    </Tabs>
 
     <AdminActionDialog
         mode={logic.adminDialogMode}
