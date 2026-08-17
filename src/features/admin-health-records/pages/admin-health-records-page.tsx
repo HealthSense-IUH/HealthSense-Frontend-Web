@@ -6,6 +6,7 @@ import { HealthRecordsTable } from "../components/HealthRecordsTable"
 import { HealthRecordsFilters } from "../components/HealthRecordsFilters"
 import { HealthRecordDetailDialog } from "../components/HealthRecordDetailDialog"
 import { HealthRecordCreateDialog } from "../components/HealthRecordCreateDialog"
+import { SystemStatisticsChart } from "../components/SystemStatisticsChart"
 import { adminHealthRecordApi } from "../services"
 import type { HealthRecord, GetHealthRecordsParams, PaginatedResponse, HealthRecordStatus, PredictionLabel } from "../types"
 
@@ -66,6 +67,8 @@ export default function AdminHealthRecordsPage() {
           Create Mock Record
         </Button>
       </div>
+
+      <SystemStatisticsChart />
 
       <HealthRecordsFilters onFilterChange={handleFilterChange} />
 

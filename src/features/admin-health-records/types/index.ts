@@ -54,3 +54,13 @@ export type UpdateHealthRecordDto = {
   confidence?: number
   hrvFeaturesJson?: string
 }
+
+
+export interface SystemHealthStat {
+  statDate: string;
+  totalRecords: number;
+  totalNormal: number;
+  totalAfib: number;
+  totalUncertain: number;
+}
+

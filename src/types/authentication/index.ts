@@ -17,6 +17,7 @@ export type UserSession = {
   role: UserRole
   accountStatus?: AccountStatus
   avatarUrl?: string
+  timezone?: string
 }
 
 export type CurrentUser = Pick<UserSession, "userId" | "email" | "role">

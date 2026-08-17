@@ -6,9 +6,22 @@ import type {
   HealthRecord,
   CreateHealthRecordDto,
   UpdateHealthRecordDto,
+  SystemHealthStat,
 } from "../types"
 
 export const adminHealthRecordApi = {
+  getSystemStatistics(fromDate: Date, toDate: Date) {
+    return axiosClient.get<any, ApiResponse<SystemHealthStat[]>>(
+      "/api/admin/health-records/statistics",
+      {
+        params: {
+          fromDate: fromDate.toISOString(),
+          toDate: toDate.toISOString()
+        }
+      }
+    )
+  },
+
   getAllHealthRecords(params: GetHealthRecordsParams) {
     return axiosClient.get<ApiResponse<PaginatedResponse<HealthRecord>>, ApiResponse<PaginatedResponse<HealthRecord>>>(
       "/api/admin/health-records",
