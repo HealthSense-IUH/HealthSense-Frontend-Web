@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react"
+import { useState, useMemo, useCallback, type ReactNode } from "react"
 
 import { useAuthStore } from "@/features/auth/auth-store"
 import { USER_ROLES, type UserRole } from "@/types/authentication"
@@ -13,22 +13,25 @@ export function AppShellProvider({ children }: { children: ReactNode }) {
 
   const effectiveRole = import.meta.env.DEV && demoRole ? demoRole : realRole
 
-  function toggleSidebar() {
+  const toggleSidebar = useCallback(() => {
     setIsCollapsed((prev) => !prev)
-  }
+  }, [])
+
+  const contextValue = useMemo(
+    () => ({
+      isCollapsed,
+      toggleSidebar,
+      setIsCollapsed,
+      effectiveRole,
+      demoRole,
+      setDemoRole,
+      realRole,
+    }),
+    [isCollapsed, toggleSidebar, effectiveRole, demoRole, realRole]
+  )
 
   return (
-    <AppShellContext.Provider
-      value={{
-        isCollapsed,
-        toggleSidebar,
-        setIsCollapsed,
-        effectiveRole,
-        demoRole,
-        setDemoRole,
-        realRole,
-      }}
-    >
+    <AppShellContext.Provider value={contextValue}>
       {children}
     </AppShellContext.Provider>
   )

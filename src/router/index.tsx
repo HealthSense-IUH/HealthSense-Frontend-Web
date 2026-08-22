@@ -311,22 +311,27 @@ export const router = createBrowserRouter([
   },
   {
     path: "/general",
+    errorElement: <GlobalErrorBoundary />,
     element: <Navigate to="/app/general/dashboard" replace />,
   },
   {
     path: "/management",
+    errorElement: <GlobalErrorBoundary />,
     element: <Navigate to="/app/management" replace />,
   },
   {
     path: "/admin/users",
+    errorElement: <GlobalErrorBoundary />,
     element: <Navigate to="/app/users" replace />,
   },
   {
     path: "/admin/health-records",
+    errorElement: <GlobalErrorBoundary />,
     element: <Navigate to="/app/health-records" replace />,
   },
   {
     path: "/profile",
+    errorElement: <GlobalErrorBoundary />,
     element: <Navigate to="/app/profile" replace />,
   },
 ])
