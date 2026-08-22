@@ -1,4 +1,4 @@
-name: Build & Push Docker Image
+name: CI / CD Pipeline
 
 on:
   push:
@@ -11,7 +11,8 @@ env:
   IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/healthsense-frontend-web
 
 jobs:
-  build:
+  lint:
+    name: ESLint Validation
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
@@ -21,6 +22,7 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: '20'
+        cache: 'npm'
 
     - name: Install dependencies
       run: npm ci || npm install
@@ -28,18 +30,67 @@ jobs:
     - name: Run ESLint
       run: npm run lint
 
-    - name: Run React Doctor (Code Health Scan)
+  knip:
+    name: Knip (Dead Code & Unused Dependencies)
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci || npm install
+
+    - name: Run Knip Scan
+      run: npm run knip || true
+
+  doctor:
+    name: React Doctor (Code Health Scan)
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci || npm install
+
+    - name: Run React Doctor
       run: npm run doctor
 
-    - name: Run Knip (Dead Code & Dependency Analysis)
-      run: npm run knip || true
+  build:
+    name: TypeScript & Vite Build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci || npm install
 
     - name: Build project
       run: npm run build
 
   docker:
+    name: Build & Push Docker Image
     runs-on: ubuntu-latest
-    needs: build
+    needs: [lint, knip, doctor, build]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
     steps:

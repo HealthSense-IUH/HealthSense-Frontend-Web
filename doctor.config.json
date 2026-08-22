@@ -1,37 +1,9 @@
 {
   "$schema": "https://unpkg.com/react-doctor/schema.json",
   "ignore": {
-    "rules": [
-      "react-doctor/no-transition-all",
-      "react-doctor/prefer-dynamic-import",
-      "react-doctor/use-lazy-motion",
-      "react-doctor/no-giant-component",
-      "react-doctor/prefer-useReducer",
-      "react-doctor/only-export-components",
-      "deslop/unused-dependency",
-      "deslop/unused-file",
-      "deslop/unused-export",
-      "react-doctor/no-array-index-as-key",
-      "react-doctor/no-adjust-state-on-prop-change",
-      "react-doctor/prefer-module-scope-pure-function",
-      "react-doctor/rerender-lazy-state-init",
-      "react-doctor/no-set-state-after-await-in-effect",
-      "react-doctor/exhaustive-deps",
-      "react-doctor/no-effect-event-handler",
-      "react-doctor/no-placeholder-only-field",
-      "react-doctor/control-has-associated-label",
-      "react-doctor/no-many-boolean-props",
-      "react-doctor/label-has-associated-control",
-      "react-doctor/click-events-have-key-events",
-      "react-doctor/no-static-element-interactions",
-      "react-doctor/js-hoist-intl",
-      "react-doctor/js-tosorted-immutable",
-      "react-doctor/rerender-state-only-in-handlers"
-    ],
     "files": [
       "dist/**",
-      "node_modules/**",
-      "src/components/ui/**"
+      "node_modules/**"
     ]
   }
 }
