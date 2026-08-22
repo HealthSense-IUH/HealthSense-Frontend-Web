@@ -1,5 +1,5 @@
 import { motion } from "framer-motion"
-import { Database, Filter, Activity, Server } from "lucide-react"
+import { Filter, Activity, Server } from "lucide-react"
 
 export function AIDatasetSection() {
   return (
@@ -10,21 +10,10 @@ export function AIDatasetSection() {
 
           {/* Left: Text Content */}
           <div>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-100 text-emerald-700 text-sm font-bold w-fit mb-6 shadow-sm border border-emerald-200"
-            >
-              <Database className="w-4 h-4" />
-              Nền Tảng Dữ Liệu
-            </motion.div>
-
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
               className="text-3xl md:text-4xl font-bold text-slate-900 mb-6 leading-tight"
             >
               Được huấn luyện từ <br />

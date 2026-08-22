@@ -1,5 +1,5 @@
 import { motion } from "framer-motion"
-import { ShieldCheck, Target, Activity, Lock } from "lucide-react"
+import { Target, Activity, Lock } from "lucide-react"
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LabelList } from "recharts"
 
 const featureImportance = [
@@ -20,20 +20,10 @@ export function AIClinicalSection() {
         
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-100 text-emerald-800 text-sm font-bold mb-6"
-          >
-            <ShieldCheck className="w-4 h-4" />
-            Đạt Chuẩn Y Khoa
-          </motion.div>
           <motion.h2 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
             className="text-3xl md:text-5xl font-bold text-slate-900 mb-6"
           >
             Chuẩn Mực Lâm Sàng

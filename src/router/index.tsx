@@ -22,6 +22,7 @@ const PaymentResultPage = lazy(() => import("@/features/consultations/pages/paym
 const DoctorSessionsPage = lazy(() => import("@/features/consultations/pages/doctor-sessions-page"))
 const ProfilePage = lazy(() => import("@/features/profile/pages/profile-page"))
 const LandingPage = lazy(() => import("@/pages/public/landing-page"))
+const LoginPage = lazy(() => import("@/pages/public/login-page"))
 const ForgotPasswordPage = lazy(() => import("@/features/forgot-password/pages/forgot-password-page"))
 
 export const router = createBrowserRouter([
@@ -42,7 +43,7 @@ export const router = createBrowserRouter([
         path: "/login",
         element: (
           <LazyElement>
-            <LandingPage />
+            <LoginPage />
           </LazyElement>
         ),
       },
