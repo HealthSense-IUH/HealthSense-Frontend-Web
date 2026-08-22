@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react"
+import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { ShieldAlert, CheckCircle2, Clock, XCircle, AlertTriangle, RefreshCw, ArrowLeft } from "lucide-react"
 
@@ -16,8 +16,8 @@ export default function PaymentResultPage() {
   const [loading, setLoading] = useState(true)
   const [payment, setPayment] = useState<ConsultationPaymentResponse | null>(null)
   const [errorText, setErrorText] = useState<string | null>(null)
-  const isMissingRequestId = useRef(false)
-  const isNotFound = useRef(false)
+  const [isMissingRequestId, setIsMissingRequestId] = useState(false)
+  const [isNotFound, setIsNotFound] = useState(false)
 
   const fetchPaymentStatus = async (reqId: string) => {
     try {
@@ -31,9 +31,10 @@ export default function PaymentResultPage() {
       if (data.status !== "PENDING") {
         localStorage.removeItem("healthsense.pendingPaymentRequestId")
       }
-    } catch (error: any) {
-      if (error?.response?.status === 404) {
-        isNotFound.current = true
+    } catch (error: unknown) {
+      const anyErr = error as { response?: { status?: number } }
+      if (anyErr?.response?.status === 404) {
+        setIsNotFound(true)
         localStorage.removeItem("healthsense.pendingPaymentRequestId")
       } else {
         setErrorText(readError(error, "Lỗi kiểm tra trạng thái thanh toán."))
@@ -46,7 +47,7 @@ export default function PaymentResultPage() {
   useEffect(() => {
     const requestId = localStorage.getItem("healthsense.pendingPaymentRequestId")
     if (!requestId) {
-      isMissingRequestId.current = true
+      setIsMissingRequestId(true)
       setLoading(false)
       return
     }
@@ -73,7 +74,7 @@ export default function PaymentResultPage() {
     )
   }
 
-  if (isMissingRequestId.current) {
+  if (isMissingRequestId) {
     return (
       <div className="flex flex-col items-center justify-center h-[calc(100vh-200px)] text-center max-w-md mx-auto">
         <ShieldAlert className="h-12 w-12 text-neutral-400 mb-4" />
@@ -86,7 +87,7 @@ export default function PaymentResultPage() {
     )
   }
 
-  if (isNotFound.current) {
+  if (isNotFound) {
     return (
       <div className="flex flex-col items-center justify-center h-[calc(100vh-200px)] text-center max-w-md mx-auto">
         <AlertTriangle className="h-12 w-12 text-orange-500 mb-4" />

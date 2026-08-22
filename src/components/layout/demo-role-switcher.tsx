@@ -54,7 +54,7 @@ export function DemoRoleSwitcher() {
           </div>
 
           <div className="space-y-1 py-1">
-            {roles.map((role) => {
+            {DEMO_ROLES.map((role) => {
               const isSelected = effectiveRole === role.value
               const isReal = realRole === role.value
               return (

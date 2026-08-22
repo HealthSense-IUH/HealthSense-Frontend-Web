@@ -28,6 +28,9 @@ jobs:
     - name: Run ESLint
       run: npm run lint
 
+    - name: Run React Doctor (Code Health Scan)
+      run: npm run doctor
+
     - name: Run Knip (Dead Code & Dependency Analysis)
       run: npm run knip || true
 
