@@ -1,0 +1,22 @@
+{
+  "$schema": "https://unpkg.com/react-doctor/schema.json",
+  "ignore": {
+    "rules": [
+      "react-doctor/no-transition-all",
+      "react-doctor/prefer-dynamic-import",
+      "react-doctor/use-lazy-motion",
+      "react-doctor/no-giant-component",
+      "react-doctor/prefer-useReducer",
+      "react-doctor/only-export-components",
+      "deslop/unused-dependency",
+      "deslop/unused-file",
+      "deslop/unused-export",
+      "react-doctor/no-array-index-as-key"
+    ],
+    "files": [
+      "dist/**",
+      "node_modules/**",
+      "src/components/ui/**"
+    ]
+  }
+}

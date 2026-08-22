@@ -9,18 +9,18 @@ import {
 } from "@/components/ui/popover"
 import { Button } from "@/components/ui/button"
 
+const DEMO_ROLES: { value: UserRole; label: string; color: string }[] = [
+  { value: USER_ROLES.SUPER_ADMIN, label: "Super Admin", color: "bg-purple-50 text-purple-700 border-purple-200" },
+  { value: USER_ROLES.ADMIN, label: "Admin", color: "bg-blue-50 text-blue-700 border-blue-200" },
+  { value: USER_ROLES.CARE_COORDINATOR, label: "Care Coordinator", color: "bg-fuchsia-50 text-fuchsia-700 border-fuchsia-200" },
+  { value: USER_ROLES.DOCTOR, label: "Doctor", color: "bg-teal-50 text-teal-700 border-teal-200" },
+  { value: USER_ROLES.MEMBER, label: "Member", color: "bg-emerald-50 text-emerald-700 border-emerald-200" },
+]
+
 export function DemoRoleSwitcher() {
   const { effectiveRole, demoRole, setDemoRole, realRole } = useAppShell()
 
-  const roles: { value: UserRole; label: string; color: string }[] = [
-    { value: USER_ROLES.SUPER_ADMIN, label: "Super Admin", color: "bg-purple-50 text-purple-700 border-purple-200" },
-    { value: USER_ROLES.ADMIN, label: "Admin", color: "bg-blue-50 text-blue-700 border-blue-200" },
-    { value: USER_ROLES.CARE_COORDINATOR, label: "Care Coordinator", color: "bg-fuchsia-50 text-fuchsia-700 border-fuchsia-200" },
-    { value: USER_ROLES.DOCTOR, label: "Doctor", color: "bg-teal-50 text-teal-700 border-teal-200" },
-    { value: USER_ROLES.MEMBER, label: "Member", color: "bg-emerald-50 text-emerald-700 border-emerald-200" },
-  ]
-
-  const currentConfig = roles.find((r) => r.value === effectiveRole) || roles[0]
+  const currentConfig = DEMO_ROLES.find((r) => r.value === effectiveRole) || DEMO_ROLES[0]
 
   return (
     <Popover>

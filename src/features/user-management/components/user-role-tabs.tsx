@@ -16,46 +16,46 @@ interface RoleTabConfig {
   activeColor: string
 }
 
-export function UserRoleTabs({ selectedRole, onSelectRole, loading, effectiveRole }: UserRoleTabsProps) {
-  const tabs: RoleTabConfig[] = [
-    {
-      role: USER_ROLES.MEMBER,
-      label: "Members / Patients",
-      description: "Connected clinical health accounts",
-      icon: <Users className="w-4 h-4 text-blue-600 shrink-0" />,
-      activeColor: "border-blue-600 bg-blue-50/70 text-blue-950 shadow-sm",
-    },
-    {
-      role: USER_ROLES.DOCTOR,
-      label: "Doctors / Clinical",
-      description: "Verified telemetry diagnostic doctors",
-      icon: <Stethoscope className="w-4 h-4 text-teal-600 shrink-0" />,
-      activeColor: "border-teal-600 bg-teal-50/70 text-teal-950 shadow-sm",
-    },
-    {
-      role: USER_ROLES.CARE_COORDINATOR,
-      label: "Care Coordinators",
-      description: "Consultation coordination",
-      icon: <CalendarHeart className="w-4 h-4 text-fuchsia-600 shrink-0" />,
-      activeColor: "border-fuchsia-600 bg-fuchsia-50/70 text-fuchsia-950 shadow-sm",
-    },
-    {
-      role: USER_ROLES.ADMIN,
-      label: "Hospital Admins",
-      description: "Tenant operational account moderators",
-      icon: <ShieldCheck className="w-4 h-4 text-indigo-600 shrink-0" />,
-      activeColor: "border-indigo-600 bg-indigo-50/70 text-indigo-950 shadow-sm",
-    },
-    {
-      role: USER_ROLES.SUPER_ADMIN,
-      label: "Super Admins",
-      description: "System root & architecture control",
-      icon: <Crown className="w-4 h-4 text-amber-600 shrink-0" />,
-      activeColor: "border-amber-600 bg-amber-50/70 text-amber-950 shadow-sm",
-    },
-  ]
+const ROLE_TABS: RoleTabConfig[] = [
+  {
+    role: USER_ROLES.MEMBER,
+    label: "Members / Patients",
+    description: "Connected clinical health accounts",
+    icon: <Users className="w-4 h-4 text-blue-600 shrink-0" />,
+    activeColor: "border-blue-600 bg-blue-50/70 text-blue-950 shadow-sm",
+  },
+  {
+    role: USER_ROLES.DOCTOR,
+    label: "Doctors / Clinical",
+    description: "Verified telemetry diagnostic doctors",
+    icon: <Stethoscope className="w-4 h-4 text-teal-600 shrink-0" />,
+    activeColor: "border-teal-600 bg-teal-50/70 text-teal-950 shadow-sm",
+  },
+  {
+    role: USER_ROLES.CARE_COORDINATOR,
+    label: "Care Coordinators",
+    description: "Consultation coordination",
+    icon: <CalendarHeart className="w-4 h-4 text-fuchsia-600 shrink-0" />,
+    activeColor: "border-fuchsia-600 bg-fuchsia-50/70 text-fuchsia-950 shadow-sm",
+  },
+  {
+    role: USER_ROLES.ADMIN,
+    label: "Hospital Admins",
+    description: "Tenant operational account moderators",
+    icon: <ShieldCheck className="w-4 h-4 text-purple-600 shrink-0" />,
+    activeColor: "border-purple-600 bg-purple-50/70 text-purple-950 shadow-sm",
+  },
+  {
+    role: USER_ROLES.SUPER_ADMIN,
+    label: "Super Admins",
+    description: "Platform-wide system directors",
+    icon: <Crown className="w-4 h-4 text-amber-600 shrink-0" />,
+    activeColor: "border-amber-600 bg-amber-50/70 text-amber-950 shadow-sm",
+  },
+]
 
-  const visibleTabs = tabs.filter(tab => {
+export function UserRoleTabs({ selectedRole, onSelectRole, loading, effectiveRole }: UserRoleTabsProps) {
+  const visibleTabs = ROLE_TABS.filter(tab => {
     if (effectiveRole !== USER_ROLES.SUPER_ADMIN) {
       if (tab.role === USER_ROLES.SUPER_ADMIN || tab.role === USER_ROLES.ADMIN) {
         return false
