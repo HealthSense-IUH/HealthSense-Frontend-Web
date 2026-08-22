@@ -19,7 +19,7 @@ import { RequestsPanel } from "../components/requests-panel"
 import { SessionsPanel } from "../components/sessions-panel"
 import { useConsultationsLogic } from "../hooks/use-consultations-logic"
 
-export function ConsultationsPage() {
+export default function ConsultationsPage() {
   const logic = useConsultationsLogic()
   const [searchParams, setSearchParams] = useSearchParams()
 
@@ -283,5 +283,3 @@ export function ConsultationsPage() {
     </>
   )
 }
-
-export default ConsultationsPage

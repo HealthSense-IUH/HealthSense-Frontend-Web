@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom"
-import { navigationGroups, type NavigationItem } from "./nav-config"
+import { generalNavigationGroups, managementNavigationGroups, type NavigationItem } from "./nav-config"
 import { useAppShell } from "./app-shell-context"
 import {
   Tooltip,
@@ -7,11 +7,18 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 
 export function SidebarContent() {
   const location = useLocation()
-  const { isCollapsed, effectiveRole } = useAppShell()
+  const { effectiveRole } = useAppShell()
+
+  const isManagement = location.pathname.startsWith("/app/management") ||
+    location.pathname.startsWith("/app/users") ||
+    location.pathname.startsWith("/app/packages") ||
+    location.pathname.startsWith("/app/health-records") ||
+    location.pathname.startsWith("/app/doctor")
+
+  const currentGroups = isManagement ? managementNavigationGroups : generalNavigationGroups
 
   function isItemActive(item: NavigationItem): boolean {
     if (item.exact) {
@@ -20,20 +27,10 @@ export function SidebarContent() {
     return location.pathname.startsWith(item.href) && item.href !== "/"
   }
 
-  function isSubItemActive(sub: Omit<NavigationItem, "icon" | "subItems">, parentHref: string, isFirst: boolean): boolean {
-    const currentUrl = location.pathname + location.search
-    if (currentUrl === sub.href) return true
-    
-    // If we are at the base parent url without search params, and this is the first subItem, consider it active
-    if (location.pathname === parentHref && location.search === "" && isFirst) return true
-    
-    return false
-  }
-
   return (
     <TooltipProvider delayDuration={150}>
-      <nav className="flex-1 space-y-6 px-3 py-4">
-        {navigationGroups.map((group) => {
+      <nav className="flex-1 space-y-4 px-2 py-3">
+        {currentGroups.map((group, groupIdx) => {
           // Filter items by allowedRoles using effectiveRole
           const visibleItems = group.items.filter((item) =>
             item.allowedRoles.includes(effectiveRole)
@@ -44,121 +41,60 @@ export function SidebarContent() {
           }
 
           return (
-            <div key={group.id} className="space-y-1">
-              {!isCollapsed ? (
-                <h3 className="px-3 text-[10px] font-black uppercase tracking-widest text-slate-500 font-heading mb-2">
-                  {group.title}
-                </h3>
-              ) : (
-                <div className="my-2 border-t border-white/10 mx-2" />
+            <div key={group.id} className="space-y-1.5">
+              {groupIdx > 0 && (
+                <div className="my-2.5 w-8 mx-auto border-t border-slate-800" />
               )}
 
-              <div className="space-y-1">
+              <div className="space-y-1.5">
                 {visibleItems.map((item) => {
                   const active = isItemActive(item)
                   const Icon = item.icon
                   
                   const visibleSubItems = item.subItems?.filter(sub => sub.allowedRoles.includes(effectiveRole)) || []
                   const hasVisibleSubItems = visibleSubItems.length > 0
+                  const targetHref = hasVisibleSubItems ? visibleSubItems[0].href : item.href
 
-                  if (hasVisibleSubItems && !isCollapsed) {
-                    const isParentActive = active || visibleSubItems.some(sub => isSubItemActive(sub, item.href, false))
-                    
-                    return (
-                      <Accordion type="multiple" defaultValue={isParentActive ? [item.id] : []} key={item.id} className="w-full">
-                        <AccordionItem value={item.id} className="border-none">
-                          <AccordionTrigger className={`group flex items-center justify-between gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200 hover:no-underline [&[data-state=open]>svg]:rotate-180 ${
-                              isParentActive
-                                ? "bg-gradient-to-r from-rose-950/70 via-[#80091B]/40 to-rose-900/10 text-white font-bold border border-rose-500/30 shadow-md shadow-rose-950/50"
-                                : "text-slate-400 hover:bg-white/[0.05] hover:text-white"
-                            }`}>
-                            <div className="flex items-center gap-3 flex-1">
-                              <Icon
-                                className={`h-5 w-5 shrink-0 transition-colors ${
-                                  isParentActive ? "text-rose-400 drop-shadow-[0_0_6px_rgba(244,63,94,0.5)]" : "text-slate-500 group-hover:text-slate-200"
-                                }`}
-                              />
-                              <span className="truncate">{item.title}</span>
-                            </div>
-                          </AccordionTrigger>
-                          <AccordionContent className="pb-0 pt-1">
-                            <div className="flex flex-col space-y-1 ml-[22px] pl-3 mt-1 relative before:absolute before:left-0 before:top-2 before:bottom-2 before:w-px before:bg-white/10">
-                              {visibleSubItems.map((sub, idx) => {
-                                const subActive = isSubItemActive(sub, item.href, idx === 0)
-                                return (
-                                  <Link
-                                    key={sub.id}
-                                    to={sub.href}
-                                    className={`relative flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 ${
-                                      subActive
-                                        ? "text-rose-300 font-bold bg-rose-950/40 border border-rose-800/30"
-                                        : "text-slate-400 hover:text-white hover:bg-white/[0.04]"
-                                    }`}
-                                  >
-                                    {subActive && <span className="absolute left-[-1px] top-1/2 -translate-y-1/2 w-[3px] h-4 rounded-full bg-rose-500 shadow-[0_0_8px_#f43f5e]" />}
-                                    {sub.title}
-                                  </Link>
-                                )
-                              })}
-                            </div>
-                          </AccordionContent>
-                        </AccordionItem>
-                      </Accordion>
-                    )
-                  }
-
-                  const linkContent = (
+                  const linkElement = (
                     <Link
-                      to={hasVisibleSubItems ? visibleSubItems[0].href : item.href}
-                      className={`group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200 ${
+                      to={targetHref}
+                      className={`group relative flex flex-col items-center justify-center w-full py-2.5 px-1 rounded-2xl transition-all duration-200 ${
                         active
-                          ? "bg-gradient-to-r from-rose-950/80 via-[#80091B]/50 to-rose-900/20 text-white font-bold border border-rose-500/40 shadow-lg shadow-rose-950/40 backdrop-blur-md"
-                          : "text-slate-400 hover:bg-white/[0.05] hover:text-white"
-                      } ${isCollapsed ? "justify-center px-2" : ""}`}
+                          ? "bg-gradient-to-b from-sky-500/25 to-blue-600/20 text-white font-bold border border-sky-400/50 shadow-[0_0_14px_rgba(56,189,248,0.25)]"
+                          : "text-slate-400 hover:bg-white/[0.08] hover:text-white"
+                      }`}
                     >
-                      {active && !isCollapsed && (
-                        <span className="absolute left-0 top-2 bottom-2 w-1 rounded-r-full bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.8)]" />
-                      )}
-                      <Icon
-                        className={`h-5 w-5 shrink-0 transition-colors ${
-                          active ? "text-rose-400 drop-shadow-[0_0_6px_rgba(244,63,94,0.6)]" : "text-slate-500 group-hover:text-slate-200"
-                        }`}
-                      />
-                      {!isCollapsed && (
-                        <span className="truncate flex-1">{item.title}</span>
-                      )}
-                      {!isCollapsed && item.badge && (
-                        <span
-                          className={`ml-auto inline-flex items-center justify-center rounded-full px-2 py-0.5 text-[10px] font-bold ${
-                            active
-                              ? "bg-rose-600 text-white shadow-xs"
-                              : "bg-white/10 text-slate-300 group-hover:bg-white/20"
+                      <div className="relative">
+                        <Icon
+                          className={`h-5 w-5 shrink-0 transition-colors ${
+                            active ? "text-sky-300 drop-shadow-[0_0_6px_rgba(56,189,248,0.6)]" : "text-slate-400 group-hover:text-slate-200"
                           }`}
-                        >
-                          {item.badge}
-                        </span>
-                      )}
-                      {isCollapsed && item.badge && (
-                        <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-rose-500 shadow-[0_0_6px_#f43f5e] ring-2 ring-[#070D1E]" />
-                      )}
+                        />
+                        {item.badge && (
+                          <span className="absolute -top-1 -right-1.5 h-2 w-2 rounded-full bg-sky-400 shadow-[0_0_8px_#38bdf8] ring-2 ring-[#0F172A]" />
+                        )}
+                      </div>
+                      <span className={`text-[10px] text-center leading-tight mt-1 max-w-[76px] truncate tracking-tight ${active ? "font-bold text-white" : "font-semibold text-slate-400 group-hover:text-white"}`}>
+                        {item.shortTitle || item.title}
+                      </span>
                     </Link>
                   )
 
-                  if (isCollapsed) {
-                    return (
-                      <Tooltip key={item.id}>
-                        <TooltipTrigger asChild className="relative">
-                          {linkContent}
-                        </TooltipTrigger>
-                        <TooltipContent side="right" sideOffset={8} className="font-semibold bg-[#070D1E] text-white border border-white/15 shadow-2xl">
-                          {item.title}
-                          {item.badge ? ` (${item.badge})` : ""}
-                        </TooltipContent>
-                      </Tooltip>
-                    )
-                  }
-
-                  return <div key={item.id}>{linkContent}</div>
+                  return (
+                    <Tooltip key={item.id}>
+                      <TooltipTrigger asChild className="w-full">
+                        {linkElement}
+                      </TooltipTrigger>
+                      <TooltipContent
+                        side="right"
+                        sideOffset={12}
+                        className="font-bold bg-slate-900 text-white border border-slate-700 shadow-2xl text-xs py-1.5 px-3 rounded-xl z-50"
+                      >
+                        {item.title}
+                        {item.badge ? ` (${item.badge})` : ""}
+                      </TooltipContent>
+                    </Tooltip>
+                  )
                 })}
               </div>
             </div>
@@ -168,3 +104,5 @@ export function SidebarContent() {
     </TooltipProvider>
   )
 }
+
+

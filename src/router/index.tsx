@@ -130,11 +130,113 @@ export const router = createBrowserRouter([
       },
       {
         path: "management",
-        element: (
-          <LazyElement>
-            <ManagementPage />
-          </LazyElement>
-        ),
+        children: [
+          {
+            index: true,
+            element: (
+              <LazyElement>
+                <ManagementPage />
+              </LazyElement>
+            ),
+          },
+          {
+            path: "users",
+            element: (
+              <LazyElement>
+                <UserManagementPage />
+              </LazyElement>
+            ),
+          },
+          {
+            path: "packages",
+            element: (
+              <LazyElement>
+                <AdminPackagesPage />
+              </LazyElement>
+            ),
+          },
+          {
+            path: "health-records",
+            element: (
+              <LazyElement>
+                <AdminHealthRecordsPage />
+              </LazyElement>
+            ),
+          },
+          {
+            path: "doctor/consultations",
+            element: (
+              <LazyElement>
+                <DoctorSessionsPage />
+              </LazyElement>
+            ),
+          },
+        ],
+      },
+      {
+        path: "general",
+        children: [
+          {
+            index: true,
+            element: <Navigate to="/app/general/dashboard" replace />,
+          },
+          {
+            path: "dashboard",
+            element: (
+              <LazyElement>
+                <DashboardPage />
+              </LazyElement>
+            ),
+          },
+          {
+            path: "workouts",
+            element: (
+              <LazyElement>
+                <WorkoutsPage />
+              </LazyElement>
+            ),
+          },
+          {
+            path: "afib-history",
+            element: (
+              <LazyElement>
+                <AfibHistoryPage />
+              </LazyElement>
+            ),
+          },
+          {
+            path: "reports",
+            element: (
+              <LazyElement>
+                <ReportsPage />
+              </LazyElement>
+            ),
+          },
+          {
+            path: "sleep",
+            element: (
+              <LazyElement>
+                <SleepPage />
+              </LazyElement>
+            ),
+          },
+          {
+            path: "consultations",
+            element: (
+              <LazyElement>
+                <ConsultationsPage />
+              </LazyElement>
+            ),
+          },
+          {
+            path: "profile",
+            element: (
+              <LazyElement>
+                <ProfilePage />
+              </LazyElement>
+            ),
+          },
+        ],
       },
       {
         path: "users",
@@ -209,7 +311,7 @@ export const router = createBrowserRouter([
   },
   {
     path: "/general",
-    element: <Navigate to="/app/dashboard" replace />,
+    element: <Navigate to="/app/general/dashboard" replace />,
   },
   {
     path: "/management",

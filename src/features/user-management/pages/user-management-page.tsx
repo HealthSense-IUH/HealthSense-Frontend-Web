@@ -27,7 +27,7 @@ function normalizeUserPage(pageData: UserPageResponse | undefined, selectedRole:
   return { userList, total, pages }
 }
 
-export function UserManagementPage() {
+export default function UserManagementPage() {
   const { effectiveRole } = useAppShell()
 
   // Strict RBAC Verification at page level
@@ -349,5 +349,3 @@ export function UserManagementPage() {
     </div>
   )
 }
-
-export default UserManagementPage

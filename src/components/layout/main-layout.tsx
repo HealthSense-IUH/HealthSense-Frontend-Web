@@ -2,19 +2,12 @@ import { Outlet } from "react-router-dom"
 import { AppSidebar } from "./app-sidebar"
 import { Topbar } from "./topbar"
 import { AppShellProvider } from "./app-shell-provider"
-import { useAppShell } from "./app-shell-context"
 
 function AppShellInner() {
-  const { isCollapsed } = useAppShell()
-
   return (
     <div className="min-h-screen flex bg-slate-50/80 text-slate-900 font-sans transition-colors">
       <AppSidebar />
-      <div
-        className={`flex-1 flex flex-col transition-[padding] duration-300 ease-in-out ${
-          isCollapsed ? "pl-[76px]" : "pl-64"
-        }`}
-      >
+      <div className="flex-1 flex flex-col pl-[92px]">
         <Topbar />
         <main className="flex-1 flex flex-col container mx-auto px-6 py-8 max-w-[1600px]">
           <Outlet />

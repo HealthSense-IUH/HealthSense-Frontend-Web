@@ -7,7 +7,7 @@ import { profileApi } from "../services/profile-api"
 import type { UserResponse, ProfileUpdateRequest } from "../types"
 import { UnifiedProfileCard } from "../components/unified-profile-card"
 
-export function ProfilePage() {
+export default function ProfilePage() {
   const [user, setUser] = useState<UserResponse | null>(null)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
@@ -172,5 +172,3 @@ export function ProfilePage() {
     </div>
   )
 }
-
-export default ProfilePage

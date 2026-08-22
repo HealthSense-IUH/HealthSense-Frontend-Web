@@ -25,6 +25,12 @@ jobs:
     - name: Install dependencies
       run: npm ci || npm install
 
+    - name: Run ESLint
+      run: npm run lint
+
+    - name: Run Knip (Dead Code & Dependency Analysis)
+      run: npm run knip || true
+
     - name: Build project
       run: npm run build
 

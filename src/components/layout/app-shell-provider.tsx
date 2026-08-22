@@ -6,7 +6,7 @@ import { AppShellContext } from "./app-shell-context"
 
 export function AppShellProvider({ children }: { children: ReactNode }) {
   const userSession = useAuthStore((state) => state.userSession)
-  const [isCollapsed, setIsCollapsed] = useState<boolean>(false)
+  const [isCollapsed, setIsCollapsed] = useState<boolean>(true)
   const [demoRole, setDemoRole] = useState<UserRole | null>(null)
 
   const realRole = userSession?.role || USER_ROLES.SUPER_ADMIN
