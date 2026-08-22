@@ -43,7 +43,11 @@ export function SidebarContent() {
           return (
             <div key={group.id} className="space-y-1.5">
               {groupIdx > 0 && (
-                <div className="my-2.5 w-8 mx-auto border-t border-slate-800" />
+                <div
+                  className={`my-2.5 w-8 mx-auto border-t transition-colors ${
+                    isManagement ? "border-indigo-900/50" : "border-sky-950/60"
+                  }`}
+                />
               )}
 
               <div className="space-y-1.5">
@@ -60,21 +64,43 @@ export function SidebarContent() {
                       to={targetHref}
                       className={`group relative flex flex-col items-center justify-center w-full py-2.5 px-1 rounded-2xl transition-all duration-200 ${
                         active
-                          ? "bg-gradient-to-b from-sky-500/25 to-blue-600/20 text-white font-bold border border-sky-400/50 shadow-[0_0_14px_rgba(56,189,248,0.25)]"
+                          ? isManagement
+                            ? "bg-gradient-to-b from-indigo-500/35 to-purple-600/25 text-white font-bold border border-indigo-400/60 shadow-[0_0_15px_rgba(129,140,248,0.35)]"
+                            : "bg-gradient-to-b from-sky-500/25 to-cyan-500/20 text-white font-bold border border-sky-400/60 shadow-[0_0_15px_rgba(56,189,248,0.3)]"
+                          : isManagement
+                          ? "text-indigo-200/60 hover:bg-white/[0.08] hover:text-white"
                           : "text-slate-400 hover:bg-white/[0.08] hover:text-white"
                       }`}
                     >
                       <div className="relative">
                         <Icon
                           className={`h-5 w-5 shrink-0 transition-colors ${
-                            active ? "text-sky-300 drop-shadow-[0_0_6px_rgba(56,189,248,0.6)]" : "text-slate-400 group-hover:text-slate-200"
+                            active
+                              ? isManagement
+                                ? "text-indigo-200 drop-shadow-[0_0_8px_rgba(129,140,248,0.8)]"
+                                : "text-sky-300 drop-shadow-[0_0_8px_rgba(56,189,248,0.8)]"
+                              : "text-slate-400 group-hover:text-slate-200"
                           }`}
                         />
                         {item.badge && (
-                          <span className="absolute -top-1 -right-1.5 h-2 w-2 rounded-full bg-sky-400 shadow-[0_0_8px_#38bdf8] ring-2 ring-[#0F172A]" />
+                          <span
+                            className={`absolute -top-1 -right-1.5 h-2 w-2 rounded-full ring-2 ${
+                              isManagement
+                                ? "bg-indigo-400 shadow-[0_0_8px_#818cf8] ring-[#110E24]"
+                                : "bg-sky-400 shadow-[0_0_8px_#38bdf8] ring-[#0B132B]"
+                            }`}
+                          />
                         )}
                       </div>
-                      <span className={`text-[10px] text-center leading-tight mt-1 max-w-[76px] truncate tracking-tight ${active ? "font-bold text-white" : "font-semibold text-slate-400 group-hover:text-white"}`}>
+                      <span
+                        className={`text-[10px] text-center leading-tight mt-1 max-w-[76px] truncate tracking-tight ${
+                          active
+                            ? "font-bold text-white"
+                            : isManagement
+                            ? "font-semibold text-indigo-200/70 group-hover:text-white"
+                            : "font-semibold text-slate-400 group-hover:text-white"
+                        }`}
+                      >
                         {item.shortTitle || item.title}
                       </span>
                     </Link>

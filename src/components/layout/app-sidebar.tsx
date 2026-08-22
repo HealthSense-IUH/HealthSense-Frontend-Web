@@ -17,21 +17,54 @@ export function AppSidebar() {
 
   return (
     <aside
-      className="fixed left-0 top-0 z-40 flex h-screen w-[92px] flex-col border-r border-slate-800/80 bg-[#0F172A] text-slate-300 shadow-[4px_0_30px_rgba(0,0,0,0.15)] select-none"
+      className={`fixed left-0 top-0 z-40 flex h-screen w-[92px] flex-col select-none transition-colors duration-300 ${
+        isManagement
+          ? "border-r border-indigo-900/50 bg-[#110E24] text-indigo-200 shadow-[4px_0_30px_rgba(79,70,229,0.12)]"
+          : "border-r border-sky-950/60 bg-[#0B132B] text-slate-300 shadow-[4px_0_30px_rgba(14,165,233,0.12)]"
+      }`}
     >
       {/* Dynamic Ambient Top Glow */}
-      <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-sky-500/20 via-blue-600/10 to-transparent pointer-events-none blur-xl" />
+      <div
+        className={`absolute top-0 left-0 right-0 h-36 pointer-events-none blur-2xl transition-all duration-500 ${
+          isManagement
+            ? "bg-gradient-to-b from-indigo-600/30 via-purple-600/15 to-transparent"
+            : "bg-gradient-to-b from-sky-500/25 via-cyan-500/10 to-transparent"
+        }`}
+      />
 
-      {/* Header / Brand */}
-      <div className="relative flex h-16 items-center justify-center border-b border-slate-800/80 px-2 z-10">
+      {/* Header / Brand with Scope Badge */}
+      <div
+        className={`relative flex flex-col items-center justify-center py-3.5 border-b z-10 transition-colors ${
+          isManagement ? "border-indigo-900/50 bg-indigo-950/30" : "border-sky-950/60 bg-sky-950/20"
+        }`}
+      >
         <Link
           to={isManagement ? "/app/management" : "/app/dashboard"}
-          className="flex items-center justify-center group"
-          title="HealthSense - AI Cardiac Platform"
+          className="flex flex-col items-center group"
+          title={isManagement ? "HealthSense - Phân hệ Quản trị" : "HealthSense - Sức khỏe Người dùng"}
         >
-          <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-tr from-blue-600 via-sky-500 to-cyan-400 text-white shadow-md shadow-sky-500/30 group-hover:scale-105 transition-transform duration-200">
-            <HeartPulse className="h-5 w-5 text-white animate-pulse drop-shadow-xs" />
+          <div
+            className={`relative flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl text-white shadow-md group-hover:scale-105 transition-all duration-200 ${
+              isManagement
+                ? "bg-gradient-to-tr from-purple-600 via-indigo-500 to-blue-500 shadow-indigo-500/30"
+                : "bg-gradient-to-tr from-blue-600 via-sky-500 to-cyan-400 shadow-sky-500/30"
+            }`}
+          >
+            {isManagement ? (
+              <ShieldCheck className="h-5 w-5 text-white animate-pulse drop-shadow-xs" />
+            ) : (
+              <HeartPulse className="h-5 w-5 text-white animate-pulse drop-shadow-xs" />
+            )}
           </div>
+          <span
+            className={`text-[8.5px] font-mono font-black uppercase tracking-wider px-2 py-0.5 rounded-full mt-1.5 border ${
+              isManagement
+                ? "bg-indigo-500/20 text-indigo-300 border-indigo-400/40"
+                : "bg-sky-500/20 text-sky-300 border-sky-400/40"
+            }`}
+          >
+            {isManagement ? "ADMIN" : "MEMBER"}
+          </span>
         </Link>
       </div>
 
@@ -41,7 +74,11 @@ export function AppSidebar() {
       </div>
 
       {/* Footer / Switch Scope Button */}
-      <div className="relative border-t border-slate-800/80 p-2 bg-slate-950/50 z-10 flex flex-col items-center">
+      <div
+        className={`relative border-t p-2 z-10 flex flex-col items-center transition-colors ${
+          isManagement ? "border-indigo-900/50 bg-indigo-950/50" : "border-sky-950/60 bg-slate-950/60"
+        }`}
+      >
         <TooltipProvider delayDuration={150}>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -50,19 +87,19 @@ export function AppSidebar() {
                 onClick={() => navigate(isManagement ? "/app/dashboard" : "/app/management")}
                 className={`group flex flex-col items-center justify-center w-full py-2 px-1 rounded-2xl transition-all duration-200 cursor-pointer ${
                   isManagement
-                    ? "bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 border border-sky-400/40 shadow-xs shadow-sky-500/20"
-                    : "bg-white/[0.05] hover:bg-white/[0.1] hover:text-white text-slate-300 border border-white/10 shadow-2xs"
+                    ? "bg-sky-950/60 hover:bg-sky-900/80 text-sky-300 hover:text-white border border-sky-500/40 hover:border-sky-400 shadow-xs shadow-sky-500/10"
+                    : "bg-indigo-950/50 hover:bg-indigo-900/70 text-indigo-300 hover:text-white border border-indigo-500/30 hover:border-indigo-400 shadow-xs shadow-indigo-500/10"
                 }`}
               >
                 <div className="relative mb-0.5">
                   {isManagement ? (
                     <ArrowRightLeft className="h-4 w-4 text-sky-400 group-hover:rotate-180 transition-transform duration-300" />
                   ) : (
-                    <ShieldCheck className="h-4 w-4 text-slate-400 group-hover:text-sky-400 group-hover:scale-110 transition-transform duration-200" />
+                    <ArrowRightLeft className="h-4 w-4 text-indigo-400 group-hover:rotate-180 transition-transform duration-300" />
                   )}
                 </div>
-                <span className="text-[9.5px] font-bold text-center leading-tight tracking-tight">
-                  {isManagement ? "Người dùng" : "Quản trị"}
+                <span className="text-[9px] font-bold text-center leading-tight tracking-tight">
+                  {isManagement ? "Về Người dùng" : "Sang Quản trị"}
                 </span>
               </button>
             </TooltipTrigger>
@@ -72,8 +109,8 @@ export function AppSidebar() {
               className="font-bold bg-slate-900 text-white border border-slate-700 shadow-2xl text-xs py-1.5 px-3 rounded-xl z-50"
             >
               {isManagement
-                ? "Chuyển về Sức khỏe người dùng (General)"
-                : "Chuyển sang Quản trị hệ thống (Management)"}
+                ? "Chuyển về Bảng theo dõi sức khỏe người dùng (General)"
+                : "Chuyển sang Quản trị hệ thống & Bác sĩ (Management)"}
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
