@@ -12,7 +12,7 @@ function AppShellInner() {
       <AppSidebar />
       <div
         className={`flex-1 flex flex-col transition-[padding] duration-300 ease-in-out ${
-          isCollapsed ? "pl-[72px]" : "pl-64"
+          isCollapsed ? "pl-[76px]" : "pl-64"
         }`}
       >
         <Topbar />

@@ -108,7 +108,7 @@ export function Topbar() {
           <PopoverContent align="end" className="w-80 p-4 rounded-2xl border-slate-200 shadow-xl bg-white space-y-3">
             <div className="flex items-center justify-between border-b border-slate-100 pb-2">
               <h4 className="font-bold text-sm text-slate-900">Medical Notifications</h4>
-              <span className="text-[11px] font-semibold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">3 New</span>
+              <span className="text-[11px] font-bold text-rose-700 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-100">3 New</span>
             </div>
             <div className="space-y-2 text-xs">
               <div className="p-2 rounded-xl bg-red-50/60 border border-red-100 flex gap-2.5 items-start">
@@ -140,7 +140,7 @@ export function Topbar() {
             >
               <Avatar className="h-8 w-8 border border-slate-200 shadow-xs">
                 <AvatarImage src={userSession?.avatarUrl || "https://i.pravatar.cc/150?img=47"} alt={userEmail} className="object-cover" />
-                <AvatarFallback className="bg-blue-600 text-white font-bold text-xs">
+                <AvatarFallback className="bg-[#80091B] text-white font-bold text-xs">
                   {userInitials}
                 </AvatarFallback>
               </Avatar>
@@ -148,7 +148,7 @@ export function Topbar() {
                 <span className="font-bold text-slate-900 truncate">
                   {userSession?.fullName || "Administrator"}
                 </span>
-                <span className="text-[10px] font-semibold text-teal-600 uppercase tracking-wider truncate">
+                <span className="text-[10px] font-bold text-rose-600 uppercase tracking-wider truncate font-mono">
                   {effectiveRole}
                 </span>
               </div>

@@ -7,7 +7,7 @@ const coreValues = [
     enTitle: "Continuous",
     viTitle: "Giám sát 24/7",
     desc: "Đồng bộ không dây liên tục dữ liệu nhịp tim và SpO2 từng giây qua smartwatch mà không làm gián đoạn sinh hoạt.",
-    letterColor: "text-sky-400",
+    letterColor: "text-cyan-400",
   },
   {
     letter: "A",
@@ -21,24 +21,24 @@ const coreValues = [
     enTitle: "Real-time",
     viTitle: "Cảnh báo tức thì",
     desc: "Phản xạ nhanh dưới 100ms phát hiện sớm cơn Rung nhĩ (AFib) và nguy cơ đột quỵ trước khi có triệu chứng.",
-    letterColor: "text-indigo-300",
+    letterColor: "text-sky-400",
   },
   {
     letter: "E",
     enTitle: "Expert Care",
     viTitle: "Bác sĩ đồng hành",
     desc: "Kết nối trực tuyến 1 chạm với đội ngũ bác sĩ chuyên khoa tim mạch và tự động chia sẻ hồ sơ điện tim an toàn.",
-    letterColor: "text-rose-400",
+    letterColor: "text-blue-400",
   },
 ]
 
 export function HealthSenseBrandStorySection() {
   return (
-    <section className="w-full relative overflow-hidden bg-gradient-to-br from-[#80091B] via-[#4A081D] to-[#0A0D1A] text-white py-20 sm:py-28">
+    <section className="w-full relative overflow-hidden bg-gradient-to-br from-[#0F172A] via-[#0369A1] to-[#0A0D1A] text-white py-20 sm:py-28">
       
-      {/* Abstract Graphic Background Shapes & Lighting (NEXT Guideline Signature) */}
-      <div className="absolute top-0 right-0 w-[650px] h-[650px] bg-gradient-to-bl from-rose-500/25 via-pink-600/15 to-transparent rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-to-tr from-red-600/20 via-purple-700/15 to-transparent rounded-full blur-[140px] pointer-events-none" />
+      {/* Abstract Graphic Background Shapes & Lighting */}
+      <div className="absolute top-0 right-0 w-[650px] h-[650px] bg-gradient-to-bl from-sky-500/25 via-cyan-600/15 to-transparent rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-to-tr from-blue-600/20 via-indigo-700/15 to-transparent rounded-full blur-[140px] pointer-events-none" />
       
       {/* Subtle Angular Overlay Shards */}
       <div className="absolute -top-12 right-1/4 w-96 h-96 border border-white/10 rounded-[3rem] rotate-12 bg-white/[0.02] backdrop-blur-3xl pointer-events-none" />
@@ -60,7 +60,7 @@ export function HealthSenseBrandStorySection() {
             {/* Brand Pill Logo */}
             <div className="inline-flex items-center gap-2 mb-6 sm:mb-8">
               <div className="w-9 h-9 rounded-xl bg-white/15 border border-white/20 flex items-center justify-center text-white backdrop-blur-md shadow-sm">
-                <HeartPulse className="w-5 h-5 text-rose-300" />
+                <HeartPulse className="w-5 h-5 text-cyan-300" />
               </div>
               <span className="text-xl sm:text-2xl font-black font-heading tracking-tight text-white uppercase">
                 HEALTHSENSE
@@ -73,7 +73,7 @@ export function HealthSenseBrandStorySection() {
               {/* Layer 1: Giant WHAT'S */}
               <div className="relative">
                 {/* 3D Offset Shadow */}
-                <span className="text-6xl sm:text-8xl lg:text-[104px] font-black font-heading tracking-tighter leading-[0.9] text-rose-950/70 absolute top-1.5 left-1.5 uppercase -z-10">
+                <span className="text-6xl sm:text-8xl lg:text-[104px] font-black font-heading tracking-tighter leading-[0.9] text-blue-950/70 absolute top-1.5 left-1.5 uppercase -z-10">
                   WHAT&apos;S
                 </span>
                 <h2 className="text-6xl sm:text-8xl lg:text-[104px] font-black font-heading tracking-tighter leading-[0.9] text-white uppercase drop-shadow-md">
@@ -84,7 +84,7 @@ export function HealthSenseBrandStorySection() {
               {/* Layer 2: Giant HEALTHSENSE */}
               <div className="relative mt-1 sm:mt-2">
                 {/* 3D Offset Shadow */}
-                <span className="text-5xl sm:text-7xl lg:text-[92px] font-black font-heading tracking-tighter leading-[0.9] text-rose-950/70 absolute top-1.5 left-1.5 uppercase -z-10">
+                <span className="text-5xl sm:text-7xl lg:text-[92px] font-black font-heading tracking-tighter leading-[0.9] text-blue-950/70 absolute top-1.5 left-1.5 uppercase -z-10">
                   HEALTHSENSE
                 </span>
                 <h2 className="text-5xl sm:text-7xl lg:text-[92px] font-black font-heading tracking-tighter leading-[0.9] text-white uppercase drop-shadow-md">
@@ -98,7 +98,7 @@ export function HealthSenseBrandStorySection() {
 
           {/* Right Column: Mission Paragraph + Action Circle Button */}
           <div className="lg:col-span-5 flex items-end justify-between gap-6 pt-4 lg:pt-0">
-            <p className="text-xs sm:text-sm text-rose-100/90 leading-relaxed max-w-md font-sans">
+            <p className="text-xs sm:text-sm text-sky-100/90 leading-relaxed max-w-md font-sans">
               HealthSense được phát triển với tinh thần tiên phong và tư duy đột phá của y tế số. Chúng mình tin rằng mỗi người đều xứng đáng sở hữu giải pháp AI cá nhân hóa để theo dõi nhịp tim và bảo vệ sức khỏe tim mạch chủ động mỗi ngày.
             </p>
 
@@ -108,7 +108,7 @@ export function HealthSenseBrandStorySection() {
                 document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })
               }}
               aria-label="Scroll to features section"
-              className="w-12 h-12 rounded-full bg-rose-900/80 hover:bg-rose-800 border border-rose-400/30 text-white flex items-center justify-center shadow-lg shadow-rose-950/40 shrink-0 hover:scale-110 active:scale-95 transition-all cursor-pointer group"
+              className="w-12 h-12 rounded-full bg-sky-600/80 hover:bg-sky-500 border border-sky-400/30 text-white flex items-center justify-center shadow-lg shadow-sky-950/40 shrink-0 hover:scale-110 active:scale-95 transition-all cursor-pointer group"
             >
               <ArrowDown className="w-5 h-5 group-hover:translate-y-0.5 transition-transform" />
             </button>
@@ -130,7 +130,7 @@ export function HealthSenseBrandStorySection() {
           </motion.h3>
 
           {/* Two Editorial Narrative Columns */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-14 text-xs sm:text-sm text-rose-100/80 leading-relaxed font-sans">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-14 text-xs sm:text-sm text-sky-100/80 leading-relaxed font-sans">
             
             {/* Story Column 1 */}
             <motion.div
@@ -178,7 +178,7 @@ export function HealthSenseBrandStorySection() {
                 C.A.R.E Core Values
               </h3>
             </div>
-            <p className="text-xs sm:text-sm text-rose-100/70 max-w-md font-sans">
+            <p className="text-xs sm:text-sm text-sky-100/70 max-w-md font-sans">
               4 tiêu chí cốt lõi định hình nên sứ mệnh bảo vệ và chăm sóc sức khỏe tim mạch của HealthSense.
             </p>
           </div>
@@ -214,20 +214,20 @@ export function HealthSenseBrandStorySection() {
                     </div>
 
                     {/* Vietnamese Title Text */}
-                    <span className="text-xs font-bold font-heading text-rose-300 block mb-3">
+                    <span className="text-xs font-bold font-heading text-cyan-300 block mb-3">
                       {val.viTitle}
                     </span>
 
                     {/* Description Copy */}
-                    <p className="text-xs text-rose-100/85 leading-relaxed font-sans">
+                    <p className="text-xs text-sky-100/85 leading-relaxed font-sans">
                       {val.desc}
                     </p>
                   </div>
 
                   {/* Subtle Bottom Accent Indicator */}
                   <div className="mt-5 pt-3 border-t border-white/10 flex items-center justify-between">
-                    <div className="w-8 h-1 rounded-full bg-gradient-to-r from-rose-400 to-transparent group-hover:w-14 transition-all duration-300" />
-                    <div className="w-1.5 h-1.5 rounded-full bg-rose-400 opacity-60 group-hover:opacity-100 group-hover:scale-125 transition-all" />
+                    <div className="w-8 h-1 rounded-full bg-gradient-to-r from-cyan-400 to-transparent group-hover:w-14 transition-all duration-300" />
+                    <div className="w-1.5 h-1.5 rounded-full bg-cyan-400 opacity-60 group-hover:opacity-100 group-hover:scale-125 transition-all" />
                   </div>
 
                 </div>

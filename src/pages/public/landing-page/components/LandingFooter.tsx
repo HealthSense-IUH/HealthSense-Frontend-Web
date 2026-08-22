@@ -13,7 +13,7 @@ export function LandingFooter() {
     <footer className="w-full bg-[#070D1E] text-slate-300 relative overflow-hidden border-t border-white/10 pt-16 sm:pt-20 pb-12">
       
       {/* Dynamic Ambient Background Glow */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-red-600/10 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-600/15 rounded-full blur-[140px] pointer-events-none" />
       <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-sky-600/10 rounded-full blur-[140px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 relative z-10">
@@ -26,7 +26,7 @@ export function LandingFooter() {
             <div>
               {/* Brand Logo */}
               <div className="inline-flex items-center gap-2.5 mb-4">
-                <div className="w-9 h-9 rounded-xl bg-red-600/20 border border-red-500/30 flex items-center justify-center text-red-400">
+                <div className="w-9 h-9 rounded-xl bg-sky-600/20 border border-sky-500/30 flex items-center justify-center text-sky-400">
                   <HeartPulse className="w-5 h-5 animate-pulse" />
                 </div>
                 <span className="text-xl font-black font-heading tracking-tight text-white uppercase">

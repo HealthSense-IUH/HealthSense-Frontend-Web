@@ -36,9 +36,9 @@ const stagesData: Record<StageId, PipelineStageData> = {
     title: "Thu Thập & Khử Nhiễu R-Peak",
     enTitle: "Signal Ingestion & Butterworth Denoising",
     tagline: "Tiếp nhận dòng sóng 125Hz và lọc sạch trôi đường đẳng điện",
-    color: "text-rose-500",
-    glowColor: "from-rose-500/20 to-red-600/10",
-    badgeBg: "bg-rose-50 border-rose-200 text-rose-700",
+    color: "text-sky-500",
+    glowColor: "from-sky-500/20 to-blue-600/10",
+    badgeBg: "bg-sky-50 border-sky-200 text-sky-700",
     summary: "Dòng dữ liệu điện tim thô từ thiết bị đeo (hoặc kho lâm sàng MIMIC-III) thường bị lẫn tạp âm do người dùng cử động tay. Thuật toán lọc dải thông Butterworth 0.5 - 40Hz loại bỏ 100% nhiễu rung lắc, sau đó thuật toán SciPy find_peaks định vị chuẩn xác từng đỉnh sóng R với sai số dưới 2ms.",
     bulletPoints: [
       "Lấy mẫu liên tục ở tần số y tế fs = 125 Hz",
@@ -189,8 +189,8 @@ export function AIPipelineSection() {
       
       {/* High-Tech Background Grid & Ambient Lighting */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#1e293b15_1px,transparent_1px),linear-gradient(to_bottom,#1e293b15_1px,transparent_1px)] bg-[size:3rem_3rem] pointer-events-none" />
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[500px] bg-rose-600/15 rounded-full blur-[160px] pointer-events-none" />
-      <div className="absolute bottom-10 right-10 w-[500px] h-[400px] bg-sky-600/10 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[500px] bg-sky-600/15 rounded-full blur-[160px] pointer-events-none" />
+      <div className="absolute bottom-10 right-10 w-[500px] h-[400px] bg-cyan-600/10 rounded-full blur-[140px] pointer-events-none" />
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
@@ -217,7 +217,7 @@ export function AIPipelineSection() {
                 onClick={() => setActiveStage(stageKey)}
                 className={`relative text-left p-4 sm:p-5 rounded-2xl transition-all duration-300 cursor-pointer border flex flex-col justify-between overflow-hidden ${
                   isActive 
-                    ? "bg-white/10 border-white/30 shadow-xl shadow-rose-950/40 backdrop-blur-xl scale-[1.01]" 
+                    ? "bg-white/10 border-white/30 shadow-xl shadow-sky-950/40 backdrop-blur-xl scale-[1.01]" 
                     : "bg-white/[0.03] border-white/10 hover:bg-white/[0.06] text-slate-400"
                 }`}
               >
@@ -225,16 +225,16 @@ export function AIPipelineSection() {
                 {isActive && (
                   <motion.div 
                     layoutId="activeTabLine"
-                    className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-rose-500 via-red-500 to-sky-500" 
+                    className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-sky-500 to-cyan-500" 
                   />
                 )}
 
                 <div className="flex items-center justify-between mb-3">
-                  <span className={`text-xs font-mono font-black ${isActive ? "text-rose-400" : "text-slate-500"}`}>
+                  <span className={`text-xs font-mono font-black ${isActive ? "text-sky-400" : "text-slate-500"}`}>
                     PHASE 0{item.stepNum}
                   </span>
                   
-                  <div className={`w-2.5 h-2.5 rounded-full ${isActive ? "bg-rose-400 animate-ping" : "bg-white/20"}`} />
+                  <div className={`w-2.5 h-2.5 rounded-full ${isActive ? "bg-sky-400 animate-ping" : "bg-white/20"}`} />
                 </div>
 
                 <div>
@@ -257,7 +257,7 @@ export function AIPipelineSection() {
           <div className="lg:col-span-5 flex flex-col justify-between p-6 sm:p-8 rounded-3xl bg-slate-950/80 border border-white/15 backdrop-blur-xl shadow-2xl">
             <div>
               {/* Stage Step Indicator */}
-              <span className="text-xs font-mono text-rose-400 font-bold block mb-2 tracking-wider uppercase">
+              <span className="text-xs font-mono text-sky-400 font-bold block mb-2 tracking-wider uppercase">
                 GIAI ĐOẠN 0{current.stepNum} / 03
               </span>
 
@@ -266,7 +266,7 @@ export function AIPipelineSection() {
                 {current.title}
               </h3>
               
-              <p className="text-xs font-mono text-rose-300/80 mb-6">
+              <p className="text-xs font-mono text-sky-300/80 mb-6">
                 {current.tagline}
               </p>
 
@@ -279,7 +279,7 @@ export function AIPipelineSection() {
               <div className="space-y-2.5 mb-8">
                 {current.bulletPoints.map((bullet, idx) => (
                   <div key={idx} className="flex items-start gap-2.5 text-xs text-slate-300 font-sans">
-                    <CheckCircle2 className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
+                    <CheckCircle2 className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
                     <span>{bullet}</span>
                   </div>
                 ))}
@@ -317,7 +317,7 @@ export function AIPipelineSection() {
                   onClick={() => setViewTab("simulation")}
                   className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer flex items-center gap-1.5 ${
                     viewTab === "simulation" 
-                      ? "bg-rose-600 text-white font-bold shadow-xs" 
+                      ? "bg-sky-600 text-white font-bold shadow-xs" 
                       : "text-slate-400 hover:text-white"
                   }`}
                 >
@@ -328,7 +328,7 @@ export function AIPipelineSection() {
                   onClick={() => setViewTab("code")}
                   className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer flex items-center gap-1.5 ${
                     viewTab === "code" 
-                      ? "bg-rose-600 text-white font-bold shadow-xs" 
+                      ? "bg-sky-600 text-white font-bold shadow-xs" 
                       : "text-slate-400 hover:text-white"
                   }`}
                 >
@@ -350,7 +350,7 @@ export function AIPipelineSection() {
                     <div className="space-y-6">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                          <Filter className="w-4 h-4 text-rose-400" />
+                          <Filter className="w-4 h-4 text-sky-400" />
                           <span className="text-xs font-bold font-heading text-white">
                             Giả lập sóng ECG thời gian thực (125 Hz)
                           </span>
@@ -376,7 +376,7 @@ export function AIPipelineSection() {
                           BPM: 74 | RR: 810ms
                         </div>
 
-                        <svg className="w-full h-32 stroke-rose-500 fill-none" viewBox="0 0 400 100">
+                        <svg className="w-full h-32 stroke-sky-500 fill-none" viewBox="0 0 400 100">
                           {/* Baseline */}
                           <line x1="0" y1="50" x2="400" y2="50" stroke="#334155" strokeWidth="1" strokeDasharray="4 4" />
                           
@@ -384,7 +384,7 @@ export function AIPipelineSection() {
                           {isNoiseSimulated ? (
                             <path 
                               d="M 0 50 Q 15 40 30 52 Q 40 65 50 48 L 65 50 L 72 38 L 78 75 L 85 15 L 94 90 L 102 50 L 120 54 Q 135 30 150 56 Q 165 70 180 46 L 195 50 L 202 34 L 208 78 L 215 12 L 224 88 L 232 50 L 250 52 Q 265 35 280 58 Q 295 68 310 44 L 325 50 L 332 36 L 338 76 L 345 14 L 354 92 L 362 50 L 400 50" 
-                              stroke="#f43f5e" 
+                              stroke="#38bdf8" 
                               strokeWidth="2.5" 
                             />
                           ) : (

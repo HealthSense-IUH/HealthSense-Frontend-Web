@@ -37,8 +37,8 @@ const domainPillars: DomainPillar[] = [
     title: "BIẾN THIÊN TỨC THỜI",
     subtitle: "Time-Domain Analysis (8 Chỉ số)",
     tagline: "Đo đạc chính xác từng khoảng cách sóng R",
-    accentColor: "from-red-600 to-rose-600",
-    borderColor: "border-red-600 bg-red-600",
+    accentColor: "from-blue-600 to-sky-600",
+    borderColor: "border-blue-600 bg-blue-600",
     desc: "AI quét liên tục từng nhịp đập qua thuật toán lọc đỉnh Pan-Tompkins. Các chỉ số RMSSD và pNN50 phản ánh tức thời phản xạ phó giao cảm và cảnh báo nhịp chậm/nhịp nhanh bất thường.",
     keyStats: ["RMSSD nhạy > 50ms", "8 Đặc trưng thời gian thực", "Khung trượt 30 giây"],
     visualType: "ecg-time",
@@ -78,8 +78,8 @@ const domainPillars: DomainPillar[] = [
     title: "ĐỊNH DANH RUNG NHĨ",
     subtitle: "Non-Linear Poincaré & SampEn (3 Chỉ số)",
     tagline: "Nhận diện tính hỗn loạn và bất định của tim",
-    accentColor: "from-rose-600 to-red-700",
-    borderColor: "border-rose-600 bg-rose-600",
+    accentColor: "from-cyan-600 to-teal-700",
+    borderColor: "border-cyan-600 bg-cyan-600",
     desc: "Sử dụng đồ thị phân tán Poincaré (SD1/SD2) và Entropy mẫu (SampEn). Khi xảy ra Rung Nhĩ (AFib), nhịp tim mất tính chu kỳ làm SampEn tăng vọt — đây là chìa khóa phát hiện bệnh sớm.",
     keyStats: ["Entropy Mẫu (SampEn)", "Đồ thị Poincaré SD1/SD2", "Độ chính xác 98.65%"],
     visualType: "poincare-scatter",
@@ -98,8 +98,8 @@ export function AIFeaturesSection() {
     <section className="w-full py-24 sm:py-32 relative bg-transparent text-slate-900 overflow-hidden">
       
       {/* Dynamic Ambient Background Glows */}
-      <div className="absolute top-1/4 -right-32 w-96 h-96 bg-red-400/10 rounded-full blur-[130px] pointer-events-none" />
-      <div className="absolute bottom-1/4 -left-32 w-96 h-96 bg-sky-400/10 rounded-full blur-[130px] pointer-events-none" />
+      <div className="absolute top-1/4 -right-32 w-96 h-96 bg-sky-400/10 rounded-full blur-[130px] pointer-events-none" />
+      <div className="absolute bottom-1/4 -left-32 w-96 h-96 bg-cyan-400/10 rounded-full blur-[130px] pointer-events-none" />
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
@@ -133,7 +133,7 @@ export function AIFeaturesSection() {
             <path 
               d="M 380 260 C 380 420, 680 340, 680 500" 
               fill="none" 
-              stroke="#eb1d2f" 
+              stroke="#0284c7" 
               strokeWidth="3" 
               strokeDasharray="6 6"
               className="opacity-60"
@@ -142,7 +142,7 @@ export function AIFeaturesSection() {
             <path 
               d="M 680 720 C 680 880, 380 800, 380 960" 
               fill="none" 
-              stroke="#eb1d2f" 
+              stroke="#0284c7" 
               strokeWidth="3" 
               strokeDasharray="6 6"
               className="opacity-60"
@@ -167,10 +167,10 @@ export function AIFeaturesSection() {
                 <div className="w-full lg:w-1/2 flex justify-center">
                   <div className="relative w-full max-w-[480px]">
                     
-                    {/* Red / Accent Offset Background Shadow Layer */}
+                    {/* Blue / Accent Offset Background Shadow Layer */}
                     <div 
                       className={`absolute -bottom-3 -right-3 sm:-bottom-4 sm:-right-4 w-full h-full rounded-[2rem] sm:rounded-[2.4rem] -z-10 ${
-                        index === 1 ? "bg-sky-600" : "bg-[#eb1d2f]"
+                        index === 0 ? "bg-blue-600" : index === 1 ? "bg-sky-600" : "bg-cyan-600"
                       }`} 
                     />
 
@@ -179,14 +179,14 @@ export function AIFeaturesSection() {
                       
                       {/* Connection Pin Node (Dot with ring) */}
                       <div className={`absolute top-5 ${isEven ? "left-5" : "right-5"} z-20`}>
-                        <div className="w-5 h-5 rounded-full bg-red-600 border-2 border-white shadow-md ring-4 ring-red-100 flex items-center justify-center animate-pulse">
+                        <div className="w-5 h-5 rounded-full bg-sky-600 border-2 border-white shadow-md ring-4 ring-sky-100 flex items-center justify-center animate-pulse">
                           <span className="w-1.5 h-1.5 rounded-full bg-white" />
                         </div>
                       </div>
 
                       {/* Header in visual */}
                       <div className="flex items-center gap-2 mb-4">
-                        <span className="text-[11px] font-black tracking-widest text-red-600 font-heading uppercase">
+                        <span className="text-[11px] font-black tracking-widest text-sky-700 font-heading uppercase">
                           {pillar.step}
                         </span>
                       </div>
@@ -198,16 +198,16 @@ export function AIFeaturesSection() {
                         {pillar.visualType === "ecg-time" && (
                           <div className="w-full h-full flex flex-col justify-between">
                             <div className="flex items-center justify-between text-[11px] font-bold text-slate-500">
-                              <span className="flex items-center gap-1.5 text-red-600">
+                              <span className="flex items-center gap-1.5 text-sky-600">
                                 <HeartPulse className="w-4 h-4" /> Sóng ECG Liên Tục
                               </span>
-                              <span className="font-mono bg-red-50 text-red-700 px-2 py-0.5 rounded-md font-bold">
+                              <span className="font-mono bg-sky-50 text-sky-700 px-2 py-0.5 rounded-md font-bold">
                                 RMSSD: 42.8 ms
                               </span>
                             </div>
 
                             {/* Animated Mini ECG wave SVG */}
-                            <svg className="w-full h-24 stroke-red-600 fill-none my-auto" viewBox="0 0 320 80">
+                            <svg className="w-full h-24 stroke-sky-600 fill-none my-auto" viewBox="0 0 320 80">
                               <path 
                                 d="M 0 40 L 40 40 L 50 30 L 60 50 L 70 40 L 90 40 L 100 10 L 115 75 L 125 40 L 150 40 L 160 30 L 170 50 L 180 40 L 200 40 L 210 10 L 225 75 L 235 40 L 260 40 L 270 30 L 280 50 L 320 40" 
                                 strokeWidth="2.5" 
@@ -262,10 +262,10 @@ export function AIFeaturesSection() {
                         {pillar.visualType === "poincare-scatter" && (
                           <div className="w-full h-full flex flex-col justify-between">
                             <div className="flex items-center justify-between text-[11px] font-bold text-slate-500">
-                              <span className="flex items-center gap-1.5 text-rose-600">
+                              <span className="flex items-center gap-1.5 text-cyan-600">
                                 <Zap className="w-4 h-4" /> Đồ thị Poincaré (SD1/SD2)
                               </span>
-                              <span className="font-mono bg-rose-50 text-rose-700 px-2 py-0.5 rounded-md font-bold">
+                              <span className="font-mono bg-cyan-50 text-cyan-700 px-2 py-0.5 rounded-md font-bold">
                                 SampEn: 1.18
                               </span>
                             </div>
@@ -275,18 +275,18 @@ export function AIFeaturesSection() {
                               {/* 45-degree axis */}
                               <div className="absolute w-36 h-[1.5px] bg-slate-200 rotate-45" />
                               {/* Ellipse */}
-                              <div className="w-28 h-14 rounded-[50%] border-2 border-dashed border-rose-500 rotate-45 flex items-center justify-center bg-rose-50/30">
-                                <div className="w-2 h-2 rounded-full bg-rose-600" />
+                              <div className="w-28 h-14 rounded-[50%] border-2 border-dashed border-cyan-500 rotate-45 flex items-center justify-center bg-cyan-50/30">
+                                <div className="w-2 h-2 rounded-full bg-cyan-600" />
                               </div>
                               {/* Scatter dots */}
-                              <div className="absolute top-4 left-24 w-1.5 h-1.5 rounded-full bg-rose-400" />
-                              <div className="absolute bottom-4 right-24 w-1.5 h-1.5 rounded-full bg-rose-400" />
-                              <div className="absolute top-8 right-20 w-1.5 h-1.5 rounded-full bg-rose-400" />
+                              <div className="absolute top-4 left-24 w-1.5 h-1.5 rounded-full bg-cyan-400" />
+                              <div className="absolute bottom-4 right-24 w-1.5 h-1.5 rounded-full bg-cyan-400" />
+                              <div className="absolute top-8 right-20 w-1.5 h-1.5 rounded-full bg-cyan-400" />
                             </div>
 
                             <div className="flex items-center justify-between text-[10px] text-slate-400 font-medium pt-2 border-t border-slate-100">
                               <span>SD1: Ngắn hạn | SD2: Dài hạn</span>
-                              <span className="text-rose-600 font-bold">✓ Phát hiện Rung nhĩ</span>
+                              <span className="text-cyan-600 font-bold">✓ Phát hiện Rung nhĩ</span>
                             </div>
                           </div>
                         )}
@@ -301,7 +301,7 @@ export function AIFeaturesSection() {
                 <div className="w-full lg:w-1/2 flex flex-col justify-center">
                   
                   {/* Step Number Tag */}
-                  <span className="text-xs font-black tracking-widest text-red-600 font-heading uppercase mb-2">
+                  <span className="text-xs font-black tracking-widest text-sky-700 font-heading uppercase mb-2">
                     {pillar.step}
                   </span>
 
@@ -325,7 +325,7 @@ export function AIFeaturesSection() {
                         key={stat}
                         className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-white border border-slate-200/90 text-slate-800 shadow-2xs font-heading"
                       >
-                        <CheckCircle2 className="w-3.5 h-3.5 text-red-600" />
+                        <CheckCircle2 className="w-3.5 h-3.5 text-sky-600" />
                         <span>{stat}</span>
                       </span>
                     ))}
@@ -339,7 +339,7 @@ export function AIFeaturesSection() {
                           onClick={() => setSelectedDomain(pillar)}
                           className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white hover:bg-slate-50 text-slate-800 font-bold text-xs sm:text-sm border border-slate-200 shadow-xs hover:shadow-sm hover:border-slate-300 transition-all cursor-pointer font-heading group"
                         >
-                          <Sliders className="w-4 h-4 text-red-600" />
+                          <Sliders className="w-4 h-4 text-sky-600" />
                           <span>Xem chi tiết danh sách {pillar.technicalFeatures.length} công thức</span>
                           <ChevronRight className="w-4 h-4 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
                         </button>
@@ -360,17 +360,19 @@ export function AIFeaturesSection() {
                                 className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 flex items-start justify-between gap-4"
                               >
                                 <div>
-                                  <h4 className="text-sm font-black text-slate-900 font-heading mb-1">
-                                    {feat.name}
-                                  </h4>
-                                  <p className="text-xs text-slate-600 leading-relaxed mb-2">
-                                    {feat.desc}
+                                  <div className="flex items-center gap-2">
+                                    <span className="font-mono font-bold text-xs text-sky-700 bg-sky-50 px-2 py-0.5 rounded border border-sky-200/60">
+                                      {feat.name}
+                                    </span>
+                                    <span className="text-xs font-semibold text-slate-700">
+                                      {feat.desc}
+                                    </span>
+                                  </div>
+                                  <p className="text-[11px] font-mono text-slate-500 mt-1.5 pl-0.5">
+                                    Công thức: <code className="bg-white px-1.5 py-0.5 rounded border border-slate-200 text-slate-800 font-semibold">{feat.formula}</code>
                                   </p>
-                                  <span className="font-mono text-[11px] text-slate-500 bg-white px-2 py-0.5 rounded border border-slate-200 inline-block">
-                                    Công thức: {feat.formula}
-                                  </span>
                                 </div>
-                                <span className="font-bold text-xs bg-red-50 text-red-700 px-2 py-1 rounded-md shrink-0 font-heading">
+                                <span className="text-[11px] font-mono font-bold text-slate-500 shrink-0 bg-white px-2 py-1 rounded-lg border border-slate-200 shadow-2xs">
                                   {feat.unit}
                                 </span>
                               </div>
