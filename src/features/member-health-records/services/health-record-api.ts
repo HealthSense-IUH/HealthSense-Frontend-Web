@@ -92,4 +92,30 @@ export const healthRecordApi = {
       `/api/health-records/${id}/confirm`
     )
   },
+
+  /**
+   * Get all dates that have health measurement records
+   * GET /api/health-records/history/available-dates
+   */
+  getAvailableHistoryDates(timezone = "Asia/Ho_Chi_Minh") {
+    return axiosClient.get<ApiResponse<string[]>, ApiResponse<string[]>>(
+      "/api/health-records/history/available-dates",
+      {
+        params: { timezone },
+      }
+    )
+  },
+
+  /**
+   * Get all health records for a specific date (YYYY-MM-DD)
+   * GET /api/health-records/history/by-date?date=...
+   */
+  getRecordsByDate(date: string, timezone = "Asia/Ho_Chi_Minh") {
+    return axiosClient.get<ApiResponse<MemberHealthRecord[]>, ApiResponse<MemberHealthRecord[]>>(
+      "/api/health-records/history/by-date",
+      {
+        params: { date, timezone },
+      }
+    )
+  },
 }
