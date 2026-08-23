@@ -1,5 +1,7 @@
+import type { PredictionLabel } from "@/lib/health-record-labels"
+
 export type HealthRecordStatus = 'PENDING_UPLOAD' | 'PROCESSING' | 'COMPLETED' | 'FAILED'
-export type PredictionLabel = 'NORMAL' | 'AFIB' | 'UNCERTAIN'
+export type { PredictionLabel }
 
 export type HrvFeatures = Record<string, number>
 

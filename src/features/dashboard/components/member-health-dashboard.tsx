@@ -1,426 +1,396 @@
-import { useState } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { useNavigate } from "react-router-dom"
 import {
   Activity,
   HeartPulse,
-  Flame,
-  Moon,
-  ShieldCheck,
-  Calendar,
-  ArrowUpRight,
-  TrendingDown,
-  Sparkles,
-  MessagesSquare,
-  Zap,
+  TrendingUp,
+  Sliders,
+  ChevronRight,
+  Eye,
 } from "lucide-react"
 import {
-  AreaChart,
-  Area,
+  BarChart,
+  Bar,
   ResponsiveContainer,
   XAxis,
   YAxis,
   Tooltip,
+  Legend,
+  CartesianGrid,
 } from "recharts"
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
+import { healthRecordApi } from "@/features/member-health-records/services/health-record-api"
+import { HealthRecordDetailModal } from "@/features/member-health-records/components/HealthRecordDetailModal"
+import { 
+  getPredictionMeta, 
+  formatHrvNumber, 
+  formatRecordDate 
+} from "@/lib/health-record-labels"
+import type { MemberHealthRecord, HealthStatisticsResponse } from "@/features/member-health-records/types"
 
-// Mock ECG Waveform Data (1-lead continuous signal simulation)
-const ecgWaveformData = [
-  { time: "0.0s", mv: 0.0 },
-  { time: "0.1s", mv: 0.05 },
-  { time: "0.2s", mv: 0.15 }, // P wave
-  { time: "0.3s", mv: 0.0 },
-  { time: "0.35s", mv: -0.1 }, // Q wave
-  { time: "0.4s", mv: 1.2 },  // R peak
-  { time: "0.45s", mv: -0.3 }, // S wave
-  { time: "0.55s", mv: 0.0 },
-  { time: "0.65s", mv: 0.25 }, // T wave
-  { time: "0.75s", mv: 0.0 },
-  { time: "0.9s", mv: 0.0 },
-  { time: "1.0s", mv: 0.05 },
-  { time: "1.1s", mv: 0.15 }, // P wave
-  { time: "1.2s", mv: 0.0 },
-  { time: "1.25s", mv: -0.1 }, // Q wave
-  { time: "1.3s", mv: 1.25 }, // R peak
-  { time: "1.35s", mv: -0.3 }, // S wave
-  { time: "1.45s", mv: 0.0 },
-  { time: "1.55s", mv: 0.26 }, // T wave
-  { time: "1.65s", mv: 0.0 },
-  { time: "1.8s", mv: 0.0 },
-  { time: "1.9s", mv: 0.05 },
-  { time: "2.0s", mv: 0.16 }, // P wave
-  { time: "2.1s", mv: -0.1 }, // Q wave
-  { time: "2.15s", mv: 1.18 }, // R peak
-  { time: "2.2s", mv: -0.28 }, // S wave
-  { time: "2.3s", mv: 0.0 },
-  { time: "2.4s", mv: 0.24 }, // T wave
-  { time: "2.5s", mv: 0.0 },
-]
-
-const recentScreenings = [
-  { id: 1, time: "Hôm nay, 08:30", hr: 72, hrv: 58, status: "Nhịp xoang bình thường", risk: "2%", safe: true },
-  { id: 2, time: "Hôm qua, 22:15", hr: 68, hrv: 64, status: "Nhịp xoang bình thường", risk: "1%", safe: true },
-  { id: 3, time: "20 Th7, 14:05", hr: 115, hrv: 32, status: "Nghi ngờ Rung nhĩ (AFib)", risk: "82%", safe: false },
-]
+type PeriodType = "DAY" | "WEEK" | "MONTH" | "YEAR"
 
 export function MemberHealthDashboard() {
   const navigate = useNavigate()
-  const [isLiveMonitoring, setIsLiveMonitoring] = useState(true)
+
+  // State for stats & recent records
+  const [stats, setStats] = useState<HealthStatisticsResponse | null>(null)
+  const [recentRecords, setRecentRecords] = useState<MemberHealthRecord[]>([])
+  const [period, setPeriod] = useState<PeriodType>("WEEK")
+  const [loading, setLoading] = useState(true)
+
+  // Modal states
+  const [selectedRecord, setSelectedRecord] = useState<MemberHealthRecord | null>(null)
+  const [isDetailOpen, setIsDetailOpen] = useState(false)
+
+  // Fetch Dashboard Data (Statistics + Recent Records)
+  const loadDashboardData = useCallback(async () => {
+    setLoading(true)
+
+    try {
+      const [statsRes, recordsRes] = await Promise.all([
+        healthRecordApi.getHealthStatistics({ period, timezone: "Asia/Ho_Chi_Minh" }),
+        healthRecordApi.getMyRecords({ page: 1, size: 5 }),
+      ])
+
+      setStats(statsRes.data || null)
+      setRecentRecords(recordsRes.data?.content || [])
+    } catch (err) {
+      console.error("Failed to load dashboard data:", err)
+    } finally {
+      setLoading(false)
+    }
+  }, [period])
+
+  useEffect(() => {
+    loadDashboardData()
+  }, [loadDashboardData])
+
+  // Latest record for summary cards
+  const latestRecord = recentRecords.length > 0 ? recentRecords[0] : null
+  const latestMeta = latestRecord ? getPredictionMeta(latestRecord.predictionLabel, latestRecord.status) : null
+  const latestHr = latestRecord?.hrvFeatures?.HR_mean ? Math.round(Number(latestRecord.hrvFeatures.HR_mean)) : null
+  const latestRmssd = latestRecord?.hrvFeatures?.RMSSD ? Number(latestRecord.hrvFeatures.RMSSD) : null
+  const latestSdnn = latestRecord?.hrvFeatures?.SDNN ? Number(latestRecord.hrvFeatures.SDNN) : null
+
+  // Total summary counts
+  const totalNormal = stats?.totalNormal || 0
+  const totalAfib = stats?.totalAfibRisk || 0
+  const totalSuspected = stats?.totalAfibSuspected || 0
+  const totalUncertain = stats?.totalUncertain || 0
+  const totalScreenings = totalNormal + totalAfib + totalSuspected + totalUncertain
+
+  const chartData = stats?.chartData || []
 
   return (
-    <div className="space-y-8 pb-10">
-      {/* 1. Header Banner: Welcome & Device Status */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-blue-600 via-sky-600 to-cyan-500 p-7 text-white shadow-xl shadow-sky-500/10">
-        <div className="absolute right-0 top-0 -mt-10 -mr-10 h-64 w-64 rounded-full bg-white/10 blur-2xl pointer-events-none" />
-        <div className="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-          <div className="space-y-2">
-            <div className="inline-flex items-center gap-2 rounded-full bg-white/20 px-3 py-1 text-xs font-bold text-white backdrop-blur-md">
-              <span className="h-2 w-2 rounded-full bg-emerald-400 animate-ping" />
-              <span>Thiết bị AI HeartSense: Đang đồng bộ thời gian thực</span>
-            </div>
-            <h1 className="text-2xl sm:text-3xl font-black tracking-tight">
-              Bảng Theo Dõi Sức Khỏe Tim Mạch
-            </h1>
-            <p className="text-sm font-medium text-sky-100 max-w-xl">
-              Hệ thống giám sát điện tâm đồ liên tục, cảnh báo sớm biến thiên HRV và nguy cơ rung nhĩ dựa trên AI.
-            </p>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-3">
-            <Button
-              onClick={() => navigate("/app/afib-history")}
-              className="rounded-xl bg-white text-sky-700 font-bold hover:bg-sky-50 shadow-md shadow-black/10 border-0"
-            >
-              <HeartPulse className="h-4 w-4 mr-2 text-rose-500 animate-pulse" />
-              Tầm soát Rung nhĩ
-            </Button>
-            <Button
-              onClick={() => navigate("/app/consultations")}
-              variant="outline"
-              className="rounded-xl bg-white/10 hover:bg-white/20 text-white border-white/30 backdrop-blur-md"
-            >
-              <MessagesSquare className="h-4 w-4 mr-2" />
-              Tư vấn Bác sĩ
-            </Button>
-          </div>
-        </div>
-      </div>
-
-      {/* 2. Key Vitals Grid (4 Metric Cards) */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        {/* Heart Rate */}
-        <Card className="rounded-2xl border-slate-200/90 shadow-2xs hover:shadow-md transition-shadow bg-white">
+    <div className="space-y-6 w-full pb-10">
+      {/* 4 Overview Stat Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Latest Heart Rate */}
+        <Card className="rounded-3xl border border-border shadow-xs bg-white dark:bg-card">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Nhịp tim hiện tại</span>
-            <div className="h-8 w-8 rounded-xl bg-rose-50 flex items-center justify-center text-rose-500">
-              <HeartPulse className="h-5 w-5 animate-pulse" />
-            </div>
+            <span className="text-xs font-medium text-muted-foreground">Lần đo gần nhất</span>
+            <HeartPulse className="h-4 w-4 text-rose-500" />
           </CardHeader>
-          <CardContent>
-            <div className="flex items-baseline gap-2">
-              <span className="text-3xl font-black text-slate-900 font-heading">72</span>
-              <span className="text-xs font-bold text-slate-500">BPM</span>
+          <CardContent className="space-y-1">
+            <div className="text-2xl font-bold text-foreground">
+              {latestHr ? `${latestHr} ` : "-- "}
+              <span className="text-xs font-normal text-muted-foreground">BPM</span>
             </div>
-            <div className="mt-2.5 flex items-center gap-1.5 text-xs font-bold text-emerald-600">
-              <ShieldCheck className="h-4 w-4" />
-              <span>Nhịp xoang đều • 60-100 BPM</span>
-            </div>
+            {latestRecord ? (
+              <span className="text-xs text-muted-foreground block truncate">
+                {formatRecordDate(latestRecord.createdAt)}
+              </span>
+            ) : (
+              <span className="text-xs text-muted-foreground block">Chưa có dữ liệu</span>
+            )}
           </CardContent>
         </Card>
 
-        {/* AFib Risk Score */}
-        <Card className="rounded-2xl border-slate-200/90 shadow-2xs hover:shadow-md transition-shadow bg-white">
+        {/* Latest AFib Probability */}
+        <Card className="rounded-3xl border border-border shadow-xs bg-white dark:bg-card">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Nguy cơ Rung nhĩ AI</span>
-            <div className="h-8 w-8 rounded-xl bg-sky-50 flex items-center justify-center text-sky-600">
-              <Sparkles className="h-5 w-5" />
-            </div>
+            <span className="text-xs font-medium text-muted-foreground">Khả năng bị rung nhĩ</span>
+            <Activity className="h-4 w-4 text-blue-500" />
           </CardHeader>
-          <CardContent>
-            <div className="flex items-baseline gap-2">
-              <span className="text-3xl font-black text-slate-900 font-heading">2%</span>
-              <Badge className="bg-emerald-50 text-emerald-700 border-emerald-200 font-bold hover:bg-emerald-50">
-                Rất an toàn
-              </Badge>
+          <CardContent className="space-y-1">
+            <div className="text-2xl font-bold text-foreground">
+              {latestRecord?.confidence !== null && latestRecord?.confidence !== undefined
+                ? `${(latestRecord.confidence * 100).toFixed(1)}%`
+                : "--"}
             </div>
-            <div className="mt-2.5 flex items-center gap-1.5 text-xs font-semibold text-slate-500">
-              <TrendingDown className="h-4 w-4 text-emerald-500" />
-              <span>Không phát hiện dấu hiệu bất thường</span>
-            </div>
+            {latestMeta ? (
+              <span className={`inline-flex items-center justify-center w-32 py-1 rounded-full text-xs font-bold border shadow-2xs ${latestMeta.badgeClass}`}>
+                {latestMeta.badgeText}
+              </span>
+            ) : (
+              <span className="text-xs text-muted-foreground block">Chưa có kết luận</span>
+            )}
           </CardContent>
         </Card>
 
-        {/* HRV Variability */}
-        <Card className="rounded-2xl border-slate-200/90 shadow-2xs hover:shadow-md transition-shadow bg-white">
+        {/* Latest HRV (RMSSD / SDNN) */}
+        <Card className="rounded-3xl border border-border shadow-xs bg-white dark:bg-card">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Biến thiên nhịp (HRV)</span>
-            <div className="h-8 w-8 rounded-xl bg-cyan-50 flex items-center justify-center text-cyan-600">
-              <Activity className="h-5 w-5" />
-            </div>
+            <span className="text-xs font-medium text-muted-foreground">Biến thiên nhịp (RMSSD)</span>
+            <TrendingUp className="h-4 w-4 text-emerald-500" />
           </CardHeader>
-          <CardContent>
-            <div className="flex items-baseline gap-2">
-              <span className="text-3xl font-black text-slate-900 font-heading">58</span>
-              <span className="text-xs font-bold text-slate-500">ms (rMSSD)</span>
+          <CardContent className="space-y-1">
+            <div className="text-2xl font-bold text-foreground">
+              {latestRmssd ? formatHrvNumber(latestRmssd, 1) : "--"}{" "}
+              <span className="text-xs font-normal text-muted-foreground">ms</span>
             </div>
-            <div className="mt-2.5 flex items-center gap-1.5 text-xs font-semibold text-slate-500">
-              <Zap className="h-4 w-4 text-cyan-500" />
-              <span>Phục hồi thể chất tối ưu</span>
-            </div>
+            <span className="text-xs text-muted-foreground block">
+              SDNN: {latestSdnn ? `${formatHrvNumber(latestSdnn, 1)} ms` : "--"}
+            </span>
           </CardContent>
         </Card>
 
-        {/* SpO2 Blood Oxygen */}
-        <Card className="rounded-2xl border-slate-200/90 shadow-2xs hover:shadow-md transition-shadow bg-white">
+        {/* Total Screenings */}
+        <Card className="rounded-3xl border border-border shadow-xs bg-white dark:bg-card">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Oxy trong máu (SpO2)</span>
-            <div className="h-8 w-8 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600">
-              <Activity className="h-5 w-5" />
-            </div>
+            <span className="text-xs font-medium text-muted-foreground">Tổng lượt tầm soát</span>
+            <Sliders className="h-4 w-4 text-indigo-500" />
           </CardHeader>
-          <CardContent>
-            <div className="flex items-baseline gap-2">
-              <span className="text-3xl font-black text-slate-900 font-heading">98%</span>
-              <span className="text-xs font-bold text-slate-500">Bão hòa</span>
+          <CardContent className="space-y-1">
+            <div className="text-2xl font-bold text-foreground">
+              {totalScreenings}{" "}
+              <span className="text-xs font-normal text-muted-foreground">lần đo</span>
             </div>
-            <div className="mt-2.5 flex items-center gap-1.5 text-xs font-semibold text-slate-500">
-              <ShieldCheck className="h-4 w-4 text-blue-500" />
-              <span>Chỉ số hô hấp bình thường</span>
-            </div>
+            <span className="text-xs text-muted-foreground block truncate">
+              {totalNormal} bình thường • {totalAfib + totalSuspected} cảnh báo
+            </span>
           </CardContent>
         </Card>
       </div>
 
-      {/* 3. Live AI ECG Waveform Visualizer */}
-      <Card className="rounded-3xl border-slate-200/90 shadow-xs bg-white overflow-hidden">
-        <CardHeader className="border-b border-slate-100 bg-slate-50/50 pb-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      {/* 2-Column Grid: Left Chart + Right Recent Table */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+        {/* Left Column: AI Screening Trends Chart (6 cols) */}
+        <Card className="lg:col-span-6 rounded-3xl border border-border shadow-xs bg-white dark:bg-card flex flex-col justify-between">
+          <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border pb-4">
             <div>
-              <div className="flex items-center gap-2">
-                <CardTitle className="text-lg font-bold text-slate-900">
-                  Dải Sóng Điện Tâm Đồ (Live ECG Lead-I)
-                </CardTitle>
-                <Badge className="bg-emerald-50 text-emerald-700 border-emerald-200 text-[10px] font-mono font-bold">
-                  250 Hz Real-Time
-                </Badge>
-              </div>
-              <CardDescription className="text-xs text-slate-500 mt-1">
-                Tín hiệu ECG sau khi qua bộ lọc thông dải Butterworth 0.5Hz - 45Hz và AI phát hiện phức bộ QRS.
+              <CardTitle className="text-base font-bold text-foreground">
+                Thống kê Phân bổ Tầm soát AI
+              </CardTitle>
+              <CardDescription className="text-xs text-muted-foreground mt-0.5">
+                Số lượng các lần đo theo mốc thời gian
               </CardDescription>
             </div>
 
-            <div className="flex items-center gap-3">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setIsLiveMonitoring(!isLiveMonitoring)}
-                className="rounded-xl text-xs font-bold border-slate-200"
+            {/* Period Selector Buttons */}
+            <div className="flex items-center gap-1 p-1 bg-slate-50 dark:bg-slate-800 border border-border rounded-xl">
+              <button
+                type="button"
+                onClick={() => setPeriod("DAY")}
+                className={`px-2.5 py-1 text-xs font-semibold rounded-lg transition-all cursor-pointer ${
+                  period === "DAY"
+                    ? "bg-white dark:bg-card text-foreground shadow-2xs"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
               >
-                {isLiveMonitoring ? "Tạm dừng" : "Tiếp tục đo"}
-              </Button>
-              <Button
-                size="sm"
-                onClick={() => navigate("/app/afib-history")}
-                className="rounded-xl bg-sky-600 hover:bg-sky-700 text-white text-xs font-bold shadow-xs"
+                Hôm nay
+              </button>
+              <button
+                type="button"
+                onClick={() => setPeriod("WEEK")}
+                className={`px-2.5 py-1 text-xs font-semibold rounded-lg transition-all cursor-pointer ${
+                  period === "WEEK"
+                    ? "bg-white dark:bg-card text-foreground shadow-2xs"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
               >
-                Xem chi tiết lịch sử
-              </Button>
+                Tuần
+              </button>
+              <button
+                type="button"
+                onClick={() => setPeriod("MONTH")}
+                className={`px-2.5 py-1 text-xs font-semibold rounded-lg transition-all cursor-pointer ${
+                  period === "MONTH"
+                    ? "bg-white dark:bg-card text-foreground shadow-2xs"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                Tháng
+              </button>
+              <button
+                type="button"
+                onClick={() => setPeriod("YEAR")}
+                className={`px-2.5 py-1 text-xs font-semibold rounded-lg transition-all cursor-pointer ${
+                  period === "YEAR"
+                    ? "bg-white dark:bg-card text-foreground shadow-2xs"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                Năm
+              </button>
             </div>
-          </div>
-        </CardHeader>
-        <CardContent className="pt-6">
-          <div className="h-48 w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={ecgWaveformData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="ecgGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#0284c7" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#0284c7" stopOpacity={0.0} />
-                  </linearGradient>
-                </defs>
-                <XAxis dataKey="time" stroke="#94a3b8" fontSize={11} tickLine={false} />
-                <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} domain={[-0.5, 1.5]} />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: "#ffffff",
-                    borderRadius: "12px",
-                    border: "1px solid #e2e8f0",
-                    boxShadow: "0 10px 25px rgba(0,0,0,0.08)",
-                  }}
-                  formatter={(val: any) => [`${val} mV`, "Biên độ điện học"]}
-                />
-                <Area
-                  type="monotone"
-                  dataKey="mv"
-                  stroke="#0284c7"
-                  strokeWidth={2.5}
-                  fillOpacity={1}
-                  fill="url(#ecgGradient)"
-                  isAnimationActive={true}
-                />
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
-
-          <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4 border-t border-slate-100 text-center">
-            <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100">
-              <span className="text-[11px] font-bold text-slate-400 uppercase">Khoảng PR</span>
-              <p className="text-sm font-black text-slate-800 mt-0.5">142 ms</p>
-            </div>
-            <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100">
-              <span className="text-[11px] font-bold text-slate-400 uppercase">Độ rộng QRS</span>
-              <p className="text-sm font-black text-slate-800 mt-0.5">88 ms</p>
-            </div>
-            <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100">
-              <span className="text-[11px] font-bold text-slate-400 uppercase">Khoảng QTc</span>
-              <p className="text-sm font-black text-slate-800 mt-0.5">410 ms</p>
-            </div>
-            <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100">
-              <span className="text-[11px] font-bold text-slate-400 uppercase">Độ tin cậy AI</span>
-              <p className="text-sm font-black text-emerald-600 mt-0.5">99.2%</p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* 4. Lifestyle & Activity Sync (Sleep, Workouts, Doctor Consult) */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* Sleep Sync Card */}
-        <Card
-          onClick={() => navigate("/app/sleep")}
-          className="rounded-3xl border-slate-200/90 shadow-2xs hover:shadow-md hover:border-sky-300 transition-all cursor-pointer bg-white group"
-        >
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <div className="flex items-center gap-2.5">
-              <div className="h-8 w-8 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600">
-                <Moon className="h-4.5 w-4.5" />
-              </div>
-              <CardTitle className="text-sm font-bold text-slate-900">Giấc ngủ đêm qua</CardTitle>
-            </div>
-            <ArrowUpRight className="h-4 w-4 text-slate-400 group-hover:text-sky-600 transition-colors" />
           </CardHeader>
-          <CardContent className="space-y-3">
-            <div className="flex items-baseline justify-between">
-              <span className="text-2xl font-black text-slate-900 font-heading">7h 30m</span>
-              <span className="text-xs font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-md">
-                Điểm: 85/100
-              </span>
-            </div>
-            <p className="text-xs font-medium text-slate-500">
-              Giai đoạn ngủ sâu (Deep Sleep) đạt 2h 15m, nhịp tim khi ngủ ổn định ở 58 BPM.
-            </p>
+
+          <CardContent className="pt-6 flex-1 flex flex-col justify-center">
+            {loading ? (
+              <div className="h-72 w-full flex items-center justify-center p-4">
+                <div className="h-48 w-full bg-slate-100 dark:bg-slate-800/40 rounded-2xl animate-pulse" />
+              </div>
+            ) : chartData.length === 0 ? (
+              <div className="h-64 flex flex-col items-center justify-center text-center gap-2 text-muted-foreground">
+                <Activity className="h-8 w-8 text-slate-300" />
+                <p className="text-xs font-medium">Chưa có dữ liệu đo lường trong khoảng thời gian này</p>
+              </div>
+            ) : (
+              <div className="h-72 w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} className="stroke-slate-100 dark:stroke-slate-800" />
+                    <XAxis dataKey="label" stroke="#94a3b8" fontSize={11} tickLine={false} />
+                    <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} allowDecimals={false} />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: "var(--card, #ffffff)",
+                        borderRadius: "16px",
+                        border: "1px solid var(--border, #e2e8f0)",
+                        boxShadow: "0 4px 12px rgba(0,0,0,0.06)",
+                        fontSize: "12px",
+                        fontWeight: 500,
+                      }}
+                    />
+                    <Legend 
+                      wrapperStyle={{ paddingTop: "12px", fontSize: "11px" }}
+                    />
+                    <Bar dataKey="normalCount" name="Bình thường" fill="#10b981" radius={[4, 4, 0, 0]} />
+                    <Bar dataKey="afibSuspectedCount" name="Nghi ngờ" fill="#f59e0b" radius={[4, 4, 0, 0]} />
+                    <Bar dataKey="afibRiskCount" name="Rung nhĩ" fill="#f43f5e" radius={[4, 4, 0, 0]} />
+                    <Bar dataKey="uncertainCount" name="Chưa rõ" fill="#a855f7" radius={[4, 4, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            )}
           </CardContent>
         </Card>
 
-        {/* Workouts Sync Card */}
-        <Card
-          onClick={() => navigate("/app/workouts")}
-          className="rounded-3xl border-slate-200/90 shadow-2xs hover:shadow-md hover:border-sky-300 transition-all cursor-pointer bg-white group"
-        >
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <div className="flex items-center gap-2.5">
-              <div className="h-8 w-8 rounded-xl bg-amber-50 flex items-center justify-center text-amber-600">
-                <Flame className="h-4.5 w-4.5" />
-              </div>
-              <CardTitle className="text-sm font-bold text-slate-900">Luyện tập hôm nay</CardTitle>
+        {/* Right Column: Recent Screenings Table (6 cols) */}
+        <Card className="lg:col-span-6 rounded-3xl border border-border shadow-xs bg-white dark:bg-card flex flex-col justify-between">
+          <CardHeader className="flex flex-row items-center justify-between border-b border-border pb-4">
+            <div>
+              <CardTitle className="text-base font-bold text-foreground">
+                Lịch sử Đo Gần Đây
+              </CardTitle>
+              <CardDescription className="text-xs text-muted-foreground mt-0.5">
+                5 lần đo mới nhất của bạn trên hệ thống
+              </CardDescription>
             </div>
-            <ArrowUpRight className="h-4 w-4 text-slate-400 group-hover:text-sky-600 transition-colors" />
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => navigate("/app/afib-history")}
+              className="text-xs font-semibold text-primary hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl gap-1 cursor-pointer"
+            >
+              <span>Xem tất cả</span>
+              <ChevronRight className="w-3.5 h-3.5" />
+            </Button>
           </CardHeader>
-          <CardContent className="space-y-3">
-            <div className="flex items-baseline justify-between">
-              <span className="text-2xl font-black text-slate-900 font-heading">420 kcal</span>
-              <span className="text-xs font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-md">
-                5.2 km Chạy bộ
-              </span>
-            </div>
-            <p className="text-xs font-medium text-slate-500">
-              Nhịp tim trung bình buổi tập 145 BPM, thời gian trong vùng đốt mỡ: 35 phút.
-            </p>
-          </CardContent>
-        </Card>
 
-        {/* Consultation Doctor Card */}
-        <Card
-          onClick={() => navigate("/app/consultations")}
-          className="rounded-3xl border-slate-200/90 shadow-2xs hover:shadow-md hover:border-sky-300 transition-all cursor-pointer bg-white group"
-        >
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <div className="flex items-center gap-2.5">
-              <div className="h-8 w-8 rounded-xl bg-sky-50 flex items-center justify-center text-sky-600">
-                <Calendar className="h-4.5 w-4.5" />
+          <CardContent className="p-0 flex-1 flex flex-col justify-between">
+            {loading ? (
+              <div className="p-6 space-y-3">
+                {[...Array(4)].map((_, i) => (
+                  <div key={i} className="h-10 bg-slate-100 dark:bg-slate-800/40 rounded-xl animate-pulse" />
+                ))}
               </div>
-              <CardTitle className="text-sm font-bold text-slate-900">Tư vấn Bác sĩ</CardTitle>
-            </div>
-            <ArrowUpRight className="h-4 w-4 text-slate-400 group-hover:text-sky-600 transition-colors" />
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <div className="flex items-baseline justify-between">
-              <span className="text-sm font-bold text-slate-900">TS.BS Nguyễn Minh</span>
-              <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md">
-                14:00 Hôm nay
-              </span>
-            </div>
-            <p className="text-xs font-medium text-slate-500">
-              Phiên tư vấn đánh giá chỉ số ECG và hướng dẫn phác đồ kiểm soát rung nhĩ.
-            </p>
+            ) : recentRecords.length === 0 ? (
+              <div className="p-12 text-center text-xs text-muted-foreground flex flex-col items-center justify-center gap-2">
+                <Activity className="h-8 w-8 text-slate-300" />
+                <span>Chưa có bản ghi đo nào. Hãy tải lên file đầu tiên!</span>
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead>
+                    <tr className="border-b border-border text-muted-foreground font-semibold bg-slate-50/50 dark:bg-slate-900/30">
+                      <th className="py-3 px-4">Thời gian đo</th>
+                      <th className="py-3 px-4">Kết luận AI</th>
+                      <th className="py-3 px-4 text-center">Khả năng AFib</th>
+                      <th className="py-3 px-4 text-right">Thao tác</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border font-medium">
+                    {recentRecords.map((record) => {
+                      const meta = getPredictionMeta(record.predictionLabel, record.status)
+                      const hr = record.hrvFeatures?.HR_mean ? Math.round(Number(record.hrvFeatures.HR_mean)) : null
+                      const confPct = record.confidence !== null && record.confidence !== undefined 
+                        ? (record.confidence * 100).toFixed(1) 
+                        : null
+
+                      return (
+                        <tr 
+                          key={record.id}
+                          onClick={() => {
+                            setSelectedRecord(record)
+                            setIsDetailOpen(true)
+                          }}
+                          className="hover:bg-slate-50/80 dark:hover:bg-slate-800/50 transition-colors cursor-pointer group"
+                        >
+                          <td className="py-3 px-4">
+                            <div className="font-semibold text-foreground group-hover:text-primary transition-colors">
+                              {formatRecordDate(record.createdAt)}
+                            </div>
+                            <span className="text-[11px] text-muted-foreground truncate block max-w-[140px]">
+                              {record.fileName}
+                            </span>
+                          </td>
+
+                          <td className="py-3 px-4">
+                            <span className={`inline-flex items-center justify-center w-32 py-1 rounded-full text-xs font-bold border shadow-2xs ${meta.badgeClass}`}>
+                              {meta.badgeText}
+                            </span>
+                          </td>
+
+                          <td className="py-3 px-4 text-center">
+                            <div className="font-bold text-foreground">
+                              {confPct !== null ? `${confPct}%` : "--"}
+                            </div>
+                            <span className="text-[11px] text-muted-foreground block">
+                              {hr ? `${hr} BPM` : ""}
+                            </span>
+                          </td>
+
+                          <td className="py-3 px-4 text-right">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                setSelectedRecord(record)
+                                setIsDetailOpen(true)
+                              }}
+                              className="h-8 px-3 rounded-xl bg-white dark:bg-slate-800 border border-border text-foreground hover:bg-slate-50 dark:hover:bg-slate-700 text-xs font-semibold gap-1.5 cursor-pointer shadow-2xs"
+                            >
+                              <Eye className="w-3.5 h-3.5 text-muted-foreground" />
+                              <span>Xem chi tiết</span>
+                            </Button>
+                          </td>
+                        </tr>
+                      )
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>
 
-      {/* 5. Recent Screening Table */}
-      <Card className="rounded-3xl border-slate-200/90 shadow-xs bg-white">
-        <CardHeader className="flex flex-row items-center justify-between border-b border-slate-100 pb-4">
-          <div>
-            <CardTitle className="text-base font-bold text-slate-900">Lịch sử Đo & Cảnh Báo Gần Đây</CardTitle>
-            <CardDescription className="text-xs text-slate-500">
-              Kết quả phân tích tự động từ thiết bị đeo và thuật toán AI C.A.R.E
-            </CardDescription>
-          </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => navigate("/app/afib-history")}
-            className="text-xs font-bold text-sky-600 hover:text-sky-700 hover:bg-sky-50 rounded-xl"
-          >
-            Xem tất cả
-          </Button>
-        </CardHeader>
-        <CardContent className="p-0">
-          <div className="divide-y divide-slate-100">
-            {recentScreenings.map((sc) => (
-              <div key={sc.id} className="flex items-center justify-between p-4 px-6 hover:bg-slate-50/70 transition-colors">
-                <div className="flex items-center gap-4">
-                  <div className={`h-10 w-10 rounded-2xl flex items-center justify-center shrink-0 ${sc.safe ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"}`}>
-                    <HeartPulse className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-bold text-slate-900">{sc.status}</h4>
-                    <span className="text-xs text-slate-400 font-medium">{sc.time}</span>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-6">
-                  <div className="text-right hidden sm:block">
-                    <span className="text-xs font-bold text-slate-700">{sc.hr} BPM</span>
-                    <span className="text-[11px] text-slate-400 block">HRV: {sc.hrv} ms</span>
-                  </div>
-                  <Badge
-                    className={`rounded-full px-3 py-1 font-bold text-xs ${
-                      sc.safe
-                        ? "bg-emerald-50 text-emerald-700 border-emerald-200"
-                        : "bg-rose-50 text-rose-700 border-rose-200"
-                    }`}
-                  >
-                    Nguy cơ: {sc.risk}
-                  </Badge>
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+      {/* Modals */}
+      <HealthRecordDetailModal
+        record={selectedRecord}
+        isOpen={isDetailOpen}
+        onClose={() => {
+          setIsDetailOpen(false)
+          setSelectedRecord(null)
+        }}
+      />
     </div>
   )
 }

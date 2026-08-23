@@ -12,14 +12,6 @@ function AppShellInner() {
         <main className="flex-1 flex flex-col w-full p-2">
           <Outlet />
         </main>
-        <footer className="py-6 px-6 text-left text-xs font-medium text-slate-400 border-t border-slate-200/60 bg-white/50 flex items-center justify-between">
-          <p>© 2026 HealthSense Platform Inc. Clinical Grade Healthcare SaaS.</p>
-          <div className="flex items-center gap-6">
-            <span className="hover:text-slate-600 transition-colors cursor-pointer">HIPAA & GDPR Compliance</span>
-            <span className="hover:text-slate-600 transition-colors cursor-pointer">System Security Status</span>
-            <span className="hover:text-slate-600 transition-colors cursor-pointer">Clinical Support Desk</span>
-          </div>
-        </footer>
       </div>
     </div>
   )
