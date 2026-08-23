@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react"
-import { useNavigate, Link } from "react-router-dom"
+import { Link } from "react-router-dom"
 import {
-  ArrowLeft,
   ArrowUp,
   ShieldAlert,
   ChevronRight,
@@ -44,7 +43,6 @@ const handleDownloadPdf = () => {
 }
 
 export default function TermsAndConditionsPage() {
-  const navigate = useNavigate()
   const [viewStyle, setViewStyle] = useState<ViewStyle>("interactive")
   const [activeSection, setActiveSection] = useState("section-1")
   const [showScrollTop, setShowScrollTop] = useState(false)
@@ -145,13 +143,6 @@ export default function TermsAndConditionsPage() {
       <header className="sticky top-0 z-40 w-full bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-xs print:hidden">
         <div className="w-full px-4 sm:px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <button
-              onClick={() => navigate(-1)}
-              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              <span>Quay lại</span>
-            </button>
             <Link to="/" className="flex items-center gap-2.5">
               <img src="/logo.png" alt="HealthSense" className="w-8 h-8 object-contain rounded-lg" />
               <span className="font-heading font-black text-lg tracking-tight text-slate-900 hidden sm:inline-block">
