@@ -21,7 +21,7 @@ const mockWorkouts = [
 
 export default function WorkoutsPage() {
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 w-full p-2">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold tracking-tight text-foreground">Lịch sử Tập luyện</h1>
       </div>

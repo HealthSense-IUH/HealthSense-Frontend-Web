@@ -116,7 +116,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="space-y-6 pb-12 max-w-7xl mx-auto">
+    <div className="space-y-6 pb-12 w-full p-2">
       {/* Page Header */}
       <div className="flex items-center justify-between py-2 border-b border-slate-200/60 pb-4">
         <div className="flex items-center gap-3">
@@ -165,7 +165,7 @@ export default function ProfilePage() {
 
       {/* Loaded Content: Unified View/Edit Profile Card */}
       {!loading && user && (
-        <div className="max-w-4xl mx-auto">
+        <div className="w-full">
           <UnifiedProfileCard user={user} onSave={handleSave} onAvatarUpdate={handleAvatarUpdate} loading={saving} />
         </div>
       )}

@@ -18,7 +18,7 @@ const mockSleepStages = [
 
 export default function SleepPage() {
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 w-full p-2">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-primary">Giấc ngủ</h1>

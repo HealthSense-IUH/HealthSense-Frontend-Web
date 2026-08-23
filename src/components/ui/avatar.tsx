@@ -40,3 +40,5 @@ const AvatarFallback = React.forwardRef<
 AvatarFallback.displayName = AvatarPrimitive.Fallback.displayName
 
 export { Avatar, AvatarImage, AvatarFallback }
+export { AvatarPlaceholder } from "./avatar-placeholder"
+export type { AvatarPlaceholderProps, AvatarSize, AvatarStatus } from "./avatar-placeholder"

@@ -16,7 +16,7 @@ import {
   AlertCircle, 
   CheckCircle2 
 } from "lucide-react"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { AvatarPlaceholder } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -82,12 +82,6 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
 
   // Defensive display name fallback
   const currentDisplayName = user.displayName || user.fullName || user.email || "Current User"
-  const initials = currentDisplayName
-    .split(" ")
-    .map((n) => n[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase()
 
   const formatDate = (val?: string | number) => {
     if (!val) return "Not available"
@@ -266,12 +260,12 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
           <div className="flex items-center gap-5">
             {/* Interactive Avatar */}
             <div className="relative group shrink-0">
-              <Avatar className="h-20 w-20 sm:h-24 sm:w-24 border-4 border-white shadow-md transition-transform group-hover:scale-[1.02]">
-                <AvatarImage src={user.avatarUrl || "https://i.pravatar.cc/150?img=47"} alt={currentDisplayName} className="object-cover" />
-                <AvatarFallback className="bg-blue-600 text-white font-black text-2xl">
-                  {initials || "U"}
-                </AvatarFallback>
-              </Avatar>
+              <AvatarPlaceholder
+                src={user.avatarUrl}
+                name={currentDisplayName}
+                size="2xl"
+                className="rounded-full border-4 border-white shadow-md transition-transform group-hover:scale-[1.02] overflow-hidden"
+              />
 
               <button
                 type="button"

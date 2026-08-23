@@ -16,7 +16,7 @@ const mockHrTrendData = [
 
 export default function ReportsPage() {
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 w-full p-2">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-foreground">Báo cáo Sức khỏe</h1>
