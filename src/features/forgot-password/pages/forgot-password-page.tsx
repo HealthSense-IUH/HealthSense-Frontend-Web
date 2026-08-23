@@ -78,9 +78,11 @@ export default function ForgotPasswordPage() {
             onClick={() => navigate("/", { replace: false })}
             className="flex items-center gap-2.5 cursor-pointer group transition-opacity hover:opacity-90"
           >
-            <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center text-white group-hover:scale-105 transition-transform">
-              <HeartPulse className="w-6 h-6 drop-shadow-sm" />
-            </div>
+            <img
+              src="/logo.png"
+              alt="HealthSense Logo"
+              className="w-10 h-10 object-contain rounded-xl group-hover:scale-105 transition-transform shrink-0"
+            />
             <span className="text-2xl font-bold font-heading text-white tracking-tight">HealthSense</span>
           </div>
 

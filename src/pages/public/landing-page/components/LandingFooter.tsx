@@ -26,9 +26,11 @@ export function LandingFooter() {
             <div>
               {/* Brand Logo */}
               <div className="inline-flex items-center gap-2.5 mb-4">
-                <div className="w-9 h-9 rounded-xl bg-sky-600/20 border border-sky-500/30 flex items-center justify-center text-sky-400">
-                  <HeartPulse className="w-5 h-5 animate-pulse" />
-                </div>
+                <img
+                  src="/logo.png"
+                  alt="HealthSense Logo"
+                  className="w-9 h-9 object-contain rounded-xl shrink-0"
+                />
                 <span className="text-xl font-black font-heading tracking-tight text-white uppercase">
                   HEALTHSENSE
                 </span>

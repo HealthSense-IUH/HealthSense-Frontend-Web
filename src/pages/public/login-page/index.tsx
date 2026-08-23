@@ -188,9 +188,11 @@ export default function LoginPage() {
       {/* Top Header Bar */}
       <header className="relative top-0 left-0 right-0 p-4 sm:p-6 z-20 flex items-center justify-between max-w-7xl mx-auto w-full">
         <Link to="/" className="flex items-center gap-2.5 group">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-600 via-sky-500 to-cyan-400 flex items-center justify-center text-white shadow-md shadow-sky-500/25 group-hover:scale-105 transition-transform duration-300">
-            <HeartPulse className="w-5 h-5 drop-shadow-xs" />
-          </div>
+          <img
+            src="/logo.png"
+            alt="HealthSense Logo"
+            className="w-10 h-10 object-contain rounded-xl group-hover:scale-105 transition-transform duration-300 shrink-0"
+          />
           <div className="flex flex-col">
             <span className="text-xl font-black text-slate-900 tracking-tight font-heading">HealthSense</span>
             <span className="text-[11px] text-slate-500 font-medium hidden sm:block -mt-0.5">Hệ sinh thái Y tế Thông minh</span>

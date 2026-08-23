@@ -43,19 +43,17 @@ export function AppSidebar() {
           className="flex flex-col items-center group"
           title={isManagement ? "HealthSense - Phân hệ Quản trị" : "HealthSense - Sức khỏe Người dùng"}
         >
-          <div
-            className={`relative flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl text-white shadow-md group-hover:scale-105 transition-all duration-200 ${
-              isManagement
-                ? "bg-gradient-to-tr from-purple-600 via-indigo-500 to-blue-500 shadow-indigo-500/30"
-                : "bg-gradient-to-tr from-blue-600 via-sky-500 to-cyan-400 shadow-sky-500/30"
-            }`}
-          >
             {isManagement ? (
-              <ShieldCheck className="h-5 w-5 text-white animate-pulse drop-shadow-xs" />
+              <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl text-white shadow-md bg-gradient-to-tr from-purple-600 via-indigo-500 to-blue-500 shadow-indigo-500/30 group-hover:scale-105 transition-all duration-200">
+                <ShieldCheck className="h-5 w-5 text-white animate-pulse drop-shadow-xs" />
+              </div>
             ) : (
-              <HeartPulse className="h-5 w-5 text-white animate-pulse drop-shadow-xs" />
+              <img
+                src="/logo.png"
+                alt="HealthSense Logo"
+                className="h-10 w-10 object-contain rounded-2xl drop-shadow-sm group-hover:scale-105 transition-all duration-200 shrink-0"
+              />
             )}
-          </div>
           <span
             className={`text-[8.5px] font-mono font-black uppercase tracking-wider px-2 py-0.5 rounded-full mt-1.5 border ${
               isManagement

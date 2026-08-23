@@ -1,12 +1,14 @@
 import { useState } from "react"
 import { motion } from "framer-motion"
 import { 
-  Filter, 
-  ActivitySquare, 
+  HeartPulse, 
+  Activity, 
   CheckCircle2, 
-  Zap, 
   AlertTriangle, 
-  Activity 
+  Sparkles,
+  ShieldCheck,
+  Zap,
+  Sliders
 } from "lucide-react"
 
 type StageId = "stage-1" | "stage-2" | "stage-3"
@@ -15,11 +17,8 @@ interface PipelineStageData {
   id: StageId
   stepNum: string
   title: string
-  enTitle: string
+  subtitle: string
   tagline: string
-  color: string
-  glowColor: string
-  badgeBg: string
   summary: string
   bulletPoints: string[]
   specs: { label: string; value: string }[]
@@ -28,71 +27,62 @@ interface PipelineStageData {
 const stagesData: Record<StageId, PipelineStageData> = {
   "stage-1": {
     id: "stage-1",
-    stepNum: "01",
-    title: "Thu Thập & Làm Sạch Tín Hiệu",
-    enTitle: "Lọc bỏ tạp âm & bắt nhịp tim chuẩn",
-    tagline: "Tự động loại bỏ rung lắc khi cử động tay để giữ lại nhịp đập chính xác",
-    color: "text-sky-500",
-    glowColor: "from-sky-500/20 to-blue-600/10",
-    badgeBg: "bg-sky-50 border-sky-200 text-sky-700",
-    summary: "Khi bạn vận động hoặc di chuyển, cảm biến đo từ thiết bị đeo có thể bị rung lắc làm tín hiệu bị nhiễu. Hệ thống sẽ tự động lọc sạch các tạp âm này, giữ lại từng nhịp tim rõ nét và chuẩn xác theo thời gian thực.",
+    stepNum: "1",
+    title: "Làm Sạch Tín Hiệu Nhịp Tim",
+    subtitle: "Lọc bỏ tạp âm & bắt nhịp tim chuẩn",
+    tagline: "Tự động loại bỏ rung lắc khi cử động tay để giữ lại nhịp đập chính xác nhất",
+    summary: "Khi bạn đi bộ, chạy bộ hay cử động tay, tín hiệu từ cảm biến đeo có thể bị rung lắc làm mờ nhịp đập. Hệ thống sẽ tự động lọc sạch các tạp âm này, giữ lại từng nhịp tim rõ nét theo thời gian thực.",
     bulletPoints: [
-      "Đo liên tục 125 lần mỗi giây từ cảm biến đeo tay",
-      "Tự động lọc sạch tạp âm do cử động và rung lắc",
-      "Xác định chuẩn xác từng nhịp đập với sai số cực nhỏ",
-      "Đo khoảng thời gian chính xác giữa các nhịp tim liên tiếp"
+      "Cảm biến đo liên tục 125 lần mỗi giây",
+      "Tự động khử rung lắc và tạp âm khi bạn vận động",
+      "Nhận diện chính xác từng nhịp đập của tim",
+      "Đo khoảng cách chuẩn xác giữa các nhịp liên tiếp"
     ],
     specs: [
-      { label: "Tần số đo nhịp", value: "125 lần / giây" },
-      { label: "Khử nhiễu cử động", value: "Tự động 100%" },
-      { label: "Thời gian xử lý", value: "< 12 ms" },
-      { label: "Độ chuẩn xác nhịp", value: "99.98%" }
+      { label: "Tốc độ đo", value: "125 lần / giây" },
+      { label: "Khử nhiễu rung lắc", value: "Tự động 100%" },
+      { label: "Thời gian xử lý", value: "< 12 mili-giây" },
+      { label: "Độ chính xác bắt nhịp", value: "99.98%" }
     ]
   },
   "stage-2": {
     id: "stage-2",
-    stepNum: "02",
-    title: "Phân Tích 16 Chỉ Số Biến Thiên (HRV)",
-    enTitle: "Đo lường độ đều đặn & sức khỏe tim",
-    tagline: "Phân tích khoảng cách giữa các nhịp đập thành 16 chỉ số chuyên sâu",
-    color: "text-sky-500",
-    glowColor: "from-sky-500/20 to-blue-600/10",
-    badgeBg: "bg-sky-50 border-sky-200 text-sky-700",
-    summary: "Trái tim khỏe mạnh luôn có độ biến thiên linh hoạt. AI phân tích 16 chỉ số biến thiên nhịp tim (HRV) giúp phát hiện sớm các dấu hiệu loạn nhịp, căng thẳng hoặc quá tải tim trước khi bạn kịp cảm thấy mệt mỏi.",
+    stepNum: "2",
+    title: "Phân Tích 16 Chỉ Số Sức Khỏe",
+    subtitle: "Đo lường độ đều đặn & sức khỏe tim",
+    tagline: "Phân tích khoảng cách giữa các nhịp đập thành 16 chỉ số sức khỏe chuyên sâu",
+    summary: "Trái tim khỏe mạnh luôn có độ biến thiên linh hoạt. AI phân tích 16 chỉ số biến thiên nhịp tim (HRV) giúp nhận biết sớm tình trạng tim đập không đều, căng thẳng hoặc quá tải trước khi bạn kịp cảm thấy mệt mỏi.",
     bulletPoints: [
       "Đo độ đều đặn của nhịp tim (nhịp nhanh, chậm hay ngắt quãng)",
-      "Đánh giá mức độ đồng bộ giữa hơi thở và nhịp tim",
-      "Nhận diện các cơn loạn nhịp ngầm khó nhận biết bằng mắt thường",
-      "Quy chuẩn toàn bộ chỉ số về thang đo đồng bộ để AI phân tích"
+      "Đánh giá mức độ đồng bộ giữa nhịp tim và hơi thở",
+      "Phát hiện các cơn rối loạn nhịp tim ngầm khó nhận biết",
+      "Đồng bộ toàn bộ chỉ số về thang đo chuẩn để phân tích"
     ],
     specs: [
-      { label: "Chỉ số sức khỏe", value: "16 Chỉ số chuyên sâu" },
+      { label: "Chỉ số phân tích", value: "16 Chỉ số tim mạch" },
       { label: "Khả năng bao quát", value: "Toàn diện nhịp tim" },
-      { label: "Chuẩn hóa dữ liệu", value: "Đồng bộ tự động" },
-      { label: "Thời gian tính toán", value: "< 24 ms" }
+      { label: "Đồng bộ dữ liệu", value: "Tự động tức thì" },
+      { label: "Thời gian tính toán", value: "< 24 mili-giây" }
     ]
   },
   "stage-3": {
     id: "stage-3",
-    stepNum: "03",
-    title: "Đưa Ra Kết Quả & Cảnh Báo Sớm",
-    enTitle: "Nhận diện và cảnh báo Rung nhĩ (AFib)",
-    tagline: "Kết hợp 4 mô hình AI cùng phân tích chéo để đưa ra cảnh báo chính xác",
-    color: "text-emerald-500",
-    glowColor: "from-emerald-500/20 to-teal-600/10",
-    badgeBg: "bg-emerald-50 border-emerald-200 text-emerald-700",
-    summary: "Thay vì chỉ dựa vào một thuật toán duy nhất, HealthSense kết hợp 4 mô hình trí tuệ nhân tạo cùng phân tích chéo dữ liệu. Nhờ đó, hệ thống nhận diện chính xác đến 98.65% nguy cơ Rung nhĩ (AFib) và gửi cảnh báo tức thì đến bạn.",
+    stepNum: "3",
+    title: "Đưa Ra Đánh Giá & Cảnh Báo",
+    subtitle: "Nhận diện và cảnh báo sớm Rung nhĩ (AFib)",
+    tagline: "Kết hợp 4 mô hình AI cùng phân tích chéo để đưa ra kết luận chính xác và an tâm",
+    summary: "Thay vì chỉ dựa vào một thuật toán duy nhất, HealthSense kết hợp 4 mô hình trí tuệ nhân tạo cùng đánh giá chéo dữ liệu. Nhờ đó, hệ thống nhận diện chính xác đến 98.65% nguy cơ Rung nhĩ (AFib) và gửi cảnh báo tức thì đến bạn.",
     bulletPoints: [
-      "4 mô hình AI cùng làm việc độc lập để tránh kết luận sai",
-      "Tự động chọn lọc phương án có độ tin cậy và chính xác cao nhất",
+      "4 mô hình AI cùng phân tích độc lập để tránh kết luận sai",
+      "Tự động chọn lọc phương án có độ tin cậy cao nhất",
       "Độ nhạy phát hiện bệnh 99.78% (hạn chế tối đa bỏ sót ca bệnh)",
-      "Đưa ra kết quả cảnh báo siêu nhanh dưới 85 mili-giây"
+      "Đưa ra cảnh báo siêu nhanh dưới 85 mili-giây"
     ],
     specs: [
-      { label: "Cơ chế phân tích", value: "4 Mô hình AI phân tích chéo" },
+      { label: "Cơ chế phân tích", value: "4 AI phân tích chéo" },
       { label: "Độ chính xác", value: "98.65%" },
-      { label: "Khả năng bắt bệnh", value: "99.78%" },
-      { label: "Tốc độ cảnh báo", value: "< 85 ms" }
+      { label: "Độ nhạy bắt bệnh", value: "99.78%" },
+      { label: "Tốc độ cảnh báo", value: "< 85 mili-giây" }
     ]
   }
 }
@@ -105,28 +95,33 @@ export function AIPipelineSection() {
   const current = stagesData[activeStage]
 
   return (
-    <section className="w-full py-24 sm:py-32 relative bg-slate-900 text-white overflow-hidden">
+    <section className="w-full py-24 sm:py-32 relative bg-[#070D1E] text-white overflow-hidden border-t border-white/10">
       
-      {/* High-Tech Background Grid & Ambient Lighting */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#1e293b15_1px,transparent_1px),linear-gradient(to_bottom,#1e293b15_1px,transparent_1px)] bg-[size:3rem_3rem] pointer-events-none" />
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[500px] bg-sky-600/15 rounded-full blur-[160px] pointer-events-none" />
-      <div className="absolute bottom-10 right-10 w-[500px] h-[400px] bg-cyan-600/10 rounded-full blur-[140px] pointer-events-none" />
+      {/* Premium Deep Dark Glows */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#1e293b12_1px,transparent_1px),linear-gradient(to_bottom,#1e293b12_1px,transparent_1px)] bg-[size:3rem_3rem] pointer-events-none" />
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[450px] bg-blue-600/15 rounded-full blur-[160px] pointer-events-none" />
+      <div className="absolute bottom-10 right-10 w-[500px] h-[400px] bg-sky-500/10 rounded-full blur-[140px] pointer-events-none" />
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* ================= SECTION HEADER ================= */}
-        <div className="text-center mb-14 max-w-3xl mx-auto">
+        <div className="text-center mb-14 sm:mb-16 max-w-3xl mx-auto">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-sky-500/10 border border-sky-400/30 text-sky-300 text-xs font-bold font-heading mb-4 shadow-xs">
+            <Sparkles className="w-3.5 h-3.5 text-sky-400" />
+            <span>Quy Trình Hoạt Động Thông Minh</span>
+          </div>
+
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black mb-4 text-white font-heading tracking-tight uppercase">
-            Quy Trình Phân Tích &amp; Dự Đoán Của AI
+            Cách AI Phân Tích Nhịp Tim Của Bạn
           </h2>
 
-          <p className="text-slate-400 text-sm sm:text-base leading-relaxed font-sans">
-            Khám phá 3 bước đơn giản từ lúc thiết bị đo nhịp tim đến khi đưa ra cảnh báo sức khỏe chính xác cho bạn.
+          <p className="text-slate-300 text-base sm:text-lg leading-relaxed font-sans">
+            Hệ thống tự động thực hiện 3 bước liên tục để bảo vệ và theo dõi sức khỏe trái tim bạn suốt 24/7.
           </p>
         </div>
 
-        {/* ================= 3-STAGE INTERACTIVE STEPPER TABS ================= */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-10">
+        {/* ================= 3-STAGE STEPER TABS ================= */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
           {(["stage-1", "stage-2", "stage-3"] as StageId[]).map((stageKey) => {
             const item = stagesData[stageKey]
             const isActive = activeStage === stageKey
@@ -135,34 +130,38 @@ export function AIPipelineSection() {
               <button
                 key={item.id}
                 onClick={() => setActiveStage(stageKey)}
-                className={`relative text-left p-4 sm:p-5 rounded-2xl transition-all duration-300 cursor-pointer border flex flex-col justify-between overflow-hidden ${
+                className={`relative text-left p-5 sm:p-6 rounded-3xl transition-all duration-300 cursor-pointer border flex flex-col justify-between overflow-hidden ${
                   isActive 
-                    ? "bg-white/10 border-white/30 shadow-xl shadow-sky-950/40 backdrop-blur-xl scale-[1.01]" 
-                    : "bg-white/[0.03] border-white/10 hover:bg-white/[0.06] text-slate-400"
+                    ? "bg-white/[0.12] border-sky-400/80 shadow-2xl shadow-sky-950/60 backdrop-blur-xl scale-[1.02] ring-2 ring-sky-400/30" 
+                    : "bg-white/[0.04] border-white/10 hover:bg-white/[0.07] text-slate-300"
                 }`}
               >
-                {/* Active Top Accent Line */}
+                {/* Active Top Glow Line */}
                 {isActive && (
                   <motion.div 
-                    layoutId="activeTabLine"
-                    className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-sky-500 to-cyan-500" 
+                    layoutId="activeTabGlow"
+                    className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-sky-400 to-cyan-400" 
                   />
                 )}
 
-                <div className="flex items-center justify-between mb-3">
-                  <span className={`text-xs font-mono font-black ${isActive ? "text-sky-400" : "text-slate-500"}`}>
-                    BƯỚC 0{item.stepNum}
+                <div className="flex items-center justify-between mb-3 mt-1">
+                  <span className={`text-xs font-bold px-3 py-1 rounded-full ${
+                    isActive ? "bg-sky-500/20 text-sky-300 border border-sky-500/40" : "bg-white/10 text-slate-400"
+                  }`}>
+                    Bước 0{item.stepNum}
                   </span>
                   
-                  <div className={`w-2.5 h-2.5 rounded-full ${isActive ? "bg-sky-400 animate-ping" : "bg-white/20"}`} />
+                  <div className={`w-3 h-3 rounded-full ${isActive ? "bg-sky-400 ring-4 ring-sky-500/20 animate-pulse" : "bg-white/20"}`} />
                 </div>
 
                 <div>
-                  <h3 className={`text-sm sm:text-base font-black font-heading leading-snug mb-1 ${isActive ? "text-white" : "text-slate-300"}`}>
+                  <h3 className={`text-base sm:text-lg font-black font-heading leading-snug mb-1.5 ${
+                    isActive ? "text-white" : "text-slate-200"
+                  }`}>
                     {item.title}
                   </h3>
-                  <span className="text-[11px] text-slate-400 line-clamp-1 block">
-                    {item.enTitle}
+                  <span className="text-xs text-slate-400 font-sans line-clamp-2 leading-relaxed">
+                    {item.subtitle}
                   </span>
                 </div>
               </button>
@@ -170,34 +169,34 @@ export function AIPipelineSection() {
           })}
         </div>
 
-        {/* ================= STAGE WORKBENCH CONSOLE ================= */}
+        {/* ================= STAGE CONTENT & SMART HEALTH MONITOR ================= */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
           
-          {/* Left Column (5 Cols): Stage Deep-Dive Details */}
-          <div className="lg:col-span-5 flex flex-col justify-between p-6 sm:p-8 rounded-3xl bg-white/[0.04] border border-white/10 backdrop-blur-xl">
+          {/* Left Column (5 Cols): Stage Explanation Card */}
+          <div className="lg:col-span-5 flex flex-col justify-between p-6 sm:p-8 rounded-3xl bg-white/[0.05] border border-white/15 backdrop-blur-xl shadow-xl">
             <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-500/10 border border-sky-500/30 text-sky-300 text-xs font-mono mb-4">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-500/10 border border-sky-400/30 text-sky-300 text-xs font-bold mb-4 font-heading">
                 <span>Bước 0{current.stepNum}</span>
                 <span>•</span>
-                <span>Quy trình xử lý</span>
+                <span>Chi tiết quy trình</span>
               </div>
 
-              <h3 className="text-2xl font-black font-heading text-white mb-2">
+              <h3 className="text-2xl sm:text-3xl font-black font-heading text-white mb-2">
                 {current.title}
               </h3>
               
-              <p className="text-xs sm:text-sm font-medium text-sky-400 mb-4">
+              <p className="text-xs sm:text-sm font-bold text-sky-400 mb-4 font-heading">
                 {current.tagline}
               </p>
 
-              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-sans mb-6">
+              <p className="text-sm text-slate-300 leading-relaxed font-sans mb-6">
                 {current.summary}
               </p>
 
               {/* Bullet Points */}
-              <div className="space-y-2.5 mb-6">
+              <div className="space-y-3 mb-8">
                 {current.bulletPoints.map((bullet, idx) => (
-                  <div key={idx} className="flex items-start gap-2 text-xs sm:text-sm text-slate-300">
+                  <div key={idx} className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-200 font-medium">
                     <CheckCircle2 className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
                     <span>{bullet}</span>
                   </div>
@@ -206,74 +205,85 @@ export function AIPipelineSection() {
             </div>
 
             {/* Spec Mini Cards */}
-            <div className="grid grid-cols-2 gap-3 pt-4 border-t border-white/10">
+            <div className="grid grid-cols-2 gap-3 pt-5 border-t border-white/10">
               {current.specs.map((spec, idx) => (
-                <div key={idx} className="p-3 rounded-xl bg-black/40 border border-white/5">
-                  <span className="text-[10px] font-mono text-slate-400 block mb-0.5">{spec.label}</span>
-                  <span className="text-xs font-black font-heading text-white">{spec.value}</span>
+                <div key={idx} className="p-3.5 rounded-2xl bg-black/40 border border-white/10">
+                  <span className="text-[11px] text-slate-400 block mb-0.5 font-medium">{spec.label}</span>
+                  <span className="text-xs sm:text-sm font-black font-heading text-white">{spec.value}</span>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Right Column (7 Cols): Interactive Simulation Console */}
-          <div className="lg:col-span-7 flex flex-col rounded-3xl bg-slate-950 border border-white/15 overflow-hidden shadow-2xl">
+          {/* Right Column (7 Cols): Smart Health Monitor Visual Card */}
+          <div className="lg:col-span-7 flex flex-col rounded-3xl bg-slate-950/90 border border-white/15 shadow-2xl overflow-hidden backdrop-blur-xl">
             
-            {/* Workbench Top Bar */}
-            <div className="p-4 bg-slate-900/90 border-b border-white/10 flex items-center justify-between gap-3">
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full bg-red-500/80" />
-                <div className="w-3 h-3 rounded-full bg-amber-500/80" />
-                <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
-                <span className="text-xs font-mono text-slate-400 ml-2 font-bold">
-                  Mô phỏng trực quan theo thời gian thực
-                </span>
+            {/* Monitor Header */}
+            <div className="p-4 sm:p-5 bg-white/[0.04] border-b border-white/10 flex flex-wrap items-center justify-between gap-3">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-sky-600 to-cyan-500 text-white flex items-center justify-center shadow-md shadow-sky-600/30">
+                  <HeartPulse className="w-4 h-4" />
+                </div>
+                <div>
+                  <h4 className="text-xs sm:text-sm font-black font-heading text-white">
+                    Mô phỏng trực quan theo thời gian thực
+                  </h4>
+                  <p className="text-[11px] text-slate-400 font-medium font-sans">
+                    Dữ liệu phân tích nhịp tim mẫu
+                  </p>
+                </div>
               </div>
 
-              <div className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-sky-500/10 border border-sky-500/20 text-sky-400 text-xs font-bold font-heading">
-                <Activity className="w-3.5 h-3.5 animate-pulse" />
-                <span>Trực quan hóa</span>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-bold">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+                <span className="w-2 h-2 -ml-3.5 rounded-full bg-emerald-400" />
+                <span>Hoạt động 24/7</span>
               </div>
             </div>
 
-            {/* Workbench Body: Live Interactive Simulation */}
-            <div className="flex-1 p-6 flex flex-col justify-between bg-gradient-to-b from-slate-950 to-slate-900/60 min-h-[380px]">
+            {/* Monitor Body */}
+            <div className="flex-1 p-6 sm:p-7 flex flex-col justify-between bg-gradient-to-b from-slate-950 to-slate-900/90 min-h-[380px]">
               
               <div className="flex-1 flex flex-col justify-between">
                 
-                {/* STAGE 1 SIMULATION: ECG FILTERING & NOISE TOGGLE */}
+                {/* STAGE 1 VISUALIZER: ECG WAVEFORM */}
                 {activeStage === "stage-1" && (
                   <div className="space-y-6">
-                    <div className="flex items-center justify-between">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
                       <div className="flex items-center gap-2">
-                        <Filter className="w-4 h-4 text-sky-400" />
-                        <span className="text-xs font-bold font-heading text-white">
-                          Mô phỏng sóng nhịp tim từ thiết bị (125 lần/giây)
+                        <Activity className="w-4 h-4 text-sky-400" />
+                        <span className="text-xs sm:text-sm font-bold font-heading text-white">
+                          Sóng nhịp tim thu nhận từ thiết bị đeo
                         </span>
                       </div>
 
-                      {/* Noise Simulation Toggle Button */}
+                      {/* Noise Toggle Button */}
                       <button
                         onClick={() => setIsNoiseSimulated(!isNoiseSimulated)}
-                        className={`px-3 py-1.5 rounded-xl text-xs font-bold font-heading border transition-all cursor-pointer flex items-center gap-1.5 ${
+                        className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 shadow-xs font-heading ${
                           isNoiseSimulated 
-                            ? "bg-amber-500/20 text-amber-300 border-amber-500/40" 
-                            : "bg-emerald-500/20 text-emerald-300 border-emerald-500/40"
+                            ? "bg-amber-500/20 text-amber-300 border border-amber-500/40 hover:bg-amber-500/30" 
+                            : "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/30"
                         }`}
                       >
                         <Zap className="w-3.5 h-3.5" />
-                        <span>{isNoiseSimulated ? "Đang có tạp âm do cử động" : "Đã lọc sạch tín hiệu"}</span>
+                        <span>{isNoiseSimulated ? "Đang có rung lắc cử động" : "Đã lọc sạch tín hiệu chuẩn"}</span>
                       </button>
                     </div>
 
-                    {/* Animated ECG Waveform Screen */}
-                    <div className="p-4 rounded-2xl bg-black/60 border border-white/10 relative overflow-hidden">
-                      <div className="absolute top-2 right-3 text-[10px] font-mono text-emerald-400">
-                        Nhịp tim: 74 BPM | Độ trễ: 12ms
+                    {/* ECG Monitor Screen (Clean Medical Style) */}
+                    <div className="p-4 sm:p-5 rounded-2xl bg-black/60 border border-white/10 relative overflow-hidden shadow-inner">
+                      <div className="flex items-center justify-between text-xs font-bold text-emerald-400 mb-2">
+                        <span className="flex items-center gap-1.5">
+                          <HeartPulse className="w-3.5 h-3.5 animate-pulse" />
+                          Nhịp tim: 74 BPM
+                        </span>
+                        <span className="text-[11px] text-slate-400 font-normal font-sans">Độ trễ: 12ms</span>
                       </div>
 
-                      <svg className="w-full h-32 stroke-sky-500 fill-none" viewBox="0 0 400 100">
-                        {/* Baseline */}
+                      {/* SVG Wave */}
+                      <svg className="w-full h-32 stroke-sky-400 fill-none" viewBox="0 0 400 100">
+                        {/* Grid lines */}
                         <line x1="0" y1="50" x2="400" y2="50" stroke="#334155" strokeWidth="1" strokeDasharray="4 4" />
                         
                         {/* ECG Wave: Clean vs Noisy */}
@@ -286,149 +296,159 @@ export function AIPipelineSection() {
                         ) : (
                           <path 
                             d="M 0 50 L 40 50 L 50 42 L 58 58 L 66 50 L 85 50 L 95 15 L 108 85 L 118 50 L 155 50 L 165 42 L 173 58 L 181 50 L 200 50 L 210 15 L 223 85 L 233 50 L 270 50 L 280 42 L 288 58 L 296 50 L 315 50 L 325 15 L 338 85 L 348 50 L 400 50" 
-                            stroke="#10b981" 
+                            stroke="#34d399" 
                             strokeWidth="2.5" 
                             strokeLinecap="round" 
                           />
                         )}
 
-                        {/* Detected R-Peaks */}
+                        {/* Detected Peaks */}
                         {!isNoiseSimulated && (
                           <>
-                            <circle cx="95" cy="15" r="4" fill="#10b981" />
-                            <circle cx="210" cy="15" r="4" fill="#10b981" />
-                            <circle cx="325" cy="15" r="4" fill="#10b981" />
+                            <circle cx="95" cy="15" r="4" fill="#34d399" />
+                            <circle cx="210" cy="15" r="4" fill="#34d399" />
+                            <circle cx="325" cy="15" r="4" fill="#34d399" />
                           </>
                         )}
                       </svg>
 
-                      <div className="flex items-center justify-between text-[11px] font-mono text-slate-400 mt-2 pt-2 border-t border-white/10">
-                        <span>Trạng thái: {isNoiseSimulated ? "⚠️ Tín hiệu bị rung lắc" : "🟢 Sóng tim ổn định, rõ nét"}</span>
-                        <span>Định vị: Từng nhịp đập</span>
+                      <div className="flex items-center justify-between text-xs text-slate-300 mt-2 pt-2 border-t border-white/10 font-sans">
+                        <span>{isNoiseSimulated ? "⚠️ Đang lọc bỏ rung lắc cử động" : "🟢 Sóng nhịp tim ổn định và chuẩn xác"}</span>
+                        <span className="text-slate-400">Định vị từng nhịp</span>
                       </div>
                     </div>
                   </div>
                 )}
 
-                {/* STAGE 2 SIMULATION: 16-D FEATURE MATRIX BARS */}
+                {/* STAGE 2 VISUALIZER: 16 HRV HEALTH BARS */}
                 {activeStage === "stage-2" && (
-                  <div className="space-y-4">
+                  <div className="space-y-5">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <ActivitySquare className="w-4 h-4 text-sky-400" />
-                        <span className="text-xs font-bold font-heading text-white">
+                        <Sliders className="w-4 h-4 text-sky-400" />
+                        <span className="text-xs sm:text-sm font-bold font-heading text-white">
                           16 Chỉ số biến thiên nhịp tim (HRV)
                         </span>
                       </div>
-                      <span className="text-[11px] font-mono text-sky-300 bg-sky-950/60 px-2 py-0.5 rounded border border-sky-800">
-                        Thang đo chuẩn: [-1.0, 1.0]
+                      <span className="text-xs font-bold text-sky-300 bg-sky-950/80 px-3 py-1 rounded-full border border-sky-800">
+                        Thang đo chuẩn hóa
                       </span>
                     </div>
 
-                    {/* 16 Matrix Bars Grid */}
-                    <div className="grid grid-cols-4 sm:grid-cols-8 gap-2 p-4 rounded-2xl bg-black/60 border border-white/10">
+                    {/* 8 Featured Metric Bars */}
+                    <div className="grid grid-cols-4 sm:grid-cols-8 gap-2.5 p-4 sm:p-5 rounded-2xl bg-black/50 border border-white/10">
                       {[
                         { name: "Độ lệch nhịp", val: "+0.84", h: "84%", col: "bg-sky-400" },
-                        { name: "Biến thiên", val: "+0.62", h: "62%", col: "bg-sky-400" },
-                        { name: "Nhịp ngắt", val: "-0.45", h: "45%", col: "bg-sky-400" },
-                        { name: "Nhịp TB", val: "+0.78", h: "78%", col: "bg-sky-400" },
-                        { name: "Tần số thấp", val: "+0.91", h: "91%", col: "bg-blue-500" },
-                        { name: "Tần số cao", val: "+0.53", h: "53%", col: "bg-blue-500" },
-                        { name: "Tỷ số hô hấp", val: "+0.68", h: "68%", col: "bg-blue-500" },
-                        { name: "Độ bất quy tắc", val: "+0.88", h: "88%", col: "bg-indigo-400" },
+                        { name: "Độ biến thiên", val: "+0.62", h: "62%", col: "bg-sky-400" },
+                        { name: "Nhịp ngắt", val: "-0.45", h: "45%", col: "bg-blue-400" },
+                        { name: "Nhịp TB", val: "+0.78", h: "78%", col: "bg-blue-400" },
+                        { name: "Tần số thấp", val: "+0.91", h: "91%", col: "bg-indigo-400" },
+                        { name: "Tần số cao", val: "+0.53", h: "53%", col: "bg-indigo-400" },
+                        { name: "Tỷ số thở", val: "+0.68", h: "68%", col: "bg-cyan-400" },
+                        { name: "Độ ổn định", val: "+0.88", h: "88%", col: "bg-emerald-400" },
                       ].map((feat, i) => (
                         <div key={i} className="flex flex-col items-center gap-1.5">
-                          <div className="w-full h-24 bg-slate-900 rounded-lg flex items-end p-1 border border-white/5">
-                            <div className={`w-full ${feat.col} rounded-sm transition-all duration-500`} style={{ height: feat.h }} />
+                          <div className="w-full h-24 bg-slate-900 rounded-xl flex items-end p-1 overflow-hidden border border-white/5">
+                            <div 
+                              className={`w-full ${feat.col} rounded-lg transition-all duration-500 shadow-xs`} 
+                              style={{ height: feat.h }} 
+                            />
                           </div>
-                          <span className="text-[9px] font-medium text-white truncate text-center w-full">{feat.name}</span>
-                          <span className="text-[8px] font-mono text-slate-400">{feat.val}</span>
+                          <span className="text-[10px] font-bold text-white truncate text-center w-full">{feat.name}</span>
+                          <span className="text-[9px] text-slate-400 font-sans">{feat.val}</span>
                         </div>
                       ))}
                     </div>
 
-                    <div className="p-3 rounded-xl bg-sky-950/40 border border-sky-800/40 text-xs text-slate-300 font-sans flex items-center justify-between">
-                      <span>✓ Các chỉ số sức khỏe đã sẵn sàng để AI phân tích</span>
-                      <span className="font-mono text-sky-400 font-bold">16 Chỉ số • Đã đồng bộ</span>
+                    <div className="p-3.5 rounded-2xl bg-sky-950/40 border border-sky-800/50 text-xs text-sky-200 font-sans flex items-center justify-between">
+                      <span>✓ 16 chỉ số sức khỏe đã sẵn sàng để AI phân tích</span>
+                      <span className="font-bold text-sky-300">Đã đồng bộ</span>
                     </div>
                   </div>
                 )}
 
-                {/* STAGE 3 SIMULATION: STACKING AI LIVE INFERENCE */}
+                {/* STAGE 3 VISUALIZER: MULTI-AI EVALUATION */}
                 {activeStage === "stage-3" && (
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold font-heading text-white">
+                  <div className="space-y-5">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <span className="text-xs sm:text-sm font-bold font-heading text-white">
                         4 Mô hình AI cùng phân tích chéo
                       </span>
 
-                      {/* Sample Switcher */}
-                      <div className="flex items-center gap-1 bg-slate-800 p-1 rounded-xl border border-white/10">
+                      {/* Sample Selector Buttons */}
+                      <div className="flex items-center gap-1.5 bg-slate-900 p-1 rounded-full border border-white/10">
                         <button
                           onClick={() => setSimulatedSample("normal")}
-                          className={`px-2.5 py-1 rounded-lg text-xs font-mono transition-all cursor-pointer ${
-                            simulatedSample === "normal" ? "bg-emerald-600 text-white font-bold" : "text-slate-400"
+                          className={`px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer font-heading ${
+                            simulatedSample === "normal" 
+                              ? "bg-emerald-600 text-white shadow-xs" 
+                              : "text-slate-400 hover:text-white"
                           }`}
                         >
-                          Mẫu: Nhịp tim bình thường
+                          Mẫu: Bình thường
                         </button>
                         <button
                           onClick={() => setSimulatedSample("afib")}
-                          className={`px-2.5 py-1 rounded-lg text-xs font-mono transition-all cursor-pointer ${
-                            simulatedSample === "afib" ? "bg-rose-600 text-white font-bold" : "text-slate-400"
+                          className={`px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer font-heading ${
+                            simulatedSample === "afib" 
+                              ? "bg-rose-600 text-white shadow-xs" 
+                              : "text-slate-400 hover:text-white"
                           }`}
                         >
-                          Mẫu: Rung Nhĩ (AFib)
+                          Mẫu: Loạn nhịp (AFib)
                         </button>
                       </div>
                     </div>
 
-                    {/* 4 Base Models Decision Grid */}
+                    {/* 4 AI Model Mini Cards */}
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
                       {[
-                        { name: "Mô hình 1 (XGBoost)", conf: simulatedSample === "normal" ? "98.9% Bình thường" : "99.4% Loạn nhịp", color: "border-sky-500/40" },
-                        { name: "Mô hình 2 (Random Forest)", conf: simulatedSample === "normal" ? "97.8% Bình thường" : "98.7% Loạn nhịp", color: "border-blue-500/40" },
-                        { name: "Mô hình 3 (SVM)", conf: simulatedSample === "normal" ? "99.1% Bình thường" : "99.2% Loạn nhịp", color: "border-indigo-500/40" },
-                        { name: "Mô hình 4 (Neural Net)", conf: simulatedSample === "normal" ? "98.5% Bình thường" : "98.9% Loạn nhịp", color: "border-cyan-500/40" },
+                        { name: "Kiểm tra độ đều nhịp", conf: simulatedSample === "normal" ? "98.9% Ổn định" : "99.4% Loạn nhịp", border: "border-sky-500/40" },
+                        { name: "Kiểm tra tần số tim", conf: simulatedSample === "normal" ? "97.8% Ổn định" : "98.7% Loạn nhịp", border: "border-blue-500/40" },
+                        { name: "Kiểm tra cơn ngắt quãng", conf: simulatedSample === "normal" ? "99.1% Ổn định" : "99.2% Loạn nhịp", border: "border-indigo-500/40" },
+                        { name: "Đánh giá dạng sóng", conf: simulatedSample === "normal" ? "98.5% Ổn định" : "98.9% Loạn nhịp", border: "border-cyan-500/40" },
                       ].map((model, idx) => (
-                        <div key={idx} className={`p-3 rounded-xl bg-black/60 border ${model.color} text-center`}>
-                          <span className="text-[10px] text-slate-400 block truncate">{model.name}</span>
-                          <span className="text-xs font-bold font-heading text-white block mt-0.5">{model.conf}</span>
+                        <div key={idx} className={`p-3 rounded-2xl bg-black/50 border ${model.border} text-center`}>
+                          <span className="text-[11px] text-slate-400 font-sans block truncate">{model.name}</span>
+                          <span className="text-xs font-black font-heading text-white block mt-1">{model.conf}</span>
                         </div>
                       ))}
                     </div>
 
-                    {/* Meta Learner Final Decision Card */}
-                    <div className={`p-4 rounded-xl border flex items-center justify-between ${
+                    {/* Final Smart Assessment Card */}
+                    <div className={`p-4 sm:p-5 rounded-2xl border flex items-center justify-between gap-4 transition-all duration-300 ${
                       simulatedSample === "normal" 
-                        ? "bg-emerald-950/40 border-emerald-500/40 text-emerald-300" 
-                        : "bg-rose-950/40 border-rose-500/40 text-rose-300"
+                        ? "bg-emerald-950/50 border-emerald-500/40 text-emerald-200" 
+                        : "bg-rose-950/50 border-rose-500/40 text-rose-200"
                     }`}>
-                      <div className="flex items-center gap-3">
-                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold ${
-                          simulatedSample === "normal" ? "bg-emerald-500/20 text-emerald-400" : "bg-rose-500/20 text-rose-400"
+                      <div className="flex items-center gap-3.5">
+                        <div className={`w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 ${
+                          simulatedSample === "normal" ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30" : "bg-rose-500/20 text-rose-400 border border-rose-500/30"
                         }`}>
-                          {simulatedSample === "normal" ? <CheckCircle2 className="w-5 h-5" /> : <AlertTriangle className="w-5 h-5" />}
+                          {simulatedSample === "normal" ? <CheckCircle2 className="w-6 h-6" /> : <AlertTriangle className="w-6 h-6" />}
                         </div>
                         <div>
-                          <span className="text-xs font-mono text-slate-400 block">KẾT QUẢ TỔNG HỢP TỨC THÌ (&lt; 85ms)</span>
-                          <span className="text-sm font-black font-heading text-white">
+                          <span className="text-xs font-bold text-slate-400 block font-heading">KẾT QUẢ ĐÁNH GIÁ TỔNG HỢP (&lt; 85ms)</span>
+                          <span className="text-sm sm:text-base font-black font-heading block mt-0.5 text-white">
                             {simulatedSample === "normal" ? "Nhịp tim bình thường, ổn định" : "Cảnh báo: Phát hiện dấu hiệu Rung nhĩ (AFib)"}
                           </span>
                         </div>
                       </div>
 
-                      <span className="text-xs font-mono font-bold px-2.5 py-1 rounded bg-white/10 text-white">
+                      <span className="text-xs font-bold px-3 py-1.5 rounded-full bg-white/10 text-white border border-white/15 whitespace-nowrap font-heading">
                         Độ chính xác: 98.65%
                       </span>
                     </div>
                   </div>
                 )}
 
-                {/* Stage Bottom Interactive Footer */}
-                <div className="flex items-center justify-between pt-4 border-t border-white/10 text-xs text-slate-400 font-sans">
+                {/* Card Bottom Note */}
+                <div className="flex items-center justify-between pt-5 mt-4 border-t border-white/10 text-xs text-slate-400 font-sans">
                   <span>Đang xem: {current.title}</span>
-                  <span className="text-emerald-400">✓ Đã kiểm nghiệm trên dữ liệu y tế MIMIC-III</span>
+                  <span className="inline-flex items-center gap-1 text-emerald-400 font-bold">
+                    <ShieldCheck className="w-3.5 h-3.5" />
+                    Đã kiểm chứng trên dữ liệu y tế MIMIC-III
+                  </span>
                 </div>
 
               </div>

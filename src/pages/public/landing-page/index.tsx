@@ -98,9 +98,11 @@ export default function LandingPage() {
 
           {/* Logo & Tag */}
           <Link to="/" className="flex items-center gap-2.5 group shrink-0">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 via-sky-500 to-cyan-400 flex items-center justify-center text-white shadow-md shadow-sky-500/25 group-hover:scale-105 transition-transform duration-300 shrink-0">
-              <HeartPulse className="w-5 h-5 drop-shadow-xs" />
-            </div>
+            <img
+              src="/logo.png"
+              alt="HealthSense Logo"
+              className="w-10 h-10 object-contain rounded-xl group-hover:scale-105 transition-transform duration-300 shrink-0"
+            />
             <div className="flex flex-col">
               <span className="text-xl font-black text-slate-900 tracking-tight font-heading whitespace-nowrap">HealthSense</span>
               <span className="text-[11px] text-slate-500 font-medium hidden sm:block -mt-0.5 whitespace-nowrap">Hệ sinh thái Y tế Thông minh</span>
