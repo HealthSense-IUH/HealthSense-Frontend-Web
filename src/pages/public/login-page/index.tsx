@@ -464,6 +464,14 @@ export default function LoginPage() {
                   </div>
                 )}
               </Button>
+
+              <p className="text-[11px] text-slate-400 text-center leading-relaxed mt-1">
+                Bằng việc tiếp tục, bạn đồng ý với{" "}
+                <Link to="/terms" target="_blank" className="text-sky-600 font-bold hover:underline">
+                  Điều khoản sử dụng &amp; Miễn trừ y tế
+                </Link>{" "}
+                của HealthSense.
+              </p>
             </form>
           )}
 

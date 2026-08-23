@@ -24,6 +24,7 @@ const ProfilePage = lazy(() => import("@/features/profile/pages/profile-page"))
 const LandingPage = lazy(() => import("@/pages/public/landing-page"))
 const LoginPage = lazy(() => import("@/pages/public/login-page"))
 const ForgotPasswordPage = lazy(() => import("@/features/forgot-password/pages/forgot-password-page"))
+const TermsPage = lazy(() => import("@/pages/public/terms-page"))
 
 export const router = createBrowserRouter([
   {
@@ -32,6 +33,24 @@ export const router = createBrowserRouter([
     element: (
       <LazyElement>
         <LandingPage />
+      </LazyElement>
+    ),
+  },
+  {
+    path: "/terms",
+    errorElement: <GlobalErrorBoundary />,
+    element: (
+      <LazyElement>
+        <TermsPage />
+      </LazyElement>
+    ),
+  },
+  {
+    path: "/terms-and-conditions",
+    errorElement: <GlobalErrorBoundary />,
+    element: (
+      <LazyElement>
+        <TermsPage />
       </LazyElement>
     ),
   },

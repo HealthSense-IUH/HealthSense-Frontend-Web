@@ -119,6 +119,12 @@ export function LandingFooter() {
                   <ArrowUpRight className="w-3.5 h-3.5 opacity-60" />
                 </Link>
               </li>
+              <li>
+                <Link to="/terms" className="hover:text-white text-sky-400 transition-colors flex items-center gap-1 font-bold">
+                  <span>Điều khoản &amp; Miễn trừ y khoa</span>
+                  <ArrowUpRight className="w-3.5 h-3.5 opacity-80" />
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -127,7 +133,7 @@ export function LandingFooter() {
         {/* Medical Disclaimer & Copyright Bottom Bar */}
         <div className="pt-8 flex flex-col md:flex-row items-center justify-between gap-6 text-xs text-slate-500 font-sans">
           <p className="text-[11px] leading-relaxed max-w-2xl text-center md:text-left text-slate-500">
-            <strong>Tuyên bố miễn trừ y khoa:</strong> HealthSense là công cụ AI hỗ trợ theo dõi sức khỏe và cảnh báo sớm nguy cơ Rung nhĩ. Kết quả từ hệ thống mang tính tham khảo chuyên môn và không thay thế hoàn toàn chỉ định cấp cứu trực tiếp từ bác sĩ chuyên khoa tim mạch.
+            <strong>Tuyên bố miễn trừ y khoa:</strong> HealthSense là nền tảng thử nghiệm công nghệ AI hỗ trợ theo dõi nhịp tim và tầm soát Rung nhĩ. Kết quả mang tính tham khảo và không thay thế chẩn đoán từ bác sĩ. Xem chi tiết tại <Link to="/terms" className="text-sky-400 underline font-bold hover:text-sky-300">Điều khoản sử dụng &amp; Miễn trừ trách nhiệm</Link>.
           </p>
           <div className="text-center md:text-right shrink-0 text-slate-400">
             © {new Date().getFullYear()} HealthSense. All rights reserved.
