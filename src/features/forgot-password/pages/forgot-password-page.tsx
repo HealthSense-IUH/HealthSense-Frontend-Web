@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
-import { HeartPulse } from "lucide-react"
 
 import { RequestOtpForm } from "../components/request-otp-form"
 import { VerifyOtpForm } from "../components/verify-otp-form"

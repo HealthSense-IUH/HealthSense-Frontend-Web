@@ -1,7 +1,7 @@
 import { useState, useEffect, type FormEvent } from "react"
 import { 
-  HeartPulse, 
   ArrowLeft, 
+  ArrowUpRight, 
   Mail, 
   Lock, 
   LogIn, 
@@ -9,8 +9,6 @@ import {
   User, 
   AlertCircle, 
   CheckCircle2, 
-  ShieldCheck, 
-  ArrowUpRight, 
   Eye, 
   EyeOff, 
   Loader2 
@@ -496,12 +494,6 @@ export default function LoginPage() {
             )}
           </div>
 
-        </div>
-
-        {/* Subtle Security Badge below Card */}
-        <div className="flex items-center justify-center gap-2 mt-6 text-xs text-slate-500 font-medium">
-          <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
-          <span>Mã hóa bảo mật chuẩn y tế HIPAA &amp; HL7 Quốc tế</span>
         </div>
 
       </div>
