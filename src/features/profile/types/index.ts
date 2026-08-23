@@ -19,6 +19,15 @@ export interface UserResponse {
   gender?: string
   address?: string
   avatarUrl?: string
+  citizenId?: string
+  bankAccount?: string
+  healthInsuranceNumber?: string
+  healthData?: string
+  biometricData?: string
+  identityCardFrontUrl?: string
+  identityCardBackUrl?: string
+  identityCardFrontRotate?: number
+  identityCardBackRotate?: number
   createdAt?: string | number
   updatedAt?: string | number
 }
@@ -30,15 +39,37 @@ export interface ProfileUpdateRequest {
   gender?: string
   address?: string
   avatarUrl?: string
+  citizenId?: string
+  bankAccount?: string
+  healthInsuranceNumber?: string
+  healthData?: string
+  biometricData?: string
+  identityCardFrontUrl?: string
+  identityCardBackUrl?: string
+  identityCardFrontRotate?: number
+  identityCardBackRotate?: number
 }
 
 export interface AvatarPresignedUrlRequest {
   fileName: string
-  contentType: string
+  contentType?: string
 }
 
 export interface AvatarPresignedUrlResponse {
   uploadUrl: string
   publicUrl: string
   s3Key: string
+}
+
+export interface IdentityCardPresignedUrlRequest {
+  fileName: string
+  contentType?: string
+  cardSide?: "FRONT" | "BACK"
+}
+
+export interface IdentityCardPresignedUrlResponse {
+  uploadUrl: string
+  publicUrl: string
+  s3Key: string
+  cardSide?: string
 }

@@ -4,6 +4,8 @@ import type { ApiResponse } from "@/types/base"
 import type {
   AvatarPresignedUrlRequest,
   AvatarPresignedUrlResponse,
+  IdentityCardPresignedUrlRequest,
+  IdentityCardPresignedUrlResponse,
   ProfileUpdateRequest,
   UserResponse,
 } from "../types"
@@ -37,6 +39,17 @@ export const profileApi = {
       ApiResponse<AvatarPresignedUrlResponse>,
       ApiResponse<AvatarPresignedUrlResponse>
     >("/api/users/me/avatar/presigned-url", payload)
+  },
+
+  /**
+   * Generate S3 Presigned URL for uploading identity card (CCCD)
+   * POST /api/users/me/identity-card/presigned-url
+   */
+  generateIdentityCardPresignedUrl(payload: IdentityCardPresignedUrlRequest) {
+    return axiosClient.post<
+      ApiResponse<IdentityCardPresignedUrlResponse>,
+      ApiResponse<IdentityCardPresignedUrlResponse>
+    >("/api/users/me/identity-card/presigned-url", payload)
   },
 
   /**
