@@ -35,7 +35,6 @@
 - `src/types/base/`: Kiểu response dùng chung như `ApiResponse<T>`, `PageResponse<T>`.
 - `src/components/ui/`: Component shadcn/ui.
 - `src/components/layout/`: Layout dùng chung.
-- Xem thêm quy ước chi tiết trong `ARCHITECTURE.md`.
 
 ### Auth API
 - Backend mặc định: `http://localhost:8080` (`VITE_API_BASE_URL` để override).
@@ -97,7 +96,6 @@
 - `src/types/base/`: Shared response contracts such as `ApiResponse<T>` and `PageResponse<T>`.
 - `src/components/ui/`: shadcn/ui components.
 - `src/components/layout/`: Shared layouts.
-- See `ARCHITECTURE.md` for detailed placement rules.
 
 ### Auth API
 - Default backend: `http://localhost:8080`; override with `VITE_API_BASE_URL`.
