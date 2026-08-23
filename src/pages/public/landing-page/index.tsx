@@ -1,19 +1,19 @@
 import { useState, useEffect } from "react"
-import { 
-  HeartPulse, 
+import {
+  HeartPulse,
   ArrowRight,
   ArrowUpRight,
   Play,
-  ChevronDown
+  ChevronDown,
+  ArrowUp
 } from "lucide-react"
 import { useNavigate, Link } from "react-router-dom"
-import { motion } from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion"
 
 import { AIPipelineSection } from "./components/AIPipelineSection"
 import { AIFeaturesSection } from "./components/AIFeaturesSection"
 import { AIClinicalBenchmarkSection } from "./components/AIClinicalBenchmarkSection"
 import { HealthSenseBrandStorySection } from "./components/HealthSenseBrandStorySection"
-import { MeetOurTeamSection } from "./components/MeetOurTeamSection"
 import { LandingFooter } from "./components/LandingFooter"
 import { useAuthStore } from "@/features/auth/auth-store"
 
@@ -22,19 +22,20 @@ const navItems = [
   { id: "features", label: "Chỉ số sinh học" },
   { id: "pipeline", label: "Mô hình AI" },
   { id: "benchmark", label: "Kiểm chứng lâm sàng" },
-  { id: "team", label: "Đội ngũ chuyên gia" },
 ]
 
 export default function LandingPage() {
   const navigate = useNavigate()
   const userSession = useAuthStore((state) => state.userSession)
-  
+
   const [activeSection, setActiveSection] = useState<string>("")
   const [isScrolled, setIsScrolled] = useState(false)
+  const [showScrollTop, setShowScrollTop] = useState(false)
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 30)
+      setShowScrollTop(window.scrollY > 350)
 
       const scrollPosition = window.scrollY + 220
       const sectionElements = navItems.map((item) => ({
@@ -60,6 +61,13 @@ export default function LandingPage() {
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    })
+  }
+
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId)
     if (element) {
@@ -71,8 +79,8 @@ export default function LandingPage() {
     <div className="min-h-screen bg-[#F8FAFC] text-slate-900 font-sans overflow-x-hidden flex flex-col relative selection:bg-sky-500/20">
 
       {/* Modern Background Grid Pattern */}
-      <div 
-        className="absolute inset-0 bg-[radial-gradient(#0284c7_1px,transparent_1px)] [background-size:28px_28px] opacity-[0.035] pointer-events-none" 
+      <div
+        className="absolute inset-0 bg-[radial-gradient(#0284c7_1px,transparent_1px)] [background-size:28px_28px] opacity-[0.035] pointer-events-none"
       />
 
       {/* Dynamic Ambient Glowing Blobs */}
@@ -81,15 +89,13 @@ export default function LandingPage() {
       <div className="absolute top-[60%] right-10 w-[450px] h-[450px] rounded-full bg-gradient-to-bl from-cyan-400/10 via-teal-300/10 to-transparent blur-[120px] pointer-events-none" />
 
       {/* Fixed Glassmorphism Navigation Header */}
-      <header className={`fixed top-0 left-0 right-0 w-full px-4 sm:px-6 lg:px-8 z-50 transition-all duration-300 ${
-        isScrolled ? "pt-2.5 pb-2" : "pt-4 sm:pt-5 pb-2"
-      }`}>
-        <nav className={`relative w-full px-4 sm:px-6 xl:px-7 py-2.5 sm:py-3 flex items-center justify-between max-w-7xl mx-auto rounded-2xl sm:rounded-full border transition-all duration-300 ${
-          isScrolled 
-            ? "bg-white/95 backdrop-blur-xl border-slate-200/90 shadow-[0_10px_35px_rgba(0,0,0,0.08)]"
-            : "bg-white/85 backdrop-blur-xl border-slate-200/80 shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
+      <header className={`fixed top-0 left-0 right-0 w-full px-4 sm:px-6 lg:px-8 z-50 transition-all duration-300 ${isScrolled ? "pt-2.5 pb-2" : "pt-4 sm:pt-5 pb-2"
         }`}>
-          
+        <nav className={`relative w-full px-4 sm:px-6 xl:px-7 py-2.5 sm:py-3 flex items-center justify-between max-w-7xl mx-auto rounded-2xl sm:rounded-full border transition-all duration-300 ${isScrolled
+          ? "bg-white/95 backdrop-blur-xl border-slate-200/90 shadow-[0_10px_35px_rgba(0,0,0,0.08)]"
+          : "bg-white/85 backdrop-blur-xl border-slate-200/80 shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
+          }`}>
+
           {/* Logo & Tag */}
           <Link to="/" className="flex items-center gap-2.5 group shrink-0">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 via-sky-500 to-cyan-400 flex items-center justify-center text-white shadow-md shadow-sky-500/25 group-hover:scale-105 transition-transform duration-300 shrink-0">
@@ -113,15 +119,14 @@ export default function LandingPage() {
                     e.preventDefault()
                     scrollToSection(item.id)
                   }}
-                  className={`px-3 xl:px-4 py-1.5 xl:py-2 rounded-full transition-all relative cursor-pointer whitespace-nowrap shrink-0 ${
-                    isActive 
-                      ? "text-sky-700 bg-sky-50/90 font-bold shadow-2xs" 
-                      : "hover:text-sky-600 hover:bg-slate-100/60"
-                  }`}
+                  className={`px-3 xl:px-4 py-1.5 xl:py-2 rounded-full transition-all relative cursor-pointer whitespace-nowrap shrink-0 ${isActive
+                    ? "text-sky-700 bg-sky-50/90 font-bold shadow-2xs"
+                    : "hover:text-sky-600 hover:bg-slate-100/60"
+                    }`}
                 >
                   <span className="whitespace-nowrap">{item.label}</span>
                   {isActive && (
-                    <motion.span 
+                    <motion.span
                       layoutId="activeNavIndicator"
                       className="absolute bottom-1 left-3 right-3 xl:left-4 xl:right-4 h-0.5 bg-sky-500 rounded-full"
                     />
@@ -134,7 +139,7 @@ export default function LandingPage() {
           {/* Action Button */}
           <div className="flex items-center gap-2 text-xs xl:text-sm font-semibold shrink-0">
             {userSession ? (
-              <button 
+              <button
                 onClick={() => navigate('/app/dashboard')}
                 className="bg-gradient-to-r from-blue-600 to-sky-600 hover:from-blue-700 hover:to-sky-700 text-white transition-all px-4 sm:px-5 py-2 rounded-full shadow-md shadow-sky-900/20 font-bold flex items-center gap-1.5 hover:-translate-y-0.5 cursor-pointer font-heading whitespace-nowrap shrink-0"
               >
@@ -143,14 +148,14 @@ export default function LandingPage() {
               </button>
             ) : (
               <>
-                <Link 
+                <Link
                   to="/login"
                   className="text-slate-700 hover:text-sky-700 hover:bg-slate-100/80 font-bold px-3 sm:px-4 py-2 rounded-full transition-all cursor-pointer font-heading whitespace-nowrap shrink-0"
                 >
                   Đăng nhập
                 </Link>
-                <Link 
-                  to="/login"
+                <Link
+                  to="/register"
                   className="bg-gradient-to-r from-blue-600 to-sky-600 hover:from-blue-700 hover:to-sky-700 text-white transition-all px-4 sm:px-5 py-2 rounded-full shadow-md shadow-sky-900/20 font-bold flex items-center gap-1 hover:-translate-y-0.5 cursor-pointer font-heading whitespace-nowrap shrink-0"
                 >
                   <span className="whitespace-nowrap">Trải nghiệm</span>
@@ -168,7 +173,7 @@ export default function LandingPage() {
 
           {/* Left Content (Clean Typography, CTAs, and Measured Metrics) */}
           <div className="col-span-1 lg:col-span-5 flex flex-col justify-center order-2 lg:order-1 z-20">
-            
+
             {/* Main Headline - Crystal Clear & Impactful */}
             <h1 className="text-4xl sm:text-5xl lg:text-[54px] font-black leading-[1.12] mb-5 tracking-tight text-slate-900 font-heading uppercase">
               Giám sát tim 24/7 <br />
@@ -185,7 +190,7 @@ export default function LandingPage() {
             {/* CTAs */}
             <div className="flex flex-wrap items-center gap-4 mb-10">
               {userSession ? (
-                <button 
+                <button
                   onClick={() => navigate('/app/dashboard')}
                   className="bg-gradient-to-r from-blue-600 via-sky-600 to-blue-600 hover:from-blue-700 hover:to-sky-700 text-white font-extrabold px-7 py-3.5 rounded-full shadow-lg shadow-sky-900/25 hover:shadow-sky-900/35 hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center gap-2.5 cursor-pointer text-sm sm:text-base font-heading"
                 >
@@ -193,16 +198,16 @@ export default function LandingPage() {
                   <ArrowUpRight className="w-5 h-5" />
                 </button>
               ) : (
-                <Link 
+                <Link
                   to="/login"
                   className="bg-gradient-to-r from-blue-600 via-sky-600 to-blue-600 hover:from-blue-700 hover:to-sky-700 text-white font-extrabold px-7 py-3.5 rounded-full shadow-lg shadow-sky-900/25 hover:shadow-sky-900/35 hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center gap-2.5 cursor-pointer text-sm sm:text-base font-heading"
                 >
-                  <span>Bắt đầu Theo dõi Ngay</span>
+                  <span>Tham gia ngay</span>
                   <ArrowUpRight className="w-5 h-5" />
                 </Link>
               )}
 
-              <button 
+              <button
                 onClick={() => scrollToSection("about")}
                 className="px-5 py-3.5 rounded-full font-bold text-slate-700 bg-white hover:bg-slate-50 border border-slate-200/80 shadow-2xs hover:shadow-xs transition-all flex items-center gap-2 text-sm sm:text-base cursor-pointer font-heading"
               >
@@ -231,31 +236,31 @@ export default function LandingPage() {
 
           {/* Right Hero (Clean, Focused Product Video Mockup Showcase) */}
           <div className="col-span-1 lg:col-span-7 relative flex flex-col items-center justify-center order-1 lg:order-2 w-full max-w-[800px] mx-auto">
-            
+
             {/* Ambient Background Glows */}
             <div className="absolute top-1/4 right-1/4 w-80 h-80 bg-sky-400/20 rounded-full blur-[100px] -z-10 pointer-events-none" />
             <div className="absolute bottom-1/4 left-1/4 w-80 h-80 bg-cyan-400/15 rounded-full blur-[100px] -z-10 pointer-events-none" />
 
             {/* Dark Modern Device Mockup */}
             <div className="relative w-full bg-slate-900 rounded-[2.2rem] sm:rounded-[2.6rem] shadow-[0_30px_80px_-15px_rgba(15,23,42,0.35)] p-3.5 sm:p-4.5 overflow-hidden border-[6px] sm:border-8 border-slate-800 ring-1 ring-black/20 hover:-translate-y-1 transition-all duration-300">
-              
+
               {/* Device Camera Notch / Bar */}
               <div className="absolute top-2.5 left-1/2 -translate-x-1/2 w-16 h-1.5 bg-slate-800 rounded-full z-30" />
 
               {/* Interactive Screen Container */}
               <div className="w-full aspect-[16/9] rounded-[1.4rem] sm:rounded-[1.7rem] overflow-hidden bg-slate-950 relative shadow-inner">
-                <iframe 
-                  className="absolute inset-0 w-full h-full pointer-events-none"
-                  src="https://www.youtube.com/embed/_5ibr_-CpFg?enablejsapi=1&autoplay=1&mute=1&controls=0&loop=1&playlist=_5ibr_-CpFg&playsinline=1&modestbranding=1&rel=0&iv_load_policy=3&disablekb=1&vq=hd1080" 
-                  title="HealthSense Overview" 
-                  frameBorder="0" 
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                  referrerPolicy="strict-origin-when-cross-origin" 
-                  allowFullScreen
+                <video
+                  src="/video/promo.mp4"
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  preload="auto"
+                  className="absolute inset-0 w-full h-full object-cover pointer-events-none"
                 />
-                
+
                 {/* Subtle Gradient Overlay on video edge */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent pointer-events-none" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none" />
               </div>
             </div>
 
@@ -298,13 +303,25 @@ export default function LandingPage() {
         <AIClinicalBenchmarkSection />
       </div>
 
-      {/* 05. Meet Our Team & Medical Board Section */}
-      <div id="team" className="scroll-mt-20 sm:scroll-mt-24">
-        <MeetOurTeamSection />
-      </div>
-
       {/* Professional Full Footer */}
       <LandingFooter />
+
+      {/* Scroll to Top Floating Button */}
+      <AnimatePresence>
+        {showScrollTop && (
+          <motion.button
+            initial={{ opacity: 0, scale: 0.8, y: 16 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.8, y: 16 }}
+            transition={{ duration: 0.2 }}
+            onClick={scrollToTop}
+            aria-label="Cuộn lên đầu trang"
+            className="fixed bottom-6 right-6 z-50 w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-white/95 hover:bg-white text-slate-700 hover:text-sky-600 border border-slate-200/90 shadow-lg shadow-sky-950/10 backdrop-blur-md flex items-center justify-center cursor-pointer transition-all hover:scale-110 hover:shadow-xl active:scale-95 group"
+          >
+            <ArrowUp className="w-5 h-5 transition-transform group-hover:-translate-y-0.5" />
+          </motion.button>
+        )}
+      </AnimatePresence>
 
     </div>
   )

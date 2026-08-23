@@ -48,6 +48,14 @@ export const router = createBrowserRouter([
         ),
       },
       {
+        path: "/register",
+        element: (
+          <LazyElement>
+            <LoginPage />
+          </LazyElement>
+        ),
+      },
+      {
         path: "/forgot-password",
         element: (
           <LazyElement>

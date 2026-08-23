@@ -1,4 +1,4 @@
-import { HeartPulse, Mail, Phone, MapPin, ArrowUpRight } from "lucide-react"
+import { HeartPulse, ArrowUpRight } from "lucide-react"
 import { Link } from "react-router-dom"
 
 export function LandingFooter() {
@@ -18,11 +18,11 @@ export function LandingFooter() {
 
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 relative z-10">
         
-        {/* Main 4-Column Grid */}
+        {/* Main 3-Column Balanced Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-8 pb-14 border-b border-white/10">
           
-          {/* Col 1: Brand & Mission (4 Cols) */}
-          <div className="lg:col-span-4 flex flex-col justify-between space-y-6">
+          {/* Col 1: Brand & Mission (6 Cols) */}
+          <div className="lg:col-span-6 flex flex-col justify-start space-y-4">
             <div>
               {/* Brand Logo */}
               <div className="inline-flex items-center gap-2.5 mb-4">
@@ -34,16 +34,9 @@ export function LandingFooter() {
                 </span>
               </div>
 
-              <p className="text-xs sm:text-sm text-slate-400 leading-relaxed max-w-sm font-sans mb-4">
+              <p className="text-xs sm:text-sm text-slate-400 leading-relaxed max-w-md font-sans">
                 Hệ sinh thái y tế AI tiên phong giám sát nhịp tim và nồng độ SpO2 liên tục 24/7 từ thiết bị đeo, nhận diện sớm Rung nhĩ (AFib) và bảo vệ trái tim của bạn.
               </p>
-            </div>
-
-            {/* System Status Indicator */}
-            <div className="inline-flex items-center gap-2 text-xs text-slate-400 font-sans">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-              <span className="w-2 h-2 -ml-4 rounded-full bg-emerald-500" />
-              <span>Hệ thống AI hoạt động ổn định (99.99% Uptime)</span>
             </div>
           </div>
 
@@ -96,8 +89,8 @@ export function LandingFooter() {
             </ul>
           </div>
 
-          {/* Col 3: Company & Values (2 Cols) */}
-          <div className="lg:col-span-2 space-y-4">
+          {/* Col 3: Company & Values (3 Cols) */}
+          <div className="lg:col-span-3 space-y-4">
             <h4 className="text-xs font-bold font-heading uppercase text-white tracking-wider">
               Về Chúng Tôi
             </h4>
@@ -124,34 +117,7 @@ export function LandingFooter() {
                   <ArrowUpRight className="w-3.5 h-3.5 opacity-60" />
                 </Link>
               </li>
-              <li>
-                <span className="text-slate-500 cursor-not-allowed">Chính sách bảo mật</span>
-              </li>
-              <li>
-                <span className="text-slate-500 cursor-not-allowed">Điều khoản sử dụng</span>
-              </li>
             </ul>
-          </div>
-
-          {/* Col 4: Contact & Support (3 Cols) */}
-          <div className="lg:col-span-3 space-y-4">
-            <h4 className="text-xs font-bold font-heading uppercase text-white tracking-wider">
-              Liên Hệ &amp; Hỗ Trợ
-            </h4>
-            <div className="space-y-3 text-xs sm:text-sm font-sans text-slate-400">
-              <div className="flex items-start gap-3">
-                <Mail className="w-4 h-4 text-slate-500 mt-0.5 shrink-0" />
-                <span>support@healthsense.vn</span>
-              </div>
-              <div className="flex items-start gap-3">
-                <Phone className="w-4 h-4 text-slate-500 mt-0.5 shrink-0" />
-                <span>Hotline: 1900 8888 (24/7)</span>
-              </div>
-              <div className="flex items-start gap-3">
-                <MapPin className="w-4 h-4 text-slate-500 mt-0.5 shrink-0" />
-                <span>Khu Công nghệ Cao, TP. Hồ Chí Minh, Việt Nam</span>
-              </div>
-            </div>
           </div>
 
         </div>
