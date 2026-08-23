@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom"
 import {
-  Bell,
   LogOut,
   User,
   ChevronDown
@@ -12,7 +11,6 @@ import { DemoRoleSwitcher } from "./demo-role-switcher"
 import { authApi } from "@/services/authentication"
 import { useAuthStore } from "@/features/auth/auth-store"
 import { AvatarPlaceholder } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
 import {
   Popover,
   PopoverContent,
@@ -221,53 +219,11 @@ export function Topbar() {
       {/* Left empty container to push actions to the right */}
       <div className="flex-1 relative z-10" />
 
-      {/* Right section: DEV Role Switcher, Notification Bell, User Account Pill */}
+      {/* Right section: DEV Role Switcher, User Account Pill */}
       <div className="flex items-center gap-3 relative z-10">
 
         {/* DEV ONLY: Role Switcher */}
         {import.meta.env.DEV ? <DemoRoleSwitcher /> : null}
-
-        {/* Notification Bell */}
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="relative h-9 w-9 rounded-full border border-slate-200/80 bg-white/90 shadow-2xs hover:bg-slate-100 text-slate-700 hover:text-slate-900 cursor-pointer"
-              title="Notifications"
-            >
-              <Bell className="h-4 w-4" />
-              <span className="absolute top-1.5 right-1.5 flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></span>
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-red-500"></span>
-              </span>
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent align="end" className="w-80 p-4 rounded-2xl border-slate-200 shadow-xl bg-white space-y-3">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-              <h4 className="font-bold text-sm text-slate-900">Thông báo Y tế</h4>
-              <span className="text-[11px] font-bold text-rose-700 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-100">3 Mới</span>
-            </div>
-            <div className="space-y-2 text-xs">
-              <div className="p-2 rounded-xl bg-red-50/60 border border-red-100 flex gap-2.5 items-start">
-                <div className="h-2 w-2 rounded-full bg-red-500 mt-1.5 shrink-0" />
-                <div>
-                  <p className="font-bold text-slate-900">Cảnh báo: Phát hiện đợt nhịp tim nhanh</p>
-                  <p className="text-slate-500 text-[11px]">Đồng hồ ECG phát hiện 115 BPM lúc 14:05</p>
-                  <span className="text-[10px] text-red-600 font-medium">2 phút trước</span>
-                </div>
-              </div>
-              <div className="p-2 rounded-xl hover:bg-slate-50 transition-colors flex gap-2.5 items-start">
-                <div className="h-2 w-2 rounded-full bg-slate-300 mt-1.5 shrink-0" />
-                <div>
-                  <p className="font-semibold text-slate-800">Lịch hẹn Bác sĩ</p>
-                  <p className="text-slate-500 text-[11px]">TS.BS Nguyễn Minh đã xác nhận lịch hẹn 14:00 hôm nay.</p>
-                  <span className="text-[10px] text-slate-400">1 giờ trước</span>
-                </div>
-              </div>
-            </div>
-          </PopoverContent>
-        </Popover>
 
         {/* User Account Menu Pill */}
         <Popover>
