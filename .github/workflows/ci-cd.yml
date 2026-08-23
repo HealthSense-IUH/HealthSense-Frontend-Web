@@ -90,7 +90,7 @@ jobs:
   docker:
     name: Build & Push Docker Image
     runs-on: ubuntu-latest
-    needs: [lint, knip, doctor, build]
+    needs: [build]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
     steps:

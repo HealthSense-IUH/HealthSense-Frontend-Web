@@ -15,23 +15,40 @@ import { Button } from "@/components/ui/button"
 
 type ViewStyle = "interactive" | "document"
 
+const SECTIONS = [
+  { id: "section-1", title: "1. Bản chất thử nghiệm và mục đích của nền tảng" },
+  { id: "section-2", title: "2. Tuyên bố miễn trừ trách nhiệm y tế toàn diện" },
+  { id: "section-3", title: "3. Quy trình xử trí tình huống cấp cứu" },
+  { id: "section-4", title: "4. Độ chính xác và sai số thiết bị phần cứng" },
+  { id: "section-5", title: "5. Quyền riêng tư và bảo mật dữ liệu sức khỏe" },
+  { id: "section-6", title: "6. Trách nhiệm và nghĩa vụ của người dùng" },
+  { id: "section-7", title: "7. Giới hạn trách nhiệm pháp lý tối đa" },
+  { id: "section-8", title: "8. Hiệu lực và sự tự nguyện chấp thuận" },
+] as const
+
+const EMERGENCY_SYMPTOMS = [
+  "Đau thắt ngực hoặc cảm giác đè nặng vùng ngực",
+  "Khó thở, thở gấp, hụt hơi đột ngột",
+  "Ngất xỉu, chóng mặt mất thăng bằng đột ngột",
+  "Tê yếu một bên cơ thể, nói khó (dấu hiệu đột quỵ)",
+  "Tim đập thình thịch liên tục kèm vã mồ hôi lạnh",
+  "Mất ý thức hoặc co giật",
+] as const
+
+const handleScrollToTop = () => {
+  window.scrollTo({ top: 0, behavior: "smooth" })
+}
+
+const handleDownloadPdf = () => {
+  window.print()
+}
+
 export default function TermsAndConditionsPage() {
   const navigate = useNavigate()
   const [viewStyle, setViewStyle] = useState<ViewStyle>("interactive")
   const [activeSection, setActiveSection] = useState("section-1")
   const [showScrollTop, setShowScrollTop] = useState(false)
   const [copied, setCopied] = useState(false)
-
-  const sections = [
-    { id: "section-1", title: "1. Bản chất thử nghiệm và mục đích của nền tảng" },
-    { id: "section-2", title: "2. Tuyên bố miễn trừ trách nhiệm y tế toàn diện" },
-    { id: "section-3", title: "3. Quy trình xử trí tình huống cấp cứu" },
-    { id: "section-4", title: "4. Độ chính xác và sai số thiết bị phần cứng" },
-    { id: "section-5", title: "5. Quyền riêng tư và bảo mật dữ liệu sức khỏe" },
-    { id: "section-6", title: "6. Trách nhiệm và nghĩa vụ của người dùng" },
-    { id: "section-7", title: "7. Giới hạn trách nhiệm pháp lý tối đa" },
-    { id: "section-8", title: "8. Hiệu lực và sự tự nguyện chấp thuận" },
-  ]
 
   const scrollToSection = (id: string) => {
     const el = document.getElementById(id)
@@ -43,22 +60,13 @@ export default function TermsAndConditionsPage() {
     }
   }
 
-  const handleScrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" })
-  }
-
-  // PDF Export via native print engine formatted as A4 legal document in Times New Roman
-  const handleDownloadPdf = () => {
-    window.print()
-  }
-
   useEffect(() => {
     const handleScroll = () => {
       setShowScrollTop(window.scrollY > 300)
 
       if (viewStyle === "interactive") {
         const scrollPosition = window.scrollY + 120
-        for (const section of sections) {
+        for (const section of SECTIONS) {
           const el = document.getElementById(section.id)
           if (el) {
             const top = el.offsetTop
@@ -74,7 +82,7 @@ export default function TermsAndConditionsPage() {
 
     window.addEventListener("scroll", handleScroll, { passive: true })
     return () => window.removeEventListener("scroll", handleScroll)
-  }, [sections, viewStyle])
+  }, [viewStyle])
 
   // Copy plain text document
   const handleCopyText = () => {
@@ -242,13 +250,13 @@ export default function TermsAndConditionsPage() {
                   Cây mục lục điều khoản
                 </h3>
                 <nav className="space-y-1">
-                  {sections.map((item) => {
+                  {SECTIONS.map((item) => {
                     const isActive = activeSection === item.id
                     return (
                       <button
                         key={item.id}
                         onClick={() => scrollToSection(item.id)}
-                        className={`w-full text-left text-xs font-bold py-2.5 px-3 rounded-xl transition-all flex items-center justify-between cursor-pointer ${isActive
+                        className={`w-full text-left text-xs font-bold py-2.5 px-3 rounded-xl transition-colors flex items-center justify-between cursor-pointer ${isActive
                             ? "bg-sky-50 text-sky-700 font-extrabold border border-sky-200/80 shadow-2xs"
                             : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                           }`}
@@ -333,15 +341,8 @@ export default function TermsAndConditionsPage() {
                     <strong>3.2. Hành động khi có triệu chứng nguy hiểm:</strong> Khi xuất hiện các triệu chứng như đau thắt ngực lan ra vai/tay, khó thở, chóng mặt dữ dội, vã mồ hôi lạnh, ngất xỉu, mất ý thức hoặc nghi ngờ tai biến mạch máu não, Người dùng hoặc thân nhân <strong>phải lập tức gọi Tổng đài Cấp cứu 115</strong> hoặc đến bệnh viện gần nhất.
                   </p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
-                    {[
-                      "Đau thắt ngực hoặc cảm giác đè nặng vùng ngực",
-                      "Khó thở, thở gấp, hụt hơi đột ngột",
-                      "Ngất xỉu, chóng mặt mất thăng bằng đột ngột",
-                      "Tê yếu một bên cơ thể, nói khó (dấu hiệu đột quỵ)",
-                      "Tim đập thình thịch liên tục kèm vã mồ hôi lạnh",
-                      "Mất ý thức hoặc co giật",
-                    ].map((symptom, idx) => (
-                      <div key={idx} className="flex items-start gap-2 p-2.5 rounded-xl bg-red-50/60 border border-red-100 text-xs text-red-900 font-medium">
+                    {EMERGENCY_SYMPTOMS.map((symptom) => (
+                      <div key={symptom} className="flex items-start gap-2 p-2.5 rounded-xl bg-red-50/60 border border-red-100 text-xs text-red-900 font-medium">
                         <span className="text-red-500 font-bold">•</span>
                         <span>{symptom}</span>
                       </div>
@@ -686,7 +687,7 @@ export default function TermsAndConditionsPage() {
         <button
           onClick={handleScrollToTop}
           type="button"
-          className="fixed bottom-6 right-6 z-50 p-3 rounded-full bg-white/95 backdrop-blur-md border border-slate-200/90 shadow-xl text-slate-700 hover:text-sky-600 hover:border-sky-300 hover:bg-sky-50 transition-all duration-200 hover:-translate-y-1 active:translate-y-0 cursor-pointer group print:hidden"
+          className="fixed bottom-6 right-6 z-50 p-3 rounded-full bg-white/95 backdrop-blur-md border border-slate-200/90 shadow-xl text-slate-700 hover:text-sky-600 hover:border-sky-300 hover:bg-sky-50 transition-colors duration-200 hover:-translate-y-1 active:translate-y-0 cursor-pointer group print:hidden"
           title="Cuộn lên đầu trang"
           aria-label="Scroll to top"
         >
