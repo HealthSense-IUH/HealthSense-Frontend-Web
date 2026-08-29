@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { AlertTriangle, CheckCircle2, FileText, Activity } from "lucide-react"
+import { AlertTriangle, CheckCircle2, FileText, Activity, Download } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
@@ -37,6 +37,7 @@ export function DoctorRecordDetailDialog({
   const [loading, setLoading] = useState(false)
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
   const [reviewing, setReviewing] = useState(false)
+  const [downloading, setDownloading] = useState(false)
   const { toast } = useToast()
 
   useEffect(() => {
@@ -80,6 +81,40 @@ export function DoctorRecordDetailDialog({
       toast({ variant: "destructive", description: readError(error, "Lỗi khi đánh dấu đã xem.") })
     } finally {
       setReviewing(false)
+    }
+  }
+
+  const handleDownloadRawArtifact = async () => {
+    if (!recordId) return
+    setDownloading(true)
+    try {
+      const res = await consultationApi.getDoctorScopedRawArtifact(sessionId, recordId)
+      const downloadUrl = res.data.downloadUrl || res.data.uploadUrl
+      if (downloadUrl) {
+        const link = document.createElement("a")
+        link.href = downloadUrl
+        link.target = "_blank"
+        link.rel = "noopener noreferrer"
+        link.download = detail?.record?.originalFileName || detail?.record?.fileName || `health-record-${recordId}.csv`
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        toast({ description: "Đang tải xuống tệp dữ liệu gốc..." })
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Lỗi tải tệp",
+          description: "Không tìm thấy liên kết tải file dữ liệu gốc.",
+        })
+      }
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Lỗi tải tệp",
+        description: readError(error, "Không thể tải tệp dữ liệu gốc cho hồ sơ này."),
+      })
+    } finally {
+      setDownloading(false)
     }
   }
 
@@ -171,10 +206,23 @@ export function DoctorRecordDetailDialog({
           ) : null}
         </div>
 
-        <DialogFooter className="gap-2 sm:justify-between">
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
-            Đóng
-          </Button>
+        <DialogFooter className="gap-2 sm:justify-between flex-wrap">
+          <div className="flex items-center gap-2">
+            <Button variant="outline" onClick={() => onOpenChange(false)}>
+              Đóng
+            </Button>
+            {detail?.record && (
+              <Button
+                variant="outline"
+                onClick={handleDownloadRawArtifact}
+                disabled={downloading}
+                className="gap-1.5"
+              >
+                <Download className="h-4 w-4" />
+                {downloading ? "Đang tải..." : "Tải CSV gốc"}
+              </Button>
+            )}
+          </div>
           {detail?.attention?.status === "REQUIRES_ATTENTION" && (
             <Button onClick={() => void handleReview()} disabled={reviewing}>
               <CheckCircle2 className="mr-2 h-4 w-4" />

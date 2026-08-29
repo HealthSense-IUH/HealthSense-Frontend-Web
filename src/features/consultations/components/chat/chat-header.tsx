@@ -1,19 +1,24 @@
-import { User, Phone, Video, MoreHorizontal } from "lucide-react"
+import { useState } from "react"
+import { User, Phone, Video, MoreHorizontal, FileText, Share2, RefreshCw } from "lucide-react"
+
 import { Button } from "@/components/ui/button"
 import type { ConsultationSessionItem } from "../../types"
 import { statusBadge } from "../shared"
 import { MemberFinalSummaryDialog } from "../member-final-summary-dialog"
-import { useState } from "react"
-import { FileText } from "lucide-react"
+import { ShareHealthRecordDialog } from "../share-health-record-dialog"
+import { RenewalDialog } from "../renewal-dialog"
 
 interface ChatHeaderProps {
   session: ConsultationSessionItem
   isDoctor?: boolean
   isMember?: boolean
+  onSessionRefreshed?: () => void
 }
 
-export function ChatHeader({ session, isDoctor, isMember }: ChatHeaderProps) {
+export function ChatHeader({ session, isDoctor, isMember, onSessionRefreshed }: ChatHeaderProps) {
   const [isSummaryOpen, setIsSummaryOpen] = useState(false)
+  const [isShareRecordOpen, setIsShareRecordOpen] = useState(false)
+  const [isRenewalOpen, setIsRenewalOpen] = useState(false)
 
   return (
     <div className="flex items-center justify-between border-b border-border bg-background/95 px-6 py-4 shadow-sm z-10 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -39,6 +44,28 @@ export function ChatHeader({ session, isDoctor, isMember }: ChatHeaderProps) {
         </div>
       </div>
       <div className="flex items-center gap-2">
+        {isMember && session.status === "ACTIVE" && (
+          <>
+            <Button
+              variant="outline"
+              size="sm"
+              className="flex items-center gap-1.5 text-primary border-primary/30 hover:bg-primary/5"
+              onClick={() => setIsRenewalOpen(true)}
+            >
+              <RefreshCw className="h-4 w-4" />
+              <span className="hidden sm:inline">Gia hạn chăm sóc</span>
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className="flex items-center gap-1.5"
+              onClick={() => setIsShareRecordOpen(true)}
+            >
+              <Share2 className="h-4 w-4" />
+              <span className="hidden sm:inline">Chia sẻ hồ sơ</span>
+            </Button>
+          </>
+        )}
         {isMember && session.status !== "SCHEDULED" && (
           <Button 
             variant="outline" 
@@ -65,6 +92,20 @@ export function ChatHeader({ session, isDoctor, isMember }: ChatHeaderProps) {
         sessionId={session.id}
         open={isSummaryOpen}
         onOpenChange={setIsSummaryOpen}
+      />
+
+      <ShareHealthRecordDialog
+        sessionId={session.id}
+        sessionStatus={session.status}
+        open={isShareRecordOpen}
+        onOpenChange={setIsShareRecordOpen}
+      />
+
+      <RenewalDialog
+        session={session}
+        open={isRenewalOpen}
+        onOpenChange={setIsRenewalOpen}
+        onSessionRefreshed={onSessionRefreshed}
       />
     </div>
   )

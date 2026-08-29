@@ -140,6 +140,45 @@ export function MemberFinalSummaryDialog({ sessionId, open, onOpenChange, isAdmi
                     </div>
                   </div>
                 )}
+
+                {/* Referenced Health Records */}
+                {summary.referencedHealthRecordIds && summary.referencedHealthRecordIds.length > 0 && (
+                  <div className="space-y-1.5 pt-2 border-t">
+                    <h4 className="text-sm font-semibold text-neutral-900">Hồ sơ đo đạc tham chiếu</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {summary.referencedHealthRecordIds.map((recId) => (
+                        <Badge key={recId} variant="secondary" className="text-xs py-1 px-2.5 gap-1.5">
+                          <FileText className="w-3.5 h-3.5" />
+                          Hồ sơ #{recId}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Addenda Section */}
+                {summary.addenda && summary.addenda.length > 0 && (
+                  <div className="space-y-2.5 pt-3 border-t">
+                    <h4 className="text-sm font-semibold text-amber-900 dark:text-amber-300 flex items-center gap-1.5">
+                      <FileText className="w-4 h-4 text-amber-600" />
+                      Phụ lục & Đính chính sau hoàn tất ({summary.addenda.length})
+                    </h4>
+                    <div className="space-y-2">
+                      {summary.addenda.map((addendum) => (
+                        <div
+                          key={addendum.id}
+                          className="p-3 rounded-lg bg-amber-50/60 dark:bg-amber-950/20 border border-amber-200/60 dark:border-amber-900/40 text-xs"
+                        >
+                          <div className="flex items-center justify-between font-medium text-amber-950 dark:text-amber-300 mb-1">
+                            <span>Lý do: {addendum.reason}</span>
+                            <span className="text-[10px] text-muted-foreground">{formatDate(addendum.createdAt)}</span>
+                          </div>
+                          <p className="text-foreground/90 whitespace-pre-wrap">{addendum.content}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           )}

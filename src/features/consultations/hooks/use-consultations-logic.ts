@@ -7,6 +7,8 @@ import { useToast } from "@/hooks/use-toast"
 import { useConsultationSocket } from "./use-consultation-socket"
 import { consultationApi } from "../services/consultation-api"
 import type { AdminDialogMode } from "../components/admin-action-dialog"
+import type { RequestFormData } from "../components/create-request-panel"
+import type { AdminSessionFormData } from "../components/create-admin-session-panel"
 import type {
   ConsultationMessageItem,
   ConsultationRequestItem,
@@ -104,19 +106,26 @@ export function useConsultationsLogic() {
   const [attachmentUrl, setAttachmentUrl] = useState("")
   const [loadingMoreMessages, setLoadingMoreMessages] = useState(false)
   const [hasMoreMessages, setHasMoreMessages] = useState(false)
-  const [requestForm, setRequestForm] = useState({
+  const [requestForm, setRequestForm] = useState<RequestFormData>({
     packageId: "",
+    reasonForCare: "",
+    currentConcern: "",
+    careGoal: "",
+    memberNote: "",
+    relevantSelfReportedContext: "",
+    selectedHealthRecordIds: [],
+    preferredDoctorId: "",
     healthRecordId: "",
     reason: "",
-    preferredDoctorId: "",
   })
-  const [adminSessionForm, setAdminSessionForm] = useState({
+  const [adminSessionForm, setAdminSessionForm] = useState<AdminSessionFormData>({
     memberId: "",
     doctorId: "",
     healthRecordId: "",
     endsAt: localDateTimeIn(30),
     supportEndsAt: localDateTimeIn(33),
     initialSystemMessage: "Admin creates direct consultation session",
+    overrideReason: "",
   })
   const [adminDialogMode, setAdminDialogMode] = useState<AdminDialogMode>(null)
   const [targetRequest, setTargetRequest] = useState<ConsultationRequestItem | null>(null)
@@ -142,8 +151,13 @@ export function useConsultationsLogic() {
   
   const [isMoreInfoDialogOpen, setIsMoreInfoDialogOpen] = useState(false)
   const [moreInfoNote, setMoreInfoNote] = useState("")
+  const [moreInfoSelectedRecordIds, setMoreInfoSelectedRecordIds] = useState<string[]>([])
   const [isAdminMoreInfoDialogOpen, setIsAdminMoreInfoDialogOpen] = useState(false)
   const [adminMoreInfoReason, setAdminMoreInfoReason] = useState("")
+
+  // Care Agreement Dialog State
+  const [isAgreementDialogOpen, setIsAgreementDialogOpen] = useState(false)
+  const [agreementTargetRequestId, setAgreementTargetRequestId] = useState<string | number | null>(null)
 
   const sortedMessages = useMemo(
     () => [...messages].sort((a, b) => new Date(a.createdAt || 0).getTime() - new Date(b.createdAt || 0).getTime()),
@@ -302,22 +316,50 @@ export function useConsultationsLogic() {
     try {
       const packageIdStr = requestForm.packageId?.trim()
       if (!packageIdStr) {
-        setAlert({ type: "error", text: "Please select a valid service package." })
+        setAlert({ type: "error", text: "Vui lòng chọn gói dịch vụ." })
+        setActionLoading(false)
+        return
+      }
+      if (!requestForm.reasonForCare.trim()) {
+        setAlert({ type: "error", text: "Vui lòng nhập lý do đăng ký chăm sóc." })
+        setActionLoading(false)
+        return
+      }
+      if (!requestForm.currentConcern.trim()) {
+        setAlert({ type: "error", text: "Vui lòng nhập triệu chứng & vấn đề lo ngại hiện tại." })
         setActionLoading(false)
         return
       }
 
       await consultationApi.createRequest({
         packageId: packageIdStr,
-        healthRecordId: normalizeOptionalId(requestForm.healthRecordId) || null,
-        reason: requestForm.reason.trim(),
+        reasonForCare: requestForm.reasonForCare.trim(),
+        currentConcern: requestForm.currentConcern.trim(),
+        careGoal: requestForm.careGoal.trim() || null,
+        memberNote: requestForm.memberNote.trim() || null,
+        relevantSelfReportedContext: requestForm.relevantSelfReportedContext.trim() || null,
+        selectedHealthRecordIds: requestForm.selectedHealthRecordIds.length > 0 ? requestForm.selectedHealthRecordIds : undefined,
         preferredDoctorId: normalizeOptionalId(requestForm.preferredDoctorId) || null,
+        healthRecordId: requestForm.selectedHealthRecordIds[0] ? requestForm.selectedHealthRecordIds[0] : null,
+        reason: requestForm.reasonForCare.trim(),
       })
-      setRequestForm({ packageId: "", healthRecordId: "", reason: "", preferredDoctorId: "" })
-      setAlert({ type: "success", text: "Consultation request sent for admin approval." })
+
+      setRequestForm({
+        packageId: "",
+        reasonForCare: "",
+        currentConcern: "",
+        careGoal: "",
+        memberNote: "",
+        relevantSelfReportedContext: "",
+        selectedHealthRecordIds: [],
+        preferredDoctorId: "",
+        healthRecordId: "",
+        reason: "",
+      })
+      setAlert({ type: "success", text: "Đã gửi yêu cầu tư vấn thành công. Vui lòng chờ điều phối viên xét duyệt." })
       await loadData()
     } catch (error) {
-      setAlert({ type: "error", text: readError(error, "Failed to send consultation request.") })
+      setAlert({ type: "error", text: readError(error, "Không thể gửi yêu cầu tư vấn.") })
     } finally {
       setActionLoading(false)
     }
@@ -328,10 +370,10 @@ export function useConsultationsLogic() {
     setAlert(null)
     try {
       await consultationApi.cancelRequest(requestId)
-      setAlert({ type: "success", text: "Canceled pending request." })
+      setAlert({ type: "success", text: "Đã hủy yêu cầu tư vấn." })
       await loadData()
     } catch (error) {
-      setAlert({ type: "error", text: readError(error, "Failed to cancel this request.") })
+      setAlert({ type: "error", text: readError(error, "Không thể hủy yêu cầu tư vấn.") })
     } finally {
       setActionLoading(false)
     }
@@ -342,6 +384,12 @@ export function useConsultationsLogic() {
     setActionLoading(true)
     setAlert(null)
     try {
+      if (!adminSessionForm.overrideReason.trim()) {
+        setAlert({ type: "error", text: "Vui lòng nhập lý do ghi đè (overrideReason) của Quản trị viên." })
+        setActionLoading(false)
+        return
+      }
+
       const response = await consultationApi.createSessionByAdmin({
         memberId: adminSessionForm.memberId.trim(),
         doctorId: adminSessionForm.doctorId.trim(),
@@ -350,12 +398,13 @@ export function useConsultationsLogic() {
         endsAt: new Date(adminSessionForm.endsAt).toISOString(),
         supportEndsAt: toIsoOrNull(adminSessionForm.supportEndsAt),
         initialSystemMessage: adminSessionForm.initialSystemMessage.trim() || null,
+        overrideReason: adminSessionForm.overrideReason.trim(),
       })
       setSelectedSession(response.data)
-      setAlert({ type: "success", text: `Created session #${response.data.id}.` })
+      setAlert({ type: "success", text: `Đã tạo phiên tư vấn đặc biệt #${response.data.id}.` })
       toast({
-        title: "Session Created",
-        description: `Successfully created direct consultation session #${response.data.id}.`,
+        title: "Tạo phiên thành công",
+        description: `Đã tạo phiên tư vấn trực tiếp #${response.data.id}.`,
       })
       setAdminSessionForm({
         memberId: "",
@@ -364,14 +413,15 @@ export function useConsultationsLogic() {
         endsAt: localDateTimeIn(30),
         supportEndsAt: localDateTimeIn(33),
         initialSystemMessage: "Admin creates direct consultation session",
+        overrideReason: "",
       })
       await loadData()
     } catch (error) {
-      setAlert({ type: "error", text: readError(error, "Failed to create direct session.") })
+      setAlert({ type: "error", text: readError(error, "Không thể tạo phiên tư vấn đặc biệt.") })
       toast({
         variant: "destructive",
-        title: "Failed to create session",
-        description: readError(error, "An error occurred while creating the session."),
+        title: "Lỗi tạo phiên tư vấn",
+        description: readError(error, "Đã có lỗi xảy ra khi tạo phiên tư vấn đặc biệt."),
       })
     } finally {
       setActionLoading(false)
@@ -399,7 +449,13 @@ export function useConsultationsLogic() {
   function openMoreInfoDialog(request: ConsultationRequestItem) {
     setTargetRequest(request)
     setMoreInfoNote("")
+    setMoreInfoSelectedRecordIds([])
     setIsMoreInfoDialogOpen(true)
+  }
+
+  function openAgreementDialog(request: ConsultationRequestItem) {
+    setAgreementTargetRequestId(request.id)
+    setIsAgreementDialogOpen(true)
   }
 
   async function handleSubmitMoreInfo() {
@@ -407,12 +463,17 @@ export function useConsultationsLogic() {
     setActionLoading(true)
     setAlert(null)
     try {
-      await consultationApi.submitMoreInfo(targetRequest.id, { additionalNote: moreInfoNote.trim() })
-      setAlert({ type: "success", text: `Submitted additional info for request #${targetRequest.id}.` })
+      await consultationApi.submitMoreInfo(targetRequest.id, {
+        additionalNote: moreInfoNote.trim(),
+        responseNote: moreInfoNote.trim(),
+        selectedHealthRecordIds: moreInfoSelectedRecordIds.length > 0 ? moreInfoSelectedRecordIds : undefined,
+        healthRecordId: moreInfoSelectedRecordIds[0] ? moreInfoSelectedRecordIds[0] : undefined,
+      })
+      setAlert({ type: "success", text: `Đã gửi bổ sung thông tin cho yêu cầu #${targetRequest.id}.` })
       setIsMoreInfoDialogOpen(false)
       await loadData()
     } catch (error) {
-      setAlert({ type: "error", text: readError(error, "Failed to submit additional info.") })
+      setAlert({ type: "error", text: readError(error, "Không thể gửi bổ sung thông tin.") })
     } finally {
       setActionLoading(false)
     }
@@ -443,12 +504,16 @@ export function useConsultationsLogic() {
     setAlert(null)
     try {
       await consultationApi.approveRequest(targetRequest.id, { doctorId })
-      setAlert({ type: "success", text: "Đã giữ bác sĩ. Yêu cầu chuyển sang chờ thanh toán." })
+      setAlert({ type: "success", text: "Đã giữ bác sĩ. Yêu cầu chuyển sang chờ hội viên xác nhận thỏa thuận (WAITING_ACCEPTANCE)." })
+      toast({
+        title: "Đã phân công bác sĩ",
+        description: "Yêu cầu đã được chuyển sang trạng thái chờ hội viên xem & xác nhận thỏa thuận dịch vụ.",
+      })
       setIsDoctorCandidatesOpen(false)
       setIsAdminRequestDetailOpen(false)
       await loadData()
     } catch (error) {
-      setAlert({ type: "error", text: readError(error, "Failed to reserve doctor.") })
+      setAlert({ type: "error", text: readError(error, "Không thể phân công bác sĩ.") })
     } finally {
       setActionLoading(false)
     }
@@ -477,14 +542,6 @@ export function useConsultationsLogic() {
     }
   }
 
-  function openExtendDialog(session: ConsultationSessionItem) {
-    setTargetSession(session)
-    setEndsAt(localDateTimeIn(30))
-    setSupportEndsAt(localDateTimeIn(33))
-    setReason("")
-    setAdminDialogMode("extend")
-  }
-
   function openCloseDialog(session: ConsultationSessionItem) {
     setTargetSession(session)
     setReason("")
@@ -511,15 +568,6 @@ export function useConsultationsLogic() {
       if (adminDialogMode === "reject" && targetRequest) {
         await consultationApi.rejectRequest(targetRequest.id, { rejectionReason: reason.trim() })
         setAlert({ type: "success", text: `Rejected request #${targetRequest.id}.` })
-      }
-
-      if (adminDialogMode === "extend" && targetSession) {
-        await consultationApi.extendSession(targetSession.id, {
-          endsAt: new Date(endsAt).toISOString(),
-          supportEndsAt: toIsoOrNull(supportEndsAt),
-          reason: reason.trim() || null,
-        })
-        setAlert({ type: "success", text: `Extended session #${targetSession.id}.` })
       }
 
       if (adminDialogMode === "close" && targetSession) {
@@ -708,7 +756,6 @@ export function useConsultationsLogic() {
     handleCreateAdminSession,
     openApproveDialog,
     openRejectDialog,
-    openExtendDialog,
     openCloseDialog,
     handleAdminDialogSubmit,
     handleExpireOverdue,
@@ -720,8 +767,14 @@ export function useConsultationsLogic() {
     setIsMoreInfoDialogOpen,
     moreInfoNote,
     setMoreInfoNote,
+    moreInfoSelectedRecordIds,
+    setMoreInfoSelectedRecordIds,
     openMoreInfoDialog,
     handleSubmitMoreInfo,
+    isAgreementDialogOpen,
+    setIsAgreementDialogOpen,
+    agreementTargetRequestId,
+    openAgreementDialog,
     adminFilters,
     setAdminFilters,
     isAdminRequestDetailOpen,

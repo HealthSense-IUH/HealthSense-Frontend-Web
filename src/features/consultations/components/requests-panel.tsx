@@ -1,14 +1,13 @@
-import { MessageCircle, CreditCard } from "lucide-react"
+import { MessageCircle, CreditCard, Shield, Search } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Input } from "@/components/ui/input"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 import type { ConsultationRequestItem } from "../types"
 import { EmptyRow, formatDate, statusBadge } from "./shared"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Search } from "lucide-react"
 
 export function RequestsPanel({
   isAdmin,
@@ -18,6 +17,7 @@ export function RequestsPanel({
   onApprove,
   onOpenSession,
   onSubmitMoreInfo,
+  onReviewAgreement,
   adminFilters,
   onAdminFilterChange,
   onSearchAdminFilters,
@@ -31,6 +31,7 @@ export function RequestsPanel({
   onApprove: (request: ConsultationRequestItem) => void
   onOpenSession: (sessionId: string | number) => void
   onSubmitMoreInfo?: (request: ConsultationRequestItem) => void
+  onReviewAgreement?: (request: ConsultationRequestItem) => void
   adminFilters?: {
     status: string
     memberId: string
@@ -48,41 +49,47 @@ export function RequestsPanel({
     <Card>
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <div>
-          <CardTitle>{isAdmin ? "Consultation Requests Management" : "My Consultation Requests"}</CardTitle>
-          <CardDescription>{isAdmin ? "Review and assign doctors for consultation requests." : "Track request status from PENDING to APPROVED to open chat session."}</CardDescription>
+          <CardTitle>{isAdmin ? "Quản lý Yêu cầu Tư vấn (Care Coordination)" : "Yêu cầu Tư vấn của tôi"}</CardTitle>
+          <CardDescription>
+            {isAdmin
+              ? "Xem xét yêu cầu, điều phối bác sĩ và theo dõi trạng thái thỏa thuận."
+              : "Theo dõi tiến trình từ gửi yêu cầu, xác nhận thỏa thuận, thanh toán đến khi mở phiên tư vấn."}
+          </CardDescription>
         </div>
         {isAdmin && onExpireWaitingPayment && (
           <Button 
             variant="outline" 
             size="sm" 
             onClick={() => {
-              if (window.confirm("Quét và huỷ các yêu cầu quá hạn thanh toán?")) {
+              if (window.confirm("Quét và huỷ các yêu cầu quá hạn thanh toán / quá hạn xác nhận?")) {
                 onExpireWaitingPayment()
               }
             }}
             disabled={loading}
           >
-            Quét yêu cầu quá hạn thanh toán
+            Quét yêu cầu quá hạn
           </Button>
         )}
       </CardHeader>
       <CardContent>
         {isAdmin && adminFilters && onAdminFilterChange && onSearchAdminFilters && (
           <div className="flex flex-wrap gap-3 mb-4 p-4 border rounded-md bg-muted/20">
-            <div className="flex flex-col gap-1.5 w-[140px]">
-              <span className="text-xs font-medium">Status</span>
+            <div className="flex flex-col gap-1.5 w-[160px]">
+              <span className="text-xs font-medium">Trạng thái</span>
               <Select value={adminFilters.status} onValueChange={(v) => onAdminFilterChange({ ...adminFilters, status: v === "ALL" ? "" : v })}>
                 <SelectTrigger className="h-8 text-xs">
-                  <SelectValue placeholder="All Status" />
+                  <SelectValue placeholder="Tất cả trạng thái" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="ALL">All Status</SelectItem>
-                  <SelectItem value="PENDING_REVIEW">Pending Review</SelectItem>
-                  <SelectItem value="NEED_MORE_INFO">Need More Info</SelectItem>
-                  <SelectItem value="WAITING_PAYMENT">Waiting Payment</SelectItem>
-                  <SelectItem value="REJECTED">Rejected</SelectItem>
-                  <SelectItem value="CANCELLED">Cancelled</SelectItem>
-                  <SelectItem value="EXPIRED">Expired</SelectItem>
+                  <SelectItem value="ALL">Tất cả trạng thái</SelectItem>
+                  <SelectItem value="PENDING_REVIEW">Chờ xem xét</SelectItem>
+                  <SelectItem value="NEED_MORE_INFO">Cần bổ sung TT</SelectItem>
+                  <SelectItem value="WAITING_ACCEPTANCE">Chờ xác nhận thỏa thuận</SelectItem>
+                  <SelectItem value="WAITING_PAYMENT">Chờ thanh toán</SelectItem>
+                  <SelectItem value="FULFILLED">Đã kích hoạt</SelectItem>
+                  <SelectItem value="REJECTED">Đã từ chối</SelectItem>
+                  <SelectItem value="CANCELLED">Đã hủy</SelectItem>
+                  <SelectItem value="EXPIRED">Đã hết hạn</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -110,7 +117,7 @@ export function RequestsPanel({
             </div>
 
             <div className="flex flex-col gap-1.5 w-[140px]">
-              <span className="text-xs font-medium">From Date</span>
+              <span className="text-xs font-medium">Từ ngày</span>
               <Input 
                 type="date"
                 className="h-8 text-xs" 
@@ -120,7 +127,7 @@ export function RequestsPanel({
             </div>
 
             <div className="flex flex-col gap-1.5 w-[140px]">
-              <span className="text-xs font-medium">To Date</span>
+              <span className="text-xs font-medium">Đến ngày</span>
               <Input 
                 type="date"
                 className="h-8 text-xs" 
@@ -132,7 +139,7 @@ export function RequestsPanel({
             <div className="flex items-end pb-0.5">
               <Button size="sm" className="h-8" onClick={onSearchAdminFilters} disabled={loading}>
                 <Search className="w-3 h-3 mr-2" />
-                Filter
+                Lọc
               </Button>
             </div>
           </div>
@@ -141,40 +148,56 @@ export function RequestsPanel({
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Request</TableHead>
-              <TableHead>Member</TableHead>
-              <TableHead>Record</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Doctor</TableHead>
-              <TableHead>Created</TableHead>
-              <TableHead className="text-right">Action</TableHead>
+              <TableHead>Yêu cầu</TableHead>
+              <TableHead>Hội viên</TableHead>
+              <TableHead>Hồ sơ đo</TableHead>
+              <TableHead>Trạng thái</TableHead>
+              <TableHead>Bác sĩ</TableHead>
+              <TableHead>Ngày tạo</TableHead>
+              <TableHead className="text-right">Thao tác</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {requests.length === 0 && <EmptyRow colSpan={7} text={loading ? "Loading requests..." : "No requests found."} />}
+            {requests.length === 0 && <EmptyRow colSpan={7} text={loading ? "Đang tải danh sách..." : "Không có yêu cầu nào."} />}
             {requests.map((request) => (
               <TableRow key={request.id}>
                 <TableCell>
                   <div className="flex flex-col gap-1">
                     <span className="font-medium">#{request.id}</span>
-                    <span className="max-w-64 text-xs text-neutral-500 whitespace-pre-wrap">{request.reason}</span>
-                    {request.status === "WAITING_PAYMENT" && (
-                      <div className="mt-1 text-xs text-blue-600 bg-blue-50 p-2 rounded-md">
-                        Yêu cầu đã được giữ bác sĩ và đang chờ thanh toán.
+                    <span className="max-w-64 text-xs text-neutral-500 whitespace-pre-wrap">
+                      {request.reasonForCare || request.reason || "Yêu cầu tư vấn"}
+                    </span>
+                    
+                    {request.status === "WAITING_ACCEPTANCE" && (
+                      <div className="mt-1 text-xs text-amber-800 bg-amber-50 dark:bg-amber-950/20 p-2 rounded-md border border-amber-200">
+                        Bác sĩ đã được giữ chỗ. Vui lòng xem và xác nhận Thỏa thuận dịch vụ để tiến hành thanh toán.
                         {request.paymentDeadline && (
                           <div className="mt-1 font-semibold">
-                            Vui lòng hoàn tất thanh toán trước: {formatDate(request.paymentDeadline)}
+                            Hạn xác nhận: {formatDate(request.paymentDeadline)}
                           </div>
                         )}
                       </div>
                     )}
+
+                    {request.status === "WAITING_PAYMENT" && (
+                      <div className="mt-1 text-xs text-blue-700 bg-blue-50 dark:bg-blue-950/20 p-2 rounded-md border border-blue-200">
+                        Đã xác nhận thỏa thuận. Đang chờ thanh toán.
+                        {request.paymentDeadline && (
+                          <div className="mt-1 font-semibold">
+                            Hạn thanh toán: {formatDate(request.paymentDeadline)}
+                          </div>
+                        )}
+                      </div>
+                    )}
+
                     {request.status === "NEED_MORE_INFO" && request.moreInfoReason && (
-                      <div className="mt-1 text-xs text-orange-600 bg-orange-50 p-2 rounded-md">
+                      <div className="mt-1 text-xs text-orange-700 bg-orange-50 dark:bg-orange-950/20 p-2 rounded-md border border-orange-200">
                         <strong>Lý do cần bổ sung:</strong> {request.moreInfoReason}
                       </div>
                     )}
+
                     {request.memberAdditionalNote && (
-                      <div className="mt-1 text-xs text-neutral-600 bg-neutral-50 p-2 rounded-md">
+                      <div className="mt-1 text-xs text-neutral-600 bg-neutral-50 dark:bg-neutral-900/30 p-2 rounded-md">
                         <strong>Thông tin đã bổ sung:</strong> {request.memberAdditionalNote}
                       </div>
                     )}
@@ -186,34 +209,58 @@ export function RequestsPanel({
                 <TableCell>{request.assignedDoctorId ?? request.preferredDoctorId ?? "-"}</TableCell>
                 <TableCell>{formatDate(request.createdAt)}</TableCell>
                 <TableCell className="text-right">
-                  <div className="flex justify-end gap-2">
-                    {request.consultationSessionId && !["PENDING_REVIEW", "NEED_MORE_INFO", "WAITING_PAYMENT", "REJECTED", "CANCELLED", "EXPIRED", "PENDING"].includes(request.status) && (
+                  <div className="flex justify-end gap-2 flex-wrap">
+                    {request.consultationSessionId && !["PENDING_REVIEW", "NEED_MORE_INFO", "WAITING_ACCEPTANCE", "WAITING_PAYMENT", "REJECTED", "CANCELLED", "EXPIRED", "PENDING"].includes(request.status) && (
                       <Button variant="outline" size="sm" onClick={() => onOpenSession(request.consultationSessionId!)}>
-                        <MessageCircle data-icon="inline-start" />
+                        <MessageCircle className="mr-1.5 h-4 w-4" />
                         Chat
                       </Button>
                     )}
+                    
+                    {!isAdmin && request.status === "WAITING_ACCEPTANCE" && onReviewAgreement && (
+                      <Button
+                        size="sm"
+                        onClick={() => onReviewAgreement(request)}
+                        disabled={loading}
+                        className="bg-amber-600 hover:bg-amber-700 text-white gap-1.5 shadow-xs"
+                      >
+                        <Shield className="h-4 w-4" />
+                        Xem & Chấp nhận thỏa thuận
+                      </Button>
+                    )}
+
                     {!isAdmin && request.status === "WAITING_PAYMENT" && onInitiatePayment && (
-                      <Button size="sm" onClick={() => onInitiatePayment(request.id)} disabled={loading}>
-                        <CreditCard className="mr-2 h-4 w-4" />
+                      <Button size="sm" onClick={() => onInitiatePayment(request.id)} disabled={loading} className="gap-1.5">
+                        <CreditCard className="h-4 w-4" />
                         Thanh toán
                       </Button>
                     )}
+
                     {!isAdmin && request.status === "NEED_MORE_INFO" && onSubmitMoreInfo && (
                       <Button size="sm" onClick={() => onSubmitMoreInfo(request)} disabled={loading}>
                         Bổ sung thông tin
                       </Button>
                     )}
+
                     {isAdmin && (
-                      <>
-                        <Button size="sm" onClick={() => onApprove(request)} disabled={loading}>
-                          Review Details
-                        </Button>
-                      </>
+                      <Button size="sm" onClick={() => onApprove(request)} disabled={loading}>
+                        Xem chi tiết & Điều phối
+                      </Button>
                     )}
-                    {!isAdmin && (request.status === "PENDING" || request.status === "PENDING_REVIEW") && (
-                      <Button variant="outline" size="sm" onClick={() => onCancel(request.id)} disabled={loading}>
-                        Cancel
+
+                    {!isAdmin && ["PENDING", "PENDING_REVIEW", "NEED_MORE_INFO", "WAITING_ACCEPTANCE", "WAITING_PAYMENT"].includes(request.status) && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          if (window.confirm("Bạn có chắc chắn muốn hủy yêu cầu tư vấn này?")) {
+                            onCancel(request.id)
+                          }
+                        }}
+                        disabled={loading}
+                        className="text-neutral-600 hover:text-red-600 hover:border-red-300"
+                      >
+                        Hủy yêu cầu
                       </Button>
                     )}
                   </div>

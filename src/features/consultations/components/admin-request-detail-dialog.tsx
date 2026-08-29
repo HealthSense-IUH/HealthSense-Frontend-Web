@@ -99,16 +99,54 @@ export function AdminRequestDetailDialog({
               </div>
             </div>
 
-            <div className="flex flex-col gap-2">
-              <span className="text-sm font-semibold">Request Reason</span>
-              <div className="p-3 bg-muted/30 border rounded-md text-sm whitespace-pre-wrap">
-                {detail.reason || "No reason provided."}
-              </div>
+            <div className="flex flex-col gap-3 p-4 border rounded-xl bg-card">
+              <span className="text-sm font-semibold text-foreground">Thông tin phiếu khám ban đầu (Intake)</span>
+              
+              {detail.reasonForCare && (
+                <div className="space-y-1">
+                  <span className="text-xs font-semibold text-muted-foreground">Lý do đăng ký:</span>
+                  <div className="text-sm p-2.5 bg-muted/20 rounded-lg">{detail.reasonForCare}</div>
+                </div>
+              )}
+
+              {detail.currentConcern && (
+                <div className="space-y-1">
+                  <span className="text-xs font-semibold text-muted-foreground">Triệu chứng & Vấn đề hiện tại:</span>
+                  <div className="text-sm p-2.5 bg-muted/20 rounded-lg whitespace-pre-wrap">{detail.currentConcern}</div>
+                </div>
+              )}
+
+              {detail.careGoal && (
+                <div className="space-y-1">
+                  <span className="text-xs font-semibold text-muted-foreground">Mục tiêu chăm sóc:</span>
+                  <div className="text-xs p-2 bg-muted/20 rounded-lg">{detail.careGoal}</div>
+                </div>
+              )}
+
+              {detail.relevantSelfReportedContext && (
+                <div className="space-y-1">
+                  <span className="text-xs font-semibold text-muted-foreground">Tiền sử & Thông tin tự khai:</span>
+                  <div className="text-xs p-2 bg-muted/20 rounded-lg">{detail.relevantSelfReportedContext}</div>
+                </div>
+              )}
+
+              {detail.memberNote && (
+                <div className="space-y-1">
+                  <span className="text-xs font-semibold text-muted-foreground">Ghi chú của hội viên:</span>
+                  <div className="text-xs p-2 bg-muted/20 rounded-lg">{detail.memberNote}</div>
+                </div>
+              )}
+
+              {!detail.reasonForCare && !detail.currentConcern && (
+                <div className="text-sm p-3 bg-muted/30 border rounded-md whitespace-pre-wrap">
+                  {detail.reason || "Không có lý do được cung cấp."}
+                </div>
+              )}
             </div>
 
             {detail.healthRecord && (
               <div className="flex flex-col gap-2">
-                <span className="text-sm font-semibold">Health Record Attachment</span>
+                <span className="text-sm font-semibold">Hồ sơ đo đạc đính kèm</span>
                 <div className="p-3 bg-muted/30 border rounded-md text-sm">
                   #{detail.healthRecord.id} - {detail.healthRecord.title || "Health Record"}
                   {detail.healthRecord.summary && <div className="mt-1 text-xs text-muted-foreground">{detail.healthRecord.summary}</div>}
@@ -118,12 +156,12 @@ export function AdminRequestDetailDialog({
 
             {(detail.assignedDoctor || detail.preferredDoctor) && (
               <div className="flex flex-col gap-2">
-                <span className="text-sm font-semibold">{detail.assignedDoctorId ? "Assigned Doctor" : "Preferred Doctor"}</span>
+                <span className="text-sm font-semibold">{detail.assignedDoctorId ? "Bác sĩ đã phân công" : "Bác sĩ mong muốn"}</span>
                 <div className="flex items-center gap-2 p-3 bg-muted/30 border rounded-md text-sm">
                   <Stethoscope className="w-4 h-4 text-primary" />
                   <div>
                     <span className="font-medium">
-                      {detail.assignedDoctor?.displayName || detail.preferredDoctor?.displayName || "Doctor"}
+                      {detail.assignedDoctor?.displayName || detail.preferredDoctor?.displayName || "Bác sĩ"}
                     </span>
                     <div className="text-xs text-muted-foreground">
                       ID: #{detail.assignedDoctorId || detail.preferredDoctor?.id}
@@ -133,14 +171,26 @@ export function AdminRequestDetailDialog({
               </div>
             )}
 
+            {detail.status === "WAITING_ACCEPTANCE" && (
+              <div className="p-3.5 bg-amber-50 border border-amber-200 text-amber-900 dark:bg-amber-950/20 dark:text-amber-200 rounded-xl text-sm">
+                <div className="font-semibold flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-amber-600" /> Đã phân công bác sĩ - Chờ hội viên xác nhận thỏa thuận
+                </div>
+                <div className="mt-1 text-xs">
+                  Thời gian giữ bác sĩ: {formatDate(detail.doctorReservedAt)}<br />
+                  Hạn hoàn tất: {formatDate(detail.paymentDeadline)}
+                </div>
+              </div>
+            )}
+
             {detail.status === "WAITING_PAYMENT" && (
               <div className="p-3 bg-blue-50 border border-blue-200 text-blue-800 rounded-md text-sm">
                 <div className="font-semibold flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4" /> Doctor Reserved
+                  <CheckCircle2 className="w-4 h-4" /> Hội viên đã xác nhận thỏa thuận - Đang chờ thanh toán
                 </div>
                 <div className="mt-1 text-xs">
-                  Reserved at: {formatDate(detail.doctorReservedAt)}<br />
-                  Payment deadline: {formatDate(detail.paymentDeadline)}
+                  Thời gian giữ bác sĩ: {formatDate(detail.doctorReservedAt)}<br />
+                  Hạn thanh toán: {formatDate(detail.paymentDeadline)}
                 </div>
               </div>
             )}
@@ -148,15 +198,15 @@ export function AdminRequestDetailDialog({
             {detail.status === "NEED_MORE_INFO" && detail.moreInfoReason && (
               <div className="p-3 bg-orange-50 border border-orange-200 text-orange-800 rounded-md text-sm">
                 <div className="font-semibold flex items-center gap-2">
-                  <AlertCircle className="w-4 h-4" /> Waiting for member info
+                  <AlertCircle className="w-4 h-4" /> Đang chờ hội viên bổ sung thông tin
                 </div>
-                <div className="mt-1">Reason: {detail.moreInfoReason}</div>
+                <div className="mt-1">Lý do: {detail.moreInfoReason}</div>
               </div>
             )}
 
             {detail.memberAdditionalNote && (
               <div className="p-3 bg-green-50 border border-green-200 text-green-800 rounded-md text-sm">
-                <div className="font-semibold">Member has provided additional info:</div>
+                <div className="font-semibold">Hội viên đã bổ sung thông tin:</div>
                 <div className="mt-1">{detail.memberAdditionalNote}</div>
               </div>
             )}

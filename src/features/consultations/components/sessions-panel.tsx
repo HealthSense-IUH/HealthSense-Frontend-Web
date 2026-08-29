@@ -1,4 +1,5 @@
-import { Clock } from "lucide-react"
+import { useState } from "react"
+import { Clock, RefreshCw } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -7,7 +8,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import type { ConsultationSessionItem } from "../types"
 import { EmptyRow, formatDate, statusBadge } from "./shared"
 import { MemberFinalSummaryDialog } from "./member-final-summary-dialog"
-import { useState } from "react"
+import { RenewalDialog } from "./renewal-dialog"
+import { AdminRenewalsDialog } from "./admin-renewals-dialog"
 
 export function SessionsPanel({
   isAdmin,
@@ -15,22 +17,24 @@ export function SessionsPanel({
   loading,
   selectedSessionId,
   onSelect,
-  onExtend,
   onClose,
   onExpireOverdue,
   onActivateScheduled,
+  onSessionRefreshed,
 }: {
   isAdmin: boolean
   sessions: ConsultationSessionItem[]
   loading: boolean
   selectedSessionId: string | number | null
   onSelect: (session: ConsultationSessionItem) => void
-  onExtend: (session: ConsultationSessionItem) => void
   onClose: (session: ConsultationSessionItem) => void
   onExpireOverdue: () => void
   onActivateScheduled?: () => void
+  onSessionRefreshed?: () => void
 }) {
   const [summarySessionId, setSummarySessionId] = useState<string | number | null>(null)
+  const [renewalSession, setRenewalSession] = useState<ConsultationSessionItem | null>(null)
+  const [adminRenewalSession, setAdminRenewalSession] = useState<ConsultationSessionItem | null>(null)
 
   return (
     <Card>
@@ -88,21 +92,38 @@ export function SessionsPanel({
                   <span className="block max-w-56 truncate text-neutral-500">{session.lastMessagePreview ?? "No messages yet"}</span>
                 </TableCell>
                 <TableCell className="text-right">
-                  <div className="flex justify-end gap-2">
+                  <div className="flex justify-end gap-2 flex-wrap">
                     {session.status === "ACTIVE" && (
                       <Button variant="outline" size="sm" onClick={() => onSelect(session)}>
                         Chat
                       </Button>
                     )}
+                    {!isAdmin && (session.status === "ACTIVE" || session.status === "COMPLETED") && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setRenewalSession(session)}
+                        className="gap-1 text-primary hover:bg-primary/5"
+                      >
+                        <RefreshCw className="w-3.5 h-3.5" />
+                        Gia hạn
+                      </Button>
+                    )}
+                    {isAdmin && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setAdminRenewalSession(session)}
+                        className="gap-1"
+                      >
+                        <RefreshCw className="w-3.5 h-3.5" />
+                        Quản lý gia hạn
+                      </Button>
+                    )}
                     {isAdmin && session.status === "ACTIVE" && (
-                      <>
-                        <Button variant="outline" size="sm" onClick={() => onExtend(session)} disabled={loading}>
-                          Extend
-                        </Button>
-                        <Button variant="destructive" size="sm" onClick={() => onClose(session)} disabled={loading}>
-                          Close
-                        </Button>
-                      </>
+                      <Button variant="destructive" size="sm" onClick={() => onClose(session)} disabled={loading}>
+                        Close
+                      </Button>
                     )}
                     {isAdmin && (session.status === "COMPLETED" || session.status === "ACTIVE") && (
                       <Button variant="outline" size="sm" onClick={() => setSummarySessionId(session.id)}>
@@ -125,6 +146,28 @@ export function SessionsPanel({
         }}
         isAdminView={true}
       />
+
+      {renewalSession && (
+        <RenewalDialog
+          session={renewalSession}
+          open={!!renewalSession}
+          onOpenChange={(open) => {
+            if (!open) setRenewalSession(null)
+          }}
+          onSessionRefreshed={onSessionRefreshed}
+        />
+      )}
+
+      {adminRenewalSession && (
+        <AdminRenewalsDialog
+          session={adminRenewalSession}
+          open={!!adminRenewalSession}
+          onOpenChange={(open) => {
+            if (!open) setAdminRenewalSession(null)
+          }}
+          onSessionRefreshed={onSessionRefreshed}
+        />
+      )}
     </Card>
   )
 }

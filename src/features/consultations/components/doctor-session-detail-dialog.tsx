@@ -21,6 +21,7 @@ import type { DoctorConsultationDetailResponse } from "../types"
 import { formatDate } from "./shared"
 import { DoctorScopedRecordsTab } from "./doctor-scoped-records-tab"
 import { DoctorFinalSummaryTab } from "./doctor-final-summary-tab"
+import { DoctorContinuityTab } from "./doctor-continuity-tab"
 
 function readError(error: unknown, fallback: string) {
   const err = error as { response?: { data?: { message?: string } }; message?: string }
@@ -99,7 +100,7 @@ export function DoctorSessionDetailDialog({ sessionId, open, onOpenChange }: Doc
   if (loading || !detail) {
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="sm:max-w-[600px]">
+        <DialogContent className="sm:max-w-[650px]">
           <DialogHeader>
             <DialogTitle>Chi tiết phiên chăm sóc</DialogTitle>
           </DialogHeader>
@@ -119,7 +120,7 @@ export function DoctorSessionDetailDialog({ sessionId, open, onOpenChange }: Doc
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[600px] max-h-[85vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-[650px] max-h-[88vh] overflow-y-auto">
         <DialogHeader>
           <div className="flex items-start justify-between pr-4">
             <div>
@@ -139,10 +140,11 @@ export function DoctorSessionDetailDialog({ sessionId, open, onOpenChange }: Doc
         </DialogHeader>
 
         <Tabs defaultValue="info" className="mt-4">
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="info">Thông tin chung</TabsTrigger>
-            <TabsTrigger value="records">Hồ sơ trong phạm vi</TabsTrigger>
-            <TabsTrigger value="summary">Tổng kết chăm sóc</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-4 text-xs">
+            <TabsTrigger value="info">Thông tin</TabsTrigger>
+            <TabsTrigger value="records">Hồ sơ đo</TabsTrigger>
+            <TabsTrigger value="continuity">Chăm sóc trước</TabsTrigger>
+            <TabsTrigger value="summary">Tổng kết</TabsTrigger>
           </TabsList>
           
           <TabsContent value="info" className="grid gap-6 py-4 outline-none">
@@ -151,7 +153,7 @@ export function DoctorSessionDetailDialog({ sessionId, open, onOpenChange }: Doc
                 <AlertTriangle className="h-5 w-5 text-orange-500 shrink-0 mt-0.5" />
                 <div>
                   <h4 className="font-medium text-orange-900">Có {session.unresolvedAttentionCount} hồ sơ/chỉ số cần xem</h4>
-                  <p className="text-sm text-orange-700 mt-1">Hệ thống ghi nhận có dữ liệu mới từ bệnh nhân. Vui lòng chuyển sang tab "Hồ sơ trong phạm vi" để xem.</p>
+                  <p className="text-sm text-orange-700 mt-1">Hệ thống ghi nhận có dữ liệu mới từ bệnh nhân. Vui lòng chuyển sang tab "Hồ sơ đo" để xem.</p>
                 </div>
               </div>
             )}
@@ -178,7 +180,6 @@ export function DoctorSessionDetailDialog({ sessionId, open, onOpenChange }: Doc
             </div>
             <div className="text-sm text-neutral-600 space-y-2">
               <p><span className="font-medium text-neutral-800">Mã bệnh nhân:</span> #{session.memberId}</p>
-              {/* If we have member profile info, display it here later */}
               <p className="italic text-neutral-400">Các thông tin cơ bản khác sẽ hiển thị nếu được chia sẻ.</p>
             </div>
           </div>
@@ -219,6 +220,10 @@ export function DoctorSessionDetailDialog({ sessionId, open, onOpenChange }: Doc
 
           <TabsContent value="records" className="outline-none">
             <DoctorScopedRecordsTab sessionId={session.id} />
+          </TabsContent>
+
+          <TabsContent value="continuity" className="outline-none">
+            <DoctorContinuityTab sessionId={session.id} />
           </TabsContent>
 
           <TabsContent value="summary" className="outline-none">

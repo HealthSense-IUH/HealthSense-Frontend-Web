@@ -18,18 +18,31 @@ import type {
   DoctorCandidateResponse,
   DoctorCareProfilePayload,
   DoctorCareProfileResponse,
-  ExtendConsultationPayload,
+  ConsultationRenewalResponse,
+  RequestConsultationRenewalPayload,
+  DecideConsultationRenewalPayload,
+  SessionExtensionResponse,
   HealthRecordPage,
   RejectConsultationRequestPayload,
   SendConsultationMessagePayload,
   CreateCareServicePackagePayload,
   UpdateCareServicePackagePayload,
   ConsultationPaymentResponse,
+  ConsultationPaymentAttemptItem,
+  CareServiceAgreementResponse,
+  AcceptCareServiceAgreementRequest,
+  SubmitConsultationMoreInfoPayload,
   DoctorConsultationSessionResponse,
   DoctorConsultationDetailResponse,
   DoctorScopedHealthRecordResponse,
+  DoctorRawArtifactResponse,
+  CareContinuitySummaryResponse,
+  EpisodeHealthRecordAuthorizationResponse,
   ConsultationFinalSummaryResponse,
   UpsertConsultationFinalSummaryPayload,
+  CreateFinalSummaryAddendumPayload,
+  FinalSummaryAddendumResponse,
+  CareHistoryEpisodeResponse,
 } from "../types"
 
 type PageParams = {
@@ -106,10 +119,57 @@ export const consultationApi = {
       { params }
     )
   },
-  extendSession(sessionId: string | number, payload: ExtendConsultationPayload) {
-    return axiosClient.patch<ApiResponse<ConsultationSessionItem>, ApiResponse<ConsultationSessionItem>>(
-      `/api/admin/consultation-sessions/${sessionId}/extend`,
+  requestRenewal(sessionId: string | number, payload?: RequestConsultationRenewalPayload) {
+    return axiosClient.post<ApiResponse<ConsultationRenewalResponse>, ApiResponse<ConsultationRenewalResponse>>(
+      `/api/consultation-sessions/${sessionId}/renewals`,
       payload
+    )
+  },
+  listSessionRenewals(sessionId: string | number) {
+    return axiosClient.get<ApiResponse<ConsultationRenewalResponse[]>, ApiResponse<ConsultationRenewalResponse[]>>(
+      `/api/consultation-sessions/${sessionId}/renewals`
+    )
+  },
+  cancelRenewal(renewalId: string | number) {
+    return axiosClient.patch<ApiResponse<ConsultationRenewalResponse>, ApiResponse<ConsultationRenewalResponse>>(
+      `/api/consultation-renewals/${renewalId}/cancel`
+    )
+  },
+  getSessionExtensions(sessionId: string | number) {
+    return axiosClient.get<ApiResponse<SessionExtensionResponse[]>, ApiResponse<SessionExtensionResponse[]>>(
+      `/api/consultation-sessions/${sessionId}/extensions`
+    )
+  },
+  beginRenewalReview(renewalId: string | number) {
+    return axiosClient.patch<ApiResponse<ConsultationRenewalResponse>, ApiResponse<ConsultationRenewalResponse>>(
+      `/api/admin/consultation-renewals/${renewalId}/begin-review`
+    )
+  },
+  decideRenewal(renewalId: string | number, payload: DecideConsultationRenewalPayload) {
+    return axiosClient.patch<ApiResponse<ConsultationRenewalResponse>, ApiResponse<ConsultationRenewalResponse>>(
+      `/api/admin/consultation-renewals/${renewalId}/decision`,
+      payload
+    )
+  },
+  getRenewalAgreement(renewalId: string | number) {
+    return axiosClient.get<ApiResponse<CareServiceAgreementResponse>, ApiResponse<CareServiceAgreementResponse>>(
+      `/api/consultation-renewals/${renewalId}/agreement`
+    )
+  },
+  acceptRenewalAgreement(renewalId: string | number, payload: AcceptCareServiceAgreementRequest) {
+    return axiosClient.post<ApiResponse<CareServiceAgreementResponse>, ApiResponse<CareServiceAgreementResponse>>(
+      `/api/consultation-renewals/${renewalId}/agreement/accept`,
+      payload
+    )
+  },
+  createRenewalPayment(renewalId: string | number) {
+    return axiosClient.post<ApiResponse<ConsultationPaymentResponse>, ApiResponse<ConsultationPaymentResponse>>(
+      `/api/consultation-renewals/${renewalId}/payment`
+    )
+  },
+  getRenewalPaymentAttempts(renewalId: string | number) {
+    return axiosClient.get<ApiResponse<ConsultationPaymentAttemptItem[]>, ApiResponse<ConsultationPaymentAttemptItem[]>>(
+      `/api/consultation-renewals/${renewalId}/payment/attempts`
     )
   },
   closeSession(sessionId: string | number, payload: CloseConsultationPayload) {
@@ -168,9 +228,20 @@ export const consultationApi = {
       `/api/care-service-packages/${packageId}`
     )
   },
-  submitMoreInfo(requestId: string | number, payload: { additionalNote: string }) {
+  submitMoreInfo(requestId: string | number, payload: SubmitConsultationMoreInfoPayload) {
     return axiosClient.patch<ApiResponse<ConsultationRequestItem>, ApiResponse<ConsultationRequestItem>>(
       `/api/consultation-requests/${requestId}/more-info`,
+      payload
+    )
+  },
+  getAgreement(requestId: string | number) {
+    return axiosClient.get<ApiResponse<CareServiceAgreementResponse>, ApiResponse<CareServiceAgreementResponse>>(
+      `/api/consultation-requests/${requestId}/agreement`
+    )
+  },
+  acceptAgreement(requestId: string | number, payload: AcceptCareServiceAgreementRequest) {
+    return axiosClient.post<ApiResponse<CareServiceAgreementResponse>, ApiResponse<CareServiceAgreementResponse>>(
+      `/api/consultation-requests/${requestId}/agreement/accept`,
       payload
     )
   },
@@ -250,6 +321,11 @@ export const consultationApi = {
       `/api/consultation-requests/${requestId}/payment`
     )
   },
+  getPaymentAttempts(requestId: string | number) {
+    return axiosClient.get<ApiResponse<ConsultationPaymentAttemptItem[]>, ApiResponse<ConsultationPaymentAttemptItem[]>>(
+      `/api/consultation-requests/${requestId}/payment/attempts`
+    )
+  },
   getDoctorSessions(params: PageParams = {}) {
     return axiosClient.get<ApiResponse<PageResponse<DoctorConsultationSessionResponse>>, ApiResponse<PageResponse<DoctorConsultationSessionResponse>>>(
       "/api/doctor/consultation-sessions",
@@ -259,6 +335,11 @@ export const consultationApi = {
   getDoctorSessionDetail(sessionId: string | number) {
     return axiosClient.get<ApiResponse<DoctorConsultationDetailResponse>, ApiResponse<DoctorConsultationDetailResponse>>(
       `/api/doctor/consultation-sessions/${sessionId}`
+    )
+  },
+  shareHealthRecord(sessionId: string | number, recordId: string | number) {
+    return axiosClient.post<ApiResponse<EpisodeHealthRecordAuthorizationResponse>, ApiResponse<EpisodeHealthRecordAuthorizationResponse>>(
+      `/api/consultation-sessions/${sessionId}/health-records/${recordId}/share`
     )
   },
   getDoctorScopedRecords(sessionId: string | number, params: PageParams = {}) {
@@ -272,9 +353,19 @@ export const consultationApi = {
       `/api/doctor/consultation-sessions/${sessionId}/health-records/${recordId}`
     )
   },
+  getDoctorScopedRawArtifact(sessionId: string | number, recordId: string | number) {
+    return axiosClient.get<ApiResponse<DoctorRawArtifactResponse>, ApiResponse<DoctorRawArtifactResponse>>(
+      `/api/doctor/consultation-sessions/${sessionId}/health-records/${recordId}/raw-artifact`
+    )
+  },
   reviewDoctorScopedRecordAttention(sessionId: string | number, recordId: string | number) {
     return axiosClient.patch<ApiResponse<void>, ApiResponse<void>>(
       `/api/doctor/consultation-sessions/${sessionId}/health-records/${recordId}/attention/review`
+    )
+  },
+  getDoctorContinuitySummaries(sessionId: string | number) {
+    return axiosClient.get<ApiResponse<CareContinuitySummaryResponse[]>, ApiResponse<CareContinuitySummaryResponse[]>>(
+      `/api/doctor/consultation-sessions/${sessionId}/continuity-summaries`
     )
   },
   getDoctorFinalSummary(sessionId: string | number) {
@@ -293,6 +384,12 @@ export const consultationApi = {
       `/api/doctor/consultation-sessions/${sessionId}/final-summary/finalize`
     )
   },
+  addDoctorFinalSummaryAddendum(sessionId: string | number, payload: CreateFinalSummaryAddendumPayload) {
+    return axiosClient.post<ApiResponse<FinalSummaryAddendumResponse>, ApiResponse<FinalSummaryAddendumResponse>>(
+      `/api/doctor/consultation-sessions/${sessionId}/final-summary/addenda`,
+      payload
+    )
+  },
   getMemberFinalSummary(sessionId: string | number) {
     return axiosClient.get<ApiResponse<ConsultationFinalSummaryResponse>, ApiResponse<ConsultationFinalSummaryResponse>>(
       `/api/consultation-sessions/${sessionId}/final-summary`
@@ -301,6 +398,17 @@ export const consultationApi = {
   getAdminFinalSummary(sessionId: string | number) {
     return axiosClient.get<ApiResponse<ConsultationFinalSummaryResponse>, ApiResponse<ConsultationFinalSummaryResponse>>(
       `/api/admin/consultation-sessions/${sessionId}/final-summary`
+    )
+  },
+  getCareHistory(params?: { page?: number; size?: number }) {
+    return axiosClient.get<ApiResponse<PageResponse<CareHistoryEpisodeResponse>>, ApiResponse<PageResponse<CareHistoryEpisodeResponse>>>(
+      "/api/care-history",
+      { params }
+    )
+  },
+  getCareHistoryEpisode(sessionId: string | number) {
+    return axiosClient.get<ApiResponse<CareHistoryEpisodeResponse>, ApiResponse<CareHistoryEpisodeResponse>>(
+      `/api/care-history/${sessionId}`
     )
   },
 }

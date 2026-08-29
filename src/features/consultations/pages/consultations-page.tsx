@@ -1,3 +1,4 @@
+import { useEffect } from "react"
 import { CheckCircle2, RefreshCw, ShieldAlert, Stethoscope, XCircle } from "lucide-react"
 import { useSearchParams } from "react-router-dom"
 
@@ -5,10 +6,12 @@ import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent } from "@/components/ui/tabs"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Textarea } from "@/components/ui/textarea"
+import { Checkbox } from "@/components/ui/checkbox"
 import { cn } from "@/lib/utils"
 
 import { AdminActionDialog } from "../components/admin-action-dialog"
 import { AdminRequestDetailDialog } from "../components/admin-request-detail-dialog"
+import { CareAgreementDialog } from "../components/care-agreement-dialog"
 import { ChatWorkspace } from "../components/chat/chat-workspace"
 import { CreateAdminSessionPanel } from "../components/create-admin-session-panel"
 import { CreateRequestPanel } from "../components/create-request-panel"
@@ -25,6 +28,13 @@ export default function ConsultationsPage() {
 
   const defaultTab = logic.isAdmin ? "admin-requests" : logic.isMember ? "create-request" : "sessions"
   const activeTab = searchParams.get("tab") || defaultTab
+
+  useEffect(() => {
+    const pkgId = searchParams.get("packageId")
+    if (pkgId && logic.isMember) {
+      logic.setRequestForm((prev) => ({ ...prev, packageId: pkgId }))
+    }
+  }, [searchParams, logic.isMember, logic.setRequestForm])
 
   const roleLabel = logic.isAdmin ? "Admin" : logic.isDoctor ? "Doctor" : "Member"
 
@@ -118,6 +128,7 @@ export default function ConsultationsPage() {
               onCancel={logic.handleCancelRequest}
               onApprove={logic.openAdminRequestDetail}
               onSubmitMoreInfo={logic.openMoreInfoDialog}
+              onReviewAgreement={logic.openAgreementDialog}
               adminFilters={logic.adminFilters}
               onAdminFilterChange={logic.setAdminFilters}
               onSearchAdminFilters={logic.loadData}
@@ -151,10 +162,10 @@ export default function ConsultationsPage() {
             loading={logic.loading || logic.actionLoading}
             selectedSessionId={logic.selectedSession?.id ?? null}
             onSelect={logic.setSelectedSession}
-            onExtend={logic.openExtendDialog}
             onClose={logic.openCloseDialog}
             onExpireOverdue={logic.handleExpireOverdue}
             onActivateScheduled={logic.handleActivateScheduledSessions}
+            onSessionRefreshed={logic.loadData}
           />
         </TabsContent>
 
@@ -188,13 +199,9 @@ export default function ConsultationsPage() {
         request={logic.targetRequest}
         session={logic.targetSession}
         doctorId={logic.doctorId}
-        endsAt={logic.endsAt}
-        supportEndsAt={logic.supportEndsAt}
         reason={logic.reason}
         loading={logic.actionLoading}
         onDoctorIdChange={logic.setDoctorId}
-        onEndsAtChange={logic.setEndsAt}
-        onSupportEndsAtChange={logic.setSupportEndsAt}
         onReasonChange={logic.setReason}
         onSubmit={logic.handleAdminDialogSubmit}
         onOpenChange={(open) => {
@@ -205,20 +212,59 @@ export default function ConsultationsPage() {
       />
 
       <Dialog open={logic.isMoreInfoDialogOpen} onOpenChange={logic.setIsMoreInfoDialogOpen}>
-        <DialogContent>
+        <DialogContent className="max-w-lg">
           <DialogHeader>
             <DialogTitle>Bổ sung thông tin cho yêu cầu #{logic.targetRequest?.id}</DialogTitle>
             <DialogDescription>
               Vui lòng cung cấp thêm thông tin theo yêu cầu của điều phối viên.
             </DialogDescription>
           </DialogHeader>
-          <div className="flex flex-col gap-4 py-4">
-            <Textarea
-              placeholder="Nhập thông tin bổ sung tại đây..."
-              value={logic.moreInfoNote}
-              onChange={(e) => logic.setMoreInfoNote(e.target.value)}
-              rows={4}
-            />
+          <div className="flex flex-col gap-4 py-2">
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold text-foreground">Nội dung giải trình / Thông tin bổ sung *</label>
+              <Textarea
+                placeholder="Nhập thông tin chi tiết bổ sung tại đây..."
+                value={logic.moreInfoNote}
+                onChange={(e) => logic.setMoreInfoNote(e.target.value)}
+                rows={3}
+                className="resize-none"
+              />
+            </div>
+
+            {logic.healthRecords.length > 0 && (
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-foreground">
+                  Đính kèm thêm hồ sơ đo đạc (Tùy chọn - {logic.moreInfoSelectedRecordIds.length} đã chọn)
+                </label>
+                <div className="max-h-36 overflow-y-auto border rounded-xl p-2 space-y-1 bg-muted/10">
+                  {logic.healthRecords.map((record) => {
+                    const idStr = String(record.id)
+                    const checked = logic.moreInfoSelectedRecordIds.includes(idStr)
+                    return (
+                      <div
+                        key={record.id}
+                        onClick={() => {
+                          logic.setMoreInfoSelectedRecordIds(
+                            checked
+                              ? logic.moreInfoSelectedRecordIds.filter((id) => id !== idStr)
+                              : [...logic.moreInfoSelectedRecordIds, idStr]
+                          )
+                        }}
+                        className="flex items-center gap-2.5 p-2 rounded-lg hover:bg-muted/40 cursor-pointer text-xs select-none border border-transparent hover:border-border transition-all"
+                      >
+                        <Checkbox checked={checked} className="data-[state=checked]:bg-primary" />
+                        <span className="font-medium">#{record.id} {record.originalFileName ? `- ${record.originalFileName}` : ""}</span>
+                        {record.predictionLabel && (
+                          <span className="text-[10px] text-muted-foreground ml-auto">
+                            [{record.predictionLabel}]
+                          </span>
+                        )}
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+            )}
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => logic.setIsMoreInfoDialogOpen(false)}>
@@ -230,6 +276,13 @@ export default function ConsultationsPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <CareAgreementDialog
+        open={logic.isAgreementDialogOpen}
+        onOpenChange={logic.setIsAgreementDialogOpen}
+        requestId={logic.agreementTargetRequestId}
+        onAgreementAccepted={() => void logic.loadData()}
+      />
 
       <AdminRequestDetailDialog
         requestId={logic.targetRequest?.id ?? null}
