@@ -6,6 +6,7 @@ import type {
   AvatarPresignedUrlResponse,
   IdentityCardPresignedUrlRequest,
   IdentityCardPresignedUrlResponse,
+  MemberDetailResponse,
   ProfileUpdateRequest,
   UserResponse,
 } from "../types"
@@ -13,10 +14,20 @@ import type {
 export const profileApi = {
   /**
    * Get current authenticated user profile details
-   * GET /api/auth/me
+   * GET /api/users/me
    */
   getMe() {
-    return axiosClient.get<ApiResponse<UserResponse>, ApiResponse<UserResponse>>("/api/auth/me")
+    return axiosClient.get<ApiResponse<UserResponse>, ApiResponse<UserResponse>>("/api/users/me")
+  },
+
+  /**
+   * Get rich member details (including record count and latest health record)
+   * GET /api/users/me/detail
+   */
+  getMeDetail() {
+    return axiosClient.get<ApiResponse<MemberDetailResponse>, ApiResponse<MemberDetailResponse>>(
+      "/api/users/me/detail"
+    )
   },
 
   /**

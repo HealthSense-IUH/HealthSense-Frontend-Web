@@ -73,3 +73,9 @@ export interface IdentityCardPresignedUrlResponse {
   s3Key: string
   cardSide?: string
 }
+
+export interface MemberDetailResponse {
+  user: UserResponse
+  latestHealthRecord?: any
+  totalHealthRecords?: number
+}
