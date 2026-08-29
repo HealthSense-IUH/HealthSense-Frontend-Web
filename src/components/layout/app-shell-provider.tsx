@@ -9,7 +9,7 @@ export function AppShellProvider({ children }: { children: ReactNode }) {
   const [isCollapsed, setIsCollapsed] = useState<boolean>(true)
   const [demoRole, setDemoRole] = useState<UserRole | null>(null)
 
-  const realRole = userSession?.role || USER_ROLES.SUPER_ADMIN
+  const realRole = userSession?.role || USER_ROLES.MEMBER
 
   const effectiveRole = import.meta.env.DEV && demoRole ? demoRole : realRole
 
