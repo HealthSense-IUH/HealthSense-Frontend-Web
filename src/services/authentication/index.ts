@@ -34,6 +34,6 @@ export const authApi = {
   },
 
   me() {
-    return axiosClient.get<ApiResponse<CurrentUser>, ApiResponse<CurrentUser>>("/api/auth/me")
+    return axiosClient.get<ApiResponse<CurrentUser>, ApiResponse<CurrentUser>>("/api/users/me")
   },
 }
