@@ -118,4 +118,14 @@ export const healthRecordApi = {
       }
     )
   },
+
+  /**
+   * Get presigned download URL for member's own raw health record CSV artifact
+   * GET /api/health-records/{id}/download-url
+   */
+  getDownloadUrl(id: string | number) {
+    return axiosClient.get<ApiResponse<PresignedUrlResponse>, ApiResponse<PresignedUrlResponse>>(
+      `/api/health-records/${id}/download-url`
+    )
+  },
 }

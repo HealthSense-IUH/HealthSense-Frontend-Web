@@ -1,15 +1,19 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import {
   Clock,
   FileText,
   X,
+  Download,
+  Loader2,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { useToast } from "@/hooks/use-toast"
 import { 
   getPredictionMeta, 
   formatHrvNumber, 
   formatRecordDate 
 } from "@/lib/health-record-labels"
+import { healthRecordApi } from "../services/health-record-api"
 import type { MemberHealthRecord } from "../types"
 
 interface HealthRecordDetailModalProps {
@@ -19,6 +23,8 @@ interface HealthRecordDetailModalProps {
 }
 
 export function HealthRecordDetailModal({ record, isOpen, onClose }: HealthRecordDetailModalProps) {
+  const { toast } = useToast()
+  const [downloading, setDownloading] = useState(false)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -238,13 +244,55 @@ export function HealthRecordDetailModal({ record, isOpen, onClose }: HealthRecor
             <FileText className="w-3.5 h-3.5" />
             <span>Kích thước: {formatHrvNumber(record.fileSize ? record.fileSize / 1024 : 0, 1)} KB</span>
           </span>
-          <Button
-            type="button"
-            onClick={onClose}
-            className="h-9 px-5 rounded-xl bg-primary text-primary-foreground font-semibold text-xs cursor-pointer shadow-xs"
-          >
-            Đóng
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              disabled={downloading}
+              onClick={async () => {
+                try {
+                  setDownloading(true)
+                  const res = await healthRecordApi.getDownloadUrl(record.id)
+                  const downloadUrl = res.data?.uploadUrl
+                  if (!downloadUrl) {
+                    toast({ variant: "destructive", title: "Lỗi", description: "Không tìm thấy đường dẫn tải file." })
+                    return
+                  }
+                  const link = document.createElement("a")
+                  link.href = downloadUrl
+                  link.download = record.fileName || `health-record-${record.id}.csv`
+                  link.target = "_blank"
+                  link.rel = "noopener noreferrer"
+                  document.body.appendChild(link)
+                  link.click()
+                  document.body.removeChild(link)
+                } catch {
+                  toast({ variant: "destructive", title: "Lỗi", description: "Không thể lấy đường dẫn tải tệp." })
+                } finally {
+                  setDownloading(false)
+                }
+              }}
+              className="h-9 px-3 rounded-xl border-border text-foreground font-medium text-xs cursor-pointer"
+            >
+              {downloading ? (
+                <>
+                  <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" /> Đang tải...
+                </>
+              ) : (
+                <>
+                  <Download className="w-3.5 h-3.5 mr-1.5" /> Tải CSV gốc
+                </>
+              )}
+            </Button>
+            <Button
+              type="button"
+              onClick={onClose}
+              className="h-9 px-5 rounded-xl bg-primary text-primary-foreground font-semibold text-xs cursor-pointer shadow-xs"
+            >
+              Đóng
+            </Button>
+          </div>
         </div>
       </div>
     </div>

@@ -55,6 +55,6 @@ export interface PresignedUrlRequest {
 
 export interface PresignedUrlResponse {
   recordId: number
-  presignedUrl: string
+  uploadUrl: string
   s3Key: string
 }
