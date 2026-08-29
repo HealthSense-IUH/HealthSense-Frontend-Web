@@ -6,6 +6,7 @@ import type {
   UserListFilterParams,
   UserPageResponse,
   UserUpdateRequest,
+  AdminMemberDetailResponse,
 } from "../types"
 
 export const userManagementApi = {
@@ -27,6 +28,16 @@ export const userManagementApi = {
   getUserDetail(id: string | number) {
     return axiosClient.get<ApiResponse<UserItem>, ApiResponse<UserItem>>(
       `/api/admin/users/${id}`
+    )
+  },
+
+  /**
+   * Get target user details along with health record metrics (for MEMBER accounts)
+   * GET /api/admin/users/{id}/detail
+   */
+  getAdminMemberDetail(id: string | number) {
+    return axiosClient.get<ApiResponse<AdminMemberDetailResponse>, ApiResponse<AdminMemberDetailResponse>>(
+      `/api/admin/users/${id}/detail`
     )
   },
 

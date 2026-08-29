@@ -1,8 +1,11 @@
-import { ShieldCheck, Mail, Phone, Calendar, MapPin, Edit3, X, Clock, UserCheck } from "lucide-react"
+import { useEffect, useState } from "react"
+import { ShieldCheck, Mail, Phone, Calendar, MapPin, Edit3, X, Clock, UserCheck, Activity, HeartPulse } from "lucide-react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
 import { UserStatusBadge } from "./user-status-badge"
-import type { UserItem } from "../types"
+import { userManagementApi } from "../services/user-api"
+import type { UserItem, AdminMemberDetailResponse } from "../types"
 
 interface UserDetailDrawerProps {
   isOpen: boolean
@@ -12,14 +15,42 @@ interface UserDetailDrawerProps {
 }
 
 export function UserDetailDrawer({ isOpen, onClose, user, onEdit }: UserDetailDrawerProps) {
+  const [memberDetail, setMemberDetail] = useState<AdminMemberDetailResponse | null>(null)
+  const [loadingDetail, setLoadingDetail] = useState(false)
+
+  useEffect(() => {
+    if (isOpen && user?.id) {
+      setLoadingDetail(true)
+      userManagementApi
+        .getAdminMemberDetail(user.id)
+        .then((res) => {
+          setMemberDetail(res.data || null)
+        })
+        .catch(() => {
+          setMemberDetail(null)
+        })
+        .finally(() => {
+          setLoadingDetail(false)
+        })
+    } else {
+      setMemberDetail(null)
+    }
+  }, [isOpen, user?.id])
+
   if (!user && !isOpen) return null
 
   const formatDate = (val?: string | number) => {
-    if (!val) return "Not recorded"
+    if (!val) return "Chưa ghi nhận"
     try {
       const d = typeof val === "number" ? new Date(val) : new Date(val)
       if (isNaN(d.getTime())) return String(val)
-      return d.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric", hour: "2-digit", minute: "2-digit" })
+      return d.toLocaleDateString("vi-VN", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      })
     } catch {
       return String(val)
     }
@@ -90,14 +121,14 @@ export function UserDetailDrawer({ isOpen, onClose, user, onEdit }: UserDetailDr
             <h4 className="font-black text-slate-400 uppercase tracking-wider text-[11px]">Demographic Profile</h4>
             <div className="grid grid-cols-2 gap-3 font-medium">
               <div className="p-3.5 rounded-2xl border border-slate-100 bg-slate-50/40">
-                <span className="text-slate-400 block text-[11px] flex items-center gap-1.5 mb-1">
+                <span className="text-slate-400 text-[11px] flex items-center gap-1.5 mb-1">
                   <Calendar className="w-3.5 h-3.5" />
                   <span>Date of Birth</span>
                 </span>
                 <span className="font-extrabold font-mono text-slate-800 text-sm">{user?.dateOfBirth || "Not configured"}</span>
               </div>
               <div className="p-3.5 rounded-2xl border border-slate-100 bg-slate-50/40">
-                <span className="text-slate-400 block text-[11px] flex items-center gap-1.5 mb-1">
+                <span className="text-slate-400 text-[11px] flex items-center gap-1.5 mb-1">
                   <UserCheck className="w-3.5 h-3.5" />
                   <span>Gender</span>
                 </span>
@@ -105,6 +136,39 @@ export function UserDetailDrawer({ isOpen, onClose, user, onEdit }: UserDetailDr
               </div>
             </div>
           </div>
+
+          {/* Member Health Records Overview if applicable */}
+          {loadingDetail ? (
+            <div className="p-3.5 rounded-2xl border border-slate-100 bg-slate-50 text-slate-400 text-center text-xs">
+              Đang tải dữ liệu hồ sơ sức khỏe...
+            </div>
+          ) : memberDetail && (
+            <div className="space-y-3">
+              <h4 className="font-black text-slate-400 uppercase tracking-wider text-[11px] flex items-center gap-1.5">
+                <Activity className="w-3.5 h-3.5 text-blue-600" />
+                <span>Health Records Overview</span>
+              </h4>
+              <div className="p-3.5 rounded-2xl border border-slate-100 bg-blue-50/40 space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-600 font-medium">Tổng số bản ghi sức khỏe:</span>
+                  <Badge variant="secondary" className="font-bold">
+                    {memberDetail.totalHealthRecords ?? 0} bản ghi
+                  </Badge>
+                </div>
+                {memberDetail.latestHealthRecord && (
+                  <div className="pt-2 border-t border-slate-200/60 flex items-center justify-between text-[11px]">
+                    <span className="text-slate-500 flex items-center gap-1">
+                      <HeartPulse className="w-3.5 h-3.5 text-red-500" />
+                      Lần đo gần nhất:
+                    </span>
+                    <Badge variant="outline">
+                      {memberDetail.latestHealthRecord.predictionLabel || memberDetail.latestHealthRecord.status || "Đã lưu"}
+                    </Badge>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
 
           {/* Timestamps */}
           <div className="p-3.5 rounded-2xl bg-slate-50 text-slate-500 text-[11px] font-medium flex items-center justify-between">

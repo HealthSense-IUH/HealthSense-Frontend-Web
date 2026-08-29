@@ -53,3 +53,15 @@ export interface UserPageResponse {
   totalPages?: number
   hasMore?: boolean
 }
+
+export interface AdminMemberDetailResponse {
+  user: UserItem
+  latestHealthRecord?: {
+    id: string | number
+    predictionLabel?: string
+    status?: string
+    confidence?: number
+    createdAt?: string | null
+  } | null
+  totalHealthRecords?: number
+}
