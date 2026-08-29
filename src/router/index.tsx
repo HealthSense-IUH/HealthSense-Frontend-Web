@@ -6,12 +6,16 @@ import { LazyElement } from "@/components/custom/LazyElement"
 import { GuestOnlyRoute } from "@/pages/commons/GuestOnlyRoute"
 import { ProtectedRoute } from "@/pages/commons/ProtectedRoute"
 
+import { USER_ROLES } from "@/types/authentication"
+
 const MemberLayout = lazy(() => import("@/pages/member"))
 const DashboardPage = lazy(() => import("@/features/dashboard/pages/dashboard-page"))
 const WorkoutsPage = lazy(() => import("@/pages/member/workouts"))
 const AfibHistoryPage = lazy(() => import("@/pages/member/afib-history"))
 const ReportsPage = lazy(() => import("@/pages/member/reports"))
 const SleepPage = lazy(() => import("@/pages/member/sleep"))
+const CareHistoryPage = lazy(() => import("@/features/care-history/pages/care-history-page"))
+const PackageCatalogPage = lazy(() => import("@/features/care-service-packages/pages/package-catalog-page"))
 
 const ManagementPage = lazy(() => import("@/pages/admin/management-page"))
 const UserManagementPage = lazy(() => import("@/features/user-management/pages/user-management-page"))
@@ -161,41 +165,51 @@ export const router = createBrowserRouter([
           {
             index: true,
             element: (
-              <LazyElement>
-                <ManagementPage />
-              </LazyElement>
+              <ProtectedRoute allowedRoles={[USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN, USER_ROLES.CARE_COORDINATOR]}>
+                <LazyElement>
+                  <ManagementPage />
+                </LazyElement>
+              </ProtectedRoute>
             ),
           },
           {
             path: "users",
             element: (
-              <LazyElement>
-                <UserManagementPage />
-              </LazyElement>
+              <ProtectedRoute allowedRoles={[USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN]}>
+                <LazyElement>
+                  <UserManagementPage />
+                </LazyElement>
+              </ProtectedRoute>
             ),
           },
           {
             path: "packages",
             element: (
-              <LazyElement>
-                <AdminPackagesPage />
-              </LazyElement>
+              <ProtectedRoute allowedRoles={[USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN, USER_ROLES.CARE_COORDINATOR]}>
+                <LazyElement>
+                  <AdminPackagesPage />
+                </LazyElement>
+              </ProtectedRoute>
             ),
           },
           {
             path: "health-records",
             element: (
-              <LazyElement>
-                <AdminHealthRecordsPage />
-              </LazyElement>
+              <ProtectedRoute allowedRoles={[USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN, USER_ROLES.CARE_COORDINATOR]}>
+                <LazyElement>
+                  <AdminHealthRecordsPage />
+                </LazyElement>
+              </ProtectedRoute>
             ),
           },
           {
             path: "doctor/consultations",
             element: (
-              <LazyElement>
-                <DoctorSessionsPage />
-              </LazyElement>
+              <ProtectedRoute allowedRoles={[USER_ROLES.SUPER_ADMIN, USER_ROLES.DOCTOR]}>
+                <LazyElement>
+                  <DoctorSessionsPage />
+                </LazyElement>
+              </ProtectedRoute>
             ),
           },
         ],
@@ -256,6 +270,22 @@ export const router = createBrowserRouter([
             ),
           },
           {
+            path: "care-history",
+            element: (
+              <LazyElement>
+                <CareHistoryPage />
+              </LazyElement>
+            ),
+          },
+          {
+            path: "packages/catalog",
+            element: (
+              <LazyElement>
+                <PackageCatalogPage />
+              </LazyElement>
+            ),
+          },
+          {
             path: "profile",
             element: (
               <LazyElement>
@@ -266,35 +296,59 @@ export const router = createBrowserRouter([
         ],
       },
       {
-        path: "users",
+        path: "care-history",
         element: (
           <LazyElement>
-            <UserManagementPage />
+            <CareHistoryPage />
           </LazyElement>
+        ),
+      },
+      {
+        path: "packages/catalog",
+        element: (
+          <LazyElement>
+            <PackageCatalogPage />
+          </LazyElement>
+        ),
+      },
+      {
+        path: "users",
+        element: (
+          <ProtectedRoute allowedRoles={[USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN]}>
+            <LazyElement>
+              <UserManagementPage />
+            </LazyElement>
+          </ProtectedRoute>
         ),
       },
       {
         path: "packages",
         element: (
-          <LazyElement>
-            <AdminPackagesPage />
-          </LazyElement>
+          <ProtectedRoute allowedRoles={[USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN, USER_ROLES.CARE_COORDINATOR]}>
+            <LazyElement>
+              <AdminPackagesPage />
+            </LazyElement>
+          </ProtectedRoute>
         ),
       },
       {
         path: "health-records",
         element: (
-          <LazyElement>
-            <AdminHealthRecordsPage />
-          </LazyElement>
+          <ProtectedRoute allowedRoles={[USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN, USER_ROLES.CARE_COORDINATOR]}>
+            <LazyElement>
+              <AdminHealthRecordsPage />
+            </LazyElement>
+          </ProtectedRoute>
         ),
       },
       {
         path: "doctor/consultations",
         element: (
-          <LazyElement>
-            <DoctorSessionsPage />
-          </LazyElement>
+          <ProtectedRoute allowedRoles={[USER_ROLES.SUPER_ADMIN, USER_ROLES.DOCTOR]}>
+            <LazyElement>
+              <DoctorSessionsPage />
+            </LazyElement>
+          </ProtectedRoute>
         ),
       },
       {
