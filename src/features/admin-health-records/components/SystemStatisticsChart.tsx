@@ -65,7 +65,7 @@ export function SystemStatisticsChart() {
           <div className="h-[350px] flex items-center justify-center text-neutral-500">Loading statistics...</div>
         ) : data.length === 0 ? (
           <div className="h-[350px] flex items-center justify-center text-neutral-500">
-            No data available. (Lưu ý: Nếu bạn vừa tạo Mock Data, Materialized View chỉ tự cập nhật vào nửa đêm. Hãy gọi lệnh REFRESH MATERIALIZED VIEW trong Postgres để xem ngay!)
+            Không có dữ liệu thống kê nào trong khoảng thời gian đã chọn.
           </div>
         ) : (
           <div className="h-[350px] w-full mt-4">

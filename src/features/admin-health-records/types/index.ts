@@ -49,14 +49,6 @@ export type CreateHealthRecordDto = {
   hrvFeaturesJson?: string
 }
 
-export type UpdateHealthRecordDto = {
-  fileName?: string
-  status?: HealthRecordStatus
-  predictionLabel?: PredictionLabel
-  confidence?: number
-  hrvFeaturesJson?: string
-}
-
 
 export interface SystemHealthStat {
   statDate: string;

@@ -5,7 +5,6 @@ import type {
   PaginatedResponse,
   HealthRecord,
   CreateHealthRecordDto,
-  UpdateHealthRecordDto,
   SystemHealthStat,
 } from "../types"
 
@@ -38,13 +37,6 @@ export const adminHealthRecordApi = {
   createHealthRecord(payload: CreateHealthRecordDto) {
     return axiosClient.post<ApiResponse<HealthRecord>, ApiResponse<HealthRecord>>(
       "/api/admin/health-records",
-      payload
-    )
-  },
-
-  updateHealthRecord(id: string, payload: UpdateHealthRecordDto) {
-    return axiosClient.patch<ApiResponse<HealthRecord>, ApiResponse<HealthRecord>>(
-      `/api/admin/health-records/${id}`,
       payload
     )
   },
