@@ -8,6 +8,7 @@ import { motion } from "framer-motion"
 
 import { useAppShell } from "./app-shell-context"
 import { DemoRoleSwitcher } from "./demo-role-switcher"
+import { NotificationBell } from "@/features/notifications/components/notification-bell"
 import { authApi } from "@/services/authentication"
 import { useAuthStore } from "@/features/auth/auth-store"
 import { AvatarPlaceholder } from "@/components/ui/avatar"
@@ -219,11 +220,14 @@ export function Topbar() {
       {/* Left empty container to push actions to the right */}
       <div className="flex-1 relative z-10" />
 
-      {/* Right section: DEV Role Switcher, User Account Pill */}
+      {/* Right section: DEV Role Switcher, Notification Bell, User Account Pill */}
       <div className="flex items-center gap-3 relative z-10">
 
         {/* DEV ONLY: Role Switcher */}
         {import.meta.env.DEV ? <DemoRoleSwitcher /> : null}
+
+        {/* In-app Notification Bell */}
+        <NotificationBell />
 
         {/* User Account Menu Pill */}
         <Popover>
