@@ -19,14 +19,26 @@ export interface BusinessAuditEventResponse {
   domainType: BusinessDomainType
   domainId: string | number
   eventType: string
-  actorId?: number | string | null
+  actorUserId?: number | string | null
+  actorId?: number | string | null // legacy fallback
   actorRole?: string | null
   actorType: BusinessActorType
   previousState?: string | null
   newState?: string | null
   reason?: string | null
   metadataJson?: string | null
-  correctionReference?: string | null
+  correctionOfEventId?: number | string | null
+  correctionReference?: string | null // legacy fallback
+  requestId?: number | string | null
+  agreementId?: number | string | null
+  paymentId?: number | string | null
+  sessionId?: number | string | null
+  renewalId?: number | string | null
+  refundId?: number | string | null
+  healthRecordId?: number | string | null
+  memberId?: number | string | null
+  doctorId?: number | string | null
+  summaryId?: number | string | null
   occurredAt: string
 }
 

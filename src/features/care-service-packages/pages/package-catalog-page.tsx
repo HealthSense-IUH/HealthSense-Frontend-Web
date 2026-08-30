@@ -61,6 +61,8 @@ export default function PackageCatalogPage() {
 
   const getSupportPolicyLabel = (pol?: string | null) => {
     switch (pol) {
+      case "ASSIGNED_DOCTOR_SUPPORT_SCHEDULE":
+        return "Theo lịch làm việc của bác sĩ phụ trách"
       case "OFFICE_HOURS":
         return "Giờ hành chính (8h-17h)"
       case "BUSINESS_HOURS":
@@ -70,7 +72,7 @@ export default function PackageCatalogPage() {
       case "CONTINUOUS":
         return "Theo dõi liên tục 24/7"
       default:
-        return pol || "Theo lịch bác sĩ"
+        return pol || "Theo lịch làm việc của bác sĩ phụ trách"
     }
   }
 
@@ -119,81 +121,86 @@ export default function PackageCatalogPage() {
         </Card>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {packages.map((pkg) => (
-            <Card
-              key={pkg.id}
-              className="flex flex-col justify-between border hover:border-primary/50 hover:shadow-lg transition-all rounded-2xl overflow-hidden"
-            >
-              <CardHeader className="p-6 pb-4 space-y-3">
-                <div className="flex items-center justify-between gap-2">
-                  <Badge variant="secondary" className="font-semibold text-xs">
-                    {getSpecialtyLabel(pkg.specialty)}
-                  </Badge>
-                  {pkg.renewable && (
-                    <Badge variant="outline" className="text-emerald-600 border-emerald-200 bg-emerald-50 text-[10px]">
-                      Có thể gia hạn
+          {packages.map((pkg) => {
+            const includedList = pkg.includedServices || pkg.includedServiceTypes || []
+            const policyRef = pkg.termsPolicyReference || pkg.limitations
+
+            return (
+              <Card
+                key={pkg.id}
+                className="flex flex-col justify-between border hover:border-primary/50 hover:shadow-lg transition-all rounded-2xl overflow-hidden"
+              >
+                <CardHeader className="p-6 pb-4 space-y-3">
+                  <div className="flex items-center justify-between gap-2">
+                    <Badge variant="secondary" className="font-semibold text-xs">
+                      {getSpecialtyLabel(pkg.requiredSpecialty || pkg.specialty)}
                     </Badge>
+                    {pkg.renewable && (
+                      <Badge variant="outline" className="text-emerald-600 border-emerald-200 bg-emerald-50 text-[10px]">
+                        Có thể gia hạn
+                      </Badge>
+                    )}
+                  </div>
+
+                  <div>
+                    <CardTitle className="text-xl font-bold">{pkg.name}</CardTitle>
+                    <p className="text-xs font-mono text-muted-foreground mt-0.5">#{pkg.code}</p>
+                  </div>
+
+                  <div className="flex items-baseline gap-1.5 pt-1">
+                    <span className="text-3xl font-extrabold text-foreground">
+                      {formatPrice(pkg.priceAmount, pkg.currency)}
+                    </span>
+                    <span className="text-xs text-muted-foreground font-medium">/ {pkg.durationDays} ngày</span>
+                  </div>
+
+                  {(pkg.description || pkg.shortDescription) && (
+                    <CardDescription className="text-xs leading-relaxed line-clamp-3">
+                      {pkg.shortDescription || pkg.description}
+                    </CardDescription>
                   )}
-                </div>
+                </CardHeader>
 
-                <div>
-                  <CardTitle className="text-xl font-bold">{pkg.name}</CardTitle>
-                  <p className="text-xs font-mono text-muted-foreground mt-0.5">#{pkg.code}</p>
-                </div>
-
-                <div className="flex items-baseline gap-1.5 pt-1">
-                  <span className="text-3xl font-extrabold text-foreground">
-                    {formatPrice(pkg.priceAmount, pkg.currency)}
-                  </span>
-                  <span className="text-xs text-muted-foreground font-medium">/ {pkg.durationDays} ngày</span>
-                </div>
-
-                {pkg.description && (
-                  <CardDescription className="text-xs leading-relaxed line-clamp-3">
-                    {pkg.description}
-                  </CardDescription>
-                )}
-              </CardHeader>
-
-              <CardContent className="p-6 pt-0 space-y-4 text-xs">
-                <div className="p-3 rounded-xl bg-muted/40 space-y-1.5 border border-border/50">
-                  <div className="flex items-center gap-1.5 font-semibold text-foreground">
-                    <Clock className="h-3.5 w-3.5 text-primary" />
-                    Chính sách hỗ trợ:
+                <CardContent className="p-6 pt-0 space-y-4 text-xs">
+                  <div className="p-3 rounded-xl bg-muted/40 space-y-1.5 border border-border/50">
+                    <div className="flex items-center gap-1.5 font-semibold text-foreground">
+                      <Clock className="h-3.5 w-3.5 text-primary" />
+                      Chính sách hỗ trợ:
+                    </div>
+                    <p className="text-muted-foreground pl-5">{getSupportPolicyLabel(pkg.supportPolicy)}</p>
                   </div>
-                  <p className="text-muted-foreground pl-5">{getSupportPolicyLabel(pkg.supportPolicy)}</p>
-                </div>
 
-                {/* Included Services */}
-                {pkg.includedServiceTypes && pkg.includedServiceTypes.length > 0 && (
-                  <div className="space-y-1.5">
-                    <p className="font-semibold text-foreground flex items-center gap-1.5">
-                      <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" /> Dịch vụ bao gồm:
-                    </p>
-                    <ul className="space-y-1 pl-5 list-disc text-muted-foreground text-[11px]">
-                      {pkg.includedServiceTypes.map((item, idx) => (
-                        <li key={idx}>{item}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
+                  {/* Included Services */}
+                  {includedList.length > 0 && (
+                    <div className="space-y-1.5">
+                      <p className="font-semibold text-foreground flex items-center gap-1.5">
+                        <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" /> Dịch vụ bao gồm:
+                      </p>
+                      <ul className="space-y-1 pl-5 list-disc text-muted-foreground text-[11px]">
+                        {includedList.map((item, idx) => (
+                          <li key={idx}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
 
-                {/* Limitations */}
-                {pkg.limitations && (
-                  <div className="p-2.5 rounded-lg bg-amber-50/50 dark:bg-amber-950/20 border border-amber-200/50 dark:border-amber-900/50 text-[11px] text-amber-900 dark:text-amber-300 flex items-start gap-2">
-                    <Info className="h-3.5 w-3.5 shrink-0 mt-0.5" />
-                    <span>{pkg.limitations}</span>
-                  </div>
-                )}
-              </CardContent>
+                  {/* Limitations / Terms Policy */}
+                  {policyRef && (
+                    <div className="p-2.5 rounded-lg bg-amber-50/50 dark:bg-amber-950/20 border border-amber-200/50 dark:border-amber-900/50 text-[11px] text-amber-900 dark:text-amber-300 flex items-start gap-2">
+                      <Info className="h-3.5 w-3.5 shrink-0 mt-0.5" />
+                      <span>{policyRef}</span>
+                    </div>
+                  )}
+                </CardContent>
 
-              <CardFooter className="p-6 pt-0 border-t mt-4 bg-muted/10">
-                <Button onClick={() => handleRegister(pkg.id)} className="w-full font-semibold shadow-sm">
-                  Đăng ký tư vấn ngay <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </CardFooter>
-            </Card>
-          ))}
+                <CardFooter className="p-6 pt-0 border-t mt-4 bg-muted/10">
+                  <Button onClick={() => handleRegister(pkg.id)} className="w-full font-semibold shadow-sm">
+                    Đăng ký tư vấn ngay <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </CardFooter>
+              </Card>
+            )
+          })}
         </div>
       )}
     </div>

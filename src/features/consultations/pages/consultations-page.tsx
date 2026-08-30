@@ -1,9 +1,9 @@
 import { useEffect } from "react"
-import { CheckCircle2, RefreshCw, ShieldAlert, Stethoscope, XCircle } from "lucide-react"
+import { Activity, Calendar, CheckCircle2, Inbox, MessagesSquare, PlusCircle, RefreshCw, ShieldAlert, Stethoscope, XCircle } from "lucide-react"
 import { useSearchParams } from "react-router-dom"
 
 import { Button } from "@/components/ui/button"
-import { Tabs, TabsContent } from "@/components/ui/tabs"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Textarea } from "@/components/ui/textarea"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -26,13 +26,20 @@ export default function ConsultationsPage() {
   const logic = useConsultationsLogic()
   const [searchParams, setSearchParams] = useSearchParams()
 
-  const defaultTab = logic.isAdmin ? "admin-requests" : logic.isMember ? "create-request" : "sessions"
-  const activeTab = searchParams.get("tab") || defaultTab
+  const tabParam = searchParams.get("tab")
+  const defaultTab = logic.isAdmin 
+    ? "admin-requests" 
+    : logic.isMember 
+      ? (logic.requests.length > 0 ? "my-requests" : "create-request") 
+      : "sessions"
+  const activeTab = tabParam === "requests"
+    ? (logic.isAdmin ? "admin-requests" : "my-requests")
+    : (tabParam || defaultTab)
 
   useEffect(() => {
     const pkgId = searchParams.get("packageId")
     if (pkgId && logic.isMember) {
-      logic.setRequestForm((prev) => ({ ...prev, packageId: pkgId }))
+      logic.setRequestForm((prev) => (prev.packageId === pkgId ? prev : { ...prev, packageId: pkgId }))
     }
   }, [searchParams, logic.isMember, logic.setRequestForm])
 
@@ -100,6 +107,90 @@ export default function ConsultationsPage() {
         )}
 
         <Tabs value={activeTab} onValueChange={(val) => setSearchParams({ tab: val })} className="flex-1 min-w-0 flex flex-col bg-background rounded-2xl shadow-sm border border-border overflow-hidden h-full">
+          <div className="border-b border-border bg-muted/20 px-4 py-2 shrink-0 flex items-center justify-between overflow-x-auto">
+            <TabsList className="h-10 bg-muted/60 p-1 rounded-xl">
+              {logic.isMember && (
+                <>
+                  <TabsTrigger value="my-requests" className="rounded-lg text-xs font-semibold gap-1.5 px-3">
+                    <Inbox className="w-3.5 h-3.5" />
+                    <span>Yêu cầu của tôi</span>
+                    {logic.requests.length > 0 && (
+                      <span className="ml-1 px-1.5 py-0.5 rounded-full text-[10px] bg-primary/15 text-primary font-bold">
+                        {logic.requests.length}
+                      </span>
+                    )}
+                  </TabsTrigger>
+                  <TabsTrigger value="create-request" className="rounded-lg text-xs font-semibold gap-1.5 px-3">
+                    <PlusCircle className="w-3.5 h-3.5" />
+                    <span>Đăng ký tư vấn</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="sessions" className="rounded-lg text-xs font-semibold gap-1.5 px-3">
+                    <Calendar className="w-3.5 h-3.5" />
+                    <span>Phiên tư vấn</span>
+                    {logic.sessions.length > 0 && (
+                      <span className="ml-1 px-1.5 py-0.5 rounded-full text-[10px] bg-muted-foreground/15 text-foreground font-bold">
+                        {logic.sessions.length}
+                      </span>
+                    )}
+                  </TabsTrigger>
+                  <TabsTrigger value="chat" className="rounded-lg text-xs font-semibold gap-1.5 px-3">
+                    <MessagesSquare className="w-3.5 h-3.5" />
+                    <span>Trò chuyện trực tiếp</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="records" className="rounded-lg text-xs font-semibold gap-1.5 px-3">
+                    <Activity className="w-3.5 h-3.5" />
+                    <span>Hồ sơ đo đạc</span>
+                  </TabsTrigger>
+                </>
+              )}
+
+              {logic.isAdmin && (
+                <>
+                  <TabsTrigger value="admin-requests" className="rounded-lg text-xs font-semibold gap-1.5 px-3">
+                    <Inbox className="w-3.5 h-3.5" />
+                    <span>Yêu cầu tư vấn đến</span>
+                    {logic.requests.length > 0 && (
+                      <span className="ml-1 px-1.5 py-0.5 rounded-full text-[10px] bg-primary/15 text-primary font-bold">
+                        {logic.requests.length}
+                      </span>
+                    )}
+                  </TabsTrigger>
+                  <TabsTrigger value="sessions" className="rounded-lg text-xs font-semibold gap-1.5 px-3">
+                    <Calendar className="w-3.5 h-3.5" />
+                    <span>Tất cả phiên tư vấn</span>
+                    {logic.sessions.length > 0 && (
+                      <span className="ml-1 px-1.5 py-0.5 rounded-full text-[10px] bg-muted-foreground/15 text-foreground font-bold">
+                        {logic.sessions.length}
+                      </span>
+                    )}
+                  </TabsTrigger>
+                  <TabsTrigger value="create-session" className="rounded-lg text-xs font-semibold gap-1.5 px-3">
+                    <PlusCircle className="w-3.5 h-3.5" />
+                    <span>Tạo phiên trực tiếp</span>
+                  </TabsTrigger>
+                </>
+              )}
+
+              {logic.isDoctor && (
+                <>
+                  <TabsTrigger value="sessions" className="rounded-lg text-xs font-semibold gap-1.5 px-3">
+                    <Calendar className="w-3.5 h-3.5" />
+                    <span>Phiên tư vấn phụ trách</span>
+                    {logic.sessions.length > 0 && (
+                      <span className="ml-1 px-1.5 py-0.5 rounded-full text-[10px] bg-primary/15 text-primary font-bold">
+                        {logic.sessions.length}
+                      </span>
+                    )}
+                  </TabsTrigger>
+                  <TabsTrigger value="chat" className="rounded-lg text-xs font-semibold gap-1.5 px-3">
+                    <MessagesSquare className="w-3.5 h-3.5" />
+                    <span>Phòng trao đổi chuyên môn</span>
+                  </TabsTrigger>
+                </>
+              )}
+            </TabsList>
+          </div>
+
           {logic.isMember && (
           <TabsContent value="records" className="m-0 flex-1 min-h-0 overflow-y-auto p-4 sm:p-6">
             <HealthRecordsPanel records={logic.healthRecords} loading={logic.loading} onSelect={(record) => logic.setRequestForm((prev) => ({ ...prev, healthRecordId: String(record.id) }))} />
@@ -114,7 +205,7 @@ export default function ConsultationsPage() {
               packages={logic.packages}
               loading={logic.actionLoading}
               onChange={logic.setRequestForm}
-              onSubmit={logic.handleCreateRequest}
+              onSubmit={(e) => logic.handleCreateRequest(e, () => setSearchParams({ tab: "my-requests" }))}
             />
           </TabsContent>
         )}
@@ -243,16 +334,25 @@ export default function ConsultationsPage() {
                     return (
                       <div
                         key={record.id}
-                        onClick={() => {
-                          logic.setMoreInfoSelectedRecordIds(
-                            checked
-                              ? logic.moreInfoSelectedRecordIds.filter((id) => id !== idStr)
-                              : [...logic.moreInfoSelectedRecordIds, idStr]
+                        role="button"
+                        tabIndex={0}
+                        onClick={(e) => {
+                          e.preventDefault()
+                          logic.setMoreInfoSelectedRecordIds((prev) =>
+                            prev.includes(idStr) ? prev.filter((id) => id !== idStr) : [...prev, idStr]
                           )
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault()
+                            logic.setMoreInfoSelectedRecordIds((prev) =>
+                              prev.includes(idStr) ? prev.filter((id) => id !== idStr) : [...prev, idStr]
+                            )
+                          }
                         }}
                         className="flex items-center gap-2.5 p-2 rounded-lg hover:bg-muted/40 cursor-pointer text-xs select-none border border-transparent hover:border-border transition-all"
                       >
-                        <Checkbox checked={checked} className="data-[state=checked]:bg-primary" />
+                        <Checkbox checked={checked} tabIndex={-1} className="data-[state=checked]:bg-primary pointer-events-none" />
                         <span className="font-medium">#{record.id} {record.originalFileName ? `- ${record.originalFileName}` : ""}</span>
                         {record.predictionLabel && (
                           <span className="text-[10px] text-muted-foreground ml-auto">

@@ -27,11 +27,21 @@ export interface NeedsActionResponse {
   assignedRole: UserRole | string
   referenceType?: string | null
   referenceId?: string | number | null
-  claimedByUserId?: number | string | null
+  requestId?: number | string | null
+  paymentId?: number | string | null
+  sessionId?: number | string | null
+  renewalId?: number | string | null
+  refundId?: number | string | null
+  memberId?: number | string | null
+  doctorId?: number | string | null
+  claimedBy?: number | string | null
+  claimedByUserId?: number | string | null // legacy fallback
   claimedAt?: string | null
-  resolvedByUserId?: number | string | null
+  resolvedBy?: number | string | null
+  resolvedByUserId?: number | string | null // legacy fallback
   resolvedAt?: string | null
-  resolution?: string | null
+  resolutionNotes?: string | null
+  resolution?: string | null // legacy fallback
   createdAt: string
   updatedAt?: string | null
 }

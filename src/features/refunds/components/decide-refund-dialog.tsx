@@ -36,9 +36,10 @@ export function DecideRefundDialog({
 
   useEffect(() => {
     if (open && refund) {
+      const origAmount = refund.originalPaidAmount ?? refund.originalAmount ?? 0
       const defaultAmount =
         refund.recommendedAmount ??
-        (refund.recommendation === "FULL" ? refund.originalAmount : refund.originalAmount)
+        (refund.recommendation === "FULL" ? origAmount : origAmount)
       setApproved(refund.recommendation !== "NONE")
       setApprovedAmount(defaultAmount)
       setReason("")
@@ -95,6 +96,9 @@ export function DecideRefundDialog({
 
   if (!refund) return null
 
+  const origAmount = refund.originalPaidAmount ?? refund.originalAmount ?? 0
+  const coordReason = refund.reviewReason || refund.recommendationReason
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[540px]">
@@ -112,7 +116,7 @@ export function DecideRefundDialog({
               <div className="flex items-center justify-between">
                 <span className="text-slate-500 font-medium">Số tiền gốc:</span>
                 <span className="font-mono font-bold text-slate-800">
-                  {refund.originalAmount?.toLocaleString("vi-VN")} {refund.currency || "VND"}
+                  {origAmount.toLocaleString("vi-VN")} {refund.currency || "VND"}
                 </span>
               </div>
               <div className="flex items-center justify-between">
@@ -125,9 +129,9 @@ export function DecideRefundDialog({
                     : "Không hoàn"}
                 </span>
               </div>
-              {refund.recommendationReason && (
+              {coordReason && (
                 <div className="pt-2 border-t border-slate-200/60 text-[11px] text-slate-600 italic">
-                  "{refund.recommendationReason}"
+                  "{coordReason}"
                 </div>
               )}
             </div>

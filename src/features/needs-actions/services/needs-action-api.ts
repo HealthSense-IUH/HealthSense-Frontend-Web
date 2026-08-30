@@ -6,6 +6,8 @@ import type {
   ResolveNeedsActionRequest,
 } from "../types"
 
+import type { ConsultationPaymentResponse } from "@/features/consultations/types"
+
 export const needsActionApi = {
   /**
    * Discover and list role-scoped Needs Action work
@@ -65,8 +67,8 @@ export const needsActionApi = {
    */
   retryProviderCancellation(paymentId: number | string) {
     return axiosClient.post<
-      ApiResponse<void>,
-      ApiResponse<void>
+      ApiResponse<ConsultationPaymentResponse>,
+      ApiResponse<ConsultationPaymentResponse>
     >(`/api/admin/payment-reconciliation/${paymentId}/retry-cancellation`)
   },
 }

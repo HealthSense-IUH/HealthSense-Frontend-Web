@@ -181,7 +181,7 @@ export function RefundDetailDialog({
                   <div className="p-4 rounded-2xl border border-slate-100 bg-slate-50/50">
                     <span className="text-[11px] text-slate-400 font-bold block mb-1">Số tiền gốc</span>
                     <span className="text-base font-black text-slate-900 font-mono">
-                      {refund.originalAmount?.toLocaleString("vi-VN")} {refund.currency || "VND"}
+                      {(refund.originalPaidAmount ?? refund.originalAmount)?.toLocaleString("vi-VN")} {refund.currency || "VND"}
                     </span>
                   </div>
                   <div className="p-4 rounded-2xl border border-blue-100 bg-blue-50/40">
@@ -201,10 +201,10 @@ export function RefundDetailDialog({
                       {refund.recommendedAmount ? ` (${refund.recommendedAmount.toLocaleString("vi-VN")} VND)` : ""}
                     </span>
                   </div>
-                  {refund.recommendationReason && (
+                  {(refund.reviewReason || refund.recommendationReason) && (
                     <div className="p-3.5 bg-slate-50/40">
                       <span className="text-slate-400 text-[10px] uppercase font-bold block mb-1">Lý do đề xuất:</span>
-                      <p className="text-slate-700 font-medium">{refund.recommendationReason}</p>
+                      <p className="text-slate-700 font-medium">{refund.reviewReason || refund.recommendationReason}</p>
                     </div>
                   )}
                   {refund.decisionReason && (

@@ -36,25 +36,35 @@ export interface ConsultationRefundResponse {
   renewalId?: number | string | null
   sessionId?: number | string | null
   agreementId?: number | string | null
-  originalAmount: number
+  memberId?: number | string | null
+  provider?: string | null
+  originalPaidAmount?: number | null
+  originalAmount?: number // legacy fallback
   currency: string
-  refundPolicySnapshot?: string | null
+  refundPolicyReference?: string | null
+  refundPolicySnapshot?: string | null // legacy fallback
   status: ConsultationRefundStatus
   recommendation?: RefundRecommendation | null
   recommendedAmount?: number | null
-  recommendedByUserId?: number | string | null
-  recommendedAt?: string | null
-  recommendationReason?: string | null
+  reviewReason?: string | null
+  reviewedBy?: number | string | null
+  reviewedAt?: string | null
+  recommendedByUserId?: number | string | null // legacy fallback
+  recommendedAt?: string | null // legacy fallback
+  recommendationReason?: string | null // legacy fallback
   operationalContext?: string | null
   approved?: boolean | null
   approvedAmount?: number | null
-  decidedByUserId?: number | string | null
+  decidedBy?: number | string | null
+  decidedByUserId?: number | string | null // legacy fallback
   decidedAt?: string | null
   decisionReason?: string | null
   providerRefundId?: string | null
   providerResult?: string | null
-  attemptsCount?: number
-  lastAttemptAt?: string | null
+  executionAttempts?: number | null
+  attemptsCount?: number // legacy fallback
+  lastExecutionAt?: string | null
+  lastAttemptAt?: string | null // legacy fallback
   completedAt?: string | null
   createdAt: string
   updatedAt?: string | null

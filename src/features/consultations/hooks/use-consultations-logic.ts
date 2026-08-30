@@ -309,7 +309,7 @@ export function useConsultationsLogic() {
       setLoadingMoreMessages(false)
     }
   }, [selectedSession, loadingMoreMessages, hasMoreMessages, messages.length, sortedMessages])
-  async function handleCreateRequest(event: FormEvent<HTMLFormElement>) {
+  async function handleCreateRequest(event: FormEvent<HTMLFormElement>, onSuccess?: () => void) {
     event.preventDefault()
     setActionLoading(true)
     setAlert(null)
@@ -358,6 +358,9 @@ export function useConsultationsLogic() {
       })
       setAlert({ type: "success", text: "Đã gửi yêu cầu tư vấn thành công. Vui lòng chờ điều phối viên xét duyệt." })
       await loadData()
+      if (onSuccess) {
+        onSuccess()
+      }
     } catch (error) {
       setAlert({ type: "error", text: readError(error, "Không thể gửi yêu cầu tư vấn.") })
     } finally {

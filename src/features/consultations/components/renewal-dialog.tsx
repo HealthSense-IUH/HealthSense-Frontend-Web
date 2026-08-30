@@ -250,15 +250,15 @@ export function RenewalDialog({
                   </div>
 
                   <div className="text-xs text-amber-900/90 dark:text-amber-300/90 space-y-1.5 pl-7">
-                    {unresolvedRenewal.proposedEndsAt && (
+                    {(unresolvedRenewal.proposedNewEndsAt || unresolvedRenewal.proposedEndsAt) && (
                       <p>
-                        Thời hạn sau khi gia hạn: <strong>{formatDate(unresolvedRenewal.proposedEndsAt)}</strong>
+                        Thời hạn sau khi gia hạn: <strong>{formatDate(unresolvedRenewal.proposedNewEndsAt || unresolvedRenewal.proposedEndsAt)}</strong>
                       </p>
                     )}
-                    {unresolvedRenewal.packageNameSnapshot && (
+                    {(unresolvedRenewal.packageNameSnapshot || unresolvedRenewal.durationDays) && (
                       <p>
-                        Gói dịch vụ gia hạn: <strong>{unresolvedRenewal.packageNameSnapshot}</strong>
-                        {unresolvedRenewal.packagePriceSnapshot ? ` (${unresolvedRenewal.packagePriceSnapshot.toLocaleString("vi-VN")} VND)` : ""}
+                        Gói dịch vụ gia hạn: <strong>{unresolvedRenewal.packageNameSnapshot || `Gói +${unresolvedRenewal.durationDays} ngày`}</strong>
+                        {(unresolvedRenewal.packagePriceSnapshot || unresolvedRenewal.priceAmount) ? ` (${(unresolvedRenewal.packagePriceSnapshot || unresolvedRenewal.priceAmount)?.toLocaleString("vi-VN")} ${unresolvedRenewal.currency || "VND"})` : ""}
                       </p>
                     )}
                     {unresolvedRenewal.paymentDeadline && (
@@ -353,9 +353,9 @@ export function RenewalDialog({
                             <span className="font-medium">Yêu cầu #{r.id}</span>
                             <span className="text-muted-foreground font-mono">({formatDate(r.requestedAt || r.createdAt)})</span>
                           </div>
-                          {r.proposedEndsAt && (
+                          {(r.proposedNewEndsAt || r.proposedEndsAt) && (
                             <p className="text-muted-foreground">
-                              Hạn đề xuất: <strong>{formatDate(r.proposedEndsAt)}</strong>
+                              Hạn đề xuất: <strong>{formatDate(r.proposedNewEndsAt || r.proposedEndsAt)}</strong>
                             </p>
                           )}
                         </div>

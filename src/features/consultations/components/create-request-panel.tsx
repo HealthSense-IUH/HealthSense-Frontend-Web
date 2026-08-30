@@ -103,18 +103,17 @@ export function CreateRequestPanel({
               onValueChange={(value) => onChange({ ...form, packageId: value })}
             >
               <SelectTrigger className="h-11 rounded-xl">
-                <SelectValue placeholder="Chọn gói dịch vụ tư vấn phù hợp" />
+                <SelectValue placeholder="Chọn gói dịch vụ tư vấn phù hợp">
+                  {selectedPackage
+                    ? `${selectedPackage.name} (${selectedPackage.priceAmount.toLocaleString("vi-VN", { style: "currency", currency: selectedPackage.currency || "VND" })} • ${selectedPackage.durationDays} ngày)`
+                    : undefined}
+                </SelectValue>
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
                   {packages.map((pkg) => (
                     <SelectItem key={pkg.id} value={String(pkg.id)}>
-                      <div className="flex items-center justify-between w-full gap-4">
-                        <span className="font-medium">{pkg.name}</span>
-                        <span className="text-xs text-muted-foreground">
-                          {pkg.priceAmount.toLocaleString("vi-VN", { style: "currency", currency: pkg.currency || "VND" })} &bull; {pkg.durationDays} ngày
-                        </span>
-                      </div>
+                      {pkg.name} — {pkg.priceAmount.toLocaleString("vi-VN", { style: "currency", currency: pkg.currency || "VND" })} • {pkg.durationDays} ngày
                     </SelectItem>
                   ))}
                 </SelectGroup>
@@ -175,7 +174,18 @@ export function CreateRequestPanel({
                   return (
                     <div
                       key={record.id}
-                      onClick={() => toggleRecordSelection(idStr)}
+                      role="button"
+                      tabIndex={0}
+                      onClick={(e) => {
+                        e.preventDefault()
+                        toggleRecordSelection(idStr)
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault()
+                          toggleRecordSelection(idStr)
+                        }
+                      }}
                       className={`flex items-center gap-3 p-2.5 rounded-lg border cursor-pointer transition-all select-none ${
                         isChecked
                           ? "bg-primary/10 border-primary/50 shadow-2xs"
@@ -184,8 +194,8 @@ export function CreateRequestPanel({
                     >
                       <Checkbox
                         checked={isChecked}
-                        onCheckedChange={() => toggleRecordSelection(idStr)}
-                        className="data-[state=checked]:bg-primary"
+                        tabIndex={-1}
+                        className="data-[state=checked]:bg-primary pointer-events-none"
                       />
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">

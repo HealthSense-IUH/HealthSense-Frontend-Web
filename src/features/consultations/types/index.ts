@@ -9,33 +9,92 @@ export type ConsultationRequestStatus =
   | "REJECTED"
   | "CANCELLED"
   | "EXPIRED"
-  | "PENDING"
   | string
 
 export type ConsultationStatus = "SCHEDULED" | "ACTIVE" | "COMPLETED" | "CANCELLED" | string
 export type ConsultationSessionStatus = ConsultationStatus
-export type ConsultationSourceType = "REQUEST" | "ADMIN_DIRECT" | string
-export type ConsultationMessageType = "TEXT" | "IMAGE" | "FILE" | string
+export type ConsultationSourceType = "ADMIN_CREATED" | "MEMBER_REQUEST" | "SYSTEM_RECOMMENDED" | string
+export type ConsultationCompletionReason = "PERIOD_ENDED" | "NORMAL_COMPLETION" | "ADMINISTRATIVE_CANCELLATION" | string
+export type CareTerminationReason =
+  | "MEMBER_REQUESTED"
+  | "DOCTOR_UNAVAILABLE"
+  | "MEMBER_UNAVAILABLE"
+  | "ACCOUNT_SUSPENDED"
+  | "SERVICE_VIOLATION"
+  | "TECHNICAL_FAILURE"
+  | "ADMINISTRATIVE_CLOSURE"
+  | "SAFETY_OR_SCOPE_REASON"
+  | "OTHER"
+  | string
+export type CareOperationalReviewReason =
+  | "MEMBER_TERMINATION_REQUESTED"
+  | "DOCTOR_TERMINATION_REQUESTED"
+  | "MEMBER_ACCOUNT_DISABLED"
+  | "DOCTOR_ACCOUNT_DISABLED"
+  | string
+export type ConsultationMessageType = "TEXT" | "IMAGE" | "FILE" | "SYSTEM" | string
 export type ConsultationParticipantRole = "MEMBER" | "DOCTOR" | "ADMIN" | "SYSTEM" | string
 export type CareServicePackageStatus = "ACTIVE" | "INACTIVE" | "RETIRED" | string
 export type DoctorSpecialty = "CARDIOLOGY" | "INTERNAL_MEDICINE" | "GENERAL_PRACTICE" | "OTHER" | string
+export type CareServiceSupportPolicy = "ASSIGNED_DOCTOR_SUPPORT_SCHEDULE" | string
+
+export type CareServiceCode =
+  | "REMOTE_ONE_ON_ONE_CARE"
+  | "SECURE_MESSAGING"
+  | "HEALTH_RECORD_REVIEW"
+  | "AI_SCREENING_REVIEW"
+  | "CARE_MONITORING"
+  | "FINAL_CARE_SUMMARY"
+  | "EMERGENCY_CARE"
+  | "TWENTY_FOUR_SEVEN_SUPPORT"
+  | "FORMAL_DIAGNOSIS"
+  | "PRESCRIPTION"
+  | "VIDEO_CONSULTATION"
+  | string
+
+export const CARE_SERVICE_CODE_LABELS: Record<string, string> = {
+  REMOTE_ONE_ON_ONE_CARE: "Chăm sóc 1-1 từ xa",
+  SECURE_MESSAGING: "Nhắn tin bảo mật",
+  HEALTH_RECORD_REVIEW: "Đánh giá hồ sơ sức khỏe",
+  AI_SCREENING_REVIEW: "Đánh giá kết quả tầm soát AI",
+  CARE_MONITORING: "Theo dõi chỉ số sức khỏe định kỳ",
+  FINAL_CARE_SUMMARY: "Tổng kết y khoa cuối kỳ",
+  VIDEO_CONSULTATION: "Tư vấn qua video call",
+  EMERGENCY_CARE: "Cấp cứu khẩn cấp",
+  TWENTY_FOUR_SEVEN_SUPPORT: "Hỗ trợ y tế 24/7",
+  FORMAL_DIAGNOSIS: "Chẩn đoán bệnh chính thức",
+  PRESCRIPTION: "Kê đơn thuốc",
+}
+
+export const SUPPORT_POLICY_LABELS: Record<string, string> = {
+  ASSIGNED_DOCTOR_SUPPORT_SCHEDULE: "Theo lịch làm việc của bác sĩ phụ trách",
+}
+
 export type ConsultationFinalSummaryStatus = "DRAFT" | "FINALIZED" | string
+export type FinalSummaryClosureStatus = "SUMMARY_PENDING" | "SUMMARY_OVERDUE" | "SUMMARY_FINALIZED" | "ESCALATED" | string
 
 export type ConsultationPaymentStatus = "PENDING" | "PAID" | "EXPIRED" | "CANCELLED" | "FAILED" | "REQUIRES_REVIEW" | string
+export type ConsultationPaymentPurpose = "INITIAL_CARE" | "RENEWAL" | string
+export type ConsultationPaymentProvider = "PAYOS" | string
+export type PaymentProviderCancellationStatus = "NOT_REQUESTED" | "PENDING" | "SUCCEEDED" | "FAILED" | "NOT_APPLICABLE" | string
 
 export type ConsultationRenewalStatus =
   | "REQUESTED"
   | "UNDER_REVIEW"
+  | "APPROVED"
   | "PENDING_ACCEPTANCE"
   | "WAITING_PAYMENT"
   | "PAID"
+  | "APPLIED"
   | "REJECTED"
   | "CANCELLED"
   | "EXPIRED"
   | "REQUIRES_REVIEW"
   | string
 
-export type CareServiceAgreementStatus = "PENDING_ACCEPTANCE" | "ACCEPTED" | "REJECTED" | "EXPIRED" | string
+export type CareServiceAgreementStatus = "DRAFT" | "PENDING_ACCEPTANCE" | "ACCEPTED" | "CONSUMED" | "INVALIDATED" | string
+export type CareServiceAgreementType = "INITIAL_CARE" | "RENEWAL" | string
+export type CareStartRule = "IMMEDIATE_AFTER_VERIFIED_PAYMENT" | "EXTENSION_FROM_CURRENT_END" | string
 
 export interface CareServiceAgreementPackageSnapshot {
   code?: string
@@ -46,10 +105,14 @@ export interface CareServiceAgreementPackageSnapshot {
   durationDays?: number
   renewable?: boolean
   specialty?: string
+  requiredSpecialty?: DoctorSpecialty | null
   supportPolicy?: string
   limitations?: string
+  termsPolicyReference?: string | null
   includedServiceTypes?: string[]
   excludedServiceTypes?: string[]
+  includedServices?: CareServiceCode[] | null
+  excludedServices?: CareServiceCode[] | null
   maxExtensionsAllowed?: number
 }
 
@@ -70,23 +133,59 @@ export interface CareServiceAgreementMemberSnapshot {
 }
 
 export interface CareServiceAgreementResponse {
-  agreementId: string | number
-  requestId: string | number
+  id: number | string
+  agreementId?: number | string
+  requestId?: number | string | null
+  renewalId?: number | string | null
+  agreementType?: CareServiceAgreementType | string | null
+  memberId?: number | string | null
+  doctorId?: number | string | null
+  packageId?: number | string | null
+  packageFamilyId?: number | string | null
+  packageCode?: string | null
+  packageName?: string | null
+  packageVersion?: number | null
+  serviceDescription?: string | null
+  includedServices?: CareServiceCode[] | null
+  excludedServices?: CareServiceCode[] | null
+  priceAmount?: number | null
+  currency?: string | null
+  durationDays?: number | null
+  extensionStartsAt?: string | null
+  resultingEndsAt?: string | null
+  startRule?: CareStartRule | string | null
+  supportScheduleSnapshotJson?: string | null
+  supportTimezoneSnapshot?: string | null
+  supportPolicy?: CareServiceSupportPolicy | null
+  renewable?: boolean | null
+  termsPolicyReference?: string | null
+  cancellationPolicyReference?: string | null
+  refundPolicyReference?: string | null
+  emergencyLimitation?: string | null
+  aiLimitation?: string | null
+  serviceLimitation?: string | null
+  healthDataScopeDisclosure?: string | null
+  status: CareServiceAgreementStatus
+  acceptedByMember?: boolean | null
+  acceptedAt?: string | null
+  validUntil?: string | null
+  invalidatedAt?: string | null
+  invalidationReason?: string | null
+  consumedAt?: string | null
+  createdAt?: string | null
+
+  // Legacy snapshot compatibility
   packageSnapshot?: CareServiceAgreementPackageSnapshot | null
   doctorSnapshot?: CareServiceAgreementDoctorSnapshot | null
   memberSnapshot?: CareServiceAgreementMemberSnapshot | null
   limitations?: string | null
   policyRefs?: string[] | null
-  validUntil?: string | null
-  status: CareServiceAgreementStatus
-  acceptedAt?: string | null
   rejectedAt?: string | null
-  createdAt?: string | null
   updatedAt?: string | null
 }
 
 export interface AcceptCareServiceAgreementRequest {
-  agreementId: string | number
+  agreementId: number | string
   accepted: boolean
 }
 
@@ -97,6 +196,13 @@ export interface ConsultationPaymentAttemptItem {
   currency: string
   status: ConsultationPaymentStatus
   checkoutUrl?: string
+  attemptNumber?: number | null
+  paymentPurpose?: ConsultationPaymentPurpose | string | null
+  expiresAt?: string | null
+  paidAt?: string | null
+  expiredAt?: string | null
+  cancelledAt?: string | null
+  providerCancellationStatus?: PaymentProviderCancellationStatus | string | null
   createdAt?: string
   updatedAt?: string
 }
@@ -111,32 +217,56 @@ export type DayOfWeek =
   | "SUNDAY"
 
 export interface ConsultationPaymentResponse {
-  id: string
-  requestId: string | number
+  id: string | number
+  requestId?: string | number | null
+  renewalId?: string | number | null
+  paymentPurpose?: ConsultationPaymentPurpose | string | null
+  agreementId?: string | number | null
+  attemptNumber?: number | null
+  memberId?: string | number | null
+  provider?: ConsultationPaymentProvider | string | null
   orderCode: number
-  paymentLinkId: string
-  checkoutUrl: string
+  paymentLinkId?: string | null
+  checkoutUrl?: string | null
   amount: number
   currency: string
   status: ConsultationPaymentStatus
-  expiresAt: string
+  expiresAt?: string | null
+  paidAt?: string | null
+  expiredAt?: string | null
+  cancelledAt?: string | null
+  providerCancellationStatus?: PaymentProviderCancellationStatus | string | null
+  providerCancellationRequestedAt?: string | null
+  providerCancellationCompletedAt?: string | null
+  providerCancellationLastAttemptAt?: string | null
+  providerCancellationError?: string | null
+  createdAt?: string | null
+  updatedAt?: string | null
 }
 
 export interface CareServicePackage {
   id: number
+  familyId?: number | null
   code: string
+  version?: number | null
   name: string
+  shortDescription?: string | null
   description?: string | null
+  detailedDescription?: string | null
   priceAmount: number
   currency: string
   durationDays: number
   renewable: boolean
-  specialty?: DoctorSpecialty | null
-  supportPolicy?: string | null
-  limitations?: string | null
+  requiredSpecialty?: DoctorSpecialty | null
+  specialty?: DoctorSpecialty | null // legacy compatibility
+  supportPolicy?: CareServiceSupportPolicy | null
+  termsPolicyReference?: string | null
+  limitations?: string | null // legacy compatibility
   maxExtensionsAllowed?: number | null
-  includedServiceTypes?: string[] | null
-  excludedServiceTypes?: string[] | null
+  includedServices?: CareServiceCode[] | null
+  includedServiceTypes?: string[] | null // legacy compatibility
+  excludedServices?: CareServiceCode[] | null
+  excludedServiceTypes?: string[] | null // legacy compatibility
   status: CareServicePackageStatus
   createdAt?: string
   updatedAt?: string
@@ -146,29 +276,43 @@ export interface CreateCareServicePackagePayload {
   code: string
   name: string
   description?: string | null
+  shortDescription?: string | null
+  detailedDescription?: string | null
   priceAmount: number
+  currency?: string
   durationDays: number
   renewable: boolean
-  specialty?: DoctorSpecialty | null
-  supportPolicy?: string | null
-  limitations?: string | null
+  requiredSpecialty?: DoctorSpecialty | null
+  specialty?: DoctorSpecialty | null // legacy fallback
+  supportPolicy?: CareServiceSupportPolicy | null
+  termsPolicyReference?: string | null
+  limitations?: string | null // legacy fallback
   maxExtensionsAllowed?: number | null
-  includedServiceTypes?: string[] | null
-  excludedServiceTypes?: string[] | null
+  includedServices?: CareServiceCode[] | null
+  includedServiceTypes?: string[] | null // legacy fallback
+  excludedServices?: CareServiceCode[] | null
+  excludedServiceTypes?: string[] | null // legacy fallback
 }
 
 export interface UpdateCareServicePackagePayload {
   name: string
   description?: string | null
+  shortDescription?: string | null
+  detailedDescription?: string | null
   priceAmount: number
+  currency?: string
   durationDays: number
   renewable: boolean
-  specialty?: DoctorSpecialty | null
-  supportPolicy?: string | null
-  limitations?: string | null
+  requiredSpecialty?: DoctorSpecialty | null
+  specialty?: DoctorSpecialty | null // legacy fallback
+  supportPolicy?: CareServiceSupportPolicy | null
+  termsPolicyReference?: string | null
+  limitations?: string | null // legacy fallback
   maxExtensionsAllowed?: number | null
-  includedServiceTypes?: string[] | null
-  excludedServiceTypes?: string[] | null
+  includedServices?: CareServiceCode[] | null
+  includedServiceTypes?: string[] | null // legacy fallback
+  excludedServices?: CareServiceCode[] | null
+  excludedServiceTypes?: string[] | null // legacy fallback
 }
 
 export interface CareHistoryEpisodeResponse {
@@ -409,17 +553,29 @@ export interface ConsultationRenewalResponse {
   sessionId: number | string
   memberId: number | string
   doctorId: number | string
+  packageFamilyId?: number | string | null
   packageId?: number | string | null
+  packageVersion?: number | null
   packageCodeSnapshot?: string | null
   packageNameSnapshot?: string | null
   packagePriceSnapshot?: number | null
   packageDurationDaysSnapshot?: number | null
+  durationDays?: number | null
+  priceAmount?: number | null
+  currency?: string | null
+  supportScheduleSnapshotJson?: string | null
+  supportTimezoneSnapshot?: string | null
   status: ConsultationRenewalStatus
   previousEndsAt?: string | null
-  proposedEndsAt?: string | null
+  proposedNewEndsAt?: string | null
+  proposedEndsAt?: string | null // legacy compatibility
+  agreementId?: number | string | null
+  successfulPaymentId?: number | string | null
   requestedAt?: string | null
+  reviewedBy?: number | string | null
+  reviewedByUserId?: number | string | null // legacy compatibility
+  reviewStartedAt?: string | null
   reviewedAt?: string | null
-  reviewedByUserId?: number | string | null
   rejectionReason?: string | null
   paymentDeadline?: string | null
   appliedAt?: string | null
@@ -441,17 +597,61 @@ export interface SessionExtensionResponse {
   id: number | string
   sessionId: number | string
   renewalId?: number | string | null
+  agreementId?: number | string | null
+  paymentId?: number | string | null
   previousEndsAt: string
   newEndsAt: string
+  durationDays?: number | null
+  packageId?: number | string | null
+  packageVersion?: number | null
   packageCodeSnapshot?: string | null
   packageNameSnapshot?: string | null
   packagePriceSnapshot?: number | null
+  priceAmount?: number | null
+  currency?: string | null
+  supportScheduleSnapshotJson?: string | null
+  supportTimezoneSnapshot?: string | null
   appliedAt: string
   createdAt?: string | null
 }
 
 export interface CloseConsultationPayload {
   closeReason: string
+  terminationReason?: CareTerminationReason | null
+  meaningfulCareOccurred?: boolean | null
+}
+
+export interface RequestSessionTerminationRequest {
+  reason: CareTerminationReason
+  details: string
+}
+
+export interface ConsultationMoreInfoCycleResponse {
+  id: number | string
+  requestedItemsCategory?: string | null
+  coordinatorMessage?: string | null
+  requestedBy?: number | string | null
+  requestedAt?: string | null
+  memberResponse?: string | null
+  responseHealthRecordIds?: (number | string)[] | null
+  responseHealthRecords?: HealthRecordItem[] | null
+  respondedAt?: string | null
+}
+
+export interface UserSummaryResponse {
+  userId: number | string
+  email: string
+  displayName: string
+  phone?: string | null
+}
+
+export interface HealthRecordSummaryResponse {
+  recordId: number | string
+  status: string
+  predictionLabel?: string | null
+  confidence?: number | null
+  createdAt: string
+  updatedAt?: string | null
 }
 
 export interface SendConsultationMessagePayload {

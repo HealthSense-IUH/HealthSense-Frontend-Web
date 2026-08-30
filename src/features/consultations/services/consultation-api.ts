@@ -43,6 +43,7 @@ import type {
   CreateFinalSummaryAddendumPayload,
   FinalSummaryAddendumResponse,
   CareHistoryEpisodeResponse,
+  RequestSessionTerminationRequest,
 } from "../types"
 
 type PageParams = {
@@ -359,8 +360,14 @@ export const consultationApi = {
     )
   },
   reviewDoctorScopedRecordAttention(sessionId: string | number, recordId: string | number) {
-    return axiosClient.patch<ApiResponse<void>, ApiResponse<void>>(
+    return axiosClient.patch<ApiResponse<DoctorScopedHealthRecordResponse>, ApiResponse<DoctorScopedHealthRecordResponse>>(
       `/api/doctor/consultation-sessions/${sessionId}/health-records/${recordId}/attention/review`
+    )
+  },
+  requestSessionTermination(sessionId: string | number, payload: RequestSessionTerminationRequest) {
+    return axiosClient.post<ApiResponse<ConsultationSessionItem>, ApiResponse<ConsultationSessionItem>>(
+      `/api/consultation-sessions/${sessionId}/termination-request`,
+      payload
     )
   },
   getDoctorContinuitySummaries(sessionId: string | number) {

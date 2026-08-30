@@ -353,12 +353,23 @@ export function DoctorFinalSummaryTab({ sessionId, sessionStatus }: DoctorFinalS
                   return (
                     <div
                       key={item.record.id}
-                      onClick={() => toggleRecordSelection(item.record.id)}
+                      role="button"
+                      tabIndex={0}
+                      onClick={(e) => {
+                        e.preventDefault()
+                        toggleRecordSelection(item.record.id)
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault()
+                          toggleRecordSelection(item.record.id)
+                        }
+                      }}
                       className={`flex items-center gap-2.5 p-2 rounded-lg border text-xs cursor-pointer transition-colors ${
                         isChecked ? "bg-primary/5 border-primary" : "bg-card hover:bg-muted/30"
                       }`}
                     >
-                      <Checkbox checked={isChecked} onCheckedChange={() => toggleRecordSelection(item.record.id)} />
+                      <Checkbox checked={isChecked} tabIndex={-1} className="pointer-events-none" />
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-1.5 truncate font-medium">
                           <Activity className="h-3 w-3 shrink-0 text-muted-foreground" />

@@ -222,15 +222,15 @@ export function AdminRenewalsDialog({
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-muted-foreground">
-                          {r.proposedEndsAt && (
+                          {(r.proposedNewEndsAt || r.proposedEndsAt) && (
                             <div>
-                              Thời hạn đề xuất: <strong className="text-foreground">{formatDate(r.proposedEndsAt)}</strong>
+                              Thời hạn đề xuất: <strong className="text-foreground">{formatDate(r.proposedNewEndsAt || r.proposedEndsAt)}</strong>
                             </div>
                           )}
-                          {r.packageNameSnapshot && (
+                          {(r.packageNameSnapshot || r.durationDays) && (
                             <div>
-                              Gói gia hạn: <strong className="text-foreground">{r.packageNameSnapshot}</strong>
-                              {r.packagePriceSnapshot ? ` (${r.packagePriceSnapshot.toLocaleString("vi-VN")} VND)` : ""}
+                              Gói gia hạn: <strong className="text-foreground">{r.packageNameSnapshot || `Gói +${r.durationDays} ngày`}</strong>
+                              {(r.packagePriceSnapshot || r.priceAmount) ? ` (${(r.packagePriceSnapshot || r.priceAmount)?.toLocaleString("vi-VN")} ${r.currency || "VND"})` : ""}
                             </div>
                           )}
                           {r.paymentDeadline && (

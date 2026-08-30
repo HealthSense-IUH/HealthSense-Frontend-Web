@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { useToast } from "@/hooks/use-toast"
+import { Check, Plus, X } from "lucide-react"
 
 import {
   Dialog,
@@ -14,11 +15,18 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Switch } from "@/components/ui/switch"
+import { Badge } from "@/components/ui/badge"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 import { consultationApi } from "@/features/consultations/services/consultation-api"
-import type { CareServicePackage, DoctorSpecialty, UpdateCareServicePackagePayload } from "@/features/consultations/types"
+import {
+  CARE_SERVICE_CODE_LABELS,
+  type CareServiceCode,
+  type CareServicePackage,
+  type DoctorSpecialty,
+  type UpdateCareServicePackagePayload,
+} from "@/features/consultations/types"
 
 interface EditPackageDialogProps {
   pkg: CareServicePackage
@@ -27,48 +35,89 @@ interface EditPackageDialogProps {
   onSuccess: () => void
 }
 
+const ALL_CARE_SERVICE_CODES: CareServiceCode[] = [
+  "REMOTE_ONE_ON_ONE_CARE",
+  "SECURE_MESSAGING",
+  "HEALTH_RECORD_REVIEW",
+  "AI_SCREENING_REVIEW",
+  "CARE_MONITORING",
+  "FINAL_CARE_SUMMARY",
+  "VIDEO_CONSULTATION",
+  "EMERGENCY_CARE",
+  "TWENTY_FOUR_SEVEN_SUPPORT",
+  "FORMAL_DIAGNOSIS",
+  "PRESCRIPTION",
+]
+
 export function EditPackageDialog({ pkg, open, onOpenChange, onSuccess }: EditPackageDialogProps) {
   const { toast } = useToast()
   const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState<UpdateCareServicePackagePayload>({
     name: pkg.name,
     description: pkg.description || "",
+    shortDescription: pkg.shortDescription || "",
+    detailedDescription: pkg.detailedDescription || "",
     priceAmount: pkg.priceAmount,
+    currency: pkg.currency || "VND",
     durationDays: pkg.durationDays,
     renewable: pkg.renewable,
-    specialty: pkg.specialty || "CARDIOLOGY",
-    supportPolicy: pkg.supportPolicy || "OFFICE_HOURS",
-    limitations: pkg.limitations || "",
-    maxExtensionsAllowed: pkg.maxExtensionsAllowed ?? 3,
-    includedServiceTypes: pkg.includedServiceTypes || [],
-    excludedServiceTypes: pkg.excludedServiceTypes || [],
+    requiredSpecialty: pkg.requiredSpecialty || pkg.specialty || "CARDIOLOGY",
+    supportPolicy: "ASSIGNED_DOCTOR_SUPPORT_SCHEDULE",
+    termsPolicyReference: pkg.termsPolicyReference || pkg.limitations || "",
+    includedServices: pkg.includedServices || (pkg.includedServiceTypes as CareServiceCode[]) || [],
+    excludedServices: pkg.excludedServices || (pkg.excludedServiceTypes as CareServiceCode[]) || [],
   })
-
-  const [includedText, setIncludedText] = useState((pkg.includedServiceTypes || []).join("\n"))
-  const [excludedText, setExcludedText] = useState((pkg.excludedServiceTypes || []).join("\n"))
 
   useEffect(() => {
     if (open) {
       setFormData({
         name: pkg.name,
         description: pkg.description || "",
+        shortDescription: pkg.shortDescription || "",
+        detailedDescription: pkg.detailedDescription || "",
         priceAmount: pkg.priceAmount,
+        currency: pkg.currency || "VND",
         durationDays: pkg.durationDays,
         renewable: pkg.renewable,
-        specialty: pkg.specialty || "CARDIOLOGY",
-        supportPolicy: pkg.supportPolicy || "OFFICE_HOURS",
-        limitations: pkg.limitations || "",
-        maxExtensionsAllowed: pkg.maxExtensionsAllowed ?? 3,
-        includedServiceTypes: pkg.includedServiceTypes || [],
-        excludedServiceTypes: pkg.excludedServiceTypes || [],
+        requiredSpecialty: pkg.requiredSpecialty || pkg.specialty || "CARDIOLOGY",
+        supportPolicy: "ASSIGNED_DOCTOR_SUPPORT_SCHEDULE",
+        termsPolicyReference: pkg.termsPolicyReference || pkg.limitations || "",
+        includedServices: pkg.includedServices || (pkg.includedServiceTypes as CareServiceCode[]) || [],
+        excludedServices: pkg.excludedServices || (pkg.excludedServiceTypes as CareServiceCode[]) || [],
       })
-      setIncludedText((pkg.includedServiceTypes || []).join("\n"))
-      setExcludedText((pkg.excludedServiceTypes || []).join("\n"))
     }
   }, [open, pkg])
 
   const handleChange = (field: keyof UpdateCareServicePackagePayload, value: unknown) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
+  }
+
+  const toggleIncludedService = (code: CareServiceCode) => {
+    setFormData((prev) => {
+      const current = prev.includedServices || []
+      const isIncluded = current.includes(code)
+      const nextIncluded = isIncluded ? current.filter((c) => c !== code) : [...current, code]
+      const nextExcluded = (prev.excludedServices || []).filter((c) => c !== code)
+      return {
+        ...prev,
+        includedServices: nextIncluded,
+        excludedServices: nextExcluded,
+      }
+    })
+  }
+
+  const toggleExcludedService = (code: CareServiceCode) => {
+    setFormData((prev) => {
+      const current = prev.excludedServices || []
+      const isExcluded = current.includes(code)
+      const nextExcluded = isExcluded ? current.filter((c) => c !== code) : [...current, code]
+      const nextIncluded = (prev.includedServices || []).filter((c) => c !== code)
+      return {
+        ...prev,
+        includedServices: nextIncluded,
+        excludedServices: nextExcluded,
+      }
+    })
   }
 
   const isRetired = pkg.status === "RETIRED"
@@ -91,25 +140,22 @@ export function EditPackageDialog({ pkg, open, onOpenChange, onSuccess }: EditPa
       return
     }
 
-    const parsedIncluded = includedText
-      .split("\n")
-      .map((s) => s.trim())
-      .filter(Boolean)
-
-    const parsedExcluded = excludedText
-      .split("\n")
-      .map((s) => s.trim())
-      .filter(Boolean)
-
     setLoading(true)
     try {
       await consultationApi.updateCareServicePackage(pkg.id, {
-        ...formData,
         name: formData.name.trim(),
         description: formData.description?.trim() || null,
-        limitations: formData.limitations?.trim() || null,
-        includedServiceTypes: parsedIncluded.length > 0 ? parsedIncluded : null,
-        excludedServiceTypes: parsedExcluded.length > 0 ? parsedExcluded : null,
+        shortDescription: formData.shortDescription?.trim() || null,
+        detailedDescription: formData.detailedDescription?.trim() || null,
+        priceAmount: Number(formData.priceAmount),
+        currency: pkg.currency || "VND",
+        durationDays: Number(formData.durationDays),
+        renewable: Boolean(formData.renewable),
+        requiredSpecialty: (formData.requiredSpecialty || "CARDIOLOGY") as DoctorSpecialty,
+        supportPolicy: "ASSIGNED_DOCTOR_SUPPORT_SCHEDULE",
+        termsPolicyReference: formData.termsPolicyReference?.trim() || null,
+        includedServices: (formData.includedServices || []).length > 0 ? formData.includedServices : null,
+        excludedServices: (formData.excludedServices || []).length > 0 ? formData.excludedServices : null,
       })
       toast({
         title: "Success",
@@ -129,9 +175,12 @@ export function EditPackageDialog({ pkg, open, onOpenChange, onSuccess }: EditPa
     }
   }
 
+  const includedSet = new Set(formData.includedServices || [])
+  const excludedSet = new Set(formData.excludedServices || [])
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[650px] max-h-[90vh] flex flex-col p-0 overflow-hidden">
+      <DialogContent className="sm:max-w-[700px] max-h-[90vh] flex flex-col p-0 overflow-hidden">
         <form onSubmit={handleSubmit} className="flex flex-col min-h-0">
           <DialogHeader className="p-6 pb-4 border-b">
             <DialogTitle>Chỉnh sửa Gói Dịch vụ (V3)</DialogTitle>
@@ -148,7 +197,7 @@ export function EditPackageDialog({ pkg, open, onOpenChange, onSuccess }: EditPa
             </Alert>
           )}
 
-          <div className="flex-1 overflow-y-auto p-6 space-y-4">
+          <div className="flex-1 overflow-y-auto p-6 space-y-5">
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
                 <Label>Mã gói (Code)</Label>
@@ -161,7 +210,7 @@ export function EditPackageDialog({ pkg, open, onOpenChange, onSuccess }: EditPa
             </div>
 
             <div className="grid gap-2">
-              <Label htmlFor="edit-name">Tên gói (Name)</Label>
+              <Label htmlFor="edit-name">Tên gói (Name) *</Label>
               <Input
                 id="edit-name"
                 value={formData.name}
@@ -172,10 +221,10 @@ export function EditPackageDialog({ pkg, open, onOpenChange, onSuccess }: EditPa
 
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
-                <Label>Chuyên khoa (Specialty)</Label>
+                <Label>Chuyên khoa yêu cầu (Required Specialty)</Label>
                 <Select
-                  value={formData.specialty || "CARDIOLOGY"}
-                  onValueChange={(v) => handleChange("specialty", v as DoctorSpecialty)}
+                  value={formData.requiredSpecialty || "CARDIOLOGY"}
+                  onValueChange={(v) => handleChange("requiredSpecialty", v as DoctorSpecialty)}
                   disabled={isDisabled}
                 >
                   <SelectTrigger>
@@ -193,18 +242,16 @@ export function EditPackageDialog({ pkg, open, onOpenChange, onSuccess }: EditPa
               <div className="grid gap-2">
                 <Label>Chính sách hỗ trợ (Support Policy)</Label>
                 <Select
-                  value={formData.supportPolicy || "OFFICE_HOURS"}
-                  onValueChange={(v) => handleChange("supportPolicy", v)}
-                  disabled={isDisabled}
+                  value="ASSIGNED_DOCTOR_SUPPORT_SCHEDULE"
+                  disabled
                 >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Chọn chính sách hỗ trợ" />
+                  <SelectTrigger className="bg-muted">
+                    <SelectValue placeholder="Theo lịch làm việc của bác sĩ phụ trách" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="OFFICE_HOURS">Giờ hành chính (Office Hours)</SelectItem>
-                    <SelectItem value="BUSINESS_HOURS">Giờ mở rộng (Business Hours)</SelectItem>
-                    <SelectItem value="EXTENDED">Mở rộng & Cuối tuần (Extended)</SelectItem>
-                    <SelectItem value="CONTINUOUS">Liên tục 24/7 (Continuous)</SelectItem>
+                    <SelectItem value="ASSIGNED_DOCTOR_SUPPORT_SCHEDULE">
+                      Theo lịch làm việc của bác sĩ phụ trách
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -217,12 +264,13 @@ export function EditPackageDialog({ pkg, open, onOpenChange, onSuccess }: EditPa
                 value={formData.description || ""}
                 onChange={(e) => handleChange("description", e.target.value)}
                 disabled={isDisabled}
+                rows={2}
               />
             </div>
 
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
-                <Label htmlFor="edit-priceAmount">Giá ({pkg.currency || "VND"})</Label>
+                <Label htmlFor="edit-priceAmount">Giá ({pkg.currency || "VND"}) *</Label>
                 <Input
                   id="edit-priceAmount"
                   type="number"
@@ -233,7 +281,7 @@ export function EditPackageDialog({ pkg, open, onOpenChange, onSuccess }: EditPa
                 />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="edit-durationDays">Thời hạn (Ngày)</Label>
+                <Label htmlFor="edit-durationDays">Thời hạn (Ngày) *</Label>
                 <Input
                   id="edit-durationDays"
                   type="number"
@@ -243,50 +291,80 @@ export function EditPackageDialog({ pkg, open, onOpenChange, onSuccess }: EditPa
                   disabled={isDisabled}
                 />
               </div>
-              <div className="grid gap-2">
-                <Label htmlFor="edit-maxExtensions">Số lần gia hạn tối đa</Label>
-                <Input
-                  id="edit-maxExtensions"
-                  type="number"
-                  min="0"
-                  value={formData.maxExtensionsAllowed ?? 3}
-                  onChange={(e) => handleChange("maxExtensionsAllowed", Number(e.target.value))}
-                  disabled={isDisabled}
-                />
+            </div>
+
+            {/* Included Services Selector */}
+            <div className="space-y-2 border rounded-xl p-4 bg-emerald-50/30 dark:bg-emerald-950/10 border-emerald-200/50">
+              <div className="flex items-center justify-between">
+                <Label className="text-sm font-semibold text-emerald-900 dark:text-emerald-300">
+                  Dịch vụ bao gồm (Included Services)
+                </Label>
+                <span className="text-xs text-muted-foreground">
+                  Đã chọn {includedSet.size} dịch vụ
+                </span>
+              </div>
+              <div className="flex flex-wrap gap-2 pt-1">
+                {ALL_CARE_SERVICE_CODES.map((code) => {
+                  const isIncluded = includedSet.has(code)
+                  return (
+                    <Badge
+                      key={code}
+                      variant={isIncluded ? "default" : "outline"}
+                      className={`cursor-pointer transition-all ${
+                        isIncluded
+                          ? "bg-emerald-600 hover:bg-emerald-700 text-white"
+                          : "bg-background hover:bg-muted text-muted-foreground"
+                      } ${isDisabled ? "pointer-events-none opacity-60" : ""}`}
+                      onClick={() => !isDisabled && toggleIncludedService(code)}
+                    >
+                      {isIncluded ? <Check className="w-3 h-3 mr-1" /> : <Plus className="w-3 h-3 mr-1" />}
+                      {CARE_SERVICE_CODE_LABELS[code] || code}
+                    </Badge>
+                  )
+                })}
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div className="grid gap-2">
-                <Label htmlFor="edit-includedServices">Dịch vụ bao gồm (Mỗi dòng 1 dịch vụ)</Label>
-                <Textarea
-                  id="edit-includedServices"
-                  value={includedText}
-                  onChange={(e) => setIncludedText(e.target.value)}
-                  disabled={isDisabled}
-                  rows={3}
-                />
+            {/* Excluded Services Selector */}
+            <div className="space-y-2 border rounded-xl p-4 bg-red-50/30 dark:bg-red-950/10 border-red-200/50">
+              <div className="flex items-center justify-between">
+                <Label className="text-sm font-semibold text-red-900 dark:text-red-300">
+                  Dịch vụ không bao gồm (Excluded Services)
+                </Label>
+                <span className="text-xs text-muted-foreground">
+                  Đã chọn {excludedSet.size} dịch vụ
+                </span>
               </div>
-              <div className="grid gap-2">
-                <Label htmlFor="edit-excludedServices">Dịch vụ không bao gồm (Mỗi dòng 1 dịch vụ)</Label>
-                <Textarea
-                  id="edit-excludedServices"
-                  value={excludedText}
-                  onChange={(e) => setExcludedText(e.target.value)}
-                  disabled={isDisabled}
-                  rows={3}
-                />
+              <div className="flex flex-wrap gap-2 pt-1">
+                {ALL_CARE_SERVICE_CODES.map((code) => {
+                  const isExcluded = excludedSet.has(code)
+                  return (
+                    <Badge
+                      key={code}
+                      variant={isExcluded ? "destructive" : "outline"}
+                      className={`cursor-pointer transition-all ${
+                        isExcluded
+                          ? "bg-red-600 hover:bg-red-700 text-white"
+                          : "bg-background hover:bg-muted text-muted-foreground"
+                      } ${isDisabled ? "pointer-events-none opacity-60" : ""}`}
+                      onClick={() => !isDisabled && toggleExcludedService(code)}
+                    >
+                      {isExcluded ? <X className="w-3 h-3 mr-1" /> : <Plus className="w-3 h-3 mr-1" />}
+                      {CARE_SERVICE_CODE_LABELS[code] || code}
+                    </Badge>
+                  )
+                })}
               </div>
             </div>
 
             <div className="grid gap-2">
-              <Label htmlFor="edit-limitations">Giới hạn & Lưu ý y tế (Limitations)</Label>
-              <Textarea
-                id="edit-limitations"
-                value={formData.limitations || ""}
-                onChange={(e) => handleChange("limitations", e.target.value)}
+              <Label htmlFor="edit-termsPolicyReference">Tham chiếu điều khoản & giới hạn (Terms Policy Reference)</Label>
+              <Input
+                id="edit-termsPolicyReference"
+                value={formData.termsPolicyReference || ""}
+                onChange={(e) => handleChange("termsPolicyReference", e.target.value)}
                 disabled={isDisabled}
-                rows={2}
+                maxLength={255}
               />
             </div>
 

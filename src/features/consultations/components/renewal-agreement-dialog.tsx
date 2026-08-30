@@ -65,10 +65,13 @@ export function RenewalAgreementDialog({
   const handleAccept = async () => {
     if (!renewalId || !agreement || !acceptedTerms) return
 
+    const agreementId = agreement.id || agreement.agreementId
+    if (!agreementId) return
+
     setSubmitting(true)
     try {
       await consultationApi.acceptRenewalAgreement(renewalId, {
-        agreementId: agreement.agreementId,
+        agreementId: Number(agreementId),
         accepted: true,
       })
       toast({
@@ -88,9 +91,21 @@ export function RenewalAgreementDialog({
     }
   }
 
-  const pkg = agreement?.packageSnapshot
-  const doctor = agreement?.doctorSnapshot
-  const member = agreement?.memberSnapshot
+  const pkgName = agreement?.packageName || agreement?.packageSnapshot?.name || "Gói gia hạn chăm sóc"
+  const pkgCode = agreement?.packageCode || agreement?.packageSnapshot?.code || ""
+  const priceAmount = agreement?.priceAmount ?? agreement?.packageSnapshot?.priceAmount ?? 0
+  const currency = agreement?.currency || agreement?.packageSnapshot?.currency || "VND"
+  const durationDays = agreement?.durationDays ?? agreement?.packageSnapshot?.durationDays ?? 30
+  const description = agreement?.serviceDescription || agreement?.packageSnapshot?.description || ""
+  const termsPolicy = agreement?.termsPolicyReference || agreement?.packageSnapshot?.termsPolicyReference || agreement?.limitations || agreement?.packageSnapshot?.limitations || ""
+  const supportPolicy = agreement?.supportPolicy || agreement?.packageSnapshot?.supportPolicy || "ASSIGNED_DOCTOR_SUPPORT_SCHEDULE"
+  const includedList = agreement?.includedServices || agreement?.packageSnapshot?.includedServices || agreement?.packageSnapshot?.includedServiceTypes || []
+  const excludedList = agreement?.excludedServices || agreement?.packageSnapshot?.excludedServices || agreement?.packageSnapshot?.excludedServiceTypes || []
+  const supportSchedule = agreement?.supportScheduleSnapshotJson || agreement?.doctorSnapshot?.declaredSupportSchedule
+  const supportTimezone = agreement?.supportTimezoneSnapshot || agreement?.doctorSnapshot?.timezone || "Asia/Ho_Chi_Minh"
+  const doctorName = agreement?.doctorSnapshot?.displayName || "Bác sĩ phụ trách"
+  const doctorEmail = agreement?.doctorSnapshot?.email
+  const doctorSpecialty = agreement?.doctorSnapshot?.specialty
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -104,7 +119,7 @@ export function RenewalAgreementDialog({
               <div>
                 <DialogTitle className="text-xl font-bold">Thỏa thuận Gia hạn Dịch vụ Chăm sóc</DialogTitle>
                 <DialogDescription>
-                  Renewal Care Service Agreement &bull; Yêu cầu gia hạn #{renewalId} {member?.displayName ? `(${member.displayName})` : ""}
+                  Renewal Care Service Agreement &bull; Yêu cầu gia hạn #{renewalId}
                 </DialogDescription>
               </div>
             </div>
@@ -143,25 +158,21 @@ export function RenewalAgreementDialog({
                     <Stethoscope className="w-4 h-4 text-primary" />
                     Bác sĩ tiếp tục đồng hành
                   </div>
-                  {doctor ? (
-                    <div className="space-y-1 text-sm">
-                      <div className="font-medium text-base text-foreground">{doctor.displayName || "Bác sĩ phụ trách"}</div>
-                      <div className="text-xs text-muted-foreground">{doctor.email}</div>
-                      {doctor.specialty && (
-                        <div className="text-xs pt-1">
-                          <span className="text-muted-foreground">Chuyên khoa:</span>{" "}
-                          <span className="font-medium text-foreground">{doctor.specialty}</span>
-                        </div>
-                      )}
-                      {doctor.declaredSupportSchedule && (
-                        <div className="text-xs pt-1 bg-muted/30 p-2 rounded-md font-mono text-muted-foreground">
-                          Khung giờ hỗ trợ: {doctor.declaredSupportSchedule} ({doctor.timezone || "Asia/Ho_Chi_Minh"})
-                        </div>
-                      )}
-                    </div>
-                  ) : (
-                    <div className="text-sm text-muted-foreground italic">Bác sĩ hiện tại của phiên chăm sóc</div>
-                  )}
+                  <div className="space-y-1 text-sm">
+                    <div className="font-medium text-base text-foreground">{doctorName}</div>
+                    {doctorEmail && <div className="text-xs text-muted-foreground">{doctorEmail}</div>}
+                    {doctorSpecialty && (
+                      <div className="text-xs pt-1">
+                        <span className="text-muted-foreground">Chuyên khoa:</span>{" "}
+                        <span className="font-medium text-foreground">{doctorSpecialty}</span>
+                      </div>
+                    )}
+                    {supportSchedule && (
+                      <div className="text-xs pt-1 bg-muted/30 p-2 rounded-md font-mono text-muted-foreground">
+                        Khung giờ hỗ trợ: {supportSchedule} ({supportTimezone})
+                      </div>
+                    )}
+                  </div>
                 </div>
 
                 {/* Service Package Card */}
@@ -170,21 +181,17 @@ export function RenewalAgreementDialog({
                     <FileText className="w-4 h-4 text-primary" />
                     Gói dịch vụ gia hạn
                   </div>
-                  {pkg ? (
-                    <div className="space-y-1 text-sm">
-                      <div className="font-medium text-base text-foreground">{pkg.name}</div>
-                      <div className="text-xs text-muted-foreground">Mã gói: {pkg.code}</div>
-                      <div className="pt-1 text-base font-bold text-primary">
-                        {pkg.priceAmount ? pkg.priceAmount.toLocaleString("vi-VN", { style: "currency", currency: pkg.currency || "VND" }) : "Miễn phí"}{" "}
-                        <span className="text-xs font-normal text-muted-foreground">/ +{pkg.durationDays} ngày đồng hành</span>
-                      </div>
-                      {pkg.description && (
-                        <p className="text-xs text-muted-foreground pt-1 line-clamp-2">{pkg.description}</p>
-                      )}
+                  <div className="space-y-1 text-sm">
+                    <div className="font-medium text-base text-foreground">{pkgName}</div>
+                    {pkgCode && <div className="text-xs text-muted-foreground">Mã gói: {pkgCode}</div>}
+                    <div className="pt-1 text-base font-bold text-primary">
+                      {priceAmount > 0 ? priceAmount.toLocaleString("vi-VN", { style: "currency", currency }) : "Miễn phí"}{" "}
+                      <span className="text-xs font-normal text-muted-foreground">/ +{durationDays} ngày đồng hành</span>
                     </div>
-                  ) : (
-                    <div className="text-sm text-muted-foreground">Thông tin gói dịch vụ</div>
-                  )}
+                    {description && (
+                      <p className="text-xs text-muted-foreground pt-1 line-clamp-2">{description}</p>
+                    )}
+                  </div>
                 </div>
               </div>
 
@@ -195,27 +202,33 @@ export function RenewalAgreementDialog({
                   Điều khoản gia hạn & Phạm vi chăm sóc
                 </div>
                 
-                {pkg?.limitations && (
+                {termsPolicy && (
                   <div>
-                    <strong className="text-foreground">Giới hạn dịch vụ:</strong> {pkg.limitations}
+                    <strong className="text-foreground">Tham chiếu điều khoản & giới hạn:</strong> {termsPolicy}
                   </div>
                 )}
 
-                {pkg?.supportPolicy && (
+                {agreement?.emergencyLimitation && (
                   <div>
-                    <strong className="text-foreground">Chính sách hỗ trợ:</strong> {pkg.supportPolicy}
+                    <strong className="text-foreground">Giới hạn cấp cứu:</strong> {agreement.emergencyLimitation}
                   </div>
                 )}
 
-                {Array.isArray(pkg?.includedServiceTypes) && pkg.includedServiceTypes.length > 0 && (
+                {supportPolicy && (
                   <div>
-                    <strong className="text-foreground">Dịch vụ bao gồm:</strong> {pkg.includedServiceTypes.join(", ")}
+                    <strong className="text-foreground">Chính sách hỗ trợ:</strong> {supportPolicy === "ASSIGNED_DOCTOR_SUPPORT_SCHEDULE" ? "Theo lịch làm việc của bác sĩ phụ trách" : supportPolicy}
                   </div>
                 )}
 
-                {Array.isArray(pkg?.excludedServiceTypes) && pkg.excludedServiceTypes.length > 0 && (
+                {includedList.length > 0 && (
                   <div>
-                    <strong className="text-foreground">Dịch vụ loại trừ:</strong> {pkg.excludedServiceTypes.join(", ")}
+                    <strong className="text-foreground">Dịch vụ bao gồm:</strong> {includedList.join(", ")}
+                  </div>
+                )}
+
+                {excludedList.length > 0 && (
+                  <div>
+                    <strong className="text-foreground">Dịch vụ loại trừ:</strong> {excludedList.join(", ")}
                   </div>
                 )}
 

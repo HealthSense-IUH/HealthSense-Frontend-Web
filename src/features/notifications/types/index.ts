@@ -27,12 +27,14 @@ export type NotificationDeliveryStatus = "AVAILABLE" | "FAILED" | string
 
 export interface NotificationResponse {
   id: number | string
+  userId?: number | string
   type: NotificationType
   title: string
   message: string
+  linkUrl?: string | null
   referenceType?: string | null
   referenceId?: string | number | null
-  deliveryStatus: NotificationDeliveryStatus
+  deliveryStatus?: NotificationDeliveryStatus
   createdAt: string
   readAt?: string | null
   read: boolean
