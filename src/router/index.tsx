@@ -21,6 +21,8 @@ const ManagementPage = lazy(() => import("@/pages/admin/management-page"))
 const UserManagementPage = lazy(() => import("@/features/user-management/pages/user-management-page"))
 const AdminHealthRecordsPage = lazy(() => import("@/features/admin-health-records/pages/admin-health-records-page"))
 const AdminPackagesPage = lazy(() => import("@/features/care-service-packages/pages/admin-packages-page"))
+const NeedsActionsPage = lazy(() => import("@/features/needs-actions/pages/needs-actions-page"))
+const BusinessAuditPage = lazy(() => import("@/features/business-audit/pages/business-audit-page"))
 const ConsultationsPage = lazy(() => import("@/features/consultations/pages/consultations-page"))
 const PaymentResultPage = lazy(() => import("@/features/consultations/pages/payment-result-page"))
 const DoctorSessionsPage = lazy(() => import("@/features/consultations/pages/doctor-sessions-page"))
@@ -212,6 +214,26 @@ export const router = createBrowserRouter([
               </ProtectedRoute>
             ),
           },
+          {
+            path: "needs-actions",
+            element: (
+              <ProtectedRoute allowedRoles={[USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN, USER_ROLES.CARE_COORDINATOR]}>
+                <LazyElement>
+                  <NeedsActionsPage />
+                </LazyElement>
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "audit",
+            element: (
+              <ProtectedRoute allowedRoles={[USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN, USER_ROLES.CARE_COORDINATOR]}>
+                <LazyElement>
+                  <BusinessAuditPage />
+                </LazyElement>
+              </ProtectedRoute>
+            ),
+          },
         ],
       },
       {
@@ -347,6 +369,26 @@ export const router = createBrowserRouter([
           <ProtectedRoute allowedRoles={[USER_ROLES.SUPER_ADMIN, USER_ROLES.DOCTOR]}>
             <LazyElement>
               <DoctorSessionsPage />
+            </LazyElement>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "needs-actions",
+        element: (
+          <ProtectedRoute allowedRoles={[USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN, USER_ROLES.CARE_COORDINATOR]}>
+            <LazyElement>
+              <NeedsActionsPage />
+            </LazyElement>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "audit",
+        element: (
+          <ProtectedRoute allowedRoles={[USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN, USER_ROLES.CARE_COORDINATOR]}>
+            <LazyElement>
+              <BusinessAuditPage />
             </LazyElement>
           </ProtectedRoute>
         ),
