@@ -75,7 +75,7 @@ export function CreateRequestPanel({
   const isValid = !!form.packageId && !!form.reasonForCare.trim() && !!form.currentConcern.trim()
 
   return (
-    <Card className="max-w-4xl mx-auto shadow-sm border rounded-2xl">
+    <Card className="shadow-sm border rounded-2xl">
       <CardHeader className="border-b bg-muted/10 pb-4">
         <div className="flex items-center gap-3">
           <div className="p-2.5 rounded-xl bg-primary/10 text-primary">
