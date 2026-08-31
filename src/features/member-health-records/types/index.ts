@@ -27,6 +27,15 @@ export interface HRVFeatures {
   sqi_valid_ratio?: number
   sqi_spectral_conc?: number
   sqi_n_valid_beats?: number
+  /** Chỉ số hiển thị bổ sung (AI Service tính, không đưa vào model) */
+  hrMin?: number
+  hrMax?: number
+  stressScore?: number
+  respiratoryRate?: number
+  perfusionIndex?: number
+  /** SpO2/BPM do firmware tính (SpO2 mức tham khảo — chưa hiệu chuẩn) */
+  deviceSpO2?: number
+  deviceBpm?: number
   [key: string]: unknown
 }
 

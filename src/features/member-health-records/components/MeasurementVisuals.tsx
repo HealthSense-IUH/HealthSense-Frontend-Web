@@ -1,4 +1,4 @@
-import { Activity, ShieldAlert, ShieldCheck } from "lucide-react"
+import { Activity, Droplets, Gauge, HeartPulse, ShieldAlert, ShieldCheck, Wind } from "lucide-react"
 import {
   Area,
   AreaChart,
@@ -41,6 +41,74 @@ function SqiBadge({ features }: { features: HRVFeatures }) {
   )
 }
 
+interface MetricTile {
+  key: string
+  icon: typeof Activity
+  label: string
+  value: string
+  unit?: string
+  note?: string
+}
+
+function buildExtraTiles(features: HRVFeatures): MetricTile[] {
+  const tiles: MetricTile[] = []
+
+  if (typeof features.deviceSpO2 === "number") {
+    tiles.push({
+      key: "spo2",
+      icon: Droplets,
+      label: "SpO2",
+      value: features.deviceSpO2.toFixed(0),
+      unit: "%",
+      note: "Tham khảo (đo tại thiết bị)",
+    })
+  }
+  if (typeof features.respiratoryRate === "number") {
+    tiles.push({
+      key: "resp",
+      icon: Wind,
+      label: "Nhịp thở",
+      value: features.respiratoryRate.toFixed(1),
+      unit: "lần/phút",
+      note: "12 - 20 lần/phút",
+    })
+  }
+  if (typeof features.hrMin === "number" && typeof features.hrMax === "number") {
+    tiles.push({
+      key: "hrrange",
+      icon: HeartPulse,
+      label: "Nhịp tim min - max",
+      value: `${features.hrMin.toFixed(0)} - ${features.hrMax.toFixed(0)}`,
+      unit: "BPM",
+      note: "Trong phiên đo",
+    })
+  }
+  if (typeof features.perfusionIndex === "number") {
+    tiles.push({
+      key: "pi",
+      icon: Activity,
+      label: "Perfusion Index",
+      value: features.perfusionIndex.toFixed(2),
+      unit: "%",
+      note: "Thấp → đeo lỏng / tưới máu yếu",
+    })
+  }
+  // Stress score chỉ hiển thị khi nhịp không quá bất thường —
+  // với nhịp AFib, chỉ số này mất ý nghĩa và dễ gây hiểu lầm
+  const irregular = typeof features.pNN50 === "number" && features.pNN50 > 40
+  if (typeof features.stressScore === "number" && !irregular) {
+    tiles.push({
+      key: "stress",
+      icon: Gauge,
+      label: "Điểm căng thẳng",
+      value: String(features.stressScore),
+      unit: "/100",
+      note: "Tham khảo (Baevsky SI)",
+    })
+  }
+  return tiles
+}
+
 /**
  * Khối trực quan của một phép đo: sóng mạch PPG + đồ thị Poincaré + badge SQI.
  * Toàn bộ dữ liệu lấy từ hrvFeatures đã lưu sẵn trong record (AI Service sinh):
@@ -50,12 +118,13 @@ function SqiBadge({ features }: { features: HRVFeatures }) {
 export function MeasurementVisuals({ features }: { features: HRVFeatures }) {
   const wave = asNumberArray(features.chartData)
   const nn = asNumberArray(features.nnIntervals)
+  const extraTiles = buildExtraTiles(features)
 
   const hasWave = wave.length >= 10
   const hasPoincare = nn.length >= 10
   const hasSqi = typeof features.sqi_ok === "boolean"
 
-  if (!hasWave && !hasPoincare && !hasSqi) return null
+  if (!hasWave && !hasPoincare && !hasSqi && extraTiles.length === 0) return null
 
   const waveData = wave.map((v, i) => ({ i, v }))
   const poincareData = nn.slice(0, -1).map((x, i) => ({ x, y: nn[i + 1] }))
@@ -103,6 +172,30 @@ export function MeasurementVisuals({ features }: { features: HRVFeatures }) {
             Mỗi đỉnh sóng là một nhịp tim. Sóng đều đặn → nhịp ổn định; sóng lộn xộn, biên độ
             thất thường → nhịp bất thường.
           </p>
+        </div>
+      )}
+
+      {/* Chỉ số bổ sung của phiên đo */}
+      {extraTiles.length > 0 && (
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+          {extraTiles.map((tile) => {
+            const Icon = tile.icon
+            return (
+              <div key={tile.key} className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border border-border">
+                <span className="text-xs text-muted-foreground font-medium flex items-center gap-1.5">
+                  <Icon className="w-3.5 h-3.5 text-sky-500" />
+                  {tile.label}
+                </span>
+                <div className="text-lg font-bold text-foreground mt-1">
+                  {tile.value}{" "}
+                  {tile.unit && <span className="text-xs font-normal text-muted-foreground">{tile.unit}</span>}
+                </div>
+                {tile.note && (
+                  <span className="text-[10px] text-muted-foreground block mt-0.5">{tile.note}</span>
+                )}
+              </div>
+            )
+          })}
         </div>
       )}
 
