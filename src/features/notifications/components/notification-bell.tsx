@@ -137,15 +137,15 @@ export function NotificationBell() {
     switch (refType) {
       case "REQUEST":
         if (role === "CARE_COORDINATOR" || role === "ADMIN" || role === "SUPER_ADMIN") {
-          navigate(`/app/consultations?tab=admin-requests&requestId=${refId}`)
+          navigate(`/app/general/consultations?tab=admin-requests&requestId=${refId}`)
         } else {
-          navigate(`/app/consultations?tab=requests`)
+          navigate(`/app/general/consultations?tab=requests`)
         }
         break
 
       case "SESSION":
       case "CONSULTATION_SESSION":
-        navigate(`/app/consultations?tab=chat&sessionId=${refId}`)
+        navigate(`/app/general/consultations?tab=chat&sessionId=${refId}`)
         break
 
       case "NEEDS_ACTION":
@@ -162,22 +162,22 @@ export function NotificationBell() {
 
       case "HEALTH_RECORD":
         if (role === "MEMBER") {
-          navigate(`/app/afib-history`)
+          navigate(`/app/general/afib-history`)
         } else {
-          navigate(`/app/health-records`)
+          navigate(`/app/management/health-records`)
         }
         break
 
       case "PACKAGE":
         if (role === "MEMBER") {
-          navigate(`/app/packages/catalog`)
+          navigate(`/app/general/packages/catalog`)
         } else {
-          navigate(`/app/packages`)
+          navigate(`/app/management/packages`)
         }
         break
 
       case "CARE_HISTORY":
-        navigate(`/app/care-history`)
+        navigate(`/app/general/care-history`)
         break
 
       default:

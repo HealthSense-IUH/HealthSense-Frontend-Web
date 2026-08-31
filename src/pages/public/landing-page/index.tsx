@@ -141,7 +141,7 @@ export default function LandingPage() {
           <div className="flex items-center gap-2 text-xs xl:text-sm font-semibold shrink-0">
             {userSession ? (
               <button
-                onClick={() => navigate('/app/dashboard')}
+                onClick={() => navigate('/app/general/dashboard')}
                 className="bg-gradient-to-r from-blue-600 to-sky-600 hover:from-blue-700 hover:to-sky-700 text-white transition-all px-4 sm:px-5 py-2 rounded-full shadow-md shadow-sky-900/20 font-bold flex items-center gap-1.5 hover:-translate-y-0.5 cursor-pointer font-heading whitespace-nowrap shrink-0"
               >
                 <span>Dashboard</span>
@@ -192,7 +192,7 @@ export default function LandingPage() {
             <div className="flex flex-wrap items-center gap-4 mb-10">
               {userSession ? (
                 <button
-                  onClick={() => navigate('/app/dashboard')}
+                  onClick={() => navigate('/app/general/dashboard')}
                   className="bg-gradient-to-r from-blue-600 via-sky-600 to-blue-600 hover:from-blue-700 hover:to-sky-700 text-white font-extrabold px-7 py-3.5 rounded-full shadow-lg shadow-sky-900/25 hover:shadow-sky-900/35 hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center gap-2.5 cursor-pointer text-sm sm:text-base font-heading"
                 >
                   <span>Xem Dashboard Sức khỏe</span>

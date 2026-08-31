@@ -237,7 +237,7 @@ export function DoctorSessionDetailDialog({ sessionId, open, onOpenChange }: Doc
           </Button>
           
           {session.status === "ACTIVE" && (
-            <Button onClick={() => navigate(`/app/consultations?tab=chat&sessionId=${session.id}`)}>
+            <Button onClick={() => navigate(`/app/general/consultations?tab=chat&sessionId=${session.id}`)}>
               <MessageSquare className="mr-2 h-4 w-4" />
               Mở phòng Chat
             </Button>

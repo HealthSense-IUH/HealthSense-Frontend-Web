@@ -135,7 +135,7 @@ export default function PaymentResultPage() {
 
   const handleBackToConsultations = () => {
     if (targetSessionId) {
-      navigate(`/app/consultations?tab=chat&sessionId=${targetSessionId}`)
+      navigate(`/app/general/consultations?tab=chat&sessionId=${targetSessionId}`)
     } else {
       navigate("/app/general/consultations?tab=sessions")
     }

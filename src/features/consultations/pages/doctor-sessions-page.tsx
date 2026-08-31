@@ -174,7 +174,7 @@ export default function DoctorSessionsPage() {
                     variant="default" 
                     size="sm" 
                     className="w-full"
-                    onClick={() => navigate(`/app/consultations?tab=chat&sessionId=${session.id}`)}
+                    onClick={() => navigate(`/app/general/consultations?tab=chat&sessionId=${session.id}`)}
                   >
                     <MessageSquare className="h-4 w-4 mr-2" /> Mở Chat
                   </Button>

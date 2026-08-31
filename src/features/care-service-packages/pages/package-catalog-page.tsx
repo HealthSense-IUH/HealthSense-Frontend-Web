@@ -39,7 +39,7 @@ export default function PackageCatalogPage() {
   }, [])
 
   const handleRegister = (pkgId: number | string) => {
-    navigate(`/app/consultations?tab=create-request&packageId=${pkgId}`)
+    navigate(`/app/general/consultations?tab=create-request&packageId=${pkgId}`)
   }
 
   const formatPrice = (amount: number, curr = "VND") => {
