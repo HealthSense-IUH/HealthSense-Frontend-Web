@@ -5,7 +5,8 @@
     "src/services/index.ts",
     "src/constants/index.ts",
     "src/config/index.ts",
-    "src/lib/index.ts"
+    "src/lib/index.ts",
+    "src/stores/index.ts"
   ],
   "project": ["src/**/*.{ts,tsx}"],
   "ignore": [

@@ -8,9 +8,9 @@ import { motion } from "framer-motion"
 
 import { useAppShell } from "./app-shell-context"
 import { DemoRoleSwitcher } from "./demo-role-switcher"
-import { NotificationBell } from "@/features/notifications/components/notification-bell"
+import { NotificationBell } from "@/components/layout/notification-bell"
 import { authApi } from "@/services"
-import { useAuthStore } from "@/features/auth/auth-store"
+import { useAuthStore } from "@/stores/auth-store"
 import { AvatarPlaceholder } from "@/components/ui/avatar"
 import {
   Popover,

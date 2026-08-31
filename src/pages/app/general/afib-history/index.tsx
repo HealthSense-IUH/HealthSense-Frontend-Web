@@ -15,8 +15,8 @@ import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { PaginationControl } from "@/components/custom/PaginationControl"
 import { healthRecordApi } from "@/services"
-import { HealthRecordDetailModal } from "@/features/member-health-records/components/HealthRecordDetailModal"
-import { UploadMeasurementModal } from "@/features/member-health-records/components/UploadMeasurementModal"
+import { HealthRecordDetailModal } from "@/pages/app/general/afib-history/components/HealthRecordDetailModal"
+import { UploadMeasurementModal } from "@/pages/app/general/afib-history/components/UploadMeasurementModal"
 import { PREDICTION_LABEL_CONFIG } from "@/constants"
 import {
   getPredictionMeta,

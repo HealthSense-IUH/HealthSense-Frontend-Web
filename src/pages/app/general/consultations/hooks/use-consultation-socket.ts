@@ -3,7 +3,7 @@ import { Client, type IMessage } from "@stomp/stompjs"
 import SockJS from "sockjs-client"
 
 import { env } from "@/config"
-import { useAuthStore } from "@/features/auth/auth-store"
+import { useAuthStore } from "@/stores/auth-store"
 import type { ApiResponse } from "@/types/base"
 import type { ConsultationMessageItem, SendConsultationMessagePayload } from "@/types/consultation"
 

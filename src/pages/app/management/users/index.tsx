@@ -6,12 +6,12 @@ import { USER_ROLES } from "@/constants"
 import type { UserRole } from "@/types/auth"
 import { userManagementApi } from "@/services"
 import type { UserItem, UserCreateRequest, UserUpdateRequest, UserPageResponse, UserAccountStatus as AccountStatus } from "@/types/user"
-import { UserRoleTabs } from "@/features/user-management/components/user-role-tabs"
-import { UserTableHeader } from "@/features/user-management/components/user-table-header"
-import { UserTable } from "@/features/user-management/components/user-table"
-import { UserFormModal } from "@/features/user-management/components/user-form-modal"
-import { UserDetailDrawer } from "@/features/user-management/components/user-detail-drawer"
-import { UserDeleteDialog } from "@/features/user-management/components/user-delete-dialog"
+import { UserRoleTabs } from "@/pages/app/management/users/components/user-role-tabs"
+import { UserTableHeader } from "@/pages/app/management/users/components/user-table-header"
+import { UserTable } from "@/pages/app/management/users/components/user-table"
+import { UserFormModal } from "@/pages/app/management/users/components/user-form-modal"
+import { UserDetailDrawer } from "@/pages/app/management/users/components/user-detail-drawer"
+import { UserDeleteDialog } from "@/pages/app/management/users/components/user-delete-dialog"
 
 function normalizeUserPage(pageData: UserPageResponse | undefined, selectedRole: UserRole, size: number) {
   const serverList = pageData?.content ?? pageData?.items ?? []

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react"
-import { useAuthStore } from "@/features/auth/auth-store"
+import { useAuthStore } from "@/stores/auth-store"
 import { useAppShell } from "@/components/layout/app-shell-context"
 import { USER_ROLES } from "@/constants"
 import { useToast } from "@/hooks/use-toast"

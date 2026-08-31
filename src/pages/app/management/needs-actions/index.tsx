@@ -25,10 +25,10 @@ import {
 } from "@/components/ui/select"
 import { Card, CardContent } from "@/components/ui/card"
 import { useToast } from "@/hooks/use-toast"
-import { useAuthStore } from "@/features/auth/auth-store"
+import { useAuthStore } from "@/stores/auth-store"
 import { needsActionApi } from "@/services"
 import type { NeedsActionResponse, NeedsActionStatus, NeedsActionType } from "@/types/needs-action"
-import { NeedsActionDetailDialog } from "@/features/needs-actions/components/needs-action-detail-dialog"
+import { NeedsActionDetailDialog } from "@/pages/app/management/needs-actions/components/needs-action-detail-dialog"
 
 export default function NeedsActionsPage() {
   const { toast } = useToast()

@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/popover"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { useToast } from "@/hooks/use-toast"
-import { useAuthStore } from "@/features/auth/auth-store"
+import { useAuthStore } from "@/stores/auth-store"
 import { notificationApi } from "@/services"
 import type { NotificationResponse, NotificationType } from "@/types/notification"
 

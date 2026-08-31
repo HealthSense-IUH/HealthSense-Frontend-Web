@@ -1,4 +1,4 @@
-import { SuperAdminDashboard } from "@/features/dashboard/components/super-admin-dashboard"
+import { SuperAdminDashboard } from "@/pages/app/general/dashboard/components/super-admin-dashboard"
 
 export default function ManagementHubPage() {
   return (

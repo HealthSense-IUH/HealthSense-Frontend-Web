@@ -1,6 +1,6 @@
 import { useState, useMemo, useCallback, type ReactNode } from "react"
 
-import { useAuthStore } from "@/features/auth/auth-store"
+import { useAuthStore } from "@/stores/auth-store"
 import { USER_ROLES } from "@/constants"
 import type { UserRole } from "@/types/auth"
 import { AppShellContext } from "./app-shell-context"

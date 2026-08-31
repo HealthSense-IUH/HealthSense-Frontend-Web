@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import { useToast } from "@/hooks/use-toast"
 import { Skeleton } from "@/components/ui/skeleton"
 
-import { MeasurementVisuals } from "@/features/member-health-records/components/MeasurementVisuals"
+import { MeasurementVisuals } from "@/pages/app/general/afib-history/components/MeasurementVisuals"
 import type { HRVFeatures } from "@/types/health-record"
 
 import { consultationApi } from "@/services"

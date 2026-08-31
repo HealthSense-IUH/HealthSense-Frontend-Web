@@ -1,7 +1,7 @@
 import axios, { AxiosError, type InternalAxiosRequestConfig } from "axios"
 
 import { env } from "@/config"
-import { useAuthStore } from "@/features/auth/auth-store"
+import { useAuthStore } from "@/stores/auth-store"
 import type { LoginResponse } from "@/types/auth"
 import type { ApiResponse, ErrorResponse } from "@/types/base"
 

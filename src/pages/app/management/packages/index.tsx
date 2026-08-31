@@ -11,9 +11,9 @@ import { useToast } from "@/hooks/use-toast"
 import { consultationApi } from "@/services"
 import type { CareServicePackage, CareServicePackageStatus } from "@/types/consultation"
 
-import { CreatePackageDialog } from "@/features/care-service-packages/components/create-package-dialog"
-import { EditPackageDialog } from "@/features/care-service-packages/components/edit-package-dialog"
-import { PackageActions } from "@/features/care-service-packages/components/package-actions"
+import { CreatePackageDialog } from "@/pages/app/general/packages/components/create-package-dialog"
+import { EditPackageDialog } from "@/pages/app/general/packages/components/edit-package-dialog"
+import { PackageActions } from "@/pages/app/general/packages/components/package-actions"
 
 export default function AdminPackagesPage() {
   const { toast } = useToast()

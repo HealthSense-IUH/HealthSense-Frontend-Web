@@ -22,7 +22,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { healthRecordApi } from "@/services"
-import { HealthRecordDetailModal } from "@/features/member-health-records/components/HealthRecordDetailModal"
+import { HealthRecordDetailModal } from "@/pages/app/general/afib-history/components/HealthRecordDetailModal"
 import { HealthHeatmapCalendar } from "./health-heatmap-calendar"
 import { DailyInspirationQuote } from "./daily-inspiration-quote"
 import { 

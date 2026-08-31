@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/dialog"
 import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { MeasurementVisuals } from "@/features/member-health-records/components/MeasurementVisuals"
+import { MeasurementVisuals } from "@/pages/app/general/afib-history/components/MeasurementVisuals"
 import type { HRVFeatures, HealthRecord } from "@/types/health-record"
 
 interface HealthRecordDetailDialogProps {

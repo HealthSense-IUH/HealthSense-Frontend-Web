@@ -14,7 +14,7 @@ import { AIFeaturesSection } from "./components/AIFeaturesSection"
 import { AIClinicalBenchmarkSection } from "./components/AIClinicalBenchmarkSection"
 import { HealthSenseBrandStorySection } from "./components/HealthSenseBrandStorySection"
 import { LandingFooter } from "./components/LandingFooter"
-import { useAuthStore } from "@/features/auth/auth-store"
+import { useAuthStore } from "@/stores/auth-store"
 
 const navItems = [
   { id: "about", label: "Về chúng tôi" },

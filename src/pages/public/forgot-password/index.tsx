@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 
-import { RequestOtpForm } from "@/features/forgot-password/components/request-otp-form"
-import { VerifyOtpForm } from "@/features/forgot-password/components/verify-otp-form"
-import { ResetPasswordForm } from "@/features/forgot-password/components/reset-password-form"
+import { RequestOtpForm } from "@/pages/public/forgot-password/components/request-otp-form"
+import { VerifyOtpForm } from "@/pages/public/forgot-password/components/verify-otp-form"
+import { ResetPasswordForm } from "@/pages/public/forgot-password/components/reset-password-form"
 
 type Step = "request" | "verify" | "reset" | "success"
 

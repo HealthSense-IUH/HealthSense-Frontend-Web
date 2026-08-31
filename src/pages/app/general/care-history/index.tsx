@@ -15,7 +15,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Skeleton } from "@/components/ui/skeleton"
 import { consultationApi } from "@/services"
 import type { CareHistoryEpisodeResponse } from "@/types/consultation"
-import { CareHistoryDetailDialog } from "@/features/care-history/components/care-history-detail-dialog"
+import { CareHistoryDetailDialog } from "@/pages/app/general/care-history/components/care-history-detail-dialog"
 
 export default function CareHistoryPage() {
   const [episodes, setEpisodes] = useState<CareHistoryEpisodeResponse[]>([])

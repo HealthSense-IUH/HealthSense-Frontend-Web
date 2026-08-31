@@ -14,7 +14,7 @@ import {
   RefreshCw,
 } from "lucide-react"
 
-import { useAuthStore } from "@/features/auth/auth-store"
+import { useAuthStore } from "@/stores/auth-store"
 import { refundApi, businessAuditApi } from "@/services"
 import type { ConsultationRefundResponse } from "@/types/refund"
 import type { BusinessAuditEventResponse } from "@/types/business-audit"

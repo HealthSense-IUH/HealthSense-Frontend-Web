@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react"
 
-import { useAuthStore } from "@/features/auth/auth-store"
+import { useAuthStore } from "@/stores/auth-store"
 import { refreshAccessToken } from "@/lib/axiosClient"
 
 export function AuthBootstrap() {

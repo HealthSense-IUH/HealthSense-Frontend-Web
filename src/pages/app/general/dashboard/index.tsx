@@ -1,4 +1,4 @@
-import { MemberHealthDashboard } from "@/features/dashboard/components/member-health-dashboard"
+import { MemberHealthDashboard } from "@/pages/app/general/dashboard/components/member-health-dashboard"
 
 export default function DashboardPage() {
   return (

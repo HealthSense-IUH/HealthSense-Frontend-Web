@@ -18,11 +18,11 @@ import {
   DollarSign,
 } from "lucide-react"
 
-import { useAuthStore } from "@/features/auth/auth-store"
+import { useAuthStore } from "@/stores/auth-store"
 import { needsActionApi } from "@/services"
 import type { NeedsActionResponse } from "@/types/needs-action"
-import { RecommendRefundDialog } from "@/features/refunds/components/recommend-refund-dialog"
-import { RefundDetailDialog } from "@/features/refunds/components/refund-detail-dialog"
+import { RecommendRefundDialog } from "@/pages/app/management/needs-actions/components/recommend-refund-dialog"
+import { RefundDetailDialog } from "@/pages/app/management/needs-actions/components/refund-detail-dialog"
 
 interface NeedsActionDetailDialogProps {
   item: NeedsActionResponse | null

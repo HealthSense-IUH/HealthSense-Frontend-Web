@@ -11,8 +11,8 @@ import { useAppShell } from "@/components/layout/app-shell-context"
 
 import { consultationApi } from "@/services"
 import type { DoctorConsultationSessionResponse } from "@/types/consultation"
-import { formatDate } from "@/features/consultations/components/shared"
-import { DoctorSessionDetailDialog } from "@/features/consultations/components/doctor-session-detail-dialog"
+import { formatDate } from "@/pages/app/general/consultations/components/shared"
+import { DoctorSessionDetailDialog } from "@/pages/app/general/consultations/components/doctor-session-detail-dialog"
 
 function readError(error: unknown, fallback: string) {
   const err = error as { response?: { data?: { message?: string } }; message?: string }

@@ -1,11 +1,11 @@
 import { useState, useEffect, useCallback } from "react"
 import { AlertCircle, RotateCw, Loader2, User as UserIcon } from "lucide-react"
-import { useAuthStore } from "@/features/auth/auth-store"
+import { useAuthStore } from "@/stores/auth-store"
 import { Button } from "@/components/ui/button"
 
 import { profileApi } from "@/services"
 import type { UserResponse, ProfileUpdateRequest } from "@/types/profile"
-import { UnifiedProfileCard } from "@/features/profile/components/unified-profile-card"
+import { UnifiedProfileCard } from "@/pages/app/general/profile/components/unified-profile-card"
 
 export default function ProfilePage() {
   const [user, setUser] = useState<UserResponse | null>(null)

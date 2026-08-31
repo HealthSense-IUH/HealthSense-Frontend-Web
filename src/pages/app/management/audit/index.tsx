@@ -21,14 +21,14 @@ import {
 } from "@/components/ui/select"
 import { Card, CardContent } from "@/components/ui/card"
 import { useToast } from "@/hooks/use-toast"
-import { useAuthStore } from "@/features/auth/auth-store"
+import { useAuthStore } from "@/stores/auth-store"
 import { businessAuditApi } from "@/services"
 import { COORDINATOR_PERMITTED_DOMAINS, ADMIN_ALL_DOMAINS } from "@/constants"
 import type {
   BusinessAuditEventResponse,
   BusinessAuditTargetDomain as BusinessDomainType,
 } from "@/types/business-audit"
-import { AuditEventDetailDrawer } from "@/features/business-audit/components/audit-event-detail-drawer"
+import { AuditEventDetailDrawer } from "@/pages/app/management/audit/components/audit-event-detail-drawer"
 
 export default function BusinessAuditPage() {
   const { toast } = useToast()
