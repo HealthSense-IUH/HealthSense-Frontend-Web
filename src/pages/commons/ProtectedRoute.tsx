@@ -1,16 +1,21 @@
-import { Navigate, useLocation } from "react-router-dom"
+import { Navigate, Outlet, useLocation } from "react-router-dom"
 import type { ReactNode } from "react"
 
 import { useAuthStore } from "@/features/auth/auth-store"
 import type { UserRole } from "@/types/authentication"
 
 type ProtectedRouteProps = {
-  children: ReactNode
+  /** Không truyền children => dùng làm layout route, render <Outlet /> cho route con */
+  children?: ReactNode
   allowedRoles?: UserRole[]
   redirectTo?: string
 }
 
-export function ProtectedRoute({ children, allowedRoles, redirectTo = "/app/dashboard" }: ProtectedRouteProps) {
+export function ProtectedRoute({
+  children,
+  allowedRoles,
+  redirectTo = "/app/general/dashboard",
+}: ProtectedRouteProps) {
   const location = useLocation()
   const userSession = useAuthStore((state) => state.userSession)
 
@@ -25,5 +30,5 @@ export function ProtectedRoute({ children, allowedRoles, redirectTo = "/app/dash
     }
   }
 
-  return children
+  return children ?? <Outlet />
 }

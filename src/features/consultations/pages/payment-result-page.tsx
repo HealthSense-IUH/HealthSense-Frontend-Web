@@ -137,7 +137,7 @@ export default function PaymentResultPage() {
     if (targetSessionId) {
       navigate(`/app/consultations?tab=chat&sessionId=${targetSessionId}`)
     } else {
-      navigate("/app/consultations?tab=sessions")
+      navigate("/app/general/consultations?tab=sessions")
     }
   }
 
@@ -156,7 +156,7 @@ export default function PaymentResultPage() {
         <ShieldAlert className="h-12 w-12 text-neutral-400 mb-4" />
         <h2 className="text-xl font-bold text-neutral-900 dark:text-neutral-100 mb-2">Không tìm thấy yêu cầu</h2>
         <p className="text-neutral-500 mb-6">Không tìm thấy mã giao dịch hoặc yêu cầu thanh toán hợp lệ trong phiên của bạn.</p>
-        <Button onClick={() => navigate("/app/consultations")}>
+        <Button onClick={() => navigate("/app/general/consultations")}>
           <ArrowLeft className="mr-2 h-4 w-4" /> Về trang Quản lý Tư vấn
         </Button>
       </div>
@@ -169,7 +169,7 @@ export default function PaymentResultPage() {
         <AlertTriangle className="h-12 w-12 text-orange-500 mb-4" />
         <h2 className="text-xl font-bold text-neutral-900 dark:text-neutral-100 mb-2">Không có giao dịch</h2>
         <p className="text-neutral-500 mb-6">Chưa có giao dịch thanh toán nào được ghi nhận cho yêu cầu này.</p>
-        <Button onClick={() => navigate("/app/consultations")}>
+        <Button onClick={() => navigate("/app/general/consultations")}>
           <ArrowLeft className="mr-2 h-4 w-4" /> Về trang Quản lý Tư vấn
         </Button>
       </div>
@@ -186,7 +186,7 @@ export default function PaymentResultPage() {
           <Button variant="outline" onClick={handleRefresh}>
             <RefreshCw className="mr-2 h-4 w-4" /> Thử lại
           </Button>
-          <Button onClick={() => navigate("/app/consultations")}>
+          <Button onClick={() => navigate("/app/general/consultations")}>
             <ArrowLeft className="mr-2 h-4 w-4" /> Về trang Quản lý Tư vấn
           </Button>
         </div>
@@ -231,7 +231,7 @@ export default function PaymentResultPage() {
             <Button onClick={handleRefresh} variant="outline" className="w-full mb-3 text-blue-600 border-blue-200 bg-blue-50 hover:bg-blue-100">
               <RefreshCw className="mr-2 h-4 w-4" /> Làm mới trạng thái
             </Button>
-            <Button variant="ghost" onClick={() => navigate("/app/consultations")} className="w-full">
+            <Button variant="ghost" onClick={() => navigate("/app/general/consultations")} className="w-full">
               <ArrowLeft className="mr-2 h-4 w-4" /> Quay lại sau
             </Button>
           </>
@@ -315,7 +315,7 @@ export default function PaymentResultPage() {
           <Button onClick={handleRefresh} variant="outline" className="w-full mb-3 text-blue-600 border-blue-200 bg-blue-50 hover:bg-blue-100">
             <RefreshCw className="mr-2 h-4 w-4" /> Làm mới trạng thái
           </Button>
-          <Button variant="ghost" onClick={() => navigate("/app/consultations")} className="w-full">
+          <Button variant="ghost" onClick={() => navigate("/app/general/consultations")} className="w-full">
             <ArrowLeft className="mr-2 h-4 w-4" /> Quay lại sau
           </Button>
         </>
@@ -326,7 +326,7 @@ export default function PaymentResultPage() {
           <Clock className="h-16 w-16 text-orange-500 mb-4" />
           <h2 className="text-2xl font-bold text-orange-900 dark:text-orange-300 mb-2">Thanh toán đã hết hạn</h2>
           <p className="text-orange-700/80 dark:text-orange-400/80 mb-8">Thời hạn thanh toán cho yêu cầu này đã kết thúc. Vui lòng tạo lại yêu cầu nếu cần.</p>
-          <Button onClick={() => navigate("/app/consultations")} variant="outline" className="w-full">
+          <Button onClick={() => navigate("/app/general/consultations")} variant="outline" className="w-full">
             <ArrowLeft className="mr-2 h-4 w-4" /> Về trang Quản lý Tư vấn
           </Button>
         </>
@@ -337,7 +337,7 @@ export default function PaymentResultPage() {
           <XCircle className="h-16 w-16 text-neutral-500 mb-4" />
           <h2 className="text-2xl font-bold text-neutral-900 dark:text-neutral-300 mb-2">Thanh toán đã bị hủy</h2>
           <p className="text-neutral-600 dark:text-neutral-400 mb-8">Giao dịch đã bị hủy bởi người dùng hoặc hệ thống thanh toán.</p>
-          <Button onClick={() => navigate("/app/consultations")} variant="outline" className="w-full">
+          <Button onClick={() => navigate("/app/general/consultations")} variant="outline" className="w-full">
             <ArrowLeft className="mr-2 h-4 w-4" /> Về trang Quản lý Tư vấn
           </Button>
         </>
@@ -348,7 +348,7 @@ export default function PaymentResultPage() {
           <XCircle className="h-16 w-16 text-red-500 mb-4" />
           <h2 className="text-2xl font-bold text-red-900 dark:text-red-300 mb-2">Thanh toán thất bại</h2>
           <p className="text-red-700/80 dark:text-red-400/80 mb-8">Đã có lỗi xảy ra trong quá trình xử lý thanh toán. Vui lòng thử lại sau.</p>
-          <Button onClick={() => navigate("/app/consultations")} variant="outline" className="w-full">
+          <Button onClick={() => navigate("/app/general/consultations")} variant="outline" className="w-full">
             <ArrowLeft className="mr-2 h-4 w-4" /> Về trang Quản lý Tư vấn
           </Button>
         </>
@@ -359,7 +359,7 @@ export default function PaymentResultPage() {
           <AlertTriangle className="h-16 w-16 text-yellow-500 mb-4" />
           <h2 className="text-2xl font-bold text-yellow-900 dark:text-yellow-300 mb-2">Thanh toán cần được kiểm tra</h2>
           <p className="text-yellow-700/80 dark:text-yellow-400/80 mb-8">Giao dịch đang cần kiểm tra thủ công. Vui lòng liên hệ bộ phận hỗ trợ.</p>
-          <Button onClick={() => navigate("/app/consultations")} variant="outline" className="w-full">
+          <Button onClick={() => navigate("/app/general/consultations")} variant="outline" className="w-full">
             <ArrowLeft className="mr-2 h-4 w-4" /> Về trang Quản lý Tư vấn
           </Button>
         </>

@@ -1,5 +1,5 @@
 import { lazy } from "react"
-import { Navigate, createBrowserRouter } from "react-router-dom"
+import { Navigate, createBrowserRouter, useLocation } from "react-router-dom"
 
 import { GlobalErrorBoundary } from "@/components/custom/GlobalErrorBoundary"
 import { LazyElement } from "@/components/custom/LazyElement"
@@ -10,10 +10,8 @@ import { USER_ROLES } from "@/types/authentication"
 
 const MemberLayout = lazy(() => import("@/pages/member"))
 const DashboardPage = lazy(() => import("@/features/dashboard/pages/dashboard-page"))
-const WorkoutsPage = lazy(() => import("@/pages/member/workouts"))
 const AfibHistoryPage = lazy(() => import("@/pages/member/afib-history"))
 const ReportsPage = lazy(() => import("@/pages/member/reports"))
-const SleepPage = lazy(() => import("@/pages/member/sleep"))
 const CareHistoryPage = lazy(() => import("@/features/care-history/pages/care-history-page"))
 const PackageCatalogPage = lazy(() => import("@/features/care-service-packages/pages/package-catalog-page"))
 
@@ -32,80 +30,59 @@ const LoginPage = lazy(() => import("@/pages/public/login-page"))
 const ForgotPasswordPage = lazy(() => import("@/features/forgot-password/pages/forgot-password-page"))
 const TermsPage = lazy(() => import("@/pages/public/terms-page"))
 
+/** Redirect giữ nguyên query string (quan trọng với URL PayOS trả về). */
+function RedirectPreserveQuery({ to }: { to: string }) {
+  const location = useLocation()
+  return <Navigate to={{ pathname: to, search: location.search }} replace />
+}
+
+const wrap = (node: React.ReactNode) => <LazyElement>{node}</LazyElement>
+
+/**
+ * CẤU TRÚC ROUTE
+ * ==============
+ * /                    Landing (public)
+ * /terms               Điều khoản (public)
+ * /login, /register... GuestOnly (đã đăng nhập thì đá về app)
+ * /app                 Yêu cầu đăng nhập (ProtectedRoute + MemberLayout)
+ *   /app/general/*     Phân hệ NGƯỜI DÙNG — mọi role đăng nhập đều vào được
+ *   /app/management/*  Phân hệ QUẢN TRỊ — gác quyền 1 lần ở cổng này
+ *                      (SUPER_ADMIN / ADMIN / CARE_COORDINATOR / DOCTOR),
+ *                      từng trang con siết thêm nếu cần
+ * Cuối file: các redirect từ đường dẫn cũ (bookmark, link PayOS...) về đường mới.
+ */
 export const router = createBrowserRouter([
+  // ---------- PUBLIC ----------
   {
     path: "/",
     errorElement: <GlobalErrorBoundary />,
-    element: (
-      <LazyElement>
-        <LandingPage />
-      </LazyElement>
-    ),
+    element: wrap(<LandingPage />),
   },
   {
     path: "/terms",
     errorElement: <GlobalErrorBoundary />,
-    element: (
-      <LazyElement>
-        <TermsPage />
-      </LazyElement>
-    ),
+    element: wrap(<TermsPage />),
   },
   {
     path: "/terms-and-conditions",
     errorElement: <GlobalErrorBoundary />,
-    element: (
-      <LazyElement>
-        <TermsPage />
-      </LazyElement>
-    ),
+    element: wrap(<TermsPage />),
   },
+
+  // ---------- GUEST ONLY ----------
   {
     errorElement: <GlobalErrorBoundary />,
     element: <GuestOnlyRoute />,
     children: [
-      {
-        path: "/login",
-        element: (
-          <LazyElement>
-            <LoginPage />
-          </LazyElement>
-        ),
-      },
-      {
-        path: "/register",
-        element: (
-          <LazyElement>
-            <LoginPage />
-          </LazyElement>
-        ),
-      },
-      {
-        path: "/forgot-password",
-        element: (
-          <LazyElement>
-            <ForgotPasswordPage />
-          </LazyElement>
-        ),
-      },
-      {
-        path: "/forgot-password/verify",
-        element: (
-          <LazyElement>
-            <ForgotPasswordPage />
-          </LazyElement>
-        ),
-      },
-      {
-        path: "/reset-password",
-        element: (
-          <LazyElement>
-            <ForgotPasswordPage />
-          </LazyElement>
-        ),
-      },
+      { path: "/login", element: wrap(<LoginPage />) },
+      { path: "/register", element: wrap(<LoginPage />) },
+      { path: "/forgot-password", element: wrap(<ForgotPasswordPage />) },
+      { path: "/forgot-password/verify", element: wrap(<ForgotPasswordPage />) },
+      { path: "/reset-password", element: wrap(<ForgotPasswordPage />) },
     ],
   },
+
+  // ---------- APP (yêu cầu đăng nhập) ----------
   {
     path: "/app",
     errorElement: <GlobalErrorBoundary />,
@@ -117,60 +94,51 @@ export const router = createBrowserRouter([
       </ProtectedRoute>
     ),
     children: [
+      { index: true, element: <Navigate to="/app/general/dashboard" replace /> },
+
+      // ----- PHÂN HỆ NGƯỜI DÙNG -----
       {
-        index: true,
-        element: <Navigate to="/app/dashboard" replace />,
+        path: "general",
+        children: [
+          { index: true, element: <Navigate to="/app/general/dashboard" replace /> },
+          { path: "dashboard", element: wrap(<DashboardPage />) },
+          { path: "afib-history", element: wrap(<AfibHistoryPage />) },
+          { path: "reports", element: wrap(<ReportsPage />) },
+          { path: "care-history", element: wrap(<CareHistoryPage />) },
+          { path: "packages/catalog", element: wrap(<PackageCatalogPage />) },
+          { path: "profile", element: wrap(<ProfilePage />) },
+          {
+            path: "consultations",
+            children: [
+              { index: true, element: wrap(<ConsultationsPage />) },
+              { path: "payment/result", element: wrap(<PaymentResultPage />) },
+              { path: "payment/cancel", element: wrap(<PaymentResultPage />) },
+            ],
+          },
+        ],
       },
-      {
-        path: "dashboard",
-        element: (
-          <LazyElement>
-            <DashboardPage />
-          </LazyElement>
-        ),
-      },
-      {
-        path: "workouts",
-        element: (
-          <LazyElement>
-            <WorkoutsPage />
-          </LazyElement>
-        ),
-      },
-      {
-        path: "afib-history",
-        element: (
-          <LazyElement>
-            <AfibHistoryPage />
-          </LazyElement>
-        ),
-      },
-      {
-        path: "reports",
-        element: (
-          <LazyElement>
-            <ReportsPage />
-          </LazyElement>
-        ),
-      },
-      {
-        path: "sleep",
-        element: (
-          <LazyElement>
-            <SleepPage />
-          </LazyElement>
-        ),
-      },
+
+      // ----- PHÂN HỆ QUẢN TRỊ (gác quyền tại cổng) -----
       {
         path: "management",
+        element: (
+          <ProtectedRoute
+            allowedRoles={[
+              USER_ROLES.SUPER_ADMIN,
+              USER_ROLES.ADMIN,
+              USER_ROLES.CARE_COORDINATOR,
+              USER_ROLES.DOCTOR,
+            ]}
+          />
+        ),
         children: [
           {
             index: true,
             element: (
-              <ProtectedRoute allowedRoles={[USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN, USER_ROLES.CARE_COORDINATOR]}>
-                <LazyElement>
-                  <ManagementPage />
-                </LazyElement>
+              <ProtectedRoute
+                allowedRoles={[USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN, USER_ROLES.CARE_COORDINATOR]}
+              >
+                {wrap(<ManagementPage />)}
               </ProtectedRoute>
             ),
           },
@@ -178,29 +146,47 @@ export const router = createBrowserRouter([
             path: "users",
             element: (
               <ProtectedRoute allowedRoles={[USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN]}>
-                <LazyElement>
-                  <UserManagementPage />
-                </LazyElement>
+                {wrap(<UserManagementPage />)}
               </ProtectedRoute>
             ),
           },
           {
             path: "packages",
             element: (
-              <ProtectedRoute allowedRoles={[USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN, USER_ROLES.CARE_COORDINATOR]}>
-                <LazyElement>
-                  <AdminPackagesPage />
-                </LazyElement>
+              <ProtectedRoute
+                allowedRoles={[USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN, USER_ROLES.CARE_COORDINATOR]}
+              >
+                {wrap(<AdminPackagesPage />)}
               </ProtectedRoute>
             ),
           },
           {
             path: "health-records",
             element: (
-              <ProtectedRoute allowedRoles={[USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN, USER_ROLES.CARE_COORDINATOR]}>
-                <LazyElement>
-                  <AdminHealthRecordsPage />
-                </LazyElement>
+              <ProtectedRoute
+                allowedRoles={[USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN, USER_ROLES.CARE_COORDINATOR]}
+              >
+                {wrap(<AdminHealthRecordsPage />)}
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "needs-actions",
+            element: (
+              <ProtectedRoute
+                allowedRoles={[USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN, USER_ROLES.CARE_COORDINATOR]}
+              >
+                {wrap(<NeedsActionsPage />)}
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "audit",
+            element: (
+              <ProtectedRoute
+                allowedRoles={[USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN, USER_ROLES.CARE_COORDINATOR]}
+              >
+                {wrap(<BusinessAuditPage />)}
               </ProtectedRoute>
             ),
           },
@@ -208,253 +194,24 @@ export const router = createBrowserRouter([
             path: "doctor/consultations",
             element: (
               <ProtectedRoute allowedRoles={[USER_ROLES.SUPER_ADMIN, USER_ROLES.DOCTOR]}>
-                <LazyElement>
-                  <DoctorSessionsPage />
-                </LazyElement>
-              </ProtectedRoute>
-            ),
-          },
-          {
-            path: "needs-actions",
-            element: (
-              <ProtectedRoute allowedRoles={[USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN, USER_ROLES.CARE_COORDINATOR]}>
-                <LazyElement>
-                  <NeedsActionsPage />
-                </LazyElement>
-              </ProtectedRoute>
-            ),
-          },
-          {
-            path: "audit",
-            element: (
-              <ProtectedRoute allowedRoles={[USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN, USER_ROLES.CARE_COORDINATOR]}>
-                <LazyElement>
-                  <BusinessAuditPage />
-                </LazyElement>
+                {wrap(<DoctorSessionsPage />)}
               </ProtectedRoute>
             ),
           },
         ],
       },
+
+      // GIỮ TẠM 2 redirect thanh toán: PayOS quay về theo env PAYMENT_RETURN_URL /
+      // PAYMENT_CANCEL_URL cấu hình trên server Core — có thể còn trỏ đường cũ.
+      // Sau khi đổi 2 env đó sang /app/general/consultations/payment/... thì xóa nốt.
       {
-        path: "general",
-        children: [
-          {
-            index: true,
-            element: <Navigate to="/app/general/dashboard" replace />,
-          },
-          {
-            path: "dashboard",
-            element: (
-              <LazyElement>
-                <DashboardPage />
-              </LazyElement>
-            ),
-          },
-          {
-            path: "workouts",
-            element: (
-              <LazyElement>
-                <WorkoutsPage />
-              </LazyElement>
-            ),
-          },
-          {
-            path: "afib-history",
-            element: (
-              <LazyElement>
-                <AfibHistoryPage />
-              </LazyElement>
-            ),
-          },
-          {
-            path: "reports",
-            element: (
-              <LazyElement>
-                <ReportsPage />
-              </LazyElement>
-            ),
-          },
-          {
-            path: "sleep",
-            element: (
-              <LazyElement>
-                <SleepPage />
-              </LazyElement>
-            ),
-          },
-          {
-            path: "consultations",
-            element: (
-              <LazyElement>
-                <ConsultationsPage />
-              </LazyElement>
-            ),
-          },
-          {
-            path: "care-history",
-            element: (
-              <LazyElement>
-                <CareHistoryPage />
-              </LazyElement>
-            ),
-          },
-          {
-            path: "packages/catalog",
-            element: (
-              <LazyElement>
-                <PackageCatalogPage />
-              </LazyElement>
-            ),
-          },
-          {
-            path: "profile",
-            element: (
-              <LazyElement>
-                <ProfilePage />
-              </LazyElement>
-            ),
-          },
-        ],
+        path: "consultations/payment/result",
+        element: <RedirectPreserveQuery to="/app/general/consultations/payment/result" />,
       },
       {
-        path: "care-history",
-        element: (
-          <LazyElement>
-            <CareHistoryPage />
-          </LazyElement>
-        ),
-      },
-      {
-        path: "packages/catalog",
-        element: (
-          <LazyElement>
-            <PackageCatalogPage />
-          </LazyElement>
-        ),
-      },
-      {
-        path: "users",
-        element: (
-          <ProtectedRoute allowedRoles={[USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN]}>
-            <LazyElement>
-              <UserManagementPage />
-            </LazyElement>
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "packages",
-        element: (
-          <ProtectedRoute allowedRoles={[USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN, USER_ROLES.CARE_COORDINATOR]}>
-            <LazyElement>
-              <AdminPackagesPage />
-            </LazyElement>
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "health-records",
-        element: (
-          <ProtectedRoute allowedRoles={[USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN, USER_ROLES.CARE_COORDINATOR]}>
-            <LazyElement>
-              <AdminHealthRecordsPage />
-            </LazyElement>
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "doctor/consultations",
-        element: (
-          <ProtectedRoute allowedRoles={[USER_ROLES.SUPER_ADMIN, USER_ROLES.DOCTOR]}>
-            <LazyElement>
-              <DoctorSessionsPage />
-            </LazyElement>
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "needs-actions",
-        element: (
-          <ProtectedRoute allowedRoles={[USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN, USER_ROLES.CARE_COORDINATOR]}>
-            <LazyElement>
-              <NeedsActionsPage />
-            </LazyElement>
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "audit",
-        element: (
-          <ProtectedRoute allowedRoles={[USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN, USER_ROLES.CARE_COORDINATOR]}>
-            <LazyElement>
-              <BusinessAuditPage />
-            </LazyElement>
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "consultations",
-        children: [
-          {
-            index: true,
-            element: (
-              <LazyElement>
-                <ConsultationsPage />
-              </LazyElement>
-            ),
-          },
-          {
-            path: "payment/result",
-            element: (
-              <LazyElement>
-                <PaymentResultPage />
-              </LazyElement>
-            ),
-          },
-          {
-            path: "payment/cancel",
-            element: (
-              <LazyElement>
-                <PaymentResultPage />
-              </LazyElement>
-            ),
-          },
-        ],
-      },
-      {
-        path: "profile",
-        element: (
-          <LazyElement>
-            <ProfilePage />
-          </LazyElement>
-        ),
+        path: "consultations/payment/cancel",
+        element: <RedirectPreserveQuery to="/app/general/consultations/payment/cancel" />,
       },
     ],
-  },
-  {
-    path: "/general",
-    errorElement: <GlobalErrorBoundary />,
-    element: <Navigate to="/app/general/dashboard" replace />,
-  },
-  {
-    path: "/management",
-    errorElement: <GlobalErrorBoundary />,
-    element: <Navigate to="/app/management" replace />,
-  },
-  {
-    path: "/admin/users",
-    errorElement: <GlobalErrorBoundary />,
-    element: <Navigate to="/app/users" replace />,
-  },
-  {
-    path: "/admin/health-records",
-    errorElement: <GlobalErrorBoundary />,
-    element: <Navigate to="/app/health-records" replace />,
-  },
-  {
-    path: "/profile",
-    errorElement: <GlobalErrorBoundary />,
-    element: <Navigate to="/app/profile" replace />,
   },
 ])

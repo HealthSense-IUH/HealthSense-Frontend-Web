@@ -83,7 +83,7 @@ export default function DoctorSessionsPage() {
         <ShieldAlert className="h-12 w-12 text-red-500 mb-4" />
         <h2 className="text-xl font-bold text-neutral-900 mb-2">Quyền truy cập bị từ chối</h2>
         <p className="text-neutral-500 mb-6">Bạn không có quyền truy cập trang bác sĩ.</p>
-        <Button onClick={() => navigate("/app/dashboard")}>Về trang chủ</Button>
+        <Button onClick={() => navigate("/app/general/dashboard")}>Về trang chủ</Button>
       </div>
     )
   }

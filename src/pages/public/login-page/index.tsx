@@ -64,7 +64,7 @@ export default function LoginPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const state = location.state as LoginLocationState | null
-  const redirectTo = state?.from?.pathname ?? "/app/dashboard"
+  const redirectTo = state?.from?.pathname ?? "/app/general/dashboard"
 
   // Synchronize mode with location / search parameters
   useEffect(() => {

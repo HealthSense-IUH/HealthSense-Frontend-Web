@@ -35,7 +35,7 @@ export function AppSidebar() {
         }`}
       >
         <Link
-          to={isManagement ? "/app/management" : "/app/dashboard"}
+          to={isManagement ? "/app/management" : "/app/general/dashboard"}
           className="flex flex-col items-center group"
           title={isManagement ? "HealthSense - Phân hệ Quản trị" : "HealthSense - Sức khỏe Người dùng"}
         >
@@ -78,7 +78,7 @@ export function AppSidebar() {
             <TooltipTrigger asChild>
               <button
                 type="button"
-                onClick={() => navigate(isManagement ? "/app/dashboard" : "/app/management")}
+                onClick={() => navigate(isManagement ? "/app/general/dashboard" : "/app/management")}
                 className={`group flex flex-col items-center justify-center w-full py-2 px-1 rounded-2xl transition-all duration-200 cursor-pointer ${
                   isManagement
                     ? "bg-sky-950/60 hover:bg-sky-900/80 text-sky-300 hover:text-white border border-sky-500/40 hover:border-sky-400 shadow-xs shadow-sky-500/10"

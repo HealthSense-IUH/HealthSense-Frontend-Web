@@ -301,7 +301,7 @@ export function MemberHealthDashboard() {
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => navigate("/app/afib-history")}
+                onClick={() => navigate("/app/general/afib-history")}
                 className="text-xs font-semibold text-primary hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl gap-1 cursor-pointer"
               >
                 <span>Xem tất cả</span>

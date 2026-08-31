@@ -260,7 +260,7 @@ export function Topbar() {
 
             <button
               type="button"
-              onClick={() => navigate("/app/profile")}
+              onClick={() => navigate("/app/general/profile")}
               className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-100 hover:text-slate-900 transition-colors cursor-pointer"
             >
               <User className="h-4 w-4 text-sky-600" />

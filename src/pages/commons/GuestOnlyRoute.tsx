@@ -6,7 +6,7 @@ export function GuestOnlyRoute() {
   const userSession = useAuthStore((state) => state.userSession)
 
   if (userSession) {
-    return <Navigate to="/app/dashboard" replace />
+    return <Navigate to="/app/general/dashboard" replace />
   }
 
   return <Outlet />
