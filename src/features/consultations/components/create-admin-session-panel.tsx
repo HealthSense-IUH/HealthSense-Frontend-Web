@@ -31,7 +31,7 @@ export function CreateAdminSessionPanel({
   const isValid = !!form.memberId.trim() && !!form.doctorId.trim() && !!form.endsAt && !!form.overrideReason.trim()
 
   return (
-    <Card className="max-w-4xl mx-auto shadow-sm border rounded-2xl">
+    <Card className="shadow-sm border rounded-2xl">
       <CardHeader className="border-b bg-muted/10 pb-4">
         <div className="flex items-center gap-3">
           <div className="p-2.5 rounded-xl bg-orange-500/10 text-orange-600 dark:text-orange-400">
