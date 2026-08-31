@@ -1,7 +1,8 @@
 import { useState, useMemo, useCallback, type ReactNode } from "react"
 
 import { useAuthStore } from "@/features/auth/auth-store"
-import { USER_ROLES, type UserRole } from "@/types/authentication"
+import { USER_ROLES } from "@/constants"
+import type { UserRole } from "@/types/auth"
 import { AppShellContext } from "./app-shell-context"
 
 export function AppShellProvider({ children }: { children: ReactNode }) {

@@ -1,0 +1,172 @@
+import axiosClient from "@/lib/axiosClient"
+import type { ApiResponse, PageResponse } from "@/types/base"
+import type {
+  CreateHealthRecordDto,
+  GetHealthRecordsParams,
+  HealthRecord,
+  HealthStatisticsResponse,
+  MemberHealthRecord,
+  PaginatedResponse,
+  PresignedUrlRequest,
+  PresignedUrlResponse,
+  SystemHealthStat,
+} from "@/types/health-record"
+
+export const healthRecordApi = {
+  /**
+   * Get paginated list of health records for current authenticated user
+   * GET /api/health-records/my-records?page=1&size=10
+   */
+  getMyRecords(params?: { page?: number; size?: number }) {
+    const page = params?.page ?? 1
+    const size = params?.size ?? 10
+    return axiosClient.get<
+      ApiResponse<PageResponse<MemberHealthRecord>>,
+      ApiResponse<PageResponse<MemberHealthRecord>>
+    >("/api/health-records/my-records", {
+      params: { page, size },
+    })
+  },
+
+  /**
+   * Get detail of a specific health record
+   * GET /api/health-records/{id}
+   */
+  getRecordById(id: string | number) {
+    return axiosClient.get<
+      ApiResponse<MemberHealthRecord>,
+      ApiResponse<MemberHealthRecord>
+    >(`/api/health-records/${id}`)
+  },
+
+  /**
+   * Get user health statistics summary & chart data
+   * GET /api/health-records/statistics?period=YEAR
+   */
+  getHealthStatistics(params?: {
+    period?: "DAY" | "WEEK" | "MONTH" | "YEAR"
+    referenceDate?: string
+    timezone?: string
+  }) {
+    return axiosClient.get<
+      ApiResponse<HealthStatisticsResponse>,
+      ApiResponse<HealthStatisticsResponse>
+    >("/api/health-records/statistics", {
+      params: {
+        period: params?.period ?? "YEAR",
+        referenceDate: params?.referenceDate,
+        timezone: params?.timezone ?? "Asia/Ho_Chi_Minh",
+      },
+    })
+  },
+
+  /**
+   * Upload CSV record directly to backend
+   * POST /api/health-records/upload-direct
+   */
+  uploadDirect(file: File) {
+    const formData = new FormData()
+    formData.append("file", file)
+    return axiosClient.post<
+      ApiResponse<MemberHealthRecord>,
+      ApiResponse<MemberHealthRecord>
+    >("/api/health-records/upload-direct", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    })
+  },
+
+  /**
+   * Request Presigned URL for S3 upload
+   * POST /api/health-records/presigned-url
+   */
+  createPresignedUrl(payload: PresignedUrlRequest) {
+    return axiosClient.post<
+      ApiResponse<PresignedUrlResponse>,
+      ApiResponse<PresignedUrlResponse>
+    >("/api/health-records/presigned-url", payload)
+  },
+
+  /**
+   * Confirm upload after S3 direct transfer
+   * POST /api/health-records/{id}/confirm
+   */
+  confirmUpload(id: string | number) {
+    return axiosClient.post<
+      ApiResponse<MemberHealthRecord>,
+      ApiResponse<MemberHealthRecord>
+    >(`/api/health-records/${id}/confirm`)
+  },
+
+  /**
+   * Get all dates that have health measurement records
+   * GET /api/health-records/history/available-dates
+   */
+  getAvailableHistoryDates(timezone = "Asia/Ho_Chi_Minh") {
+    return axiosClient.get<ApiResponse<string[]>, ApiResponse<string[]>>(
+      "/api/health-records/history/available-dates",
+      {
+        params: { timezone },
+      }
+    )
+  },
+
+  /**
+   * Get all health records for a specific date (YYYY-MM-DD)
+   * GET /api/health-records/history/by-date?date=...
+   */
+  getRecordsByDate(date: string, timezone = "Asia/Ho_Chi_Minh") {
+    return axiosClient.get<
+      ApiResponse<MemberHealthRecord[]>,
+      ApiResponse<MemberHealthRecord[]>
+    >("/api/health-records/history/by-date", {
+      params: { date, timezone },
+    })
+  },
+
+  /**
+   * Get presigned download URL for member's own raw health record CSV artifact
+   * GET /api/health-records/{id}/download-url
+   */
+  getDownloadUrl(id: string | number) {
+    return axiosClient.get<
+      ApiResponse<PresignedUrlResponse>,
+      ApiResponse<PresignedUrlResponse>
+    >(`/api/health-records/${id}/download-url`)
+  },
+}
+
+export const adminHealthRecordApi = {
+  getSystemStatistics(fromDate: Date, toDate: Date) {
+    return axiosClient.get<any, ApiResponse<SystemHealthStat[]>>(
+      "/api/admin/health-records/statistics",
+      {
+        params: {
+          fromDate: fromDate.toISOString(),
+          toDate: toDate.toISOString(),
+        },
+      }
+    )
+  },
+
+  getAllHealthRecords(params: GetHealthRecordsParams) {
+    return axiosClient.get<
+      ApiResponse<PaginatedResponse<HealthRecord>>,
+      ApiResponse<PaginatedResponse<HealthRecord>>
+    >("/api/admin/health-records", { params })
+  },
+
+  getHealthRecordById(id: string) {
+    return axiosClient.get<ApiResponse<HealthRecord>, ApiResponse<HealthRecord>>(
+      `/api/admin/health-records/${id}`
+    )
+  },
+
+  createHealthRecord(payload: CreateHealthRecordDto) {
+    return axiosClient.post<
+      ApiResponse<HealthRecord>,
+      ApiResponse<HealthRecord>
+    >("/api/admin/health-records", payload)
+  },
+}

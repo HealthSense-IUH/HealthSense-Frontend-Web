@@ -2,7 +2,7 @@ import { useState } from "react"
 import { User, Phone, Video, MoreHorizontal, FileText, Share2, RefreshCw } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
-import type { ConsultationSessionItem } from "../../types"
+import type { ConsultationSessionItem } from "@/types/consultation"
 import { statusBadge } from "../shared"
 import { MemberFinalSummaryDialog } from "../member-final-summary-dialog"
 import { ShareHealthRecordDialog } from "../share-health-record-dialog"

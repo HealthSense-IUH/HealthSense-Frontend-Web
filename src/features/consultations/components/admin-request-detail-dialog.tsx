@@ -5,8 +5,8 @@ import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { useToast } from "@/hooks/use-toast"
 
-import { consultationApi } from "../services/consultation-api"
-import type { ConsultationRequestReviewResponse } from "../types"
+import { consultationApi } from "@/services"
+import type { ConsultationRequestReviewResponse } from "@/types/consultation"
 import { formatDate, statusBadge } from "./shared"
 
 export function AdminRequestDetailDialog({

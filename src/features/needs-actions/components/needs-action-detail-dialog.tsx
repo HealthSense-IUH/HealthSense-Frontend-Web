@@ -19,8 +19,8 @@ import {
 } from "lucide-react"
 
 import { useAuthStore } from "@/features/auth/auth-store"
-import { needsActionApi } from "../services/needs-action-api"
-import type { NeedsActionResponse } from "../types"
+import { needsActionApi } from "@/services"
+import type { NeedsActionResponse } from "@/types/needs-action"
 import { RecommendRefundDialog } from "@/features/refunds/components/recommend-refund-dialog"
 import { RefundDetailDialog } from "@/features/refunds/components/refund-detail-dialog"
 

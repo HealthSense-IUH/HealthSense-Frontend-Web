@@ -15,10 +15,9 @@ import {
 } from "lucide-react"
 
 import { useAuthStore } from "@/features/auth/auth-store"
-import { refundApi } from "../services/refund-api"
-import { businessAuditApi } from "@/features/business-audit/services/business-audit-api"
-import type { ConsultationRefundResponse } from "../types"
-import type { BusinessAuditEventResponse } from "@/features/business-audit/types"
+import { refundApi, businessAuditApi } from "@/services"
+import type { ConsultationRefundResponse } from "@/types/refund"
+import type { BusinessAuditEventResponse } from "@/types/business-audit"
 import { DecideRefundDialog } from "./decide-refund-dialog"
 import { ReconcileRefundDialog } from "./reconcile-refund-dialog"
 

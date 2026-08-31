@@ -6,7 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
-import type { ConsultationRequestItem } from "../types"
+import type { ConsultationRequestItem } from "@/types/consultation"
 import { EmptyRow, formatDate, statusBadge } from "./shared"
 
 export function RequestsPanel({

@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils"
-import type { ConsultationMessageItem } from "../../types"
+import type { ConsultationMessageItem } from "@/types/consultation"
 
 interface ChatMessageBubbleProps {
   message: ConsultationMessageItem

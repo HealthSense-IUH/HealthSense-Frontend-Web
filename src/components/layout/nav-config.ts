@@ -13,7 +13,8 @@ import {
   type LucideIcon,
 } from "lucide-react"
 
-import { USER_ROLES, type UserRole } from "@/types/authentication"
+import { USER_ROLES } from "@/constants"
+import type { UserRole } from "@/types/auth"
 
 export interface NavigationItem {
   id: string

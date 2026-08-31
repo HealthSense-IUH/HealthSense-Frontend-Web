@@ -1,6 +1,6 @@
 import { MessageSquare, ArrowDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import type { ConsultationMessageItem } from "../../types"
+import type { ConsultationMessageItem } from "@/types/consultation"
 import { useMessageGroups } from "../../hooks/use-message-groups"
 import { useChatScroll } from "../../hooks/use-chat-scroll"
 import { ChatMessageGroup } from "./chat-message-group"

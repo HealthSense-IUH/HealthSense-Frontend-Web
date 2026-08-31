@@ -8,8 +8,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge"
 import { useToast } from "@/hooks/use-toast"
 
-import { consultationApi } from "@/features/consultations/services/consultation-api"
-import type { CareServicePackage, CareServicePackageStatus } from "@/features/consultations/types"
+import { consultationApi } from "@/services"
+import type { CareServicePackage, CareServicePackageStatus } from "@/types/consultation"
 
 import { CreatePackageDialog } from "../components/create-package-dialog"
 import { EditPackageDialog } from "../components/edit-package-dialog"

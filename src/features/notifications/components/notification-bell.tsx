@@ -25,8 +25,8 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { useToast } from "@/hooks/use-toast"
 import { useAuthStore } from "@/features/auth/auth-store"
-import { notificationApi } from "../services/notification-api"
-import type { NotificationResponse, NotificationType } from "../types"
+import { notificationApi } from "@/services"
+import type { NotificationResponse, NotificationType } from "@/types/notification"
 
 export function NotificationBell() {
   const navigate = useNavigate()

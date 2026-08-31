@@ -1,5 +1,6 @@
 import { Users, Stethoscope, ShieldCheck, Crown, CalendarHeart } from "lucide-react"
-import { USER_ROLES, type UserRole } from "@/types/authentication"
+import { USER_ROLES } from "@/constants"
+import type { UserRole } from "@/types/auth"
 
 interface UserRoleTabsProps {
   selectedRole: UserRole

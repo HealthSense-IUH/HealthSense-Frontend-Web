@@ -14,16 +14,16 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { PaginationControl } from "@/components/custom/PaginationControl"
-import { healthRecordApi } from "@/features/member-health-records/services/health-record-api"
+import { healthRecordApi } from "@/services"
 import { HealthRecordDetailModal } from "@/features/member-health-records/components/HealthRecordDetailModal"
 import { UploadMeasurementModal } from "@/features/member-health-records/components/UploadMeasurementModal"
-import { 
-  getPredictionMeta, 
-  formatRecordDate, 
+import { PREDICTION_LABEL_CONFIG } from "@/constants"
+import {
+  getPredictionMeta,
+  formatRecordDate,
   formatHrvNumber,
-  PREDICTION_LABEL_CONFIG 
-} from "@/lib/health-record-labels"
-import type { MemberHealthRecord } from "@/features/member-health-records/types"
+} from "@/lib"
+import type { MemberHealthRecord } from "@/types/health-record"
 
 export default function AfibHistoryPage() {
   const [records, setRecords] = useState<MemberHealthRecord[]>([])

@@ -4,7 +4,7 @@ import { Eye } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
-import type { HealthRecord } from "../types"
+import type { HealthRecord } from "@/types/health-record"
 
 interface HealthRecordsTableProps {
   records: HealthRecord[]

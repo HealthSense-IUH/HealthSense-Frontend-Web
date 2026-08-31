@@ -1,4 +1,4 @@
-import { formatChatDate } from "../../utils/chat-formatters"
+import { formatChatDate } from "@/lib"
 
 export function ChatDateSeparator({ date }: { date: string }) {
   const formattedDate = formatChatDate(date)

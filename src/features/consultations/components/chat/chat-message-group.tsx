@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils"
 import { ChatMessageBubble } from "./chat-message-bubble"
-import { formatMessageTime } from "../../utils/chat-formatters"
+import { formatMessageTime } from "@/lib"
 import type { MessageGroup } from "../../hooks/use-message-groups"
 
 interface ChatMessageGroupProps {

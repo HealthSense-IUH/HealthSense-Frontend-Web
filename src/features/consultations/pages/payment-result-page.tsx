@@ -3,8 +3,8 @@ import { useNavigate, useSearchParams } from "react-router-dom"
 import { ShieldAlert, CheckCircle2, Clock, XCircle, AlertTriangle, RefreshCw, ArrowLeft } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
-import { consultationApi } from "../services/consultation-api"
-import type { ConsultationPaymentResponse, ConsultationPaymentAttemptItem, ConsultationRenewalResponse } from "../types"
+import { consultationApi } from "@/services"
+import type { ConsultationPaymentResponse, ConsultationPaymentAttemptItem, ConsultationRenewalResponse } from "@/types/consultation"
 
 function readError(error: unknown, fallback: string) {
   const err = error as { response?: { data?: { message?: string } }; message?: string }

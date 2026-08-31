@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react"
 import { useAuthStore } from "@/features/auth/auth-store"
 import { useAppShell } from "@/components/layout/app-shell-context"
-import { USER_ROLES } from "@/types/authentication"
+import { USER_ROLES } from "@/constants"
 import { useToast } from "@/hooks/use-toast"
 
 import { useConsultationSocket } from "./use-consultation-socket"
-import { consultationApi } from "../services/consultation-api"
+import { consultationApi } from "@/services"
 import type { AdminDialogMode } from "../components/admin-action-dialog"
 import type { RequestFormData } from "../components/create-request-panel"
 import type { AdminSessionFormData } from "../components/create-admin-session-panel"
@@ -17,7 +17,7 @@ import type {
   SendConsultationMessagePayload,
   CareServicePackage,
   ConsultationRequestReviewResponse,
-} from "../types"
+} from "@/types/consultation"
 
 export type AlertState = {
   type: "success" | "error"

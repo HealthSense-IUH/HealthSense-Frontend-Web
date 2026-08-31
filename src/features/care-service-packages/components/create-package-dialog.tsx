@@ -18,13 +18,13 @@ import { Switch } from "@/components/ui/switch"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
-import { consultationApi } from "@/features/consultations/services/consultation-api"
-import {
-  CARE_SERVICE_CODE_LABELS,
-  type CareServiceCode,
-  type CreateCareServicePackagePayload,
-  type DoctorSpecialty,
-} from "@/features/consultations/types"
+import { consultationApi } from "@/services"
+import { CARE_SERVICE_CODE_LABELS } from "@/constants"
+import type {
+  CareServiceCode,
+  CreateCareServicePackagePayload,
+  DoctorSpecialty,
+} from "@/types/consultation"
 
 interface CreatePackageDialogProps {
   open: boolean

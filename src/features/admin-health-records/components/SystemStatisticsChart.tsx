@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis, CartesianGrid, Legend } from "recharts";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { adminHealthRecordApi } from "../services";
-import type { SystemHealthStat } from "../types";
+import { adminHealthRecordApi } from "@/services";
+import type { SystemHealthStat } from "@/types/health-record";
 
 export function SystemStatisticsChart() {
   const [data, setData] = useState<SystemHealthStat[]>([]);

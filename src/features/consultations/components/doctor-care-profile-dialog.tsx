@@ -10,8 +10,8 @@ import { Switch } from "@/components/ui/switch"
 import { useToast } from "@/hooks/use-toast"
 import { ScrollArea } from "@/components/ui/scroll-area"
 
-import { consultationApi } from "../services/consultation-api"
-import type { DoctorCareProfilePayload, DoctorAvailabilitySlot, DoctorSpecialty, DayOfWeek } from "../types"
+import { consultationApi } from "@/services"
+import type { DoctorCareProfilePayload, DoctorAvailabilitySlot, DoctorSpecialty, DayOfWeek } from "@/types/consultation"
 
 const DEFAULT_SLOT: DoctorAvailabilitySlot = {
   dayOfWeek: "MONDAY",

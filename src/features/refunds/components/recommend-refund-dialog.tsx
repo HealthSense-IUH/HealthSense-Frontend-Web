@@ -12,8 +12,8 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { refundApi } from "../services/refund-api"
-import type { RefundRecommendation } from "../types"
+import { refundApi } from "@/services"
+import type { RefundRecommendation } from "@/types/refund"
 
 interface RecommendRefundDialogProps {
   paymentId: number | string | null

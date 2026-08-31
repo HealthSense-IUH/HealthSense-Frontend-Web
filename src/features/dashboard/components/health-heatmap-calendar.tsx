@@ -2,8 +2,8 @@ import { useState, useEffect, useMemo, useCallback } from "react"
 import { Calendar as CalendarIcon, Flame, ShieldCheck, ChevronLeft, ChevronRight } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { healthRecordApi } from "@/features/member-health-records/services/health-record-api"
-import type { MemberHealthRecord } from "@/features/member-health-records/types"
+import { healthRecordApi } from "@/services"
+import type { MemberHealthRecord } from "@/types/health-record"
 
 interface HealthHeatmapCalendarProps {
   onSelectRecord?: (record: MemberHealthRecord) => void

@@ -3,8 +3,8 @@ import { AlertCircle, RotateCw, Loader2, User as UserIcon } from "lucide-react"
 import { useAuthStore } from "@/features/auth/auth-store"
 import { Button } from "@/components/ui/button"
 
-import { profileApi } from "../services/profile-api"
-import type { UserResponse, ProfileUpdateRequest } from "../types"
+import { profileApi } from "@/services"
+import type { UserResponse, ProfileUpdateRequest } from "@/types/profile"
 import { UnifiedProfileCard } from "../components/unified-profile-card"
 
 export default function ProfilePage() {

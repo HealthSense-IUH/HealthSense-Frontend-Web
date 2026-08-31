@@ -4,7 +4,7 @@ import { KeyRound, ArrowRight, ArrowLeft, RefreshCw, AlertCircle, CheckCircle2, 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { forgotPasswordApi } from "../services/forgot-password-api"
+import { forgotPasswordApi } from "@/services"
 
 interface VerifyOtpFormProps {
   email: string

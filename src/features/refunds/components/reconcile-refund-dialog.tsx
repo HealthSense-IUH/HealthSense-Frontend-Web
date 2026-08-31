@@ -14,8 +14,8 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Info } from "lucide-react"
-import { refundApi } from "../services/refund-api"
-import type { ConsultationRefundResponse } from "../types"
+import { refundApi } from "@/services"
+import type { ConsultationRefundResponse } from "@/types/refund"
 
 interface ReconcileRefundDialogProps {
   refund: ConsultationRefundResponse | null

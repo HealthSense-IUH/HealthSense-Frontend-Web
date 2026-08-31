@@ -19,14 +19,14 @@ import { Badge } from "@/components/ui/badge"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
-import { consultationApi } from "@/features/consultations/services/consultation-api"
-import {
-  CARE_SERVICE_CODE_LABELS,
-  type CareServiceCode,
-  type CareServicePackage,
-  type DoctorSpecialty,
-  type UpdateCareServicePackagePayload,
-} from "@/features/consultations/types"
+import { consultationApi } from "@/services"
+import { CARE_SERVICE_CODE_LABELS } from "@/constants"
+import type {
+  CareServiceCode,
+  CareServicePackage,
+  DoctorSpecialty,
+  UpdateCareServicePackagePayload,
+} from "@/types/consultation"
 
 interface EditPackageDialogProps {
   pkg: CareServicePackage

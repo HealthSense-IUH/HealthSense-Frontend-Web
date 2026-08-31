@@ -26,8 +26,8 @@ import {
 import { Card, CardContent } from "@/components/ui/card"
 import { useToast } from "@/hooks/use-toast"
 import { useAuthStore } from "@/features/auth/auth-store"
-import { needsActionApi } from "../services/needs-action-api"
-import type { NeedsActionResponse, NeedsActionStatus, NeedsActionType } from "../types"
+import { needsActionApi } from "@/services"
+import type { NeedsActionResponse, NeedsActionStatus, NeedsActionType } from "@/types/needs-action"
 import { NeedsActionDetailDialog } from "../components/needs-action-detail-dialog"
 
 export default function NeedsActionsPage() {

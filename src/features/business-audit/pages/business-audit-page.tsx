@@ -22,13 +22,12 @@ import {
 import { Card, CardContent } from "@/components/ui/card"
 import { useToast } from "@/hooks/use-toast"
 import { useAuthStore } from "@/features/auth/auth-store"
-import { businessAuditApi } from "../services/business-audit-api"
-import {
-  COORDINATOR_PERMITTED_DOMAINS,
-  ADMIN_ALL_DOMAINS,
-  type BusinessAuditEventResponse,
-  type BusinessDomainType,
-} from "../types"
+import { businessAuditApi } from "@/services"
+import { COORDINATOR_PERMITTED_DOMAINS, ADMIN_ALL_DOMAINS } from "@/constants"
+import type {
+  BusinessAuditEventResponse,
+  BusinessAuditTargetDomain as BusinessDomainType,
+} from "@/types/business-audit"
 import { AuditEventDetailDrawer } from "../components/audit-event-detail-drawer"
 
 export default function BusinessAuditPage() {

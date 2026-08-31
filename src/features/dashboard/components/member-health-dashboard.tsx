@@ -21,7 +21,7 @@ import {
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { healthRecordApi } from "@/features/member-health-records/services/health-record-api"
+import { healthRecordApi } from "@/services"
 import { HealthRecordDetailModal } from "@/features/member-health-records/components/HealthRecordDetailModal"
 import { HealthHeatmapCalendar } from "./health-heatmap-calendar"
 import { DailyInspirationQuote } from "./daily-inspiration-quote"
@@ -29,8 +29,8 @@ import {
   getPredictionMeta, 
   formatHrvNumber, 
   formatRecordDate 
-} from "@/lib/health-record-labels"
-import type { MemberHealthRecord, HealthStatisticsResponse } from "@/features/member-health-records/types"
+} from "@/lib"
+import type { MemberHealthRecord, HealthStatisticsResponse } from "@/types/health-record"
 
 type PeriodType = "DAY" | "WEEK" | "MONTH" | "YEAR"
 

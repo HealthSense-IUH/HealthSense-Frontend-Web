@@ -19,9 +19,9 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { cn } from "@/lib/utils"
-import { authApi } from "@/services/authentication"
+import { authApi } from "@/services"
 import { useAuthStore } from "@/features/auth/auth-store"
-import { getAuthErrorMessage } from "@/utils/authErrorHandler"
+import { getAuthErrorMessage } from "@/lib/errorHandler"
 
 type LoginLocationState = {
   from?: {

@@ -17,12 +17,12 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 
-import { consultationApi } from "../services/consultation-api"
+import { consultationApi } from "@/services"
 import type {
   ConsultationFinalSummaryResponse,
   ConsultationStatus,
   DoctorScopedHealthRecordResponse,
-} from "../types"
+} from "@/types/consultation"
 import { formatDate } from "./shared"
 
 interface DoctorFinalSummaryTabProps {

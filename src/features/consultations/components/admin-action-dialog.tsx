@@ -5,7 +5,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 
-import type { ConsultationRequestItem, ConsultationSessionItem } from "../types"
+import type { ConsultationRequestItem, ConsultationSessionItem } from "@/types/consultation"
 
 export type AdminDialogMode = "approve" | "reject" | "close" | null
 

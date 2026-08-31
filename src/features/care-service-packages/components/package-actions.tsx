@@ -23,8 +23,8 @@ import {
 } from "@/components/ui/alert-dialog"
 import { useToast } from "@/hooks/use-toast"
 
-import { consultationApi } from "@/features/consultations/services/consultation-api"
-import type { CareServicePackage } from "@/features/consultations/types"
+import { consultationApi } from "@/services"
+import type { CareServicePackage } from "@/types/consultation"
 
 interface PackageActionsProps {
   pkg: CareServicePackage

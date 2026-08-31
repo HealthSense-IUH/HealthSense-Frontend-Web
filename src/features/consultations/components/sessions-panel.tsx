@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 
-import type { ConsultationSessionItem } from "../types"
+import type { ConsultationSessionItem } from "@/types/consultation"
 import { EmptyRow, formatDate, statusBadge } from "./shared"
 import { MemberFinalSummaryDialog } from "./member-final-summary-dialog"
 import { RenewalDialog } from "./renewal-dialog"

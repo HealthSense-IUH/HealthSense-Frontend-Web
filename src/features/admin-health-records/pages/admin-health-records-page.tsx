@@ -7,8 +7,8 @@ import { HealthRecordsFilters } from "../components/HealthRecordsFilters"
 import { HealthRecordDetailDialog } from "../components/HealthRecordDetailDialog"
 import { HealthRecordCreateDialog } from "../components/HealthRecordCreateDialog"
 import { SystemStatisticsChart } from "../components/SystemStatisticsChart"
-import { adminHealthRecordApi } from "../services"
-import type { HealthRecord, GetHealthRecordsParams, PaginatedResponse, HealthRecordStatus, PredictionLabel } from "../types"
+import { adminHealthRecordApi } from "@/services"
+import type { HealthRecord, GetHealthRecordsParams, PaginatedResponse, HealthRecordStatus, PredictionLabel } from "@/types/health-record"
 
 export default function AdminHealthRecordsPage() {
   const [data, setData] = useState<PaginatedResponse<HealthRecord> | null>(null)

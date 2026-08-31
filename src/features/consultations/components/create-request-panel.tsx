@@ -10,7 +10,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Badge } from "@/components/ui/badge"
 
-import type { HealthRecordItem, CareServicePackage } from "../types"
+import type { HealthRecordItem, CareServicePackage } from "@/types/consultation"
 import { formatDate } from "./shared"
 
 export interface RequestFormData {

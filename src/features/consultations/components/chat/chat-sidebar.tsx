@@ -1,7 +1,7 @@
 import { Search, Plus, User } from "lucide-react"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { cn } from "@/lib/utils"
-import type { ConsultationSessionItem } from "../../types"
+import type { ConsultationSessionItem } from "@/types/consultation"
 import { statusBadge } from "../shared"
 
 interface ChatSidebarProps {

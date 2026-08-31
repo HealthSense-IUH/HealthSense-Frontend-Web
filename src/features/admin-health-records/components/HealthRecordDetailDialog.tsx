@@ -8,8 +8,7 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { MeasurementVisuals } from "@/features/member-health-records/components/MeasurementVisuals"
-import type { HRVFeatures } from "@/features/member-health-records/types"
-import type { HealthRecord } from "../types"
+import type { HRVFeatures, HealthRecord } from "@/types/health-record"
 
 interface HealthRecordDetailDialogProps {
   record: HealthRecord | null

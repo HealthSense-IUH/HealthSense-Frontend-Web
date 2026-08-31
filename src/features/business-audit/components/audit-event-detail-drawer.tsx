@@ -12,7 +12,7 @@ import {
   FileCode,
   ArrowRight,
 } from "lucide-react"
-import type { BusinessAuditEventResponse } from "../types"
+import type { BusinessAuditEventResponse } from "@/types/business-audit"
 
 interface AuditEventDetailDrawerProps {
   event: BusinessAuditEventResponse | null

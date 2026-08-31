@@ -6,8 +6,8 @@ import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
-import { consultationApi } from "../services/consultation-api"
-import type { CareContinuitySummaryResponse } from "../types"
+import { consultationApi } from "@/services"
+import type { CareContinuitySummaryResponse } from "@/types/consultation"
 import { formatDate } from "./shared"
 
 interface DoctorContinuityTabProps {

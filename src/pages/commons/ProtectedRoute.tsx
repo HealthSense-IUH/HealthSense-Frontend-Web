@@ -2,7 +2,7 @@ import { Navigate, Outlet, useLocation } from "react-router-dom"
 import type { ReactNode } from "react"
 
 import { useAuthStore } from "@/features/auth/auth-store"
-import type { UserRole } from "@/types/authentication"
+import type { UserRole } from "@/types/auth"
 
 type ProtectedRouteProps = {
   /** Không truyền children => dùng làm layout route, render <Outlet /> cho route con */

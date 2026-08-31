@@ -5,8 +5,8 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
 
-import { consultationApi } from "../services/consultation-api"
-import type { DoctorScopedHealthRecordResponse } from "../types"
+import { consultationApi } from "@/services"
+import type { DoctorScopedHealthRecordResponse } from "@/types/consultation"
 import { formatDate } from "./shared"
 import { DoctorRecordDetailDialog } from "./doctor-record-detail-dialog"
 

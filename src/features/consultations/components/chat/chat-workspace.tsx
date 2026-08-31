@@ -1,7 +1,7 @@
 import { MessageSquare } from "lucide-react"
 import type { FormEvent } from "react"
 
-import type { ConsultationMessageItem, ConsultationSessionItem } from "../../types"
+import type { ConsultationMessageItem, ConsultationSessionItem } from "@/types/consultation"
 import { ChatSidebar } from "./chat-sidebar"
 import { ChatHeader } from "./chat-header"
 import { ChatMessageList } from "./chat-message-list"

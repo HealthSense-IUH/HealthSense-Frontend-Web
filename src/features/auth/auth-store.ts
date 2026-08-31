@@ -1,8 +1,7 @@
 import { create } from "zustand"
 
-import type { UserSession } from "@/types/authentication"
-
-const USER_SESSION_STORAGE_KEY = "healthsense:user-session"
+import { USER_SESSION_STORAGE_KEY } from "@/constants/storage"
+import type { UserSession } from "@/types/auth"
 
 type AuthState = {
   accessToken: string | null

@@ -11,7 +11,7 @@ import {
   YAxis,
 } from "recharts"
 
-import type { HRVFeatures } from "../types"
+import type { HRVFeatures } from "@/types/health-record"
 
 function asNumberArray(value: unknown): number[] {
   if (!Array.isArray(value)) return []

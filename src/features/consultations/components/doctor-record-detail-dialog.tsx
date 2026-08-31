@@ -8,10 +8,10 @@ import { useToast } from "@/hooks/use-toast"
 import { Skeleton } from "@/components/ui/skeleton"
 
 import { MeasurementVisuals } from "@/features/member-health-records/components/MeasurementVisuals"
-import type { HRVFeatures } from "@/features/member-health-records/types"
+import type { HRVFeatures } from "@/types/health-record"
 
-import { consultationApi } from "../services/consultation-api"
-import type { DoctorScopedHealthRecordResponse } from "../types"
+import { consultationApi } from "@/services"
+import type { DoctorScopedHealthRecordResponse } from "@/types/consultation"
 import { formatDate } from "./shared"
 
 interface DoctorRecordDetailDialogProps {

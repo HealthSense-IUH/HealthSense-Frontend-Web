@@ -1,8 +1,8 @@
 import { Eye, Edit3, Trash2, ChevronLeft, ChevronRight, Inbox, Loader2, FilePlus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { UserStatusBadge } from "./user-status-badge"
-import { USER_ROLES } from "@/types/authentication"
-import type { UserItem } from "../types"
+import { USER_ROLES } from "@/constants"
+import type { UserItem } from "@/types/user"
 
 interface UserTableProps {
   users: UserItem[]

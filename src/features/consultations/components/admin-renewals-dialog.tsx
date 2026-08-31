@@ -8,12 +8,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
 
-import { consultationApi } from "../services/consultation-api"
+import { consultationApi } from "@/services"
 import type {
   ConsultationSessionItem,
   ConsultationRenewalResponse,
   SessionExtensionResponse,
-} from "../types"
+} from "@/types/consultation"
 import { formatDate } from "./shared"
 import { getRenewalStatusBadge } from "./renewal-dialog"
 

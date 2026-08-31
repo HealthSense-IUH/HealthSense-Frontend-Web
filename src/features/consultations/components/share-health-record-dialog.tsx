@@ -7,8 +7,8 @@ import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { useToast } from "@/hooks/use-toast"
 
-import { consultationApi } from "../services/consultation-api"
-import type { HealthRecordItem } from "../types"
+import { consultationApi } from "@/services"
+import type { HealthRecordItem } from "@/types/consultation"
 import { formatDate } from "./shared"
 
 interface ShareHealthRecordDialogProps {

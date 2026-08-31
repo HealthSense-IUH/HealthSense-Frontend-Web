@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react"
-import type { UserRole } from "@/types/authentication"
+import type { UserRole } from "@/types/auth"
 
 export interface AppShellContextValue {
   isCollapsed: boolean

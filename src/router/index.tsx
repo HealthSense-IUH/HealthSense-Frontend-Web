@@ -6,7 +6,7 @@ import { LazyElement } from "@/components/custom/LazyElement"
 import { GuestOnlyRoute } from "@/pages/commons/GuestOnlyRoute"
 import { ProtectedRoute } from "@/pages/commons/ProtectedRoute"
 
-import { USER_ROLES } from "@/types/authentication"
+import { USER_ROLES } from "@/constants"
 
 const MemberLayout = lazy(() => import("@/pages/member"))
 const DashboardPage = lazy(() => import("@/features/dashboard/pages/dashboard-page"))

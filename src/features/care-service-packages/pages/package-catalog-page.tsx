@@ -14,8 +14,8 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
-import { consultationApi } from "@/features/consultations/services/consultation-api"
-import type { CareServicePackage } from "@/features/consultations/types"
+import { consultationApi } from "@/services"
+import type { CareServicePackage } from "@/types/consultation"
 
 export default function PackageCatalogPage() {
   const navigate = useNavigate()

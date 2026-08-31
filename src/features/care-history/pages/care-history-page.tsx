@@ -13,8 +13,8 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
-import { consultationApi } from "@/features/consultations/services/consultation-api"
-import type { CareHistoryEpisodeResponse } from "@/features/consultations/types"
+import { consultationApi } from "@/services"
+import type { CareHistoryEpisodeResponse } from "@/types/consultation"
 import { CareHistoryDetailDialog } from "../components/care-history-detail-dialog"
 
 export default function CareHistoryPage() {

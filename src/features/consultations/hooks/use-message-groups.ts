@@ -1,5 +1,5 @@
 import { useMemo } from "react"
-import type { ConsultationMessageItem } from "../types"
+import type { ConsultationMessageItem } from "@/types/consultation"
 
 export interface MessageGroup {
   id: string

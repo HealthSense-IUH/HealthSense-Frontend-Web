@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, type ChangeEvent, type FormEvent } from "r
 import { UploadCloud, FileText, Loader2, X, AlertCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useToast } from "@/hooks/use-toast"
-import { healthRecordApi } from "../services/health-record-api"
+import { healthRecordApi } from "@/services"
 
 interface UploadMeasurementModalProps {
   isOpen: boolean

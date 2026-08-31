@@ -12,8 +12,8 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog"
 
-import { consultationApi } from "../services/consultation-api"
-import type { ConsultationFinalSummaryResponse } from "../types"
+import { consultationApi } from "@/services"
+import type { ConsultationFinalSummaryResponse } from "@/types/consultation"
 import { formatDate } from "./shared"
 
 interface MemberFinalSummaryDialogProps {

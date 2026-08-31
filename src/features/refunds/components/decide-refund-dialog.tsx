@@ -12,8 +12,8 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { refundApi } from "../services/refund-api"
-import type { ConsultationRefundResponse } from "../types"
+import { refundApi } from "@/services"
+import type { ConsultationRefundResponse } from "@/types/refund"
 
 interface DecideRefundDialogProps {
   refund: ConsultationRefundResponse | null

@@ -4,8 +4,9 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { USER_ROLES, type UserRole } from "@/types/authentication"
-import type { UserCreateRequest, UserItem, UserUpdateRequest, AccountStatus } from "../types"
+import { USER_ROLES } from "@/constants"
+import type { UserRole } from "@/types/auth"
+import type { UserCreateRequest, UserItem, UserUpdateRequest, UserAccountStatus as AccountStatus } from "@/types/user"
 
 interface UserFormModalProps {
   isOpen: boolean

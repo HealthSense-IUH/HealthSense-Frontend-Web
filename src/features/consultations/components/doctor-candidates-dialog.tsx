@@ -9,8 +9,8 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Badge } from "@/components/ui/badge"
 import { useToast } from "@/hooks/use-toast"
 
-import { consultationApi } from "../services/consultation-api"
-import type { DoctorCandidateResponse } from "../types"
+import { consultationApi } from "@/services"
+import type { DoctorCandidateResponse } from "@/types/consultation"
 
 export function DoctorCandidatesDialog({
   requestId,

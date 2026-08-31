@@ -1,6 +1,7 @@
 import { ShieldAlert, Check } from "lucide-react"
 
-import { USER_ROLES, type UserRole } from "@/types/authentication"
+import { USER_ROLES } from "@/constants"
+import type { UserRole } from "@/types/auth"
 import { useAppShell } from "./app-shell-context"
 import {
   Popover,

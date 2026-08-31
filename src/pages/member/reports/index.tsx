@@ -12,8 +12,8 @@ import {
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { healthRecordApi } from "@/features/member-health-records/services/health-record-api"
-import type { HealthStatisticsResponse, MemberHealthRecord } from "@/features/member-health-records/types"
+import { healthRecordApi } from "@/services"
+import type { HealthStatisticsResponse, MemberHealthRecord } from "@/types/health-record"
 
 interface DayAggregate {
   date: string

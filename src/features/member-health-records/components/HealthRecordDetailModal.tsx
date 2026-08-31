@@ -12,9 +12,9 @@ import {
   getPredictionMeta, 
   formatHrvNumber, 
   formatRecordDate 
-} from "@/lib/health-record-labels"
-import { healthRecordApi } from "../services/health-record-api"
-import type { MemberHealthRecord } from "../types"
+} from "@/lib"
+import { healthRecordApi } from "@/services"
+import type { MemberHealthRecord } from "@/types/health-record"
 import { MeasurementVisuals } from "./MeasurementVisuals"
 
 interface HealthRecordDetailModalProps {

@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/dialog"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import type { CareHistoryEpisodeResponse } from "@/features/consultations/types"
+import type { CareHistoryEpisodeResponse } from "@/types/consultation"
 
 interface CareHistoryDetailDialogProps {
   episode: CareHistoryEpisodeResponse | null

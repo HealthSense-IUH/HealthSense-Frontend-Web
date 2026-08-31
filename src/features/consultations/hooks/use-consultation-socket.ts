@@ -5,7 +5,7 @@ import SockJS from "sockjs-client"
 import { env } from "@/config"
 import { useAuthStore } from "@/features/auth/auth-store"
 import type { ApiResponse } from "@/types/base"
-import type { ConsultationMessageItem, SendConsultationMessagePayload } from "../types"
+import type { ConsultationMessageItem, SendConsultationMessagePayload } from "@/types/consultation"
 
 type SocketStatus = "idle" | "connecting" | "connected" | "error"
 

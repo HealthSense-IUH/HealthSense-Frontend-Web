@@ -4,8 +4,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { UserStatusBadge } from "./user-status-badge"
-import { userManagementApi } from "../services/user-api"
-import type { UserItem, AdminMemberDetailResponse } from "../types"
+import { userManagementApi } from "@/services"
+import type { UserItem, AdminMemberDetailResponse } from "@/types/user"
 
 interface UserDetailDrawerProps {
   isOpen: boolean

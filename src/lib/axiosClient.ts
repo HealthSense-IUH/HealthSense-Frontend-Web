@@ -2,8 +2,8 @@ import axios, { AxiosError, type InternalAxiosRequestConfig } from "axios"
 
 import { env } from "@/config"
 import { useAuthStore } from "@/features/auth/auth-store"
+import type { LoginResponse } from "@/types/auth"
 import type { ApiResponse, ErrorResponse } from "@/types/base"
-import type { LoginResponse } from "@/types/authentication"
 
 function preserveUnsafeIntegers(json: string) {
   return json.replace(/:\s*(-?\d{16,})(?=\s*[,}\]])/g, ': "$1"')
@@ -115,4 +115,5 @@ axiosClient.interceptors.response.use(
   }
 )
 
+export { axiosClient }
 export default axiosClient
