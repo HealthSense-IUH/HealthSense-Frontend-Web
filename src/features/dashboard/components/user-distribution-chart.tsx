@@ -36,8 +36,8 @@ export function UserDistributionChart({ data }: { data: UserDistributionItem[] }
               paddingAngle={4}
               stroke="none"
             >
-              {data.map((item, index) => (
-                <Cell key={`cell-${index}`} fill={item.color} />
+              {data.map((item) => (
+                <Cell key={item.name} fill={item.color} />
               ))}
             </Pie>
           </PieChart>

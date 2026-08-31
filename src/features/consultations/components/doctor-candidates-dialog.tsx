@@ -139,8 +139,8 @@ export function DoctorCandidatesDialog({
                     <div className="mt-2 text-xs text-red-600 bg-red-50 p-2 rounded flex gap-1.5 items-start">
                       <AlertTriangle className="w-4 h-4 shrink-0" />
                       <ul className="list-disc list-inside">
-                        {doctor.ineligibleReasons.map((r, i) => (
-                          <li key={i}>{r}</li>
+                        {doctor.ineligibleReasons.map((r) => (
+                          <li key={r}>{r}</li>
                         ))}
                       </ul>
                     </div>

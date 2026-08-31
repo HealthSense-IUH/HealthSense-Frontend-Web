@@ -294,9 +294,9 @@ export function DailyInspirationQuote() {
           {/* Tags */}
           {quote?.tags && quote.tags.length > 0 && (
             <div className="flex items-center gap-1.5">
-              {quote.tags.slice(0, 3).map((tag, i) => (
+              {quote.tags.slice(0, 3).map((tag) => (
                 <span
-                  key={i}
+                  key={tag}
                   className="text-[11px] font-semibold text-emerald-800 dark:text-emerald-300 bg-white/80 dark:bg-slate-800/80 px-2.5 py-0.5 rounded-lg border border-emerald-500/20 shadow-2xs backdrop-blur-xs"
                 >
                   #{tag}

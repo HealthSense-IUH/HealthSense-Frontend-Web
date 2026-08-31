@@ -381,7 +381,7 @@ export function RenewalDialog({
               ) : (
                 <div className="space-y-3">
                   {extensions.map((ext, idx) => (
-                    <div key={ext.id || idx} className="p-3.5 rounded-xl border bg-card text-xs space-y-2">
+                    <div key={ext.id ?? `ext-${ext.appliedAt}-${idx}`} className="p-3.5 rounded-xl border bg-card text-xs space-y-2">
                       <div className="flex items-center justify-between">
                         <span className="font-semibold text-foreground">Gia hạn lần #{idx + 1}</span>
                         <Badge variant="outline" className="text-[10px] bg-emerald-50 text-emerald-700 border-emerald-200">

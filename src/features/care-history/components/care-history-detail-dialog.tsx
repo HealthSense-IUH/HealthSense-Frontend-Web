@@ -193,8 +193,8 @@ export function CareHistoryDetailDialog({
                       <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
                         Phụ lục bổ sung ({finalSummary.addenda.length})
                       </h4>
-                      {finalSummary.addenda.map((addendum, idx) => (
-                        <div key={idx} className="p-3 rounded-lg border bg-muted/40 space-y-1 text-xs">
+                      {finalSummary.addenda.map((addendum) => (
+                        <div key={addendum.id ?? `${addendum.createdAt}-${addendum.reason}`} className="p-3 rounded-lg border bg-muted/40 space-y-1 text-xs">
                           <div className="flex items-center justify-between text-muted-foreground">
                             <span className="font-semibold text-foreground">Lý do: {addendum.reason}</span>
                             <span>{formatDate(addendum.createdAt)}</span>

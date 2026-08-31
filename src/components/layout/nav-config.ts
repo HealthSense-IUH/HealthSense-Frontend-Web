@@ -220,11 +220,7 @@ export const managementNavigationGroups: NavigationGroup[] = [
   },
 ]
 
-// Fallback all navigation groups for breadcrumb matching
-export const navigationGroups: NavigationGroup[] = [
-  ...generalNavigationGroups,
-  ...managementNavigationGroups,
-]
+
 
 /**
  * Xác định pathname có thuộc phân hệ Quản trị (Management) hay không.
@@ -233,15 +229,4 @@ export const navigationGroups: NavigationGroup[] = [
  */
 export function isManagementPath(pathname: string): boolean {
   return pathname.startsWith("/app/management")
-}
-
-export function findNavigationItemByPath(pathname: string): { item: NavigationItem | undefined; group: NavigationGroup | undefined } {
-  for (const group of navigationGroups) {
-    for (const item of group.items) {
-      if (item.href === pathname || (pathname.startsWith(item.href) && item.href !== "/app/general/dashboard" && item.href !== "/app/management" && item.href !== "/app/management/packages")) {
-        return { item, group }
-      }
-    }
-  }
-  return { item: undefined, group: undefined }
 }

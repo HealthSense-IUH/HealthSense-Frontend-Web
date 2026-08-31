@@ -75,8 +75,8 @@ export function DoctorSessionDetailDialog({ sessionId, open, onOpenChange }: Doc
 
       return (
         <div className="space-y-2 mt-2">
-          {schedule.weekly.map((slot: any, idx: number) => (
-            <div key={idx} className="flex justify-between items-center text-sm border-b pb-1 last:border-0 last:pb-0">
+          {schedule.weekly.map((slot: { dayOfWeek: string; start: string; end: string }) => (
+            <div key={`${slot.dayOfWeek}-${slot.start}-${slot.end}`} className="flex justify-between items-center text-sm border-b pb-1 last:border-0 last:pb-0">
               <span className="font-medium text-neutral-700">
                 {DAYS_OF_WEEK_MAP[slot.dayOfWeek] || slot.dayOfWeek}
               </span>

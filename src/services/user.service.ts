@@ -79,7 +79,7 @@ export const userManagementApi = {
    * POST /api/admin/health-records
    */
   createFakeHealthRecord(payload: { memberId: string | number }) {
-    return axiosClient.post<ApiResponse<any>, ApiResponse<any>>(
+    return axiosClient.post<ApiResponse<unknown>>(
       "/api/admin/health-records",
       payload
     )

@@ -77,6 +77,6 @@ export interface IdentityCardPresignedUrlResponse {
 
 export interface MemberDetailResponse {
   user: UserResponse
-  latestHealthRecord?: any
+  latestHealthRecord?: Record<string, unknown> | null
   totalHealthRecords?: number
 }

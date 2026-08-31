@@ -1,15 +1,28 @@
 {
   "$schema": "https://unpkg.com/knip@5/schema.json",
-  "entry": ["src/main.tsx"],
+  "entry": [
+    "src/types/index.ts",
+    "src/services/index.ts",
+    "src/constants/index.ts",
+    "src/config/index.ts",
+    "src/lib/index.ts"
+  ],
   "project": ["src/**/*.{ts,tsx}"],
   "ignore": [
-    "src/components/ui/**",
-    "**/*.d.ts"
+    "src/components/ui/**"
   ],
   "ignoreDependencies": [
-    "@tailwindcss/vite",
     "tailwindcss",
-    "tailwindcss-animate"
+    "tailwindcss-animate",
+    "@radix-ui/react-accordion",
+    "@radix-ui/react-alert-dialog",
+    "@radix-ui/react-checkbox",
+    "@radix-ui/react-dropdown-menu",
+    "@radix-ui/react-progress",
+    "@radix-ui/react-separator",
+    "@radix-ui/react-slider",
+    "eslint-config-prettier",
+    "prettier"
   ],
   "ignoreExportsUsedInFile": true
 }

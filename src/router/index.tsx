@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { lazy } from "react"
 import { Navigate, createBrowserRouter, useLocation } from "react-router-dom"
 
@@ -8,27 +9,28 @@ import { ProtectedRoute } from "@/pages/commons/ProtectedRoute"
 
 import { USER_ROLES } from "@/constants"
 
-const MemberLayout = lazy(() => import("@/pages/member"))
-const DashboardPage = lazy(() => import("@/features/dashboard/pages/dashboard-page"))
-const AfibHistoryPage = lazy(() => import("@/pages/member/afib-history"))
-const ReportsPage = lazy(() => import("@/pages/member/reports"))
-const CareHistoryPage = lazy(() => import("@/features/care-history/pages/care-history-page"))
-const PackageCatalogPage = lazy(() => import("@/features/care-service-packages/pages/package-catalog-page"))
+const AppLayout = lazy(() => import("@/pages/app/app-layout"))
+const DashboardPage = lazy(() => import("@/pages/app/general/dashboard"))
+const AfibHistoryPage = lazy(() => import("@/pages/app/general/afib-history"))
+const ReportsPage = lazy(() => import("@/pages/app/general/reports"))
+const CareHistoryPage = lazy(() => import("@/pages/app/general/care-history"))
+const PackageCatalogPage = lazy(() => import("@/pages/app/general/packages"))
+const ProfilePage = lazy(() => import("@/pages/app/general/profile"))
+const ConsultationsPage = lazy(() => import("@/pages/app/general/consultations"))
+const PaymentResultPage = lazy(() => import("@/pages/app/general/payment-result"))
 
-const ManagementPage = lazy(() => import("@/pages/admin/management-page"))
-const UserManagementPage = lazy(() => import("@/features/user-management/pages/user-management-page"))
-const AdminHealthRecordsPage = lazy(() => import("@/features/admin-health-records/pages/admin-health-records-page"))
-const AdminPackagesPage = lazy(() => import("@/features/care-service-packages/pages/admin-packages-page"))
-const NeedsActionsPage = lazy(() => import("@/features/needs-actions/pages/needs-actions-page"))
-const BusinessAuditPage = lazy(() => import("@/features/business-audit/pages/business-audit-page"))
-const ConsultationsPage = lazy(() => import("@/features/consultations/pages/consultations-page"))
-const PaymentResultPage = lazy(() => import("@/features/consultations/pages/payment-result-page"))
-const DoctorSessionsPage = lazy(() => import("@/features/consultations/pages/doctor-sessions-page"))
-const ProfilePage = lazy(() => import("@/features/profile/pages/profile-page"))
-const LandingPage = lazy(() => import("@/pages/public/landing-page"))
-const LoginPage = lazy(() => import("@/pages/public/login-page"))
-const ForgotPasswordPage = lazy(() => import("@/features/forgot-password/pages/forgot-password-page"))
-const TermsPage = lazy(() => import("@/pages/public/terms-page"))
+const ManagementPage = lazy(() => import("@/pages/app/management/hub"))
+const UserManagementPage = lazy(() => import("@/pages/app/management/users"))
+const AdminPackagesPage = lazy(() => import("@/pages/app/management/packages"))
+const AdminHealthRecordsPage = lazy(() => import("@/pages/app/management/health-records"))
+const NeedsActionsPage = lazy(() => import("@/pages/app/management/needs-actions"))
+const BusinessAuditPage = lazy(() => import("@/pages/app/management/audit"))
+const DoctorSessionsPage = lazy(() => import("@/pages/app/management/doctor-consultations"))
+
+const LandingPage = lazy(() => import("@/pages/public/landing"))
+const LoginPage = lazy(() => import("@/pages/public/login"))
+const ForgotPasswordPage = lazy(() => import("@/pages/public/forgot-password"))
+const TermsPage = lazy(() => import("@/pages/public/terms"))
 
 /** Redirect giữ nguyên query string (quan trọng với URL PayOS trả về). */
 function RedirectPreserveQuery({ to }: { to: string }) {
@@ -89,7 +91,7 @@ export const router = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <LazyElement>
-          <MemberLayout />
+          <AppLayout />
         </LazyElement>
       </ProtectedRoute>
     ),

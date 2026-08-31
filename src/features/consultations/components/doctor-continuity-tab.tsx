@@ -93,8 +93,8 @@ export function DoctorContinuityTab({ sessionId }: DoctorContinuityTabProps) {
       </div>
 
       <div className="space-y-4">
-        {summaries.map((item, idx) => (
-          <Card key={item.sessionId || idx} className="border-border shadow-2xs">
+        {summaries.map((item) => (
+          <Card key={item.sessionId} className="border-border shadow-2xs">
             <CardHeader className="p-4 pb-3 bg-muted/20 border-b">
               <div className="flex items-start justify-between gap-2">
                 <div>

@@ -56,6 +56,7 @@ export function DashboardHeader({ filters, onFilterChange }: DashboardHeaderProp
 
         <div className="relative">
           <select
+            aria-label="Chọn khoảng thời gian"
             value={filters.period}
             onChange={(event) => onFilterChange({ period: event.target.value as DashboardFilters["period"] })}
             className="appearance-none rounded-xl border border-slate-200/80 bg-white px-3.5 py-1.5 pr-8 text-xs font-bold text-slate-700 shadow-2xs hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 cursor-pointer"
@@ -75,6 +76,7 @@ export function DashboardHeader({ filters, onFilterChange }: DashboardHeaderProp
             <Building className="h-3.5 w-3.5" />
           </div>
           <select
+            aria-label="Chọn cơ sở y tế hoặc tổ chức"
             value={filters.organizationId}
             onChange={(event) => onFilterChange({ organizationId: event.target.value })}
             className="appearance-none rounded-xl border border-slate-200/80 bg-white pl-8 pr-8 py-1.5 text-xs font-bold text-slate-700 shadow-2xs hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 cursor-pointer"

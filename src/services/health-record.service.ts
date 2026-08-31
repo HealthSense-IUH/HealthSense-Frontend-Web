@@ -139,7 +139,10 @@ export const healthRecordApi = {
 
 export const adminHealthRecordApi = {
   getSystemStatistics(fromDate: Date, toDate: Date) {
-    return axiosClient.get<any, ApiResponse<SystemHealthStat[]>>(
+    return axiosClient.get<
+      ApiResponse<SystemHealthStat[]>,
+      ApiResponse<SystemHealthStat[]>
+    >(
       "/api/admin/health-records/statistics",
       {
         params: {

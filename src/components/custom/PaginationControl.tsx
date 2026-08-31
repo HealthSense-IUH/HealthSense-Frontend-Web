@@ -149,11 +149,11 @@ export function PaginationControl({
 
         {/* Page Number Buttons */}
         <div className="flex items-center gap-1 px-1">
-          {pageNumbers.map((p, idx) => {
+          {pageNumbers.map((p) => {
             if (typeof p === "string") {
               return (
                 <div
-                  key={`ellipsis-${idx}`}
+                  key={p}
                   className="h-8 w-6 flex items-center justify-center text-muted-foreground"
                 >
                   <MoreHorizontal className="h-3.5 w-3.5" />

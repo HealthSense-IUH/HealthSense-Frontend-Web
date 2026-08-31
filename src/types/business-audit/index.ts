@@ -1,10 +1,3 @@
-import {
-  COORDINATOR_PERMITTED_DOMAINS,
-  ADMIN_ALL_DOMAINS,
-} from "@/constants/consultations"
-
-export { COORDINATOR_PERMITTED_DOMAINS, ADMIN_ALL_DOMAINS }
-
 export type BusinessDomainType =
   | "PACKAGE"
   | "REQUEST"

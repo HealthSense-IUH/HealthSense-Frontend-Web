@@ -9,7 +9,6 @@ import {
 import type {
   PredictionLabel,
   PredictionLabelMeta,
-  RecordStatus,
 } from "@/types/health-record"
 
 /**
@@ -88,12 +87,4 @@ export const PREDICTION_LABEL_CONFIG: Record<PredictionLabel, PredictionLabelMet
       className: "w-5 h-5 text-rose-600 dark:text-rose-400",
     }),
   },
-}
-
-export const HEALTH_RECORD_STATUS_LABELS: Record<RecordStatus, string> = {
-  PENDING_UPLOAD: "Chờ tải lên",
-  PROCESSING: "Đang xử lý",
-  PENDING_ANALYSIS: "Đang phân tích",
-  COMPLETED: "Hoàn tất",
-  FAILED: "Lỗi xử lý",
 }

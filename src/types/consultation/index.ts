@@ -501,11 +501,11 @@ export interface ConsultationRequestReviewResponse {
   relevantSelfReportedContext?: string | null
   reason?: string | null
   status: ConsultationRequestStatus
-  member?: any
-  preferredDoctor?: any
-  assignedDoctor?: any
-  healthRecord?: any
-  healthRecords?: any[]
+  member?: UserSummaryResponse | null
+  preferredDoctor?: UserSummaryResponse | null
+  assignedDoctor?: UserSummaryResponse | null
+  healthRecord?: HealthRecordSummaryResponse | null
+  healthRecords?: HealthRecordSummaryResponse[]
   selectedHealthRecordIds?: (number | string)[]
   moreInfoReason?: string | null
   memberAdditionalNote?: string | null
@@ -623,18 +623,22 @@ export interface ConsultationMoreInfoCycleResponse {
 }
 
 export interface UserSummaryResponse {
-  userId: number | string
-  email: string
-  displayName: string
+  id?: number | string
+  userId?: number | string
+  email?: string
+  displayName?: string
   phone?: string | null
 }
 
 export interface HealthRecordSummaryResponse {
-  recordId: number | string
-  status: string
+  id?: number | string
+  recordId?: number | string
+  title?: string | null
+  summary?: string | null
+  status?: string
   predictionLabel?: string | null
   confidence?: number | null
-  createdAt: string
+  createdAt?: string
   updatedAt?: string | null
 }
 
@@ -654,14 +658,17 @@ export type ConsultationMessagePage = PageResponse<ConsultationMessageItem>
 export type HealthRecordPage = PageResponse<HealthRecordItem>
 
 export interface DoctorConsultationSessionResponse {
-  id: string | number
-  requestId: string | number
-  memberId: string | number
-  status: ConsultationSessionStatus
+  id: number | string
+  sessionId?: number | string
+  memberId: number | string
+  doctorId: number | string
+  agreementId: number | string
+  packageId?: number | string | null
+  packageNameSnapshot?: string | null
+  packageCodeSnapshot?: string | null
   startedAt?: string | null
   endsAt?: string | null
-  supportEndsAt?: string | null
-  lastMessageAt?: string | null
+  status: ConsultationSessionStatus
   supportScheduleSnapshotJson?: string | null
   supportTimezoneSnapshot?: string | null
   unresolvedAttentionCount: number
@@ -671,11 +678,11 @@ export interface DoctorConsultationSessionResponse {
 
 export interface DoctorConsultationDetailResponse {
   session: DoctorConsultationSessionResponse
-  member?: any
-  request?: any
-  packageSnapshot?: any
+  member?: UserSummaryResponse | Record<string, unknown> | null
+  request?: ConsultationRequestReviewResponse | Record<string, unknown> | null
+  packageSnapshot?: CareServicePackage | Record<string, unknown> | null
   initialHealthRecord?: HealthRecordItem | null
-  attentions?: any[]
+  attentions?: Record<string, unknown>[]
   unresolvedAttentionCount?: number
 }
 

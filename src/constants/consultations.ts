@@ -14,9 +14,6 @@ export const CARE_SERVICE_CODE_LABELS: Record<string, string> = {
   PRESCRIPTION: "Kê đơn thuốc",
 }
 
-export const SUPPORT_POLICY_LABELS: Record<string, string> = {
-  ASSIGNED_DOCTOR_SUPPORT_SCHEDULE: "Theo lịch làm việc của bác sĩ phụ trách",
-}
 
 /**
  * Domain types permissible for CARE_COORDINATOR
