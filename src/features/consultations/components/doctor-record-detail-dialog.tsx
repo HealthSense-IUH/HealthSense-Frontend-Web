@@ -7,6 +7,9 @@ import { Badge } from "@/components/ui/badge"
 import { useToast } from "@/hooks/use-toast"
 import { Skeleton } from "@/components/ui/skeleton"
 
+import { MeasurementVisuals } from "@/features/member-health-records/components/MeasurementVisuals"
+import type { HRVFeatures } from "@/features/member-health-records/types"
+
 import { consultationApi } from "../services/consultation-api"
 import type { DoctorScopedHealthRecordResponse } from "../types"
 import { formatDate } from "./shared"
@@ -202,6 +205,10 @@ export function DoctorRecordDetailDialog({
                   </div>
                 </div>
               </div>
+
+              {detail.record.hrvFeatures && (
+                <MeasurementVisuals features={detail.record.hrvFeatures as HRVFeatures} />
+              )}
             </div>
           ) : null}
         </div>

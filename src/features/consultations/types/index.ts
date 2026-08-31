@@ -789,6 +789,8 @@ export interface DoctorScopedHealthRecordResponse {
     fileSize?: number
     predictionLabel?: string
     confidence?: number
+    /** Map đặc trưng HRV từ AI Service (gồm cả chartData/nnIntervals/sqi_*) */
+    hrvFeatures?: Record<string, unknown> | null
   }
   initialAttachedRecord: boolean
   attention?: ConsultationAttentionResponse | null

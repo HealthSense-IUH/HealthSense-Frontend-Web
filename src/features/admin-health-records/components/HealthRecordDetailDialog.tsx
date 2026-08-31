@@ -7,6 +7,8 @@ import {
 } from "@/components/ui/dialog"
 import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { MeasurementVisuals } from "@/features/member-health-records/components/MeasurementVisuals"
+import type { HRVFeatures } from "@/features/member-health-records/types"
 import type { HealthRecord } from "../types"
 
 interface HealthRecordDetailDialogProps {
@@ -62,16 +64,27 @@ export function HealthRecordDetailDialog({ record, open, onOpenChange }: HealthR
             </div>
           </div>
 
+          {record.hrvFeatures && (
+            <div className="mb-6">
+              <MeasurementVisuals features={record.hrvFeatures as HRVFeatures} />
+            </div>
+          )}
+
           <div>
             <h3 className="font-semibold mb-2">HRV Features</h3>
             {record.hrvFeatures && Object.keys(record.hrvFeatures).length > 0 ? (
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                {Object.entries(record.hrvFeatures).map(([key, value]) => (
-                  <div key={key} className="bg-neutral-50 dark:bg-neutral-900 p-2 rounded-md border text-xs">
-                    <span className="font-medium block text-neutral-500">{key}</span>
-                    <span className="block truncate" title={String(value)}>{value}</span>
-                  </div>
-                ))}
+                {Object.entries(record.hrvFeatures)
+                  // Bỏ các mảng dữ liệu đồ thị (chartData, nnIntervals) — đã vẽ ở trên
+                  .filter(([, value]) =>
+                    typeof value === "number" || typeof value === "string" || typeof value === "boolean"
+                  )
+                  .map(([key, value]) => (
+                    <div key={key} className="bg-neutral-50 dark:bg-neutral-900 p-2 rounded-md border text-xs">
+                      <span className="font-medium block text-neutral-500">{key}</span>
+                      <span className="block truncate" title={String(value)}>{String(value)}</span>
+                    </div>
+                  ))}
               </div>
             ) : (
               <p className="text-sm text-neutral-500 italic">No HRV features available.</p>

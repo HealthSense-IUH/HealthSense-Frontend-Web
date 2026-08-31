@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom"
-import { generalNavigationGroups, managementNavigationGroups, type NavigationItem } from "./nav-config"
+import { generalNavigationGroups, isManagementPath, managementNavigationGroups, type NavigationItem } from "./nav-config"
 import { useAppShell } from "./app-shell-context"
 import {
   Tooltip,
@@ -12,11 +12,7 @@ export function SidebarContent() {
   const location = useLocation()
   const { effectiveRole } = useAppShell()
 
-  const isManagement = location.pathname.startsWith("/app/management") ||
-    location.pathname.startsWith("/app/users") ||
-    location.pathname.startsWith("/app/packages") ||
-    location.pathname.startsWith("/app/health-records") ||
-    location.pathname.startsWith("/app/doctor")
+  const isManagement = isManagementPath(location.pathname)
 
   const currentGroups = isManagement ? managementNavigationGroups : generalNavigationGroups
 

@@ -15,6 +15,18 @@ export interface HRVFeatures {
   LF_norm?: number
   HF_norm?: number
   Total_Power?: number
+  SD1?: number
+  SD2?: number
+  SampEn?: number
+  /** 300 điểm sóng mạch đã chuẩn hóa 0-100 (AI Service sinh sẵn) */
+  chartData?: number[]
+  /** Chuỗi khoảng NN (ms) giữa các nhịp liên tiếp — để vẽ Poincaré */
+  nnIntervals?: number[]
+  /** Signal Quality Index — chất lượng tín hiệu của phép đo */
+  sqi_ok?: boolean
+  sqi_valid_ratio?: number
+  sqi_spectral_conc?: number
+  sqi_n_valid_beats?: number
   [key: string]: unknown
 }
 

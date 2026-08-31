@@ -255,6 +255,24 @@ export const navigationGroups: NavigationGroup[] = [
   ...managementNavigationGroups,
 ]
 
+/**
+ * Xác định pathname có thuộc phân hệ Quản trị (Management) hay không.
+ * Lưu ý: /app/packages/catalog là trang GÓI DỊCH VỤ cho hội viên (General),
+ * phải loại trừ trước khi khớp tiền tố /app/packages của trang quản trị.
+ */
+export function isManagementPath(pathname: string): boolean {
+  if (pathname.startsWith("/app/packages/catalog")) {
+    return false
+  }
+  return (
+    pathname.startsWith("/app/management") ||
+    pathname.startsWith("/app/users") ||
+    pathname.startsWith("/app/packages") ||
+    pathname.startsWith("/app/health-records") ||
+    pathname.startsWith("/app/doctor")
+  )
+}
+
 export function findNavigationItemByPath(pathname: string): { item: NavigationItem | undefined; group: NavigationGroup | undefined } {
   for (const group of navigationGroups) {
     for (const item of group.items) {

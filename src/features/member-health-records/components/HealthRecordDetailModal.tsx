@@ -15,6 +15,7 @@ import {
 } from "@/lib/health-record-labels"
 import { healthRecordApi } from "../services/health-record-api"
 import type { MemberHealthRecord } from "../types"
+import { MeasurementVisuals } from "./MeasurementVisuals"
 
 interface HealthRecordDetailModalProps {
   record: MemberHealthRecord | null
@@ -97,6 +98,9 @@ export function HealthRecordDetailModal({ record, isOpen, onClose }: HealthRecor
             </div>
           )}
         </div>
+
+        {/* Waveform + Poincaré + SQI */}
+        <MeasurementVisuals features={features} />
 
         {/* 4 Core Physiological Metrics */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">

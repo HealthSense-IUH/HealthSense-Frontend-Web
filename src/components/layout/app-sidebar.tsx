@@ -2,18 +2,14 @@ import { Link, useLocation, useNavigate } from "react-router-dom"
 import { ShieldCheck, ArrowRightLeft } from "lucide-react"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
+import { isManagementPath } from "./nav-config"
 import { SidebarContent } from "./sidebar-content"
 
 export function AppSidebar() {
   const location = useLocation()
   const navigate = useNavigate()
 
-  const isManagement =
-    location.pathname.startsWith("/app/management") ||
-    location.pathname.startsWith("/app/users") ||
-    location.pathname.startsWith("/app/packages") ||
-    location.pathname.startsWith("/app/health-records") ||
-    location.pathname.startsWith("/app/doctor")
+  const isManagement = isManagementPath(location.pathname)
 
   return (
     <aside
