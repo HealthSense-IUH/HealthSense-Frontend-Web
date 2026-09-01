@@ -34,7 +34,7 @@ export function AdminRequestDetailDialog({
       consultationApi.getRequestDetail(requestId)
         .then(res => setDetail(res.data))
         .catch(() => {
-          toast({ variant: "destructive", description: "Failed to load request detail." })
+          toast({ variant: "destructive", description: "Không thể tải chi tiết yêu cầu." })
           onOpenChange(false)
         })
         .finally(() => setLoading(false))
@@ -47,23 +47,23 @@ export function AdminRequestDetailDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Request Detail #{requestId}</DialogTitle>
+          <DialogTitle>Chi tiết yêu cầu #{requestId}</DialogTitle>
           <DialogDescription>
-            Review consultation request and assign a doctor.
+            Xem xét yêu cầu tư vấn và phân công bác sĩ.
           </DialogDescription>
         </DialogHeader>
 
         {loading ? (
-          <div className="py-8 text-center text-muted-foreground">Loading detail...</div>
+          <div className="py-8 text-center text-muted-foreground">Đang tải chi tiết...</div>
         ) : detail ? (
           <div className="flex flex-col gap-6 py-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <span className="font-semibold text-lg">Status:</span>
+                <span className="font-semibold text-lg">Trạng thái:</span>
                 {statusBadge(detail.status)}
               </div>
               <div className="text-sm text-muted-foreground">
-                Created: {formatDate(detail.createdAt)}
+                Ngày tạo: {formatDate(detail.createdAt)}
               </div>
             </div>
 
@@ -71,12 +71,12 @@ export function AdminRequestDetailDialog({
               <div className="flex flex-col gap-2 p-4 border rounded-md bg-muted/20">
                 <div className="flex items-center gap-2 text-sm font-semibold">
                   <FileText className="w-4 h-4" />
-                  Service Package
+                  Gói dịch vụ
                 </div>
                 <div className="text-sm">
                   <span className="font-medium">{detail.packageNameSnapshot || "N/A"}</span>
                   <div className="text-muted-foreground text-xs mt-1">
-                    {detail.packagePriceSnapshot ? detail.packagePriceSnapshot.toLocaleString("vi-VN", { style: "currency", currency: "VND" }) : "Free"} &bull; {detail.packageDurationDaysSnapshot} days
+                    {detail.packagePriceSnapshot ? detail.packagePriceSnapshot.toLocaleString("vi-VN", { style: "currency", currency: "VND" }) : "Miễn phí"} &bull; {detail.packageDurationDaysSnapshot} ngày
                   </div>
                 </div>
               </div>
@@ -84,17 +84,17 @@ export function AdminRequestDetailDialog({
               <div className="flex flex-col gap-2 p-4 border rounded-md bg-muted/20">
                 <div className="flex items-center gap-2 text-sm font-semibold">
                   <User className="w-4 h-4" />
-                  Member Info
+                  Thông tin hội viên
                 </div>
                 {detail.member ? (
                   <div className="text-sm">
                     <span className="font-medium">{detail.member.displayName || detail.member.email}</span>
                     <div className="text-muted-foreground text-xs mt-1">
-                      ID: #{detail.memberId} &bull; {detail.member.phone || "No phone"}
+                      Mã: #{detail.memberId} &bull; {detail.member.phone || "Chưa có SĐT"}
                     </div>
                   </div>
                 ) : (
-                  <div className="text-sm">ID: #{detail.memberId}</div>
+                  <div className="text-sm">Mã: #{detail.memberId}</div>
                 )}
               </div>
             </div>
@@ -148,7 +148,7 @@ export function AdminRequestDetailDialog({
               <div className="flex flex-col gap-2">
                 <span className="text-sm font-semibold">Hồ sơ đo đạc đính kèm</span>
                 <div className="p-3 bg-muted/30 border rounded-md text-sm">
-                  #{detail.healthRecord.id} - {detail.healthRecord.title || "Health Record"}
+                  #{detail.healthRecord.id} - {detail.healthRecord.title || "Hồ sơ sức khỏe"}
                   {detail.healthRecord.summary && <div className="mt-1 text-xs text-muted-foreground">{detail.healthRecord.summary}</div>}
                 </div>
               </div>
@@ -219,19 +219,19 @@ export function AdminRequestDetailDialog({
             <div>
               {detail.status === "PENDING_REVIEW" && (
                 <Button variant="destructive" onClick={() => onReject(detail.id)}>
-                  Reject Request
+                  Từ chối yêu cầu
                 </Button>
               )}
             </div>
             <div className="flex gap-2">
-              <Button variant="outline" onClick={() => onOpenChange(false)}>Close</Button>
+              <Button variant="outline" onClick={() => onOpenChange(false)}>Đóng</Button>
               {detail.status === "PENDING_REVIEW" && (
                 <>
                   <Button variant="secondary" onClick={() => onNeedMoreInfo(detail)}>
-                    Request More Info
+                    Yêu cầu bổ sung TT
                   </Button>
                   <Button onClick={() => onSelectDoctor(detail)}>
-                    Select Doctor
+                    Chọn bác sĩ
                   </Button>
                 </>
               )}

@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom"
 import {
   Package,
   Clock,
-  RefreshCw,
   Sparkles,
   ArrowRight,
   Info,
@@ -88,10 +87,6 @@ export default function PackageCatalogPage() {
             Đồng hành cùng các bác sĩ chuyên khoa hàng đầu. Đăng ký nhận tư vấn trực tiếp, đánh giá dữ liệu nhịp tim AI và phác đồ theo dõi cá nhân hóa.
           </p>
         </div>
-
-        <Button variant="outline" size="sm" onClick={fetchPackages} disabled={loading} className="self-start sm:self-center bg-white/10 hover:bg-white/20 border-white/30 text-white">
-          <RefreshCw className="mr-2 h-4 w-4" /> Làm mới
-        </Button>
       </div>
 
       {/* Packages Grid */}

@@ -45,7 +45,7 @@ export function RequestsPanel({
     <Card>
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <div>
-          <CardTitle>{isAdmin ? "Quản lý Yêu cầu Tư vấn (Care Coordination)" : "Yêu cầu Tư vấn của tôi"}</CardTitle>
+          <CardTitle>{isAdmin ? "Quản lý Yêu cầu Tư vấn" : "Yêu cầu Tư vấn của tôi"}</CardTitle>
           <CardDescription>
             {isAdmin
               ? "Xem xét yêu cầu, điều phối bác sĩ và theo dõi trạng thái thỏa thuận."
@@ -77,7 +77,7 @@ export function RequestsPanel({
             </div>
             
             <div className="flex flex-col gap-1.5 w-[120px]">
-              <span className="text-xs font-medium">Member ID</span>
+              <span className="text-xs font-medium">Mã hội viên</span>
               <Input 
                 className="h-8 text-xs" 
                 placeholder="ID..." 
@@ -87,11 +87,11 @@ export function RequestsPanel({
               />
             </div>
             
-            <div className="flex flex-col gap-1.5 w-[120px]">
-              <span className="text-xs font-medium">Pref. Doctor ID</span>
+            <div className="flex flex-col gap-1.5 w-[130px]">
+              <span className="text-xs font-medium">BS mong muốn</span>
               <Input 
                 className="h-8 text-xs" 
-                placeholder="ID..." 
+                placeholder="ID bác sĩ..." 
                 value={adminFilters.preferredDoctorId}
                 onChange={(e) => onAdminFilterChange({ ...adminFilters, preferredDoctorId: e.target.value })}
                 onKeyDown={(e) => e.key === 'Enter' && onSearchAdminFilters()}

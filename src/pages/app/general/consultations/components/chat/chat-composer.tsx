@@ -86,7 +86,7 @@ export function ChatComposer({
             variant="ghost" 
             size="icon"
             className="flex-shrink-0 h-10 w-10 text-muted-foreground hover:bg-muted rounded-full"
-            aria-label="Attach file"
+            aria-label="Đính kèm tệp"
           >
             <Paperclip className="h-5 w-5" />
           </Button>
@@ -95,7 +95,7 @@ export function ChatComposer({
             <textarea
               ref={textareaRef}
               className="max-h-[120px] min-h-[24px] w-full resize-none bg-transparent py-2.5 text-[14px] text-foreground outline-none placeholder:text-muted-foreground"
-              placeholder="Type your message here..."
+              placeholder="Nhập tin nhắn..."
               value={messageDraft}
               onChange={(e) => onMessageChange(e.target.value)}
               disabled={loading}
@@ -115,7 +115,7 @@ export function ChatComposer({
                 : "text-muted-foreground hover:bg-muted"
             )}
             disabled={loading || !hasContent} 
-            aria-label="Send message"
+            aria-label="Gửi tin nhắn"
           >
             <Send className="h-5 w-5" />
           </Button>

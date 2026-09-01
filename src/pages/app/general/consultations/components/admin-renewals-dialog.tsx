@@ -171,7 +171,7 @@ export function AdminRenewalsDialog({
                 <div>
                   <DialogTitle className="text-lg font-bold">Điều phối & Quản lý Gia hạn Phiên</DialogTitle>
                   <DialogDescription>
-                    Phiên #{session.id} &bull; Hội viên #{session.memberId} &bull; Bác sĩ #{session.doctorId}
+                    Phiên #{session.id} &bull; {session.memberDisplayName || `Hội viên #${session.memberId}`} &bull; {session.doctorDisplayName || `Bác sĩ #${session.doctorId}`}
                   </DialogDescription>
                 </div>
               </div>

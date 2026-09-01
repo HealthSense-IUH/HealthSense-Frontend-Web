@@ -19,22 +19,22 @@ export function HealthRecordsPanel({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>My Health Records</CardTitle>
-        <CardDescription>Select a record to quickly attach it to your consultation request.</CardDescription>
+        <CardTitle>Hồ sơ sức khỏe của tôi</CardTitle>
+        <CardDescription>Chọn một hồ sơ để đính kèm nhanh vào yêu cầu tư vấn của bạn.</CardDescription>
       </CardHeader>
       <CardContent>
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Record</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Prediction</TableHead>
-              <TableHead>Created</TableHead>
-              <TableHead className="text-right">Action</TableHead>
+              <TableHead>Hồ sơ</TableHead>
+              <TableHead>Trạng thái</TableHead>
+              <TableHead>Dự đoán</TableHead>
+              <TableHead>Ngày tạo</TableHead>
+              <TableHead className="text-right">Thao tác</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {records.length === 0 && <EmptyRow colSpan={5} text={loading ? "Loading health records..." : "No health records found."} />}
+            {records.length === 0 && <EmptyRow colSpan={5} text={loading ? "Đang tải hồ sơ sức khỏe..." : "Không tìm thấy hồ sơ sức khỏe nào."} />}
             {records.map((record) => (
               <TableRow key={record.id}>
                 <TableCell className="font-medium">#{record.id}</TableCell>
@@ -44,7 +44,7 @@ export function HealthRecordsPanel({
                 <TableCell className="text-right">
                   <Button variant="outline" size="sm" onClick={() => onSelect(record)}>
                     <FileText data-icon="inline-start" />
-                    Use
+                    Sử dụng
                   </Button>
                 </TableCell>
               </TableRow>

@@ -203,7 +203,7 @@ export function RenewalDialog({
                 <div>
                   <DialogTitle className="text-lg font-bold">Gia hạn Phiên Chăm sóc</DialogTitle>
                   <DialogDescription>
-                    Phiên #{session.id} &bull; Bác sĩ #{session.doctorId}
+                    Phiên #{session.id} &bull; {session.doctorDisplayName || `Bác sĩ #${session.doctorId}`}
                   </DialogDescription>
                 </div>
               </div>
@@ -319,7 +319,7 @@ export function RenewalDialog({
                     <span className="font-semibold text-sm">Gia hạn thêm thời gian chăm sóc</span>
                   </div>
                   <p className="text-xs text-muted-foreground leading-relaxed">
-                    Gia hạn chăm sóc giúp bạn tiếp tục đồng hành cùng <strong>Bác sĩ #{session.doctorId}</strong> trong cùng phiên tư vấn này mà không bị gián đoạn dữ liệu và lịch sử trò chuyện.
+                    Gia hạn chăm sóc giúp bạn tiếp tục đồng hành cùng <strong>{session.doctorDisplayName || `Bác sĩ #${session.doctorId}`}</strong> trong cùng phiên tư vấn này mà không bị gián đoạn dữ liệu và lịch sử trò chuyện.
                   </p>
                   <Button
                     onClick={handleRequestRenewal}

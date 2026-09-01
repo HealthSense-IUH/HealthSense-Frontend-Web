@@ -1,4 +1,4 @@
-import { Search, Plus, User } from "lucide-react"
+import { Search, User } from "lucide-react"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { cn } from "@/lib/utils"
 import type { ConsultationSessionItem } from "@/types/consultation"
@@ -20,7 +20,7 @@ export function ChatSidebar({ sessions, selectedSession, isDoctor, isMember, onS
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/70" />
           <input 
             type="text" 
-            placeholder="Search" 
+            placeholder="Tìm kiếm..." 
             className="w-full bg-muted/40 hover:bg-muted/60 focus:bg-muted focus:ring-1 focus:ring-primary/30 transition-colors rounded-full pl-10 pr-4 py-2 text-[13px] outline-none text-foreground placeholder:text-muted-foreground"
           />
         </div>
@@ -29,7 +29,7 @@ export function ChatSidebar({ sessions, selectedSession, isDoctor, isMember, onS
         <div className="flex flex-col gap-0">
           {sessions.length === 0 && (
             <div className="p-4 text-center text-sm text-muted-foreground">
-              No sessions found.
+              Không có phiên tư vấn nào.
             </div>
           )}
           {sessions.map((session) => {
@@ -57,16 +57,16 @@ export function ChatSidebar({ sessions, selectedSession, isDoctor, isMember, onS
                         isSelected ? "text-foreground" : "text-foreground/80"
                       )}>
                         {isDoctor 
-                          ? `Member #${session.memberId}` 
+                          ? (session.memberDisplayName || (session as any).memberName || (session as any).member?.displayName || `Hội viên #${session.memberId}`)
                           : isMember 
-                            ? `Doctor #${session.doctorId}`
-                            : `Dr #${session.doctorId} - Mem #${session.memberId}`}
+                            ? (session.doctorDisplayName || (session as any).doctorName || (session as any).doctor?.displayName || `Bác sĩ #${session.doctorId}`)
+                            : `${session.doctorDisplayName || (session as any).doctorName || `BS #${session.doctorId}`} - ${session.memberDisplayName || (session as any).memberName || `HV #${session.memberId}`}`}
                       </span>
                       <span className="flex-shrink-0 scale-75 origin-right">{statusBadge(session.status)}</span>
                     </div>
                     <div className="mt-1 flex items-center justify-between gap-2">
                       <span className="truncate text-[12px] text-muted-foreground">
-                        {session.lastMessagePreview || "No messages yet"}
+                        {session.lastMessagePreview || "Chưa có tin nhắn"}
                       </span>
                       <span className="shrink-0 text-[11px] font-medium text-muted-foreground/70">
                         {session.lastMessageAt ? new Date(session.lastMessageAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ""}
@@ -79,11 +79,6 @@ export function ChatSidebar({ sessions, selectedSession, isDoctor, isMember, onS
           })}
         </div>
       </ScrollArea>
-      <div className="absolute bottom-6 right-6">
-        <button className="h-14 w-14 rounded-full bg-primary text-primary-foreground shadow-lg hover:shadow-xl hover:scale-105 transition-all flex items-center justify-center">
-          <Plus className="h-7 w-7" />
-        </button>
-      </div>
     </div>
   )
 }

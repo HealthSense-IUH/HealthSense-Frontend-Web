@@ -1,14 +1,12 @@
 import { useState } from "react"
-import { User, Phone, Video, MoreHorizontal, FileText, Share2, RefreshCw, LogOut } from "lucide-react"
+import { User, Phone, Video, MoreHorizontal, FileText, RefreshCw } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import type { ConsultationSessionItem } from "@/types/consultation"
 import { statusBadge } from "../shared"
 import { MemberFinalSummaryDialog } from "../member-final-summary-dialog"
 import { DoctorSessionDetailDialog } from "../doctor-session-detail-dialog"
-import { ShareHealthRecordDialog } from "../share-health-record-dialog"
 import { RenewalDialog } from "../renewal-dialog"
-import { TerminationRequestDialog } from "../termination-request-dialog"
 
 interface ChatHeaderProps {
   session: ConsultationSessionItem
@@ -20,9 +18,27 @@ interface ChatHeaderProps {
 export function ChatHeader({ session, isDoctor, isMember, onSessionRefreshed }: ChatHeaderProps) {
   const [isSummaryOpen, setIsSummaryOpen] = useState(false)
   const [isDoctorDetailOpen, setIsDoctorDetailOpen] = useState(false)
-  const [isShareRecordOpen, setIsShareRecordOpen] = useState(false)
   const [isRenewalOpen, setIsRenewalOpen] = useState(false)
-  const [isTerminationOpen, setIsTerminationOpen] = useState(false)
+
+  const memberName =
+    session.memberDisplayName ||
+    (session as any).memberName ||
+    (session as any).member?.displayName ||
+    (session as any).member_display_name ||
+    `Hội viên #${session.memberId}`
+
+  const doctorName =
+    session.doctorDisplayName ||
+    (session as any).doctorName ||
+    (session as any).doctor?.displayName ||
+    (session as any).doctor_display_name ||
+    `Bác sĩ #${session.doctorId}`
+
+  const headerTitle = isDoctor
+    ? memberName
+    : isMember
+      ? doctorName
+      : `${doctorName} - ${memberName}`
 
   return (
     <div className="flex items-center justify-between border-b border-border bg-background/95 px-6 py-4 shadow-sm z-10 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -32,15 +48,11 @@ export function ChatHeader({ session, isDoctor, isMember, onSessionRefreshed }: 
         </div>
         <div className="flex flex-col">
           <h3 className="font-semibold text-foreground text-sm tracking-tight">
-            {isDoctor 
-              ? `Member #${session.memberId}` 
-              : isMember 
-                ? `Doctor #${session.doctorId}`
-                : `Doctor #${session.doctorId} - Member #${session.memberId}`}
+            {headerTitle}
           </h3>
           <div className="flex items-center gap-1.5 mt-0.5">
             <span className="text-muted-foreground text-[11px]">
-              Last seen just now
+              Vừa mới truy cập
             </span>
             <span className="text-muted-foreground text-[10px]">•</span>
             {statusBadge(session.status)}
@@ -49,36 +61,14 @@ export function ChatHeader({ session, isDoctor, isMember, onSessionRefreshed }: 
       </div>
       <div className="flex items-center gap-2">
         {isMember && session.status === "ACTIVE" && (
-          <>
-            <Button
-              variant="outline"
-              size="sm"
-              className="flex items-center gap-1.5 text-primary border-primary/30 hover:bg-primary/5"
-              onClick={() => setIsRenewalOpen(true)}
-            >
-              <RefreshCw className="h-4 w-4" />
-              <span className="hidden sm:inline">Gia hạn chăm sóc</span>
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              className="flex items-center gap-1.5"
-              onClick={() => setIsShareRecordOpen(true)}
-            >
-              <Share2 className="h-4 w-4" />
-              <span className="hidden sm:inline">Chia sẻ hồ sơ</span>
-            </Button>
-          </>
-        )}
-        {session.status === "ACTIVE" && (isMember || isDoctor) && (
           <Button
             variant="outline"
             size="sm"
-            className="flex items-center gap-1.5 text-rose-600 border-rose-200 hover:bg-rose-50 hover:text-rose-700"
-            onClick={() => setIsTerminationOpen(true)}
+            className="flex items-center gap-1.5 text-primary border-primary/30 hover:bg-primary/5"
+            onClick={() => setIsRenewalOpen(true)}
           >
-            <LogOut className="h-4 w-4" />
-            <span className="hidden sm:inline">Yêu cầu kết thúc</span>
+            <RefreshCw className="h-4 w-4" />
+            <span className="hidden sm:inline">Gia hạn chăm sóc</span>
           </Button>
         )}
         {isDoctor && (
@@ -128,25 +118,11 @@ export function ChatHeader({ session, isDoctor, isMember, onSessionRefreshed }: 
         onOpenChange={setIsSummaryOpen}
       />
 
-      <ShareHealthRecordDialog
-        sessionId={session.id}
-        sessionStatus={session.status}
-        open={isShareRecordOpen}
-        onOpenChange={setIsShareRecordOpen}
-      />
-
       <RenewalDialog
         session={session}
         open={isRenewalOpen}
         onOpenChange={setIsRenewalOpen}
         onSessionRefreshed={onSessionRefreshed}
-      />
-
-      <TerminationRequestDialog
-        sessionId={session.id}
-        open={isTerminationOpen}
-        onOpenChange={setIsTerminationOpen}
-        onSuccess={onSessionRefreshed}
       />
     </div>
   )

@@ -46,8 +46,8 @@ export function ChatMessageList({
               <div className="flex h-16 w-16 items-center justify-center rounded-full bg-muted mb-4">
                 <MessageSquare className="h-8 w-8 text-muted-foreground" />
               </div>
-              <p className="text-sm font-medium text-foreground">No messages yet.</p>
-              <p className="mt-1 text-xs text-muted-foreground">Send a message to start the conversation.</p>
+              <p className="text-sm font-medium text-foreground">Chưa có tin nhắn nào.</p>
+              <p className="mt-1 text-xs text-muted-foreground">Gửi tin nhắn để bắt đầu cuộc trò chuyện.</p>
             </div>
           )}
           
@@ -60,7 +60,7 @@ export function ChatMessageList({
                 disabled={loadingMoreMessages} 
                 className="rounded-full bg-background shadow-sm text-xs px-6 h-8"
               >
-                {loadingMoreMessages ? "Loading history..." : "Load previous messages"}
+                {loadingMoreMessages ? "Đang tải lịch sử..." : "Tải tin nhắn cũ hơn"}
               </Button>
             </div>
           )}
@@ -93,7 +93,7 @@ export function ChatMessageList({
           className={cn(
             "absolute bottom-4 right-6 flex h-8 w-8 items-center justify-center rounded-full bg-background border border-border shadow-md text-foreground transition-all hover:bg-muted z-10 animate-in fade-in slide-in-from-bottom-2 duration-200"
           )}
-          aria-label="Scroll to bottom"
+          aria-label="Cuộn xuống dưới cùng"
         >
           <ArrowDown className="h-4 w-4" />
         </button>

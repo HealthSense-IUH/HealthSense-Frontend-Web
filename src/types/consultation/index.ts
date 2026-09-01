@@ -348,7 +348,9 @@ export interface ConsultationRequestItem {
 export interface ConsultationSessionItem {
   id: string | number
   memberId: string | number
+  memberDisplayName?: string | null
   doctorId: string | number
+  doctorDisplayName?: string | null
   createdByAdminId?: string | number | null
   sourceType?: ConsultationSourceType
   status: ConsultationStatus
@@ -663,7 +665,9 @@ export interface DoctorConsultationSessionResponse {
   id: number | string
   sessionId?: number | string
   memberId: number | string
+  memberDisplayName?: string | null
   doctorId: number | string
+  doctorDisplayName?: string | null
   agreementId: number | string
   packageId?: number | string | null
   packageNameSnapshot?: string | null

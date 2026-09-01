@@ -255,67 +255,6 @@ export function CreateRequestPanel({
                   maxLength={1000}
                 />
               </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="careGoal" className="text-sm font-medium">
-                    Mục tiêu chăm sóc mong muốn (Tùy chọn)
-                  </Label>
-                  <Textarea
-                    id="careGoal"
-                    rows={2}
-                    placeholder="VD: Ổn định nhịp tim, cải thiện giấc ngủ, tối ưu hóa chỉ số HRV..."
-                    value={form.careGoal}
-                    onChange={(e) => onChange({ ...form, careGoal: e.target.value })}
-                    className="rounded-xl resize-none text-xs"
-                    maxLength={500}
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="relevantSelfReportedContext" className="text-sm font-medium">
-                    Tiền sử bệnh & Thuốc đang dùng (Tùy chọn)
-                  </Label>
-                  <Textarea
-                    id="relevantSelfReportedContext"
-                    rows={2}
-                    placeholder="VD: Tiền sử tăng huyết áp 2 năm, đang sử dụng thuốc theo đơn..."
-                    value={form.relevantSelfReportedContext}
-                    onChange={(e) => onChange({ ...form, relevantSelfReportedContext: e.target.value })}
-                    className="rounded-xl resize-none text-xs"
-                    maxLength={500}
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="memberNote" className="text-sm font-medium">
-                    Ghi chú thêm cho Bác sĩ (Tùy chọn)
-                  </Label>
-                  <Input
-                    id="memberNote"
-                    placeholder="Ghi chú thêm giờ giấc thuận tiện liên hệ..."
-                    value={form.memberNote}
-                    onChange={(e) => onChange({ ...form, memberNote: e.target.value })}
-                    className="rounded-xl h-10 text-xs"
-                    maxLength={300}
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="preferredDoctorId" className="text-sm font-medium">
-                    Mã Bác sĩ mong muốn (Tùy chọn)
-                  </Label>
-                  <Input
-                    id="preferredDoctorId"
-                    placeholder="Để trống nếu muốn điều phối viên tự chọn"
-                    value={form.preferredDoctorId}
-                    onChange={(e) => onChange({ ...form, preferredDoctorId: e.target.value })}
-                    className="rounded-xl h-10 text-xs"
-                  />
-                </div>
-              </div>
             </div>
           </div>
 

@@ -12,7 +12,7 @@ import type { HRVFeatures } from "@/types/health-record"
 
 import { consultationApi } from "@/services"
 import type { DoctorScopedHealthRecordResponse } from "@/types/consultation"
-import { formatDate } from "./shared"
+import { formatDate, statusBadge } from "./shared"
 
 interface DoctorRecordDetailDialogProps {
   sessionId: string | number
@@ -168,9 +168,9 @@ export function DoctorRecordDetailDialog({
                 </div>
                 <div className="space-y-1">
                   <p className="text-muted-foreground">Trạng thái xử lý</p>
-                  <p className="font-medium">
-                    <Badge variant="outline">{detail.record.status || "UNKNOWN"}</Badge>
-                  </p>
+                  <div className="font-medium">
+                    {statusBadge(detail.record.status || "-")}
+                  </div>
                 </div>
                 <div className="space-y-1">
                   <p className="text-muted-foreground">Dung lượng</p>

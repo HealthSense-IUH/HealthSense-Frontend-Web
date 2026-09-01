@@ -45,7 +45,7 @@ export function CreateAdminSessionPanel({
             <AlertTriangle className="w-5 h-5" />
           </div>
           <div>
-            <CardTitle className="text-xl font-bold">Tạo Phiên Tư Vấn Đặc Biệt (Admin Override)</CardTitle>
+            <CardTitle className="text-xl font-bold">Tạo Phiên Tư Vấn Đặc Biệt</CardTitle>
             <CardDescription>
               Tạo phiên tư vấn trực tiếp do Quản trị viên chỉ định (vượt qua quy trình thanh toán thông thường). Bắt buộc phải có lý do ghi đè (overrideReason).
             </CardDescription>

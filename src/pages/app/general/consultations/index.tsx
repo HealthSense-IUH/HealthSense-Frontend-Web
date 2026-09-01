@@ -43,14 +43,14 @@ export default function ConsultationsPage() {
     }
   }, [searchParams, logic.isMember, logic.setRequestForm])
 
-  const roleLabel = logic.isAdmin ? "Admin" : logic.isDoctor ? "Doctor" : "Member"
+  const roleLabel = logic.isAdmin ? "Quản trị viên" : logic.isDoctor ? "Bác sĩ" : "Hội viên"
 
   if (!logic.isAdmin && !logic.isDoctor && !logic.isMember) {
     return (
       <div className="mx-auto flex max-w-lg flex-col items-center justify-center gap-4 py-24 text-center">
         <ShieldAlert className="text-red-500" />
-        <h2 className="text-2xl font-bold text-neutral-950">Access Denied</h2>
-        <p className="text-sm text-neutral-500">Consultation module is only available for Member, Doctor, and Admin roles.</p>
+        <h2 className="text-2xl font-bold text-neutral-950">Truy cập bị từ chối</h2>
+        <p className="text-sm text-neutral-500">Mô-đun tư vấn chỉ dành cho các vai trò Hội viên, Bác sĩ và Quản trị viên.</p>
       </div>
     )
   }
@@ -64,25 +64,25 @@ export default function ConsultationsPage() {
               <Stethoscope className="h-5 w-5" />
             </div>
             <div className="flex flex-col">
-              <h1 className="text-xl font-semibold tracking-tight text-foreground">Consultations</h1>
+              <h1 className="text-xl font-semibold tracking-tight text-foreground">Tư vấn & Chăm sóc</h1>
               <p className="text-sm text-muted-foreground">
-                Manage your 1-on-1 consultations.
+                Quản lý các buổi và phiên tư vấn 1-1 của bạn.
               </p>
             </div>
           </div>
           
           <div className="flex flex-wrap items-center gap-3">
             <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-border/50 bg-muted/30">
-              <span className="text-xs font-medium text-muted-foreground">Role:</span>
+              <span className="text-xs font-medium text-muted-foreground">Vai trò:</span>
               <span className="text-xs font-semibold text-foreground">{roleLabel}</span>
             </div>
             <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-border/50 bg-muted/30">
-              <span className="text-xs font-medium text-muted-foreground">ID:</span>
+              <span className="text-xs font-medium text-muted-foreground">Mã ID:</span>
               <span className="text-xs font-semibold text-foreground">#{logic.userSession?.userId ?? "-"}</span>
             </div>
             <Button variant="outline" size="sm" onClick={() => void logic.loadData()} disabled={logic.loading} className="shadow-sm">
               <RefreshCw className="mr-2 h-4 w-4" />
-              Refresh Data
+              Làm mới
             </Button>
           </div>
         </div>
@@ -101,7 +101,7 @@ export default function ConsultationsPage() {
               <span className="flex-1">{logic.alert.text}</span>
             </div>
             <Button variant="ghost" size="sm" className="h-7 px-2 self-end" onClick={() => logic.setAlert(null)}>
-              Close
+              Đóng
             </Button>
           </div>
         )}

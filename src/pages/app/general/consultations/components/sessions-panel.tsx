@@ -51,7 +51,7 @@ export function SessionsPanel({
     <Card>
       <CardHeader className="flex-row items-start justify-between gap-4">
         <div className="flex flex-col gap-1.5">
-          <CardTitle>{isAdmin ? "Quản lý Phiên Tư vấn (Consultation Sessions)" : "Phiên Tư vấn của tôi"}</CardTitle>
+          <CardTitle>{isAdmin ? "Quản lý Phiên Tư vấn" : "Phiên Tư vấn của tôi"}</CardTitle>
           <CardDescription>
             {isAdmin 
               ? "Danh sách tất cả các phiên tư vấn chăm sóc sức khỏe trên hệ thống (Sắp xếp theo mới nhất)." 
@@ -100,8 +100,8 @@ export function SessionsPanel({
             {sortedSessions.map((session) => (
               <TableRow key={session.id} data-state={String(selectedSessionId) === String(session.id) ? "selected" : undefined}>
                 <TableCell className="font-medium">#{session.id}</TableCell>
-                <TableCell>#{session.memberId}</TableCell>
-                <TableCell>#{session.doctorId}</TableCell>
+                <TableCell>{session.memberDisplayName || `#${session.memberId}`}</TableCell>
+                <TableCell>{session.doctorDisplayName || `#${session.doctorId}`}</TableCell>
                 <TableCell>{statusBadge(session.status)}</TableCell>
                 <TableCell>{formatDate(session.createdAt)}</TableCell>
                 <TableCell>{formatDate(session.endsAt)}</TableCell>

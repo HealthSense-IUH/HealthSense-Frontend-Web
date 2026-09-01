@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
 import {
   Calendar,
   Clock,
   User,
-  MessageSquare,
   AlertTriangle,
   FileText,
   BriefcaseMedical
@@ -48,7 +46,6 @@ export function DoctorSessionDetailDialog({ sessionId, open, onOpenChange }: Doc
   const [detail, setDetail] = useState<DoctorConsultationDetailResponse | null>(null)
   const [loading, setLoading] = useState(false)
   const { toast } = useToast()
-  const navigate = useNavigate()
 
   useEffect(() => {
     if (!open) return
@@ -100,7 +97,7 @@ export function DoctorSessionDetailDialog({ sessionId, open, onOpenChange }: Doc
   if (loading || !detail) {
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="sm:max-w-[650px]">
+        <DialogContent className="sm:max-w-4xl">
           <DialogHeader>
             <DialogTitle>Chi tiết phiên chăm sóc</DialogTitle>
           </DialogHeader>
@@ -120,12 +117,12 @@ export function DoctorSessionDetailDialog({ sessionId, open, onOpenChange }: Doc
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[650px] max-h-[88vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-4xl max-h-[88vh] overflow-y-auto">
         <DialogHeader>
           <div className="flex items-start justify-between pr-4">
             <div>
               <DialogTitle className="text-xl">
-                Bệnh nhân #{session.memberId}
+                {detail.member?.displayName || session.memberDisplayName || `Bệnh nhân #${session.memberId}`}
               </DialogTitle>
               <DialogDescription className="mt-1">
                 ID Phiên: {session.id}
@@ -185,6 +182,7 @@ export function DoctorSessionDetailDialog({ sessionId, open, onOpenChange }: Doc
               <h3 className="font-semibold text-neutral-900">Thông tin bệnh nhân</h3>
             </div>
             <div className="text-sm text-neutral-600 space-y-2">
+              <p><span className="font-medium text-neutral-800">Tên bệnh nhân:</span> {detail.member?.displayName || session.memberDisplayName || `Hội viên #${session.memberId}`}</p>
               <p><span className="font-medium text-neutral-800">Mã bệnh nhân:</span> #{session.memberId}</p>
               <p className="italic text-neutral-400">Các thông tin cơ bản khác sẽ hiển thị nếu được chia sẻ.</p>
             </div>
@@ -241,17 +239,10 @@ export function DoctorSessionDetailDialog({ sessionId, open, onOpenChange }: Doc
           </TabsContent>
         </Tabs>
 
-        <DialogFooter className="sm:justify-between border-t pt-4">
+        <DialogFooter className="border-t pt-4">
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Đóng
           </Button>
-          
-          {session.status === "ACTIVE" && (
-            <Button onClick={() => navigate(`/app/general/consultations?tab=chat&sessionId=${session.id}`)}>
-              <MessageSquare className="mr-2 h-4 w-4" />
-              Mở phòng Chat
-            </Button>
-          )}
         </DialogFooter>
       </DialogContent>
     </Dialog>

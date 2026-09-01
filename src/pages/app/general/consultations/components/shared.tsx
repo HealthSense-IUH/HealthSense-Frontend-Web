@@ -50,13 +50,28 @@ export function statusBadge(status: string) {
       variant = "destructive"
       break
     case "ACTIVE":
+      label = "Đang hoạt động"
+      variant = "default"
+      break
     case "APPROVED":
+      label = "Đã duyệt"
       variant = "default"
       break
     case "PENDING":
+      label = "Đang chờ"
       variant = "secondary"
       break
+    case "PROCESSING":
+    case "IN_PROGRESS":
+      label = "Đang xử lý"
+      variant = "secondary"
+      break
+    case "FAILED":
+      label = "Thất bại"
+      variant = "destructive"
+      break
     case "CLOSED":
+      label = "Đã đóng"
       variant = "destructive"
       break
   }

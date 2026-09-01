@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { History, FileText, AlertCircle, RefreshCw, CheckCircle2, Stethoscope, Package, Calendar } from "lucide-react"
+import { History, FileText, AlertCircle, RefreshCw, CheckCircle2, Stethoscope, Package, Calendar, ChevronDown, ChevronUp } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -24,6 +24,14 @@ export function DoctorContinuityTab({ sessionId }: DoctorContinuityTabProps) {
   const [summaries, setSummaries] = useState<CareContinuitySummaryResponse[]>([])
   const [loading, setLoading] = useState(true)
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
+  const [expandedIds, setExpandedIds] = useState<Record<string, boolean>>({})
+
+  const toggleExpand = (id: string | number) => {
+    setExpandedIds((prev) => ({
+      ...prev,
+      [String(id)]: !prev[String(id)],
+    }))
+  }
 
   const fetchContinuity = () => {
     setLoading(true)
@@ -104,11 +112,16 @@ export function DoctorContinuityTab({ sessionId }: DoctorContinuityTabProps) {
           const finalizedAtDate = item.finalizedSummary?.finalizedAt || item.finalizedAt
           const addendaList = item.finalizedSummary?.addenda || item.addenda || []
 
+          const isExpanded = !!expandedIds[String(item.sessionId)]
+
           return (
-            <Card key={item.sessionId} className="border-border shadow-2xs">
-              <CardHeader className="p-4 pb-3 bg-muted/20 border-b">
-                <div className="flex items-start justify-between gap-2">
-                  <div>
+            <Card key={item.sessionId} className="border-border shadow-2xs overflow-hidden transition-all">
+              <CardHeader 
+                className="p-4 bg-muted/20 hover:bg-muted/40 cursor-pointer transition-colors select-none"
+                onClick={() => toggleExpand(item.sessionId)}
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex-1 min-w-0">
                     <CardTitle className="text-sm font-semibold flex items-center gap-2">
                       <span>Đợt chăm sóc #{item.sessionId}</span>
                       <Badge variant="outline" className="text-[10px] bg-emerald-50 text-emerald-700 border-emerald-200">
@@ -134,69 +147,80 @@ export function DoctorContinuityTab({ sessionId }: DoctorContinuityTabProps) {
                       )}
                     </CardDescription>
                   </div>
-                  {finalizedAtDate && (
-                    <span className="text-[11px] text-muted-foreground shrink-0 font-mono">
-                      Hoàn tất: {formatDate(finalizedAtDate)}
-                    </span>
-                  )}
+                  <div className="flex items-center gap-3 shrink-0">
+                    {finalizedAtDate && (
+                      <span className="text-[11px] text-muted-foreground hidden sm:inline font-mono">
+                        Hoàn tất: {formatDate(finalizedAtDate)}
+                      </span>
+                    )}
+                    <div className="p-1 rounded-full text-muted-foreground">
+                      {isExpanded ? (
+                        <ChevronUp className="h-4 w-4" />
+                      ) : (
+                        <ChevronDown className="h-4 w-4" />
+                      )}
+                    </div>
+                  </div>
                 </div>
               </CardHeader>
 
-              <CardContent className="p-4 space-y-3 text-xs">
-                <div className="space-y-1">
-                  <span className="font-semibold text-foreground">Tổng kết y tế:</span>
-                  <p className="p-2.5 rounded-lg bg-muted/30 text-foreground/90 whitespace-pre-wrap leading-relaxed">
-                    {summaryText}
-                  </p>
-                </div>
-
-                {observationsText && (
+              {isExpanded && (
+                <CardContent className="p-4 border-t space-y-3 text-xs animate-in fade-in-50 duration-200">
                   <div className="space-y-1">
-                    <span className="font-semibold text-foreground">Ghi nhận / Triệu chứng:</span>
+                    <span className="font-semibold text-foreground">Tổng kết y tế:</span>
                     <p className="p-2.5 rounded-lg bg-muted/30 text-foreground/90 whitespace-pre-wrap leading-relaxed">
-                      {observationsText}
+                      {summaryText}
                     </p>
                   </div>
-                )}
 
-                {recommendationsText && (
-                  <div className="space-y-1">
-                    <span className="font-semibold text-foreground">Khuyến nghị điều trị & lối sống:</span>
-                    <p className="p-2.5 rounded-lg bg-muted/30 text-foreground/90 whitespace-pre-wrap leading-relaxed">
-                      {recommendationsText}
-                    </p>
-                  </div>
-                )}
-
-                {followUpText && (
-                  <div className="space-y-1">
-                    <span className="font-semibold text-foreground">Kế hoạch tái khám / Theo dõi tiếp theo:</span>
-                    <p className="p-2.5 rounded-lg bg-muted/30 text-foreground/90 whitespace-pre-wrap leading-relaxed">
-                      {followUpText}
-                    </p>
-                  </div>
-                )}
-
-                {addendaList.length > 0 && (
-                  <div className="mt-3 pt-3 border-t space-y-2">
-                    <span className="font-semibold text-foreground flex items-center gap-1.5 text-xs text-amber-700 dark:text-amber-400">
-                      <FileText className="w-3.5 h-3.5" />
-                      Phụ lục & Đính chính sau hoàn tất ({addendaList.length}):
-                    </span>
-                    <div className="space-y-2">
-                      {addendaList.map((addendum) => (
-                        <div key={addendum.id} className="p-2.5 rounded-lg bg-amber-50/50 dark:bg-amber-950/20 border border-amber-200/60 dark:border-amber-900/40 text-xs">
-                          <div className="flex items-center justify-between font-medium text-amber-900 dark:text-amber-300 mb-1">
-                            <span>Lý do: {addendum.reason}</span>
-                            <span className="text-[10px] text-muted-foreground">{formatDate(addendum.createdAt)}</span>
-                          </div>
-                          <p className="text-foreground/90 whitespace-pre-wrap">{addendum.content}</p>
-                        </div>
-                      ))}
+                  {observationsText && (
+                    <div className="space-y-1">
+                      <span className="font-semibold text-foreground">Ghi nhận / Triệu chứng:</span>
+                      <p className="p-2.5 rounded-lg bg-muted/30 text-foreground/90 whitespace-pre-wrap leading-relaxed">
+                        {observationsText}
+                      </p>
                     </div>
-                  </div>
-                )}
-              </CardContent>
+                  )}
+
+                  {recommendationsText && (
+                    <div className="space-y-1">
+                      <span className="font-semibold text-foreground">Khuyến nghị điều trị & lối sống:</span>
+                      <p className="p-2.5 rounded-lg bg-muted/30 text-foreground/90 whitespace-pre-wrap leading-relaxed">
+                        {recommendationsText}
+                      </p>
+                    </div>
+                  )}
+
+                  {followUpText && (
+                    <div className="space-y-1">
+                      <span className="font-semibold text-foreground">Kế hoạch tái khám / Theo dõi tiếp theo:</span>
+                      <p className="p-2.5 rounded-lg bg-muted/30 text-foreground/90 whitespace-pre-wrap leading-relaxed">
+                        {followUpText}
+                      </p>
+                    </div>
+                  )}
+
+                  {addendaList.length > 0 && (
+                    <div className="mt-3 pt-3 border-t space-y-2">
+                      <span className="font-semibold text-foreground flex items-center gap-1.5 text-xs text-amber-700 dark:text-amber-400">
+                        <FileText className="w-3.5 h-3.5" />
+                        Phụ lục & Đính chính sau hoàn tất ({addendaList.length}):
+                      </span>
+                      <div className="space-y-2">
+                        {addendaList.map((addendum) => (
+                          <div key={addendum.id} className="p-2.5 rounded-lg bg-amber-50/50 dark:bg-amber-950/20 border border-amber-200/60 dark:border-amber-900/40 text-xs">
+                            <div className="flex items-center justify-between font-medium text-amber-900 dark:text-amber-300 mb-1">
+                              <span>Lý do: {addendum.reason}</span>
+                              <span className="text-[10px] text-muted-foreground">{formatDate(addendum.createdAt)}</span>
+                            </div>
+                            <p className="text-foreground/90 whitespace-pre-wrap">{addendum.content}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </CardContent>
+              )}
             </Card>
           )
         })}
