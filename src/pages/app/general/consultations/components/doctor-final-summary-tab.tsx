@@ -105,7 +105,9 @@ export function DoctorFinalSummaryTab({ sessionId, sessionStatus }: DoctorFinalS
 
   const toggleRecordSelection = (recordId: string | number) => {
     setSelectedRecordIds((prev) =>
-      prev.includes(recordId) ? prev.filter((id) => id !== recordId) : [...prev, recordId]
+      prev.some((id) => String(id) === String(recordId))
+        ? prev.filter((id) => String(id) !== String(recordId))
+        : [...prev, recordId]
     )
   }
 

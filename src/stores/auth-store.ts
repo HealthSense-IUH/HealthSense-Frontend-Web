@@ -53,10 +53,16 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
   setAuthenticatedSession: (accessToken, userSession) => {
     persistUserSession(userSession)
+    if (typeof window !== "undefined") {
+      window.localStorage.removeItem("healthsense.pendingPaymentRequestId")
+    }
     set({ accessToken, userSession })
   },
   clearAuth: () => {
     persistUserSession(null)
+    if (typeof window !== "undefined") {
+      window.localStorage.removeItem("healthsense.pendingPaymentRequestId")
+    }
     set({ accessToken: null, userSession: null })
   },
 }))

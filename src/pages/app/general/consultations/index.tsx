@@ -399,6 +399,8 @@ export default function ConsultationsPage() {
         onOpenChange={logic.setIsDoctorCandidatesOpen}
         onReserveDoctor={(doctorId) => void logic.handleReserveDoctor(doctorId)}
         onOpenCareProfile={logic.openDoctorCareProfile}
+        isReserving={logic.actionLoading}
+        reservingDoctorId={logic.reservingDoctorId}
       />
 
       <DoctorCareProfileDialog

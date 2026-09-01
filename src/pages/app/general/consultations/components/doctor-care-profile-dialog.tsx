@@ -24,7 +24,7 @@ export function DoctorCareProfileDialog({
   open,
   onOpenChange,
 }: {
-  doctorId: number | null
+  doctorId: number | string | null
   open: boolean
   onOpenChange: (open: boolean) => void
 }) {

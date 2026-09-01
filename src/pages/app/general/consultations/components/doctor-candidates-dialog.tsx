@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react"
-import { Search, Star, AlertTriangle, UserCog } from "lucide-react"
+import { Search, Star, AlertTriangle, UserCog, Loader2 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
@@ -18,12 +18,16 @@ export function DoctorCandidatesDialog({
   onOpenChange,
   onReserveDoctor,
   onOpenCareProfile,
+  isReserving = false,
+  reservingDoctorId = null,
 }: {
   requestId: number | string | null
   open: boolean
   onOpenChange: (open: boolean) => void
-  onReserveDoctor: (doctorId: number) => void
-  onOpenCareProfile: (doctorId: number) => void
+  onReserveDoctor: (doctorId: number | string) => void
+  onOpenCareProfile: (doctorId: number | string) => void
+  isReserving?: boolean
+  reservingDoctorId?: number | string | null
 }) {
   const { toast } = useToast()
   const [loading, setLoading] = useState(false)
@@ -156,14 +160,22 @@ export function DoctorCandidatesDialog({
                 <div className="flex sm:flex-col gap-2 justify-start sm:justify-start">
                   <Button 
                     size="sm" 
-                    disabled={!doctor.eligible}
+                    disabled={!doctor.eligible || isReserving}
                     onClick={() => onReserveDoctor(doctor.doctorId)}
                   >
-                    Reserve Doctor
+                    {isReserving && String(reservingDoctorId) === String(doctor.doctorId) ? (
+                      <>
+                        <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" />
+                        Reserving...
+                      </>
+                    ) : (
+                      "Reserve Doctor"
+                    )}
                   </Button>
                   <Button 
                     variant="outline" 
                     size="sm"
+                    disabled={isReserving}
                     onClick={() => onOpenCareProfile(doctor.doctorId)}
                   >
                     <UserCog className="w-4 h-4 mr-2" />

@@ -18,9 +18,23 @@ export function useConsultationSocket(
   const clientRef = useRef<Client | null>(null)
 
   useEffect(() => {
+    // If no sessionId or accessToken, ensure any existing client is disconnected
     if (!sessionId || !accessToken) {
+      if (clientRef.current) {
+        void clientRef.current.deactivate()
+        clientRef.current = null
+      }
+      setConnectionStatus("idle")
       return
     }
+
+    // Clean up any previously connected instance before creating a new one
+    if (clientRef.current) {
+      void clientRef.current.deactivate()
+      clientRef.current = null
+    }
+
+    setConnectionStatus("connecting")
 
     const stompClient = new Client({
       reconnectDelay: 4000,
@@ -31,14 +45,44 @@ export function useConsultationSocket(
       onConnect: () => {
         setConnectionStatus("connected")
         stompClient.subscribe(`/topic/consultation-sessions/${sessionId}`, (frame: IMessage) => {
-          const parsed = JSON.parse(frame.body) as ApiResponse<ConsultationMessageItem>
-          if (parsed.data) {
-            onMessage(parsed.data)
+          try {
+            const parsed = JSON.parse(frame.body) as ApiResponse<ConsultationMessageItem> & ConsultationMessageItem
+            // Support both wrapped ApiResponse { code: 1000, data: { ... } } and raw ConsultationMessageItem
+            const messageData: ConsultationMessageItem | undefined = parsed?.data
+              ? parsed.data
+              : parsed?.id && parsed?.sessionId
+                ? parsed
+                : undefined
+
+            if (messageData) {
+              onMessage(messageData)
+            } else {
+              if (import.meta.env.DEV) {
+                console.warn(
+                  "[WebSocket] Received frame body that does not match expected ApiResponse or ConsultationMessageItem shape:",
+                  frame.body
+                )
+              }
+            }
+          } catch (e) {
+            if (import.meta.env.DEV) {
+              console.error("[WebSocket] Failed to parse message frame body:", e, frame.body)
+            }
           }
         })
       },
-      onStompError: () => setConnectionStatus("error"),
-      onWebSocketError: () => setConnectionStatus("error"),
+      onStompError: (frame) => {
+        if (import.meta.env.DEV) {
+          console.warn("[WebSocket] STOMP error frame:", frame)
+        }
+        setConnectionStatus("error")
+      },
+      onWebSocketError: (event) => {
+        if (import.meta.env.DEV) {
+          console.warn("[WebSocket] Transport error:", event)
+        }
+        setConnectionStatus("error")
+      },
     })
 
     clientRef.current = stompClient

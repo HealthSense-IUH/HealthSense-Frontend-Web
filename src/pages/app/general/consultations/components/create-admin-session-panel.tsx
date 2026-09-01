@@ -15,6 +15,7 @@ export interface AdminSessionFormData {
   supportEndsAt: string
   initialSystemMessage: string
   overrideReason: string
+  serviceScope: string
 }
 
 export function CreateAdminSessionPanel({
@@ -28,7 +29,13 @@ export function CreateAdminSessionPanel({
   onChange: (form: AdminSessionFormData) => void
   onSubmit: (event: FormEvent<HTMLFormElement>) => void
 }) {
-  const isValid = !!form.memberId.trim() && !!form.doctorId.trim() && !!form.endsAt && !!form.overrideReason.trim()
+  const isValid =
+    !!form.memberId.trim() &&
+    !!form.doctorId.trim() &&
+    !!form.endsAt &&
+    !!form.overrideReason.trim() &&
+    !!form.serviceScope.trim() &&
+    form.serviceScope.trim().length <= 2000
 
   return (
     <Card className="shadow-sm border rounded-2xl">
@@ -117,10 +124,26 @@ export function CreateAdminSessionPanel({
             <Textarea
               id="overrideReason"
               required
-              rows={3}
+              rows={2}
               placeholder="Nhập lý do tạo phiên đặc biệt (VD: Bổ sung ca cấp cứu đặc biệt theo chỉ đạo chuyên môn, tài trợ dịch vụ...)"
               value={form.overrideReason}
               onChange={(event) => onChange({ ...form, overrideReason: event.target.value })}
+              className="resize-none"
+            />
+          </div>
+
+          <div className="space-y-2 md:col-span-2">
+            <Label htmlFor="serviceScope" className="text-sm font-semibold text-slate-800 dark:text-slate-200">
+              Phạm vi dịch vụ chỉ định (Service Scope) <span className="text-red-500">*</span>
+            </Label>
+            <Textarea
+              id="serviceScope"
+              required
+              maxLength={2000}
+              rows={2}
+              placeholder="Nhập phạm vi chăm sóc/hướng dẫn chuyên môn cho phiên này (tối đa 2000 ký tự)..."
+              value={form.serviceScope}
+              onChange={(event) => onChange({ ...form, serviceScope: event.target.value })}
               className="resize-none"
             />
           </div>

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from "react"
 import { useAuthStore } from "@/stores/auth-store"
 import { useAppShell } from "@/components/layout/app-shell-context"
 import { USER_ROLES } from "@/constants"
@@ -28,8 +28,25 @@ const DEFAULT_PAGE_SIZE = 10
 const DEFAULT_CHAT_SIZE = 30
 
 function readError(error: unknown, fallback: string) {
-  const err = error as { response?: { data?: { message?: string } }; message?: string }
-  return err.response?.data?.message || err.message || fallback
+  const err = error as {
+    response?: {
+      data?: {
+        message?: string
+        error?: string
+        detail?: string
+      } | string
+      status?: number
+    }
+    message?: string
+  }
+  const data = err?.response?.data
+  if (typeof data === "string" && data.trim()) {
+    return data
+  }
+  if (typeof data === "object" && data !== null) {
+    return data.message || data.error || data.detail || err.message || fallback
+  }
+  return err.message || fallback
 }
 
 function toIsoOrNull(value: string) {
@@ -126,6 +143,7 @@ export function useConsultationsLogic() {
     supportEndsAt: localDateTimeIn(33),
     initialSystemMessage: "Admin creates direct consultation session",
     overrideReason: "",
+    serviceScope: "",
   })
   const [adminDialogMode, setAdminDialogMode] = useState<AdminDialogMode>(null)
   const [targetRequest, setTargetRequest] = useState<ConsultationRequestItem | null>(null)
@@ -147,7 +165,8 @@ export function useConsultationsLogic() {
   const [isAdminRequestDetailOpen, setIsAdminRequestDetailOpen] = useState(false)
   const [isDoctorCandidatesOpen, setIsDoctorCandidatesOpen] = useState(false)
   const [isDoctorCareProfileOpen, setIsDoctorCareProfileOpen] = useState(false)
-  const [targetDoctorId, setTargetDoctorId] = useState<number | null>(null)
+  const [targetDoctorId, setTargetDoctorId] = useState<number | string | null>(null)
+  const [reservingDoctorId, setReservingDoctorId] = useState<number | string | null>(null)
   
   const [isMoreInfoDialogOpen, setIsMoreInfoDialogOpen] = useState(false)
   const [moreInfoNote, setMoreInfoNote] = useState("")
@@ -191,9 +210,9 @@ export function useConsultationsLogic() {
               page: 1, 
               size: DEFAULT_PAGE_SIZE,
               status: adminFilters.status || undefined,
-              memberId: adminFilters.memberId ? Number(adminFilters.memberId) : undefined,
-              preferredDoctorId: adminFilters.preferredDoctorId ? Number(adminFilters.preferredDoctorId) : undefined,
-              assignedDoctorId: adminFilters.assignedDoctorId ? Number(adminFilters.assignedDoctorId) : undefined,
+              memberId: adminFilters.memberId.trim() || undefined,
+              preferredDoctorId: adminFilters.preferredDoctorId.trim() || undefined,
+              assignedDoctorId: adminFilters.assignedDoctorId.trim() || undefined,
               fromDate: adminFilters.fromDate ? new Date(adminFilters.fromDate).toISOString() : undefined,
               toDate: adminFilters.toDate ? new Date(adminFilters.toDate).toISOString() : undefined,
             })
@@ -211,15 +230,17 @@ export function useConsultationsLogic() {
           : Promise.resolve(null),
       ])
 
+      const loadedSessions = sessionResponse.data.content ?? []
       setRequests(requestResponse?.data.content ?? [])
-      setSessions(sessionResponse.data.content ?? [])
+      setSessions(loadedSessions)
       setHealthRecords(healthRecordResponse?.data.content ?? [])
       setPackages(packageResponse?.data.content ?? [])
-      setSelectedSession(prev => {
-        if (!prev && sessionResponse.data.content.length > 0) {
-          return sessionResponse.data.content[0]
+      setSelectedSession((prev) => {
+        if (prev) {
+          const stillValid = loadedSessions.find((s) => String(s.id) === String(prev.id))
+          if (stillValid) return stillValid
         }
-        return prev
+        return loadedSessions.length > 0 ? loadedSessions[0] : null
       })
     } catch (error) {
       setAlert({ type: "error", text: readError(error, "Failed to load consultation data.") })
@@ -230,6 +251,31 @@ export function useConsultationsLogic() {
     }
   }, [isAdmin, isMember, adminFilters])
 
+  // Clear stale state when the authenticated user or role changes
+  const previousUserIdRef = useRef<string | number | undefined>(userSession?.userId)
+  const previousRoleRef = useRef<string | undefined>(effectiveRole)
+
+  useEffect(() => {
+    if (
+      previousUserIdRef.current !== userSession?.userId ||
+      previousRoleRef.current !== effectiveRole
+    ) {
+      previousUserIdRef.current = userSession?.userId
+      previousRoleRef.current = effectiveRole
+
+      // Reset stale consultation state
+      setSelectedSession(null)
+      setMessages([])
+      setRequests([])
+      setSessions([])
+      setHealthRecords([])
+      setTargetRequest(null)
+      setTargetSession(null)
+      setAlert(null)
+      void loadData()
+    }
+  }, [userSession?.userId, effectiveRole, loadData])
+
   useEffect(() => {
     queueMicrotask(() => void loadData())
   }, [loadData])
@@ -239,10 +285,37 @@ export function useConsultationsLogic() {
       return
     }
 
+    // Role / ownership sanity check to prevent cross-account session pollution
+    if (userSession?.userId) {
+      const currentUid = String(userSession.userId)
+      if (isMember && String(selectedSession.memberId) !== currentUid) {
+        if (import.meta.env.DEV) {
+          console.warn(
+            `[Consultations] Stale session #${selectedSession.id} belongs to member #${selectedSession.memberId}, but current user is #${currentUid}. Clearing selectedSession.`
+          )
+        }
+        setSelectedSession(null)
+        setMessages([])
+        void loadData()
+        return
+      }
+      if (isDoctor && String(selectedSession.doctorId) !== currentUid) {
+        if (import.meta.env.DEV) {
+          console.warn(
+            `[Consultations] Stale session #${selectedSession.id} belongs to doctor #${selectedSession.doctorId}, but current user is #${currentUid}. Clearing selectedSession.`
+          )
+        }
+        setSelectedSession(null)
+        setMessages([])
+        void loadData()
+        return
+      }
+    }
+
     if (selectedSession.status !== "ACTIVE" && selectedSession.status !== "COMPLETED") {
       setAlert({ type: "error", text: "Phiên tư vấn chưa mở hoặc không còn hoạt động." })
       setSelectedSession(null)
-      // If we could clear URL params here we would, but resetting selectedSession hides the chat window.
+      setMessages([])
       return
     }
 
@@ -270,7 +343,7 @@ export function useConsultationsLogic() {
     return () => {
       mounted = false
     }
-  }, [selectedSession])
+  }, [selectedSession, isAdmin, userSession?.userId, isMember, isDoctor, loadData])
 
   useEffect(() => {
     if (isAdmin) return
@@ -393,6 +466,12 @@ export function useConsultationsLogic() {
         return
       }
 
+      if (!adminSessionForm.serviceScope.trim()) {
+        setAlert({ type: "error", text: "Vui lòng nhập phạm vi dịch vụ (serviceScope) chỉ định cho phiên." })
+        setActionLoading(false)
+        return
+      }
+
       const response = await consultationApi.createSessionByAdmin({
         memberId: adminSessionForm.memberId.trim(),
         doctorId: adminSessionForm.doctorId.trim(),
@@ -402,6 +481,7 @@ export function useConsultationsLogic() {
         supportEndsAt: toIsoOrNull(adminSessionForm.supportEndsAt),
         initialSystemMessage: adminSessionForm.initialSystemMessage.trim() || null,
         overrideReason: adminSessionForm.overrideReason.trim(),
+        serviceScope: adminSessionForm.serviceScope.trim(),
       })
       setSelectedSession(response.data)
       setAlert({ type: "success", text: `Đã tạo phiên tư vấn đặc biệt #${response.data.id}.` })
@@ -417,6 +497,7 @@ export function useConsultationsLogic() {
         supportEndsAt: localDateTimeIn(33),
         initialSystemMessage: "Admin creates direct consultation session",
         overrideReason: "",
+        serviceScope: "",
       })
       await loadData()
     } catch (error) {
@@ -496,14 +577,15 @@ export function useConsultationsLogic() {
     }, 150)
   }
 
-  function openDoctorCareProfile(doctorId: number) {
+  function openDoctorCareProfile(doctorId: number | string) {
     setTargetDoctorId(doctorId)
     setIsDoctorCareProfileOpen(true)
   }
 
-  async function handleReserveDoctor(doctorId: number) {
+  async function handleReserveDoctor(doctorId: number | string) {
     if (!targetRequest) return
     setActionLoading(true)
+    setReservingDoctorId(doctorId)
     setAlert(null)
     try {
       await consultationApi.approveRequest(targetRequest.id, { doctorId })
@@ -516,9 +598,16 @@ export function useConsultationsLogic() {
       setIsAdminRequestDetailOpen(false)
       await loadData()
     } catch (error) {
-      setAlert({ type: "error", text: readError(error, "Không thể phân công bác sĩ.") })
+      const errorMsg = readError(error, "Không thể phân công bác sĩ.")
+      setAlert({ type: "error", text: errorMsg })
+      toast({
+        variant: "destructive",
+        title: "Không thể phân công bác sĩ",
+        description: errorMsg,
+      })
     } finally {
       setActionLoading(false)
+      setReservingDoctorId(null)
     }
   }
 
@@ -788,6 +877,7 @@ export function useConsultationsLogic() {
     setIsDoctorCareProfileOpen,
     targetDoctorId,
     setTargetDoctorId,
+    reservingDoctorId,
     openAdminRequestDetail,
     openDoctorCandidates,
     openDoctorCareProfile,

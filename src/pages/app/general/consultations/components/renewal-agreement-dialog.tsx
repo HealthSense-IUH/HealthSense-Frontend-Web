@@ -71,7 +71,7 @@ export function RenewalAgreementDialog({
     setSubmitting(true)
     try {
       await consultationApi.acceptRenewalAgreement(renewalId, {
-        agreementId: Number(agreementId),
+        agreementId: agreementId,
         accepted: true,
       })
       toast({

@@ -155,9 +155,7 @@ export const router = createBrowserRouter([
           {
             path: "packages",
             element: (
-              <ProtectedRoute
-                allowedRoles={[USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN, USER_ROLES.CARE_COORDINATOR]}
-              >
+              <ProtectedRoute allowedRoles={[USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN]}>
                 {wrap(<AdminPackagesPage />)}
               </ProtectedRoute>
             ),
@@ -165,9 +163,7 @@ export const router = createBrowserRouter([
           {
             path: "health-records",
             element: (
-              <ProtectedRoute
-                allowedRoles={[USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN, USER_ROLES.CARE_COORDINATOR]}
-              >
+              <ProtectedRoute allowedRoles={[USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN]}>
                 {wrap(<AdminHealthRecordsPage />)}
               </ProtectedRoute>
             ),

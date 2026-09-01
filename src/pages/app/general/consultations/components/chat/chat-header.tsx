@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { User, Phone, Video, MoreHorizontal, FileText, Share2, RefreshCw } from "lucide-react"
+import { User, Phone, Video, MoreHorizontal, FileText, Share2, RefreshCw, LogOut } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import type { ConsultationSessionItem } from "@/types/consultation"
@@ -7,6 +7,7 @@ import { statusBadge } from "../shared"
 import { MemberFinalSummaryDialog } from "../member-final-summary-dialog"
 import { ShareHealthRecordDialog } from "../share-health-record-dialog"
 import { RenewalDialog } from "../renewal-dialog"
+import { TerminationRequestDialog } from "../termination-request-dialog"
 
 interface ChatHeaderProps {
   session: ConsultationSessionItem
@@ -19,6 +20,7 @@ export function ChatHeader({ session, isDoctor, isMember, onSessionRefreshed }: 
   const [isSummaryOpen, setIsSummaryOpen] = useState(false)
   const [isShareRecordOpen, setIsShareRecordOpen] = useState(false)
   const [isRenewalOpen, setIsRenewalOpen] = useState(false)
+  const [isTerminationOpen, setIsTerminationOpen] = useState(false)
 
   return (
     <div className="flex items-center justify-between border-b border-border bg-background/95 px-6 py-4 shadow-sm z-10 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -66,6 +68,17 @@ export function ChatHeader({ session, isDoctor, isMember, onSessionRefreshed }: 
             </Button>
           </>
         )}
+        {session.status === "ACTIVE" && (isMember || isDoctor) && (
+          <Button
+            variant="outline"
+            size="sm"
+            className="flex items-center gap-1.5 text-rose-600 border-rose-200 hover:bg-rose-50 hover:text-rose-700"
+            onClick={() => setIsTerminationOpen(true)}
+          >
+            <LogOut className="h-4 w-4" />
+            <span className="hidden sm:inline">Yêu cầu kết thúc</span>
+          </Button>
+        )}
         {isMember && session.status !== "SCHEDULED" && (
           <Button 
             variant="outline" 
@@ -106,6 +119,13 @@ export function ChatHeader({ session, isDoctor, isMember, onSessionRefreshed }: 
         open={isRenewalOpen}
         onOpenChange={setIsRenewalOpen}
         onSessionRefreshed={onSessionRefreshed}
+      />
+
+      <TerminationRequestDialog
+        sessionId={session.id}
+        open={isTerminationOpen}
+        onOpenChange={setIsTerminationOpen}
+        onSuccess={onSessionRefreshed}
       />
     </div>
   )

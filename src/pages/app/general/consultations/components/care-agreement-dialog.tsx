@@ -66,7 +66,7 @@ export function CareAgreementDialog({
     setSubmitting(true)
     try {
       await consultationApi.acceptAgreement(requestId, {
-        agreementId: Number(agreementId),
+        agreementId: agreementId,
         accepted: true,
       })
       toast({

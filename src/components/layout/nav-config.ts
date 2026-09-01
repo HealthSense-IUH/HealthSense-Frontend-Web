@@ -182,7 +182,7 @@ export const managementNavigationGroups: NavigationGroup[] = [
         shortTitle: "Gói DV",
         href: "/app/management/packages",
         icon: Package,
-        allowedRoles: [USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN, USER_ROLES.CARE_COORDINATOR],
+        allowedRoles: [USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN],
       },
       {
         id: "health-records-management",
@@ -190,7 +190,7 @@ export const managementNavigationGroups: NavigationGroup[] = [
         shortTitle: "Hồ sơ bệnh",
         href: "/app/management/health-records",
         icon: Activity,
-        allowedRoles: [USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN, USER_ROLES.CARE_COORDINATOR],
+        allowedRoles: [USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN],
       },
       {
         id: "needs-actions",

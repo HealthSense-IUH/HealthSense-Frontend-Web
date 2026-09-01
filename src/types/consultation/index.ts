@@ -430,9 +430,9 @@ export interface ApproveConsultationRequestPayload {
 
 export interface AdminListRequestsParams {
   status?: string
-  memberId?: number
-  preferredDoctorId?: number
-  assignedDoctorId?: number
+  memberId?: number | string
+  preferredDoctorId?: number | string
+  assignedDoctorId?: number | string
   fromDate?: string
   toDate?: string
   page?: number
@@ -440,7 +440,7 @@ export interface AdminListRequestsParams {
 }
 
 export interface DoctorCandidateResponse {
-  doctorId: number
+  doctorId: number | string
   displayName: string
   email: string
   phone?: string | null
@@ -529,6 +529,7 @@ export interface AdminCreateConsultationSessionPayload {
   supportEndsAt?: string | null
   initialSystemMessage?: string | null
   overrideReason: string
+  serviceScope: string
   packageId?: number | string | null
 }
 
