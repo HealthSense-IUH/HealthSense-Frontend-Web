@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react"
+import { useEffect, useState, useCallback, useRef } from "react"
 import { useNavigate } from "react-router-dom"
 import {
   Bell,
@@ -36,6 +36,11 @@ export function NotificationBell() {
   const role = userSession?.role || "MEMBER"
 
   const [open, setOpen] = useState(false)
+  const openRef = useRef(open)
+  useEffect(() => {
+    openRef.current = open
+  }, [open])
+
   const [unreadCount, setUnreadCount] = useState<number>(0)
   const [notifications, setNotifications] = useState<NotificationResponse[]>([])
   const [loadingList, setLoadingList] = useState(false)
@@ -72,10 +77,9 @@ export function NotificationBell() {
   const handleRealtimePing = useCallback(() => {
     void fetchUnreadCount()
     // Đang mở popover thì làm mới luôn danh sách để thấy thông báo mới
-    setOpen((isOpen) => {
-      if (isOpen) void fetchNotifications()
-      return isOpen
-    })
+    if (openRef.current) {
+      void fetchNotifications()
+    }
   }, [fetchUnreadCount, fetchNotifications])
 
   const { connected: socketConnected } = useNotificationSocket(handleRealtimePing)
