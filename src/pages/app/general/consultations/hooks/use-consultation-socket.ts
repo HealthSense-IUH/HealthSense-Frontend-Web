@@ -1,14 +1,21 @@
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Client, type IMessage } from "@stomp/stompjs"
 import SockJS from "sockjs-client"
 
 import { env } from "@/config"
 import { useAuthStore } from "@/stores/auth-store"
 import type { ApiResponse } from "@/types/base"
-import type { ConsultationMessageItem, SendConsultationMessagePayload } from "@/types/consultation"
+import type { ConsultationMessageItem } from "@/types/consultation"
 
 type SocketStatus = "idle" | "connecting" | "connected" | "error"
 
+/**
+ * Socket chat — CHIỀU NHẬN DUY NHẤT.
+ *
+ * Kiến trúc thống nhất của hệ thống: gửi luôn đi HTTP POST
+ * (/api/consultation-sessions/{id}/messages), server lưu xong tự phát vào
+ * topic; WS/STOMP chỉ để nghe tin đẩy về. Không còn publish từ client.
+ */
 export function useConsultationSocket(
   sessionId: string | number | null,
   onMessage: (message: ConsultationMessageItem) => void
@@ -50,23 +57,7 @@ export function useConsultationSocket(
     }
   }, [accessToken, onMessage, sessionId])
 
-  const sendSocketMessage = useMemo(
-    () => (payload: SendConsultationMessagePayload) => {
-      const client = clientRef.current
-      if (!client?.connected || !sessionId) {
-        return false
-      }
-
-      client.publish({
-        destination: `/app/consultation-sessions/${sessionId}/messages`,
-        body: JSON.stringify(payload),
-      })
-      return true
-    },
-    [sessionId]
-  )
-
   const status = sessionId && accessToken ? connectionStatus : "idle"
 
-  return { status, sendSocketMessage }
+  return { status }
 }

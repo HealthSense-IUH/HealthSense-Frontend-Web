@@ -23,6 +23,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { useNotificationSocket } from "@/hooks/use-notification-socket"
 import { useToast } from "@/hooks/use-toast"
 import { useAuthStore } from "@/stores/auth-store"
 import { notificationApi } from "@/services"
@@ -67,14 +68,29 @@ export function NotificationBell() {
     }
   }, [toast])
 
-  // Polling unread count every 30s
+  // Realtime: server đẩy "ping" qua WS mỗi khi có thông báo mới -> refetch
+  const handleRealtimePing = useCallback(() => {
+    void fetchUnreadCount()
+    // Đang mở popover thì làm mới luôn danh sách để thấy thông báo mới
+    setOpen((isOpen) => {
+      if (isOpen) void fetchNotifications()
+      return isOpen
+    })
+  }, [fetchUnreadCount, fetchNotifications])
+
+  const { connected: socketConnected } = useNotificationSocket(handleRealtimePing)
+
+  // Nạp số chưa đọc lần đầu; polling 60s CHỈ khi socket rớt (lưới dự phòng)
   useEffect(() => {
     fetchUnreadCount()
+    if (socketConnected) {
+      return
+    }
     const interval = setInterval(() => {
       fetchUnreadCount()
-    }, 30000)
+    }, 60000)
     return () => clearInterval(interval)
-  }, [fetchUnreadCount])
+  }, [fetchUnreadCount, socketConnected])
 
   // When popover opens, fetch list & refresh unread count
   const handleOpenChange = (isOpen: boolean) => {
