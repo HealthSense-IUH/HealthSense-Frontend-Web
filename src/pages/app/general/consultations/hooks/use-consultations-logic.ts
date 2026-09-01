@@ -194,7 +194,7 @@ export function useConsultationsLogic() {
     })
   }, [])
 
-  const { status: socketStatus, sendSocketMessage } = useConsultationSocket(
+  const { status: socketStatus } = useConsultationSocket(
     !isAdmin && selectedSession ? selectedSession.id : null,
     handleIncomingMessage
   )
@@ -747,11 +747,12 @@ export function useConsultationsLogic() {
     setActionLoading(true)
     setAlert(null)
     try {
-      const sentBySocket = sendSocketMessage(payload)
-      if (!sentBySocket) {
-        const response = await consultationApi.sendMessage(selectedSession.id, payload)
-        handleIncomingMessage(response.data)
-      }
+      // Gửi luôn qua HTTP POST (kiến trúc: gửi = HTTP, nghe = WS).
+      // Server phát tin vào topic sau khi lưu; nếu socket của mình đang nối
+      // thì tin sẽ dội về qua topic — handleIncomingMessage đã chống trùng
+      // theo message.id (POST response và frame WS mang cùng id) nên an toàn.
+      const response = await consultationApi.sendMessage(selectedSession.id, payload)
+      handleIncomingMessage(response.data)
       setMessageDraft("")
       setAttachmentUrl("")
     } catch (error: any) {
