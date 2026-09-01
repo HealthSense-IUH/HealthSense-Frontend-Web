@@ -31,6 +31,7 @@ export function DoctorContinuityTab({ sessionId }: DoctorContinuityTabProps) {
     consultationApi
       .getDoctorContinuitySummaries(sessionId)
       .then((res) => {
+        console.log("[Continuity Summaries Response]", res.data)
         setSummaries(res.data || [])
       })
       .catch((err) => {
@@ -66,7 +67,9 @@ export function DoctorContinuityTab({ sessionId }: DoctorContinuityTabProps) {
     )
   }
 
-  if (summaries.length === 0) {
+  const pastSummaries = summaries.filter((item) => String(item.sessionId) !== String(sessionId))
+
+  if (pastSummaries.length === 0) {
     return (
       <div className="py-12 text-center">
         <History className="mx-auto h-12 w-12 text-muted-foreground/40 mb-3" />
@@ -84,7 +87,7 @@ export function DoctorContinuityTab({ sessionId }: DoctorContinuityTabProps) {
         <div className="flex items-center gap-2">
           <History className="h-4 w-4 text-primary" />
           <h4 className="text-sm font-semibold text-foreground">
-            Lịch sử chăm sóc trước ({summaries.length} đợt khám)
+            Lịch sử chăm sóc trước ({pastSummaries.length} đợt khám)
           </h4>
         </div>
         <Button variant="ghost" size="sm" onClick={fetchContinuity} className="h-8 px-2 text-xs">
@@ -93,101 +96,110 @@ export function DoctorContinuityTab({ sessionId }: DoctorContinuityTabProps) {
       </div>
 
       <div className="space-y-4">
-        {summaries.map((item) => (
-          <Card key={item.sessionId} className="border-border shadow-2xs">
-            <CardHeader className="p-4 pb-3 bg-muted/20 border-b">
-              <div className="flex items-start justify-between gap-2">
-                <div>
-                  <CardTitle className="text-sm font-semibold flex items-center gap-2">
-                    <span>Đợt chăm sóc #{item.sessionId}</span>
-                    <Badge variant="outline" className="text-[10px] bg-emerald-50 text-emerald-700 border-emerald-200">
-                      <CheckCircle2 className="w-3 h-3 mr-1" /> Đã hoàn tất
-                    </Badge>
-                  </CardTitle>
-                  <CardDescription className="text-xs mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-muted-foreground">
-                    <span className="flex items-center gap-1">
-                      <Calendar className="h-3 w-3" />
-                      {formatDate(item.startedAt)} &bull; {formatDate(item.completedAt || item.endsAt)}
-                    </span>
-                    {item.doctorName && (
+        {pastSummaries.map((item) => {
+          const summaryText = item.finalizedSummary?.summary || item.summary || "Không có tóm tắt"
+          const observationsText = item.finalizedSummary?.observations || item.observations
+          const recommendationsText = item.finalizedSummary?.recommendations || item.recommendations
+          const followUpText = item.finalizedSummary?.followUpRecommendation || item.followUpRecommendation
+          const finalizedAtDate = item.finalizedSummary?.finalizedAt || item.finalizedAt
+          const addendaList = item.finalizedSummary?.addenda || item.addenda || []
+
+          return (
+            <Card key={item.sessionId} className="border-border shadow-2xs">
+              <CardHeader className="p-4 pb-3 bg-muted/20 border-b">
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <CardTitle className="text-sm font-semibold flex items-center gap-2">
+                      <span>Đợt chăm sóc #{item.sessionId}</span>
+                      <Badge variant="outline" className="text-[10px] bg-emerald-50 text-emerald-700 border-emerald-200">
+                        <CheckCircle2 className="w-3 h-3 mr-1" /> Đã hoàn tất
+                      </Badge>
+                    </CardTitle>
+                    <CardDescription className="text-xs mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-muted-foreground">
                       <span className="flex items-center gap-1">
-                        <Stethoscope className="h-3 w-3" />
-                        Bác sĩ: {item.doctorName}
+                        <Calendar className="h-3 w-3" />
+                        {formatDate(item.startedAt)} &bull; {formatDate(item.completedAt || item.endsAt)}
                       </span>
-                    )}
-                    {item.packageName && (
-                      <span className="flex items-center gap-1">
-                        <Package className="h-3 w-3" />
-                        Gói: {item.packageName}
-                      </span>
-                    )}
-                  </CardDescription>
-                </div>
-                {item.finalizedAt && (
-                  <span className="text-[11px] text-muted-foreground shrink-0 font-mono">
-                    Hoàn tất: {formatDate(item.finalizedAt)}
-                  </span>
-                )}
-              </div>
-            </CardHeader>
-
-            <CardContent className="p-4 space-y-3 text-xs">
-              <div className="space-y-1">
-                <span className="font-semibold text-foreground">Tổng kết y tế:</span>
-                <p className="p-2.5 rounded-lg bg-muted/30 text-foreground/90 whitespace-pre-wrap leading-relaxed">
-                  {item.summary || "Không có tóm tắt"}
-                </p>
-              </div>
-
-              {item.observations && (
-                <div className="space-y-1">
-                  <span className="font-semibold text-foreground">Ghi nhận / Triệu chứng:</span>
-                  <p className="p-2.5 rounded-lg bg-muted/30 text-foreground/90 whitespace-pre-wrap leading-relaxed">
-                    {item.observations}
-                  </p>
-                </div>
-              )}
-
-              {item.recommendations && (
-                <div className="space-y-1">
-                  <span className="font-semibold text-foreground">Khuyến nghị điều trị & lối sống:</span>
-                  <p className="p-2.5 rounded-lg bg-muted/30 text-foreground/90 whitespace-pre-wrap leading-relaxed">
-                    {item.recommendations}
-                  </p>
-                </div>
-              )}
-
-              {item.followUpRecommendation && (
-                <div className="space-y-1">
-                  <span className="font-semibold text-foreground">Kế hoạch tái khám / Theo dõi tiếp theo:</span>
-                  <p className="p-2.5 rounded-lg bg-muted/30 text-foreground/90 whitespace-pre-wrap leading-relaxed">
-                    {item.followUpRecommendation}
-                  </p>
-                </div>
-              )}
-
-              {item.addenda && item.addenda.length > 0 && (
-                <div className="mt-3 pt-3 border-t space-y-2">
-                  <span className="font-semibold text-foreground flex items-center gap-1.5 text-xs text-amber-700 dark:text-amber-400">
-                    <FileText className="w-3.5 h-3.5" />
-                    Phụ lục & Đính chính sau hoàn tất ({item.addenda.length}):
-                  </span>
-                  <div className="space-y-2">
-                    {item.addenda.map((addendum) => (
-                      <div key={addendum.id} className="p-2.5 rounded-lg bg-amber-50/50 dark:bg-amber-950/20 border border-amber-200/60 dark:border-amber-900/40 text-xs">
-                        <div className="flex items-center justify-between font-medium text-amber-900 dark:text-amber-300 mb-1">
-                          <span>Lý do: {addendum.reason}</span>
-                          <span className="text-[10px] text-muted-foreground">{formatDate(addendum.createdAt)}</span>
-                        </div>
-                        <p className="text-foreground/90 whitespace-pre-wrap">{addendum.content}</p>
-                      </div>
-                    ))}
+                      {item.doctorName && (
+                        <span className="flex items-center gap-1">
+                          <Stethoscope className="h-3 w-3" />
+                          Bác sĩ: {item.doctorName}
+                        </span>
+                      )}
+                      {item.packageName && (
+                        <span className="flex items-center gap-1">
+                          <Package className="h-3 w-3" />
+                          Gói: {item.packageName}
+                        </span>
+                      )}
+                    </CardDescription>
                   </div>
+                  {finalizedAtDate && (
+                    <span className="text-[11px] text-muted-foreground shrink-0 font-mono">
+                      Hoàn tất: {formatDate(finalizedAtDate)}
+                    </span>
+                  )}
                 </div>
-              )}
-            </CardContent>
-          </Card>
-        ))}
+              </CardHeader>
+
+              <CardContent className="p-4 space-y-3 text-xs">
+                <div className="space-y-1">
+                  <span className="font-semibold text-foreground">Tổng kết y tế:</span>
+                  <p className="p-2.5 rounded-lg bg-muted/30 text-foreground/90 whitespace-pre-wrap leading-relaxed">
+                    {summaryText}
+                  </p>
+                </div>
+
+                {observationsText && (
+                  <div className="space-y-1">
+                    <span className="font-semibold text-foreground">Ghi nhận / Triệu chứng:</span>
+                    <p className="p-2.5 rounded-lg bg-muted/30 text-foreground/90 whitespace-pre-wrap leading-relaxed">
+                      {observationsText}
+                    </p>
+                  </div>
+                )}
+
+                {recommendationsText && (
+                  <div className="space-y-1">
+                    <span className="font-semibold text-foreground">Khuyến nghị điều trị & lối sống:</span>
+                    <p className="p-2.5 rounded-lg bg-muted/30 text-foreground/90 whitespace-pre-wrap leading-relaxed">
+                      {recommendationsText}
+                    </p>
+                  </div>
+                )}
+
+                {followUpText && (
+                  <div className="space-y-1">
+                    <span className="font-semibold text-foreground">Kế hoạch tái khám / Theo dõi tiếp theo:</span>
+                    <p className="p-2.5 rounded-lg bg-muted/30 text-foreground/90 whitespace-pre-wrap leading-relaxed">
+                      {followUpText}
+                    </p>
+                  </div>
+                )}
+
+                {addendaList.length > 0 && (
+                  <div className="mt-3 pt-3 border-t space-y-2">
+                    <span className="font-semibold text-foreground flex items-center gap-1.5 text-xs text-amber-700 dark:text-amber-400">
+                      <FileText className="w-3.5 h-3.5" />
+                      Phụ lục & Đính chính sau hoàn tất ({addendaList.length}):
+                    </span>
+                    <div className="space-y-2">
+                      {addendaList.map((addendum) => (
+                        <div key={addendum.id} className="p-2.5 rounded-lg bg-amber-50/50 dark:bg-amber-950/20 border border-amber-200/60 dark:border-amber-900/40 text-xs">
+                          <div className="flex items-center justify-between font-medium text-amber-900 dark:text-amber-300 mb-1">
+                            <span>Lý do: {addendum.reason}</span>
+                            <span className="text-[10px] text-muted-foreground">{formatDate(addendum.createdAt)}</span>
+                          </div>
+                          <p className="text-foreground/90 whitespace-pre-wrap">{addendum.content}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          )
+        })}
       </div>
     </div>
   )

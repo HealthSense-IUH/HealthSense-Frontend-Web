@@ -19,7 +19,7 @@ function readError(error: unknown, fallback: string) {
   return err.response?.data?.message || err.message || fallback
 }
 
-function getSessionStatusBadge(status: string) {
+function getSessionStatusBadge(status: string, meaningfulCareOccurred?: boolean | null) {
   switch (status) {
     case "SCHEDULED":
       return <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">Đã lên lịch</Badge>
@@ -27,6 +27,16 @@ function getSessionStatusBadge(status: string) {
       return <Badge className="bg-emerald-500 hover:bg-emerald-600">Đang chăm sóc</Badge>
     case "COMPLETED":
       return <Badge variant="secondary" className="bg-neutral-100 text-neutral-700">Đã hoàn tất</Badge>
+    case "CANCELLED":
+      return meaningfulCareOccurred ? (
+        <Badge variant="outline" className="bg-amber-50 text-amber-800 border-amber-300">
+          Đã hủy (Có chăm sóc)
+        </Badge>
+      ) : (
+        <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200">
+          Đã hủy
+        </Badge>
+      )
     case "EXPIRED":
       return <Badge variant="destructive">Đã hết hạn</Badge>
     default:
@@ -128,7 +138,7 @@ export default function DoctorSessionsPage() {
                       ID: {session.id}
                     </CardDescription>
                   </div>
-                  {getSessionStatusBadge(session.status)}
+                  {getSessionStatusBadge(session.status, session.meaningfulCareOccurred)}
                 </div>
               </CardHeader>
               <CardContent className="pb-3 space-y-4">
@@ -148,6 +158,16 @@ export default function DoctorSessionsPage() {
                     </div>
                   </div>
                 </div>
+
+                {session.status === "CANCELLED" && session.meaningfulCareOccurred && (
+                  <div className="bg-amber-50/80 border border-amber-200 rounded-md p-3 flex items-start gap-2.5 text-xs text-amber-900">
+                    <FileText className="h-4 w-4 text-amber-600 shrink-0 mt-0.5" />
+                    <div>
+                      <p className="font-medium">Phiên đã hủy nhưng có phát sinh chăm sóc</p>
+                      <p className="text-amber-700 mt-0.5">Bác sĩ vẫn có thể lập và hoàn tất bản Tổng kết y khoa.</p>
+                    </div>
+                  </div>
+                )}
 
                 {session.unresolvedAttentionCount > 0 && (
                   <div className="bg-orange-50 border border-orange-100 rounded-md p-3 flex items-start gap-3">

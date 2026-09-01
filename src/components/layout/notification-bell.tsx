@@ -165,14 +165,11 @@ export function NotificationBell() {
         break
 
       case "NEEDS_ACTION":
-        if (role === "CARE_COORDINATOR" || role === "ADMIN" || role === "SUPER_ADMIN") {
-          navigate(`/app/management/needs-actions?itemId=${refId}`)
-        }
-        break
-
       case "REFUND":
         if (role === "CARE_COORDINATOR" || role === "ADMIN" || role === "SUPER_ADMIN") {
-          navigate(`/app/management/needs-actions`)
+          navigate(`/app/general/consultations?tab=admin-requests`)
+        } else {
+          navigate(`/app/general/consultations`)
         }
         break
 

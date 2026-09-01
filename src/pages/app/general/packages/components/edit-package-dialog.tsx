@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react"
 import { useToast } from "@/hooks/use-toast"
-import { Check, Plus, X } from "lucide-react"
 
 import {
   Dialog,
@@ -15,12 +14,10 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Switch } from "@/components/ui/switch"
-import { Badge } from "@/components/ui/badge"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 import { consultationApi } from "@/services"
-import { CARE_SERVICE_CODE_LABELS } from "@/constants"
 import type {
   CareServiceCode,
   CareServicePackage,
@@ -34,20 +31,6 @@ interface EditPackageDialogProps {
   onOpenChange: (open: boolean) => void
   onSuccess: () => void
 }
-
-const ALL_CARE_SERVICE_CODES: CareServiceCode[] = [
-  "REMOTE_ONE_ON_ONE_CARE",
-  "SECURE_MESSAGING",
-  "HEALTH_RECORD_REVIEW",
-  "AI_SCREENING_REVIEW",
-  "CARE_MONITORING",
-  "FINAL_CARE_SUMMARY",
-  "VIDEO_CONSULTATION",
-  "EMERGENCY_CARE",
-  "TWENTY_FOUR_SEVEN_SUPPORT",
-  "FORMAL_DIAGNOSIS",
-  "PRESCRIPTION",
-]
 
 export function EditPackageDialog({ pkg, open, onOpenChange, onSuccess }: EditPackageDialogProps) {
   const { toast } = useToast()
@@ -90,34 +73,6 @@ export function EditPackageDialog({ pkg, open, onOpenChange, onSuccess }: EditPa
 
   const handleChange = (field: keyof UpdateCareServicePackagePayload, value: unknown) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
-  }
-
-  const toggleIncludedService = (code: CareServiceCode) => {
-    setFormData((prev) => {
-      const current = prev.includedServices || []
-      const isIncluded = current.includes(code)
-      const nextIncluded = isIncluded ? current.filter((c) => c !== code) : [...current, code]
-      const nextExcluded = (prev.excludedServices || []).filter((c) => c !== code)
-      return {
-        ...prev,
-        includedServices: nextIncluded,
-        excludedServices: nextExcluded,
-      }
-    })
-  }
-
-  const toggleExcludedService = (code: CareServiceCode) => {
-    setFormData((prev) => {
-      const current = prev.excludedServices || []
-      const isExcluded = current.includes(code)
-      const nextExcluded = isExcluded ? current.filter((c) => c !== code) : [...current, code]
-      const nextIncluded = (prev.includedServices || []).filter((c) => c !== code)
-      return {
-        ...prev,
-        includedServices: nextIncluded,
-        excludedServices: nextExcluded,
-      }
-    })
   }
 
   const isRetired = pkg.status === "RETIRED"
@@ -174,9 +129,6 @@ export function EditPackageDialog({ pkg, open, onOpenChange, onSuccess }: EditPa
       setLoading(false)
     }
   }
-
-  const includedSet = new Set(formData.includedServices || [])
-  const excludedSet = new Set(formData.excludedServices || [])
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -290,70 +242,6 @@ export function EditPackageDialog({ pkg, open, onOpenChange, onSuccess }: EditPa
                   onChange={(e) => handleChange("durationDays", Number(e.target.value))}
                   disabled={isDisabled}
                 />
-              </div>
-            </div>
-
-            {/* Included Services Selector */}
-            <div className="space-y-2 border rounded-xl p-4 bg-emerald-50/30 dark:bg-emerald-950/10 border-emerald-200/50">
-              <div className="flex items-center justify-between">
-                <Label className="text-sm font-semibold text-emerald-900 dark:text-emerald-300">
-                  Dịch vụ bao gồm (Included Services)
-                </Label>
-                <span className="text-xs text-muted-foreground">
-                  Đã chọn {includedSet.size} dịch vụ
-                </span>
-              </div>
-              <div className="flex flex-wrap gap-2 pt-1">
-                {ALL_CARE_SERVICE_CODES.map((code) => {
-                  const isIncluded = includedSet.has(code)
-                  return (
-                    <Badge
-                      key={code}
-                      variant={isIncluded ? "default" : "outline"}
-                      className={`cursor-pointer transition-all ${
-                        isIncluded
-                          ? "bg-emerald-600 hover:bg-emerald-700 text-white"
-                          : "bg-background hover:bg-muted text-muted-foreground"
-                      } ${isDisabled ? "pointer-events-none opacity-60" : ""}`}
-                      onClick={() => !isDisabled && toggleIncludedService(code)}
-                    >
-                      {isIncluded ? <Check className="w-3 h-3 mr-1" /> : <Plus className="w-3 h-3 mr-1" />}
-                      {CARE_SERVICE_CODE_LABELS[code] || code}
-                    </Badge>
-                  )
-                })}
-              </div>
-            </div>
-
-            {/* Excluded Services Selector */}
-            <div className="space-y-2 border rounded-xl p-4 bg-red-50/30 dark:bg-red-950/10 border-red-200/50">
-              <div className="flex items-center justify-between">
-                <Label className="text-sm font-semibold text-red-900 dark:text-red-300">
-                  Dịch vụ không bao gồm (Excluded Services)
-                </Label>
-                <span className="text-xs text-muted-foreground">
-                  Đã chọn {excludedSet.size} dịch vụ
-                </span>
-              </div>
-              <div className="flex flex-wrap gap-2 pt-1">
-                {ALL_CARE_SERVICE_CODES.map((code) => {
-                  const isExcluded = excludedSet.has(code)
-                  return (
-                    <Badge
-                      key={code}
-                      variant={isExcluded ? "destructive" : "outline"}
-                      className={`cursor-pointer transition-all ${
-                        isExcluded
-                          ? "bg-red-600 hover:bg-red-700 text-white"
-                          : "bg-background hover:bg-muted text-muted-foreground"
-                      } ${isDisabled ? "pointer-events-none opacity-60" : ""}`}
-                      onClick={() => !isDisabled && toggleExcludedService(code)}
-                    >
-                      {isExcluded ? <X className="w-3 h-3 mr-1" /> : <Plus className="w-3 h-3 mr-1" />}
-                      {CARE_SERVICE_CODE_LABELS[code] || code}
-                    </Badge>
-                  )
-                })}
               </div>
             </div>
 

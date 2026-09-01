@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import type { ConsultationSessionItem } from "@/types/consultation"
 import { statusBadge } from "../shared"
 import { MemberFinalSummaryDialog } from "../member-final-summary-dialog"
+import { DoctorSessionDetailDialog } from "../doctor-session-detail-dialog"
 import { ShareHealthRecordDialog } from "../share-health-record-dialog"
 import { RenewalDialog } from "../renewal-dialog"
 import { TerminationRequestDialog } from "../termination-request-dialog"
@@ -18,6 +19,7 @@ interface ChatHeaderProps {
 
 export function ChatHeader({ session, isDoctor, isMember, onSessionRefreshed }: ChatHeaderProps) {
   const [isSummaryOpen, setIsSummaryOpen] = useState(false)
+  const [isDoctorDetailOpen, setIsDoctorDetailOpen] = useState(false)
   const [isShareRecordOpen, setIsShareRecordOpen] = useState(false)
   const [isRenewalOpen, setIsRenewalOpen] = useState(false)
   const [isTerminationOpen, setIsTerminationOpen] = useState(false)
@@ -79,6 +81,17 @@ export function ChatHeader({ session, isDoctor, isMember, onSessionRefreshed }: 
             <span className="hidden sm:inline">Yêu cầu kết thúc</span>
           </Button>
         )}
+        {isDoctor && (
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="hidden sm:flex items-center gap-1.5"
+            onClick={() => setIsDoctorDetailOpen(true)}
+          >
+            <FileText className="h-4 w-4" />
+            <span>Hồ sơ & Tổng kết</span>
+          </Button>
+        )}
         {isMember && session.status !== "SCHEDULED" && (
           <Button 
             variant="outline" 
@@ -100,6 +113,14 @@ export function ChatHeader({ session, isDoctor, isMember, onSessionRefreshed }: 
           <MoreHorizontal className="h-5 w-5" />
         </Button>
       </div>
+
+      {isDoctor && (
+        <DoctorSessionDetailDialog
+          sessionId={session.id}
+          open={isDoctorDetailOpen}
+          onOpenChange={setIsDoctorDetailOpen}
+        />
+      )}
 
       <MemberFinalSummaryDialog
         sessionId={session.id}

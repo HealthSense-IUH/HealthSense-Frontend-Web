@@ -131,11 +131,17 @@ export function DoctorSessionDetailDialog({ sessionId, open, onOpenChange }: Doc
                 ID Phiên: {session.id}
               </DialogDescription>
             </div>
-            <Badge variant={session.status === "ACTIVE" ? "default" : "outline"} className={
-              session.status === "ACTIVE" ? "bg-emerald-500 hover:bg-emerald-600" : ""
-            }>
-              {session.status}
-            </Badge>
+            {session.status === "CANCELLED" && session.meaningfulCareOccurred ? (
+              <Badge variant="outline" className="bg-amber-50 text-amber-800 border-amber-300">
+                Đã hủy (Có chăm sóc)
+              </Badge>
+            ) : (
+              <Badge variant={session.status === "ACTIVE" ? "default" : "outline"} className={
+                session.status === "ACTIVE" ? "bg-emerald-500 hover:bg-emerald-600" : ""
+              }>
+                {session.status}
+              </Badge>
+            )}
           </div>
         </DialogHeader>
 
@@ -227,7 +233,11 @@ export function DoctorSessionDetailDialog({ sessionId, open, onOpenChange }: Doc
           </TabsContent>
 
           <TabsContent value="summary" className="outline-none">
-            <DoctorFinalSummaryTab sessionId={session.id} sessionStatus={session.status} />
+            <DoctorFinalSummaryTab
+              sessionId={session.id}
+              sessionStatus={session.status}
+              meaningfulCareOccurred={session.meaningfulCareOccurred}
+            />
           </TabsContent>
         </Tabs>
 

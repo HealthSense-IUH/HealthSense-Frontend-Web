@@ -53,8 +53,10 @@ export function MemberFinalSummaryDialog({ sessionId, open, onOpenChange, isAdmi
         setSummary(res.data)
       })
       .catch((err) => {
-        if (err.response?.status === 404) {
-          setSummary(null) // Not found = missing
+        const status = err?.response?.status
+        const code = err?.response?.data?.code
+        if (status === 404 || code === 3000 || code === "3000" || code === "ENTITY_NOT_FOUND") {
+          setSummary(null) // Not finalized / not created yet = empty state
         } else {
           setErrorMsg(readError(err, "Không thể tải tổng kết chăm sóc."))
         }
@@ -72,7 +74,7 @@ export function MemberFinalSummaryDialog({ sessionId, open, onOpenChange, isAdmi
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <FileText className="h-5 w-5 text-primary" />
-            Tổng kết phiên tư vấn
+            Tổng kết phiên tư vấn #{sessionId}
           </DialogTitle>
         </DialogHeader>
 
@@ -87,9 +89,13 @@ export function MemberFinalSummaryDialog({ sessionId, open, onOpenChange, isAdmi
             <div className="rounded-md bg-red-50 p-4 text-sm text-red-700">{errorMsg}</div>
           ) : !summary || !isFinalized ? (
             <div className="flex flex-col items-center justify-center py-10 text-center">
-              <Activity className="h-12 w-12 text-neutral-300 mb-4" />
-              <p className="text-neutral-500 font-medium">Bác sĩ chưa hoàn tất tổng kết phiên tư vấn.</p>
-              <p className="text-sm text-neutral-400 mt-2">Tổng kết sẽ xuất hiện ở đây sau khi bác sĩ kết thúc quá trình chăm sóc.</p>
+              <Activity className="h-12 w-12 text-muted-foreground/40 mb-3" />
+              <p className="text-foreground font-medium">Bác sĩ chưa hoàn tất tổng kết cho phiên tư vấn này.</p>
+              <p className="text-sm text-muted-foreground mt-1.5 max-w-sm">
+                {isAdminView
+                  ? "Bản tổng kết chăm sóc sẽ hiển thị tại đây ngay sau khi Bác sĩ phụ trách hoàn tất (Finalize)."
+                  : "Tổng kết y khoa sẽ xuất hiện ở đây sau khi bác sĩ kết thúc quá trình chăm sóc."}
+              </p>
             </div>
           ) : (
             <div className="space-y-6">

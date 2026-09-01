@@ -10,7 +10,7 @@ import { useToast } from "@/hooks/use-toast"
 
 import { consultationApi } from "@/services"
 import type { CareServiceAgreementResponse } from "@/types/consultation"
-import { formatDate } from "./shared"
+import { formatDate, parseSupportSchedule } from "./shared"
 
 interface RenewalAgreementDialogProps {
   renewalId: string | number | null
@@ -99,8 +99,6 @@ export function RenewalAgreementDialog({
   const description = agreement?.serviceDescription || agreement?.packageSnapshot?.description || ""
   const termsPolicy = agreement?.termsPolicyReference || agreement?.packageSnapshot?.termsPolicyReference || agreement?.limitations || agreement?.packageSnapshot?.limitations || ""
   const supportPolicy = agreement?.supportPolicy || agreement?.packageSnapshot?.supportPolicy || "ASSIGNED_DOCTOR_SUPPORT_SCHEDULE"
-  const includedList = agreement?.includedServices || agreement?.packageSnapshot?.includedServices || agreement?.packageSnapshot?.includedServiceTypes || []
-  const excludedList = agreement?.excludedServices || agreement?.packageSnapshot?.excludedServices || agreement?.packageSnapshot?.excludedServiceTypes || []
   const supportSchedule = agreement?.supportScheduleSnapshotJson || agreement?.doctorSnapshot?.declaredSupportSchedule
   const supportTimezone = agreement?.supportTimezoneSnapshot || agreement?.doctorSnapshot?.timezone || "Asia/Ho_Chi_Minh"
   const doctorName = agreement?.doctorSnapshot?.displayName || "Bác sĩ phụ trách"
@@ -167,11 +165,40 @@ export function RenewalAgreementDialog({
                         <span className="font-medium text-foreground">{doctorSpecialty}</span>
                       </div>
                     )}
-                    {supportSchedule && (
-                      <div className="text-xs pt-1 bg-muted/30 p-2 rounded-md font-mono text-muted-foreground">
-                        Khung giờ hỗ trợ: {supportSchedule} ({supportTimezone})
-                      </div>
-                    )}
+                    {(() => {
+                      const scheduleList = parseSupportSchedule(supportSchedule)
+                      if (scheduleList && scheduleList.length > 0) {
+                        return (
+                          <div className="space-y-1.5 pt-2">
+                            <div className="text-xs font-semibold text-foreground flex items-center gap-1.5">
+                              <Clock className="w-3.5 h-3.5 text-primary" />
+                              <span>Khung giờ hỗ trợ:</span>
+                            </div>
+                            <div className="space-y-1 bg-muted/40 p-2.5 rounded-lg border border-border/50 text-xs">
+                              {scheduleList.map((item) => (
+                                <div key={item.day} className="flex items-center justify-between gap-2 py-0.5 border-b border-border/30 last:border-0">
+                                  <span className="font-medium text-foreground">{item.dayLabel}:</span>
+                                  <span className="text-muted-foreground font-mono text-[11px]">{item.times.join(", ")}</span>
+                                </div>
+                              ))}
+                              {supportTimezone && (
+                                <div className="text-[10px] text-muted-foreground text-right pt-1 mt-0.5">
+                                  Múi giờ: {supportTimezone}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        )
+                      }
+                      if (supportSchedule) {
+                        return (
+                          <div className="text-xs pt-1 bg-muted/30 p-2 rounded-md text-muted-foreground font-mono">
+                            Khung giờ hỗ trợ: {supportSchedule} {supportTimezone ? `(${supportTimezone})` : ""}
+                          </div>
+                        )
+                      }
+                      return null
+                    })()}
                   </div>
                 </div>
 
@@ -220,44 +247,36 @@ export function RenewalAgreementDialog({
                   </div>
                 )}
 
-                {includedList.length > 0 && (
-                  <div>
-                    <strong className="text-foreground">Dịch vụ bao gồm:</strong> {includedList.join(", ")}
-                  </div>
-                )}
-
-                {excludedList.length > 0 && (
-                  <div>
-                    <strong className="text-foreground">Dịch vụ loại trừ:</strong> {excludedList.join(", ")}
-                  </div>
-                )}
-
                 <div className="pt-2 border-t text-neutral-500 leading-relaxed">
                   * Lưu ý: Việc gia hạn sẽ nối dài thời hạn hiệu lực của phiên tư vấn hiện tại và giữ nguyên toàn bộ lịch sử tư vấn. Sau khi thanh toán thành công, thời hạn mới sẽ được cập nhật tự động.
                 </div>
-              </div>
-
-              {/* Explicit Acceptance Checkbox */}
-              <div className="flex items-start space-x-3 p-4 border-2 border-primary/20 bg-primary/5 rounded-xl">
-                <Checkbox
-                  id="accept-renewal-terms"
-                  checked={acceptedTerms}
-                  onCheckedChange={(checked) => setAcceptedTerms(!!checked)}
-                  disabled={submitting}
-                  className="mt-0.5 data-[state=checked]:bg-primary"
-                />
-                <label
-                  htmlFor="accept-renewal-terms"
-                  className="text-sm font-medium leading-relaxed text-foreground cursor-pointer select-none"
-                >
-                  Tôi đã đọc, hiểu rõ và đồng ý với các điều khoản gia hạn, mức phí và cam kết tiếp tục đồng hành chăm sóc cùng bác sĩ phụ trách trong phiên tư vấn này.
-                </label>
               </div>
             </div>
           ) : (
             <div className="py-12 text-center text-muted-foreground">Không có dữ liệu thỏa thuận gia hạn.</div>
           )}
         </ScrollArea>
+
+        {/* Pinned Explicit Acceptance Checkbox */}
+        {agreement && (
+          <div className="px-6 py-3.5 border-t bg-primary/5 border-primary/20 shrink-0">
+            <div className="flex items-start space-x-3">
+              <Checkbox
+                id="accept-renewal-terms"
+                checked={acceptedTerms}
+                onCheckedChange={(checked) => setAcceptedTerms(!!checked)}
+                disabled={submitting}
+                className="mt-0.5 data-[state=checked]:bg-primary h-4 w-4 shrink-0"
+              />
+              <label
+                htmlFor="accept-renewal-terms"
+                className="text-xs sm:text-sm font-medium leading-tight sm:leading-relaxed text-foreground cursor-pointer select-none"
+              >
+                Tôi đã đọc, hiểu rõ và đồng ý với các điều khoản gia hạn, mức phí và cam kết tiếp tục đồng hành chăm sóc cùng bác sĩ phụ trách trong phiên tư vấn này.
+              </label>
+            </div>
+          </div>
+        )}
 
         <DialogFooter className="p-4 border-t bg-muted/10 gap-2 sm:gap-0">
           <Button

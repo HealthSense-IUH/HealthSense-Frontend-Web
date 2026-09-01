@@ -5,7 +5,6 @@ import {
   Clock,
   RefreshCw,
   Sparkles,
-  ShieldCheck,
   ArrowRight,
   Info,
 } from "lucide-react"
@@ -122,7 +121,6 @@ export default function PackageCatalogPage() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {packages.map((pkg) => {
-            const includedList = pkg.includedServices || pkg.includedServiceTypes || []
             const policyRef = pkg.termsPolicyReference || pkg.limitations
 
             return (
@@ -169,20 +167,6 @@ export default function PackageCatalogPage() {
                     </div>
                     <p className="text-muted-foreground pl-5">{getSupportPolicyLabel(pkg.supportPolicy)}</p>
                   </div>
-
-                  {/* Included Services */}
-                  {includedList.length > 0 && (
-                    <div className="space-y-1.5">
-                      <p className="font-semibold text-foreground flex items-center gap-1.5">
-                        <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" /> Dịch vụ bao gồm:
-                      </p>
-                      <ul className="space-y-1 pl-5 list-disc text-muted-foreground text-[11px]">
-                        {includedList.map((item) => (
-                          <li key={item}>{item}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
 
                   {/* Limitations / Terms Policy */}
                   {policyRef && (

@@ -23,8 +23,6 @@ const ManagementPage = lazy(() => import("@/pages/app/management/hub"))
 const UserManagementPage = lazy(() => import("@/pages/app/management/users"))
 const AdminPackagesPage = lazy(() => import("@/pages/app/management/packages"))
 const AdminHealthRecordsPage = lazy(() => import("@/pages/app/management/health-records"))
-const NeedsActionsPage = lazy(() => import("@/pages/app/management/needs-actions"))
-const BusinessAuditPage = lazy(() => import("@/pages/app/management/audit"))
 const DoctorSessionsPage = lazy(() => import("@/pages/app/management/doctor-consultations"))
 
 const LandingPage = lazy(() => import("@/pages/public/landing"))
@@ -170,28 +168,16 @@ export const router = createBrowserRouter([
           },
           {
             path: "needs-actions",
-            element: (
-              <ProtectedRoute
-                allowedRoles={[USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN, USER_ROLES.CARE_COORDINATOR]}
-              >
-                {wrap(<NeedsActionsPage />)}
-              </ProtectedRoute>
-            ),
+            element: <Navigate to="/app/general/dashboard" replace />,
           },
           {
             path: "audit",
-            element: (
-              <ProtectedRoute
-                allowedRoles={[USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN, USER_ROLES.CARE_COORDINATOR]}
-              >
-                {wrap(<BusinessAuditPage />)}
-              </ProtectedRoute>
-            ),
+            element: <Navigate to="/app/general/dashboard" replace />,
           },
           {
             path: "doctor/consultations",
             element: (
-              <ProtectedRoute allowedRoles={[USER_ROLES.SUPER_ADMIN, USER_ROLES.DOCTOR]}>
+              <ProtectedRoute allowedRoles={[USER_ROLES.DOCTOR]}>
                 {wrap(<DoctorSessionsPage />)}
               </ProtectedRoute>
             ),

@@ -66,8 +66,8 @@ export function SuperAdminDashboard() {
         </div>
       </section>
 
-      {/* Section 4: Operational Action Items & Audit Logs */}
-      <section aria-label="Activity Audit Trail and Pending Actions">
+      {/* Section 4: Operational Action Items & Activity Logs */}
+      <section aria-label="Activity Logs and Pending Actions">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2">
             <RecentActivityTable activities={recentActivitiesData} />

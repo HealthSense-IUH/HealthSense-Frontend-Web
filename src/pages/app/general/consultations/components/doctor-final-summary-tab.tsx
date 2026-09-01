@@ -23,11 +23,12 @@ import type {
   ConsultationStatus,
   DoctorScopedHealthRecordResponse,
 } from "@/types/consultation"
-import { formatDate } from "./shared"
+import { formatDate, canEditFinalSummaryDraft, canFinalizeFinalSummary } from "./shared"
 
 interface DoctorFinalSummaryTabProps {
   sessionId: string | number
   sessionStatus: ConsultationStatus
+  meaningfulCareOccurred?: boolean | null
 }
 
 function readError(error: unknown, fallback: string) {
@@ -36,7 +37,7 @@ function readError(error: unknown, fallback: string) {
   return err.response?.data?.message || err.message || fallback
 }
 
-export function DoctorFinalSummaryTab({ sessionId, sessionStatus }: DoctorFinalSummaryTabProps) {
+export function DoctorFinalSummaryTab({ sessionId, sessionStatus, meaningfulCareOccurred }: DoctorFinalSummaryTabProps) {
   const [summary, setSummary] = useState<ConsultationFinalSummaryResponse | null>(null)
   const [scopedRecords, setScopedRecords] = useState<DoctorScopedHealthRecordResponse[]>([])
   const [loading, setLoading] = useState(true)
@@ -87,8 +88,14 @@ export function DoctorFinalSummaryTab({ sessionId, sessionStatus }: DoctorFinalS
           }
         } else {
           const err = summaryRes.reason
-          if (err?.response?.status === 404) {
+          const is404 = err?.response?.status === 404 || err?.response?.data?.code === "ENTITY_NOT_FOUND"
+          if (is404) {
             setSummary(null)
+            setSummaryText("")
+            setObservations("")
+            setRecommendations("")
+            setFollowUpRecommendation("")
+            setSelectedRecordIds([])
           } else {
             setErrorMsg(readError(err, "Không thể tải tổng kết chăm sóc."))
           }
@@ -111,6 +118,11 @@ export function DoctorFinalSummaryTab({ sessionId, sessionStatus }: DoctorFinalS
     )
   }
 
+  const getValidRecordIds = () => {
+    const validScopedSet = new Set(scopedRecords.map((r) => String(r.record?.id)))
+    return selectedRecordIds.filter((id) => validScopedSet.has(String(id)))
+  }
+
   const handleSaveDraft = async () => {
     if (!summaryText.trim()) {
       toast({ variant: "destructive", description: "Vui lòng nhập nội dung Tổng kết." })
@@ -118,19 +130,30 @@ export function DoctorFinalSummaryTab({ sessionId, sessionStatus }: DoctorFinalS
     }
 
     setSaving(true)
+    const validIds = getValidRecordIds()
     try {
       const payload = {
         summary: summaryText.trim(),
         observations: observations.trim() || null,
         recommendations: recommendations.trim() || null,
         followUpRecommendation: followUpRecommendation.trim() || null,
-        referencedHealthRecordIds: selectedRecordIds.length > 0 ? selectedRecordIds : null,
+        referencedHealthRecordIds: validIds.length > 0 ? validIds : null,
       }
       const res = await consultationApi.updateDoctorFinalSummary(sessionId, payload)
       setSummary(res.data)
       toast({ description: "Đã lưu bản nháp tổng kết thành công." })
-    } catch (error) {
-      toast({ variant: "destructive", description: readError(error, "Lỗi khi lưu bản nháp.") })
+    } catch (error: any) {
+      const errCode = error?.response?.data?.code
+      if (errCode === 4002 || errCode === "4002") {
+        setSelectedRecordIds([])
+        toast({
+          variant: "destructive",
+          title: "Hồ sơ đính kèm không khả dụng",
+          description: "Hồ sơ đo đạc đính kèm không thuộc phạm vi được ủy quyền của phiên này. Hệ thống đã tự động bỏ chọn hồ sơ, vui lòng bấm Lưu nháp lại.",
+        })
+      } else {
+        toast({ variant: "destructive", description: readError(error, "Lỗi khi lưu bản nháp.") })
+      }
     } finally {
       setSaving(false)
     }
@@ -147,6 +170,7 @@ export function DoctorFinalSummaryTab({ sessionId, sessionStatus }: DoctorFinalS
     }
 
     setFinalizing(true)
+    const validIds = getValidRecordIds()
     try {
       // Ensure latest draft is saved before finalization
       await consultationApi.updateDoctorFinalSummary(sessionId, {
@@ -154,15 +178,25 @@ export function DoctorFinalSummaryTab({ sessionId, sessionStatus }: DoctorFinalS
         observations: observations.trim() || null,
         recommendations: recommendations.trim() || null,
         followUpRecommendation: followUpRecommendation.trim() || null,
-        referencedHealthRecordIds: selectedRecordIds.length > 0 ? selectedRecordIds : null,
+        referencedHealthRecordIds: validIds.length > 0 ? validIds : null,
       })
 
       const res = await consultationApi.finalizeDoctorFinalSummary(sessionId)
       setSummary(res.data)
       setConfirmFinalizeOpen(false)
       toast({ description: "Đã hoàn tất tổng kết chăm sóc." })
-    } catch (error) {
-      toast({ variant: "destructive", description: readError(error, "Lỗi khi hoàn tất tổng kết.") })
+    } catch (error: any) {
+      const errCode = error?.response?.data?.code
+      if (errCode === 4002 || errCode === "4002") {
+        setSelectedRecordIds([])
+        toast({
+          variant: "destructive",
+          title: "Hồ sơ đính kèm không khả dụng",
+          description: "Hồ sơ đo đạc đính kèm không thuộc phạm vi được ủy quyền. Đã tự động bỏ chọn, vui lòng thử lại.",
+        })
+      } else {
+        toast({ variant: "destructive", description: readError(error, "Lỗi khi hoàn tất tổng kết.") })
+      }
     } finally {
       setFinalizing(false)
     }
@@ -226,9 +260,10 @@ export function DoctorFinalSummaryTab({ sessionId, sessionStatus }: DoctorFinalS
   }
 
   const isFinalized = summary?.status === "FINALIZED"
-  const isEditable = !isFinalized && (sessionStatus === "ACTIVE" || sessionStatus === "COMPLETED")
+  const isCancelledWithCare = sessionStatus === "CANCELLED" && !!meaningfulCareOccurred
+  const isEditable = !isFinalized && canEditFinalSummaryDraft({ status: sessionStatus, meaningfulCareOccurred })
   const canSave = isEditable
-  const canFinalize = !isFinalized && sessionStatus === "COMPLETED" && !!summaryText.trim()
+  const canFinalize = !isFinalized && canFinalizeFinalSummary({ status: sessionStatus, meaningfulCareOccurred }) && !!summaryText.trim()
 
   return (
     <div className="py-4 space-y-6">
@@ -255,8 +290,26 @@ export function DoctorFinalSummaryTab({ sessionId, sessionStatus }: DoctorFinalS
           </p>
         </div>
       )}
+
+      {!isFinalized && isCancelledWithCare && (
+        <div className="flex items-start gap-2 rounded-md bg-blue-50 p-3 text-xs text-blue-700">
+          <Info className="h-4 w-4 shrink-0 mt-0.5" />
+          <p>
+            Phiên tư vấn đã bị hủy nhưng đã phát sinh chăm sóc thực tế (meaningful care). Bạn có thể soạn và hoàn tất bản tổng kết.
+          </p>
+        </div>
+      )}
+
+      {!isFinalized && sessionStatus === "CANCELLED" && !meaningfulCareOccurred && (
+        <div className="flex items-start gap-2 rounded-md bg-orange-50 p-3 text-xs text-orange-700">
+          <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
+          <p>
+            Không thể lập tổng kết cho phiên tư vấn đã bị hủy khi chưa phát sinh chăm sóc thực tế.
+          </p>
+        </div>
+      )}
       
-      {!isFinalized && (sessionStatus === "SCHEDULED" || sessionStatus === "CANCELLED" || sessionStatus === "EXPIRED") && (
+      {!isFinalized && (sessionStatus === "SCHEDULED" || sessionStatus === "EXPIRED") && (
         <div className="flex items-start gap-2 rounded-md bg-orange-50 p-3 text-xs text-orange-700">
           <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
           <p>

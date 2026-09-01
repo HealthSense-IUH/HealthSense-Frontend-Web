@@ -1,4 +1,4 @@
-import { MessageCircle, CreditCard, Shield, Search } from "lucide-react"
+import { CreditCard, Shield, Search } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -15,21 +15,18 @@ export function RequestsPanel({
   loading,
   onCancel,
   onApprove,
-  onOpenSession,
   onSubmitMoreInfo,
   onReviewAgreement,
   adminFilters,
   onAdminFilterChange,
   onSearchAdminFilters,
   onInitiatePayment,
-  onExpireWaitingPayment,
 }: {
   isAdmin: boolean
   requests: ConsultationRequestItem[]
   loading: boolean
   onCancel: (requestId: string | number) => void
   onApprove: (request: ConsultationRequestItem) => void
-  onOpenSession: (sessionId: string | number) => void
   onSubmitMoreInfo?: (request: ConsultationRequestItem) => void
   onReviewAgreement?: (request: ConsultationRequestItem) => void
   adminFilters?: {
@@ -43,7 +40,6 @@ export function RequestsPanel({
   onAdminFilterChange?: (filters: any) => void
   onSearchAdminFilters?: () => void
   onInitiatePayment?: (requestId: string | number) => void
-  onExpireWaitingPayment?: () => void
 }) {
   return (
     <Card>
@@ -56,20 +52,6 @@ export function RequestsPanel({
               : "Theo dõi tiến trình từ gửi yêu cầu, xác nhận thỏa thuận, thanh toán đến khi mở phiên tư vấn."}
           </CardDescription>
         </div>
-        {isAdmin && onExpireWaitingPayment && (
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={() => {
-              if (window.confirm("Quét và huỷ các yêu cầu quá hạn thanh toán / quá hạn xác nhận?")) {
-                onExpireWaitingPayment()
-              }
-            }}
-            disabled={loading}
-          >
-            Quét yêu cầu quá hạn
-          </Button>
-        )}
       </CardHeader>
       <CardContent>
         {isAdmin && adminFilters && onAdminFilterChange && onSearchAdminFilters && (
@@ -210,13 +192,6 @@ export function RequestsPanel({
                 <TableCell>{formatDate(request.createdAt)}</TableCell>
                 <TableCell className="text-right">
                   <div className="flex justify-end gap-2 flex-wrap">
-                    {request.consultationSessionId && !["PENDING_REVIEW", "NEED_MORE_INFO", "WAITING_ACCEPTANCE", "WAITING_PAYMENT", "REJECTED", "CANCELLED", "EXPIRED", "PENDING"].includes(request.status) && (
-                      <Button variant="outline" size="sm" onClick={() => onOpenSession(request.consultationSessionId!)}>
-                        <MessageCircle className="mr-1.5 h-4 w-4" />
-                        Chat
-                      </Button>
-                    )}
-                    
                     {!isAdmin && request.status === "WAITING_ACCEPTANCE" && onReviewAgreement && (
                       <Button
                         size="sm"

@@ -73,3 +73,82 @@ export function EmptyRow({ colSpan, text }: { colSpan: number; text: string }) {
     </TableRow>
   )
 }
+
+export const DAYS_OF_WEEK_VN: Record<string, string> = {
+  MONDAY: "Thứ Hai",
+  TUESDAY: "Thứ Ba",
+  WEDNESDAY: "Thứ Tư",
+  THURSDAY: "Thứ Năm",
+  FRIDAY: "Thứ Sáu",
+  SATURDAY: "Thứ Bảy",
+  SUNDAY: "Chủ Nhật",
+}
+
+export interface ScheduleDayGroup {
+  day: string
+  dayLabel: string
+  times: string[]
+}
+
+export function parseSupportSchedule(jsonStr?: string | null): ScheduleDayGroup[] | null {
+  if (!jsonStr) return null
+  try {
+    const data = JSON.parse(jsonStr)
+    if (!data.weekly || !Array.isArray(data.weekly) || data.weekly.length === 0) return null
+    const dayOrder = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"]
+    const map = new Map<string, string[]>()
+    for (const slot of data.weekly) {
+      if (!slot.dayOfWeek || !slot.start || !slot.end) continue
+      const list = map.get(slot.dayOfWeek) || []
+      list.push(`${slot.start} - ${slot.end}`)
+      map.set(slot.dayOfWeek, list)
+    }
+    const grouped: ScheduleDayGroup[] = []
+    for (const day of dayOrder) {
+      if (map.has(day)) {
+        grouped.push({
+          day,
+          dayLabel: DAYS_OF_WEEK_VN[day] || day,
+          times: map.get(day)!,
+        })
+      }
+    }
+    return grouped.length > 0 ? grouped : null
+  } catch {
+    return null
+  }
+}
+
+export function canEditFinalSummaryDraft(session?: {
+  status?: string | null
+  meaningfulCareOccurred?: boolean | null
+} | null): boolean {
+  if (!session?.status) return false
+  return (
+    session.status === "ACTIVE" ||
+    session.status === "COMPLETED" ||
+    (session.status === "CANCELLED" && session.meaningfulCareOccurred === true)
+  )
+}
+
+export function canFinalizeFinalSummary(session?: {
+  status?: string | null
+  meaningfulCareOccurred?: boolean | null
+} | null): boolean {
+  if (!session?.status) return false
+  return (
+    session.status === "COMPLETED" ||
+    (session.status === "CANCELLED" && session.meaningfulCareOccurred === true)
+  )
+}
+
+export function canShowDoctorFinalSummary(
+  session?: {
+    status?: string | null
+    meaningfulCareOccurred?: boolean | null
+  } | null,
+  isDoctor = true
+): boolean {
+  return isDoctor && canEditFinalSummaryDraft(session)
+}
+

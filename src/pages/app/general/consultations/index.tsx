@@ -224,13 +224,6 @@ export default function ConsultationsPage() {
               onAdminFilterChange={logic.setAdminFilters}
               onSearchAdminFilters={logic.loadData}
               onInitiatePayment={logic.handleInitiatePayment}
-              onExpireWaitingPayment={logic.handleExpireWaitingPayment}
-              onOpenSession={(sessionId) => {
-                const session = logic.sessions.find((item) => String(item.id) === String(sessionId))
-                if (session) {
-                  logic.setSelectedSession(session)
-                }
-              }}
             />
           </TabsContent>
         )}
@@ -252,7 +245,6 @@ export default function ConsultationsPage() {
             sessions={logic.sessions}
             loading={logic.loading || logic.actionLoading}
             selectedSessionId={logic.selectedSession?.id ?? null}
-            onSelect={logic.setSelectedSession}
             onClose={logic.openCloseDialog}
             onExpireOverdue={logic.handleExpireOverdue}
             onActivateScheduled={logic.handleActivateScheduledSessions}
@@ -285,15 +277,19 @@ export default function ConsultationsPage() {
         </Tabs>
       </div>
 
-    <AdminActionDialog
+      <AdminActionDialog
         mode={logic.adminDialogMode}
         request={logic.targetRequest}
         session={logic.targetSession}
         doctorId={logic.doctorId}
         reason={logic.reason}
+        terminationReason={logic.terminationReason}
+        meaningfulCareOccurred={logic.meaningfulCareOccurred}
         loading={logic.actionLoading}
         onDoctorIdChange={logic.setDoctorId}
         onReasonChange={logic.setReason}
+        onTerminationReasonChange={logic.setTerminationReason}
+        onMeaningfulCareOccurredChange={logic.setMeaningfulCareOccurred}
         onSubmit={logic.handleAdminDialogSubmit}
         onOpenChange={(open) => {
           if (!open) {

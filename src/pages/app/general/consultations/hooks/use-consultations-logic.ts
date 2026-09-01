@@ -17,6 +17,7 @@ import type {
   SendConsultationMessagePayload,
   CareServicePackage,
   ConsultationRequestReviewResponse,
+  CareTerminationReason,
 } from "@/types/consultation"
 
 export type AlertState = {
@@ -152,6 +153,8 @@ export function useConsultationsLogic() {
   const [endsAt, setEndsAt] = useState(localDateTimeIn(30))
   const [supportEndsAt, setSupportEndsAt] = useState(localDateTimeIn(33))
   const [reason, setReason] = useState("")
+  const [terminationReason, setTerminationReason] = useState<CareTerminationReason | null>("ADMINISTRATIVE_CLOSURE")
+  const [meaningfulCareOccurred, setMeaningfulCareOccurred] = useState<boolean>(true)
 
   const [adminFilters, setAdminFilters] = useState({
     status: "",
@@ -230,8 +233,19 @@ export function useConsultationsLogic() {
           : Promise.resolve(null),
       ])
 
-      const loadedSessions = sessionResponse.data.content ?? []
-      setRequests(requestResponse?.data.content ?? [])
+      const loadedSessions = (sessionResponse.data.content ?? []).sort((a, b) => {
+        const timeA = a.createdAt ? new Date(a.createdAt).getTime() : 0
+        const timeB = b.createdAt ? new Date(b.createdAt).getTime() : 0
+        if (timeA !== timeB) return timeB - timeA
+        return String(b.id).localeCompare(String(a.id), undefined, { numeric: true })
+      })
+      const loadedRequests = (requestResponse?.data.content ?? []).sort((a, b) => {
+        const timeA = a.createdAt ? new Date(a.createdAt).getTime() : 0
+        const timeB = b.createdAt ? new Date(b.createdAt).getTime() : 0
+        if (timeA !== timeB) return timeB - timeA
+        return String(b.id).localeCompare(String(a.id), undefined, { numeric: true })
+      })
+      setRequests(loadedRequests)
       setSessions(loadedSessions)
       setHealthRecords(healthRecordResponse?.data.content ?? [])
       setPackages(packageResponse?.data.content ?? [])
@@ -637,6 +651,9 @@ export function useConsultationsLogic() {
   function openCloseDialog(session: ConsultationSessionItem) {
     setTargetSession(session)
     setReason("")
+    setTerminationReason("ADMINISTRATIVE_CLOSURE")
+    // Default meaningfulCareOccurred: true for ACTIVE, false for SCHEDULED
+    setMeaningfulCareOccurred(session.status === "ACTIVE")
     setAdminDialogMode("close")
   }
 
@@ -647,24 +664,28 @@ export function useConsultationsLogic() {
     try {
       if (adminDialogMode === "approve" && targetRequest) {
         if (!doctorId || !doctorId.trim()) {
-          setAlert({ type: "error", text: "Please select a valid doctor." })
+          setAlert({ type: "error", text: "Vui lòng chọn hoặc nhập mã bác sĩ hợp lệ." })
           setActionLoading(false)
           return
         }
         await consultationApi.approveRequest(targetRequest.id, {
           doctorId: doctorId.trim(),
         })
-        setAlert({ type: "success", text: `Reserved doctor for request #${targetRequest.id}. Status moved to WAITING_PAYMENT.` })
+        setAlert({ type: "success", text: `Đã điều phối bác sĩ cho yêu cầu #${targetRequest.id}. Trạng thái chuyển sang CHỜ THANH TOÁN.` })
       }
 
       if (adminDialogMode === "reject" && targetRequest) {
         await consultationApi.rejectRequest(targetRequest.id, { rejectionReason: reason.trim() })
-        setAlert({ type: "success", text: `Rejected request #${targetRequest.id}.` })
+        setAlert({ type: "success", text: `Đã từ chối yêu cầu #${targetRequest.id}.` })
       }
 
       if (adminDialogMode === "close" && targetSession) {
-        await consultationApi.closeSession(targetSession.id, { closeReason: reason.trim() })
-        setAlert({ type: "success", text: `Closed session #${targetSession.id}.` })
+        await consultationApi.closeSession(targetSession.id, {
+          closeReason: reason.trim(),
+          terminationReason: terminationReason,
+          meaningfulCareOccurred: meaningfulCareOccurred,
+        })
+        setAlert({ type: "success", text: `Đã đóng phiên tư vấn #${targetSession.id}.` })
       }
 
       setAdminDialogMode(null)
@@ -843,6 +864,10 @@ export function useConsultationsLogic() {
     setSupportEndsAt,
     reason,
     setReason,
+    terminationReason,
+    setTerminationReason,
+    meaningfulCareOccurred,
+    setMeaningfulCareOccurred,
     loadData,
     handleCreateRequest,
     handleCancelRequest,

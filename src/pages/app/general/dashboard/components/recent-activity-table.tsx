@@ -1,4 +1,4 @@
-import { History, ArrowUpRight } from "lucide-react"
+import { History } from "lucide-react"
 import { StatusIndicator } from "./status-indicator"
 import type { ActivityLogItem } from "../data/super-admin-dashboard.mock"
 
@@ -12,17 +12,9 @@ export function RecentActivityTable({ activities }: { activities: ActivityLogIte
           </div>
           <div>
             <h3 className="text-base font-bold text-slate-900">Recent Activity Logs</h3>
-            <p className="text-xs text-slate-500">Live system events and administrative audit trails</p>
+            <p className="text-xs text-slate-500">Live system events and administrative overview</p>
           </div>
         </div>
-        <button
-          type="button"
-          onClick={() => alert("Viewing comprehensive audit logs...")}
-          className="inline-flex items-center gap-1 text-xs font-bold text-blue-600 hover:text-blue-800 transition-colors"
-        >
-          <span>View All</span>
-          <ArrowUpRight className="h-3.5 w-3.5" />
-        </button>
       </div>
 
       {/* Table container with horizontal scroll for laptops/smaller views */}

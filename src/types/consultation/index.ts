@@ -357,6 +357,7 @@ export interface ConsultationSessionItem {
   supportEndsAt?: string | null
   closedAt?: string | null
   closeReason?: string | null
+  meaningfulCareOccurred?: boolean | null
   healthRecordId?: string | number | null
   requestId?: string | number | null
   lastMessageId?: string | null
@@ -670,6 +671,7 @@ export interface DoctorConsultationSessionResponse {
   startedAt?: string | null
   endsAt?: string | null
   status: ConsultationSessionStatus
+  meaningfulCareOccurred?: boolean | null
   supportScheduleSnapshotJson?: string | null
   supportTimezoneSnapshot?: string | null
   unresolvedAttentionCount: number
@@ -721,7 +723,17 @@ export interface CareContinuitySummaryResponse {
   doctorId?: number | string | null
   packageName?: string | null
   packageCode?: string | null
-  summary: string
+  status?: string | null
+  finalizedSummary?: {
+    summary?: string | null
+    observations?: string | null
+    recommendations?: string | null
+    followUpRecommendation?: string | null
+    finalizedAt?: string | null
+    referencedHealthRecordIds?: (string | number)[] | null
+    addenda?: FinalSummaryAddendumResponse[] | null
+  } | null
+  summary?: string | null
   observations?: string | null
   recommendations?: string | null
   followUpRecommendation?: string | null

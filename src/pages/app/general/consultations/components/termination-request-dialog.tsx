@@ -35,6 +35,7 @@ const TERMINATION_REASONS: { value: CareTerminationReason; label: string }[] = [
   { value: "DOCTOR_UNAVAILABLE", label: "Bác sĩ không thể tiếp tục sắp xếp hỗ trợ" },
   { value: "MEMBER_UNAVAILABLE", label: "Hội viên bận / không thể tiếp tục theo dõi" },
   { value: "SAFETY_OR_SCOPE_REASON", label: "Cần can thiệp trực tiếp / Vượt phạm vi tư vấn từ xa" },
+  { value: "ACCOUNT_SUSPENDED", label: "Tài khoản bị tạm khóa / đình chỉ dịch vụ" },
   { value: "SERVICE_VIOLATION", label: "Vi phạm quy tắc trao đổi / dịch vụ" },
   { value: "TECHNICAL_FAILURE", label: "Sự cố kỹ thuật / kết nối kéo dài" },
   { value: "ADMINISTRATIVE_CLOSURE", label: "Yêu cầu đóng hành chính" },
