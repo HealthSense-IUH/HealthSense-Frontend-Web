@@ -115,6 +115,11 @@ export function DoctorSessionDetailDialog({ sessionId, open, onOpenChange }: Doc
 
   const { session, initialHealthRecord } = detail
 
+  const memberDisplayName =
+    (typeof detail.member?.displayName === "string" && detail.member.displayName) ||
+    session.memberDisplayName ||
+    `Bệnh nhân #${session.memberId}`
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-4xl max-h-[88vh] overflow-y-auto">
@@ -122,7 +127,7 @@ export function DoctorSessionDetailDialog({ sessionId, open, onOpenChange }: Doc
           <div className="flex items-start justify-between pr-4">
             <div>
               <DialogTitle className="text-xl">
-                {detail.member?.displayName || session.memberDisplayName || `Bệnh nhân #${session.memberId}`}
+                {memberDisplayName}
               </DialogTitle>
               <DialogDescription className="mt-1">
                 ID Phiên: {session.id}
@@ -182,7 +187,7 @@ export function DoctorSessionDetailDialog({ sessionId, open, onOpenChange }: Doc
               <h3 className="font-semibold text-neutral-900">Thông tin bệnh nhân</h3>
             </div>
             <div className="text-sm text-neutral-600 space-y-2">
-              <p><span className="font-medium text-neutral-800">Tên bệnh nhân:</span> {detail.member?.displayName || session.memberDisplayName || `Hội viên #${session.memberId}`}</p>
+              <p><span className="font-medium text-neutral-800">Tên bệnh nhân:</span> {memberDisplayName}</p>
               <p><span className="font-medium text-neutral-800">Mã bệnh nhân:</span> #{session.memberId}</p>
               <p className="italic text-neutral-400">Các thông tin cơ bản khác sẽ hiển thị nếu được chia sẻ.</p>
             </div>

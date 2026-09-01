@@ -685,7 +685,7 @@ export interface DoctorConsultationSessionResponse {
 
 export interface DoctorConsultationDetailResponse {
   session: DoctorConsultationSessionResponse
-  member?: UserSummaryResponse | Record<string, unknown> | null
+  member?: UserSummaryResponse | null
   request?: ConsultationRequestReviewResponse | Record<string, unknown> | null
   packageSnapshot?: CareServicePackage | Record<string, unknown> | null
   initialHealthRecord?: HealthRecordItem | null
