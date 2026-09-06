@@ -148,7 +148,55 @@ export function NotificationBell() {
 
     setOpen(false)
 
-    // 2. Verified reference navigation
+    // 2. Queue V1 explicit type handling
+    if (notif.type === "DOCTOR_OFFER_AVAILABLE") {
+      navigate("/app/management/doctor/consultations")
+      return
+    }
+
+    if (
+      notif.type === "MEMBER_CONFIRMATION_REQUIRED" ||
+      notif.type === "MEMBER_CONFIRMATION_EXPIRED"
+    ) {
+      navigate("/app/general/consultations?tab=queue")
+      return
+    }
+
+    if (notif.type === "CONTINUATION_CONFIRMATION_REQUIRED") {
+      navigate(
+        notif.referenceId
+          ? `/app/general/consultations?tab=chat&sessionId=${notif.referenceId}`
+          : "/app/general/consultations?tab=chat"
+      )
+      return
+    }
+
+    if (
+      notif.type === "DOCTOR_SUMMARY_DEADLINE_EXPIRED" ||
+      notif.type === "SUMMARY_ACTION_REQUIRED"
+    ) {
+      if (role === "DOCTOR") {
+        navigate("/app/management/doctor/consultations")
+      } else {
+        navigate(
+          notif.referenceId
+            ? `/app/general/consultations?tab=chat&sessionId=${notif.referenceId}`
+            : "/app/general/consultations"
+        )
+      }
+      return
+    }
+
+    if (notif.type === "FINAL_SUMMARY_AVAILABLE" || notif.type === "CARE_COMPLETED") {
+      navigate(
+        notif.referenceId
+          ? `/app/general/consultations?tab=chat&sessionId=${notif.referenceId}`
+          : "/app/general/consultations"
+      )
+      return
+    }
+
+    // 3. Verified reference navigation
     const refType = notif.referenceType?.toUpperCase()
     const refId = notif.referenceId
 
@@ -159,7 +207,8 @@ export function NotificationBell() {
         if (role === "CARE_COORDINATOR" || role === "ADMIN" || role === "SUPER_ADMIN") {
           navigate(`/app/general/consultations?tab=admin-requests&requestId=${refId}`)
         } else {
-          navigate(`/app/general/consultations?tab=requests`)
+          // Direct to queue tab for member so active queue can be verified authoritatively
+          navigate(`/app/general/consultations?tab=queue`)
         }
         break
 
