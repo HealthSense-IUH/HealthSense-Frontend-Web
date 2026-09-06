@@ -67,7 +67,7 @@ export function DoctorFinalSummaryTab({
   const [saving, setSaving] = useState(false)
   const [finalizing, setFinalizing] = useState(false)
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
-  const [currentTime, setCurrentTime] = useState<number>(Date.now())
+  const [currentTime, setCurrentTime] = useState<number>(() => Date.now())
   const [latestDispatchStatus, setLatestDispatchStatus] = useState<DoctorDispatchStatusResponse | null>(null)
   
   // Draft form state

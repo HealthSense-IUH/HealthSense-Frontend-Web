@@ -37,7 +37,7 @@ export function SessionContinuationBanner({
   const isQueueV1 = session.flowType === "QUEUE_DISPATCH_V1"
   const isActive = session.status === "ACTIVE"
 
-  const [currentTime, setCurrentTime] = useState<number>(Date.now())
+  const [currentTime, setCurrentTime] = useState<number>(() => Date.now())
   const [continuation, setContinuation] = useState<ContinuationDecisionResponse | null>(null)
   const [actionLoading, setActionLoading] = useState(false)
 
