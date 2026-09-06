@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-import { Activity, Calendar, CheckCircle2, Inbox, MessagesSquare, PlusCircle, RefreshCw, ShieldAlert, Stethoscope, Users, XCircle } from "lucide-react"
+import { Calendar, CheckCircle2, Inbox, MessagesSquare, PlusCircle, RefreshCw, ShieldAlert, Stethoscope, Users, XCircle } from "lucide-react"
 import { useSearchParams } from "react-router-dom"
 
 import { Button } from "@/components/ui/button"
@@ -17,7 +17,6 @@ import { CreateAdminSessionPanel } from "@/pages/app/general/consultations/compo
 import { CreateRequestPanel } from "@/pages/app/general/consultations/components/create-request-panel"
 import { DoctorCandidatesDialog } from "@/pages/app/general/consultations/components/doctor-candidates-dialog"
 import { DoctorCareProfileDialog } from "@/pages/app/general/consultations/components/doctor-care-profile-dialog"
-import { HealthRecordsPanel } from "@/pages/app/general/consultations/components/health-records-panel"
 import { MemberQueuePanel } from "@/pages/app/general/consultations/components/member-queue-panel"
 import { DoctorDispatchHeader } from "@/pages/app/management/doctor-consultations/components/doctor-dispatch-header"
 import { DoctorOfferCard } from "@/pages/app/management/doctor-consultations/components/doctor-offer-card"
@@ -41,10 +40,10 @@ export default function ConsultationsPage() {
   const defaultTab = logic.isAdmin 
     ? "admin-requests" 
     : logic.isMember 
-      ? (hasActiveQueue ? "queue" : logic.requests.length > 0 ? "my-requests" : "create-request") 
+      ? (hasActiveQueue ? "queue" : "create-request") 
       : "sessions"
   const activeTab = tabParam === "requests"
-    ? (logic.isAdmin ? "admin-requests" : "my-requests")
+    ? (logic.isAdmin ? "admin-requests" : "create-request")
     : (tabParam || defaultTab)
 
   useEffect(() => {
@@ -131,15 +130,6 @@ export default function ConsultationsPage() {
                       </span>
                     )}
                   </TabsTrigger>
-                  <TabsTrigger value="my-requests" className="rounded-lg text-xs font-semibold gap-1.5 px-3">
-                    <Inbox className="w-3.5 h-3.5" />
-                    <span>Yêu cầu của tôi</span>
-                    {logic.requests.length > 0 && (
-                      <span className="ml-1 px-1.5 py-0.5 rounded-full text-[10px] bg-primary/15 text-primary font-bold">
-                        {logic.requests.length}
-                      </span>
-                    )}
-                  </TabsTrigger>
                   <TabsTrigger value="create-request" className="rounded-lg text-xs font-semibold gap-1.5 px-3">
                     <PlusCircle className="w-3.5 h-3.5" />
                     <span>Đăng ký tư vấn</span>
@@ -156,10 +146,6 @@ export default function ConsultationsPage() {
                   <TabsTrigger value="chat" className="rounded-lg text-xs font-semibold gap-1.5 px-3">
                     <MessagesSquare className="w-3.5 h-3.5" />
                     <span>Trò chuyện trực tiếp</span>
-                  </TabsTrigger>
-                  <TabsTrigger value="records" className="rounded-lg text-xs font-semibold gap-1.5 px-3">
-                    <Activity className="w-3.5 h-3.5" />
-                    <span>Hồ sơ đo đạc</span>
                   </TabsTrigger>
                 </>
               )}
@@ -233,12 +219,6 @@ export default function ConsultationsPage() {
             </TabsContent>
           )}
 
-          {logic.isMember && (
-          <TabsContent value="records" className="m-0 flex-1 min-h-0 overflow-y-auto p-4 sm:p-6">
-            <HealthRecordsPanel records={logic.healthRecords} loading={logic.loading} onSelect={(record) => logic.setRequestForm((prev) => ({ ...prev, healthRecordId: String(record.id) }))} />
-          </TabsContent>
-        )}
-
         {logic.isMember && (
           <TabsContent value="create-request" className="m-0 flex-1 min-h-0 overflow-y-auto p-4 sm:p-6">
             <CreateRequestPanel
@@ -252,8 +232,8 @@ export default function ConsultationsPage() {
           </TabsContent>
         )}
 
-        {!logic.isDoctor && (
-          <TabsContent value={logic.isAdmin ? "admin-requests" : "my-requests"} className="m-0 flex-1 min-h-0 overflow-y-auto p-4 sm:p-6">
+        {logic.isAdmin && (
+          <TabsContent value="admin-requests" className="m-0 flex-1 min-h-0 overflow-y-auto p-4 sm:p-6">
             <RequestsPanel
               isAdmin={logic.isAdmin}
               requests={logic.requests}

@@ -2,7 +2,6 @@ import {
   Activity,
   FileText,
   HeartPulse,
-  History,
   LayoutDashboard,
   MessagesSquare,
   Package,
@@ -105,20 +104,6 @@ export const generalNavigationGroups: NavigationGroup[] = [
         shortTitle: "Tư vấn",
         href: "/app/general/consultations",
         icon: MessagesSquare,
-        allowedRoles: [
-          USER_ROLES.SUPER_ADMIN,
-          USER_ROLES.ADMIN,
-          USER_ROLES.CARE_COORDINATOR,
-          USER_ROLES.DOCTOR,
-          USER_ROLES.MEMBER,
-        ],
-      },
-      {
-        id: "care-history",
-        title: "Lịch sử Chăm sóc",
-        shortTitle: "Lịch sử khám",
-        href: "/app/general/care-history",
-        icon: History,
         allowedRoles: [
           USER_ROLES.SUPER_ADMIN,
           USER_ROLES.ADMIN,
