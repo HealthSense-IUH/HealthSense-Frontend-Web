@@ -10,30 +10,41 @@ import type {
   CareServiceAgreementResponse,
   CareServicePackage,
   CloseConsultationPayload,
+  ConfirmConsultationRequestPayload,
+  ContinuationDecisionResponse,
   ConsultationFinalSummaryResponse,
   ConsultationMessageItem,
   ConsultationMessagePage,
   ConsultationParticipantItem,
   ConsultationPaymentAttemptItem,
   ConsultationPaymentResponse,
+  ConsultationQueueStatisticsResponse,
   ConsultationRenewalResponse,
   ConsultationRequestItem,
   ConsultationRequestPage,
+  ConsultationRequestResponse,
   ConsultationRequestReviewResponse,
   ConsultationSessionItem,
   ConsultationSessionPage,
+  ConsultationSessionResponse,
   CreateCareServicePackagePayload,
   CreateConsultationRequestPayload,
   CreateFinalSummaryAddendumPayload,
+  CreateQueueConsultationRequestPayload,
+  CurrentQueueStateResponse,
   DecideConsultationRenewalPayload,
   DoctorCandidateResponse,
   DoctorCareProfilePayload,
   DoctorCareProfileResponse,
   DoctorConsultationDetailResponse,
+  DoctorConsultationOfferResponse,
   DoctorConsultationSessionResponse,
+  DoctorDispatchStatus,
+  DoctorDispatchStatusResponse,
   DoctorRawArtifactResponse,
   DoctorScopedHealthRecordResponse,
   EpisodeHealthRecordAuthorizationResponse,
+  UpdateDoctorAvailabilityPayload,
   FinalSummaryAddendumResponse,
   HealthRecordPage,
   RejectConsultationRequestPayload,
@@ -42,6 +53,7 @@ import type {
   SendConsultationMessagePayload,
   SessionExtensionResponse,
   SubmitConsultationMoreInfoPayload,
+  SubmitContinuationDecisionPayload,
   UpdateCareServicePackagePayload,
   UpsertConsultationFinalSummaryPayload,
 } from "@/types/consultation"
@@ -64,6 +76,22 @@ export const consultationApi = {
       payload
     )
   },
+  createQueueRequest(payload: CreateQueueConsultationRequestPayload) {
+    return axiosClient.post<ApiResponse<ConsultationRequestResponse>, ApiResponse<ConsultationRequestResponse>>(
+      "/api/consultation-requests",
+      payload
+    )
+  },
+  getCurrentQueueState() {
+    return axiosClient.get<ApiResponse<CurrentQueueStateResponse>, ApiResponse<CurrentQueueStateResponse>>(
+      "/api/consultation-requests/current"
+    )
+  },
+  getQueueStatistics() {
+    return axiosClient.get<ApiResponse<ConsultationQueueStatisticsResponse>, ApiResponse<ConsultationQueueStatisticsResponse>>(
+      "/api/consultation-queue/statistics"
+    )
+  },
   listMyRequests(params: PageParams = {}) {
     return axiosClient.get<ApiResponse<ConsultationRequestPage>, ApiResponse<ConsultationRequestPage>>("/api/consultation-requests", {
       params,
@@ -82,6 +110,17 @@ export const consultationApi = {
   cancelRequest(requestId: string | number) {
     return axiosClient.patch<ApiResponse<ConsultationRequestItem>, ApiResponse<ConsultationRequestItem>>(
       `/api/consultation-requests/${requestId}/cancel`
+    )
+  },
+  cancelQueueRequest(requestId: string | number) {
+    return axiosClient.patch<ApiResponse<ConsultationRequestResponse>, ApiResponse<ConsultationRequestResponse>>(
+      `/api/consultation-requests/${requestId}/cancel`
+    )
+  },
+  confirmQueueRequest(requestId: string | number, payload: ConfirmConsultationRequestPayload) {
+    return axiosClient.post<ApiResponse<ConsultationSessionResponse>, ApiResponse<ConsultationSessionResponse>>(
+      `/api/consultation-requests/${requestId}/confirm`,
+      payload
     )
   },
 
@@ -263,14 +302,25 @@ export const consultationApi = {
       { params }
     )
   },
-  getDoctorCareProfile(doctorId: string | number) {
+  getDoctorCareProfile(doctorId: string) {
     return axiosClient.get<ApiResponse<DoctorCareProfileResponse>, ApiResponse<DoctorCareProfileResponse>>(
       `/api/admin/doctors/${doctorId}/care-profile`
     )
   },
-  updateDoctorCareProfile(doctorId: string | number, payload: DoctorCareProfilePayload) {
+  updateDoctorCareProfile(doctorId: string, payload: DoctorCareProfilePayload) {
     return axiosClient.put<ApiResponse<DoctorCareProfileResponse>, ApiResponse<DoctorCareProfileResponse>>(
       `/api/admin/doctors/${doctorId}/care-profile`,
+      payload
+    )
+  },
+  getMyDoctorCareProfile() {
+    return axiosClient.get<ApiResponse<DoctorCareProfileResponse>, ApiResponse<DoctorCareProfileResponse>>(
+      "/api/doctor/care-profile"
+    )
+  },
+  updateMyDoctorAvailability(payload: UpdateDoctorAvailabilityPayload) {
+    return axiosClient.patch<ApiResponse<DoctorCareProfileResponse>, ApiResponse<DoctorCareProfileResponse>>(
+      "/api/doctor/care-profile/availability",
       payload
     )
   },
@@ -325,6 +375,38 @@ export const consultationApi = {
   getPaymentAttempts(requestId: string | number) {
     return axiosClient.get<ApiResponse<ConsultationPaymentAttemptItem[]>, ApiResponse<ConsultationPaymentAttemptItem[]>>(
       `/api/consultation-requests/${requestId}/payment/attempts`
+    )
+  },
+  getDoctorDispatchStatus() {
+    return axiosClient.get<ApiResponse<DoctorDispatchStatusResponse>, ApiResponse<DoctorDispatchStatusResponse>>(
+      "/api/doctor/dispatch-status"
+    )
+  },
+  updateDoctorDispatchStatus(dispatchStatus: DoctorDispatchStatus) {
+    return axiosClient.patch<ApiResponse<DoctorDispatchStatusResponse>, ApiResponse<DoctorDispatchStatusResponse>>(
+      "/api/doctor/dispatch-status",
+      { dispatchStatus }
+    )
+  },
+  updateDoctorDispatchPreferences(stopAfterCurrentSession: boolean) {
+    return axiosClient.patch<ApiResponse<DoctorDispatchStatusResponse>, ApiResponse<DoctorDispatchStatusResponse>>(
+      "/api/doctor/dispatch-preferences",
+      { stopAfterCurrentSession }
+    )
+  },
+  getDoctorCurrentOffer() {
+    return axiosClient.get<ApiResponse<DoctorConsultationOfferResponse>, ApiResponse<DoctorConsultationOfferResponse>>(
+      "/api/doctor/consultation-offers/current"
+    )
+  },
+  acceptDoctorOffer(offerId: string) {
+    return axiosClient.post<ApiResponse<DoctorConsultationOfferResponse>, ApiResponse<DoctorConsultationOfferResponse>>(
+      `/api/doctor/consultation-offers/${offerId}/accept`
+    )
+  },
+  rejectDoctorOffer(offerId: string) {
+    return axiosClient.post<ApiResponse<DoctorConsultationOfferResponse>, ApiResponse<DoctorConsultationOfferResponse>>(
+      `/api/doctor/consultation-offers/${offerId}/reject`
     )
   },
   getDoctorSessions(params: PageParams = {}) {
@@ -405,6 +487,17 @@ export const consultationApi = {
   getAdminFinalSummary(sessionId: string | number) {
     return axiosClient.get<ApiResponse<ConsultationFinalSummaryResponse>, ApiResponse<ConsultationFinalSummaryResponse>>(
       `/api/admin/consultation-sessions/${sessionId}/final-summary`
+    )
+  },
+  getCurrentContinuation(sessionId: string | number) {
+    return axiosClient.get<ApiResponse<ContinuationDecisionResponse>, ApiResponse<ContinuationDecisionResponse>>(
+      `/api/consultation-sessions/${sessionId}/continuations/current`
+    )
+  },
+  submitContinuationDecision(sessionId: string | number, round: number, payload: SubmitContinuationDecisionPayload) {
+    return axiosClient.put<ApiResponse<ContinuationDecisionResponse>, ApiResponse<ContinuationDecisionResponse>>(
+      `/api/consultation-sessions/${sessionId}/continuations/${round}/decision`,
+      payload
     )
   },
   getCareHistory(params?: { page?: number; size?: number }) {
