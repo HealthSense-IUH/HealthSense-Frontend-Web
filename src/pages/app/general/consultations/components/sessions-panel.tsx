@@ -1,7 +1,8 @@
-import { useState } from "react"
+import { useState, useCallback } from "react"
 import { Clock, RefreshCw, FileText } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { useAppShell } from "@/components/layout/app-shell-context"
@@ -39,6 +40,10 @@ export function SessionsPanel({
   const [doctorSessionId, setDoctorSessionId] = useState<string | number | null>(null)
   const [renewalSession, setRenewalSession] = useState<ConsultationSessionItem | null>(null)
   const [adminRenewalSession, setAdminRenewalSession] = useState<ConsultationSessionItem | null>(null)
+
+  const handleDoctorDetailOpenChange = useCallback((open: boolean) => {
+    if (!open) setDoctorSessionId(null)
+  }, [])
 
   const sortedSessions = [...sessions].sort((a, b) => {
     const timeA = a.createdAt ? new Date(a.createdAt).getTime() : 0
@@ -102,7 +107,16 @@ export function SessionsPanel({
                 <TableCell className="font-medium">#{session.id}</TableCell>
                 <TableCell>{session.memberDisplayName || `#${session.memberId}`}</TableCell>
                 <TableCell>{session.doctorDisplayName || `#${session.doctorId}`}</TableCell>
-                <TableCell>{statusBadge(session.status)}</TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    {statusBadge(session.status)}
+                    {isDoctor && session.status === "COMPLETED" && session.summaryClosureStatus === "SUMMARY_PENDING" && (
+                      <Badge className="bg-amber-500 hover:bg-amber-600 text-white text-[10px]">
+                        Cần tổng kết
+                      </Badge>
+                    )}
+                  </div>
+                </TableCell>
                 <TableCell>{formatDate(session.createdAt)}</TableCell>
                 <TableCell>{formatDate(session.endsAt)}</TableCell>
                 <TableCell>
@@ -121,7 +135,7 @@ export function SessionsPanel({
                         Tổng kết / Chi tiết
                       </Button>
                     )}
-                    {!isAdmin && !isDoctor && (session.status === "ACTIVE" || session.status === "COMPLETED") && (
+                    {!isAdmin && !isDoctor && session.flowType !== "QUEUE_DISPATCH_V1" && (session.status === "ACTIVE" || session.status === "COMPLETED") && (
                       <Button
                         variant="outline"
                         size="sm"
@@ -170,9 +184,8 @@ export function SessionsPanel({
         <DoctorSessionDetailDialog
           sessionId={doctorSessionId}
           open={!!doctorSessionId}
-          onOpenChange={(open) => {
-            if (!open) setDoctorSessionId(null)
-          }}
+          onOpenChange={handleDoctorDetailOpenChange}
+          onSessionRefreshed={onSessionRefreshed}
         />
       )}
 
@@ -182,7 +195,7 @@ export function SessionsPanel({
         onOpenChange={(open) => {
           if (!open) setSummarySessionId(null)
         }}
-        isAdminView={true}
+        isAdminView={isAdmin}
       />
 
       {renewalSession && (

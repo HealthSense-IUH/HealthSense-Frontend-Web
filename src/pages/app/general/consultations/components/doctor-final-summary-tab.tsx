@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react"
-import { AlertCircle, CheckCircle2, Save, Info, PlusCircle, FileText, Activity } from "lucide-react"
+import { useEffect, useState, useRef } from "react"
+import { AlertCircle, CheckCircle2, Save, Info, PlusCircle, FileText, Activity, Clock } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -22,6 +22,9 @@ import type {
   ConsultationFinalSummaryResponse,
   ConsultationStatus,
   DoctorScopedHealthRecordResponse,
+  DoctorDispatchStatusResponse,
+  FinalSummaryClosureStatus,
+  ConsultationFlowType,
 } from "@/types/consultation"
 import { formatDate, canEditFinalSummaryDraft, canFinalizeFinalSummary } from "./shared"
 
@@ -29,6 +32,18 @@ interface DoctorFinalSummaryTabProps {
   sessionId: string | number
   sessionStatus: ConsultationStatus
   meaningfulCareOccurred?: boolean | null
+  flowType?: ConsultationFlowType | null
+  summaryDueAt?: string | null
+  summaryClosureStatus?: FinalSummaryClosureStatus | null
+  onFinalized?: () => void
+}
+
+function formatCountdown(ms: number): string {
+  if (ms <= 0) return "00:00"
+  const totalSeconds = Math.floor(ms / 1000)
+  const minutes = Math.floor(totalSeconds / 60)
+  const seconds = totalSeconds % 60
+  return `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`
 }
 
 function readError(error: unknown, fallback: string) {
@@ -37,13 +52,23 @@ function readError(error: unknown, fallback: string) {
   return err.response?.data?.message || err.message || fallback
 }
 
-export function DoctorFinalSummaryTab({ sessionId, sessionStatus, meaningfulCareOccurred }: DoctorFinalSummaryTabProps) {
+export function DoctorFinalSummaryTab({
+  sessionId,
+  sessionStatus,
+  meaningfulCareOccurred,
+  flowType,
+  summaryDueAt,
+  summaryClosureStatus,
+  onFinalized,
+}: DoctorFinalSummaryTabProps) {
   const [summary, setSummary] = useState<ConsultationFinalSummaryResponse | null>(null)
   const [scopedRecords, setScopedRecords] = useState<DoctorScopedHealthRecordResponse[]>([])
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [finalizing, setFinalizing] = useState(false)
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
+  const [currentTime, setCurrentTime] = useState<number>(Date.now())
+  const [latestDispatchStatus, setLatestDispatchStatus] = useState<DoctorDispatchStatusResponse | null>(null)
   
   // Draft form state
   const [summaryText, setSummaryText] = useState("")
@@ -109,6 +134,38 @@ export function DoctorFinalSummaryTab({ sessionId, sessionStatus, meaningfulCare
   useEffect(() => {
     fetchSummary()
   }, [sessionId])
+
+  // Local ticker for countdown
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(Date.now())
+    }, 1000)
+    return () => clearInterval(timer)
+  }, [])
+
+  const summaryDueAtMs = summaryDueAt ? new Date(summaryDueAt).getTime() : 0
+  const isSummaryOverdue = summaryClosureStatus === "SUMMARY_OVERDUE" || (summaryDueAtMs > 0 && currentTime >= summaryDueAtMs)
+  const hasTriggeredTimeoutRef = useRef(false)
+
+  // Refetch authoritative dispatch status when summary becomes overdue
+  useEffect(() => {
+    if (isSummaryOverdue && !summary?.finalizedAt && !hasTriggeredTimeoutRef.current) {
+      hasTriggeredTimeoutRef.current = true
+      consultationApi.getDoctorDispatchStatus()
+        .then(res => setLatestDispatchStatus(res.data))
+        .catch(() => {})
+      onFinalized?.()
+    }
+  }, [isSummaryOverdue, summary?.finalizedAt, onFinalized])
+
+  // Initial fetch of dispatch status if already overdue
+  useEffect(() => {
+    if (flowType === "QUEUE_DISPATCH_V1" && isSummaryOverdue && !summary?.finalizedAt) {
+      consultationApi.getDoctorDispatchStatus()
+        .then(res => setLatestDispatchStatus(res.data))
+        .catch(() => {})
+    }
+  }, [flowType, isSummaryOverdue, summary?.finalizedAt])
 
   const toggleRecordSelection = (recordId: string | number) => {
     setSelectedRecordIds((prev) =>
@@ -184,7 +241,27 @@ export function DoctorFinalSummaryTab({ sessionId, sessionStatus, meaningfulCare
       const res = await consultationApi.finalizeDoctorFinalSummary(sessionId)
       setSummary(res.data)
       setConfirmFinalizeOpen(false)
-      toast({ description: "Đã hoàn tất tổng kết chăm sóc." })
+
+      if (flowType === "QUEUE_DISPATCH_V1") {
+        try {
+          const dispatchRes = await consultationApi.getDoctorDispatchStatus()
+          setLatestDispatchStatus(dispatchRes.data)
+          const status = dispatchRes.data.dispatchStatus
+          if (status === "AVAILABLE") {
+            toast({ description: "Đã hoàn tất tổng kết. Trạng thái: Sẵn sàng nhận tư vấn." })
+          } else if (status === "UNAVAILABLE") {
+            toast({ description: "Đã hoàn tất tổng kết. Trạng thái: Không nhận tư vấn." })
+          } else {
+            toast({ description: "Đã hoàn tất tổng kết chăm sóc." })
+          }
+        } catch {
+          toast({ description: "Đã hoàn tất tổng kết chăm sóc." })
+        }
+      } else {
+        toast({ description: "Đã hoàn tất tổng kết chăm sóc." })
+      }
+
+      onFinalized?.()
     } catch (error: any) {
       const errCode = error?.response?.data?.code
       if (errCode === 4002 || errCode === "4002") {
@@ -279,6 +356,45 @@ export function DoctorFinalSummaryTab({ sessionId, sessionStatus, meaningfulCare
             </div>
           </div>
           <Badge className="bg-green-600 hover:bg-green-700 shrink-0">FINALIZED</Badge>
+        </div>
+      )}
+
+      {!isFinalized && flowType === "QUEUE_DISPATCH_V1" && sessionStatus === "COMPLETED" && !isSummaryOverdue && summaryDueAt && (
+        <div className="flex items-center justify-between rounded-lg border border-amber-200 bg-amber-50 dark:bg-amber-950/40 p-4">
+          <div className="flex items-center gap-3">
+            <Clock className="h-5 w-5 text-amber-600 dark:text-amber-400 shrink-0" />
+            <div>
+              <p className="font-medium text-amber-900 dark:text-amber-200 text-sm">Thời hạn hoàn tất tổng kết phiên</p>
+              <p className="text-xs text-amber-700 dark:text-amber-300 mt-0.5">
+                Vui lòng hoàn tất trong thời hạn 10 phút. Lưu nháp sẽ không giải phóng trạng thái trực và không dừng thời hạn.
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-200/80 dark:bg-amber-900/60 text-amber-900 dark:text-amber-200 font-mono text-xs font-bold shrink-0">
+            <Clock className="w-3.5 h-3.5" />
+            <span>{formatCountdown(summaryDueAtMs - currentTime)}</span>
+          </div>
+        </div>
+      )}
+
+      {!isFinalized && flowType === "QUEUE_DISPATCH_V1" && sessionStatus === "COMPLETED" && isSummaryOverdue && (
+        <div className="flex flex-col gap-2 rounded-lg border border-red-200 bg-red-50 dark:bg-red-950/40 p-4 text-xs">
+          <div className="flex items-start gap-3">
+            <AlertCircle className="h-5 w-5 text-red-600 dark:text-red-400 shrink-0 mt-0.5" />
+            <div>
+              <p className="font-medium text-red-900 dark:text-red-200 text-sm">Tổng kết chưa hoàn tất (Đã quá thời hạn 10 phút)</p>
+              <p className="text-xs text-red-700 dark:text-red-300 mt-1">
+                {latestDispatchStatus?.dispatchStatus === "UNAVAILABLE"
+                  ? "Trạng thái nhận tư vấn: Không nhận tư vấn (hệ thống đã giải phóng tự động)."
+                  : latestDispatchStatus?.dispatchStatus === "AVAILABLE"
+                    ? "Trạng thái nhận tư vấn: Sẵn sàng nhận tư vấn."
+                    : latestDispatchStatus?.dispatchStatus === "BUSY"
+                      ? "Trạng thái nhận tư vấn: Đang tư vấn."
+                      : "Hệ thống đã giải phóng trạng thái trực của phiên này."}
+                {" "}Bạn vẫn có thể tiếp tục chỉnh sửa bản nháp và bấm &ldquo;Hoàn tất tổng kết&rdquo; muộn để hoàn tất hồ sơ y khoa.
+              </p>
+            </div>
+          </div>
         </div>
       )}
 

@@ -23,10 +23,12 @@ export function DoctorCareProfileDialog({
   doctorId,
   open,
   onOpenChange,
+  onSuccess,
 }: {
-  doctorId: number | string | null
+  doctorId: string | null
   open: boolean
   onOpenChange: (open: boolean) => void
+  onSuccess?: () => void
 }) {
   const { toast } = useToast()
   const [loading, setLoading] = useState(false)
@@ -43,7 +45,7 @@ export function DoctorCareProfileDialog({
           if (!parsedAvailability && res.data.availabilityJson) {
             try {
               parsedAvailability = JSON.parse(res.data.availabilityJson)
-            } catch (e) {
+            } catch {
               // Ignore parse error
             }
           }
@@ -51,28 +53,36 @@ export function DoctorCareProfileDialog({
           setProfile({
             specialty: res.data.specialty || "GENERAL_PRACTICE",
             acceptsOneOnOneCare: res.data.acceptsOneOnOneCare,
-            maxActiveConsultations: res.data.maxActiveConsultations || 3,
+            maxActiveConsultations: res.data.maxActiveConsultations || 1,
             timezone: res.data.timezone || "Asia/Ho_Chi_Minh",
             availability: parsedAvailability || { weekly: [] }
           })
         })
         .catch((err) => {
-          if (err.response?.status === 404) {
-            // Open blank template
+          const code = err?.response?.data?.code
+          if (code === 4013) {
+            // Error code 4013: Doctor care profile not found -> initialize blank form with empty schedule
             setProfile({
               specialty: "GENERAL_PRACTICE",
               acceptsOneOnOneCare: false,
-              maxActiveConsultations: 3,
+              maxActiveConsultations: 1,
               timezone: "Asia/Ho_Chi_Minh",
               availability: {
-                weekly: [{ ...DEFAULT_SLOT }]
+                weekly: []
               }
             })
+          } else if (code === 4007) {
+            toast({
+              variant: "destructive",
+              title: "Tài khoản không hợp lệ",
+              description: err?.response?.data?.message || "Tài khoản bác sĩ không tồn tại hoặc đã ngừng hoạt động.",
+            })
+            onOpenChange(false)
           } else {
             toast({
               variant: "destructive",
               title: "Lỗi",
-              description: "Không thể tải hồ sơ chăm sóc của bác sĩ.",
+              description: err?.response?.data?.message || "Không thể tải hồ sơ chăm sóc của bác sĩ.",
             })
             onOpenChange(false)
           }
@@ -142,6 +152,15 @@ export function DoctorCareProfileDialog({
       return
     }
 
+    // If acceptsOneOnOneCare is true, at least one slot is required
+    if (profile.acceptsOneOnOneCare && profile.availability.weekly.length === 0) {
+      toast({
+        variant: "destructive",
+        description: "Vui lòng thêm ít nhất một khung giờ làm việc khi bật tiếp nhận tư vấn 1-1.",
+      })
+      return
+    }
+
     // Row validation
     for (let i = 0; i < profile.availability.weekly.length; i++) {
       const row = profile.availability.weekly[i]
@@ -185,6 +204,7 @@ export function DoctorCareProfileDialog({
         title: "Thành công",
         description: "Đã cập nhật hồ sơ chăm sóc bác sĩ.",
       })
+      onSuccess?.()
       onOpenChange(false)
     } catch (error: any) {
       toast({

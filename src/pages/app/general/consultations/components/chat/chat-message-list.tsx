@@ -1,3 +1,4 @@
+import { memo } from "react"
 import { MessageSquare, ArrowDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import type { ConsultationMessageItem } from "@/types/consultation"
@@ -17,7 +18,7 @@ interface ChatMessageListProps {
   onLoadMore: () => void
 }
 
-export function ChatMessageList({
+export const ChatMessageList = memo(function ChatMessageList({
   messages,
   loadingMoreMessages,
   hasMoreMessages,
@@ -100,4 +101,4 @@ export function ChatMessageList({
       )}
     </div>
   )
-}
+})

@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react"
+import { useEffect, useState, useCallback, useRef } from "react"
 import { useNavigate } from "react-router-dom"
 import { ShieldAlert, RefreshCw, Eye, MessageSquare, AlertTriangle, FileText, Calendar, Clock } from "lucide-react"
 
@@ -10,9 +10,17 @@ import { USER_ROLES } from "@/constants"
 import { useAppShell } from "@/components/layout/app-shell-context"
 
 import { consultationApi } from "@/services"
-import type { DoctorConsultationSessionResponse } from "@/types/consultation"
+import type { 
+  DoctorConsultationSessionResponse,
+  DoctorDispatchStatusResponse,
+  DoctorConsultationOfferResponse,
+  DoctorCareProfileResponse,
+} from "@/types/consultation"
 import { formatDate } from "@/pages/app/general/consultations/components/shared"
 import { DoctorSessionDetailDialog } from "@/pages/app/general/consultations/components/doctor-session-detail-dialog"
+import { DoctorDispatchHeader } from "@/pages/app/management/doctor-consultations/components/doctor-dispatch-header"
+import { DoctorOfferCard } from "@/pages/app/management/doctor-consultations/components/doctor-offer-card"
+import { DoctorScheduleDialog } from "@/pages/app/management/doctor-consultations/components/doctor-schedule-dialog"
 
 function readError(error: unknown, fallback: string) {
   const err = error as { response?: { data?: { message?: string } }; message?: string }
@@ -51,11 +59,28 @@ export default function DoctorSessionsPage() {
   const isDoctor = effectiveRole === USER_ROLES.DOCTOR
 
   const [loading, setLoading] = useState(true)
+  const [actionLoading, setActionLoading] = useState(false)
   const [sessions, setSessions] = useState<DoctorConsultationSessionResponse[]>([])
   const [page, setPage] = useState(1)
   const [hasMore, setHasMore] = useState(false)
   const [selectedSessionId, setSelectedSessionId] = useState<string | number | null>(null)
+
+  const handleDoctorDetailOpenChange = useCallback((open: boolean) => {
+    if (!open) setSelectedSessionId(null)
+  }, [])
+
+  // Queue Dispatch V1 States
+  const [dispatchStatus, setDispatchStatus] = useState<DoctorDispatchStatusResponse | null>(null)
+  const [currentOffer, setCurrentOffer] = useState<DoctorConsultationOfferResponse | null>(null)
+  const isPollingRef = useRef(false)
+
+  // Doctor Care Profile States
+  const [careProfile, setCareProfile] = useState<DoctorCareProfileResponse | null>(null)
+  const [profileLoading, setProfileLoading] = useState(true)
+  const [hasProfile, setHasProfile] = useState(false)
+  const [isScheduleOpen, setIsScheduleOpen] = useState(false)
   
+  // Load sessions list
   const loadSessions = useCallback(async (pageNum: number, isRefresh = false) => {
     if (!isDoctor) return
     try {
@@ -82,11 +107,174 @@ export default function DoctorSessionsPage() {
     }
   }, [isDoctor, toast])
 
+  // Fetch Care Profile (Precondition for Dispatch V1)
+  const fetchCareProfile = useCallback(async () => {
+    if (!isDoctor) return
+    try {
+      setProfileLoading(true)
+      const res = await consultationApi.getMyDoctorCareProfile()
+      setCareProfile(res.data)
+      setHasProfile(true)
+    } catch (err: unknown) {
+      const error = err as { response?: { status?: number; data?: { code?: number } } }
+      const errCode = error.response?.data?.code
+      if (errCode === 4013 || error.response?.status === 404) {
+        // Missing care profile - Expected for newly assigned doctors
+        setCareProfile(null)
+        setHasProfile(false)
+        setDispatchStatus(null)
+        setCurrentOffer(null)
+      } else {
+        setHasProfile(false)
+        toast({
+          variant: "destructive",
+          description: readError(err, "Không thể tải hồ sơ trực của bác sĩ."),
+        })
+      }
+    } finally {
+      setProfileLoading(false)
+    }
+  }, [isDoctor, toast])
+
+  // Fetch Dispatch Status & Current Offer (ONLY if hasProfile is true)
+  const fetchDispatchAndOffer = useCallback(async () => {
+    if (!isDoctor || !hasProfile) return
+    try {
+      // 1. Fetch dispatch status
+      const statusRes = await consultationApi.getDoctorDispatchStatus()
+      const newStatus = statusRes.data
+      setDispatchStatus(newStatus)
+
+      // 2. Fetch current offer
+      try {
+        const offerRes = await consultationApi.getDoctorCurrentOffer()
+        setCurrentOffer(offerRes.data)
+      } catch (err: unknown) {
+        const error = err as { response?: { status?: number } }
+        if (error.response?.status === 404) {
+          setCurrentOffer(null)
+        }
+      }
+
+      // If doctor is BUSY and has a busySessionId, refresh sessions if needed
+      if (newStatus.dispatchStatus === "BUSY" && newStatus.busySessionId) {
+        // Session is live, reload sessions list to include the newly created session
+        void loadSessions(1, true)
+      }
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { code?: number } } }
+      if (error.response?.data?.code === 4013) {
+        setHasProfile(false)
+        setDispatchStatus(null)
+        setCurrentOffer(null)
+      }
+    }
+  }, [isDoctor, hasProfile, loadSessions])
+
+  // Initial load
   useEffect(() => {
     if (isDoctor) {
       void loadSessions(1, true)
+      void fetchCareProfile()
     }
-  }, [isDoctor, loadSessions])
+  }, [isDoctor, loadSessions, fetchCareProfile])
+
+  // Trigger initial dispatch fetch when profile becomes available
+  useEffect(() => {
+    if (isDoctor && hasProfile) {
+      void fetchDispatchAndOffer()
+    }
+  }, [isDoctor, hasProfile, fetchDispatchAndOffer])
+
+  // 4s polling ONLY when doctor is active AND hasProfile is true
+  useEffect(() => {
+    if (!isDoctor || !hasProfile) return
+
+    const timer = setInterval(() => {
+      if (isPollingRef.current) return
+      isPollingRef.current = true
+      fetchDispatchAndOffer().finally(() => {
+        isPollingRef.current = false
+      })
+    }, 4000)
+
+    return () => clearInterval(timer)
+  }, [isDoctor, hasProfile, fetchDispatchAndOffer])
+
+  // Handler: toggle dispatch status AVAILABLE <-> UNAVAILABLE
+  const handleToggleDispatchStatus = async (newStatus: "AVAILABLE" | "UNAVAILABLE") => {
+    try {
+      setActionLoading(true)
+      const res = await consultationApi.updateDoctorDispatchStatus(newStatus)
+      setDispatchStatus(res.data)
+      toast({
+        variant: "default",
+        description:
+          newStatus === "AVAILABLE"
+            ? "Đã kích hoạt chế độ sẵn sàng nhận bệnh."
+            : "Đã tạm dừng nhận bệnh mới.",
+      })
+    } catch (error) {
+      toast({ variant: "destructive", description: readError(error, "Không thể cập nhật trạng thái trực.") })
+    } finally {
+      setActionLoading(false)
+    }
+  }
+
+  // Handler: toggle stop after current session
+  const handleToggleStopAfterCurrentSession = async (stop: boolean) => {
+    try {
+      const res = await consultationApi.updateDoctorDispatchPreferences(stop)
+      setDispatchStatus(res.data)
+      toast({
+        variant: "default",
+        description: stop
+          ? "Đã bật: Sẽ chuyển sang nghỉ trực sau khi kết thúc phiên khám hiện tại."
+          : "Đã tắt: Sẽ tiếp tục nhận ca sau khi kết thúc phiên.",
+      })
+    } catch (error) {
+      toast({ variant: "destructive", description: readError(error, "Không thể cập nhật tùy chọn.") })
+    }
+  }
+
+  // Handler: Accept consultation offer
+  const handleAcceptOffer = async (offerId: string) => {
+    try {
+      setActionLoading(true)
+      const res = await consultationApi.acceptDoctorOffer(offerId)
+      setCurrentOffer(res.data)
+      toast({
+        variant: "default",
+        description: "Đã tiếp nhận ca tư vấn! Đang chờ người bệnh xác nhận để bắt đầu phiên...",
+      })
+      // Immediately refetch dispatch status
+      await fetchDispatchAndOffer()
+    } catch (error) {
+      toast({ variant: "destructive", description: readError(error, "Không thể tiếp nhận ca khám hoặc lời mời đã hết hạn.") })
+      await fetchDispatchAndOffer()
+    } finally {
+      setActionLoading(false)
+    }
+  }
+
+  // Handler: Reject consultation offer
+  const handleRejectOffer = async (offerId: string) => {
+    try {
+      setActionLoading(true)
+      await consultationApi.rejectDoctorOffer(offerId)
+      setCurrentOffer(null)
+      toast({
+        variant: "default",
+        description: "Đã từ chối ca tư vấn. Ca khám sẽ được chuyển tiếp cho bác sĩ khác trong hàng đợi.",
+      })
+      await fetchDispatchAndOffer()
+    } catch (error) {
+      toast({ variant: "destructive", description: readError(error, "Không thể từ chối ca khám.") })
+      await fetchDispatchAndOffer()
+    } finally {
+      setActionLoading(false)
+    }
+  }
 
   if (!isDoctor) {
     return (
@@ -101,12 +289,44 @@ export default function DoctorSessionsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      {/* 1. Doctor Dispatch Header */}
+      <DoctorDispatchHeader
+        dispatchStatus={dispatchStatus}
+        loading={loading}
+        actionLoading={actionLoading}
+        hasProfile={hasProfile}
+        profileLoading={profileLoading}
+        onToggleStatus={handleToggleDispatchStatus}
+        onToggleStopAfterCurrentSession={handleToggleStopAfterCurrentSession}
+        onRetryProfile={fetchCareProfile}
+        onOpenScheduleDialog={() => setIsScheduleOpen(true)}
+      />
+
+      {/* 2. Current Offer Card if any */}
+      {currentOffer && (
+        <DoctorOfferCard
+          offer={currentOffer}
+          actionLoading={actionLoading}
+          onAccept={handleAcceptOffer}
+          onReject={handleRejectOffer}
+          onOfferExpired={fetchDispatchAndOffer}
+        />
+      )}
+
+      {/* 3. Session list header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2">
         <div>
           <h2 className="text-2xl font-bold tracking-tight text-neutral-900">Phiên chăm sóc (Active Care)</h2>
           <p className="text-neutral-500">Quản lý các phiên chăm sóc và tư vấn cho bệnh nhân.</p>
         </div>
-        <Button variant="outline" onClick={() => loadSessions(1, true)} disabled={loading}>
+        <Button
+          variant="outline"
+          onClick={() => {
+            void loadSessions(1, true)
+            void fetchDispatchAndOffer()
+          }}
+          disabled={loading || actionLoading}
+        >
           <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
           Làm mới
         </Button>
@@ -138,7 +358,14 @@ export default function DoctorSessionsPage() {
                       ID: {session.id}
                     </CardDescription>
                   </div>
-                  {getSessionStatusBadge(session.status, session.meaningfulCareOccurred)}
+                  <div className="flex items-center gap-2">
+                    {session.status === "COMPLETED" && session.summaryClosureStatus === "SUMMARY_PENDING" && (
+                      <Badge className="bg-amber-500 hover:bg-amber-600 text-white font-medium text-xs">
+                        Cần tổng kết
+                      </Badge>
+                    )}
+                    {getSessionStatusBadge(session.status, session.meaningfulCareOccurred)}
+                  </div>
                 </div>
               </CardHeader>
               <CardContent className="pb-3 space-y-4">
@@ -227,9 +454,22 @@ export default function DoctorSessionsPage() {
         <DoctorSessionDetailDialog 
           sessionId={selectedSessionId} 
           open={!!selectedSessionId} 
-          onOpenChange={(open) => !open && setSelectedSessionId(null)} 
+          onOpenChange={handleDoctorDetailOpenChange} 
+          onSessionRefreshed={() => {
+            void loadSessions(1, true)
+            void fetchDispatchAndOffer()
+          }}
         />
       )}
+
+      <DoctorScheduleDialog
+        isOpen={isScheduleOpen}
+        onClose={() => setIsScheduleOpen(false)}
+        currentProfile={careProfile}
+        onSuccess={() => {
+          void fetchCareProfile()
+        }}
+      />
     </div>
   )
 }

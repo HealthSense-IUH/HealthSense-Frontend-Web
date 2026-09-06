@@ -145,12 +145,19 @@ export function RequestsPanel({
               <TableRow key={request.id}>
                 <TableCell>
                   <div className="flex flex-col gap-1">
-                    <span className="font-medium">#{request.id}</span>
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <span className="font-medium">#{request.id}</span>
+                      {request.flowType === "QUEUE_DISPATCH_V1" && (
+                        <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-primary/10 text-primary font-bold">
+                          Hàng đợi {request.queueNumber ? `#${String(request.queueNumber).padStart(3, "0")}` : ""}
+                        </span>
+                      )}
+                    </div>
                     <span className="max-w-64 text-xs text-neutral-500 whitespace-pre-wrap">
                       {request.reasonForCare || request.reason || "Yêu cầu tư vấn"}
                     </span>
                     
-                    {request.status === "WAITING_ACCEPTANCE" && (
+                    {request.flowType !== "QUEUE_DISPATCH_V1" && request.status === "WAITING_ACCEPTANCE" && (
                       <div className="mt-1 text-xs text-amber-800 bg-amber-50 dark:bg-amber-950/20 p-2 rounded-md border border-amber-200">
                         Bác sĩ đã được giữ chỗ. Vui lòng xem và xác nhận Thỏa thuận dịch vụ để tiến hành thanh toán.
                         {request.paymentDeadline && (
@@ -161,7 +168,7 @@ export function RequestsPanel({
                       </div>
                     )}
 
-                    {request.status === "WAITING_PAYMENT" && (
+                    {request.flowType !== "QUEUE_DISPATCH_V1" && request.status === "WAITING_PAYMENT" && (
                       <div className="mt-1 text-xs text-blue-700 bg-blue-50 dark:bg-blue-950/20 p-2 rounded-md border border-blue-200">
                         Đã xác nhận thỏa thuận. Đang chờ thanh toán.
                         {request.paymentDeadline && (
@@ -187,12 +194,12 @@ export function RequestsPanel({
                 </TableCell>
                 <TableCell>#{request.memberId}</TableCell>
                 <TableCell>{request.healthRecordId ? `#${request.healthRecordId}` : "-"}</TableCell>
-                <TableCell>{statusBadge(request.status)}</TableCell>
-                <TableCell>{request.assignedDoctorId ?? request.preferredDoctorId ?? "-"}</TableCell>
+                <TableCell>{statusBadge(request.queueStatus || request.status)}</TableCell>
+                <TableCell>{request.assignedDoctorId ? `#${request.assignedDoctorId}` : (request.preferredDoctorId ? `#${request.preferredDoctorId}` : "-")}</TableCell>
                 <TableCell>{formatDate(request.createdAt)}</TableCell>
                 <TableCell className="text-right">
                   <div className="flex justify-end gap-2 flex-wrap">
-                    {!isAdmin && request.status === "WAITING_ACCEPTANCE" && onReviewAgreement && (
+                    {!isAdmin && request.flowType !== "QUEUE_DISPATCH_V1" && request.status === "WAITING_ACCEPTANCE" && onReviewAgreement && (
                       <Button
                         size="sm"
                         onClick={() => onReviewAgreement(request)}
@@ -204,14 +211,14 @@ export function RequestsPanel({
                       </Button>
                     )}
 
-                    {!isAdmin && request.status === "WAITING_PAYMENT" && onInitiatePayment && (
+                    {!isAdmin && request.flowType !== "QUEUE_DISPATCH_V1" && request.status === "WAITING_PAYMENT" && onInitiatePayment && (
                       <Button size="sm" onClick={() => onInitiatePayment(request.id)} disabled={loading} className="gap-1.5">
                         <CreditCard className="h-4 w-4" />
                         Thanh toán
                       </Button>
                     )}
 
-                    {!isAdmin && request.status === "NEED_MORE_INFO" && onSubmitMoreInfo && (
+                    {!isAdmin && request.flowType !== "QUEUE_DISPATCH_V1" && request.status === "NEED_MORE_INFO" && onSubmitMoreInfo && (
                       <Button size="sm" onClick={() => onSubmitMoreInfo(request)} disabled={loading}>
                         Bổ sung thông tin
                       </Button>
@@ -223,7 +230,7 @@ export function RequestsPanel({
                       </Button>
                     )}
 
-                    {!isAdmin && ["PENDING", "PENDING_REVIEW", "NEED_MORE_INFO", "WAITING_ACCEPTANCE", "WAITING_PAYMENT"].includes(request.status) && (
+                    {!isAdmin && (request.flowType === "QUEUE_DISPATCH_V1" ? request.status === "QUEUED" : ["PENDING", "PENDING_REVIEW", "NEED_MORE_INFO", "WAITING_ACCEPTANCE", "WAITING_PAYMENT"].includes(request.status)) && (
                       <Button
                         variant="outline"
                         size="sm"
@@ -233,7 +240,7 @@ export function RequestsPanel({
                           }
                         }}
                         disabled={loading}
-                        className="text-neutral-600 hover:text-red-600 hover:border-red-300"
+                        className="text-neutral-600 hover:text-red-600 hover:border-red-200"
                       >
                         Hủy yêu cầu
                       </Button>

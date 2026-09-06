@@ -12,6 +12,7 @@ import { UserTable } from "@/pages/app/management/users/components/user-table"
 import { UserFormModal } from "@/pages/app/management/users/components/user-form-modal"
 import { UserDetailDrawer } from "@/pages/app/management/users/components/user-detail-drawer"
 import { UserDeleteDialog } from "@/pages/app/management/users/components/user-delete-dialog"
+import { DoctorCareProfileDialog } from "@/pages/app/general/consultations/components/doctor-care-profile-dialog"
 
 function normalizeUserPage(pageData: UserPageResponse | undefined, selectedRole: UserRole, size: number) {
   const serverList = pageData?.content ?? pageData?.items ?? []
@@ -55,6 +56,7 @@ export default function UserManagementPage() {
   const [isFormOpen, setIsFormOpen] = useState(false)
   const [isDetailOpen, setIsDetailOpen] = useState(false)
   const [isDeleteOpen, setIsDeleteOpen] = useState(false)
+  const [careProfileDoctorId, setCareProfileDoctorId] = useState<string | null>(null)
 
   const fetchUsers = useCallback(async () => {
     if (!isAuthorized) return
@@ -314,6 +316,7 @@ export default function UserManagementPage() {
           onEdit={handleOpenEdit}
           onDelete={handleOpenDelete}
           onFakeRecord={handleFakeRecord}
+          onManageCareProfile={(user) => setCareProfileDoctorId(String(user.id))}
         />
       </section>
 
@@ -344,6 +347,20 @@ export default function UserManagementPage() {
         onConfirm={handleDeleteConfirm}
         user={targetUser}
         loading={actionLoading}
+      />
+
+      <DoctorCareProfileDialog
+        open={Boolean(careProfileDoctorId)}
+        onOpenChange={(open) => {
+          if (!open) setCareProfileDoctorId(null)
+        }}
+        doctorId={careProfileDoctorId}
+        onSuccess={() => {
+          setStatusAlert({
+            type: "success",
+            text: "Đã cập nhật hồ sơ điều phối và lịch tư vấn của bác sĩ thành công.",
+          })
+        }}
       />
     </div>
   )

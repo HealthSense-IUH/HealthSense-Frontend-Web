@@ -18,6 +18,9 @@ import type {
   CareServicePackage,
   ConsultationRequestReviewResponse,
   CareTerminationReason,
+  CurrentQueueStateResponse,
+  DoctorDispatchStatusResponse,
+  DoctorConsultationOfferResponse,
 } from "@/types/consultation"
 
 export type AlertState = {
@@ -117,6 +120,13 @@ export function useConsultationsLogic() {
   const [healthRecords, setHealthRecords] = useState<HealthRecordItem[]>([])
   const [packages, setPackages] = useState<CareServicePackage[]>([])
   const [requests, setRequests] = useState<ConsultationRequestItem[]>([])
+  const [currentQueueState, setCurrentQueueState] = useState<CurrentQueueStateResponse | null>(null)
+  const [doctorDispatchStatus, setDoctorDispatchStatus] = useState<DoctorDispatchStatusResponse | null>(null)
+  const [doctorCurrentOffer, setDoctorCurrentOffer] = useState<DoctorConsultationOfferResponse | null>(null)
+  const [doctorCareProfile, setDoctorCareProfile] = useState<any | null>(null)
+  const [doctorProfileLoading, setDoctorProfileLoading] = useState(false)
+  const [hasDoctorProfile, setHasDoctorProfile] = useState(false)
+  const [isDoctorScheduleOpen, setIsDoctorScheduleOpen] = useState(false)
   const [sessions, setSessions] = useState<ConsultationSessionItem[]>([])
   const [selectedSession, setSelectedSession] = useState<ConsultationSessionItem | null>(null)
   const [messages, setMessages] = useState<ConsultationMessageItem[]>([])
@@ -168,7 +178,7 @@ export function useConsultationsLogic() {
   const [isAdminRequestDetailOpen, setIsAdminRequestDetailOpen] = useState(false)
   const [isDoctorCandidatesOpen, setIsDoctorCandidatesOpen] = useState(false)
   const [isDoctorCareProfileOpen, setIsDoctorCareProfileOpen] = useState(false)
-  const [targetDoctorId, setTargetDoctorId] = useState<number | string | null>(null)
+  const [targetDoctorId, setTargetDoctorId] = useState<string | null>(null)
   const [reservingDoctorId, setReservingDoctorId] = useState<number | string | null>(null)
   
   const [isMoreInfoDialogOpen, setIsMoreInfoDialogOpen] = useState(false)
@@ -202,12 +212,85 @@ export function useConsultationsLogic() {
     handleIncomingMessage
   )
 
-  const loadData = useCallback(async () => {
-    setLoading(true)
+  const fetchCurrentQueueState = useCallback(async () => {
+    if (!isMember) {
+      setCurrentQueueState(null)
+      return null
+    }
+    try {
+      const res = await consultationApi.getCurrentQueueState()
+      const data = res.data
+      setCurrentQueueState(data)
+      return data
+    } catch (err: any) {
+      const code = err?.response?.data?.code
+      const status = err?.response?.status
+      if (status === 404 || code === 4001) {
+        setCurrentQueueState(null)
+      }
+      return null
+    }
+  }, [isMember])
+
+  const fetchDoctorCareProfile = useCallback(async () => {
+    if (!isDoctor) return
+    try {
+      setDoctorProfileLoading(true)
+      const res = await consultationApi.getMyDoctorCareProfile()
+      setDoctorCareProfile(res.data)
+      setHasDoctorProfile(true)
+    } catch (err: any) {
+      const code = err?.response?.data?.code
+      if (code === 4013 || err?.response?.status === 404) {
+        setDoctorCareProfile(null)
+        setHasDoctorProfile(false)
+        setDoctorDispatchStatus(null)
+        setDoctorCurrentOffer(null)
+      } else {
+        setHasDoctorProfile(false)
+      }
+    } finally {
+      setDoctorProfileLoading(false)
+    }
+  }, [isDoctor])
+
+  const fetchDoctorDispatchAndOffer = useCallback(async () => {
+    if (!isDoctor || !hasDoctorProfile) {
+      if (!isDoctor) {
+        setDoctorDispatchStatus(null)
+        setDoctorCurrentOffer(null)
+      }
+      return
+    }
+    try {
+      const statusRes = await consultationApi.getDoctorDispatchStatus()
+      setDoctorDispatchStatus(statusRes.data)
+
+      try {
+        const offerRes = await consultationApi.getDoctorCurrentOffer()
+        setDoctorCurrentOffer(offerRes.data)
+      } catch (err: any) {
+        if (err?.response?.status === 404) {
+          setDoctorCurrentOffer(null)
+        }
+      }
+    } catch (err: any) {
+      if (err?.response?.data?.code === 4013) {
+        setHasDoctorProfile(false)
+        setDoctorDispatchStatus(null)
+        setDoctorCurrentOffer(null)
+      }
+    }
+  }, [isDoctor, hasDoctorProfile])
+
+  const loadData = useCallback(async (silent = false) => {
+    if (!silent) {
+      setLoading(true)
+    }
     setAlert(null)
     try {
       const shouldLoadRecords = isMember
-      const [requestResponse, sessionResponse, healthRecordResponse, packageResponse] = await Promise.all([
+      const [requestResponse, sessionResponse, healthRecordResponse, packageResponse, queueResponse] = await Promise.all([
         isAdmin
           ? consultationApi.listAdminRequests({ 
               page: 1, 
@@ -231,6 +314,14 @@ export function useConsultationsLogic() {
         isMember
           ? consultationApi.listCareServicePackages({ page: 1, size: 50 })
           : Promise.resolve(null),
+        isMember
+          ? consultationApi.getCurrentQueueState().catch((err) => {
+              if (err?.response?.status === 404 || err?.response?.data?.code === 4001) {
+                return { data: null }
+              }
+              return { data: null }
+            })
+          : Promise.resolve(null),
       ])
 
       const loadedSessions = (sessionResponse.data.content ?? []).sort((a, b) => {
@@ -245,25 +336,149 @@ export function useConsultationsLogic() {
         if (timeA !== timeB) return timeB - timeA
         return String(b.id).localeCompare(String(a.id), undefined, { numeric: true })
       })
+      const loadedQueueState = queueResponse?.data ?? null
+      setCurrentQueueState(loadedQueueState)
       setRequests(loadedRequests)
       setSessions(loadedSessions)
       setHealthRecords(healthRecordResponse?.data.content ?? [])
       setPackages(packageResponse?.data.content ?? [])
       setSelectedSession((prev) => {
-        if (prev) {
-          const stillValid = loadedSessions.find((s) => String(s.id) === String(prev.id))
-          if (stillValid) return stillValid
+        let candidate: ConsultationSessionItem | null = null
+        if (loadedQueueState?.phase === "ACTIVE_SESSION" && loadedQueueState.sessionId) {
+          candidate = loadedSessions.find((s) => String(s.id) === String(loadedQueueState.sessionId)) || null
         }
-        return loadedSessions.length > 0 ? loadedSessions[0] : null
+        if (!candidate && prev) {
+          candidate = loadedSessions.find((s) => String(s.id) === String(prev.id)) || null
+        }
+        if (!candidate) {
+          return loadedSessions.length > 0 ? loadedSessions[0] : null
+        }
+        // Preserve referential equality if properties haven't changed to prevent cascading re-renders
+        if (
+          prev &&
+          String(prev.id) === String(candidate.id) &&
+          prev.status === candidate.status &&
+          prev.continuationRound === candidate.continuationRound &&
+          prev.endsAt === candidate.endsAt &&
+          prev.summaryClosureStatus === candidate.summaryClosureStatus
+        ) {
+          return prev
+        }
+        return candidate
       })
+      if (isDoctor) {
+        void fetchDoctorCareProfile()
+      }
     } catch (error) {
       setAlert({ type: "error", text: readError(error, "Failed to load consultation data.") })
       setRequests([])
       setSessions([])
     } finally {
-      setLoading(false)
+      if (!silent) {
+        setLoading(false)
+      }
     }
-  }, [isAdmin, isMember, adminFilters])
+  }, [isAdmin, isMember, isDoctor, adminFilters, fetchDoctorCareProfile])
+
+  // Initial fetch for doctor dispatch when profile becomes active
+  useEffect(() => {
+    if (isDoctor && hasDoctorProfile) {
+      void fetchDoctorDispatchAndOffer()
+    }
+  }, [isDoctor, hasDoctorProfile, fetchDoctorDispatchAndOffer])
+
+  // Polling for Member Queue updates
+  useEffect(() => {
+    if (!isMember) return
+
+    if (currentQueueState?.phase === "QUEUE" || currentQueueState?.phase === "WAITING_CONFIRMATION") {
+      const interval = setInterval(() => {
+        void fetchCurrentQueueState()
+      }, 4000)
+      return () => clearInterval(interval)
+    }
+  }, [isMember, currentQueueState?.phase, fetchCurrentQueueState])
+
+  // Polling for Doctor Dispatch and Offer updates ONLY when hasDoctorProfile is true
+  useEffect(() => {
+    if (!isDoctor || !hasDoctorProfile) return
+
+    const interval = setInterval(() => {
+      void fetchDoctorDispatchAndOffer()
+    }, 4000)
+    return () => clearInterval(interval)
+  }, [isDoctor, hasDoctorProfile, fetchDoctorDispatchAndOffer])
+
+  // Doctor Action Handlers
+  const handleToggleDoctorDispatchStatus = useCallback(async (newStatus: "AVAILABLE" | "UNAVAILABLE") => {
+    try {
+      setActionLoading(true)
+      const res = await consultationApi.updateDoctorDispatchStatus(newStatus)
+      setDoctorDispatchStatus(res.data)
+      toast({
+        variant: "default",
+        description:
+          newStatus === "AVAILABLE"
+            ? "Đã kích hoạt chế độ sẵn sàng nhận bệnh."
+            : "Đã tạm dừng nhận bệnh mới.",
+      })
+    } catch (error) {
+      toast({ variant: "destructive", description: readError(error, "Không thể cập nhật trạng thái trực.") })
+    } finally {
+      setActionLoading(false)
+    }
+  }, [toast])
+
+  const handleToggleDoctorStopAfterCurrentSession = useCallback(async (stop: boolean) => {
+    try {
+      const res = await consultationApi.updateDoctorDispatchPreferences(stop)
+      setDoctorDispatchStatus(res.data)
+      toast({
+        variant: "default",
+        description: stop
+          ? "Đã bật: Sẽ chuyển sang nghỉ trực sau khi kết thúc phiên khám hiện tại."
+          : "Đã tắt: Sẽ tiếp tục nhận ca sau khi kết thúc phiên.",
+      })
+    } catch (error) {
+      toast({ variant: "destructive", description: readError(error, "Không thể cập nhật tùy chọn.") })
+    }
+  }, [toast])
+
+  const handleAcceptDoctorOffer = useCallback(async (offerId: string) => {
+    try {
+      setActionLoading(true)
+      const res = await consultationApi.acceptDoctorOffer(offerId)
+      setDoctorCurrentOffer(res.data)
+      toast({
+        variant: "default",
+        description: "Đã tiếp nhận ca tư vấn! Đang chờ người bệnh xác nhận để bắt đầu phiên...",
+      })
+      await fetchDoctorDispatchAndOffer()
+    } catch (error) {
+      toast({ variant: "destructive", description: readError(error, "Không thể tiếp nhận ca khám hoặc lời mời đã hết hạn.") })
+      await fetchDoctorDispatchAndOffer()
+    } finally {
+      setActionLoading(false)
+    }
+  }, [fetchDoctorDispatchAndOffer, toast])
+
+  const handleRejectDoctorOffer = useCallback(async (offerId: string) => {
+    try {
+      setActionLoading(true)
+      await consultationApi.rejectDoctorOffer(offerId)
+      setDoctorCurrentOffer(null)
+      toast({
+        variant: "default",
+        description: "Đã từ chối ca tư vấn. Ca khám sẽ được chuyển tiếp cho bác sĩ khác trong hàng đợi.",
+      })
+      await fetchDoctorDispatchAndOffer()
+    } catch (error) {
+      toast({ variant: "destructive", description: readError(error, "Không thể từ chối ca khám.") })
+      await fetchDoctorDispatchAndOffer()
+    } finally {
+      setActionLoading(false)
+    }
+  }, [fetchDoctorDispatchAndOffer, toast])
 
   // Clear stale state when the authenticated user or role changes
   const previousUserIdRef = useRef<string | number | undefined>(userSession?.userId)
@@ -279,6 +494,9 @@ export function useConsultationsLogic() {
 
       // Reset stale consultation state
       setSelectedSession(null)
+      setCurrentQueueState(null)
+      setDoctorDispatchStatus(null)
+      setDoctorCurrentOffer(null)
       setMessages([])
       setRequests([])
       setSessions([])
@@ -357,15 +575,17 @@ export function useConsultationsLogic() {
     return () => {
       mounted = false
     }
-  }, [selectedSession, isAdmin, userSession?.userId, isMember, isDoctor, loadData])
+  }, [selectedSession?.id, selectedSession?.status, isAdmin, userSession?.userId, isMember, isDoctor])
 
+  const lastMarkedMessageIdRef = useRef<string | number | null>(null)
   useEffect(() => {
-    if (isAdmin) return
+    if (isAdmin || !selectedSession || selectedSession.status !== "ACTIVE") return
     const lastMessage = sortedMessages.at(-1)
-    if (selectedSession?.status === "ACTIVE" && lastMessage?.id) {
+    if (lastMessage?.id && lastMarkedMessageIdRef.current !== lastMessage.id) {
+      lastMarkedMessageIdRef.current = lastMessage.id
       void consultationApi.markRead(selectedSession.id, lastMessage.id).catch(() => undefined)
     }
-  }, [selectedSession, sortedMessages, isAdmin])
+  }, [selectedSession?.id, selectedSession?.status, sortedMessages.length, isAdmin])
 
   const handleLoadMoreMessages = useCallback(async () => {
     if (isAdmin || !selectedSession || loadingMoreMessages || !hasMoreMessages || messages.length === 0) {
@@ -401,12 +621,6 @@ export function useConsultationsLogic() {
     setActionLoading(true)
     setAlert(null)
     try {
-      const packageIdStr = requestForm.packageId?.trim()
-      if (!packageIdStr) {
-        setAlert({ type: "error", text: "Vui lòng chọn gói dịch vụ." })
-        setActionLoading(false)
-        return
-      }
       if (!requestForm.reasonForCare.trim()) {
         setAlert({ type: "error", text: "Vui lòng nhập lý do đăng ký chăm sóc." })
         setActionLoading(false)
@@ -418,17 +632,14 @@ export function useConsultationsLogic() {
         return
       }
 
-      await consultationApi.createRequest({
-        packageId: packageIdStr,
+      const res = await consultationApi.createQueueRequest({
         reasonForCare: requestForm.reasonForCare.trim(),
         currentConcern: requestForm.currentConcern.trim(),
-        careGoal: requestForm.careGoal.trim() || null,
-        memberNote: requestForm.memberNote.trim() || null,
-        relevantSelfReportedContext: requestForm.relevantSelfReportedContext.trim() || null,
-        selectedHealthRecordIds: requestForm.selectedHealthRecordIds.length > 0 ? requestForm.selectedHealthRecordIds : undefined,
-        preferredDoctorId: normalizeOptionalId(requestForm.preferredDoctorId) || null,
-        healthRecordId: requestForm.selectedHealthRecordIds[0] ? requestForm.selectedHealthRecordIds[0] : null,
-        reason: requestForm.reasonForCare.trim(),
+        careGoal: requestForm.careGoal.trim() || undefined,
+        memberNote: requestForm.memberNote.trim() || undefined,
+        relevantSelfReportedContext: requestForm.relevantSelfReportedContext.trim() || undefined,
+        selectedHealthRecordIds:
+          requestForm.selectedHealthRecordIds.length > 0 ? requestForm.selectedHealthRecordIds : undefined,
       })
 
       setRequestForm({
@@ -443,7 +654,13 @@ export function useConsultationsLogic() {
         healthRecordId: "",
         reason: "",
       })
-      setAlert({ type: "success", text: "Đã gửi yêu cầu tư vấn thành công. Vui lòng chờ điều phối viên xét duyệt." })
+      const queueNumber = res.data?.queueNumber
+      const queueNumberStr = queueNumber ? ` #${String(queueNumber).padStart(3, "0")}` : ""
+      setAlert({
+        type: "success",
+        text: `Đã vào hàng đợi tư vấn thành công. Số thứ tự của bạn:${queueNumberStr}.`,
+      })
+      await fetchCurrentQueueState()
       await loadData()
       if (onSuccess) {
         onSuccess()
@@ -455,12 +672,52 @@ export function useConsultationsLogic() {
     }
   }
 
+  async function handleConfirmQueue(offerId: string) {
+    if (!currentQueueState) return
+    setActionLoading(true)
+    setAlert(null)
+    try {
+      const res = await consultationApi.confirmQueueRequest(currentQueueState.requestId, { offerId })
+      const session = res.data
+      setAlert({ type: "success", text: "Đã xác nhận thành công. Phiên tư vấn đã được kích hoạt!" })
+      toast({
+        title: "Kích hoạt phiên thành công",
+        description: `Phiên tư vấn #${session.id} đã bắt đầu.`,
+      })
+      await fetchCurrentQueueState()
+      await loadData()
+      setSelectedSession(session)
+    } catch (error) {
+      setAlert({ type: "error", text: readError(error, "Không thể xác nhận lượt tư vấn.") })
+      await fetchCurrentQueueState()
+    } finally {
+      setActionLoading(false)
+    }
+  }
+
+  async function handleCancelQueue(requestId: string | number) {
+    setActionLoading(true)
+    setAlert(null)
+    try {
+      await consultationApi.cancelQueueRequest(requestId)
+      setAlert({ type: "success", text: "Đã rời khỏi hàng đợi tư vấn." })
+      setCurrentQueueState(null)
+      await loadData()
+    } catch (error) {
+      setAlert({ type: "error", text: readError(error, "Không thể hủy lượt chờ tư vấn.") })
+      await fetchCurrentQueueState()
+    } finally {
+      setActionLoading(false)
+    }
+  }
+
   async function handleCancelRequest(requestId: string | number) {
     setActionLoading(true)
     setAlert(null)
     try {
       await consultationApi.cancelRequest(requestId)
       setAlert({ type: "success", text: "Đã hủy yêu cầu tư vấn." })
+      await fetchCurrentQueueState()
       await loadData()
     } catch (error) {
       setAlert({ type: "error", text: readError(error, "Không thể hủy yêu cầu tư vấn.") })
@@ -591,7 +848,7 @@ export function useConsultationsLogic() {
     }, 150)
   }
 
-  function openDoctorCareProfile(doctorId: number | string) {
+  function openDoctorCareProfile(doctorId: string) {
     setTargetDoctorId(doctorId)
     setIsDoctorCareProfileOpen(true)
   }
@@ -739,13 +996,13 @@ export function useConsultationsLogic() {
     }
   }
 
-  async function handleSendMessage(event: FormEvent<HTMLFormElement>) {
+  async function handleSendMessage(event: FormEvent<HTMLFormElement>, contentOverride?: string) {
     event.preventDefault()
     if (!selectedSession || selectedSession.status !== "ACTIVE") {
       return
     }
 
-    const content = messageDraft.trim()
+    const content = (contentOverride !== undefined ? contentOverride : messageDraft).trim()
     const fileUrl = attachmentUrl.trim()
     if (!content && !fileUrl) {
       return
@@ -868,8 +1125,25 @@ export function useConsultationsLogic() {
     setTerminationReason,
     meaningfulCareOccurred,
     setMeaningfulCareOccurred,
+    currentQueueState,
+    fetchCurrentQueueState,
+    doctorDispatchStatus,
+    doctorCurrentOffer,
+    fetchDoctorDispatchAndOffer,
+    doctorCareProfile,
+    doctorProfileLoading,
+    hasDoctorProfile,
+    isDoctorScheduleOpen,
+    setIsDoctorScheduleOpen,
+    fetchDoctorCareProfile,
+    handleToggleDoctorDispatchStatus,
+    handleToggleDoctorStopAfterCurrentSession,
+    handleAcceptDoctorOffer,
+    handleRejectDoctorOffer,
     loadData,
     handleCreateRequest,
+    handleConfirmQueue,
+    handleCancelQueue,
     handleCancelRequest,
     handleCreateAdminSession,
     openApproveDialog,

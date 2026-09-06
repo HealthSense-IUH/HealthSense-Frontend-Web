@@ -1,3 +1,4 @@
+import { memo } from "react"
 import { Search, User } from "lucide-react"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { cn } from "@/lib/utils"
@@ -12,7 +13,7 @@ interface ChatSidebarProps {
   onSelectSession: (session: ConsultationSessionItem) => void
 }
 
-export function ChatSidebar({ sessions, selectedSession, isDoctor, isMember, onSelectSession }: ChatSidebarProps) {
+export const ChatSidebar = memo(function ChatSidebar({ sessions, selectedSession, isDoctor, isMember, onSelectSession }: ChatSidebarProps) {
   return (
     <div className="flex w-full md:w-[320px] lg:w-[360px] flex-shrink-0 flex-col border-r border-border bg-background relative h-full">
       <div className="border-b border-border/50 px-5 py-4 bg-background">
@@ -81,4 +82,4 @@ export function ChatSidebar({ sessions, selectedSession, isDoctor, isMember, onS
       </ScrollArea>
     </div>
   )
-}
+})

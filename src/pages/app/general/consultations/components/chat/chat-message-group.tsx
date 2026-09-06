@@ -1,3 +1,4 @@
+import { memo } from "react"
 import { cn } from "@/lib/utils"
 import { ChatMessageBubble } from "./chat-message-bubble"
 import { formatMessageTime } from "@/lib"
@@ -10,7 +11,7 @@ interface ChatMessageGroupProps {
   isMember: boolean
 }
 
-export function ChatMessageGroup({ group, currentUserId, isDoctor, isMember }: ChatMessageGroupProps) {
+export const ChatMessageGroup = memo(function ChatMessageGroup({ group, currentUserId, isDoctor, isMember }: ChatMessageGroupProps) {
   // Robust check based on the recent bugfix
   const mine = String(group.senderId) === String(currentUserId) || 
                (isDoctor && group.senderRole === "DOCTOR") || 
@@ -65,4 +66,4 @@ export function ChatMessageGroup({ group, currentUserId, isDoctor, isMember }: C
       </div>
     </div>
   )
-}
+})

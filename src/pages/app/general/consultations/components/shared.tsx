@@ -31,6 +31,16 @@ export function statusBadge(status: string) {
       return <Badge variant="outline" className="bg-amber-50 text-amber-800 border-amber-300">Chờ xác nhận thỏa thuận</Badge>
     case "WAITING_PAYMENT":
       return <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">Chờ thanh toán</Badge>
+    case "QUEUED":
+      return <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">Đang trong hàng đợi</Badge>
+    case "WAITING":
+      return <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">Đang chờ bác sĩ</Badge>
+    case "OFFERING_DOCTOR":
+      return <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-300">Đang kết nối bác sĩ</Badge>
+    case "WAITING_MEMBER_CONFIRMATION":
+      return <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-300">Chờ bạn xác nhận</Badge>
+    case "TIMED_OUT":
+      return <Badge variant="destructive" className="bg-neutral-100 text-neutral-600 border-neutral-300">Hết thời gian xác nhận</Badge>
     case "FULFILLED":
       return <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200">Đã kích hoạt tư vấn</Badge>
     case "SCHEDULED":

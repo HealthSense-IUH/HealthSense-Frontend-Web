@@ -6,6 +6,7 @@ import { ChatSidebar } from "./chat-sidebar"
 import { ChatHeader } from "./chat-header"
 import { ChatMessageList } from "./chat-message-list"
 import { ChatComposer } from "./chat-composer"
+import { SessionContinuationBanner } from "./session-continuation-banner"
 
 interface ChatWorkspaceProps {
   sessions: ConsultationSessionItem[]
@@ -21,9 +22,10 @@ interface ChatWorkspaceProps {
   isMember: boolean
   onSelectSession: (session: ConsultationSessionItem) => void
   onMessageChange: (value: string) => void
-  onSubmit: (event: FormEvent<HTMLFormElement>) => void
+  onSubmit: (event: FormEvent<HTMLFormElement>, contentOverride?: string) => void
   onLoadMore?: () => void
   isOutsideSupportHours?: boolean
+  onSessionRefreshed?: () => void
 }
 
 export function ChatWorkspace({
@@ -43,6 +45,7 @@ export function ChatWorkspace({
   onSubmit,
   onLoadMore,
   isOutsideSupportHours,
+  onSessionRefreshed,
 }: ChatWorkspaceProps) {
   const isCompleted = selectedSession?.status === "COMPLETED"
   const readOnlyMode = isCompleted || isOutsideSupportHours
@@ -70,6 +73,14 @@ export function ChatWorkspace({
               session={selectedSession} 
               isDoctor={isDoctor}
               isMember={isMember}
+              onSessionRefreshed={onSessionRefreshed}
+            />
+
+            <SessionContinuationBanner
+              session={selectedSession}
+              isDoctor={isDoctor}
+              isMember={isMember}
+              onSessionRefreshed={onSessionRefreshed || (() => {})}
             />
             
             <ChatMessageList 

@@ -15,6 +15,8 @@ import {
 import { consultationApi } from "@/services"
 import type { ConsultationFinalSummaryResponse } from "@/types/consultation"
 import { formatDate } from "./shared"
+import { useAppShell } from "@/components/layout/app-shell-context"
+import { USER_ROLES } from "@/constants"
 
 interface MemberFinalSummaryDialogProps {
   sessionId: string | number
@@ -29,13 +31,19 @@ function readError(error: unknown, fallback: string) {
   return err.response?.data?.message || err.message || fallback
 }
 
-export function MemberFinalSummaryDialog({ sessionId, open, onOpenChange, isAdminView = false }: MemberFinalSummaryDialogProps) {
+export function MemberFinalSummaryDialog({ sessionId, open, onOpenChange, isAdminView }: MemberFinalSummaryDialogProps) {
+  const { effectiveRole } = useAppShell()
+  const isStaff = isAdminView !== undefined
+    ? (isAdminView && (effectiveRole === USER_ROLES.ADMIN || effectiveRole === USER_ROLES.SUPER_ADMIN || effectiveRole === USER_ROLES.CARE_COORDINATOR))
+    : (effectiveRole === USER_ROLES.ADMIN || effectiveRole === USER_ROLES.SUPER_ADMIN || effectiveRole === USER_ROLES.CARE_COORDINATOR)
+  const isDoctor = effectiveRole === USER_ROLES.DOCTOR
+
   const [summary, setSummary] = useState<ConsultationFinalSummaryResponse | null>(null)
   const [loading, setLoading] = useState(false)
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
 
   useEffect(() => {
-    if (!open) {
+    if (!open || !sessionId) {
       setSummary(null)
       setErrorMsg(null)
       return
@@ -44,9 +52,11 @@ export function MemberFinalSummaryDialog({ sessionId, open, onOpenChange, isAdmi
     setLoading(true)
     setErrorMsg(null)
     
-    const fetchApi = isAdminView 
+    const fetchApi = isStaff 
       ? consultationApi.getAdminFinalSummary(sessionId)
-      : consultationApi.getMemberFinalSummary(sessionId)
+      : isDoctor
+        ? consultationApi.getDoctorFinalSummary(sessionId)
+        : consultationApi.getMemberFinalSummary(sessionId)
 
     fetchApi
       .then((res) => {
@@ -55,8 +65,16 @@ export function MemberFinalSummaryDialog({ sessionId, open, onOpenChange, isAdmi
       .catch((err) => {
         const status = err?.response?.status
         const code = err?.response?.data?.code
-        if (status === 404 || code === 3000 || code === "3000" || code === "ENTITY_NOT_FOUND") {
+        const msg = String(err?.response?.data?.message || "")
+        if (
+          status === 404 || 
+          code === 3000 || 
+          code === "3000" || 
+          code === "ENTITY_NOT_FOUND" ||
+          msg.toLowerCase().includes("has not been finalized")
+        ) {
           setSummary(null) // Not finalized / not created yet = empty state
+          setErrorMsg(null)
         } else {
           setErrorMsg(readError(err, "Không thể tải tổng kết chăm sóc."))
         }
@@ -64,7 +82,7 @@ export function MemberFinalSummaryDialog({ sessionId, open, onOpenChange, isAdmi
       .finally(() => {
         setLoading(false)
       })
-  }, [sessionId, open, isAdminView])
+  }, [sessionId, open, isStaff, isDoctor])
 
   const isFinalized = summary?.status === "FINALIZED"
 
@@ -90,11 +108,11 @@ export function MemberFinalSummaryDialog({ sessionId, open, onOpenChange, isAdmi
           ) : !summary || !isFinalized ? (
             <div className="flex flex-col items-center justify-center py-10 text-center">
               <Activity className="h-12 w-12 text-muted-foreground/40 mb-3" />
-              <p className="text-foreground font-medium">Bác sĩ chưa hoàn tất tổng kết cho phiên tư vấn này.</p>
+              <p className="text-foreground font-medium">Bác sĩ đang hoàn tất tổng kết phiên tư vấn.</p>
               <p className="text-sm text-muted-foreground mt-1.5 max-w-sm">
-                {isAdminView
+                {isStaff
                   ? "Bản tổng kết chăm sóc sẽ hiển thị tại đây ngay sau khi Bác sĩ phụ trách hoàn tất (Finalize)."
-                  : "Tổng kết y khoa sẽ xuất hiện ở đây sau khi bác sĩ kết thúc quá trình chăm sóc."}
+                  : "Tổng kết y khoa sẽ xuất hiện tại đây ngay sau khi bác sĩ hoàn tất."}
               </p>
             </div>
           ) : (

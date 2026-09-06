@@ -60,7 +60,7 @@ export function ChatHeader({ session, isDoctor, isMember, onSessionRefreshed }: 
         </div>
       </div>
       <div className="flex items-center gap-2">
-        {isMember && session.status === "ACTIVE" && (
+        {isMember && session.status === "ACTIVE" && session.flowType !== "QUEUE_DISPATCH_V1" && (
           <Button
             variant="outline"
             size="sm"

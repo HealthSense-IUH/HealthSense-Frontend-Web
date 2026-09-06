@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import {
   Calendar,
   Clock,
@@ -40,25 +40,50 @@ interface DoctorSessionDetailDialogProps {
   sessionId: string | number
   open: boolean
   onOpenChange: (open: boolean) => void
+  onSessionRefreshed?: () => void
 }
 
-export function DoctorSessionDetailDialog({ sessionId, open, onOpenChange }: DoctorSessionDetailDialogProps) {
+export function DoctorSessionDetailDialog({ sessionId, open, onOpenChange, onSessionRefreshed }: DoctorSessionDetailDialogProps) {
   const [detail, setDetail] = useState<DoctorConsultationDetailResponse | null>(null)
-  const [loading, setLoading] = useState(false)
+  const [activeTab, setActiveTab] = useState("info")
   const { toast } = useToast()
+  const onOpenChangeRef = useRef(onOpenChange)
 
   useEffect(() => {
-    if (!open) return
+    onOpenChangeRef.current = onOpenChange
+  }, [onOpenChange])
+
+  // Reset tab to "info" when opening a new session dialog
+  useEffect(() => {
+    if (open) {
+      setActiveTab("info")
+    }
+  }, [open, sessionId])
+
+  useEffect(() => {
+    if (!open || !sessionId) {
+      setDetail(null)
+      return
+    }
     
-    setLoading(true)
+    let isSubscribed = true
     consultationApi.getDoctorSessionDetail(sessionId)
-      .then(res => setDetail(res.data))
-      .catch((error) => {
-        toast({ variant: "destructive", description: readError(error, "Không thể tải chi tiết phiên chăm sóc.") })
-        onOpenChange(false)
+      .then(res => {
+        if (isSubscribed) {
+          setDetail(res.data)
+        }
       })
-      .finally(() => setLoading(false))
-  }, [sessionId, open, toast, onOpenChange])
+      .catch((error) => {
+        if (isSubscribed) {
+          toast({ variant: "destructive", description: readError(error, "Không thể tải chi tiết phiên chăm sóc.") })
+          onOpenChangeRef.current(false)
+        }
+      })
+
+    return () => {
+      isSubscribed = false
+    }
+  }, [sessionId, open, toast])
 
   const renderSupportSchedule = () => {
     const jsonStr = detail?.session.supportScheduleSnapshotJson
@@ -94,7 +119,7 @@ export function DoctorSessionDetailDialog({ sessionId, open, onOpenChange }: Doc
     }
   }
 
-  if (loading || !detail) {
+  if (!detail) {
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent className="sm:max-w-4xl">
@@ -147,7 +172,7 @@ export function DoctorSessionDetailDialog({ sessionId, open, onOpenChange }: Doc
           </div>
         </DialogHeader>
 
-        <Tabs defaultValue="info" className="mt-4">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-4">
           <TabsList className="grid w-full grid-cols-4 text-xs">
             <TabsTrigger value="info">Thông tin</TabsTrigger>
             <TabsTrigger value="records">Hồ sơ đo</TabsTrigger>
@@ -240,6 +265,13 @@ export function DoctorSessionDetailDialog({ sessionId, open, onOpenChange }: Doc
               sessionId={session.id}
               sessionStatus={session.status}
               meaningfulCareOccurred={session.meaningfulCareOccurred}
+              flowType={session.flowType}
+              summaryDueAt={session.summaryDueAt}
+              summaryClosureStatus={session.summaryClosureStatus}
+              onFinalized={() => {
+                consultationApi.getDoctorSessionDetail(sessionId).then(res => setDetail(res.data)).catch(() => {})
+                onSessionRefreshed?.()
+              }}
             />
           </TabsContent>
         </Tabs>

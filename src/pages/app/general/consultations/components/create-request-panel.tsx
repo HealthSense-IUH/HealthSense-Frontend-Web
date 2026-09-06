@@ -1,11 +1,10 @@
 import { type FormEvent } from "react"
-import { Send, FileText, Activity, AlertCircle, Sparkles } from "lucide-react"
+import { Send, Activity, AlertCircle, Sparkles } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Badge } from "@/components/ui/badge"
@@ -14,14 +13,14 @@ import type { HealthRecordItem, CareServicePackage } from "@/types/consultation"
 import { formatDate } from "./shared"
 
 export interface RequestFormData {
-  packageId: string
+  packageId?: string
   reasonForCare: string
   currentConcern: string
   careGoal: string
   memberNote: string
   relevantSelfReportedContext: string
   selectedHealthRecordIds: string[]
-  preferredDoctorId: string
+  preferredDoctorId?: string
   // legacy fallback
   healthRecordId?: string
   reason?: string
@@ -30,14 +29,13 @@ export interface RequestFormData {
 export function CreateRequestPanel({
   form,
   healthRecords,
-  packages,
   loading,
   onChange,
   onSubmit,
 }: {
   form: RequestFormData
   healthRecords: HealthRecordItem[]
-  packages: CareServicePackage[]
+  packages?: CareServicePackage[]
   loading: boolean
   onChange: (form: RequestFormData) => void
   onSubmit: (event: FormEvent<HTMLFormElement>) => void
@@ -71,65 +69,25 @@ export function CreateRequestPanel({
     })
   }
 
-  const selectedPackage = packages.find((p) => String(p.id) === form.packageId)
-  const isValid = !!form.packageId && !!form.reasonForCare.trim() && !!form.currentConcern.trim()
+  const isValid = !!form.reasonForCare.trim() && !!form.currentConcern.trim()
 
   return (
-    <Card className="shadow-sm border rounded-2xl">
+    <Card className="shadow-sm border rounded-2xl max-w-2xl mx-auto">
       <CardHeader className="border-b bg-muted/10 pb-4">
         <div className="flex items-center gap-3">
           <div className="p-2.5 rounded-xl bg-primary/10 text-primary">
             <Sparkles className="w-5 h-5" />
           </div>
           <div>
-            <CardTitle className="text-xl font-bold">Đăng ký Tư vấn & Chăm sóc 1-1</CardTitle>
+            <CardTitle className="text-xl font-bold">Đăng ký Tư vấn Sức khỏe</CardTitle>
             <CardDescription>
-              Hoàn tất phiếu thông tin sức khỏe ban đầu để điều phối viên ghép nối bác sĩ phù hợp nhất.
+              Yêu cầu của bạn sẽ được xếp vào hàng đợi trực tiếp (FIFO) và ghép nối tự động với bác sĩ đang trực.
             </CardDescription>
           </div>
         </div>
       </CardHeader>
       <CardContent className="p-6">
         <form className="flex flex-col gap-6" onSubmit={onSubmit}>
-          {/* Section 1: Package Selection */}
-          <div className="space-y-3">
-            <Label className="text-sm font-semibold flex items-center gap-1.5">
-              <FileText className="w-4 h-4 text-primary" />
-              Gói dịch vụ chăm sóc <span className="text-red-500">*</span>
-            </Label>
-            <Select
-              required
-              value={form.packageId || ""}
-              onValueChange={(value) => onChange({ ...form, packageId: value })}
-            >
-              <SelectTrigger className="h-11 rounded-xl">
-                <SelectValue placeholder="Chọn gói dịch vụ tư vấn phù hợp">
-                  {selectedPackage
-                    ? `${selectedPackage.name} (${selectedPackage.priceAmount.toLocaleString("vi-VN", { style: "currency", currency: selectedPackage.currency || "VND" })} • ${selectedPackage.durationDays} ngày)`
-                    : undefined}
-                </SelectValue>
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  {packages.map((pkg) => (
-                    <SelectItem key={pkg.id} value={String(pkg.id)}>
-                      {pkg.name} — {pkg.priceAmount.toLocaleString("vi-VN", { style: "currency", currency: pkg.currency || "VND" })} • {pkg.durationDays} ngày
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-
-            {selectedPackage && (
-              <div className="p-3.5 bg-primary/5 border border-primary/20 rounded-xl text-xs text-muted-foreground space-y-1">
-                <div className="font-medium text-foreground">{selectedPackage.name} - {selectedPackage.code}</div>
-                {selectedPackage.description && <p>{selectedPackage.description}</p>}
-                <div className="text-primary font-semibold pt-0.5">
-                  Thời hạn đồng hành: {selectedPackage.durationDays} ngày &bull; Giá: {selectedPackage.priceAmount.toLocaleString("vi-VN", { style: "currency", currency: selectedPackage.currency || "VND" })}
-                </div>
-              </div>
-            )}
-          </div>
 
           {/* Section 2: Health Records Selection */}
           <div className="space-y-3 border-t pt-5">
@@ -236,7 +194,7 @@ export function CreateRequestPanel({
                   value={form.reasonForCare}
                   onChange={(e) => onChange({ ...form, reasonForCare: e.target.value, reason: e.target.value })}
                   className="rounded-xl h-11"
-                  maxLength={500}
+                  maxLength={1000}
                 />
               </div>
 
@@ -252,16 +210,61 @@ export function CreateRequestPanel({
                   value={form.currentConcern}
                   onChange={(e) => onChange({ ...form, currentConcern: e.target.value })}
                   className="rounded-xl resize-none"
-                  maxLength={1000}
+                  maxLength={2000}
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="careGoal" className="text-sm font-semibold">
+                    Mục tiêu tư vấn (Tùy chọn)
+                  </Label>
+                  <Input
+                    id="careGoal"
+                    placeholder="VD: Có kế hoạch theo dõi và cải thiện lối sống..."
+                    value={form.careGoal}
+                    onChange={(e) => onChange({ ...form, careGoal: e.target.value })}
+                    className="rounded-xl h-11"
+                    maxLength={1000}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="memberNote" className="text-sm font-semibold">
+                    Ghi chú thêm (Tùy chọn)
+                  </Label>
+                  <Input
+                    id="memberNote"
+                    placeholder="VD: Tôi thường làm ca tối, huyết áp bình thường..."
+                    value={form.memberNote}
+                    onChange={(e) => onChange({ ...form, memberNote: e.target.value })}
+                    className="rounded-xl h-11"
+                    maxLength={1000}
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="relevantSelfReportedContext" className="text-sm font-semibold">
+                  Bối cảnh sức khỏe tự báo cáo (Tùy chọn)
+                </Label>
+                <Textarea
+                  id="relevantSelfReportedContext"
+                  rows={2}
+                  placeholder="VD: Không dùng thuốc kê đơn, tiền sử gia đình không có bệnh tim mạch..."
+                  value={form.relevantSelfReportedContext}
+                  onChange={(e) => onChange({ ...form, relevantSelfReportedContext: e.target.value })}
+                  className="rounded-xl resize-none"
+                  maxLength={4000}
                 />
               </div>
             </div>
           </div>
 
-          <div className="flex items-center gap-2 p-3 bg-muted/20 rounded-xl text-xs text-muted-foreground">
+          <div className="flex items-center gap-2 p-3.5 bg-primary/5 border border-primary/20 rounded-xl text-xs text-muted-foreground">
             <AlertCircle className="w-4 h-4 text-primary shrink-0" />
             <span>
-              Sau khi gửi yêu cầu, điều phối viên sẽ kiểm tra và phân công bác sĩ chuyên khoa. Bạn sẽ nhận được bản Thỏa thuận dịch vụ để xem và xác nhận trước khi thanh toán.
+              Yêu cầu của bạn sẽ nhận số thứ tự cố định và được xếp vào hàng đợi trực tiếp (FIFO). Không yêu cầu chọn gói hay thanh toán.
             </span>
           </div>
 
@@ -271,7 +274,7 @@ export function CreateRequestPanel({
             className="w-full h-11 rounded-xl text-base font-semibold gap-2 shadow-xs"
           >
             <Send className="w-4 h-4" />
-            {loading ? "Đang gửi yêu cầu..." : "Gửi yêu cầu tư vấn"}
+            {loading ? "Đang gửi yêu cầu..." : "Gửi yêu cầu & Vào hàng đợi"}
           </Button>
         </form>
       </CardContent>

@@ -1,4 +1,4 @@
-import { type FormEvent, type KeyboardEvent, useEffect, useRef } from "react"
+import { type FormEvent, type KeyboardEvent, useEffect, useRef, useState, memo } from "react"
 import { Send, Paperclip } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
@@ -11,10 +11,10 @@ interface ChatComposerProps {
   readOnlyMode?: boolean
   readOnlyReason?: string
   onMessageChange: (value: string) => void
-  onSubmit: (e?: any) => void
+  onSubmit: (e?: any, contentOverride?: string) => void
 }
 
-export function ChatComposer({
+export const ChatComposer = memo(function ChatComposer({
   messageDraft,
   attachmentUrl,
   canSend,
@@ -25,6 +25,12 @@ export function ChatComposer({
   onSubmit,
 }: ChatComposerProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const [localDraft, setLocalDraft] = useState(messageDraft)
+
+  // Synchronize when parent resets messageDraft (e.g. after message sent or session switched)
+  useEffect(() => {
+    setLocalDraft(messageDraft)
+  }, [messageDraft])
 
   // Auto-resize textarea
   useEffect(() => {
@@ -33,25 +39,30 @@ export function ChatComposer({
 
     textarea.style.height = "auto"
     textarea.style.height = `${Math.min(textarea.scrollHeight, 160)}px`
-  }, [messageDraft])
+  }, [localDraft])
 
   const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault()
-      if (canSend && !loading && (messageDraft.trim() || attachmentUrl.trim())) {
-        // We have to cast to any here to satisfy the FormEvent signature expected by onSubmit
-        onSubmit(e as any)
+      if (canSend && !loading && (localDraft.trim() || attachmentUrl.trim())) {
+        const textToSend = localDraft
+        setLocalDraft("")
+        onMessageChange("")
+        onSubmit(e as any, textToSend)
       }
     }
   }
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    if (!canSend || loading || (!messageDraft.trim() && !attachmentUrl.trim())) return
-    onSubmit(e)
+    if (!canSend || loading || (!localDraft.trim() && !attachmentUrl.trim())) return
+    const textToSend = localDraft
+    setLocalDraft("")
+    onMessageChange("")
+    onSubmit(e, textToSend)
   }
 
-  const hasContent = messageDraft.trim() || attachmentUrl.trim()
+  const hasContent = localDraft.trim() || attachmentUrl.trim()
 
   if (readOnlyMode) {
     return (
@@ -96,8 +107,8 @@ export function ChatComposer({
               ref={textareaRef}
               className="max-h-[120px] min-h-[24px] w-full resize-none bg-transparent py-2.5 text-[14px] text-foreground outline-none placeholder:text-muted-foreground"
               placeholder="Nhập tin nhắn..."
-              value={messageDraft}
-              onChange={(e) => onMessageChange(e.target.value)}
+              value={localDraft}
+              onChange={(e) => setLocalDraft(e.target.value)}
               disabled={loading}
               onKeyDown={handleKeyDown}
               rows={1}
@@ -123,4 +134,4 @@ export function ChatComposer({
       </form>
     </div>
   )
-}
+})

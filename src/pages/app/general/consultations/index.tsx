@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-import { Activity, Calendar, CheckCircle2, Inbox, MessagesSquare, PlusCircle, RefreshCw, ShieldAlert, Stethoscope, XCircle } from "lucide-react"
+import { Activity, Calendar, CheckCircle2, Inbox, MessagesSquare, PlusCircle, RefreshCw, ShieldAlert, Stethoscope, Users, XCircle } from "lucide-react"
 import { useSearchParams } from "react-router-dom"
 
 import { Button } from "@/components/ui/button"
@@ -18,6 +18,10 @@ import { CreateRequestPanel } from "@/pages/app/general/consultations/components
 import { DoctorCandidatesDialog } from "@/pages/app/general/consultations/components/doctor-candidates-dialog"
 import { DoctorCareProfileDialog } from "@/pages/app/general/consultations/components/doctor-care-profile-dialog"
 import { HealthRecordsPanel } from "@/pages/app/general/consultations/components/health-records-panel"
+import { MemberQueuePanel } from "@/pages/app/general/consultations/components/member-queue-panel"
+import { DoctorDispatchHeader } from "@/pages/app/management/doctor-consultations/components/doctor-dispatch-header"
+import { DoctorOfferCard } from "@/pages/app/management/doctor-consultations/components/doctor-offer-card"
+import { DoctorScheduleDialog } from "@/pages/app/management/doctor-consultations/components/doctor-schedule-dialog"
 import { RequestsPanel } from "@/pages/app/general/consultations/components/requests-panel"
 import { SessionsPanel } from "@/pages/app/general/consultations/components/sessions-panel"
 import { useConsultationsLogic } from "@/pages/app/general/consultations/hooks/use-consultations-logic"
@@ -26,11 +30,18 @@ export default function ConsultationsPage() {
   const logic = useConsultationsLogic()
   const [searchParams, setSearchParams] = useSearchParams()
 
+  const hasActiveQueue = Boolean(
+    logic.currentQueueState &&
+    (logic.currentQueueState.queueStatus === "WAITING" ||
+     logic.currentQueueState.queueStatus === "OFFERING_DOCTOR" ||
+     logic.currentQueueState.queueStatus === "WAITING_CONFIRMATION")
+  )
+
   const tabParam = searchParams.get("tab")
   const defaultTab = logic.isAdmin 
     ? "admin-requests" 
     : logic.isMember 
-      ? (logic.requests.length > 0 ? "my-requests" : "create-request") 
+      ? (hasActiveQueue ? "queue" : logic.requests.length > 0 ? "my-requests" : "create-request") 
       : "sessions"
   const activeTab = tabParam === "requests"
     ? (logic.isAdmin ? "admin-requests" : "my-requests")
@@ -111,6 +122,15 @@ export default function ConsultationsPage() {
             <TabsList className="h-10 bg-muted/60 p-1 rounded-xl">
               {logic.isMember && (
                 <>
+                  <TabsTrigger value="queue" className="rounded-lg text-xs font-semibold gap-1.5 px-3">
+                    <Users className="w-3.5 h-3.5" />
+                    <span>Hàng đợi tư vấn</span>
+                    {hasActiveQueue && (
+                      <span className="ml-1 px-1.5 py-0.5 rounded-full text-[10px] bg-amber-500 text-white font-bold animate-pulse">
+                        Đang chờ
+                      </span>
+                    )}
+                  </TabsTrigger>
                   <TabsTrigger value="my-requests" className="rounded-lg text-xs font-semibold gap-1.5 px-3">
                     <Inbox className="w-3.5 h-3.5" />
                     <span>Yêu cầu của tôi</span>
@@ -192,6 +212,28 @@ export default function ConsultationsPage() {
           </div>
 
           {logic.isMember && (
+            <TabsContent value="queue" className="m-0 flex-1 min-h-0 overflow-y-auto p-4 sm:p-6">
+              <MemberQueuePanel
+                queueState={logic.currentQueueState}
+                latestRequest={logic.requests[0] ?? null}
+                loading={logic.loading}
+                actionLoading={logic.actionLoading}
+                onConfirm={logic.handleConfirmQueue}
+                onCancel={logic.handleCancelQueue}
+                onRefresh={logic.fetchCurrentQueueState}
+                onOpenSession={(sessionId: string | number) => {
+                  const s = logic.sessions.find((item) => String(item.id) === String(sessionId))
+                  if (s) {
+                    logic.setSelectedSession(s)
+                  }
+                  setSearchParams({ tab: "chat" })
+                }}
+                onRegisterNew={() => setSearchParams({ tab: "create-request" })}
+              />
+            </TabsContent>
+          )}
+
+          {logic.isMember && (
           <TabsContent value="records" className="m-0 flex-1 min-h-0 overflow-y-auto p-4 sm:p-6">
             <HealthRecordsPanel records={logic.healthRecords} loading={logic.loading} onSelect={(record) => logic.setRequestForm((prev) => ({ ...prev, healthRecordId: String(record.id) }))} />
           </TabsContent>
@@ -205,7 +247,7 @@ export default function ConsultationsPage() {
               packages={logic.packages}
               loading={logic.actionLoading}
               onChange={logic.setRequestForm}
-              onSubmit={(e) => logic.handleCreateRequest(e, () => setSearchParams({ tab: "my-requests" }))}
+              onSubmit={(e) => logic.handleCreateRequest(e, () => setSearchParams({ tab: "queue" }))}
             />
           </TabsContent>
         )}
@@ -239,7 +281,33 @@ export default function ConsultationsPage() {
           </TabsContent>
         )}
 
-        <TabsContent value="sessions" className="m-0 flex-1 min-h-0 overflow-y-auto p-4 sm:p-6">
+        <TabsContent value="sessions" className="m-0 flex-1 min-h-0 overflow-y-auto p-4 sm:p-6 space-y-4">
+          {logic.isDoctor && (
+            <>
+              <DoctorDispatchHeader
+                dispatchStatus={logic.doctorDispatchStatus}
+                loading={logic.loading}
+                actionLoading={logic.actionLoading}
+                hasProfile={logic.hasDoctorProfile}
+                profileLoading={logic.doctorProfileLoading}
+                onToggleStatus={logic.handleToggleDoctorDispatchStatus}
+                onToggleStopAfterCurrentSession={logic.handleToggleDoctorStopAfterCurrentSession}
+                onRetryProfile={logic.fetchDoctorCareProfile}
+                onOpenScheduleDialog={() => logic.setIsDoctorScheduleOpen(true)}
+              />
+
+              {logic.doctorCurrentOffer && (
+                <DoctorOfferCard
+                  offer={logic.doctorCurrentOffer}
+                  actionLoading={logic.actionLoading}
+                  onAccept={logic.handleAcceptDoctorOffer}
+                  onReject={logic.handleRejectDoctorOffer}
+                  onOfferExpired={logic.fetchDoctorDispatchAndOffer}
+                />
+              )}
+            </>
+          )}
+
           <SessionsPanel
             isAdmin={logic.isAdmin}
             sessions={logic.sessions}
@@ -271,6 +339,7 @@ export default function ConsultationsPage() {
               onSubmit={logic.handleSendMessage}
               onLoadMore={logic.handleLoadMoreMessages}
               isOutsideSupportHours={logic.isOutsideSupportHours}
+              onSessionRefreshed={() => logic.loadData(true)}
             />
           </TabsContent>
         )}
@@ -394,7 +463,7 @@ export default function ConsultationsPage() {
         open={logic.isDoctorCandidatesOpen}
         onOpenChange={logic.setIsDoctorCandidatesOpen}
         onReserveDoctor={(doctorId) => void logic.handleReserveDoctor(doctorId)}
-        onOpenCareProfile={logic.openDoctorCareProfile}
+        onOpenCareProfile={(docId) => logic.openDoctorCareProfile(String(docId))}
         isReserving={logic.actionLoading}
         reservingDoctorId={logic.reservingDoctorId}
       />
@@ -403,6 +472,15 @@ export default function ConsultationsPage() {
         doctorId={logic.targetDoctorId}
         open={logic.isDoctorCareProfileOpen}
         onOpenChange={logic.setIsDoctorCareProfileOpen}
+      />
+
+      <DoctorScheduleDialog
+        isOpen={logic.isDoctorScheduleOpen}
+        onClose={() => logic.setIsDoctorScheduleOpen(false)}
+        currentProfile={logic.doctorCareProfile}
+        onSuccess={() => {
+          void logic.fetchDoctorCareProfile()
+        }}
       />
 
       <Dialog open={logic.isAdminMoreInfoDialogOpen} onOpenChange={logic.setIsAdminMoreInfoDialogOpen}>

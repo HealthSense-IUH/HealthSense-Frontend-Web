@@ -3,9 +3,13 @@ import { AlertCircle, RotateCw, Loader2, User as UserIcon } from "lucide-react"
 import { useAuthStore } from "@/stores/auth-store"
 import { Button } from "@/components/ui/button"
 
-import { profileApi } from "@/services"
+import { profileApi, consultationApi } from "@/services"
 import type { UserResponse, ProfileUpdateRequest } from "@/types/profile"
+import type { DoctorCareProfileResponse } from "@/types/consultation"
+import { USER_ROLES } from "@/constants"
+import { Calendar, Stethoscope } from "lucide-react"
 import { UnifiedProfileCard } from "@/pages/app/general/profile/components/unified-profile-card"
+import { DoctorScheduleDialog } from "@/pages/app/management/doctor-consultations/components/doctor-schedule-dialog"
 
 export default function ProfilePage() {
   const [user, setUser] = useState<UserResponse | null>(null)
@@ -13,9 +17,22 @@ export default function ProfilePage() {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
+  // Doctor Care Profile states
+  const [careProfile, setCareProfile] = useState<DoctorCareProfileResponse | null>(null)
+  const [isScheduleOpen, setIsScheduleOpen] = useState(false)
+
   // Auth Store bindings for real-time synchronization across Topbar & Sidebar
   const userSession = useAuthStore((state) => state.userSession)
   const setUserSession = useAuthStore((state) => state.setUserSession)
+
+  const fetchDoctorProfile = useCallback(async () => {
+    try {
+      const res = await consultationApi.getMyDoctorCareProfile()
+      setCareProfile(res.data)
+    } catch {
+      setCareProfile(null)
+    }
+  }, [])
 
   const fetchProfile = useCallback(async () => {
     try {
@@ -23,6 +40,9 @@ export default function ProfilePage() {
       const userData: UserResponse = response.data || {}
       setUser(userData)
       setError(null)
+      if (userData.role === USER_ROLES.DOCTOR) {
+        void fetchDoctorProfile()
+      }
       if (userSession && setUserSession && userData.avatarUrl !== userSession.avatarUrl) {
         setUserSession({
           ...userSession,
@@ -40,7 +60,7 @@ export default function ProfilePage() {
     } finally {
       setLoading(false)
     }
-  }, [userSession, setUserSession])
+  }, [userSession, setUserSession, fetchDoctorProfile])
 
   useEffect(() => {
     let isMounted = true
@@ -165,9 +185,61 @@ export default function ProfilePage() {
 
       {/* Loaded Content: Unified View/Edit Profile Card */}
       {!loading && user && (
-        <div className="w-full">
+        <div className="w-full space-y-6">
+          {user.role === USER_ROLES.DOCTOR && (
+            <div className="bg-white border border-slate-200/80 rounded-2xl p-5 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div className="flex items-start sm:items-center gap-3.5">
+                <div className="h-11 w-11 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 shrink-0">
+                  <Stethoscope className="w-5 h-5" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-sm font-bold text-slate-800">
+                      Hồ sơ Trực & Lịch làm việc Bác sĩ
+                    </h3>
+                    {careProfile ? (
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                        Đã kích hoạt
+                      </span>
+                    ) : (
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200">
+                        Chưa khởi tạo
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-xs text-slate-500 mt-0.5">
+                    {careProfile
+                      ? `Chuyên khoa: ${careProfile.specialty} • Lịch trực: ${careProfile.availability?.weekly?.length || 0} khung giờ/tuần • Múi giờ: ${careProfile.timezone || "Asia/Ho_Chi_Minh"}`
+                      : "Tài khoản bác sĩ chưa được quản trị viên cấu hình chuyên khoa. Bạn vẫn có thể mở xem thông tin lịch trực."}
+                  </p>
+                </div>
+              </div>
+
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setIsScheduleOpen(true)}
+                className="text-xs font-semibold shrink-0 cursor-pointer border-blue-200 text-blue-700 hover:bg-blue-50"
+              >
+                <Calendar className="w-3.5 h-3.5 mr-1.5 text-blue-600" />
+                <span>Cập nhật Lịch trực & Múi giờ</span>
+              </Button>
+            </div>
+          )}
+
           <UnifiedProfileCard user={user} onSave={handleSave} onAvatarUpdate={handleAvatarUpdate} loading={saving} />
         </div>
+      )}
+
+      {user?.role === USER_ROLES.DOCTOR && (
+        <DoctorScheduleDialog
+          isOpen={isScheduleOpen}
+          onClose={() => setIsScheduleOpen(false)}
+          currentProfile={careProfile}
+          onSuccess={() => {
+            void fetchDoctorProfile()
+          }}
+        />
       )}
     </div>
   )
