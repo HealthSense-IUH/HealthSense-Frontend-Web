@@ -1,15 +1,42 @@
 import type { PageResponse } from "@/types/base"
 
+export type ConsultationFlowType = "LEGACY_V3" | "QUEUE_DISPATCH_V1" | string
+
 export type ConsultationRequestStatus =
   | "PENDING_REVIEW"
   | "NEED_MORE_INFO"
   | "WAITING_ACCEPTANCE"
   | "WAITING_PAYMENT"
+  | "QUEUED"
   | "FULFILLED"
   | "REJECTED"
   | "CANCELLED"
   | "EXPIRED"
+  | "TIMED_OUT"
   | string
+
+export type ConsultationQueueStatus =
+  | "WAITING"
+  | "OFFERING_DOCTOR"
+  | "WAITING_MEMBER_CONFIRMATION"
+  | "FULFILLED"
+  | "CANCELLED"
+  | "TIMED_OUT"
+  | string
+
+export type DoctorDispatchStatus = "UNAVAILABLE" | "AVAILABLE" | "BUSY" | string
+
+export type DoctorOfferState =
+  | "OFFERED_TO_DOCTOR"
+  | "WAITING_MEMBER_CONFIRMATION"
+  | "CONFIRMED"
+  | "DOCTOR_REJECTED"
+  | "DOCTOR_TIMEOUT"
+  | "MEMBER_TIMEOUT"
+  | "CANCELLED"
+  | string
+
+export type CurrentConsultationPhase = "QUEUE" | "WAITING_CONFIRMATION" | "ACTIVE_SESSION" | string
 
 export type ConsultationStatus = "SCHEDULED" | "ACTIVE" | "COMPLETED" | "CANCELLED" | string
 export type ConsultationSessionStatus = ConsultationStatus
@@ -56,6 +83,24 @@ export type CareServiceCode =
 
 export type ConsultationFinalSummaryStatus = "DRAFT" | "FINALIZED" | string
 export type FinalSummaryClosureStatus = "SUMMARY_PENDING" | "SUMMARY_OVERDUE" | "SUMMARY_FINALIZED" | "ESCALATED" | string
+export type ContinuationDecision = "PENDING" | "CONTINUE" | "STOP" | string
+
+export interface ContinuationDecisionResponse {
+  sessionId: string | number
+  round: number
+  doctorDecision: ContinuationDecision
+  memberDecision: ContinuationDecision
+  promptedAt: string
+  graceExpiresAt: string
+  sessionStatus: ConsultationStatus
+  blockStartedAt: string
+  endsAt: string
+  continuationRound: number
+}
+
+export interface SubmitContinuationDecisionPayload {
+  decision: "CONTINUE" | "STOP"
+}
 
 export type ConsultationPaymentStatus = "PENDING" | "PAID" | "EXPIRED" | "CANCELLED" | "FAILED" | "REQUIRES_REVIEW" | string
 export type ConsultationPaymentPurpose = "INITIAL_CARE" | "RENEWAL" | string
@@ -321,6 +366,7 @@ export interface CareHistoryEpisodeResponse {
 export interface ConsultationRequestItem {
   id: string | number
   memberId: string | number
+  flowType?: ConsultationFlowType
   healthRecordId?: string | number | null
   selectedHealthRecordIds?: (number | string)[]
   reason?: string | null
@@ -337,13 +383,25 @@ export interface ConsultationRequestItem {
   reviewedAt?: string | null
   rejectionReason?: string | null
   packageId?: number | null
+  packageVersion?: number | null
+  packagePriceSnapshot?: number | null
+  packageDurationDaysSnapshot?: number | null
   moreInfoReason?: string | null
   memberAdditionalNote?: string | null
   paymentDeadline?: string | null
   doctorReservedAt?: string | null
+  cancelledAt?: string | null
+  expiredAt?: string | null
+  queueEntryId?: string | number | null
+  queueNumber?: string | number | null
+  queueDate?: string | null
+  queueStatus?: ConsultationQueueStatus | null
+  queuedAt?: string | null
   createdAt?: string | null
   updatedAt?: string | null
 }
+
+export type ConsultationRequestResponse = ConsultationRequestItem
 
 export interface ConsultationSessionItem {
   id: string | number
@@ -352,14 +410,31 @@ export interface ConsultationSessionItem {
   doctorId: string | number
   doctorDisplayName?: string | null
   createdByAdminId?: string | number | null
+  flowType?: ConsultationFlowType
+  exceptionalOverride?: boolean
+  overrideReason?: string | null
+  overrideServiceScope?: string | null
   sourceType?: ConsultationSourceType
   status: ConsultationStatus
   startedAt?: string | null
+  activatedAt?: string | null
+  blockStartedAt?: string | null
   endsAt?: string | null
   supportEndsAt?: string | null
+  continuationRound?: number
   closedAt?: string | null
   closeReason?: string | null
+  completedAt?: string | null
+  completionReason?: string | null
+  summaryClosureStatus?: FinalSummaryClosureStatus | null
+  summaryDueAt?: string | null
+  summaryEscalatedAt?: string | null
+  summaryEscalationReason?: string | null
+  doctorReleasedAt?: string | null
+  doctorReleaseReason?: string | null
+  terminationReason?: string | null
   meaningfulCareOccurred?: boolean | null
+  operationalReviewRequired?: boolean
   healthRecordId?: string | number | null
   requestId?: string | number | null
   lastMessageId?: string | null
@@ -369,6 +444,8 @@ export interface ConsultationSessionItem {
   createdAt?: string | null
   updatedAt?: string | null
 }
+
+export type ConsultationSessionResponse = ConsultationSessionItem
 
 export interface ConsultationMessageItem {
   id: string
@@ -406,18 +483,84 @@ export interface HealthRecordItem {
   updatedAt?: string | null
 }
 
-export interface CreateConsultationRequestPayload {
-  packageId: number | string
+export type CreateConsultationRequestPayload = CreateQueueConsultationRequestPayload
+
+export interface CreateQueueConsultationRequestPayload {
   reasonForCare: string
   currentConcern: string
   careGoal?: string | null
   memberNote?: string | null
   relevantSelfReportedContext?: string | null
   selectedHealthRecordIds?: (number | string)[]
-  preferredDoctorId?: number | string | null
-  // Legacy / deprecated compatibility
+  // deprecated compatibility fields
   healthRecordId?: number | string | null
+  packageId?: number | string | null
+  preferredDoctorId?: number | string | null
   reason?: string | null
+}
+
+export interface ConfirmConsultationRequestPayload {
+  offerId: string
+}
+
+export interface CurrentQueueStateResponse {
+  phase: CurrentConsultationPhase
+  requestId: number | string
+  queueEntryId: number | string
+  queueNumber: number | string
+  queueDate: string
+  queueStatus: ConsultationQueueStatus
+  requestStatus: ConsultationRequestStatus
+  queuedAt: string
+  peopleAhead: number
+  doctorsOnDuty: number
+  availableDoctors: number
+  busyDoctors: number
+  offerId: string | null
+  memberConfirmExpiresAt: string | null
+  doctorReady: boolean
+  doctorId: number | string | null
+  doctorName: string | null
+  sessionId: number | string | null
+  sessionStatus: ConsultationStatus | null
+  sessionStartedAt: string | null
+  sessionEndsAt: string | null
+}
+
+export interface ConsultationQueueStatisticsResponse {
+  doctorsOnDuty: number
+  availableDoctors: number
+  busyDoctors: number
+  waitingMembers: number
+}
+
+export interface DoctorDispatchStatusResponse {
+  doctorId: number | string
+  dispatchStatus: DoctorDispatchStatus
+  effectivelyDispatchable: boolean
+  stopAfterCurrentSession: boolean
+  busySessionId: number | string | null
+  dispatchStatusChangedAt: string | null
+}
+
+export interface MinimalMemberIntakeContext {
+  reasonForCare: string
+  currentConcern: string
+  careGoal?: string | null
+  memberNote?: string | null
+  relevantSelfReportedContext?: string | null
+}
+
+export interface DoctorConsultationOfferResponse {
+  offerId: string
+  queueEntryId: number | string
+  requestId: number | string
+  state: DoctorOfferState
+  offeredAt: string
+  doctorOfferExpiresAt: string
+  doctorAcceptedAt: string | null
+  memberConfirmExpiresAt: string | null
+  minimalMemberIntakeContext: MinimalMemberIntakeContext
 }
 
 export interface SubmitConsultationMoreInfoPayload {
@@ -476,9 +619,14 @@ export interface DoctorCareProfilePayload {
   availability: DoctorAvailability
 }
 
+export interface UpdateDoctorAvailabilityPayload {
+  availability: DoctorAvailability
+  timezone?: string
+}
+
 export interface DoctorCareProfileResponse {
-  id?: number
-  doctorId: number
+  id?: string
+  doctorId: string
   specialty?: DoctorSpecialty | null
   acceptsOneOnOneCare: boolean
   maxActiveConsultations: number
@@ -675,6 +823,16 @@ export interface DoctorConsultationSessionResponse {
   startedAt?: string | null
   endsAt?: string | null
   status: ConsultationSessionStatus
+  flowType?: ConsultationFlowType
+  completedAt?: string | null
+  continuationRound?: number
+  blockStartedAt?: string | null
+  summaryClosureStatus?: FinalSummaryClosureStatus | null
+  summaryDueAt?: string | null
+  summaryEscalatedAt?: string | null
+  summaryEscalationReason?: string | null
+  doctorReleasedAt?: string | null
+  doctorReleaseReason?: string | null
   meaningfulCareOccurred?: boolean | null
   supportScheduleSnapshotJson?: string | null
   supportTimezoneSnapshot?: string | null
