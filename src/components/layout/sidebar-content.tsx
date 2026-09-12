@@ -1,6 +1,7 @@
 import { Link, useLocation } from "react-router-dom"
 import { generalNavigationGroups, isManagementPath, managementNavigationGroups, type NavigationItem } from "./nav-config"
 import { useAppShell } from "./app-shell-context"
+import { useNavLabel } from "./use-nav-label"
 import {
   Tooltip,
   TooltipContent,
@@ -11,6 +12,7 @@ import {
 export function SidebarContent() {
   const location = useLocation()
   const { effectiveRole } = useAppShell()
+  const { itemLabel, itemShortLabel } = useNavLabel()
 
   const isManagement = isManagementPath(location.pathname)
 
@@ -97,7 +99,7 @@ export function SidebarContent() {
                             : "font-semibold text-slate-400 group-hover:text-white"
                         }`}
                       >
-                        {item.shortTitle || item.title}
+                        {itemShortLabel(item)}
                       </span>
                     </Link>
                   )
@@ -112,7 +114,7 @@ export function SidebarContent() {
                         sideOffset={12}
                         className="font-bold bg-slate-900 text-white border border-slate-700 shadow-2xl text-xs py-1.5 px-3 rounded-xl z-50"
                       >
-                        {item.title}
+                        {itemLabel(item)}
                         {item.badge ? ` (${item.badge})` : ""}
                       </TooltipContent>
                     </Tooltip>

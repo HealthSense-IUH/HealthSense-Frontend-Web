@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback, useRef } from "react"
 import { useNavigate } from "react-router-dom"
+import { useTranslation } from "react-i18next"
 import {
   Bell,
   CheckCheck,
@@ -30,6 +31,7 @@ import { notificationApi } from "@/services"
 import type { NotificationResponse, NotificationType } from "@/types/notification"
 
 export function NotificationBell() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const { toast } = useToast()
   const userSession = useAuthStore((state) => state.userSession)
@@ -65,13 +67,13 @@ export function NotificationBell() {
     } catch {
       toast({
         variant: "destructive",
-        title: "Lỗi",
-        description: "Không thể tải danh sách thông báo.",
+        title: t("toast.error"),
+        description: t("notification.loadFailed"),
       })
     } finally {
       setLoadingList(false)
     }
-  }, [toast])
+  }, [toast, t])
 
   // Realtime: server đẩy "ping" qua WS mỗi khi có thông báo mới -> refetch
   const handleRealtimePing = useCallback(() => {
@@ -115,8 +117,8 @@ export function NotificationBell() {
         prev.map((n) => ({ ...n, read: true, readAt: new Date().toISOString() }))
       )
       toast({
-        title: "Thành công",
-        description: "Đã đánh dấu tất cả thông báo là đã đọc.",
+        title: t("toast.success"),
+        description: t("notification.allMarkedRead"),
       })
     } catch {
       toast({
@@ -300,7 +302,7 @@ export function NotificationBell() {
           variant="outline"
           size="icon"
           className="relative h-10 w-10 rounded-full border-slate-200/90 bg-white/90 shadow-2xs hover:bg-slate-50 cursor-pointer"
-          aria-label="Thông báo"
+          aria-label={t("notification.title")}
         >
           <Bell className="h-4 w-4 text-slate-700" />
           {unreadCount > 0 && (
@@ -318,7 +320,7 @@ export function NotificationBell() {
         {/* Popover Header */}
         <div className="flex items-center justify-between p-4 border-b border-slate-100 bg-slate-50/70">
           <div className="flex items-center gap-2">
-            <h4 className="text-sm font-bold text-slate-900">Thông báo</h4>
+            <h4 className="text-sm font-bold text-slate-900">{t("notification.title")}</h4>
             {unreadCount > 0 && (
               <Badge variant="secondary" className="text-[10px] font-extrabold px-1.5 py-0">
                 {unreadCount} mới
@@ -334,7 +336,7 @@ export function NotificationBell() {
               className="h-8 text-xs font-semibold text-blue-600 hover:text-blue-700 hover:bg-blue-50 px-2 cursor-pointer"
             >
               <CheckCheck className="w-3.5 h-3.5 mr-1" />
-              Đọc tất cả
+              {t("notification.markAllRead")}
             </Button>
           )}
         </div>
@@ -344,14 +346,14 @@ export function NotificationBell() {
           {loadingList ? (
             <div className="flex flex-col items-center justify-center p-8 text-slate-400 space-y-2 text-xs">
               <RefreshCw className="w-5 h-5 animate-spin text-blue-500" />
-              <span>Đang tải thông báo...</span>
+              <span>{t("notification.loading")}</span>
             </div>
           ) : notifications.length === 0 ? (
             <div className="flex flex-col items-center justify-center p-8 text-slate-400 space-y-2 text-center text-xs">
               <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
                 <Bell className="w-5 h-5" />
               </div>
-              <p className="font-semibold text-slate-600">Không có thông báo nào</p>
+              <p className="font-semibold text-slate-600">{t("notification.empty")}</p>
               <p className="text-[11px]">Bạn sẽ nhận được thông báo khi có cập nhật mới</p>
             </div>
           ) : (
