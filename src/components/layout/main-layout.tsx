@@ -9,7 +9,7 @@ function AppShellInner() {
       <AppSidebar />
       <div className="flex-1 flex flex-col pl-[92px]">
         <Topbar />
-        <main className="flex-1 flex flex-col w-full p-2">
+        <main className="flex-1 flex flex-col w-full p-4">
           <Outlet />
         </main>
       </div>

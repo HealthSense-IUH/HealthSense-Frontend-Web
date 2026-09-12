@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button"
 import { UserStatusBadge } from "./user-status-badge"
 import { USER_ROLES } from "@/constants"
 import type { UserItem } from "@/types/user"
+import { formatShortDate } from "@/lib/formatters"
 
 interface UserTableProps {
   users: UserItem[]
@@ -39,14 +40,7 @@ export function UserTable({
   const endItem = Math.min(page * size, totalElements)
 
   const formatDate = (val?: string | number) => {
-    if (!val) return "—"
-    try {
-      const d = typeof val === "number" ? new Date(val) : new Date(val)
-      if (isNaN(d.getTime())) return String(val)
-      return d.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })
-    } catch {
-      return String(val)
-    }
+    return formatShortDate(val, "—")
   }
 
   return (

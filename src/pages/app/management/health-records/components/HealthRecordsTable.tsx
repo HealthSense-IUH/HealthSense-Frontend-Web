@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import type { HealthRecord } from "@/types/health-record"
+import { formatRecordDate } from "@/lib/formatters"
 
 interface HealthRecordsTableProps {
   records: HealthRecord[]
@@ -79,7 +80,7 @@ export function HealthRecordsTable({ records, isLoading, onView }: HealthRecords
                   : '-'}
               </TableCell>
               <TableCell>
-                {record.createdAt ? new Date(record.createdAt).toLocaleString() : '-'}
+                {record.createdAt ? formatRecordDate(record.createdAt) : '-'}
               </TableCell>
               <TableCell className="text-right space-x-2">
                 <Button variant="ghost" size="icon" onClick={() => onView(record)} title="View Detail">

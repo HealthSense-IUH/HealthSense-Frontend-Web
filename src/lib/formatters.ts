@@ -43,14 +43,14 @@ export function formatChatDate(dateString?: string | null): string {
   yesterday.setDate(now.getDate() - 1)
 
   if (date.toDateString() === now.toDateString()) {
-    return "Today"
+    return "Hôm nay"
   } else if (date.toDateString() === yesterday.toDateString()) {
-    return "Yesterday"
+    return "Hôm qua"
   }
 
-  return date.toLocaleDateString("en-US", {
-    month: "short",
+  return date.toLocaleDateString("vi-VN", {
     day: "numeric",
+    month: "short",
     year: date.getFullYear() !== now.getFullYear() ? "numeric" : undefined,
   })
 }
@@ -62,9 +62,24 @@ export function formatMessageTime(dateString?: string | null): string {
   if (!dateString) return ""
   const date = new Date(dateString)
   if (isNaN(date.getTime())) return ""
-  return date.toLocaleTimeString("en-US", {
-    hour: "numeric",
+  return date.toLocaleTimeString("vi-VN", {
+    hour: "2-digit",
     minute: "2-digit",
-    hour12: true,
+    hour12: false,
   })
+}
+
+/**
+ * Format a short date (dd thg M, yyyy) with Vietnamese locale.
+ * Dùng chung thay cho các hàm formatDate cục bộ từng viết lại trong component.
+ */
+export function formatShortDate(val?: string | number | null, fallback = "Chưa có"): string {
+  if (val === undefined || val === null || val === "") return fallback
+  try {
+    const d = new Date(val)
+    if (isNaN(d.getTime())) return String(val)
+    return d.toLocaleDateString("vi-VN", { day: "numeric", month: "short", year: "numeric" })
+  } catch {
+    return String(val)
+  }
 }

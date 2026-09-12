@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { MeasurementVisuals } from "@/pages/app/general/afib-history/components/MeasurementVisuals"
 import type { HRVFeatures, HealthRecord } from "@/types/health-record"
+import { formatRecordDate } from "@/lib/formatters"
 
 interface HealthRecordDetailDialogProps {
   record: HealthRecord | null
@@ -59,7 +60,7 @@ export function HealthRecordDetailDialog({ record, open, onOpenChange }: HealthR
             </div>
             <div>
               <span className="font-semibold text-neutral-500">Date:</span>
-              <p>{new Date(record.createdAt).toLocaleString()}</p>
+              <p>{formatRecordDate(record.createdAt)}</p>
             </div>
           </div>
 

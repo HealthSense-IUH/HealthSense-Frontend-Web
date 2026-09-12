@@ -2,7 +2,7 @@ import { SuperAdminDashboard } from "@/pages/app/general/dashboard/components/su
 
 export default function ManagementHubPage() {
   return (
-    <div className="w-full p-2">
+    <div className="w-full">
       <SuperAdminDashboard />
     </div>
   )

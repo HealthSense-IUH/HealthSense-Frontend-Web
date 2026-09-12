@@ -35,6 +35,7 @@ import { useToast } from "@/hooks/use-toast"
 import { useAuthStore } from "@/stores/auth-store"
 import { profileApi } from "@/services"
 import type { UserResponse, ProfileUpdateRequest, ProfileAccountStatus } from "@/types/profile"
+import { formatShortDate } from "@/lib/formatters"
 
 interface UnifiedProfileCardProps {
   user: UserResponse
@@ -123,16 +124,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
 
   const currentDisplayName = user.displayName || user.fullName || user.email || "Current User"
 
-  const formatDate = (val?: string | number) => {
-    if (!val) return "Not available"
-    try {
-      const d = new Date(val)
-      if (isNaN(d.getTime())) return String(val)
-      return d.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })
-    } catch {
-      return String(val)
-    }
-  }
+  const formatDate = (val?: string | number) => formatShortDate(val, "Chưa cập nhật")
 
   // Handle Avatar Upload via S3 Presigned URL
   const handleAvatarChange = async (e: ChangeEvent<HTMLInputElement>) => {

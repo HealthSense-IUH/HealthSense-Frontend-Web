@@ -2,7 +2,7 @@ import { MemberHealthDashboard } from "@/pages/app/general/dashboard/components/
 
 export default function DashboardPage() {
   return (
-    <div className="w-full p-2">
+    <div className="w-full">
       <MemberHealthDashboard />
     </div>
   )
