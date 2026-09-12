@@ -75,8 +75,13 @@
 }
 
 @theme inline {
-  --font-sans: 'Plus Jakarta Sans', 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-heading: 'Plus Jakarta Sans', 'Be Vietnam Pro', sans-serif;
+  /* Plus Jakarta Sans là variable font, trục weight chỉ chạy 200-800 và đã có
+     sẵn subset vietnamese (đủ dấu tiếng Việt) nên không cần họ font thứ hai.
+     LƯU Ý: class `font-black` (900) sẽ bị trình duyệt kẹp xuống 800 — nó hiển
+     thị y hệt `font-extrabold`. Muốn có 4 mức đậm khác biệt thật thì dùng
+     font-medium / font-semibold / font-bold / font-extrabold. */
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-heading: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);

@@ -100,7 +100,7 @@ export default function AfibHistoryPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-[calc(100vh-140px)] w-full p-2 gap-6 pb-10">
+    <div className="flex flex-col min-h-[calc(100vh-140px)] w-full gap-6 pb-10">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>

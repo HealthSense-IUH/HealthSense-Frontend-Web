@@ -56,7 +56,7 @@ export function UserDistributionChart({ data }: { data: UserDistributionItem[] }
               <span>{item.name}</span>
             </div>
             <div className="flex items-center gap-3">
-              <span className="font-mono text-slate-500">{item.value.toLocaleString()}</span>
+              <span className="font-mono text-slate-500">{item.value.toLocaleString("vi-VN")}</span>
               <span className="font-extrabold text-slate-900 w-9 text-right">{item.percentage}</span>
             </div>
           </div>

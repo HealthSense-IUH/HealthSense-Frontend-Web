@@ -10,7 +10,8 @@
     "knip": "knip",
     "doctor": "react-doctor .",
     "doctor:verbose": "react-doctor . --verbose",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "i18n:check": "node scripts/i18n-coverage.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
@@ -39,9 +40,12 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "framer-motion": "^12.42.2",
+    "i18next": "^26.4.2",
+    "i18next-browser-languagedetector": "^8.2.1",
     "lucide-react": "^1.24.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
+    "react-i18next": "^17.0.13",
     "react-router-dom": "^7.18.1",
     "recharts": "^3.10.0",
     "sockjs-client": "^1.6.1",

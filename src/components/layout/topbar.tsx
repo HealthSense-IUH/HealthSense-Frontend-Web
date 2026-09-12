@@ -5,9 +5,11 @@ import {
   ChevronDown
 } from "lucide-react"
 import { motion } from "framer-motion"
+import { useTranslation } from "react-i18next"
 
 import { useAppShell } from "./app-shell-context"
 import { DemoRoleSwitcher } from "./demo-role-switcher"
+import { LanguageSwitcher } from "./language-switcher"
 import { NotificationBell } from "@/components/layout/notification-bell"
 import { authApi } from "@/services"
 import { useAuthStore } from "@/stores/auth-store"
@@ -19,6 +21,7 @@ import {
 } from "@/components/ui/popover"
 
 export function Topbar() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const { effectiveRole } = useAppShell()
   const userSession = useAuthStore((state) => state.userSession)
@@ -227,6 +230,7 @@ export function Topbar() {
         {import.meta.env.DEV ? <DemoRoleSwitcher /> : null}
 
         {/* In-app Notification Bell */}
+        <LanguageSwitcher />
         <NotificationBell />
 
         {/* User Account Menu Pill */}
@@ -264,7 +268,7 @@ export function Topbar() {
               className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-100 hover:text-slate-900 transition-colors cursor-pointer"
             >
               <User className="h-4 w-4 text-sky-600" />
-              Hồ sơ cá nhân
+              {t("topbar.profile")}
             </button>
 
             <div className="border-t border-slate-100 pt-1 mt-1">
@@ -274,7 +278,7 @@ export function Topbar() {
                 className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-bold text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
               >
                 <LogOut className="h-4 w-4 text-rose-500" />
-                Đăng xuất
+                {t("topbar.logout")}
               </button>
             </div>
           </PopoverContent>

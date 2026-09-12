@@ -1,0 +1,74 @@
+{
+  "lang": {
+    "label": "Ngôn ngữ",
+    "vi": "Tiếng Việt",
+    "en": "English"
+  },
+  "nav": {
+    "group": {
+      "general-overview": "Tổng quan",
+      "general-health": "Sức khỏe cá nhân",
+      "general-account": "Tài khoản",
+      "management-main": "Quản trị hệ thống"
+    },
+    "item": {
+      "dashboard": "Bảng điều khiển",
+      "reports": "Báo cáo sức khỏe",
+      "packages-catalog": "Gói Dịch vụ Chăm sóc",
+      "afib-history": "Tầm soát Rung nhĩ (AFib)",
+      "consultations": "Tư vấn sức khỏe",
+      "profile": "Hồ sơ cá nhân",
+      "management-overview": "Bảng quản trị hệ thống",
+      "user-management": "Quản lý người dùng",
+      "care-service-packages": "Gói dịch vụ chăm sóc",
+      "health-records-management": "Hồ sơ sức khỏe bệnh nhân",
+      "doctor-consultations": "Phiên khám Bác sĩ"
+    },
+    "short": {
+      "dashboard": "Tổng quan",
+      "reports": "Báo cáo",
+      "packages-catalog": "Gói khám",
+      "afib-history": "Rung nhĩ",
+      "consultations": "Tư vấn",
+      "profile": "Hồ sơ",
+      "management-overview": "Tổng quan",
+      "user-management": "Người dùng",
+      "care-service-packages": "Gói DV",
+      "health-records-management": "Hồ sơ bệnh",
+      "doctor-consultations": "Phiên khám"
+    }
+  },
+  "topbar": {
+    "profile": "Hồ sơ cá nhân",
+    "logout": "Đăng xuất"
+  },
+  "notification": {
+    "title": "Thông báo",
+    "markAllRead": "Đánh dấu đã đọc",
+    "empty": "Chưa có thông báo nào",
+    "loading": "Đang tải...",
+    "loadFailed": "Không thể tải danh sách thông báo.",
+    "allMarkedRead": "Đã đánh dấu tất cả thông báo là đã đọc."
+  },
+  "date": {
+    "today": "Hôm nay",
+    "yesterday": "Hôm qua"
+  },
+  "common": {
+    "notAvailable": "Chưa có",
+    "notUpdated": "Chưa cập nhật",
+    "dash": "—"
+  },
+  "sidebar": {
+    "titleManagement": "HealthSense - Phân hệ Quản trị",
+    "titleGeneral": "HealthSense - Sức khỏe",
+    "toGeneral": "Về Người dùng",
+    "toManagement": "Sang Quản trị",
+    "tooltipToGeneral": "Chuyển về Bảng theo dõi sức khỏe người dùng (General)",
+    "tooltipToManagement": "Chuyển sang Quản trị hệ thống & Bác sĩ (Management)"
+  },
+  "toast": {
+    "error": "Lỗi",
+    "success": "Thành công"
+  }
+}

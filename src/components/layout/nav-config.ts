@@ -15,8 +15,12 @@ import type { UserRole } from "@/types/auth"
 
 export interface NavigationItem {
   id: string
+  /** Nhan tieng Viet goc — dung lam ban du phong khi thieu ban dich. */
   title: string
   shortTitle?: string
+  /** Khoa i18n: nav.item.<id> / nav.short.<id>. Sidebar tu dich qua useNavLabel(). */
+  titleKey?: string
+  shortTitleKey?: string
   href: string
   icon: LucideIcon
   allowedRoles: UserRole[]
@@ -27,7 +31,10 @@ export interface NavigationItem {
 
 export interface NavigationGroup {
   id: string
+  /** Nhan tieng Viet goc — ban du phong. */
   title: string
+  /** Khoa i18n: nav.group.<id>. */
+  titleKey?: string
   items: NavigationItem[]
 }
 

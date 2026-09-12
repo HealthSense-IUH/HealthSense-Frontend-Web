@@ -136,7 +136,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="space-y-6 pb-12 w-full p-2">
+    <div className="space-y-6 pb-12 w-full">
       {/* Page Header */}
       <div className="flex items-center justify-between py-2 border-b border-slate-200/60 pb-4">
         <div className="flex items-center gap-3">

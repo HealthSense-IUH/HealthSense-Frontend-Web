@@ -4,8 +4,10 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 
 import { isManagementPath } from "./nav-config"
 import { SidebarContent } from "./sidebar-content"
+import { useTranslation } from "react-i18next"
 
 export function AppSidebar() {
+  const { t } = useTranslation()
   const location = useLocation()
   const navigate = useNavigate()
 
@@ -93,7 +95,7 @@ export function AppSidebar() {
                   )}
                 </div>
                 <span className="text-[9px] font-bold text-center leading-tight tracking-tight">
-                  {isManagement ? "Về Người dùng" : "Sang Quản trị"}
+                  {isManagement ? t("sidebar.toGeneral") : t("sidebar.toManagement")}
                 </span>
               </button>
             </TooltipTrigger>
@@ -103,8 +105,8 @@ export function AppSidebar() {
               className="font-bold bg-slate-900 text-white border border-slate-700 shadow-2xl text-xs py-1.5 px-3 rounded-xl z-50"
             >
               {isManagement
-                ? "Chuyển về Bảng theo dõi sức khỏe người dùng (General)"
-                : "Chuyển sang Quản trị hệ thống & Bác sĩ (Management)"}
+                ? t("sidebar.tooltipToGeneral")
+                : t("sidebar.tooltipToManagement")}
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
