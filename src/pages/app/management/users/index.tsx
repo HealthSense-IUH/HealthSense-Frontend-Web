@@ -12,6 +12,7 @@ import { UserTable } from "@/pages/app/management/users/components/user-table"
 import { UserFormModal } from "@/pages/app/management/users/components/user-form-modal"
 import { UserDetailDrawer } from "@/pages/app/management/users/components/user-detail-drawer"
 import { UserDeleteDialog } from "@/pages/app/management/users/components/user-delete-dialog"
+import { UserFakeRecordDialog } from "@/pages/app/management/users/components/user-fake-record-dialog"
 import { DoctorCareProfileDialog } from "@/pages/app/general/consultations/components/doctor-care-profile-dialog"
 
 function normalizeUserPage(pageData: UserPageResponse | undefined, selectedRole: UserRole, size: number) {
@@ -56,6 +57,7 @@ export default function UserManagementPage() {
   const [isFormOpen, setIsFormOpen] = useState(false)
   const [isDetailOpen, setIsDetailOpen] = useState(false)
   const [isDeleteOpen, setIsDeleteOpen] = useState(false)
+  const [isFakeRecordOpen, setIsFakeRecordOpen] = useState(false)
   const [careProfileDoctorId, setCareProfileDoctorId] = useState<string | null>(null)
 
   const fetchUsers = useCallback(async () => {
@@ -79,7 +81,7 @@ export default function UserManagementPage() {
       setTotalPages(1)
       setStatusAlert({
         type: "error",
-        text: err?.response?.data?.message || "Could not retrieve accounts from API server. Verify backend connectivity.",
+        text: err?.response?.data?.message || "Không thể tải danh sách tài khoản từ máy chủ. Vui lòng kiểm tra kết nối mạng.",
       })
     } finally {
       setLoading(false)
@@ -111,7 +113,7 @@ export default function UserManagementPage() {
           setTotalPages(1)
           setStatusAlert({
             type: "error",
-            text: err?.response?.data?.message || "Could not retrieve accounts from API server. Verify backend connectivity.",
+            text: err?.response?.data?.message || "Không thể tải danh sách tài khoản từ máy chủ. Vui lòng kiểm tra kết nối mạng.",
           })
         }
       })
@@ -164,14 +166,14 @@ export default function UserManagementPage() {
       if (targetUser) {
         // Update mode (PATCH)
         await userManagementApi.updateUser(targetUser.id, payload as UserUpdateRequest)
-        setStatusAlert({ type: "success", text: `Account for ${targetUser.displayName || targetUser.email} successfully updated.` })
+        setStatusAlert({ type: "success", text: `Đã cập nhật thông tin tài khoản cho ${targetUser.displayName || targetUser.email} thành công.` })
       } else {
         // Create mode (POST)
         const created = await userManagementApi.createUser(payload as UserCreateRequest)
         const newEmail = (payload as UserCreateRequest).email
         setStatusAlert({
           type: "success",
-          text: `Account for ${created.data?.displayName || newEmail} provisioned successfully! Temporary credentials dispatched via email.`,
+          text: `Đã khởi tạo tài khoản cho ${created.data?.displayName || newEmail} thành công! Mật khẩu tạm thời đã được gửi qua email.`,
         })
       }
       setIsFormOpen(false)
@@ -187,14 +189,14 @@ export default function UserManagementPage() {
     setStatusAlert(null)
     try {
       await userManagementApi.deleteUser(targetUser.id)
-      setStatusAlert({ type: "success", text: `Account #${targetUser.id} (${targetUser.email}) permanently revoked.` })
+      setStatusAlert({ type: "success", text: `Đã xóa vĩnh viễn tài khoản #${targetUser.id} (${targetUser.email}).` })
       setIsDeleteOpen(false)
       await fetchUsers()
     } catch (error: unknown) {
       const err = error as { message?: string; response?: { data?: { message?: string } } }
       setStatusAlert({
         type: "error",
-        text: err?.response?.data?.message || "Failed to terminate user account. Backend server rejected deletion.",
+        text: err?.response?.data?.message || "Không thể xóa tài khoản. Máy chủ từ chối yêu cầu xóa.",
       })
       setIsDeleteOpen(false)
     } finally {
@@ -202,18 +204,26 @@ export default function UserManagementPage() {
     }
   }
 
-  const handleFakeRecord = async (user: UserItem) => {
+  const handleOpenFakeRecord = (user: UserItem) => {
+    setTargetUser(user)
+    setIsFakeRecordOpen(true)
+  }
+
+  const handleFakeRecordConfirm = async () => {
+    if (!targetUser) return
     setActionLoading(true)
     setStatusAlert(null)
     try {
-      await userManagementApi.createFakeHealthRecord({ memberId: user.id })
-      setStatusAlert({ type: "success", text: `Fake health record generated for ${user.displayName || user.email}.` })
+      await userManagementApi.createFakeHealthRecord({ memberId: targetUser.id })
+      setStatusAlert({ type: "success", text: `Đã tạo hồ sơ sức khỏe mẫu cho ${targetUser.displayName || targetUser.email} thành công.` })
+      setIsFakeRecordOpen(false)
     } catch (error: unknown) {
       const err = error as { message?: string; response?: { data?: { message?: string } } }
       setStatusAlert({
         type: "error",
-        text: err?.response?.data?.message || "Failed to generate fake health record.",
+        text: err?.response?.data?.message || "Không thể tạo hồ sơ sức khỏe mẫu.",
       })
+      setIsFakeRecordOpen(false)
     } finally {
       setActionLoading(false)
     }
@@ -226,13 +236,13 @@ export default function UserManagementPage() {
         <div className="p-5 rounded-3xl bg-red-50 text-red-600 border border-red-200/80 shadow-xs mb-5">
           <ShieldAlert className="w-12 h-12 stroke-[2.2]" />
         </div>
-        <h2 className="text-2xl font-black text-slate-900 tracking-tight">Access Denied: Protected Route</h2>
+        <h2 className="text-2xl font-black text-slate-900 tracking-tight">Từ chối truy cập: Trang được bảo vệ</h2>
         <p className="text-sm font-medium text-slate-500 mt-2 leading-relaxed">
-          The <strong className="text-slate-800">User & Account Management</strong> subsystem is restricted solely to tenant <strong className="text-blue-600">ADMIN</strong> and <strong className="text-amber-600">SUPER_ADMIN</strong> authorities. Your current effective role is <strong className="text-slate-900">{effectiveRole}</strong>.
+          Phân hệ <strong className="text-slate-800">Quản lý người dùng & tài khoản</strong> chỉ dành riêng cho quyền <strong className="text-blue-600">ADMIN</strong> và <strong className="text-amber-600">SUPER_ADMIN</strong>. Vai trò hiện tại của bạn là <strong className="text-slate-900">{effectiveRole}</strong>.
         </p>
         <div className="mt-6 p-4 rounded-2xl bg-slate-50 border border-slate-200 w-full text-xs font-bold text-slate-600 flex items-center justify-center gap-2">
           <Sparkles className="w-4 h-4 text-amber-500" />
-          <span>Use the Topbar Dev Role Switcher to toggle to SUPER_ADMIN to test this page.</span>
+          <span>Vui lòng chuyển đổi vai trò sang ADMIN hoặc SUPER_ADMIN để truy cập trang này.</span>
         </div>
       </div>
     )
@@ -240,11 +250,10 @@ export default function UserManagementPage() {
 
   const getRoleDisplayLabel = () => {
     switch (selectedRole) {
-      case USER_ROLES.MEMBER: return "Patient Member"
-      case USER_ROLES.DOCTOR: return "Clinical Doctor"
-      case USER_ROLES.CARE_COORDINATOR: return "Care Coordinator"
-      case USER_ROLES.ADMIN: return "Tenant Admin"
-      case USER_ROLES.SUPER_ADMIN: return "Super Admin"
+      case USER_ROLES.MEMBER: return "Bệnh nhân"
+      case USER_ROLES.DOCTOR: return "Bác sĩ"
+      case USER_ROLES.CARE_COORDINATOR: return "Điều phối viên"
+      case USER_ROLES.ADMIN: return "Quản trị viên bệnh viện"
       default: return String(selectedRole)
     }
   }
@@ -315,7 +324,7 @@ export default function UserManagementPage() {
           onView={handleOpenView}
           onEdit={handleOpenEdit}
           onDelete={handleOpenDelete}
-          onFakeRecord={handleFakeRecord}
+          onFakeRecord={handleOpenFakeRecord}
           onManageCareProfile={(user) => setCareProfileDoctorId(String(user.id))}
         />
       </section>
@@ -345,6 +354,14 @@ export default function UserManagementPage() {
         isOpen={isDeleteOpen}
         onClose={() => setIsDeleteOpen(false)}
         onConfirm={handleDeleteConfirm}
+        user={targetUser}
+        loading={actionLoading}
+      />
+
+      <UserFakeRecordDialog
+        isOpen={isFakeRecordOpen}
+        onClose={() => setIsFakeRecordOpen(false)}
+        onConfirm={handleFakeRecordConfirm}
         user={targetUser}
         loading={actionLoading}
       />

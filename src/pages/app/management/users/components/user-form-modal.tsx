@@ -48,47 +48,47 @@ function UserFormModalContent({
 
     // Email validation on create
     if (!isEditMode && (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))) {
-      setErrorMsg("Please enter a valid email address.")
+      setErrorMsg("Vui lòng nhập địa chỉ email hợp lệ.")
       return false
     }
 
     // Role required
     if (!role) {
-      setErrorMsg("User role is required.")
+      setErrorMsg("Vai trò người dùng là bắt buộc.")
       return false
     }
 
     // Display Name required on create, max 120 chars
     if (!displayName.trim()) {
-      setErrorMsg("Display name is required.")
+      setErrorMsg("Tên hiển thị là bắt buộc.")
       return false
     }
     if (displayName.length > 120) {
-      setErrorMsg("Display name cannot exceed 120 characters.")
+      setErrorMsg("Tên hiển thị không được vượt quá 120 ký tự.")
       return false
     }
 
     // Phone max 30 chars
     if (phone && phone.length > 30) {
-      setErrorMsg("Phone number cannot exceed 30 characters.")
+      setErrorMsg("Số điện thoại không được vượt quá 30 ký tự.")
       return false
     }
 
     // Date of birth format validation yyyy-MM-dd if entered
     if (dateOfBirth && !/^\d{4}-\d{2}-\d{2}$/.test(dateOfBirth)) {
-      setErrorMsg("Date of birth must follow the format YYYY-MM-DD.")
+      setErrorMsg("Ngày sinh phải theo định dạng YYYY-MM-DD.")
       return false
     }
 
     // Gender max 20 chars
     if (gender && gender.length > 20) {
-      setErrorMsg("Gender selection cannot exceed 20 characters.")
+      setErrorMsg("Giới tính không được vượt quá 20 ký tự.")
       return false
     }
 
     // Address max 500 chars
     if (address && address.length > 500) {
-      setErrorMsg("Address description cannot exceed 500 characters.")
+      setErrorMsg("Địa chỉ không được vượt quá 500 ký tự.")
       return false
     }
 
@@ -125,7 +125,7 @@ function UserFormModalContent({
       }
     } catch (err: unknown) {
       const anyErr = err as { message?: string; response?: { data?: { message?: string } } }
-      setErrorMsg(anyErr?.response?.data?.message || anyErr?.message || "An unexpected error occurred while saving.")
+      setErrorMsg(anyErr?.response?.data?.message || anyErr?.message || "Đã xảy ra lỗi không mong muốn khi lưu thông tin.")
     }
   }
 
@@ -134,15 +134,15 @@ function UserFormModalContent({
       <DialogHeader className="p-6 pb-4 bg-slate-50/80 border-b border-slate-100 text-left">
         <div className="flex items-center gap-2.5 text-blue-700 font-extrabold text-xs uppercase tracking-wider mb-1">
           <ShieldCheck className="w-4 h-4" />
-          <span>{isEditMode ? "Update Account Records" : "Account Onboarding Portal"}</span>
+          <span>{isEditMode ? "Cập nhật hồ sơ tài khoản" : "Cổng cấp phát tài khoản mới"}</span>
         </div>
         <DialogTitle className="text-xl font-black text-slate-900">
-          {isEditMode ? `Edit Profile: ${initialData?.displayName}` : "Provision New Clinical User"}
+          {isEditMode ? `Chỉnh sửa: ${initialData?.displayName}` : "Thêm mới tài khoản người dùng"}
         </DialogTitle>
         <DialogDescription className="text-xs text-slate-500 font-medium">
           {isEditMode
-            ? "Modify user role credentials, compliance contact data, and active operating status."
-            : "Register a new tenant user account. Backend will securely issue temporary passwords via email."}
+            ? "Chỉnh sửa quyền hạn, thông tin liên lạc và trạng thái hoạt động của tài khoản."
+            : "Đăng ký tài khoản người dùng mới. Hệ thống sẽ tự động gửi mật khẩu tạm thời qua email."}
         </DialogDescription>
       </DialogHeader>
 
@@ -159,13 +159,13 @@ function UserFormModalContent({
           <div className="space-y-1.5">
             <Label className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
               <Mail className="w-3.5 h-3.5 text-slate-400" />
-              <span>Email Address <span className="text-red-500">*</span></span>
+              <span>Địa chỉ Email <span className="text-red-500">*</span></span>
             </Label>
             <Input
               disabled={isEditMode || loading}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="doctor.nguyen@healthsense.com"
+              placeholder="bacsi.nguyen@healthsense.com"
               type="email"
               required={!isEditMode}
               className="h-10 rounded-xl border-slate-200 text-xs font-semibold disabled:bg-slate-100 disabled:text-slate-500"
@@ -174,7 +174,7 @@ function UserFormModalContent({
 
           <div className="space-y-1.5">
             <Label htmlFor="user-role-select" className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
-              <span>Account Role <span className="text-red-500">*</span></span>
+              <span>Vai trò tài khoản <span className="text-red-500">*</span></span>
             </Label>
             <select
               id="user-role-select"
@@ -184,11 +184,10 @@ function UserFormModalContent({
               onChange={(e) => setRole(e.target.value as UserRole)}
               className="w-full h-10 rounded-xl border border-slate-200 bg-white px-3 text-xs font-extrabold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer disabled:bg-slate-100 disabled:text-slate-500 disabled:cursor-not-allowed"
             >
-              <option value={USER_ROLES.MEMBER}>MEMBER - Patient Account</option>
-              <option value={USER_ROLES.DOCTOR}>DOCTOR - Clinical Diagnostic</option>
-              <option value={USER_ROLES.CARE_COORDINATOR}>CARE_COORDINATOR - Consultation Manager</option>
+              <option value={USER_ROLES.MEMBER}>MEMBER - Bệnh nhân / Hội viên</option>
+              <option value={USER_ROLES.DOCTOR}>DOCTOR - Bác sĩ lâm sàng</option>
               {effectiveRole === USER_ROLES.SUPER_ADMIN && (
-                <option value={USER_ROLES.ADMIN}>ADMIN - Tenant Manager</option>
+                <option value={USER_ROLES.ADMIN}>ADMIN - Quản trị viên bệnh viện</option>
               )}
             </select>
           </div>
@@ -199,13 +198,13 @@ function UserFormModalContent({
           <div className={`space-y-1.5 ${!isEditMode ? "sm:col-span-2" : ""}`}>
             <Label className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
               <User className="w-3.5 h-3.5 text-slate-400" />
-              <span>Display Name <span className="text-red-500">*</span></span>
+              <span>Tên hiển thị <span className="text-red-500">*</span></span>
             </Label>
             <Input
               disabled={loading}
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
-              placeholder="Dr. Nguyễn Văn A (Cardiology Specialist)"
+              placeholder="BS. Nguyễn Văn A"
               maxLength={120}
               required
               className="h-10 rounded-xl border-slate-200 text-xs font-semibold"
@@ -215,7 +214,7 @@ function UserFormModalContent({
           {isEditMode && (
             <div className="space-y-1.5">
               <Label htmlFor="account-status-select" className="text-xs font-bold text-slate-700">
-                Account Status <span className="text-red-500">*</span>
+                Trạng thái tài khoản <span className="text-red-500">*</span>
               </Label>
               <select
                 id="account-status-select"
@@ -225,11 +224,11 @@ function UserFormModalContent({
                 onChange={(e) => setStatus(e.target.value as AccountStatus)}
                 className="w-full h-10 rounded-xl border border-slate-200 bg-white px-3 text-xs font-extrabold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
               >
-                <option value="ACTIVE">ACTIVE - Healthy Operation</option>
-                <option value="PENDING_VERIFY">PENDING_VERIFY - Email Verification</option>
-                <option value="INACTIVE">INACTIVE - Dormant</option>
-                <option value="LOCKED">LOCKED - Security Lockout</option>
-                <option value="BANNED">BANNED - Compliance Violation</option>
+                <option value="ACTIVE">ACTIVE - Đang hoạt động</option>
+                <option value="PENDING_VERIFY">PENDING_VERIFY - Chờ xác thực email</option>
+                <option value="INACTIVE">INACTIVE - Không hoạt động</option>
+                <option value="LOCKED">LOCKED - Đã khóa bảo mật</option>
+                <option value="BANNED">BANNED - Bị cấm hoạt động</option>
               </select>
             </div>
           )}
@@ -240,13 +239,13 @@ function UserFormModalContent({
           <div className="space-y-1.5">
             <Label className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
               <Phone className="w-3.5 h-3.5 text-slate-400" />
-              <span>Phone Number (Optional)</span>
+              <span>Số điện thoại (Không bắt buộc)</span>
             </Label>
             <Input
               disabled={loading}
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              placeholder="+84 909 123 456"
+              placeholder="0909 123 456"
               maxLength={30}
               className="h-10 rounded-xl border-slate-200 text-xs font-mono font-semibold"
             />
@@ -255,7 +254,7 @@ function UserFormModalContent({
           <div className="space-y-1.5">
             <Label className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
               <Calendar className="w-3.5 h-3.5 text-slate-400" />
-              <span>Date of Birth (YYYY-MM-DD)</span>
+              <span>Ngày sinh (YYYY-MM-DD)</span>
             </Label>
             <Input
               disabled={loading}
@@ -271,7 +270,7 @@ function UserFormModalContent({
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div className="space-y-1.5 sm:col-span-1">
             <Label htmlFor="user-gender-select" className="text-xs font-bold text-slate-700">
-              Gender
+              Giới tính
             </Label>
             <select
               id="user-gender-select"
@@ -281,22 +280,22 @@ function UserFormModalContent({
               onChange={(e) => setGender(e.target.value)}
               className="w-full h-10 rounded-xl border border-slate-200 bg-white px-3 text-xs font-extrabold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
             >
-              <option value="MALE">Male</option>
-              <option value="FEMALE">Female</option>
-              <option value="OTHER">Other / Diverse</option>
+              <option value="MALE">Nam</option>
+              <option value="FEMALE">Nữ</option>
+              <option value="OTHER">Khác</option>
             </select>
           </div>
 
           <div className="space-y-1.5 sm:col-span-2">
             <Label className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
               <MapPin className="w-3.5 h-3.5 text-slate-400" />
-              <span>Residential / Clinical Address</span>
+              <span>Địa chỉ cư trú</span>
             </Label>
             <Input
               disabled={loading}
               value={address}
               onChange={(e) => setAddress(e.target.value)}
-              placeholder="Ho Chi Minh City, Vietnam"
+              placeholder="TP. Hồ Chí Minh, Việt Nam"
               maxLength={500}
               className="h-10 rounded-xl border-slate-200 text-xs font-medium"
             />
@@ -307,8 +306,8 @@ function UserFormModalContent({
           <div className="p-4 rounded-2xl bg-blue-50/60 border border-blue-100 flex items-start gap-3 mt-2">
             <Sparkles className="w-5 h-5 text-blue-600 shrink-0 mt-0.5 animate-pulse" />
             <div className="text-xs text-blue-900">
-              <strong className="font-extrabold block">Automatic Security Credentials Notice</strong>
-              No manual password setup is needed. Upon submitting, backend services will instantly issue a secure temporary password and dispatch login instructions via verified email.
+              <strong className="font-extrabold block">Thông báo bảo mật mật khẩu tự động</strong>
+              Không cần thiết lập mật khẩu thủ công. Sau khi lưu, hệ thống sẽ tự động cấp mật khẩu tạm thời an toàn và gửi hướng dẫn kích hoạt tài khoản qua email.
             </div>
           </div>
         )}
@@ -321,7 +320,7 @@ function UserFormModalContent({
             onClick={onClose}
             className="h-10 rounded-xl border-slate-200 text-slate-600 text-xs font-bold px-4 hover:bg-slate-50 cursor-pointer"
           >
-            Cancel
+            Hủy
           </Button>
           <Button
             type="submit"
@@ -329,7 +328,7 @@ function UserFormModalContent({
             className="h-10 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs px-5 shadow-sm shadow-blue-500/25 flex items-center gap-2 cursor-pointer"
           >
             {loading && <Loader2 className="w-4 h-4 animate-spin" />}
-            <span>{isEditMode ? "Save Changes" : "Create Account"}</span>
+            <span>{isEditMode ? "Lưu thay đổi" : "Tạo tài khoản"}</span>
           </Button>
         </DialogFooter>
       </form>

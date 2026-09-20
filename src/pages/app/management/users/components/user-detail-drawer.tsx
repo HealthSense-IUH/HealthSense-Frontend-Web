@@ -56,6 +56,15 @@ export function UserDetailDrawer({ isOpen, onClose, user, onEdit }: UserDetailDr
     }
   }
 
+  const formatGender = (g?: string) => {
+    if (!g) return "Chưa cập nhật"
+    const upper = g.toUpperCase()
+    if (upper === "MALE") return "Nam"
+    if (upper === "FEMALE") return "Nữ"
+    if (upper === "OTHER") return "Khác"
+    return g
+  }
+
   return (
     <Dialog open={isOpen} onOpenChange={(val) => !val && onClose()}>
       <DialogContent className="max-w-lg p-0 overflow-hidden bg-white rounded-3xl shadow-xl border border-slate-200">
@@ -72,7 +81,7 @@ export function UserDetailDrawer({ isOpen, onClose, user, onEdit }: UserDetailDr
                 </span>
               </div>
               <DialogTitle className="text-lg font-black text-slate-900 tracking-tight mt-0.5">
-                {user?.displayName || "Anonymous Account"}
+                {user?.displayName || "Tài khoản chưa có tên"}
               </DialogTitle>
             </div>
           </div>
@@ -83,56 +92,56 @@ export function UserDetailDrawer({ isOpen, onClose, user, onEdit }: UserDetailDr
           <div className="flex items-center justify-between p-4 rounded-2xl border border-slate-100 bg-slate-50/50">
             <div className="flex items-center gap-2.5 text-slate-600 font-extrabold">
               <ShieldCheck className="w-5 h-5 text-teal-600" />
-              <span>Operating State</span>
+              <span>Trạng thái hoạt động</span>
             </div>
             <UserStatusBadge status={user?.status} />
           </div>
 
           {/* Contact Details */}
           <div className="space-y-3">
-            <h4 className="font-black text-slate-400 uppercase tracking-wider text-[11px]">Contact & Communications</h4>
+            <h4 className="font-black text-slate-400 uppercase tracking-wider text-[11px]">Thông tin liên lạc</h4>
             <div className="rounded-2xl border border-slate-100 divide-y divide-slate-100 overflow-hidden font-medium">
               <div className="p-3.5 flex items-center justify-between">
                 <span className="text-slate-500 flex items-center gap-2">
                   <Mail className="w-4 h-4 text-slate-400" />
-                  <span>Email Address</span>
+                  <span>Địa chỉ Email</span>
                 </span>
                 <span className="font-mono font-bold text-slate-800 select-all">{user?.email || "—"}</span>
               </div>
               <div className="p-3.5 flex items-center justify-between">
                 <span className="text-slate-500 flex items-center gap-2">
                   <Phone className="w-4 h-4 text-slate-400" />
-                  <span>Phone Number</span>
+                  <span>Số điện thoại</span>
                 </span>
-                <span className="font-mono font-bold text-slate-800">{user?.phone || "No phone linked"}</span>
+                <span className="font-mono font-bold text-slate-800">{user?.phone || "Chưa liên kết SĐT"}</span>
               </div>
               <div className="p-3.5 flex items-center justify-between">
                 <span className="text-slate-500 flex items-center gap-2">
                   <MapPin className="w-4 h-4 text-slate-400" />
-                  <span>Physical Address</span>
+                  <span>Địa chỉ cư trú</span>
                 </span>
-                <span className="text-slate-800 max-w-[220px] text-right truncate">{user?.address || "No address configured"}</span>
+                <span className="text-slate-800 max-w-[220px] text-right truncate">{user?.address || "Chưa cập nhật địa chỉ"}</span>
               </div>
             </div>
           </div>
 
           {/* Clinical Demographics */}
           <div className="space-y-3">
-            <h4 className="font-black text-slate-400 uppercase tracking-wider text-[11px]">Demographic Profile</h4>
+            <h4 className="font-black text-slate-400 uppercase tracking-wider text-[11px]">Thông tin cá nhân</h4>
             <div className="grid grid-cols-2 gap-3 font-medium">
               <div className="p-3.5 rounded-2xl border border-slate-100 bg-slate-50/40">
                 <span className="text-slate-400 text-[11px] flex items-center gap-1.5 mb-1">
                   <Calendar className="w-3.5 h-3.5" />
-                  <span>Date of Birth</span>
+                  <span>Ngày sinh</span>
                 </span>
-                <span className="font-extrabold font-mono text-slate-800 text-sm">{user?.dateOfBirth || "Not configured"}</span>
+                <span className="font-extrabold font-mono text-slate-800 text-sm">{user?.dateOfBirth || "Chưa cập nhật"}</span>
               </div>
               <div className="p-3.5 rounded-2xl border border-slate-100 bg-slate-50/40">
                 <span className="text-slate-400 text-[11px] flex items-center gap-1.5 mb-1">
                   <UserCheck className="w-3.5 h-3.5" />
-                  <span>Gender</span>
+                  <span>Giới tính</span>
                 </span>
-                <span className="font-extrabold text-slate-800 text-sm">{user?.gender || "Unspecified"}</span>
+                <span className="font-extrabold text-slate-800 text-sm">{formatGender(user?.gender)}</span>
               </div>
             </div>
           </div>
@@ -146,7 +155,7 @@ export function UserDetailDrawer({ isOpen, onClose, user, onEdit }: UserDetailDr
             <div className="space-y-3">
               <h4 className="font-black text-slate-400 uppercase tracking-wider text-[11px] flex items-center gap-1.5">
                 <Activity className="w-3.5 h-3.5 text-blue-600" />
-                <span>Health Records Overview</span>
+                <span>Tổng quan hồ sơ sức khỏe</span>
               </h4>
               <div className="p-3.5 rounded-2xl border border-slate-100 bg-blue-50/40 space-y-2">
                 <div className="flex items-center justify-between">
@@ -174,7 +183,7 @@ export function UserDetailDrawer({ isOpen, onClose, user, onEdit }: UserDetailDr
           <div className="p-3.5 rounded-2xl bg-slate-50 text-slate-500 text-[11px] font-medium flex items-center justify-between">
             <span className="flex items-center gap-1.5">
               <Clock className="w-3.5 h-3.5 text-slate-400" />
-              <span>Registered On:</span>
+              <span>Ngày đăng ký:</span>
             </span>
             <strong className="text-slate-700">{formatDate(user?.createdAt)}</strong>
           </div>
@@ -187,7 +196,7 @@ export function UserDetailDrawer({ isOpen, onClose, user, onEdit }: UserDetailDr
             className="h-9 rounded-xl border-slate-200 font-bold text-slate-600 text-xs px-4 hover:bg-white cursor-pointer"
           >
             <X className="w-4 h-4 mr-1.5" />
-            <span>Close Window</span>
+            <span>Đóng</span>
           </Button>
           {user && (
             <Button
@@ -198,7 +207,7 @@ export function UserDetailDrawer({ isOpen, onClose, user, onEdit }: UserDetailDr
               className="h-9 rounded-xl bg-blue-600 hover:bg-blue-700 font-extrabold text-white text-xs px-4 shadow-sm shadow-blue-500/20 flex items-center gap-1.5 cursor-pointer"
             >
               <Edit3 className="w-4 h-4" />
-              <span>Edit Account</span>
+              <span>Chỉnh sửa</span>
             </Button>
           )}
         </div>

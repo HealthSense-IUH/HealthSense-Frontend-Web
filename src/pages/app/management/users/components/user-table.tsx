@@ -51,12 +51,12 @@ export function UserTable({
           <thead>
             <tr className="border-b border-slate-100 bg-slate-50/70 text-[11px] font-extrabold uppercase tracking-wider text-slate-400">
               <th className="py-3.5 px-5 w-16">ID</th>
-              <th className="py-3.5 px-5">Account Member</th>
-              <th className="py-3.5 px-4">Role</th>
-              <th className="py-3.5 px-4">Status</th>
-              <th className="py-3.5 px-4">Phone Number</th>
-              <th className="py-3.5 px-4">Created Date</th>
-              <th className="py-3.5 px-5 text-right w-36">Actions</th>
+              <th className="py-3.5 px-5">Thành viên / Người dùng</th>
+              <th className="py-3.5 px-4">Vai trò</th>
+              <th className="py-3.5 px-4">Trạng thái</th>
+              <th className="py-3.5 px-4">Số điện thoại</th>
+              <th className="py-3.5 px-4">Ngày tạo</th>
+              <th className="py-3.5 px-5 text-right w-36">Thao tác</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100 text-xs font-medium">
@@ -66,7 +66,7 @@ export function UserTable({
                 <td colSpan={7} className="py-16 text-center text-slate-400">
                   <div className="flex flex-col items-center justify-center gap-3">
                     <Loader2 className="w-7 h-7 text-blue-600 animate-spin" />
-                    <span className="text-sm font-bold text-slate-700">Retrieving user accounts from backend...</span>
+                    <span className="text-sm font-bold text-slate-700">Đang tải danh sách tài khoản người dùng...</span>
                   </div>
                 </td>
               </tr>
@@ -78,9 +78,9 @@ export function UserTable({
                     <div className="p-4 rounded-full bg-slate-50 text-slate-400 border border-slate-200">
                       <Inbox className="w-8 h-8" />
                     </div>
-                    <h4 className="text-base font-extrabold text-slate-800">No matching accounts found</h4>
+                    <h4 className="text-base font-extrabold text-slate-800">Không tìm thấy tài khoản phù hợp</h4>
                     <p className="text-xs text-slate-500 max-w-sm">
-                      There are currently no registered users matching your search query or selected role category.
+                      Hiện chưa có tài khoản nào khớp với tìm kiếm hoặc danh mục vai trò đã chọn.
                     </p>
                   </div>
                 </td>
@@ -125,7 +125,7 @@ export function UserTable({
                       <button
                         type="button"
                         onClick={() => onView(item)}
-                        title="View account details"
+                        title="Xem chi tiết tài khoản"
                         className="p-2 rounded-lg text-slate-500 hover:text-blue-600 hover:bg-blue-50/80 transition-colors cursor-pointer"
                       >
                         <Eye className="w-4 h-4" />
@@ -134,7 +134,7 @@ export function UserTable({
                         <button
                           type="button"
                           onClick={() => onFakeRecord(item)}
-                          title="Generate Fake Health Record"
+                          title="Tạo hồ sơ sức khỏe mẫu (giả lập)"
                           className="p-2 rounded-lg text-slate-500 hover:text-emerald-600 hover:bg-emerald-50/80 transition-colors cursor-pointer"
                         >
                           <FilePlus className="w-4 h-4" />
@@ -153,7 +153,7 @@ export function UserTable({
                       <button
                         type="button"
                         onClick={() => onEdit(item)}
-                        title="Edit account credentials & status"
+                        title="Chỉnh sửa thông tin tài khoản"
                         className="p-2 rounded-lg text-slate-500 hover:text-amber-600 hover:bg-amber-50/80 transition-colors cursor-pointer"
                       >
                         <Edit3 className="w-4 h-4" />
@@ -161,7 +161,7 @@ export function UserTable({
                       <button
                         type="button"
                         onClick={() => onDelete(item)}
-                        title="Revoke & delete account"
+                        title="Xóa tài khoản"
                         className="p-2 rounded-lg text-slate-500 hover:text-red-600 hover:bg-red-50/80 transition-colors cursor-pointer"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -179,13 +179,13 @@ export function UserTable({
       <div className="px-6 py-4 border-t border-slate-100 bg-slate-50/40 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 text-xs font-bold text-slate-500">
         <div className="flex items-center gap-4">
           <span>
-            Showing <strong className="text-slate-800">{startItem}</strong> -{" "}
-            <strong className="text-slate-800">{endItem}</strong> of{" "}
-            <strong className="text-slate-800">{totalElements}</strong> rows
+            Hiển thị <strong className="text-slate-800">{startItem}</strong> -{" "}
+            <strong className="text-slate-800">{endItem}</strong> trên tổng số{" "}
+            <strong className="text-slate-800">{totalElements}</strong> tài khoản
           </span>
 
           <div className="flex items-center gap-2 border-l border-slate-200 pl-4">
-            <span>Rows per page:</span>
+            <span>Số dòng mỗi trang:</span>
             <select
               aria-label="Rows per page selector"
               value={size}
@@ -202,7 +202,7 @@ export function UserTable({
 
         <div className="flex items-center gap-2">
           <span className="text-xs mr-2">
-            Page <strong className="text-slate-800">{page}</strong> of{" "}
+            Trang <strong className="text-slate-800">{page}</strong> /{" "}
             <strong className="text-slate-800">{Math.max(1, totalPages)}</strong>
           </span>
           <Button
@@ -213,7 +213,7 @@ export function UserTable({
             className="h-8 px-2.5 rounded-lg border-slate-200 font-bold hover:bg-white text-xs cursor-pointer disabled:opacity-50"
           >
             <ChevronLeft className="w-4 h-4 mr-1" />
-            <span>Prev</span>
+            <span>Trước</span>
           </Button>
           <Button
             size="sm"
@@ -222,7 +222,7 @@ export function UserTable({
             onClick={() => onPageChange(page + 1)}
             className="h-8 px-2.5 rounded-lg border-slate-200 font-bold hover:bg-white text-xs cursor-pointer disabled:opacity-50"
           >
-            <span>Next</span>
+            <span>Sau</span>
             <ChevronRight className="w-4 h-4 ml-1" />
           </Button>
         </div>

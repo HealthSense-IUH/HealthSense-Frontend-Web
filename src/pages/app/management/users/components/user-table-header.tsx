@@ -38,13 +38,13 @@ export function UserTableHeader({
         </div>
         <div>
           <h2 className="text-xl font-black text-slate-900 tracking-tight flex items-center gap-2.5">
-            <span>{currentRoleLabel} Account Registry</span>
+            <span>Danh sách tài khoản {currentRoleLabel}</span>
             <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-slate-100 text-slate-700 border border-slate-200">
-              {totalElements} Total
+              {totalElements} Tổng số
             </span>
           </h2>
           <p className="text-xs text-slate-500 font-medium">
-            Manage administrative status, credentials, and HIPAA compliance details.
+            Quản lý trạng thái tài khoản, thông tin định danh và bảo mật.
           </p>
         </div>
       </div>
@@ -55,7 +55,7 @@ export function UserTableHeader({
           <Input
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
-            placeholder="Filter by ID, email or phone..."
+            placeholder="Tìm kiếm theo ID, email hoặc SĐT..."
             className="pl-9 h-10 bg-white border-slate-200/80 rounded-xl text-xs font-medium shadow-3xs focus:border-blue-500 transition-all"
           />
         </div>
@@ -64,14 +64,14 @@ export function UserTableHeader({
           value={statusFilter}
           onValueChange={onStatusFilterChange}
         >
-          <SelectTrigger className="w-[160px] h-10 bg-white border-slate-200/80 rounded-xl text-xs font-medium shadow-3xs">
-            <SelectValue placeholder="All Status" />
+          <SelectTrigger className="w-[170px] h-10 bg-white border-slate-200/80 rounded-xl text-xs font-medium shadow-3xs">
+            <SelectValue placeholder="Tất cả trạng thái" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="ALL">All Status</SelectItem>
-            <SelectItem value="ACTIVE">Active</SelectItem>
-            <SelectItem value="INACTIVE">Inactive</SelectItem>
-            <SelectItem value="PENDING_VERIFY">Pending Verify</SelectItem>
+            <SelectItem value="ALL">Tất cả trạng thái</SelectItem>
+            <SelectItem value="ACTIVE">Hoạt động</SelectItem>
+            <SelectItem value="INACTIVE">Không hoạt động</SelectItem>
+            <SelectItem value="PENDING_VERIFY">Chờ xác thực</SelectItem>
           </SelectContent>
         </Select>
 
@@ -81,7 +81,7 @@ export function UserTableHeader({
           className="h-10 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs px-4.5 shadow-sm shadow-blue-500/25 flex items-center gap-2 transition-transform active:scale-95 cursor-pointer shrink-0"
         >
           <Plus className="h-4 w-4 stroke-[3]" />
-          <span>Add New Account</span>
+          <span>Thêm tài khoản</span>
         </Button>
       </div>
     </div>
