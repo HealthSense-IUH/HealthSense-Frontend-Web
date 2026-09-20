@@ -7,3 +7,16 @@ export const USER_ROLES = {
 } as const
 
 export type UserRoleConst = (typeof USER_ROLES)[keyof typeof USER_ROLES]
+
+export function getDefaultRouteForRole(role?: string | null): string {
+  if (role === USER_ROLES.DOCTOR) {
+    return "/app/management/doctor/consultations"
+  }
+  if (
+    role === USER_ROLES.SUPER_ADMIN ||
+    role === USER_ROLES.ADMIN
+  ) {
+    return "/app/management"
+  }
+  return "/app/general/dashboard"
+}
