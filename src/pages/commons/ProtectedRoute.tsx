@@ -2,6 +2,7 @@ import { Navigate, Outlet, useLocation } from "react-router-dom"
 import type { ReactNode } from "react"
 
 import { useAuthStore } from "@/stores/auth-store"
+import { getDefaultRouteForRole } from "@/constants"
 import type { UserRole } from "@/types/auth"
 
 type ProtectedRouteProps = {
@@ -14,7 +15,7 @@ type ProtectedRouteProps = {
 export function ProtectedRoute({
   children,
   allowedRoles,
-  redirectTo = "/app/general/dashboard",
+  redirectTo,
 }: ProtectedRouteProps) {
   const location = useLocation()
   const userSession = useAuthStore((state) => state.userSession)
@@ -26,7 +27,8 @@ export function ProtectedRoute({
   if (allowedRoles && allowedRoles.length > 0) {
     const userRole = userSession.role
     if (!userRole || !allowedRoles.includes(userRole)) {
-      return <Navigate to={redirectTo} replace />
+      const fallbackTarget = redirectTo ?? getDefaultRouteForRole(userRole)
+      return <Navigate to={fallbackTarget} replace />
     }
   }
 
