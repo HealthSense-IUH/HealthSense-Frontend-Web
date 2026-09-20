@@ -7,21 +7,24 @@ import { LazyElement } from "@/components/custom/LazyElement"
 import { GuestOnlyRoute } from "@/pages/commons/GuestOnlyRoute"
 import { ProtectedRoute } from "@/pages/commons/ProtectedRoute"
 
-import { USER_ROLES } from "@/constants"
+import { USER_ROLES, getDefaultRouteForRole } from "@/constants"
+import { useAuthStore } from "@/stores/auth-store"
 
 const AppLayout = lazy(() => import("@/pages/app/app-layout"))
 const DashboardPage = lazy(() => import("@/pages/app/general/dashboard"))
 const AfibHistoryPage = lazy(() => import("@/pages/app/general/afib-history"))
 const ReportsPage = lazy(() => import("@/pages/app/general/reports"))
 const CareHistoryPage = lazy(() => import("@/pages/app/general/care-history"))
-const PackageCatalogPage = lazy(() => import("@/pages/app/general/packages"))
 const ProfilePage = lazy(() => import("@/pages/app/general/profile"))
 const ConsultationsPage = lazy(() => import("@/pages/app/general/consultations"))
 const PaymentResultPage = lazy(() => import("@/pages/app/general/payment-result"))
+const CreditsPage = lazy(() => import("@/pages/app/general/credits"))
+const CreditPaymentResultPage = lazy(() => import("@/pages/app/general/credits/payment-result"))
 
 const ManagementPage = lazy(() => import("@/pages/app/management/hub"))
 const UserManagementPage = lazy(() => import("@/pages/app/management/users"))
-const AdminPackagesPage = lazy(() => import("@/pages/app/management/packages"))
+const AdminCreditPackagesPage = lazy(() => import("@/pages/app/management/credit-packages"))
+const AdminCreditOperationsPage = lazy(() => import("@/pages/app/management/credit-operations"))
 const AdminHealthRecordsPage = lazy(() => import("@/pages/app/management/health-records"))
 const DoctorSessionsPage = lazy(() => import("@/pages/app/management/doctor-consultations"))
 
@@ -34,6 +37,11 @@ const TermsPage = lazy(() => import("@/pages/public/terms"))
 function RedirectPreserveQuery({ to }: { to: string }) {
   const location = useLocation()
   return <Navigate to={{ pathname: to, search: location.search }} replace />
+}
+
+function AppRoleHomeRedirect() {
+  const userSession = useAuthStore((state) => state.userSession)
+  return <Navigate to={getDefaultRouteForRole(userSession?.role)} replace />
 }
 
 const wrap = (node: React.ReactNode) => <LazyElement>{node}</LazyElement>
@@ -94,18 +102,49 @@ export const router = createBrowserRouter([
       </ProtectedRoute>
     ),
     children: [
-      { index: true, element: <Navigate to="/app/general/dashboard" replace /> },
+      { index: true, element: <AppRoleHomeRedirect /> },
 
       // ----- PHÂN HỆ NGƯỜI DÙNG -----
       {
         path: "general",
         children: [
-          { index: true, element: <Navigate to="/app/general/dashboard" replace /> },
-          { path: "dashboard", element: wrap(<DashboardPage />) },
-          { path: "afib-history", element: wrap(<AfibHistoryPage />) },
-          { path: "reports", element: wrap(<ReportsPage />) },
-          { path: "care-history", element: wrap(<CareHistoryPage />) },
-          { path: "packages/catalog", element: wrap(<PackageCatalogPage />) },
+          { index: true, element: <AppRoleHomeRedirect /> },
+          {
+            path: "dashboard",
+            element: (
+              <ProtectedRoute allowedRoles={[USER_ROLES.MEMBER]}>
+                {wrap(<DashboardPage />)}
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "afib-history",
+            element: (
+              <ProtectedRoute allowedRoles={[USER_ROLES.MEMBER]}>
+                {wrap(<AfibHistoryPage />)}
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "reports",
+            element: (
+              <ProtectedRoute allowedRoles={[USER_ROLES.MEMBER]}>
+                {wrap(<ReportsPage />)}
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "care-history",
+            element: (
+              <ProtectedRoute allowedRoles={[USER_ROLES.MEMBER]}>
+                {wrap(<CareHistoryPage />)}
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "packages/*",
+            element: <Navigate to="/app/general/credits" replace />,
+          },
           { path: "profile", element: wrap(<ProfilePage />) },
           {
             path: "consultations",
@@ -113,6 +152,35 @@ export const router = createBrowserRouter([
               { index: true, element: wrap(<ConsultationsPage />) },
               { path: "payment/result", element: wrap(<PaymentResultPage />) },
               { path: "payment/cancel", element: wrap(<PaymentResultPage />) },
+            ],
+          },
+          {
+            path: "credits",
+            children: [
+              {
+                index: true,
+                element: (
+                  <ProtectedRoute allowedRoles={[USER_ROLES.MEMBER]}>
+                    {wrap(<CreditsPage />)}
+                  </ProtectedRoute>
+                ),
+              },
+              {
+                path: "payment/result",
+                element: (
+                  <ProtectedRoute allowedRoles={[USER_ROLES.MEMBER]}>
+                    {wrap(<CreditPaymentResultPage />)}
+                  </ProtectedRoute>
+                ),
+              },
+              {
+                path: "payment/cancel",
+                element: (
+                  <ProtectedRoute allowedRoles={[USER_ROLES.MEMBER]}>
+                    {wrap(<CreditPaymentResultPage />)}
+                  </ProtectedRoute>
+                ),
+              },
             ],
           },
         ],
@@ -126,7 +194,6 @@ export const router = createBrowserRouter([
             allowedRoles={[
               USER_ROLES.SUPER_ADMIN,
               USER_ROLES.ADMIN,
-              USER_ROLES.CARE_COORDINATOR,
               USER_ROLES.DOCTOR,
             ]}
           />
@@ -136,7 +203,7 @@ export const router = createBrowserRouter([
             index: true,
             element: (
               <ProtectedRoute
-                allowedRoles={[USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN, USER_ROLES.CARE_COORDINATOR]}
+                allowedRoles={[USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN]}
               >
                 {wrap(<ManagementPage />)}
               </ProtectedRoute>
@@ -152,9 +219,21 @@ export const router = createBrowserRouter([
           },
           {
             path: "packages",
+            element: <Navigate to="/app/management/credit-packages" replace />,
+          },
+          {
+            path: "credit-packages",
             element: (
               <ProtectedRoute allowedRoles={[USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN]}>
-                {wrap(<AdminPackagesPage />)}
+                {wrap(<AdminCreditPackagesPage />)}
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "credit-operations",
+            element: (
+              <ProtectedRoute allowedRoles={[USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN]}>
+                {wrap(<AdminCreditOperationsPage />)}
               </ProtectedRoute>
             ),
           },
