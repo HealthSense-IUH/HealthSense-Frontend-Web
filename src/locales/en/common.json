@@ -9,31 +9,34 @@
       "general-overview": "Overview",
       "general-health": "Personal health",
       "general-account": "Account",
-      "management-main": "System administration"
+      "management-main": "System administration",
+      "doctor-main": "Doctor sessions"
     },
     "item": {
       "dashboard": "Dashboard",
       "reports": "Health reports",
-      "packages-catalog": "Care service packages",
+      "credits": "Consultation credits",
       "afib-history": "AFib screening",
       "consultations": "Health consultations",
       "profile": "My profile",
       "management-overview": "Admin dashboard",
       "user-management": "User management",
-      "care-service-packages": "Care packages",
+      "admin-credit-packages": "Credit packages",
+      "admin-credit-operations": "Credit operations & reconcile",
       "health-records-management": "Patient health records",
       "doctor-consultations": "Doctor sessions"
     },
     "short": {
       "dashboard": "Overview",
       "reports": "Reports",
-      "packages-catalog": "Packages",
+      "credits": "Credits",
       "afib-history": "AFib",
       "consultations": "Chat",
       "profile": "Profile",
       "management-overview": "Overview",
       "user-management": "Users",
-      "care-service-packages": "Packages",
+      "admin-credit-packages": "Packages",
+      "admin-credit-operations": "Operations",
       "health-records-management": "Records",
       "doctor-consultations": "Sessions"
     }

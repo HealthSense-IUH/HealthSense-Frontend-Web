@@ -9,31 +9,34 @@
       "general-overview": "Tổng quan",
       "general-health": "Sức khỏe cá nhân",
       "general-account": "Tài khoản",
-      "management-main": "Quản trị hệ thống"
+      "management-main": "Quản trị hệ thống",
+      "doctor-main": "Phiên khám Bác sĩ"
     },
     "item": {
       "dashboard": "Bảng điều khiển",
       "reports": "Báo cáo sức khỏe",
-      "packages-catalog": "Gói Dịch vụ Chăm sóc",
+      "credits": "Lượt tư vấn",
       "afib-history": "Tầm soát Rung nhĩ (AFib)",
       "consultations": "Tư vấn sức khỏe",
       "profile": "Hồ sơ cá nhân",
       "management-overview": "Bảng quản trị hệ thống",
       "user-management": "Quản lý người dùng",
-      "care-service-packages": "Gói dịch vụ chăm sóc",
+      "admin-credit-packages": "Quản lý gói lượt",
+      "admin-credit-operations": "Vận hành & Đối soát lượt",
       "health-records-management": "Hồ sơ sức khỏe bệnh nhân",
       "doctor-consultations": "Phiên khám Bác sĩ"
     },
     "short": {
       "dashboard": "Tổng quan",
       "reports": "Báo cáo",
-      "packages-catalog": "Gói khám",
+      "credits": "Lượt tư vấn",
       "afib-history": "Rung nhĩ",
       "consultations": "Tư vấn",
       "profile": "Hồ sơ",
       "management-overview": "Tổng quan",
       "user-management": "Người dùng",
-      "care-service-packages": "Gói DV",
+      "admin-credit-packages": "Gói lượt",
+      "admin-credit-operations": "Vận hành lượt",
       "health-records-management": "Hồ sơ bệnh",
       "doctor-consultations": "Phiên khám"
     }
