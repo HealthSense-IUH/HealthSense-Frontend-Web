@@ -226,6 +226,8 @@ export default function ConsultationsPage() {
               healthRecords={logic.healthRecords}
               packages={logic.packages}
               loading={logic.actionLoading}
+              insufficientCredits={logic.insufficientCredits}
+              queueStatistics={logic.queueStatistics}
               onChange={logic.setRequestForm}
               onSubmit={(e) => logic.handleCreateRequest(e, () => setSearchParams({ tab: "queue" }))}
             />

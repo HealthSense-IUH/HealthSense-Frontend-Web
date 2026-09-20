@@ -16,6 +16,8 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import type { CurrentQueueStateResponse, ConsultationRequestItem } from "@/types/consultation"
+import type { CreditReservationStatus } from "@/types/credits"
+import { getCreditReservationStatusConfig } from "@/constants/credits"
 
 export interface MemberQueuePanelProps {
   queueState: CurrentQueueStateResponse | null
@@ -82,6 +84,10 @@ export function MemberQueuePanel({
   onOpenSession,
   onRegisterNew,
 }: MemberQueuePanelProps) {
+  const reservationStatus: CreditReservationStatus | null | undefined =
+    queueState?.creditReservationStatus || latestRequest?.creditReservationStatus
+  const reservationConfig = reservationStatus ? getCreditReservationStatusConfig(reservationStatus) : null
+
   // Confirmation countdown (authoritative backend timestamp only)
   const confirmationDeadline = queueState?.phase === "WAITING_CONFIRMATION" ? queueState.memberConfirmExpiresAt : null
   const { formatted: confirmTimerFormatted, isExpired: isConfirmExpired } = useDeadlineCountdown(
@@ -131,6 +137,14 @@ export function MemberQueuePanel({
                     hour: "2-digit",
                     minute: "2-digit",
                   })}
+                </span>
+              </div>
+            )}
+            {reservationStatus && reservationConfig && (
+              <div className="flex justify-between items-center text-xs pt-1 border-t">
+                <span className="text-muted-foreground">Trạng thái lượt:</span>
+                <span className={`inline-flex items-center px-2 py-0.5 rounded-md font-semibold border ${reservationConfig.className}`}>
+                  {reservationConfig.label}
                 </span>
               </div>
             )}
@@ -199,6 +213,14 @@ export function MemberQueuePanel({
               <span className="text-muted-foreground">Trạng thái:</span>
               <span className="font-semibold text-emerald-600">Bác sĩ đã chấp nhận kết nối</span>
             </div>
+            {reservationStatus && reservationConfig && (
+              <div className="flex items-center justify-between text-sm pt-2 border-t">
+                <span className="text-muted-foreground">Trạng thái lượt:</span>
+                <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-semibold border ${reservationConfig.className}`}>
+                  {reservationConfig.label}
+                </span>
+              </div>
+            )}
           </div>
 
           {isConfirmExpired ? (
@@ -303,10 +325,17 @@ export function MemberQueuePanel({
               </span>
             </div>
 
-            <div className="flex flex-col items-center sm:items-end">
-              <Badge variant="outline" className="px-3 py-1 text-xs font-semibold bg-background mb-1.5">
-                {isOfferingDoctor ? "Đang kết nối bác sĩ" : "Đang chờ đến lượt"}
-              </Badge>
+            <div className="flex flex-col items-center sm:items-end gap-1.5">
+              <div className="flex flex-wrap items-center gap-1.5 justify-center sm:justify-end">
+                <Badge variant="outline" className="px-3 py-1 text-xs font-semibold bg-background">
+                  {isOfferingDoctor ? "Đang kết nối bác sĩ" : "Đang chờ đến lượt"}
+                </Badge>
+                {reservationStatus && reservationConfig && (
+                  <Badge variant="outline" className={`px-2.5 py-1 text-xs font-semibold ${reservationConfig.className}`}>
+                    {reservationConfig.label}
+                  </Badge>
+                )}
+              </div>
               <p className="text-sm font-medium text-foreground">
                 Còn <strong className="text-primary font-bold text-base">{queueState.peopleAhead}</strong> người trước bạn
               </p>
@@ -394,6 +423,13 @@ export function MemberQueuePanel({
           <p className="text-xs text-muted-foreground max-w-sm mx-auto">
             Thời hạn xác nhận lượt tư vấn trước đó đã hết. Nếu bạn vẫn muốn được bác sĩ tư vấn, vui lòng đăng ký lại để nhận số thứ tự mới.
           </p>
+          {reservationStatus && reservationConfig && (
+            <div className="pt-1">
+              <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold border ${reservationConfig.className}`}>
+                {reservationConfig.label}
+              </span>
+            </div>
+          )}
         </div>
         <div className="pt-2">
           <Button onClick={onRegisterNew} className="rounded-xl font-semibold gap-1.5 shadow-sm">
@@ -416,6 +452,13 @@ export function MemberQueuePanel({
           <p className="text-xs text-muted-foreground max-w-sm mx-auto">
             Lượt xếp hàng trước đó của bạn đã kết thúc. Bạn có thể tạo yêu cầu tư vấn mới bất cứ lúc nào.
           </p>
+          {reservationStatus && reservationConfig && (
+            <div className="pt-1">
+              <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold border ${reservationConfig.className}`}>
+                {reservationConfig.label}
+              </span>
+            </div>
+          )}
         </div>
         <div className="pt-2">
           <Button onClick={onRegisterNew} className="rounded-xl font-semibold gap-1.5 shadow-sm">
@@ -436,7 +479,7 @@ export function MemberQueuePanel({
       <div className="space-y-1.5">
         <h3 className="text-lg font-bold text-foreground">Bạn chưa có yêu cầu tư vấn đang hoạt động</h3>
         <p className="text-xs text-muted-foreground max-w-sm mx-auto">
-          Đăng ký để được xếp vào hàng đợi tư vấn trực tiếp 1-1 với bác sĩ chuyên khoa mà không cần chờ duyệt hay thanh toán trước.
+          Đăng ký để được xếp vào hàng đợi tư vấn trực tiếp 1-1 với bác sĩ chuyên khoa.
         </p>
       </div>
       <div className="pt-2">

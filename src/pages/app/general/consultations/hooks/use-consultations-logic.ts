@@ -19,6 +19,7 @@ import type {
   ConsultationRequestReviewResponse,
   CareTerminationReason,
   CurrentQueueStateResponse,
+  ConsultationQueueStatisticsResponse,
   DoctorDispatchStatusResponse,
   DoctorConsultationOfferResponse,
 } from "@/types/consultation"
@@ -121,6 +122,8 @@ export function useConsultationsLogic() {
   const [packages, setPackages] = useState<CareServicePackage[]>([])
   const [requests, setRequests] = useState<ConsultationRequestItem[]>([])
   const [currentQueueState, setCurrentQueueState] = useState<CurrentQueueStateResponse | null>(null)
+  const [queueStatistics, setQueueStatistics] = useState<ConsultationQueueStatisticsResponse | null>(null)
+  const [insufficientCredits, setInsufficientCredits] = useState(false)
   const [doctorDispatchStatus, setDoctorDispatchStatus] = useState<DoctorDispatchStatusResponse | null>(null)
   const [doctorCurrentOffer, setDoctorCurrentOffer] = useState<DoctorConsultationOfferResponse | null>(null)
   const [doctorCareProfile, setDoctorCareProfile] = useState<any | null>(null)
@@ -290,7 +293,7 @@ export function useConsultationsLogic() {
     setAlert(null)
     try {
       const shouldLoadRecords = isMember
-      const [requestResponse, sessionResponse, healthRecordResponse, packageResponse, queueResponse] = await Promise.all([
+      const [requestResponse, sessionResponse, healthRecordResponse, packageResponse, queueResponse, queueStatsResponse] = await Promise.all([
         isAdmin
           ? consultationApi.listAdminRequests({ 
               page: 1, 
@@ -322,6 +325,9 @@ export function useConsultationsLogic() {
               return { data: null }
             })
           : Promise.resolve(null),
+        isMember
+          ? consultationApi.getQueueStatistics().catch(() => ({ data: null }))
+          : Promise.resolve(null),
       ])
 
       const loadedSessions = (sessionResponse.data.content ?? []).sort((a, b) => {
@@ -338,6 +344,9 @@ export function useConsultationsLogic() {
       })
       const loadedQueueState = queueResponse?.data ?? null
       setCurrentQueueState(loadedQueueState)
+      if (queueStatsResponse?.data) {
+        setQueueStatistics(queueStatsResponse.data)
+      }
       setRequests(loadedRequests)
       setSessions(loadedSessions)
       setHealthRecords(healthRecordResponse?.data.content ?? [])
@@ -620,6 +629,7 @@ export function useConsultationsLogic() {
     event.preventDefault()
     setActionLoading(true)
     setAlert(null)
+    setInsufficientCredits(false)
     try {
       if (!requestForm.reasonForCare.trim()) {
         setAlert({ type: "error", text: "Vui lòng nhập lý do đăng ký chăm sóc." })
@@ -642,6 +652,7 @@ export function useConsultationsLogic() {
           requestForm.selectedHealthRecordIds.length > 0 ? requestForm.selectedHealthRecordIds : undefined,
       })
 
+      setInsufficientCredits(false)
       setRequestForm({
         packageId: "",
         reasonForCare: "",
@@ -660,13 +671,32 @@ export function useConsultationsLogic() {
         type: "success",
         text: `Đã vào hàng đợi tư vấn thành công. Số thứ tự của bạn:${queueNumberStr}.`,
       })
+      window.dispatchEvent(new CustomEvent("credits:refresh"))
       await fetchCurrentQueueState()
       await loadData()
       if (onSuccess) {
         onSuccess()
       }
-    } catch (error) {
-      setAlert({ type: "error", text: readError(error, "Không thể gửi yêu cầu tư vấn.") })
+    } catch (error: any) {
+      const status = error?.response?.status
+      const errorCode = error?.response?.data?.code || error?.response?.data?.errorCode
+      const errorMsg = error?.response?.data?.message || error?.response?.data?.detail || ""
+      const isInsufficient =
+        status === 409 &&
+        (Number(errorCode) === 4100 ||
+          String(errorCode) === "4100" ||
+          String(errorMsg).toLowerCase().includes("lượt") ||
+          String(errorMsg).toLowerCase().includes("credit"))
+
+      if (isInsufficient) {
+        setInsufficientCredits(true)
+        setAlert({
+          type: "error",
+          text: "Bạn không đủ lượt tư vấn để vào hàng đợi. Vui lòng mua thêm lượt.",
+        })
+      } else {
+        setAlert({ type: "error", text: readError(error, "Không thể gửi yêu cầu tư vấn.") })
+      }
     } finally {
       setActionLoading(false)
     }
@@ -684,6 +714,7 @@ export function useConsultationsLogic() {
         title: "Kích hoạt phiên thành công",
         description: `Phiên tư vấn #${session.id} đã bắt đầu.`,
       })
+      window.dispatchEvent(new CustomEvent("credits:refresh"))
       await fetchCurrentQueueState()
       await loadData()
       setSelectedSession(session)
@@ -702,6 +733,7 @@ export function useConsultationsLogic() {
       await consultationApi.cancelQueueRequest(requestId)
       setAlert({ type: "success", text: "Đã rời khỏi hàng đợi tư vấn." })
       setCurrentQueueState(null)
+      window.dispatchEvent(new CustomEvent("credits:refresh"))
       await loadData()
     } catch (error) {
       setAlert({ type: "error", text: readError(error, "Không thể hủy lượt chờ tư vấn.") })
@@ -717,6 +749,7 @@ export function useConsultationsLogic() {
     try {
       await consultationApi.cancelRequest(requestId)
       setAlert({ type: "success", text: "Đã hủy yêu cầu tư vấn." })
+      window.dispatchEvent(new CustomEvent("credits:refresh"))
       await fetchCurrentQueueState()
       await loadData()
     } catch (error) {
@@ -1126,6 +1159,9 @@ export function useConsultationsLogic() {
     meaningfulCareOccurred,
     setMeaningfulCareOccurred,
     currentQueueState,
+    queueStatistics,
+    insufficientCredits,
+    setInsufficientCredits,
     fetchCurrentQueueState,
     doctorDispatchStatus,
     doctorCurrentOffer,
