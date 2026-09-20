@@ -1,12 +1,13 @@
 import {
   Activity,
+  Coins,
   FileText,
   HeartPulse,
   LayoutDashboard,
   MessagesSquare,
-  Package,
   User,
   Users,
+  Wrench,
   type LucideIcon,
 } from "lucide-react"
 
@@ -38,8 +39,74 @@ export interface NavigationGroup {
   items: NavigationItem[]
 }
 
-// 1. Menu dành cho Người dùng bình thường / Hội viên (General Scope)
-export const generalNavigationGroups: NavigationGroup[] = [
+export const allNavigationGroups: NavigationGroup[] = [
+  // 1. Phân hệ Quản trị hệ thống (Chỉ dành cho ADMIN / SUPER_ADMIN)
+  {
+    id: "management-main",
+    title: "Quản trị hệ thống",
+    items: [
+      {
+        id: "management-overview",
+        title: "Bảng quản trị hệ thống",
+        shortTitle: "Tổng quan",
+        href: "/app/management",
+        icon: LayoutDashboard,
+        allowedRoles: [USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN],
+        exact: true,
+      },
+      {
+        id: "user-management",
+        title: "Quản lý người dùng",
+        shortTitle: "Người dùng",
+        href: "/app/management/users",
+        icon: Users,
+        allowedRoles: [USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN],
+      },
+      {
+        id: "admin-credit-packages",
+        title: "Quản lý gói lượt",
+        shortTitle: "Gói lượt",
+        href: "/app/management/credit-packages",
+        icon: Coins,
+        allowedRoles: [USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN],
+      },
+      {
+        id: "admin-credit-operations",
+        title: "Vận hành & Đối soát lượt",
+        shortTitle: "Vận hành lượt",
+        href: "/app/management/credit-operations",
+        icon: Wrench,
+        allowedRoles: [USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN],
+      },
+      {
+        id: "health-records-management",
+        title: "Hồ sơ sức khỏe bệnh nhân",
+        shortTitle: "Hồ sơ bệnh",
+        href: "/app/management/health-records",
+        icon: Activity,
+        allowedRoles: [USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN],
+      },
+    ],
+  },
+
+  // 2. Phân hệ Bác sĩ chuyên khoa (Chỉ dành cho DOCTOR)
+  {
+    id: "doctor-main",
+    title: "Phiên khám Bác sĩ",
+    items: [
+      {
+        id: "doctor-consultations",
+        title: "Phiên khám Bác sĩ",
+        shortTitle: "Phiên khám",
+        href: "/app/management/doctor/consultations",
+        icon: MessagesSquare,
+        allowedRoles: [USER_ROLES.DOCTOR],
+        exact: true,
+      },
+    ],
+  },
+
+  // 3. Phân hệ Hội viên / Người dùng (Chỉ dành cho MEMBER)
   {
     id: "general-overview",
     title: "Tổng quan",
@@ -50,13 +117,7 @@ export const generalNavigationGroups: NavigationGroup[] = [
         shortTitle: "Tổng quan",
         href: "/app/general/dashboard",
         icon: LayoutDashboard,
-        allowedRoles: [
-          USER_ROLES.SUPER_ADMIN,
-          USER_ROLES.ADMIN,
-          USER_ROLES.CARE_COORDINATOR,
-          USER_ROLES.DOCTOR,
-          USER_ROLES.MEMBER,
-        ],
+        allowedRoles: [USER_ROLES.MEMBER],
         exact: true,
       },
       {
@@ -65,28 +126,20 @@ export const generalNavigationGroups: NavigationGroup[] = [
         shortTitle: "Báo cáo",
         href: "/app/general/reports",
         icon: FileText,
-        allowedRoles: [
-          USER_ROLES.SUPER_ADMIN,
-          USER_ROLES.ADMIN,
-          USER_ROLES.CARE_COORDINATOR,
-          USER_ROLES.DOCTOR,
-          USER_ROLES.MEMBER,
-        ],
+        allowedRoles: [USER_ROLES.MEMBER],
       },
       {
-        id: "packages-catalog",
-        title: "Gói Dịch vụ Chăm sóc",
-        shortTitle: "Gói khám",
-        href: "/app/general/packages/catalog",
-        icon: Package,
-        allowedRoles: [
-          USER_ROLES.MEMBER,
-          USER_ROLES.SUPER_ADMIN,
-          USER_ROLES.ADMIN,
-        ],
+        id: "credits",
+        title: "Lượt tư vấn",
+        shortTitle: "Lượt tư vấn",
+        href: "/app/general/credits",
+        icon: Coins,
+        allowedRoles: [USER_ROLES.MEMBER],
       },
     ],
   },
+
+  // 4. Theo dõi sức khỏe cá nhân & Tư vấn (MEMBER + Điều phối/Admin)
   {
     id: "general-health",
     title: "Sức khỏe cá nhân",
@@ -97,13 +150,7 @@ export const generalNavigationGroups: NavigationGroup[] = [
         shortTitle: "Rung nhĩ",
         href: "/app/general/afib-history",
         icon: HeartPulse,
-        allowedRoles: [
-          USER_ROLES.SUPER_ADMIN,
-          USER_ROLES.ADMIN,
-          USER_ROLES.CARE_COORDINATOR,
-          USER_ROLES.DOCTOR,
-          USER_ROLES.MEMBER,
-        ],
+        allowedRoles: [USER_ROLES.MEMBER],
       },
       {
         id: "consultations",
@@ -114,13 +161,13 @@ export const generalNavigationGroups: NavigationGroup[] = [
         allowedRoles: [
           USER_ROLES.SUPER_ADMIN,
           USER_ROLES.ADMIN,
-          USER_ROLES.CARE_COORDINATOR,
-          USER_ROLES.DOCTOR,
           USER_ROLES.MEMBER,
         ],
       },
     ],
   },
+
+  // 5. Tài khoản chung cho tất cả các vai trò
   {
     id: "general-account",
     title: "Tài khoản",
@@ -134,7 +181,6 @@ export const generalNavigationGroups: NavigationGroup[] = [
         allowedRoles: [
           USER_ROLES.SUPER_ADMIN,
           USER_ROLES.ADMIN,
-          USER_ROLES.CARE_COORDINATOR,
           USER_ROLES.DOCTOR,
           USER_ROLES.MEMBER,
         ],
@@ -143,64 +189,14 @@ export const generalNavigationGroups: NavigationGroup[] = [
   },
 ]
 
-// 2. Menu dành cho Quản trị viên / Bác sĩ / Quản lý (Management Scope)
-export const managementNavigationGroups: NavigationGroup[] = [
-  {
-    id: "management-main",
-    title: "Quản trị hệ thống",
-    items: [
-      {
-        id: "management-overview",
-        title: "Bảng quản trị hệ thống",
-        shortTitle: "Tổng quan",
-        href: "/app/management",
-        icon: LayoutDashboard,
-        allowedRoles: [USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN, USER_ROLES.CARE_COORDINATOR],
-        exact: true,
-      },
-      {
-        id: "user-management",
-        title: "Quản lý người dùng",
-        shortTitle: "Người dùng",
-        href: "/app/management/users",
-        icon: Users,
-        allowedRoles: [USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN],
-      },
-      {
-        id: "care-service-packages",
-        title: "Gói dịch vụ chăm sóc",
-        shortTitle: "Gói DV",
-        href: "/app/management/packages",
-        icon: Package,
-        allowedRoles: [USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN],
-      },
-      {
-        id: "health-records-management",
-        title: "Hồ sơ sức khỏe bệnh nhân",
-        shortTitle: "Hồ sơ bệnh",
-        href: "/app/management/health-records",
-        icon: Activity,
-        allowedRoles: [USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN],
-      },
-      {
-        id: "doctor-consultations",
-        title: "Phiên khám Bác sĩ",
-        shortTitle: "Phiên khám",
-        href: "/app/management/doctor/consultations",
-        icon: MessagesSquare,
-        allowedRoles: [USER_ROLES.DOCTOR],
-      },
-    ],
-  },
-]
-
-
+// Giữ lại alias để tương thích ngược nếu có file khác import
+export const generalNavigationGroups = allNavigationGroups
+export const managementNavigationGroups = allNavigationGroups
 
 /**
  * Xác định pathname có thuộc phân hệ Quản trị (Management) hay không.
- * Cấu trúc route mới gom toàn bộ trang quản trị dưới /app/management
- * nên chỉ cần 1 phép so tiền tố — hết sạch lớp bug va chạm tiền tố cũ.
  */
 export function isManagementPath(pathname: string): boolean {
   return pathname.startsWith("/app/management")
 }
+

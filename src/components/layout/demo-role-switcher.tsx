@@ -1,6 +1,7 @@
+import { useNavigate } from "react-router-dom"
 import { ShieldAlert, Check } from "lucide-react"
 
-import { USER_ROLES } from "@/constants"
+import { USER_ROLES, getDefaultRouteForRole } from "@/constants"
 import type { UserRole } from "@/types/auth"
 import { useAppShell } from "./app-shell-context"
 import {
@@ -13,12 +14,12 @@ import { Button } from "@/components/ui/button"
 const DEMO_ROLES: { value: UserRole; label: string; color: string }[] = [
   { value: USER_ROLES.SUPER_ADMIN, label: "Super Admin", color: "bg-purple-50 text-purple-700 border-purple-200" },
   { value: USER_ROLES.ADMIN, label: "Admin", color: "bg-blue-50 text-blue-700 border-blue-200" },
-  { value: USER_ROLES.CARE_COORDINATOR, label: "Care Coordinator", color: "bg-fuchsia-50 text-fuchsia-700 border-fuchsia-200" },
   { value: USER_ROLES.DOCTOR, label: "Doctor", color: "bg-teal-50 text-teal-700 border-teal-200" },
   { value: USER_ROLES.MEMBER, label: "Member", color: "bg-emerald-50 text-emerald-700 border-emerald-200" },
 ]
 
 export function DemoRoleSwitcher() {
+  const navigate = useNavigate()
   const { effectiveRole, demoRole, setDemoRole, realRole } = useAppShell()
 
   const currentConfig = DEMO_ROLES.find((r) => r.value === effectiveRole) || DEMO_ROLES[0]
@@ -62,7 +63,11 @@ export function DemoRoleSwitcher() {
                 <button
                   key={role.value}
                   type="button"
-                  onClick={() => setDemoRole(role.value === realRole ? null : role.value)}
+                  onClick={() => {
+                    const newRole = role.value === realRole ? null : role.value
+                    setDemoRole(newRole)
+                    navigate(getDefaultRouteForRole(newRole || realRole))
+                  }}
                   className={`flex w-full items-center justify-between rounded-xl px-3 py-2 text-left text-xs font-medium transition-colors ${
                     isSelected ? "bg-slate-100 text-slate-900 font-semibold" : "text-slate-600 hover:bg-slate-50"
                   }`}
@@ -85,7 +90,10 @@ export function DemoRoleSwitcher() {
             <div className="border-t border-slate-100 pt-2">
               <button
                 type="button"
-                onClick={() => setDemoRole(null)}
+                onClick={() => {
+                  setDemoRole(null)
+                  navigate(getDefaultRouteForRole(realRole))
+                }}
                 className="w-full rounded-lg bg-amber-50 py-1.5 text-center text-[11px] font-bold text-amber-700 transition-colors hover:bg-amber-100"
               >
                 Reset to Actual Role

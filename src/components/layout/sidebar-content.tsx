@@ -1,7 +1,8 @@
 import { Link, useLocation } from "react-router-dom"
-import { generalNavigationGroups, isManagementPath, managementNavigationGroups, type NavigationItem } from "./nav-config"
+import { allNavigationGroups, type NavigationItem } from "./nav-config"
 import { useAppShell } from "./app-shell-context"
 import { useNavLabel } from "./use-nav-label"
+import { USER_ROLES } from "@/constants"
 import {
   Tooltip,
   TooltipContent,
@@ -14,9 +15,8 @@ export function SidebarContent() {
   const { effectiveRole } = useAppShell()
   const { itemLabel, itemShortLabel } = useNavLabel()
 
-  const isManagement = isManagementPath(location.pathname)
-
-  const currentGroups = isManagement ? managementNavigationGroups : generalNavigationGroups
+  const isStaff = effectiveRole !== USER_ROLES.MEMBER
+  const currentGroups = allNavigationGroups
 
   function isItemActive(item: NavigationItem): boolean {
     if (item.exact) {
@@ -43,7 +43,7 @@ export function SidebarContent() {
               {groupIdx > 0 && (
                 <div
                   className={`my-2.5 w-8 mx-auto border-t transition-colors ${
-                    isManagement ? "border-indigo-900/50" : "border-sky-950/60"
+                    isStaff ? "border-indigo-900/50" : "border-sky-950/60"
                   }`}
                 />
               )}
@@ -62,10 +62,10 @@ export function SidebarContent() {
                       to={targetHref}
                       className={`group relative flex flex-col items-center justify-center w-full py-2.5 px-1 rounded-2xl transition-all duration-200 ${
                         active
-                          ? isManagement
+                          ? isStaff
                             ? "bg-gradient-to-b from-indigo-500/35 to-purple-600/25 text-white font-bold border border-indigo-400/60 shadow-[0_0_15px_rgba(129,140,248,0.35)]"
                             : "bg-gradient-to-b from-sky-500/25 to-cyan-500/20 text-white font-bold border border-sky-400/60 shadow-[0_0_15px_rgba(56,189,248,0.3)]"
-                          : isManagement
+                          : isStaff
                           ? "text-indigo-200/60 hover:bg-white/[0.08] hover:text-white"
                           : "text-slate-400 hover:bg-white/[0.08] hover:text-white"
                       }`}
@@ -74,7 +74,7 @@ export function SidebarContent() {
                         <Icon
                           className={`h-5 w-5 shrink-0 transition-colors ${
                             active
-                              ? isManagement
+                              ? isStaff
                                 ? "text-indigo-200 drop-shadow-[0_0_8px_rgba(129,140,248,0.8)]"
                                 : "text-sky-300 drop-shadow-[0_0_8px_rgba(56,189,248,0.8)]"
                               : "text-slate-400 group-hover:text-slate-200"
@@ -83,7 +83,7 @@ export function SidebarContent() {
                         {item.badge && (
                           <span
                             className={`absolute -top-1 -right-1.5 h-2 w-2 rounded-full ring-2 ${
-                              isManagement
+                              isStaff
                                 ? "bg-indigo-400 shadow-[0_0_8px_#818cf8] ring-[#110E24]"
                                 : "bg-sky-400 shadow-[0_0_8px_#38bdf8] ring-[#0B132B]"
                             }`}
@@ -94,7 +94,7 @@ export function SidebarContent() {
                         className={`text-[10px] text-center leading-tight mt-1 max-w-[76px] truncate tracking-tight ${
                           active
                             ? "font-bold text-white"
-                            : isManagement
+                            : isStaff
                             ? "font-semibold text-indigo-200/70 group-hover:text-white"
                             : "font-semibold text-slate-400 group-hover:text-white"
                         }`}

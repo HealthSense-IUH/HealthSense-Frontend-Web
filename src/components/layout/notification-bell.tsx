@@ -238,9 +238,9 @@ export function NotificationBell() {
 
       case "PACKAGE":
         if (role === "MEMBER") {
-          navigate(`/app/general/packages/catalog`)
+          navigate(`/app/general/credits`)
         } else {
-          navigate(`/app/management/packages`)
+          navigate(`/app/management/credit-packages`)
         }
         break
 
