@@ -63,6 +63,10 @@ type PageParams = {
   size?: number
 }
 
+export type AdminListSessionsParams = PageParams & {
+  memberId?: number | string
+}
+
 export const consultationApi = {
   listMyHealthRecords(params: PageParams = {}) {
     return axiosClient.get<ApiResponse<HealthRecordPage>, ApiResponse<HealthRecordPage>>(
@@ -153,7 +157,7 @@ export const consultationApi = {
       payload
     )
   },
-  listAdminSessions(params: PageParams = {}) {
+  listAdminSessions(params: AdminListSessionsParams = {}) {
     return axiosClient.get<ApiResponse<ConsultationSessionPage>, ApiResponse<ConsultationSessionPage>>(
       "/api/admin/consultation-sessions",
       { params }
