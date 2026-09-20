@@ -1,4 +1,4 @@
-import { Eye, Edit3, Trash2, ChevronLeft, ChevronRight, Inbox, Loader2, FilePlus, Stethoscope } from "lucide-react"
+import { Eye, Edit3, Trash2, ChevronLeft, ChevronRight, Inbox, Loader2, FilePlus, Stethoscope, FolderHeart } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { UserStatusBadge } from "./user-status-badge"
 import { USER_ROLES } from "@/constants"
@@ -19,6 +19,7 @@ interface UserTableProps {
   onDelete: (user: UserItem) => void
   onFakeRecord?: (user: UserItem) => void
   onManageCareProfile?: (user: UserItem) => void
+  onMemberDetail?: (user: UserItem) => void
 }
 
 export function UserTable({
@@ -35,6 +36,7 @@ export function UserTable({
   onDelete,
   onFakeRecord,
   onManageCareProfile,
+  onMemberDetail,
 }: UserTableProps) {
   const startItem = totalElements === 0 ? 0 : (page - 1) * size + 1
   const endItem = Math.min(page * size, totalElements)
@@ -130,6 +132,16 @@ export function UserTable({
                       >
                         <Eye className="w-4 h-4" />
                       </button>
+                      {item.role === USER_ROLES.MEMBER && onMemberDetail && (
+                        <button
+                          type="button"
+                          onClick={() => onMemberDetail(item)}
+                          title="Xem chi tiết hồ sơ Member (Thông tin, Bản đo & Tư vấn)"
+                          className="p-2 rounded-lg text-slate-500 hover:text-indigo-600 hover:bg-indigo-50/80 transition-colors cursor-pointer"
+                        >
+                          <FolderHeart className="w-4 h-4" />
+                        </button>
+                      )}
                       {item.role === USER_ROLES.MEMBER && onFakeRecord && (
                         <button
                           type="button"
