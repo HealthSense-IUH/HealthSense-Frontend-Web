@@ -1,4 +1,5 @@
 import type { PageResponse } from "@/types/base"
+import type { ConsultationCreditPolicy, CreditReservationStatus } from "@/types/credits"
 
 export type ConsultationFlowType = "LEGACY_V3" | "QUEUE_DISPATCH_V1" | string
 
@@ -397,6 +398,9 @@ export interface ConsultationRequestItem {
   queueDate?: string | null
   queueStatus?: ConsultationQueueStatus | null
   queuedAt?: string | null
+  creditPolicy?: ConsultationCreditPolicy | null
+  creditCost?: number | null
+  creditReservationStatus?: CreditReservationStatus | null
   createdAt?: string | null
   updatedAt?: string | null
 }
@@ -427,6 +431,9 @@ export interface ConsultationSessionItem {
   completedAt?: string | null
   completionReason?: string | null
   summaryClosureStatus?: FinalSummaryClosureStatus | null
+  creditPolicy?: ConsultationCreditPolicy | null
+  creditCost?: number | null
+  creditReservationStatus?: CreditReservationStatus | null
   summaryDueAt?: string | null
   summaryEscalatedAt?: string | null
   summaryEscalationReason?: string | null
@@ -525,6 +532,9 @@ export interface CurrentQueueStateResponse {
   sessionStatus: ConsultationStatus | null
   sessionStartedAt: string | null
   sessionEndsAt: string | null
+  creditPolicy?: ConsultationCreditPolicy | null
+  creditCost?: number | null
+  creditReservationStatus?: CreditReservationStatus | null
 }
 
 export interface ConsultationQueueStatisticsResponse {
@@ -532,6 +542,8 @@ export interface ConsultationQueueStatisticsResponse {
   availableDoctors: number
   busyDoctors: number
   waitingMembers: number
+  creditPolicy?: ConsultationCreditPolicy
+  creditCost?: number
 }
 
 export interface DoctorDispatchStatusResponse {
