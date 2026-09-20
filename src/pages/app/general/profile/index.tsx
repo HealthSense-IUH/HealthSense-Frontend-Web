@@ -55,7 +55,7 @@ export default function ProfilePage() {
       setError(
         anyErr?.response?.data?.message ||
           anyErr?.message ||
-          "Could not retrieve your profile from the backend server."
+          "Không thể tải thông tin hồ sơ tài khoản từ máy chủ."
       )
     } finally {
       setLoading(false)
@@ -86,7 +86,7 @@ export default function ProfilePage() {
           setError(
             anyErr?.response?.data?.message ||
               anyErr?.message ||
-              "Could not retrieve your profile from the backend server."
+              "Không thể tải thông tin hồ sơ tài khoản từ máy chủ."
           )
         }
       })
@@ -145,10 +145,10 @@ export default function ProfilePage() {
           </div>
           <div>
             <h1 className="text-xl font-black text-slate-900 tracking-tight">
-              My Account Profile
+              Hồ sơ tài khoản
             </h1>
             <p className="text-xs text-slate-500 font-medium">
-              View and manage your personal contact details and account security specifications.
+              Xem và quản lý thông tin liên hệ cá nhân, thông tin định danh và bảo mật tài khoản.
             </p>
           </div>
         </div>
@@ -159,7 +159,7 @@ export default function ProfilePage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 animate-pulse">
           <div className="lg:col-span-4 h-96 rounded-2xl bg-slate-100 border border-slate-200/60 flex flex-col items-center justify-center p-6 text-slate-400">
             <Loader2 className="w-8 h-8 animate-spin mb-3 text-blue-600" />
-            <span className="text-xs font-bold text-slate-600">Loading account credentials...</span>
+            <span className="text-xs font-bold text-slate-600">Đang tải thông tin tài khoản...</span>
           </div>
           <div className="lg:col-span-8 h-96 rounded-2xl bg-slate-100 border border-slate-200/60" />
         </div>
@@ -169,7 +169,7 @@ export default function ProfilePage() {
       {error && !loading && !user && (
         <div className="p-8 rounded-3xl bg-red-50/80 border border-red-200 text-center max-w-lg mx-auto my-8">
           <AlertCircle className="w-10 h-10 text-red-600 mx-auto mb-3" />
-          <h3 className="text-base font-black text-slate-900">Failed to load profile</h3>
+          <h3 className="text-base font-black text-slate-900">Không thể tải thông tin hồ sơ</h3>
           <p className="text-xs font-medium text-slate-600 max-w-sm mx-auto mt-1 mb-5 leading-relaxed">
             {error}
           </p>
@@ -178,7 +178,7 @@ export default function ProfilePage() {
             className="h-9 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-extrabold px-5 shadow-sm shadow-red-500/20 flex items-center gap-2 mx-auto cursor-pointer"
           >
             <RotateCw className="w-4 h-4" />
-            <span>Retry Connection</span>
+            <span>Thử kết nối lại</span>
           </Button>
         </div>
       )}
