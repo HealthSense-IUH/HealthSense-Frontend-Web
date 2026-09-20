@@ -442,6 +442,17 @@ export interface ConsultationSessionItem {
   terminationReason?: string | null
   meaningfulCareOccurred?: boolean | null
   operationalReviewRequired?: boolean
+  operationalReviewReason?: string | null
+  packageId?: number | string | null
+  packageVersion?: number | null
+  packagePriceSnapshot?: number | null
+  packageDurationDaysSnapshot?: number | null
+  supportScheduleSnapshotJson?: string | null
+  supportTimezoneSnapshot?: string | null
+  terminationRequestedBy?: number | string | null
+  terminationRequestedByRole?: string | null
+  terminationRequestedAt?: string | null
+  terminationDecidedBy?: number | string | null
   healthRecordId?: string | number | null
   requestId?: string | number | null
   lastMessageId?: string | null

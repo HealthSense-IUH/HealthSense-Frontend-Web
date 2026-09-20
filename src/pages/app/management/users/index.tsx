@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react"
+import { useNavigate } from "react-router-dom"
 import { ShieldAlert, Sparkles, CheckCircle2, AlertCircle } from "lucide-react"
 import { useDebounce } from "@/hooks/use-debounce"
 import { useAppShell } from "@/components/layout/app-shell-context"
@@ -30,6 +31,7 @@ function normalizeUserPage(pageData: UserPageResponse | undefined, selectedRole:
 }
 
 export default function UserManagementPage() {
+  const navigate = useNavigate()
   const { effectiveRole } = useAppShell()
 
   // Strict RBAC Verification at page level
@@ -326,6 +328,7 @@ export default function UserManagementPage() {
           onDelete={handleOpenDelete}
           onFakeRecord={handleOpenFakeRecord}
           onManageCareProfile={(user) => setCareProfileDoctorId(String(user.id))}
+          onMemberDetail={(user) => navigate(`/app/management/users/${user.id}`)}
         />
       </section>
 
