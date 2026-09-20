@@ -15,12 +15,13 @@ export function formatHrvNumber(val: unknown, decimals = 2): string {
 }
 
 /**
- * Format ISO datetime string to vi-VN formatted date
+ * Format ISO datetime string or timestamp to locale-formatted date
  */
-export function formatRecordDate(isoString?: string): string {
+export function formatRecordDate(isoString?: string | number | null): string {
   if (!isoString) return "N/A"
   try {
     const d = new Date(isoString)
+    if (isNaN(d.getTime())) return String(isoString)
     return d.toLocaleString(currentIntlLocale(), {
       hour: "2-digit",
       minute: "2-digit",
@@ -30,7 +31,23 @@ export function formatRecordDate(isoString?: string): string {
       year: "numeric",
     })
   } catch {
-    return isoString
+    return String(isoString)
+  }
+}
+
+/**
+ * Format currency in VND with current locale
+ */
+export function formatVND(amount?: number | null, fallback = "—"): string {
+  if (amount === undefined || amount === null || isNaN(amount)) return fallback
+  try {
+    return new Intl.NumberFormat(currentIntlLocale(), {
+      style: "currency",
+      currency: "VND",
+      maximumFractionDigits: 0,
+    }).format(amount)
+  } catch {
+    return `${amount.toLocaleString()} ₫`
   }
 }
 
