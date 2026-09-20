@@ -22,6 +22,7 @@ import { cn } from "@/lib/utils"
 import { authApi } from "@/services"
 import { useAuthStore } from "@/stores/auth-store"
 import { getAuthErrorMessage } from "@/lib/errorHandler"
+import { getDefaultRouteForRole } from "@/constants"
 
 type LoginLocationState = {
   from?: {
@@ -92,7 +93,8 @@ export default function LoginPage() {
         password: loginPassword,
       })
       setAuthenticatedSession(response.data.accessToken, response.data.userSession)
-      navigate(redirectTo, { replace: true })
+      const destination = state?.from?.pathname ?? getDefaultRouteForRole(response.data.userSession?.role)
+      navigate(destination, { replace: true })
     } catch (error) {
       setErrorMessage(getAuthErrorMessage(error))
     } finally {
