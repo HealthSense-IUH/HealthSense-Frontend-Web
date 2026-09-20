@@ -1,10 +1,8 @@
 import { useEffect, useState, useCallback, useRef } from "react"
 import { useNavigate } from "react-router-dom"
-import { ShieldAlert, RefreshCw, Eye, MessageSquare, AlertTriangle, FileText, Calendar, Clock } from "lucide-react"
+import { ShieldAlert } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import { useToast } from "@/hooks/use-toast"
 import { USER_ROLES } from "@/constants"
 import { useAppShell } from "@/components/layout/app-shell-context"
@@ -16,40 +14,15 @@ import type {
   DoctorConsultationOfferResponse,
   DoctorCareProfileResponse,
 } from "@/types/consultation"
-import { formatDate } from "@/pages/app/general/consultations/components/shared"
 import { DoctorSessionDetailDialog } from "@/pages/app/general/consultations/components/doctor-session-detail-dialog"
 import { DoctorDispatchHeader } from "@/pages/app/management/doctor-consultations/components/doctor-dispatch-header"
 import { DoctorOfferCard } from "@/pages/app/management/doctor-consultations/components/doctor-offer-card"
 import { DoctorScheduleDialog } from "@/pages/app/management/doctor-consultations/components/doctor-schedule-dialog"
+import { DoctorSessionsTable } from "@/pages/app/management/doctor-consultations/components/doctor-sessions-table"
 
 function readError(error: unknown, fallback: string) {
   const err = error as { response?: { data?: { message?: string } }; message?: string }
   return err.response?.data?.message || err.message || fallback
-}
-
-function getSessionStatusBadge(status: string, meaningfulCareOccurred?: boolean | null) {
-  switch (status) {
-    case "SCHEDULED":
-      return <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">Đã lên lịch</Badge>
-    case "ACTIVE":
-      return <Badge className="bg-emerald-500 hover:bg-emerald-600">Đang chăm sóc</Badge>
-    case "COMPLETED":
-      return <Badge variant="secondary" className="bg-neutral-100 text-neutral-700">Đã hoàn tất</Badge>
-    case "CANCELLED":
-      return meaningfulCareOccurred ? (
-        <Badge variant="outline" className="bg-amber-50 text-amber-800 border-amber-300">
-          Đã hủy (Có chăm sóc)
-        </Badge>
-      ) : (
-        <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200">
-          Đã hủy
-        </Badge>
-      )
-    case "EXPIRED":
-      return <Badge variant="destructive">Đã hết hạn</Badge>
-    default:
-      return <Badge variant="outline">{status}</Badge>
-  }
 }
 
 export default function DoctorSessionsPage() {
@@ -62,7 +35,9 @@ export default function DoctorSessionsPage() {
   const [actionLoading, setActionLoading] = useState(false)
   const [sessions, setSessions] = useState<DoctorConsultationSessionResponse[]>([])
   const [page, setPage] = useState(1)
-  const [hasMore, setHasMore] = useState(false)
+  const [size, setSize] = useState(10)
+  const [totalElements, setTotalElements] = useState(0)
+  const [totalPages, setTotalPages] = useState(1)
   const [selectedSessionId, setSelectedSessionId] = useState<string | number | null>(null)
 
   const handleDoctorDetailOpenChange = useCallback((open: boolean) => {
@@ -81,20 +56,16 @@ export default function DoctorSessionsPage() {
   const [isScheduleOpen, setIsScheduleOpen] = useState(false)
   
   // Load sessions list
-  const loadSessions = useCallback(async (pageNum: number, isRefresh = false) => {
+  const loadSessions = useCallback(async (pageNum: number, pageSize = size) => {
     if (!isDoctor) return
     try {
       setLoading(true)
-      const res = await consultationApi.getDoctorSessions({ page: pageNum, size: 10 })
+      const res = await consultationApi.getDoctorSessions({ page: pageNum, size: pageSize })
       const data = res.data.content || []
-      
-      if (isRefresh || pageNum === 1) {
-        setSessions(data)
-      } else {
-        setSessions(prev => [...prev, ...data])
-      }
-      
-      setHasMore(data.length === 10)
+      setSessions(data)
+      setTotalElements(res.data.totalElements ?? data.length)
+      setTotalPages(res.data.totalPages ?? 1)
+      setPage(res.data.page ?? pageNum)
     } catch (error: unknown) {
       const err = error as { response?: { status?: number } }
       if (err?.response?.status === 403) {
@@ -105,7 +76,7 @@ export default function DoctorSessionsPage() {
     } finally {
       setLoading(false)
     }
-  }, [isDoctor, toast])
+  }, [isDoctor, size, toast])
 
   // Fetch Care Profile (Precondition for Dispatch V1)
   const fetchCareProfile = useCallback(async () => {
@@ -159,7 +130,7 @@ export default function DoctorSessionsPage() {
       // If doctor is BUSY and has a busySessionId, refresh sessions if needed
       if (newStatus.dispatchStatus === "BUSY" && newStatus.busySessionId) {
         // Session is live, reload sessions list to include the newly created session
-        void loadSessions(1, true)
+        void loadSessions(1, size)
       }
     } catch (err: unknown) {
       const error = err as { response?: { data?: { code?: number } } }
@@ -169,15 +140,15 @@ export default function DoctorSessionsPage() {
         setCurrentOffer(null)
       }
     }
-  }, [isDoctor, hasProfile, loadSessions])
+  }, [isDoctor, hasProfile, loadSessions, size])
 
   // Initial load
   useEffect(() => {
     if (isDoctor) {
-      void loadSessions(1, true)
+      void loadSessions(1, size)
       void fetchCareProfile()
     }
-  }, [isDoctor, loadSessions, fetchCareProfile])
+  }, [isDoctor, loadSessions, fetchCareProfile, size])
 
   // Trigger initial dispatch fetch when profile becomes available
   useEffect(() => {
@@ -316,139 +287,36 @@ export default function DoctorSessionsPage() {
       {/* 3. Session list header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight text-neutral-900">Phiên chăm sóc (Active Care)</h2>
-          <p className="text-neutral-500">Quản lý các phiên chăm sóc và tư vấn cho bệnh nhân.</p>
+          <h2 className="text-2xl font-black tracking-tight text-slate-800">Danh sách phiên khám (Active Care)</h2>
+          <p className="text-xs font-semibold text-slate-500">
+            Theo dõi danh sách phiên khám, trao đổi chuyên môn và quản lý tiến trình điều trị người bệnh.
+          </p>
         </div>
-        <Button
-          variant="outline"
-          onClick={() => {
-            void loadSessions(1, true)
-            void fetchDispatchAndOffer()
-          }}
-          disabled={loading || actionLoading}
-        >
-          <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
-          Làm mới
-        </Button>
       </div>
 
-      {loading && sessions.length === 0 ? (
-        <div className="flex justify-center items-center py-12">
-          <RefreshCw className="h-8 w-8 text-primary animate-spin" />
-        </div>
-      ) : sessions.length === 0 ? (
-        <Card className="border-dashed bg-neutral-50/50">
-          <CardContent className="flex flex-col items-center justify-center py-12 text-center">
-            <FileText className="h-12 w-12 text-neutral-300 mb-4" />
-            <h3 className="text-lg font-medium text-neutral-900 mb-1">Chưa có phiên chăm sóc nào</h3>
-            <p className="text-sm text-neutral-500">Bạn chưa được phân công phiên chăm sóc nào vào lúc này.</p>
-          </CardContent>
-        </Card>
-      ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          {sessions.map(session => (
-            <Card key={session.id} className="group hover:border-primary/50 transition-colors">
-              <CardHeader className="pb-3">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <CardTitle className="text-base font-semibold line-clamp-1">
-                      Bệnh nhân #{session.memberId}
-                    </CardTitle>
-                    <CardDescription className="text-xs font-mono mt-1">
-                      ID: {session.id}
-                    </CardDescription>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    {session.status === "COMPLETED" && session.summaryClosureStatus === "SUMMARY_PENDING" && (
-                      <Badge className="bg-amber-500 hover:bg-amber-600 text-white font-medium text-xs">
-                        Cần tổng kết
-                      </Badge>
-                    )}
-                    {getSessionStatusBadge(session.status, session.meaningfulCareOccurred)}
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent className="pb-3 space-y-4">
-                <div className="grid grid-cols-2 gap-y-3 gap-x-4 text-sm">
-                  <div className="flex items-start gap-2 text-neutral-600">
-                    <Calendar className="h-4 w-4 shrink-0 text-neutral-400 mt-0.5" />
-                    <div>
-                      <p className="font-medium text-neutral-900">Bắt đầu</p>
-                      <p>{formatDate(session.startedAt)}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-2 text-neutral-600">
-                    <Clock className="h-4 w-4 shrink-0 text-neutral-400 mt-0.5" />
-                    <div>
-                      <p className="font-medium text-neutral-900">Kết thúc</p>
-                      <p>{formatDate(session.endsAt) || 'Không xác định'}</p>
-                    </div>
-                  </div>
-                </div>
-
-                {session.status === "CANCELLED" && session.meaningfulCareOccurred && (
-                  <div className="bg-amber-50/80 border border-amber-200 rounded-md p-3 flex items-start gap-2.5 text-xs text-amber-900">
-                    <FileText className="h-4 w-4 text-amber-600 shrink-0 mt-0.5" />
-                    <div>
-                      <p className="font-medium">Phiên đã hủy nhưng có phát sinh chăm sóc</p>
-                      <p className="text-amber-700 mt-0.5">Bác sĩ vẫn có thể lập và hoàn tất bản Tổng kết y khoa.</p>
-                    </div>
-                  </div>
-                )}
-
-                {session.unresolvedAttentionCount > 0 && (
-                  <div className="bg-orange-50 border border-orange-100 rounded-md p-3 flex items-start gap-3">
-                    <AlertTriangle className="h-5 w-5 text-orange-500 shrink-0" />
-                    <div>
-                      <p className="text-sm font-medium text-orange-800">
-                        Có {session.unresolvedAttentionCount} hồ sơ cần xem
-                      </p>
-                      <p className="text-xs text-orange-700 mt-0.5">Sẽ bổ sung chi tiết ở batch tiếp theo.</p>
-                    </div>
-                  </div>
-                )}
-              </CardContent>
-              <CardFooter className="pt-3 border-t bg-neutral-50/50 flex gap-2">
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  className="w-full"
-                  onClick={() => setSelectedSessionId(session.id)}
-                >
-                  <Eye className="h-4 w-4 mr-2" /> Xem chi tiết
-                </Button>
-                {session.status === "ACTIVE" && (
-                  <Button 
-                    variant="default" 
-                    size="sm" 
-                    className="w-full"
-                    onClick={() => navigate(`/app/general/consultations?tab=chat&sessionId=${session.id}`)}
-                  >
-                    <MessageSquare className="h-4 w-4 mr-2" /> Mở Chat
-                  </Button>
-                )}
-              </CardFooter>
-            </Card>
-          ))}
-        </div>
-      )}
-
-      {hasMore && (
-        <div className="flex justify-center pt-4">
-          <Button 
-            variant="outline" 
-            onClick={() => {
-              const nextPage = page + 1
-              setPage(nextPage)
-              loadSessions(nextPage)
-            }}
-            disabled={loading}
-          >
-            {loading ? <RefreshCw className="h-4 w-4 mr-2 animate-spin" /> : null}
-            Tải thêm
-          </Button>
-        </div>
-      )}
+      {/* 4. Doctor Sessions Table with Pagination */}
+      <DoctorSessionsTable
+        sessions={sessions}
+        loading={loading}
+        page={page}
+        size={size}
+        totalElements={totalElements}
+        totalPages={totalPages}
+        onPageChange={(newPage) => {
+          setPage(newPage)
+          void loadSessions(newPage, size)
+        }}
+        onSizeChange={(newSize) => {
+          setSize(newSize)
+          setPage(1)
+          void loadSessions(1, newSize)
+        }}
+        onRefresh={() => {
+          void loadSessions(page, size)
+          void fetchDispatchAndOffer()
+        }}
+        onViewDetail={(sessionId) => setSelectedSessionId(sessionId)}
+      />
 
       {selectedSessionId && (
         <DoctorSessionDetailDialog 
@@ -456,7 +324,7 @@ export default function DoctorSessionsPage() {
           open={!!selectedSessionId} 
           onOpenChange={handleDoctorDetailOpenChange} 
           onSessionRefreshed={() => {
-            void loadSessions(1, true)
+            void loadSessions(page, size)
             void fetchDispatchAndOffer()
           }}
         />

@@ -5,6 +5,7 @@ import {
   HeartPulse,
   LayoutDashboard,
   MessagesSquare,
+  Stethoscope,
   User,
   Users,
   Wrench,
@@ -96,12 +97,20 @@ export const allNavigationGroups: NavigationGroup[] = [
     items: [
       {
         id: "doctor-consultations",
-        title: "Phiên khám Bác sĩ",
+        title: "Phiên khám & Trực ban",
         shortTitle: "Phiên khám",
         href: "/app/management/doctor/consultations",
-        icon: MessagesSquare,
+        icon: Stethoscope,
         allowedRoles: [USER_ROLES.DOCTOR],
         exact: true,
+      },
+      {
+        id: "doctor-chat",
+        title: "Phòng chat tư vấn",
+        shortTitle: "Chat tư vấn",
+        href: "/app/general/consultations?tab=chat",
+        icon: MessagesSquare,
+        allowedRoles: [USER_ROLES.DOCTOR],
       },
     ],
   },
@@ -161,6 +170,7 @@ export const allNavigationGroups: NavigationGroup[] = [
         allowedRoles: [
           USER_ROLES.SUPER_ADMIN,
           USER_ROLES.ADMIN,
+          USER_ROLES.DOCTOR,
           USER_ROLES.MEMBER,
         ],
       },

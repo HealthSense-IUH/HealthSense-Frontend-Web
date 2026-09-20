@@ -241,51 +241,6 @@ export function CreateRequestPanel({
                   maxLength={2000}
                 />
               </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="careGoal" className="text-sm font-semibold">
-                    Mục tiêu tư vấn (Tùy chọn)
-                  </Label>
-                  <Input
-                    id="careGoal"
-                    placeholder="VD: Có kế hoạch theo dõi và cải thiện lối sống..."
-                    value={form.careGoal}
-                    onChange={(e) => onChange({ ...form, careGoal: e.target.value })}
-                    className="rounded-xl h-11"
-                    maxLength={1000}
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="memberNote" className="text-sm font-semibold">
-                    Ghi chú thêm (Tùy chọn)
-                  </Label>
-                  <Input
-                    id="memberNote"
-                    placeholder="VD: Tôi thường làm ca tối, huyết áp bình thường..."
-                    value={form.memberNote}
-                    onChange={(e) => onChange({ ...form, memberNote: e.target.value })}
-                    className="rounded-xl h-11"
-                    maxLength={1000}
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="relevantSelfReportedContext" className="text-sm font-semibold">
-                  Bối cảnh sức khỏe tự báo cáo (Tùy chọn)
-                </Label>
-                <Textarea
-                  id="relevantSelfReportedContext"
-                  rows={2}
-                  placeholder="VD: Không dùng thuốc kê đơn, tiền sử gia đình không có bệnh tim mạch..."
-                  value={form.relevantSelfReportedContext}
-                  onChange={(e) => onChange({ ...form, relevantSelfReportedContext: e.target.value })}
-                  className="rounded-xl resize-none"
-                  maxLength={4000}
-                />
-              </div>
             </div>
           </div>
 
