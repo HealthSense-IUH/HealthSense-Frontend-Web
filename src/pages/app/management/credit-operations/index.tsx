@@ -656,15 +656,12 @@ export default function AdminCreditOperationsPage() {
                         </SelectTrigger>
                         <SelectContent className="rounded-xl text-xs">
                           <SelectItem value="ALL">Tất cả nghiệp vụ</SelectItem>
-                          <SelectItem value="CREDIT_CHARGE">Nạp lượt (CHARGE)</SelectItem>
-                          <SelectItem value="ADMIN_ADJUSTMENT">Admin điều chỉnh</SelectItem>
-                          <SelectItem value="CREDIT_RESERVATION_HELD">Tạm giữ (HELD)</SelectItem>
-                          <SelectItem value="CREDIT_RESERVATION_CAPTURED">
-                            Quyết toán (CAPTURED)
-                          </SelectItem>
-                          <SelectItem value="CREDIT_RESERVATION_RELEASED">
-                            Hoàn trả (RELEASED)
-                          </SelectItem>
+                          <SelectItem value="PURCHASE">Nạp lượt (PURCHASE)</SelectItem>
+                          <SelectItem value="SESSION_CHARGE">Dùng lượt khi vào phiên (V2)</SelectItem>
+                          <SelectItem value="RESERVE">Tạm giữ (RESERVE)</SelectItem>
+                          <SelectItem value="CAPTURE">Quyết toán (CAPTURE)</SelectItem>
+                          <SelectItem value="RELEASE">Hoàn trả (RELEASE)</SelectItem>
+                          <SelectItem value="ADJUSTMENT">Admin điều chỉnh</SelectItem>
                           <SelectItem value="SESSION_REFUND">Bồi hoàn phiên</SelectItem>
                         </SelectContent>
                       </Select>
