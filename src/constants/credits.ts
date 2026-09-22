@@ -6,6 +6,7 @@ import type {
   CreditPaymentStatus,
   CreditReservationStatus,
   CreditSourceType,
+  ConsultationCreditPolicy,
 } from "@/types/credits"
 
 export interface StatusConfig {
@@ -127,6 +128,11 @@ export const CREDIT_OPERATION_CONFIG: Record<
     label: "Trả lượt giữ",
     description: "Hoàn trả lượt đang giữ về lại khả dụng",
     className: "bg-cyan-50 text-cyan-700 border-cyan-200 dark:bg-cyan-950/40 dark:text-cyan-400 dark:border-cyan-800",
+  },
+  SESSION_CHARGE: {
+    label: "Đã dùng lượt khi bắt đầu phiên",
+    description: "Tiêu thụ lượt tư vấn khi member xác nhận bắt đầu phiên",
+    className: "bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950/40 dark:text-rose-400 dark:border-rose-800",
   },
   ADJUSTMENT: {
     label: "Điều chỉnh",
@@ -284,3 +290,39 @@ export function getCreditSourceTypeConfig(sourceType?: string | null) {
     isOrder: false,
   }
 }
+
+/**
+ * Quy tắc hiển thị thông tin lượt tư vấn theo policy V20 (FRONTEND_V20_SESSION_CHARGE_HANDOFF.md)
+ */
+export function getCreditDisplay(snapshot?: {
+  creditPolicy?: ConsultationCreditPolicy | null
+  creditReservationStatus?: CreditReservationStatus | null
+} | null): string | null {
+  if (!snapshot?.creditPolicy) return null
+  if (snapshot.creditPolicy === "PER_SESSION_CONFIRM_V2") {
+    return snapshot.creditReservationStatus === "CAPTURED"
+      ? "Đã sử dụng lượt tư vấn"
+      : "Lượt sẽ được trừ khi bạn xác nhận bắt đầu phiên"
+  }
+  if (snapshot.creditPolicy === "PER_SESSION_V1") {
+    if (snapshot.creditReservationStatus === "HELD") return "Lượt đang được tạm giữ"
+    if (snapshot.creditReservationStatus === "CAPTURED") return "Đã sử dụng lượt tư vấn"
+    if (snapshot.creditReservationStatus === "RELEASED") return "Lượt đã được trả lại"
+  }
+  return null
+}
+
+/**
+ * Mã lỗi nghiệp vụ khi xác nhận phiên tư vấn (V20 Section 9)
+ */
+export const CONSULTATION_CONFIRM_ERROR_MESSAGES: Record<number, string> = {
+  4100: "Không còn đủ lượt tại thời điểm bắt đầu phiên. Vui lòng nạp thêm lượt.",
+  4026: "Không tìm thấy lời mời tư vấn hoặc đã bị thu hồi.",
+  4027: "Lời mời tư vấn cũ hoặc không còn hiệu lực.",
+  4028: "Lời mời tư vấn đã hết thời gian xác nhận.",
+  4009: "Yêu cầu tư vấn không còn ở trạng thái cho phép xác nhận.",
+  4014: "Bác sĩ không còn đủ điều kiện nhận phiên. Đang điều phối lại...",
+  4002: "Yêu cầu tư vấn không thuộc về tài khoản của bạn.",
+  4004: "Bạn đã có phiên tư vấn khác đang hoạt động.",
+}
+
