@@ -97,19 +97,10 @@ export const allNavigationGroups: NavigationGroup[] = [
     items: [
       {
         id: "doctor-consultations",
-        title: "Phiên khám & Trực ban",
+        title: "Quản lý phiên khám",
         shortTitle: "Phiên khám",
         href: "/app/management/doctor/consultations",
         icon: Stethoscope,
-        allowedRoles: [USER_ROLES.DOCTOR],
-        exact: true,
-      },
-      {
-        id: "doctor-chat",
-        title: "Phòng chat tư vấn",
-        shortTitle: "Chat tư vấn",
-        href: "/app/general/consultations?tab=chat",
-        icon: MessagesSquare,
         allowedRoles: [USER_ROLES.DOCTOR],
       },
     ],
@@ -137,14 +128,6 @@ export const allNavigationGroups: NavigationGroup[] = [
         icon: FileText,
         allowedRoles: [USER_ROLES.MEMBER],
       },
-      {
-        id: "credits",
-        title: "Lượt tư vấn",
-        shortTitle: "Lượt tư vấn",
-        href: "/app/general/credits",
-        icon: Coins,
-        allowedRoles: [USER_ROLES.MEMBER],
-      },
     ],
   },
 
@@ -155,8 +138,8 @@ export const allNavigationGroups: NavigationGroup[] = [
     items: [
       {
         id: "afib-history",
-        title: "Tầm soát Rung nhĩ (AFib)",
-        shortTitle: "Rung nhĩ",
+        title: "Lịch sử đo",
+        shortTitle: "Lịch sử đo",
         href: "/app/general/afib-history",
         icon: HeartPulse,
         allowedRoles: [USER_ROLES.MEMBER],
@@ -170,7 +153,6 @@ export const allNavigationGroups: NavigationGroup[] = [
         allowedRoles: [
           USER_ROLES.SUPER_ADMIN,
           USER_ROLES.ADMIN,
-          USER_ROLES.DOCTOR,
           USER_ROLES.MEMBER,
         ],
       },

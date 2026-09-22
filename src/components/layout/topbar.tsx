@@ -10,7 +10,6 @@ import { useTranslation } from "react-i18next"
 import { useAppShell } from "./app-shell-context"
 import { DemoRoleSwitcher } from "./demo-role-switcher"
 import { LanguageSwitcher } from "./language-switcher"
-import { NotificationBell } from "@/components/layout/notification-bell"
 import { authApi } from "@/services"
 import { useAuthStore } from "@/stores/auth-store"
 import { AvatarPlaceholder } from "@/components/ui/avatar"
@@ -229,9 +228,7 @@ export function Topbar() {
         {/* DEV ONLY: Role Switcher */}
         {import.meta.env.DEV ? <DemoRoleSwitcher /> : null}
 
-        {/* In-app Notification Bell */}
         <LanguageSwitcher />
-        <NotificationBell />
 
         {/* User Account Menu Pill */}
         <Popover>
