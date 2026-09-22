@@ -187,7 +187,7 @@ export function DoctorRecordDetailDialog({
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div className="space-y-1">
                     <p className="text-muted-foreground">Nhãn dự đoán</p>
-                    <p className="font-medium">
+                    <div className="font-medium">
                       {detail.record.predictionLabel ? (
                         <Badge variant={detail.record.predictionLabel === "NORMAL" ? "secondary" : "destructive"}>
                           {detail.record.predictionLabel}
@@ -195,7 +195,7 @@ export function DoctorRecordDetailDialog({
                       ) : (
                         "-"
                       )}
-                    </p>
+                    </div>
                   </div>
                   <div className="space-y-1">
                     <p className="text-muted-foreground">Độ tin cậy</p>

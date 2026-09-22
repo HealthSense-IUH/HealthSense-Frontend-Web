@@ -143,29 +143,27 @@ export function DoctorFinalSummaryTab({
     return () => clearInterval(timer)
   }, [])
 
+  const onFinalizedRef = useRef(onFinalized)
+  useEffect(() => {
+    onFinalizedRef.current = onFinalized
+  }, [onFinalized])
+
   const summaryDueAtMs = summaryDueAt ? new Date(summaryDueAt).getTime() : 0
   const isSummaryOverdue = summaryClosureStatus === "SUMMARY_OVERDUE" || (summaryDueAtMs > 0 && currentTime >= summaryDueAtMs)
   const hasTriggeredTimeoutRef = useRef(false)
 
-  // Refetch authoritative dispatch status when summary becomes overdue
+  // Refetch authoritative dispatch status when summary becomes overdue (only once)
   useEffect(() => {
     if (isSummaryOverdue && !summary?.finalizedAt && !hasTriggeredTimeoutRef.current) {
       hasTriggeredTimeoutRef.current = true
-      consultationApi.getDoctorDispatchStatus()
-        .then(res => setLatestDispatchStatus(res.data))
-        .catch(() => {})
-      onFinalized?.()
+      if (flowType === "QUEUE_DISPATCH_V1") {
+        consultationApi.getDoctorDispatchStatus()
+          .then(res => setLatestDispatchStatus(res.data))
+          .catch(() => {})
+      }
+      onFinalizedRef.current?.()
     }
-  }, [isSummaryOverdue, summary?.finalizedAt, onFinalized])
-
-  // Initial fetch of dispatch status if already overdue
-  useEffect(() => {
-    if (flowType === "QUEUE_DISPATCH_V1" && isSummaryOverdue && !summary?.finalizedAt) {
-      consultationApi.getDoctorDispatchStatus()
-        .then(res => setLatestDispatchStatus(res.data))
-        .catch(() => {})
-    }
-  }, [flowType, isSummaryOverdue, summary?.finalizedAt])
+  }, [isSummaryOverdue, summary?.finalizedAt, flowType])
 
   const toggleRecordSelection = (recordId: string | number) => {
     setSelectedRecordIds((prev) =>

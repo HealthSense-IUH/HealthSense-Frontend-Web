@@ -109,7 +109,7 @@ export function CreateRequestPanel({
                 type="button"
                 size="sm"
                 className="shrink-0 bg-primary text-primary-foreground text-xs font-semibold h-9 rounded-xl gap-1.5 shadow-xs"
-                onClick={() => navigate("/app/general/credits?tab=packages")}
+                onClick={() => navigate("/app/general/consultations?tab=credits")}
               >
                 <Coins className="w-3.5 h-3.5" />
                 Mua thêm lượt tư vấn
@@ -247,7 +247,9 @@ export function CreateRequestPanel({
           <div className="flex items-start sm:items-center gap-2.5 p-3.5 bg-primary/5 border border-primary/20 rounded-xl text-xs text-muted-foreground">
             <AlertCircle className="w-4 h-4 text-primary shrink-0 mt-0.5 sm:mt-0" />
             <span>
-              {queueStatistics?.creditPolicy === "PER_SESSION_V1"
+              {queueStatistics?.creditPolicy === "PER_SESSION_CONFIRM_V2"
+                ? `Phiên tư vấn cần ${queueStatistics.creditCost ?? 1} lượt. Lượt chỉ được trừ khi bạn xác nhận bắt đầu phiên.`
+                : queueStatistics?.creditPolicy === "PER_SESSION_V1"
                 ? `Mỗi phiên tư vấn sử dụng ${queueStatistics.creditCost ?? 1} lượt. Lượt sẽ được tạm giữ khi vào hàng đợi và chỉ trừ khi bắt đầu phiên khám.`
                 : queueStatistics?.creditPolicy === "FREE_EXISTING" || queueStatistics?.creditPolicy === "FREE_DISABLED"
                 ? "Phiên tư vấn miễn phí, không trừ lượt."

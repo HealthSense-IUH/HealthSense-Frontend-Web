@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react"
-import { Clock, RefreshCw, FileText } from "lucide-react"
+import { useNavigate } from "react-router-dom"
+import { Clock, RefreshCw, FileText, MessagesSquare } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -34,6 +35,7 @@ export function SessionsPanel({
   onActivateScheduled?: () => void
   onSessionRefreshed?: () => void
 }) {
+  const navigate = useNavigate()
   const { effectiveRole } = useAppShell()
   const isDoctor = effectiveRole === USER_ROLES.DOCTOR
   const [summarySessionId, setSummarySessionId] = useState<string | number | null>(null)
@@ -46,11 +48,17 @@ export function SessionsPanel({
   }, [])
 
   const sortedSessions = [...sessions].sort((a, b) => {
+    const aActive = a.status === "ACTIVE" ? 1 : 0
+    const bActive = b.status === "ACTIVE" ? 1 : 0
+    if (aActive !== bActive) return bActive - aActive
+
     const timeA = a.createdAt ? new Date(a.createdAt).getTime() : 0
     const timeB = b.createdAt ? new Date(b.createdAt).getTime() : 0
     if (timeA !== timeB) return timeB - timeA
     return String(b.id).localeCompare(String(a.id), undefined, { numeric: true })
   })
+
+  const activeSession = sortedSessions.find((s) => s.status === "ACTIVE")
 
   return (
     <Card>
@@ -86,7 +94,41 @@ export function SessionsPanel({
           </div>
         )}
       </CardHeader>
-      <CardContent>
+      <CardContent className="space-y-4">
+        {!isAdmin && !isDoctor && activeSession && (
+          <div className="p-4 rounded-xl border border-emerald-500/30 bg-emerald-500/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xs">
+            <div className="flex items-center gap-3">
+              <span className="relative flex h-3 w-3 shrink-0">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+              </span>
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="font-semibold text-emerald-950 dark:text-emerald-100 text-sm">
+                    Bạn đang có phiên tư vấn trực tiếp đang diễn ra!
+                  </span>
+                  <Badge className="bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] font-bold">
+                    Đang hoạt động
+                  </Badge>
+                </div>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Bác sĩ: <span className="font-medium text-foreground">{activeSession.doctorDisplayName || `#${activeSession.doctorId}`}</span> • Mã phiên: #{activeSession.id}
+                  {activeSession.lastMessagePreview && (
+                    <span className="italic"> • Tin nhắn mới nhất: &ldquo;{activeSession.lastMessagePreview}&rdquo;</span>
+                  )}
+                </p>
+              </div>
+            </div>
+            <Button
+              size="sm"
+              onClick={() => navigate(`/app/general/consultations/${activeSession.id}`)}
+              className="gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm shrink-0"
+            >
+              <MessagesSquare className="w-4 h-4" />
+              Vào phòng tư vấn ngay
+            </Button>
+          </div>
+        )}
         <Table>
           <TableHeader>
             <TableRow>
@@ -103,7 +145,11 @@ export function SessionsPanel({
           <TableBody>
             {sortedSessions.length === 0 && <EmptyRow colSpan={8} text={loading ? "Đang tải danh sách..." : "Không có phiên tư vấn nào."} />}
             {sortedSessions.map((session) => (
-              <TableRow key={session.id} data-state={String(selectedSessionId) === String(session.id) ? "selected" : undefined}>
+              <TableRow 
+                key={session.id} 
+                data-state={String(selectedSessionId) === String(session.id) ? "selected" : undefined}
+                className={session.status === "ACTIVE" ? "bg-emerald-50/40 dark:bg-emerald-950/20 hover:bg-emerald-50/60 dark:hover:bg-emerald-950/30 font-medium" : undefined}
+              >
                 <TableCell className="font-medium">#{session.id}</TableCell>
                 <TableCell>{session.memberDisplayName || `#${session.memberId}`}</TableCell>
                 <TableCell>{session.doctorDisplayName || `#${session.doctorId}`}</TableCell>
@@ -124,6 +170,50 @@ export function SessionsPanel({
                 </TableCell>
                 <TableCell className="text-right">
                   <div className="flex justify-end gap-2 flex-wrap">
+                    {!isAdmin && !isDoctor && (
+                      session.status === "ACTIVE" ? (
+                        <Button
+                          size="sm"
+                          onClick={() => navigate(`/app/general/consultations/${session.id}`)}
+                          className="gap-1 shadow-sm"
+                        >
+                          <MessagesSquare className="w-3.5 h-3.5" />
+                          Vào phòng tư vấn
+                        </Button>
+                      ) : (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => navigate(`/app/general/consultations/${session.id}`)}
+                          className="gap-1"
+                        >
+                          <MessagesSquare className="w-3.5 h-3.5" />
+                          Xem tin nhắn
+                        </Button>
+                      )
+                    )}
+                    {isDoctor && (
+                      session.status === "ACTIVE" ? (
+                        <Button
+                          size="sm"
+                          onClick={() => navigate(`/app/management/doctor/consultations/${session.id}`)}
+                          className="gap-1 shadow-sm"
+                        >
+                          <MessagesSquare className="w-3.5 h-3.5" />
+                          Vào ca khám
+                        </Button>
+                      ) : (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => navigate(`/app/management/doctor/consultations/${session.id}`)}
+                          className="gap-1"
+                        >
+                          <MessagesSquare className="w-3.5 h-3.5" />
+                          Xem ca khám
+                        </Button>
+                      )
+                    )}
                     {isDoctor && canEditFinalSummaryDraft(session) && (
                       <Button
                         variant="outline"

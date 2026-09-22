@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react"
+import { useNavigate } from "react-router-dom"
 import {
   Clock,
   Users,
@@ -10,6 +11,7 @@ import {
   Sparkles,
   ArrowRight,
   Info,
+  Coins,
 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -17,13 +19,14 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Badge } from "@/components/ui/badge"
 import type { CurrentQueueStateResponse, ConsultationRequestItem } from "@/types/consultation"
 import type { CreditReservationStatus } from "@/types/credits"
-import { getCreditReservationStatusConfig } from "@/constants/credits"
+import { getCreditReservationStatusConfig, getCreditDisplay } from "@/constants/credits"
 
 export interface MemberQueuePanelProps {
   queueState: CurrentQueueStateResponse | null
   latestRequest: ConsultationRequestItem | null
   loading: boolean
   actionLoading: boolean
+  insufficientCredits?: boolean
   onConfirm: (offerId: string) => void
   onCancel: (requestId: string | number) => void
   onRefresh: () => void
@@ -78,15 +81,22 @@ export function MemberQueuePanel({
   latestRequest,
   loading,
   actionLoading,
+  insufficientCredits,
   onConfirm,
   onCancel,
   onRefresh,
   onOpenSession,
   onRegisterNew,
 }: MemberQueuePanelProps) {
+  const navigate = useNavigate()
+  const creditPolicy = queueState?.creditPolicy || latestRequest?.creditPolicy
   const reservationStatus: CreditReservationStatus | null | undefined =
     queueState?.creditReservationStatus || latestRequest?.creditReservationStatus
   const reservationConfig = reservationStatus ? getCreditReservationStatusConfig(reservationStatus) : null
+  const creditDisplay = getCreditDisplay({
+    creditPolicy,
+    creditReservationStatus: reservationStatus,
+  })
 
   // Confirmation countdown (authoritative backend timestamp only)
   const confirmationDeadline = queueState?.phase === "WAITING_CONFIRMATION" ? queueState.memberConfirmExpiresAt : null
@@ -213,15 +223,38 @@ export function MemberQueuePanel({
               <span className="text-muted-foreground">Trạng thái:</span>
               <span className="font-semibold text-emerald-600">Bác sĩ đã chấp nhận kết nối</span>
             </div>
-            {reservationStatus && reservationConfig && (
+            {creditDisplay && (
               <div className="flex items-center justify-between text-sm pt-2 border-t">
-                <span className="text-muted-foreground">Trạng thái lượt:</span>
-                <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-semibold border ${reservationConfig.className}`}>
-                  {reservationConfig.label}
+                <span className="text-muted-foreground">Thông tin lượt:</span>
+                <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-semibold border bg-primary/5 text-primary border-primary/20">
+                  {creditDisplay}
                 </span>
               </div>
             )}
           </div>
+
+          {insufficientCredits && (
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-amber-500/10 border border-amber-500/30 rounded-2xl gap-3 text-amber-950 dark:text-amber-200">
+              <div className="flex items-start sm:items-center gap-2.5">
+                <AlertCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5 sm:mt-0" />
+                <div>
+                  <p className="font-semibold text-sm text-foreground">Không còn đủ lượt tại thời điểm bắt đầu phiên</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    Màn hình xác nhận vẫn được giữ. Vui lòng nạp thêm lượt tư vấn để tiếp tục.
+                  </p>
+                </div>
+              </div>
+              <Button
+                type="button"
+                size="sm"
+                className="shrink-0 bg-primary text-primary-foreground text-xs font-semibold h-9 rounded-xl gap-1.5 shadow-xs"
+                onClick={() => navigate("/app/general/consultations?tab=credits")}
+              >
+                <Coins className="w-3.5 h-3.5" />
+                Mua thêm lượt tư vấn
+              </Button>
+            </div>
+          )}
 
           {isConfirmExpired ? (
             <div className="p-3 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900 rounded-xl text-xs text-red-800 dark:text-red-300 flex items-start gap-2">
@@ -234,7 +267,9 @@ export function MemberQueuePanel({
             <div className="p-3 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-900 rounded-xl text-xs text-blue-800 dark:text-blue-300 flex items-start gap-2">
               <Info className="w-4 h-4 shrink-0 mt-0.5 text-blue-600" />
               <span>
-                Bạn có tối đa 15 phút để xác nhận. Sau khi bạn xác nhận, phiên tư vấn và khung chat trực tiếp sẽ được mở ngay lập tức.
+                {creditPolicy === "PER_SESSION_CONFIRM_V2"
+                  ? "Bạn có tối đa 15 phút để xác nhận. Sau khi bạn xác nhận, 1 lượt tư vấn sẽ được trừ và phiên tư vấn sẽ được bắt đầu ngay lập tức."
+                  : "Bạn có tối đa 15 phút để xác nhận. Sau khi bạn xác nhận, phiên tư vấn và khung chat trực tiếp sẽ được mở ngay lập tức."}
               </span>
             </div>
           )}
@@ -330,9 +365,9 @@ export function MemberQueuePanel({
                 <Badge variant="outline" className="px-3 py-1 text-xs font-semibold bg-background">
                   {isOfferingDoctor ? "Đang kết nối bác sĩ" : "Đang chờ đến lượt"}
                 </Badge>
-                {reservationStatus && reservationConfig && (
-                  <Badge variant="outline" className={`px-2.5 py-1 text-xs font-semibold ${reservationConfig.className}`}>
-                    {reservationConfig.label}
+                {creditDisplay && (
+                  <Badge variant="outline" className="px-2.5 py-1 text-xs font-semibold bg-primary/5 text-primary border-primary/20">
+                    {creditDisplay}
                   </Badge>
                 )}
               </div>
