@@ -104,8 +104,8 @@ export default function AfibHistoryPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-primary">Lịch sử Tầm soát Rung nhĩ</h1>
-          <p className="text-muted-foreground mt-1">Lịch sử các lần đo chủ động và cảnh báo từ AI</p>
+          <h1 className="text-3xl font-bold tracking-tight text-primary">Lịch sử đo</h1>
+          <p className="text-muted-foreground mt-1">Lịch sử các lần đo chủ động và cảnh báo tầm soát từ AI</p>
         </div>
 
         <div className="flex items-center gap-2.5">
