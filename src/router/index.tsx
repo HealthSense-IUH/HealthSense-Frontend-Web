@@ -17,8 +17,8 @@ const ReportsPage = lazy(() => import("@/pages/app/general/reports"))
 const CareHistoryPage = lazy(() => import("@/pages/app/general/care-history"))
 const ProfilePage = lazy(() => import("@/pages/app/general/profile"))
 const ConsultationsPage = lazy(() => import("@/pages/app/general/consultations"))
+const MemberSessionWorkspacePage = lazy(() => import("@/pages/app/general/consultations/workspace"))
 const PaymentResultPage = lazy(() => import("@/pages/app/general/payment-result"))
-const CreditsPage = lazy(() => import("@/pages/app/general/credits"))
 const CreditPaymentResultPage = lazy(() => import("@/pages/app/general/credits/payment-result"))
 
 const ManagementPage = lazy(() => import("@/pages/app/management/hub"))
@@ -28,6 +28,7 @@ const AdminCreditPackagesPage = lazy(() => import("@/pages/app/management/credit
 const AdminCreditOperationsPage = lazy(() => import("@/pages/app/management/credit-operations"))
 const AdminHealthRecordsPage = lazy(() => import("@/pages/app/management/health-records"))
 const DoctorSessionsPage = lazy(() => import("@/pages/app/management/doctor-consultations"))
+const DoctorSessionWorkspacePage = lazy(() => import("@/pages/app/management/doctor-consultations/workspace"))
 
 const LandingPage = lazy(() => import("@/pages/public/landing"))
 const LoginPage = lazy(() => import("@/pages/public/login"))
@@ -144,13 +145,14 @@ export const router = createBrowserRouter([
           },
           {
             path: "packages/*",
-            element: <Navigate to="/app/general/credits" replace />,
+            element: <Navigate to="/app/general/consultations?tab=credits" replace />,
           },
           { path: "profile", element: wrap(<ProfilePage />) },
           {
             path: "consultations",
             children: [
               { index: true, element: wrap(<ConsultationsPage />) },
+              { path: ":sessionId", element: wrap(<MemberSessionWorkspacePage />) },
               { path: "payment/result", element: wrap(<PaymentResultPage />) },
               { path: "payment/cancel", element: wrap(<PaymentResultPage />) },
             ],
@@ -160,11 +162,7 @@ export const router = createBrowserRouter([
             children: [
               {
                 index: true,
-                element: (
-                  <ProtectedRoute allowedRoles={[USER_ROLES.MEMBER]}>
-                    {wrap(<CreditsPage />)}
-                  </ProtectedRoute>
-                ),
+                element: <Navigate to="/app/general/consultations?tab=credits" replace />,
               },
               {
                 path: "payment/result",
@@ -265,10 +263,18 @@ export const router = createBrowserRouter([
           {
             path: "doctor/consultations",
             element: (
-              <ProtectedRoute allowedRoles={[USER_ROLES.DOCTOR]}>
-                {wrap(<DoctorSessionsPage />)}
-              </ProtectedRoute>
+              <ProtectedRoute allowedRoles={[USER_ROLES.DOCTOR]} />
             ),
+            children: [
+              {
+                index: true,
+                element: wrap(<DoctorSessionsPage />),
+              },
+              {
+                path: ":sessionId",
+                element: wrap(<DoctorSessionWorkspacePage />),
+              },
+            ],
           },
         ],
       },
