@@ -6,6 +6,7 @@ import { useToast } from "@/hooks/use-toast"
 
 import { useConsultationSocket } from "./use-consultation-socket"
 import { consultationApi } from "@/services"
+import { CONSULTATION_CONFIRM_ERROR_MESSAGES } from "@/constants/credits"
 import type { AdminDialogMode } from "../components/admin-action-dialog"
 import type { RequestFormData } from "../components/create-request-panel"
 import type { AdminSessionFormData } from "../components/create-admin-session-panel"
@@ -124,6 +125,7 @@ export function useConsultationsLogic() {
   const [currentQueueState, setCurrentQueueState] = useState<CurrentQueueStateResponse | null>(null)
   const [queueStatistics, setQueueStatistics] = useState<ConsultationQueueStatisticsResponse | null>(null)
   const [insufficientCredits, setInsufficientCredits] = useState(false)
+  const confirmLockRef = useRef(false)
   const [doctorDispatchStatus, setDoctorDispatchStatus] = useState<DoctorDispatchStatusResponse | null>(null)
   const [doctorCurrentOffer, setDoctorCurrentOffer] = useState<DoctorConsultationOfferResponse | null>(null)
   const [doctorCareProfile, setDoctorCareProfile] = useState<any | null>(null)
@@ -224,6 +226,33 @@ export function useConsultationsLogic() {
       const res = await consultationApi.getCurrentQueueState()
       const data = res.data
       setCurrentQueueState(data)
+      const activeSessionId = data?.phase === "ACTIVE_SESSION" && data?.sessionId ? data.sessionId : null
+      if (activeSessionId) {
+        setSessions((prev) => {
+          if (!prev.some((s) => String(s.id) === String(activeSessionId))) {
+            void consultationApi
+              .getSession(activeSessionId)
+              .then((sRes) => {
+                if (sRes.data) {
+                  setSessions((current) => {
+                    if (current.some((c) => String(c.id) === String(sRes.data.id))) return current
+                    return [sRes.data, ...current].sort((a, b) => {
+                      const aActive = a.status === "ACTIVE" ? 1 : 0
+                      const bActive = b.status === "ACTIVE" ? 1 : 0
+                      if (aActive !== bActive) return bActive - aActive
+                      const timeA = a.createdAt ? new Date(a.createdAt).getTime() : 0
+                      const timeB = b.createdAt ? new Date(b.createdAt).getTime() : 0
+                      if (timeA !== timeB) return timeB - timeA
+                      return String(b.id).localeCompare(String(a.id), undefined, { numeric: true })
+                    })
+                  })
+                }
+              })
+              .catch(() => {})
+          }
+          return prev
+        })
+      }
       return data
     } catch (err: any) {
       const code = err?.response?.data?.code
@@ -309,8 +338,8 @@ export function useConsultationsLogic() {
             ? consultationApi.listMyRequests({ page: 1, size: DEFAULT_PAGE_SIZE })
             : Promise.resolve(null),
         isAdmin
-          ? consultationApi.listAdminSessions({ page: 1, size: DEFAULT_PAGE_SIZE })
-          : consultationApi.listMySessions({ page: 1, size: DEFAULT_PAGE_SIZE }),
+          ? consultationApi.listAdminSessions({ page: 1, size: 50 })
+          : consultationApi.listMySessions({ page: 1, size: 50 }),
         shouldLoadRecords
           ? consultationApi.listMyHealthRecords({ page: 1, size: DEFAULT_PAGE_SIZE })
           : Promise.resolve(null),
@@ -330,23 +359,41 @@ export function useConsultationsLogic() {
           : Promise.resolve(null),
       ])
 
-      const loadedSessions = (sessionResponse.data.content ?? []).sort((a, b) => {
+      const loadedQueueState = queueResponse?.data ?? null
+      setCurrentQueueState(loadedQueueState)
+      if (queueStatsResponse?.data) {
+        setQueueStatistics(queueStatsResponse.data)
+      }
+
+      const loadedSessions = [...(sessionResponse.data.content ?? [])]
+      if (loadedQueueState?.sessionId && !loadedSessions.some((s) => String(s.id) === String(loadedQueueState.sessionId))) {
+        try {
+          const singleSessionRes = await consultationApi.getSession(loadedQueueState.sessionId)
+          if (singleSessionRes.data) {
+            loadedSessions.unshift(singleSessionRes.data)
+          }
+        } catch {
+          // ignore transient error
+        }
+      }
+
+      loadedSessions.sort((a, b) => {
+        const aActive = a.status === "ACTIVE" ? 1 : 0
+        const bActive = b.status === "ACTIVE" ? 1 : 0
+        if (aActive !== bActive) return bActive - aActive
+
         const timeA = a.createdAt ? new Date(a.createdAt).getTime() : 0
         const timeB = b.createdAt ? new Date(b.createdAt).getTime() : 0
         if (timeA !== timeB) return timeB - timeA
         return String(b.id).localeCompare(String(a.id), undefined, { numeric: true })
       })
+
       const loadedRequests = (requestResponse?.data.content ?? []).sort((a, b) => {
         const timeA = a.createdAt ? new Date(a.createdAt).getTime() : 0
         const timeB = b.createdAt ? new Date(b.createdAt).getTime() : 0
         if (timeA !== timeB) return timeB - timeA
         return String(b.id).localeCompare(String(a.id), undefined, { numeric: true })
       })
-      const loadedQueueState = queueResponse?.data ?? null
-      setCurrentQueueState(loadedQueueState)
-      if (queueStatsResponse?.data) {
-        setQueueStatistics(queueStatsResponse.data)
-      }
       setRequests(loadedRequests)
       setSessions(loadedSessions)
       setHealthRecords(healthRecordResponse?.data.content ?? [])
@@ -692,7 +739,7 @@ export function useConsultationsLogic() {
         setInsufficientCredits(true)
         setAlert({
           type: "error",
-          text: "Bạn không đủ lượt tư vấn để vào hàng đợi. Vui lòng mua thêm lượt.",
+          text: "Bạn chưa đủ lượt để xếp hàng tư vấn. Vui lòng nạp thêm lượt.",
         })
       } else {
         setAlert({ type: "error", text: readError(error, "Không thể gửi yêu cầu tư vấn.") })
@@ -703,7 +750,8 @@ export function useConsultationsLogic() {
   }
 
   async function handleConfirmQueue(offerId: string) {
-    if (!currentQueueState) return
+    if (!currentQueueState || confirmLockRef.current) return
+    confirmLockRef.current = true
     setActionLoading(true)
     setAlert(null)
     try {
@@ -712,16 +760,50 @@ export function useConsultationsLogic() {
       setAlert({ type: "success", text: "Đã xác nhận thành công. Phiên tư vấn đã được kích hoạt!" })
       toast({
         title: "Kích hoạt phiên thành công",
-        description: `Phiên tư vấn #${session.id} đã bắt đầu.`,
+        description: "Đã sử dụng 1 lượt tư vấn. Phiên tư vấn đã bắt đầu.",
       })
       window.dispatchEvent(new CustomEvent("credits:refresh"))
       await fetchCurrentQueueState()
       await loadData()
       setSelectedSession(session)
-    } catch (error) {
-      setAlert({ type: "error", text: readError(error, "Không thể xác nhận lượt tư vấn.") })
-      await fetchCurrentQueueState()
+    } catch (error: any) {
+      const status = error?.response?.status
+      const rawCode = error?.response?.data?.code || error?.response?.data?.errorCode
+      const code = Number(rawCode)
+      const errorMsg = error?.response?.data?.message || ""
+
+      if (code === 4100 || (status === 409 && String(errorMsg).toLowerCase().includes("lượt"))) {
+        setInsufficientCredits(true)
+        window.dispatchEvent(new CustomEvent("credits:refresh"))
+        setAlert({
+          type: "error",
+          text: CONSULTATION_CONFIRM_ERROR_MESSAGES[4100] || "Không còn đủ lượt tại thời điểm bắt đầu phiên. Vui lòng nạp thêm lượt.",
+        })
+        toast({
+          variant: "destructive",
+          title: "Không đủ lượt tư vấn",
+          description: "Số dư lượt tư vấn không đủ để bắt đầu phiên. Vui lòng nạp thêm lượt.",
+        })
+        await fetchCurrentQueueState()
+      } else if (code === 4004) {
+        setAlert({
+          type: "error",
+          text: CONSULTATION_CONFIRM_ERROR_MESSAGES[4004],
+        })
+        await fetchCurrentQueueState()
+        await loadData()
+      } else if (code && CONSULTATION_CONFIRM_ERROR_MESSAGES[code]) {
+        setAlert({
+          type: "error",
+          text: CONSULTATION_CONFIRM_ERROR_MESSAGES[code],
+        })
+        await fetchCurrentQueueState()
+      } else {
+        setAlert({ type: "error", text: readError(error, "Không thể xác nhận lượt tư vấn.") })
+        await fetchCurrentQueueState()
+      }
     } finally {
+      confirmLockRef.current = false
       setActionLoading(false)
     }
   }
