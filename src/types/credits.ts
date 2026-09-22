@@ -22,6 +22,7 @@ export type CreditOperation =
   | "RESERVE"
   | "CAPTURE"
   | "RELEASE"
+  | "SESSION_CHARGE"
   | "ADJUSTMENT"
   | "SESSION_REFUND"
 
@@ -35,8 +36,15 @@ export type ConsultationCreditPolicy =
   | "FREE_EXISTING"
   | "FREE_DISABLED"
   | "PER_SESSION_V1"
+  | "PER_SESSION_CONFIRM_V2"
 
 export type CreditReservationStatus = "HELD" | "CAPTURED" | "RELEASED"
+
+export interface ConsultationCreditSnapshot {
+  creditPolicy: ConsultationCreditPolicy
+  creditCost: number
+  creditReservationStatus?: CreditReservationStatus | null
+}
 
 export interface CreditWallet {
   id?: string

@@ -835,9 +835,10 @@ export type HealthRecordPage = PageResponse<HealthRecordItem>
 export interface DoctorConsultationSessionResponse {
   id: number | string
   sessionId?: number | string
-  memberId: number | string
+  memberId?: number | string
   memberDisplayName?: string | null
-  doctorId: number | string
+  member?: UserSummaryResponse | null
+  doctorId?: number | string
   doctorDisplayName?: string | null
   agreementId: number | string
   packageId?: number | string | null
@@ -860,6 +861,7 @@ export interface DoctorConsultationSessionResponse {
   supportScheduleSnapshotJson?: string | null
   supportTimezoneSnapshot?: string | null
   unresolvedAttentionCount: number
+  hasDraft?: boolean
   createdAt?: string | null
   updatedAt?: string | null
 }
