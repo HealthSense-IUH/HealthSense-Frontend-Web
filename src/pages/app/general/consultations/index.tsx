@@ -18,6 +18,7 @@ import { DoctorCandidatesDialog } from "@/pages/app/general/consultations/compon
 import { DoctorCareProfileDialog } from "@/pages/app/general/consultations/components/doctor-care-profile-dialog"
 import { MemberQueuePanel } from "@/pages/app/general/consultations/components/member-queue-panel"
 import { MemberCreditsPanel } from "@/pages/app/general/consultations/components/member-credits-panel"
+import { PendingConflictDialog } from "@/pages/app/general/consultations/components/pending-conflict-dialog"
 import { DoctorDispatchHeader } from "@/pages/app/management/doctor-consultations/components/doctor-dispatch-header"
 import { DoctorOfferCard } from "@/pages/app/management/doctor-consultations/components/doctor-offer-card"
 import { DoctorScheduleDialog } from "@/pages/app/management/doctor-consultations/components/doctor-schedule-dialog"
@@ -34,7 +35,11 @@ export default function ConsultationsPage() {
     logic.currentQueueState &&
     (logic.currentQueueState.queueStatus === "WAITING" ||
      logic.currentQueueState.queueStatus === "OFFERING_DOCTOR" ||
-     logic.currentQueueState.queueStatus === "WAITING_CONFIRMATION")
+     logic.currentQueueState.queueStatus === "WAITING_CONFIRMATION" ||
+     logic.currentQueueState.queueStatus === "WAITING_MEMBER_CONFIRMATION" ||
+     logic.currentQueueState.phase === "QUEUE" ||
+     logic.currentQueueState.phase === "WAITING_CONFIRMATION" ||
+     logic.currentQueueState.phase === "ACTIVE_SESSION")
   )
 
   const tabParam = searchParams.get("tab")
@@ -221,11 +226,14 @@ export default function ConsultationsPage() {
               form={logic.requestForm}
               healthRecords={logic.healthRecords}
               packages={logic.packages}
+              availableCredits={logic.wallet?.available}
+              hasActiveQueue={hasActiveQueue}
               loading={logic.actionLoading}
               insufficientCredits={logic.insufficientCredits}
               queueStatistics={logic.queueStatistics}
               onChange={logic.setRequestForm}
               onSubmit={(e) => logic.handleCreateRequest(e, () => setSearchParams({ tab: "queue" }))}
+              onPendingConflict={() => logic.setIsPendingConflictDialogOpen(true)}
             />
           </TabsContent>
         )}
@@ -469,6 +477,13 @@ export default function ConsultationsPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <PendingConflictDialog
+        open={logic.isPendingConflictDialogOpen}
+        onOpenChange={logic.setIsPendingConflictDialogOpen}
+        onGoToQueue={() => setSearchParams({ tab: "queue" })}
+        queueNumber={logic.currentQueueState?.queueNumber}
+      />
     </>
   )
 }

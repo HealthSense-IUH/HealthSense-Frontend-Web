@@ -8,7 +8,6 @@ import {
   Stethoscope,
   XCircle,
   RefreshCw,
-  Sparkles,
   ArrowRight,
   Info,
   Coins,
@@ -167,7 +166,6 @@ export function MemberQueuePanel({
             className="w-full h-12 rounded-xl font-semibold gap-2 shadow-sm"
             onClick={() => onOpenSession(queueState.sessionId!)}
           >
-            <Sparkles className="w-4 h-4" />
             Vào phòng tư vấn ngay (Mở Chat)
             <ArrowRight className="w-4 h-4" />
           </Button>
@@ -286,7 +284,6 @@ export function MemberQueuePanel({
               }
             }}
           >
-            <Sparkles className="w-4 h-4" />
             {actionLoading ? "Đang tạo phiên tư vấn..." : "Tham gia tư vấn"}
           </Button>
 
@@ -467,8 +464,7 @@ export function MemberQueuePanel({
           )}
         </div>
         <div className="pt-2">
-          <Button onClick={onRegisterNew} className="rounded-xl font-semibold gap-1.5 shadow-sm">
-            <Sparkles className="w-4 h-4" />
+          <Button onClick={onRegisterNew} className="rounded-xl font-semibold shadow-sm">
             Đăng ký tư vấn mới
           </Button>
         </div>
@@ -496,8 +492,7 @@ export function MemberQueuePanel({
           )}
         </div>
         <div className="pt-2">
-          <Button onClick={onRegisterNew} className="rounded-xl font-semibold gap-1.5 shadow-sm">
-            <Sparkles className="w-4 h-4" />
+          <Button onClick={onRegisterNew} className="rounded-xl font-semibold shadow-sm">
             Đăng ký tư vấn mới
           </Button>
         </div>
@@ -518,8 +513,7 @@ export function MemberQueuePanel({
         </p>
       </div>
       <div className="pt-2">
-        <Button onClick={onRegisterNew} size="lg" className="rounded-xl font-semibold gap-1.5 shadow-sm">
-          <Sparkles className="w-4 h-4" />
+        <Button onClick={onRegisterNew} size="lg" className="rounded-xl font-semibold shadow-sm">
           Đăng ký tư vấn ngay
         </Button>
       </div>

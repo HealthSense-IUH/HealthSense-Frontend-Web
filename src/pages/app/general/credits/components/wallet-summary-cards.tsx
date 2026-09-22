@@ -1,5 +1,5 @@
-import { Coins, Wallet, Info, AlertCircle, RefreshCw } from "lucide-react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Coins, Info, AlertCircle, RefreshCw } from "lucide-react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
@@ -20,15 +20,11 @@ export function WalletSummaryCards({
 }: WalletSummaryCardsProps) {
   if (loading && !wallet) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {[1, 2].map((i) => (
-          <Card key={i} className="p-6 space-y-3">
-            <Skeleton className="h-5 w-24" />
-            <Skeleton className="h-10 w-20" />
-            <Skeleton className="h-4 w-full" />
-          </Card>
-        ))}
-      </div>
+      <Card className="p-6 space-y-3">
+        <Skeleton className="h-5 w-36" />
+        <Skeleton className="h-10 w-28" />
+        <Skeleton className="h-4 w-64" />
+      </Card>
     )
   }
 
@@ -54,81 +50,53 @@ export function WalletSummaryCards({
   }
 
   const available = wallet?.available ?? 0
-  const balance = wallet?.balance ?? 0
+  const reserved = wallet?.reserved ?? 0
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      {/* 1. Lượt khả dụng - Nổi bật chính */}
-      <Card className="relative overflow-hidden border-emerald-200/80 bg-gradient-to-br from-emerald-50/60 via-background to-emerald-50/30 dark:border-emerald-900/50 dark:from-emerald-950/30 dark:to-background shadow-xs">
-        <div className="absolute top-0 right-0 p-4 opacity-10">
-          <Coins className="h-20 w-20 text-emerald-600 dark:text-emerald-400" />
+    <Card className="relative overflow-hidden border-emerald-200/80 bg-gradient-to-br from-emerald-50/70 via-background to-emerald-50/30 dark:border-emerald-900/50 dark:from-emerald-950/30 dark:to-background shadow-xs">
+      <div className="absolute top-0 right-0 p-6 opacity-10 pointer-events-none">
+        <Coins className="h-24 w-24 text-emerald-600 dark:text-emerald-400" />
+      </div>
+      <CardHeader className="pb-2">
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-sm font-semibold text-emerald-900 dark:text-emerald-200 flex items-center gap-2">
+            <div className="p-1.5 rounded-md bg-emerald-100 dark:bg-emerald-900/60 text-emerald-700 dark:text-emerald-300">
+              <Coins className="h-4 w-4" />
+            </div>
+            Lượt tư vấn khả dụng
+          </CardTitle>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span className="cursor-help text-muted-foreground hover:text-foreground">
+                  <Info className="h-4 w-4" />
+                </span>
+              </TooltipTrigger>
+              <TooltipContent className="max-w-xs text-xs">
+                Số lượt bạn có thể sử dụng ngay để đăng ký phiên tư vấn sức khỏe trực tuyến với bác sĩ.
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
-        <CardHeader className="pb-2">
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-1.5">
-              <Coins className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
-              Lượt khả dụng
-            </CardTitle>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <span className="cursor-help text-muted-foreground hover:text-foreground">
-                    <Info className="h-3.5 w-3.5" />
-                  </span>
-                </TooltipTrigger>
-                <TooltipContent className="max-w-xs text-xs">
-                  Số lượt bạn có thể sử dụng ngay để đăng ký tư vấn với bác sĩ.
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-1.5">
-          <div className="text-3xl font-extrabold text-emerald-700 dark:text-emerald-400 tracking-tight">
-            {available.toLocaleString("vi-VN")}{" "}
-            <span className="text-sm font-medium text-emerald-600/80 dark:text-emerald-400/80">lượt</span>
-          </div>
-          <CardDescription className="text-xs text-emerald-700/80 dark:text-emerald-400/80">
-            Sẵn sàng để bắt đầu phiên tư vấn sức khỏe
-          </CardDescription>
-        </CardContent>
-      </Card>
-
-      {/* 2. Tổng số lượt sở hữu */}
-      <Card className="relative overflow-hidden border-border bg-background shadow-xs">
-        <div className="absolute top-0 right-0 p-4 opacity-10">
-          <Wallet className="h-20 w-20 text-blue-600 dark:text-blue-400" />
+      </CardHeader>
+      <CardContent className="space-y-2">
+        <div className="flex items-baseline gap-2">
+          <span className="text-4xl font-extrabold text-emerald-700 dark:text-emerald-400 tracking-tight">
+            {available.toLocaleString("vi-VN")}
+          </span>
+          <span className="text-base font-semibold text-emerald-600/90 dark:text-emerald-400/90">
+            lượt
+          </span>
         </div>
-        <CardHeader className="pb-2">
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-1.5">
-              <Wallet className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-              Tổng số lượt
-            </CardTitle>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <span className="cursor-help text-muted-foreground hover:text-foreground">
-                    <Info className="h-3.5 w-3.5" />
-                  </span>
-                </TooltipTrigger>
-                <TooltipContent className="max-w-xs text-xs">
-                  Tổng số lượt tư vấn hiện có trong tài khoản của bạn.
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-1.5">
-          <div className="text-3xl font-extrabold text-foreground tracking-tight">
-            {balance.toLocaleString("vi-VN")}{" "}
-            <span className="text-sm font-medium text-muted-foreground">lượt</span>
-          </div>
-          <CardDescription className="text-xs text-muted-foreground">
-            Tổng số lượt còn lại trong tài khoản
-          </CardDescription>
-        </CardContent>
-      </Card>
-    </div>
+        <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+          <span>Sẵn sàng để bắt đầu phiên tư vấn sức khỏe trực tuyến</span>
+          {reserved > 0 && (
+            <span className="inline-flex items-center rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-medium text-amber-800 dark:bg-amber-950/60 dark:text-amber-300">
+              (Đang tạm giữ {reserved} lượt cho ca hiện tại)
+            </span>
+          )}
+        </div>
+      </CardContent>
+    </Card>
   )
 }

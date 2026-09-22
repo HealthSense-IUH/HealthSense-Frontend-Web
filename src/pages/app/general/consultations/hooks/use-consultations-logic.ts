@@ -5,8 +5,9 @@ import { USER_ROLES } from "@/constants"
 import { useToast } from "@/hooks/use-toast"
 
 import { useConsultationSocket } from "./use-consultation-socket"
-import { consultationApi } from "@/services"
+import { consultationApi, creditsApi } from "@/services"
 import { CONSULTATION_CONFIRM_ERROR_MESSAGES } from "@/constants/credits"
+import type { CreditWallet } from "@/types/credits"
 import type { AdminDialogMode } from "../components/admin-action-dialog"
 import type { RequestFormData } from "../components/create-request-panel"
 import type { AdminSessionFormData } from "../components/create-admin-session-panel"
@@ -120,11 +121,13 @@ export function useConsultationsLogic() {
   const [loading, setLoading] = useState(true)
   const [actionLoading, setActionLoading] = useState(false)
   const [healthRecords, setHealthRecords] = useState<HealthRecordItem[]>([])
-  const [packages, setPackages] = useState<CareServicePackage[]>([])
+  const [packages] = useState<CareServicePackage[]>([])
+  const [wallet, setWallet] = useState<CreditWallet | null>(null)
   const [requests, setRequests] = useState<ConsultationRequestItem[]>([])
   const [currentQueueState, setCurrentQueueState] = useState<CurrentQueueStateResponse | null>(null)
   const [queueStatistics, setQueueStatistics] = useState<ConsultationQueueStatisticsResponse | null>(null)
   const [insufficientCredits, setInsufficientCredits] = useState(false)
+  const [isPendingConflictDialogOpen, setIsPendingConflictDialogOpen] = useState(false)
   const confirmLockRef = useRef(false)
   const [doctorDispatchStatus, setDoctorDispatchStatus] = useState<DoctorDispatchStatusResponse | null>(null)
   const [doctorCurrentOffer, setDoctorCurrentOffer] = useState<DoctorConsultationOfferResponse | null>(null)
@@ -322,7 +325,7 @@ export function useConsultationsLogic() {
     setAlert(null)
     try {
       const shouldLoadRecords = isMember
-      const [requestResponse, sessionResponse, healthRecordResponse, packageResponse, queueResponse, queueStatsResponse] = await Promise.all([
+      const [requestResponse, sessionResponse, healthRecordResponse, queueResponse, queueStatsResponse, walletResponse] = await Promise.all([
         isAdmin
           ? consultationApi.listAdminRequests({ 
               page: 1, 
@@ -344,9 +347,6 @@ export function useConsultationsLogic() {
           ? consultationApi.listMyHealthRecords({ page: 1, size: DEFAULT_PAGE_SIZE })
           : Promise.resolve(null),
         isMember
-          ? consultationApi.listCareServicePackages({ page: 1, size: 50 })
-          : Promise.resolve(null),
-        isMember
           ? consultationApi.getCurrentQueueState().catch((err) => {
               if (err?.response?.status === 404 || err?.response?.data?.code === 4001) {
                 return { data: null }
@@ -357,12 +357,18 @@ export function useConsultationsLogic() {
         isMember
           ? consultationApi.getQueueStatistics().catch(() => ({ data: null }))
           : Promise.resolve(null),
+        isMember
+          ? creditsApi.getWallet().catch(() => ({ data: null }))
+          : Promise.resolve(null),
       ])
 
       const loadedQueueState = queueResponse?.data ?? null
       setCurrentQueueState(loadedQueueState)
       if (queueStatsResponse?.data) {
         setQueueStatistics(queueStatsResponse.data)
+      }
+      if (walletResponse?.data) {
+        setWallet(walletResponse.data)
       }
 
       const loadedSessions = [...(sessionResponse.data.content ?? [])]
@@ -396,8 +402,22 @@ export function useConsultationsLogic() {
       })
       setRequests(loadedRequests)
       setSessions(loadedSessions)
-      setHealthRecords(healthRecordResponse?.data.content ?? [])
-      setPackages(packageResponse?.data.content ?? [])
+      const records = healthRecordResponse?.data.content ?? []
+      setHealthRecords(records)
+      if (records.length > 0) {
+        const latestId = String(records[0].id)
+        setRequestForm((prev) => ({
+          ...prev,
+          selectedHealthRecordIds: [latestId],
+          healthRecordId: latestId,
+        }))
+      } else {
+        setRequestForm((prev) => ({
+          ...prev,
+          selectedHealthRecordIds: [],
+          healthRecordId: "",
+        }))
+      }
       setSelectedSession((prev) => {
         let candidate: ConsultationSessionItem | null = null
         if (loadedQueueState?.phase === "ACTIVE_SESSION" && loadedQueueState.sessionId) {
@@ -689,14 +709,47 @@ export function useConsultationsLogic() {
         return
       }
 
+      if (healthRecords.length === 0) {
+        setAlert({ type: "error", text: "Bạn cần thực hiện đo điện tim trước khi gửi yêu cầu tư vấn." })
+        setActionLoading(false)
+        return
+      }
+      if (wallet && wallet.available <= 0) {
+        setInsufficientCredits(true)
+        setAlert({ type: "error", text: "Bạn không có đủ lượt tư vấn khả dụng để vào hàng đợi." })
+        setActionLoading(false)
+        return
+      }
+
+      if (
+        currentQueueState &&
+        (currentQueueState.queueStatus === "WAITING" ||
+          currentQueueState.queueStatus === "OFFERING_DOCTOR" ||
+          currentQueueState.queueStatus === "WAITING_CONFIRMATION" ||
+          currentQueueState.queueStatus === "WAITING_MEMBER_CONFIRMATION" ||
+          currentQueueState.phase === "QUEUE" ||
+          currentQueueState.phase === "WAITING_CONFIRMATION" ||
+          currentQueueState.phase === "ACTIVE_SESSION")
+      ) {
+        setIsPendingConflictDialogOpen(true)
+        setActionLoading(false)
+        return
+      }
+
+      const selectedIds =
+        requestForm.selectedHealthRecordIds.length > 0
+          ? requestForm.selectedHealthRecordIds
+          : healthRecords.length > 0
+            ? [String(healthRecords[0].id)]
+            : undefined
+
       const res = await consultationApi.createQueueRequest({
         reasonForCare: requestForm.reasonForCare.trim(),
         currentConcern: requestForm.currentConcern.trim(),
         careGoal: requestForm.careGoal.trim() || undefined,
         memberNote: requestForm.memberNote.trim() || undefined,
         relevantSelfReportedContext: requestForm.relevantSelfReportedContext.trim() || undefined,
-        selectedHealthRecordIds:
-          requestForm.selectedHealthRecordIds.length > 0 ? requestForm.selectedHealthRecordIds : undefined,
+        selectedHealthRecordIds: selectedIds,
       })
 
       setInsufficientCredits(false)
@@ -707,9 +760,9 @@ export function useConsultationsLogic() {
         careGoal: "",
         memberNote: "",
         relevantSelfReportedContext: "",
-        selectedHealthRecordIds: [],
+        selectedHealthRecordIds: healthRecords.length > 0 ? [String(healthRecords[0].id)] : [],
         preferredDoctorId: "",
-        healthRecordId: "",
+        healthRecordId: healthRecords.length > 0 ? String(healthRecords[0].id) : "",
         reason: "",
       })
       const queueNumber = res.data?.queueNumber
@@ -728,6 +781,23 @@ export function useConsultationsLogic() {
       const status = error?.response?.status
       const errorCode = error?.response?.data?.code || error?.response?.data?.errorCode
       const errorMsg = error?.response?.data?.message || error?.response?.data?.detail || ""
+
+      const isPendingConflict =
+        status === 409 &&
+        (Number(errorCode) === 4005 ||
+          Number(errorCode) === 4004 ||
+          String(errorCode) === "4005" ||
+          String(errorCode) === "4004" ||
+          String(errorMsg).toLowerCase().includes("pending consultation request") ||
+          String(errorMsg).toLowerCase().includes("active consultation") ||
+          String(errorMsg).toLowerCase().includes("already has a pending"))
+
+      if (isPendingConflict) {
+        setIsPendingConflictDialogOpen(true)
+        void fetchCurrentQueueState()
+        return
+      }
+
       const isInsufficient =
         status === 409 &&
         (Number(errorCode) === 4100 ||
@@ -1207,6 +1277,7 @@ export function useConsultationsLogic() {
     actionLoading,
     healthRecords,
     packages,
+    wallet,
     requests,
     sessions,
     selectedSession,
@@ -1244,6 +1315,8 @@ export function useConsultationsLogic() {
     queueStatistics,
     insufficientCredits,
     setInsufficientCredits,
+    isPendingConflictDialogOpen,
+    setIsPendingConflictDialogOpen,
     fetchCurrentQueueState,
     doctorDispatchStatus,
     doctorCurrentOffer,

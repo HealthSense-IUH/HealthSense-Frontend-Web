@@ -96,7 +96,6 @@ export function CreditLedgerTable({
               <TableHead className="text-xs font-semibold">Loại biến động</TableHead>
               <TableHead className="text-xs font-semibold">Lượt khả dụng</TableHead>
               <TableHead className="text-xs font-semibold">Tổng lượt</TableHead>
-              <TableHead className="text-xs font-semibold">Lượt tạm giữ</TableHead>
               <TableHead className="text-xs font-semibold">Số dư sau</TableHead>
               <TableHead className="text-right text-xs font-semibold">Nguồn gốc</TableHead>
             </TableRow>
@@ -138,20 +137,11 @@ export function CreditLedgerTable({
                   <TableCell className="text-xs font-medium text-foreground">
                     {entry.deltaBalance > 0 ? `+${entry.deltaBalance}` : entry.deltaBalance}
                   </TableCell>
-                  {/* Thay đổi lượt giữ */}
-                  <TableCell className="text-xs font-medium text-foreground">
-                    {entry.deltaReserved > 0 ? `+${entry.deltaReserved}` : entry.deltaReserved}
-                  </TableCell>
                   {/* Số dư sau giao dịch */}
                   <TableCell>
-                    <div className="text-xs space-y-0.5">
-                      <span className="font-bold text-emerald-600 dark:text-emerald-400">
-                        {availableAfter} khả dụng
-                      </span>
-                      <div className="text-[10px] text-muted-foreground">
-                        Tổng: {entry.balanceAfter} | Giữ: {entry.reservedAfter}
-                      </div>
-                    </div>
+                    <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400">
+                      {availableAfter} khả dụng
+                    </span>
                   </TableCell>
                   {/* Đối tượng nguồn */}
                   <TableCell className="text-right">

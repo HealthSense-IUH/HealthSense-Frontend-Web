@@ -56,12 +56,16 @@ export default function CreditPaymentResultPage() {
 
   // 1. Xác định target orderId
   const pendingPayment = userId ? getStoredPendingPayment(userId) : null
-  const targetOrderId = pendingPayment?.orderId || searchParams.get("orderId") || null
+  const queryOrderId = searchParams.get("orderId")
+  const [activeOrderId, setActiveOrderId] = useState<string | null>(
+    pendingPayment?.orderId || queryOrderId || null
+  )
 
   // 2. Fetch order chi tiết từ backend (Nguồn chân lý duy nhất)
   const fetchOrder = useCallback(
-    async (isBackgroundPoll = false) => {
-      if (!targetOrderId) return
+    async (isBackgroundPoll = false, overrideOrderId?: string) => {
+      const orderIdToFetch = overrideOrderId || activeOrderId
+      if (!orderIdToFetch) return
 
       try {
         if (!isBackgroundPoll) {
@@ -69,7 +73,7 @@ export default function CreditPaymentResultPage() {
           setErrorText(null)
         }
 
-        const res = await creditsApi.getOrder(targetOrderId)
+        const res = await creditsApi.getOrder(orderIdToFetch)
         const data = res.data
         setOrderDetail(data)
 
@@ -121,29 +125,46 @@ export default function CreditPaymentResultPage() {
         }
       }
     },
-    [targetOrderId, userId, toast]
+    [activeOrderId, userId, toast]
   )
 
-  // 3. Khởi chạy fetch ban đầu hoặc điều hướng về orders nếu thiếu thông tin
+  // 3. Khởi chạy fetch ban đầu hoặc tra cứu đơn hàng gần nhất nếu PayOS redirect về thiếu orderId
   useEffect(() => {
-    if (!targetOrderId) {
-      toast({
-        title: "Không tìm thấy giao dịch",
-        description: "Vui lòng kiểm tra lại trạng thái trong lịch sử đơn mua.",
-      })
-      navigate("/app/general/consultations?tab=credits&creditTab=orders", { replace: true })
+    if (activeOrderId) {
+      void fetchOrder(false, activeOrderId)
       return
     }
 
-    void fetchOrder(false)
-  }, [targetOrderId, navigate, toast, fetchOrder])
+    creditsApi
+      .getOrders({ page: 1, size: 5 })
+      .then((res) => {
+        const orders = res.data?.content || []
+        const latest = orders[0]
+        if (latest?.id) {
+          setActiveOrderId(String(latest.id))
+        } else {
+          toast({
+            title: "Không tìm thấy giao dịch",
+            description: "Vui lòng kiểm tra lại trạng thái trong lịch sử đơn mua.",
+          })
+          navigate("/app/general/consultations?tab=credits&creditTab=orders", { replace: true })
+        }
+      })
+      .catch(() => {
+        toast({
+          title: "Không tìm thấy giao dịch",
+          description: "Vui lòng kiểm tra lại trạng thái trong lịch sử đơn mua.",
+        })
+        navigate("/app/general/consultations?tab=credits&creditTab=orders", { replace: true })
+      })
+  }, [activeOrderId, fetchOrder, navigate, toast])
 
   // 4. Cơ chế Polling tự động khi order đang PENDING_PAYMENT
   useEffect(() => {
     // Chỉ poll khi order đang ở trạng thái PENDING_PAYMENT
     const isPending = orderDetail?.order.status === "PENDING_PAYMENT"
 
-    if (!isPending || pollStopped || !targetOrderId) {
+    if (!isPending || pollStopped || !activeOrderId) {
       if (pollTimerRef.current) {
         clearTimeout(pollTimerRef.current)
         pollTimerRef.current = null
@@ -173,7 +194,7 @@ export default function CreditPaymentResultPage() {
         pollTimerRef.current = null
       }
     }
-  }, [orderDetail?.order.status, pollCount, pollStopped, targetOrderId, fetchOrder])
+  }, [orderDetail?.order.status, pollCount, pollStopped, activeOrderId, fetchOrder])
 
   // Lắng nghe visibilitychange để tiếp tục poll khi user quay lại tab
   useEffect(() => {
@@ -195,11 +216,11 @@ export default function CreditPaymentResultPage() {
 
   // 5. Thao tác Hủy thanh toán
   const handleCancelOrder = async () => {
-    if (!targetOrderId || isCancelling) return
+    if (!activeOrderId || isCancelling) return
 
     setIsCancelling(true)
     try {
-      const res = await creditsApi.cancelOrder(targetOrderId)
+      const res = await creditsApi.cancelOrder(activeOrderId)
       const updated = res.data
       setOrderDetail(updated)
 

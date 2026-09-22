@@ -1,4 +1,4 @@
-import { Package, Sparkles, Check, AlertCircle, RefreshCw, ShoppingCart } from "lucide-react"
+import { Package, AlertCircle, RefreshCw, ShoppingCart } from "lucide-react"
 import { Card, CardFooter } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -137,17 +137,6 @@ export function PackagesGrid({
                 <span className="text-xl font-black text-foreground">
                   {formatVnd(pkg.priceVnd)}
                 </span>
-              </div>
-            </div>
-
-            <div className="bg-muted/40 rounded-lg p-3 text-[11px] text-muted-foreground space-y-1">
-              <div className="flex items-center gap-1.5 text-foreground font-medium">
-                <Check className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
-                Lượt dùng để kết nối và đăng ký bác sĩ
-              </div>
-              <div className="flex items-center gap-1.5">
-                <Sparkles className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400" />
-                Thanh toán an toàn, bảo mật giao dịch
               </div>
             </div>
           </div>
