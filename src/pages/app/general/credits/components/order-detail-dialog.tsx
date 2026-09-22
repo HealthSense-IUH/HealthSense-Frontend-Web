@@ -317,7 +317,7 @@ export function OrderDetailDialog({
                       Số dư ví hiện tại
                     </div>
                     <div className="text-[11px] text-emerald-700/80 dark:text-emerald-400/80">
-                      Tổng: {detail.wallet.balance} | Đang tạm giữ: {detail.wallet.reserved}
+                      Tổng số lượt: {detail.wallet.balance}
                     </div>
                   </div>
                 </div>
