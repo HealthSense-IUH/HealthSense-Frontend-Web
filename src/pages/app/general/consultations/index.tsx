@@ -1,6 +1,6 @@
 import { useEffect } from "react"
-import { Calendar, CheckCircle2, Inbox, MessagesSquare, PlusCircle, RefreshCw, ShieldAlert, Stethoscope, Users, XCircle } from "lucide-react"
-import { useSearchParams } from "react-router-dom"
+import { Calendar, CheckCircle2, Coins, Inbox, PlusCircle, RefreshCw, ShieldAlert, Stethoscope, Users, XCircle } from "lucide-react"
+import { useNavigate, useSearchParams } from "react-router-dom"
 
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -12,12 +12,12 @@ import { cn } from "@/lib/utils"
 import { AdminActionDialog } from "@/pages/app/general/consultations/components/admin-action-dialog"
 import { AdminRequestDetailDialog } from "@/pages/app/general/consultations/components/admin-request-detail-dialog"
 import { CareAgreementDialog } from "@/pages/app/general/consultations/components/care-agreement-dialog"
-import { ChatWorkspace } from "@/pages/app/general/consultations/components/chat/chat-workspace"
 import { CreateAdminSessionPanel } from "@/pages/app/general/consultations/components/create-admin-session-panel"
 import { CreateRequestPanel } from "@/pages/app/general/consultations/components/create-request-panel"
 import { DoctorCandidatesDialog } from "@/pages/app/general/consultations/components/doctor-candidates-dialog"
 import { DoctorCareProfileDialog } from "@/pages/app/general/consultations/components/doctor-care-profile-dialog"
 import { MemberQueuePanel } from "@/pages/app/general/consultations/components/member-queue-panel"
+import { MemberCreditsPanel } from "@/pages/app/general/consultations/components/member-credits-panel"
 import { DoctorDispatchHeader } from "@/pages/app/management/doctor-consultations/components/doctor-dispatch-header"
 import { DoctorOfferCard } from "@/pages/app/management/doctor-consultations/components/doctor-offer-card"
 import { DoctorScheduleDialog } from "@/pages/app/management/doctor-consultations/components/doctor-schedule-dialog"
@@ -27,6 +27,7 @@ import { useConsultationsLogic } from "@/pages/app/general/consultations/hooks/u
 
 export default function ConsultationsPage() {
   const logic = useConsultationsLogic()
+  const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
 
   const hasActiveQueue = Boolean(
@@ -44,7 +45,9 @@ export default function ConsultationsPage() {
       : "sessions"
   const activeTab = tabParam === "requests"
     ? (logic.isAdmin ? "admin-requests" : "create-request")
-    : (tabParam || defaultTab)
+    : tabParam === "chat"
+      ? "sessions"
+      : (tabParam || defaultTab)
 
   useEffect(() => {
     const pkgId = searchParams.get("packageId")
@@ -143,9 +146,9 @@ export default function ConsultationsPage() {
                       </span>
                     )}
                   </TabsTrigger>
-                  <TabsTrigger value="chat" className="rounded-lg text-xs font-semibold gap-1.5 px-3">
-                    <MessagesSquare className="w-3.5 h-3.5" />
-                    <span>Trò chuyện trực tiếp</span>
+                  <TabsTrigger value="credits" className="rounded-lg text-xs font-semibold gap-1.5 px-3">
+                    <Coins className="w-3.5 h-3.5" />
+                    <span>Lượt tư vấn</span>
                   </TabsTrigger>
                 </>
               )}
@@ -188,10 +191,6 @@ export default function ConsultationsPage() {
                       </span>
                     )}
                   </TabsTrigger>
-                  <TabsTrigger value="chat" className="rounded-lg text-xs font-semibold gap-1.5 px-3">
-                    <MessagesSquare className="w-3.5 h-3.5" />
-                    <span>Phòng trao đổi chuyên môn</span>
-                  </TabsTrigger>
                 </>
               )}
             </TabsList>
@@ -204,15 +203,12 @@ export default function ConsultationsPage() {
                 latestRequest={logic.requests[0] ?? null}
                 loading={logic.loading}
                 actionLoading={logic.actionLoading}
+                insufficientCredits={logic.insufficientCredits}
                 onConfirm={logic.handleConfirmQueue}
                 onCancel={logic.handleCancelQueue}
                 onRefresh={logic.fetchCurrentQueueState}
                 onOpenSession={(sessionId: string | number) => {
-                  const s = logic.sessions.find((item) => String(item.id) === String(sessionId))
-                  if (s) {
-                    logic.setSelectedSession(s)
-                  }
-                  setSearchParams({ tab: "chat" })
+                  navigate(`/app/general/consultations/${sessionId}`)
                 }}
                 onRegisterNew={() => setSearchParams({ tab: "create-request" })}
               />
@@ -302,27 +298,9 @@ export default function ConsultationsPage() {
           />
         </TabsContent>
 
-        {!logic.isAdmin && (
-          <TabsContent value="chat" className="m-0 flex-1 min-h-0 flex flex-col data-[state=active]:flex">
-            <ChatWorkspace
-              sessions={logic.sessions}
-              selectedSession={logic.selectedSession}
-              messages={logic.sortedMessages}
-              messageDraft={logic.messageDraft}
-              attachmentUrl={logic.attachmentUrl}
-              loading={logic.actionLoading}
-              loadingMoreMessages={logic.loadingMoreMessages}
-              hasMoreMessages={logic.hasMoreMessages}
-              currentUserId={logic.userSession?.userId}
-              isDoctor={logic.isDoctor}
-              isMember={logic.isMember}
-              onSelectSession={logic.setSelectedSession}
-              onMessageChange={logic.setMessageDraft}
-              onSubmit={logic.handleSendMessage}
-              onLoadMore={logic.handleLoadMoreMessages}
-              isOutsideSupportHours={logic.isOutsideSupportHours}
-              onSessionRefreshed={() => logic.loadData(true)}
-            />
+        {logic.isMember && (
+          <TabsContent value="credits" className="m-0 flex-1 min-h-0 overflow-y-auto p-4 sm:p-6 space-y-6">
+            <MemberCreditsPanel />
           </TabsContent>
         )}
         </Tabs>
