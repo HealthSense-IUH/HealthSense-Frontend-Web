@@ -60,12 +60,79 @@ export default function DoctorSessionsPage() {
     if (!isDoctor) return
     try {
       setLoading(true)
-      const res = await consultationApi.getDoctorSessions({ page: pageNum, size: pageSize })
-      const data = res.data.content || []
-      setSessions(data)
-      setTotalElements(res.data.totalElements ?? data.length)
-      setTotalPages(res.data.totalPages ?? 1)
-      setPage(res.data.page ?? pageNum)
+      const [doctorRes, mySessionsRes] = await Promise.allSettled([
+        consultationApi.getDoctorSessions({ page: pageNum, size: pageSize }),
+        consultationApi.listMySessions({ page: pageNum, size: pageSize }),
+      ])
+
+      const mySessionsMap = new Map<string, any>()
+      if (mySessionsRes.status === "fulfilled" && mySessionsRes.value.data?.content) {
+        for (const s of mySessionsRes.value.data.content) {
+          mySessionsMap.set(String(s.id), s)
+        }
+      }
+
+      const rawData: DoctorConsultationSessionResponse[] =
+        doctorRes.status === "fulfilled" ? (doctorRes.value.data?.content || []) : []
+
+      // Merge enriched metadata from mySessions (which contains full ConsultationSessionResponse)
+      const mergedData = rawData.map((session) => {
+        const mySession = mySessionsMap.get(String(session.id))
+        return {
+          ...session,
+          summaryClosureStatus: session.summaryClosureStatus || mySession?.summaryClosureStatus || null,
+          summaryDueAt: session.summaryDueAt || mySession?.summaryDueAt || null,
+          memberDisplayName:
+            session.member?.displayName || session.memberDisplayName || mySession?.memberDisplayName || null,
+          packageNameSnapshot: session.packageNameSnapshot || mySession?.packageNameSnapshot || null,
+          flowType: session.flowType || mySession?.flowType || null,
+          meaningfulCareOccurred: session.meaningfulCareOccurred ?? mySession?.meaningfulCareOccurred ?? null,
+        }
+      })
+
+      // For any COMPLETED sessions where summaryClosureStatus is NOT yet SUMMARY_FINALIZED,
+      // check getDoctorFinalSummary directly so any existing finalized summary is recognized accurately!
+      const completedToVerify = mergedData.filter(
+        (s) =>
+          s.status === "COMPLETED" &&
+          s.summaryClosureStatus !== "SUMMARY_FINALIZED" &&
+          s.summaryClosureStatus !== "FINALIZED"
+      )
+
+      if (completedToVerify.length > 0) {
+        const summaryChecks = await Promise.allSettled(
+          completedToVerify.map((s) => consultationApi.getDoctorFinalSummary(s.id))
+        )
+
+        summaryChecks.forEach((checkResult, idx) => {
+          if (checkResult.status === "fulfilled" && checkResult.value.data) {
+            const summary = checkResult.value.data
+            const target = completedToVerify[idx]
+            if (summary.status === "FINALIZED" || Boolean(summary.finalizedAt)) {
+              target.summaryClosureStatus = "SUMMARY_FINALIZED"
+            } else if (summary.status === "DRAFT" || summary.summary) {
+              ;(target as any).hasDraft = true
+            }
+          }
+        })
+      }
+
+      const sortedData = [...mergedData].sort((a, b) => {
+        const aActive = a.status === "ACTIVE" ? 1 : 0
+        const bActive = b.status === "ACTIVE" ? 1 : 0
+        if (aActive !== bActive) return bActive - aActive
+
+        const timeA = a.createdAt ? new Date(a.createdAt).getTime() : 0
+        const timeB = b.createdAt ? new Date(b.createdAt).getTime() : 0
+        if (timeA !== timeB) return timeB - timeA
+        return String(b.id).localeCompare(String(a.id), undefined, { numeric: true })
+      })
+
+      setSessions(sortedData)
+      const resData = doctorRes.status === "fulfilled" ? doctorRes.value.data : null
+      setTotalElements(resData?.totalElements ?? sortedData.length)
+      setTotalPages(resData?.totalPages ?? 1)
+      setPage(resData?.page ?? pageNum)
     } catch (error: unknown) {
       const err = error as { response?: { status?: number } }
       if (err?.response?.status === 403) {
@@ -107,6 +174,17 @@ export default function DoctorSessionsPage() {
     }
   }, [isDoctor, toast])
 
+  const lastBusySessionIdRef = useRef<number | string | null>(null)
+  const loadSessionsRef = useRef(loadSessions)
+  useEffect(() => {
+    loadSessionsRef.current = loadSessions
+  }, [loadSessions])
+
+  const fetchCareProfileRef = useRef(fetchCareProfile)
+  useEffect(() => {
+    fetchCareProfileRef.current = fetchCareProfile
+  }, [fetchCareProfile])
+
   // Fetch Dispatch Status & Current Offer (ONLY if hasProfile is true)
   const fetchDispatchAndOffer = useCallback(async () => {
     if (!isDoctor || !hasProfile) return
@@ -127,10 +205,14 @@ export default function DoctorSessionsPage() {
         }
       }
 
-      // If doctor is BUSY and has a busySessionId, refresh sessions if needed
+      // If doctor is BUSY and has a NEW busySessionId, refresh sessions
       if (newStatus.dispatchStatus === "BUSY" && newStatus.busySessionId) {
-        // Session is live, reload sessions list to include the newly created session
-        void loadSessions(1, size)
+        if (lastBusySessionIdRef.current !== newStatus.busySessionId) {
+          lastBusySessionIdRef.current = newStatus.busySessionId
+          void loadSessionsRef.current(1, size)
+        }
+      } else {
+        lastBusySessionIdRef.current = null
       }
     } catch (err: unknown) {
       const error = err as { response?: { data?: { code?: number } } }
@@ -140,37 +222,38 @@ export default function DoctorSessionsPage() {
         setCurrentOffer(null)
       }
     }
-  }, [isDoctor, hasProfile, loadSessions, size])
+  }, [isDoctor, hasProfile, size])
+
+  const fetchDispatchAndOfferRef = useRef(fetchDispatchAndOffer)
+  useEffect(() => {
+    fetchDispatchAndOfferRef.current = fetchDispatchAndOffer
+  }, [fetchDispatchAndOffer])
 
   // Initial load
   useEffect(() => {
     if (isDoctor) {
-      void loadSessions(1, size)
-      void fetchCareProfile()
+      void loadSessionsRef.current(1, size)
+      void fetchCareProfileRef.current()
     }
-  }, [isDoctor, loadSessions, fetchCareProfile, size])
+  }, [isDoctor, size])
 
-  // Trigger initial dispatch fetch when profile becomes available
-  useEffect(() => {
-    if (isDoctor && hasProfile) {
-      void fetchDispatchAndOffer()
-    }
-  }, [isDoctor, hasProfile, fetchDispatchAndOffer])
-
-  // 4s polling ONLY when doctor is active AND hasProfile is true
+  // Polling ONLY when doctor is active AND hasProfile is true
   useEffect(() => {
     if (!isDoctor || !hasProfile) return
+
+    // Fetch immediately once profile is available
+    void fetchDispatchAndOfferRef.current()
 
     const timer = setInterval(() => {
       if (isPollingRef.current) return
       isPollingRef.current = true
-      fetchDispatchAndOffer().finally(() => {
+      fetchDispatchAndOfferRef.current().finally(() => {
         isPollingRef.current = false
       })
     }, 4000)
 
     return () => clearInterval(timer)
-  }, [isDoctor, hasProfile, fetchDispatchAndOffer])
+  }, [isDoctor, hasProfile])
 
   // Handler: toggle dispatch status AVAILABLE <-> UNAVAILABLE
   const handleToggleDispatchStatus = async (newStatus: "AVAILABLE" | "UNAVAILABLE") => {
