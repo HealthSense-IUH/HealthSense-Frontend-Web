@@ -131,7 +131,7 @@ export default function CreditPaymentResultPage() {
         title: "Không tìm thấy giao dịch",
         description: "Vui lòng kiểm tra lại trạng thái trong lịch sử đơn mua.",
       })
-      navigate("/app/general/credits?tab=orders", { replace: true })
+      navigate("/app/general/consultations?tab=credits&creditTab=orders", { replace: true })
       return
     }
 
@@ -261,7 +261,7 @@ export default function CreditPaymentResultPage() {
           <Button variant="outline" onClick={() => void fetchOrder(false)} className="gap-2">
             <RefreshCw className="h-4 w-4" /> Thử lại
           </Button>
-          <Button onClick={() => navigate("/app/general/credits?tab=orders")}>
+          <Button onClick={() => navigate("/app/general/consultations?tab=credits&creditTab=orders")}>
             <ShoppingBag className="h-4 w-4 mr-1.5" /> Về lịch sử đơn
           </Button>
         </div>
@@ -488,14 +488,14 @@ export default function CreditPaymentResultPage() {
           <div className="flex flex-col sm:flex-row gap-2.5">
             <Button
               className="flex-1 gap-1.5 font-semibold"
-              onClick={() => navigate("/app/general/credits")}
+              onClick={() => navigate("/app/general/consultations?tab=credits")}
             >
               <ArrowLeft className="h-4 w-4" /> Về ví lượt tư vấn
             </Button>
             <Button
               variant="outline"
               className="flex-1 gap-1.5"
-              onClick={() => navigate("/app/general/credits?tab=orders")}
+              onClick={() => navigate("/app/general/consultations?tab=credits&creditTab=orders")}
             >
               <ShoppingBag className="h-4 w-4" /> Xem lịch sử đơn mua
             </Button>
