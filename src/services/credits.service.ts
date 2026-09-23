@@ -7,6 +7,8 @@ import type {
   AdminCreditOrdersFilterParams,
   AdminCreditOrderSummary,
   AdminCreditPackage,
+  AdminMemberCreditSummary,
+  AdminMemberCreditsFilterParams,
   AdminMemberWallet,
   CreateAdminCreditPackageRequest,
   CreateCreditOrderRequest,
@@ -159,19 +161,41 @@ export const creditsApi = {
   },
 
   /**
+   * ADMIN API Đợt 6: Danh sách Member kèm số dư lượt (Directory)
+   * GET /api/admin/credits/members
+   */
+  adminGetMembers(params?: AdminMemberCreditsFilterParams) {
+    const page = params?.page ?? 1
+    const size = params?.size ?? 20
+    const queryParams: Record<string, any> = { page, size }
+    if (params?.keyword?.trim()) {
+      queryParams.keyword = params.keyword.trim()
+    }
+    if (params?.status && params.status !== ("ALL" as any)) {
+      queryParams.status = params.status
+    }
+    return axiosClient.get<
+      ApiResponse<PageResponse<AdminMemberCreditSummary>>,
+      ApiResponse<PageResponse<AdminMemberCreditSummary>>
+    >("/api/admin/credits/members", {
+      params: queryParams,
+    })
+  },
+
+  /**
    * ADMIN API 4: Tra cứu ví lượt của một Member
-   * GET /api/admin/credits/members/{memberId}/wallet
+   * GET /api/admin/credits/wallets/{memberId}
    */
   adminGetWallet(memberId: string) {
     return axiosClient.get<
       ApiResponse<AdminMemberWallet>,
       ApiResponse<AdminMemberWallet>
-    >(`/api/admin/credits/members/${memberId}/wallet`)
+    >(`/api/admin/credits/wallets/${memberId}`)
   },
 
   /**
    * ADMIN API 5: Tra cứu lịch sử biến động (Ledger) của một Member
-   * GET /api/admin/credits/members/{memberId}/ledger
+   * GET /api/admin/credits/wallets/{memberId}/ledger
    */
   adminGetLedger(memberId: string, params?: AdminCreditLedgerFilterParams) {
     const page = params?.page ?? 1
@@ -179,7 +203,7 @@ export const creditsApi = {
     return axiosClient.get<
       ApiResponse<PageResponse<AdminCreditLedgerEntry>>,
       ApiResponse<PageResponse<AdminCreditLedgerEntry>>
-    >(`/api/admin/credits/members/${memberId}/ledger`, {
+    >(`/api/admin/credits/wallets/${memberId}/ledger`, {
       params: {
         page,
         size,
@@ -227,7 +251,7 @@ export const creditsApi = {
 
   /**
    * ADMIN API 8: Điều chỉnh lượt thủ công (Adjustment)
-   * POST /api/admin/credits/members/{memberId}/adjustments
+   * POST /api/admin/credits/wallets/{memberId}/adjustments
    */
   adminAdjustCredits(
     memberId: string,
@@ -237,7 +261,7 @@ export const creditsApi = {
     return axiosClient.post<
       ApiResponse<CreditMutationResponse>,
       ApiResponse<CreditMutationResponse>
-    >(`/api/admin/credits/members/${memberId}/adjustments`, payload, {
+    >(`/api/admin/credits/wallets/${memberId}/adjustments`, payload, {
       headers: {
         "Idempotency-Key": idempotencyKey,
       },
