@@ -12,7 +12,6 @@ import { cn } from "@/lib/utils"
 import { AdminActionDialog } from "@/pages/app/general/consultations/components/admin-action-dialog"
 import { AdminRequestDetailDialog } from "@/pages/app/general/consultations/components/admin-request-detail-dialog"
 import { CareAgreementDialog } from "@/pages/app/general/consultations/components/care-agreement-dialog"
-import { CreateAdminSessionPanel } from "@/pages/app/general/consultations/components/create-admin-session-panel"
 import { CreateRequestPanel } from "@/pages/app/general/consultations/components/create-request-panel"
 import { DoctorCandidatesDialog } from "@/pages/app/general/consultations/components/doctor-candidates-dialog"
 import { DoctorCareProfileDialog } from "@/pages/app/general/consultations/components/doctor-care-profile-dialog"
@@ -178,10 +177,6 @@ export default function ConsultationsPage() {
                       </span>
                     )}
                   </TabsTrigger>
-                  <TabsTrigger value="create-session" className="rounded-lg text-xs font-semibold gap-1.5 px-3">
-                    <PlusCircle className="w-3.5 h-3.5" />
-                    <span>Tạo phiên trực tiếp</span>
-                  </TabsTrigger>
                 </>
               )}
 
@@ -252,17 +247,6 @@ export default function ConsultationsPage() {
               onAdminFilterChange={logic.setAdminFilters}
               onSearchAdminFilters={logic.loadData}
               onInitiatePayment={logic.handleInitiatePayment}
-            />
-          </TabsContent>
-        )}
-
-        {logic.isAdmin && (
-          <TabsContent value="create-session" className="m-0 flex-1 min-h-0 overflow-y-auto p-4 sm:p-6">
-            <CreateAdminSessionPanel
-              form={logic.adminSessionForm}
-              loading={logic.actionLoading}
-              onChange={logic.setAdminSessionForm}
-              onSubmit={logic.handleCreateAdminSession}
             />
           </TabsContent>
         )}

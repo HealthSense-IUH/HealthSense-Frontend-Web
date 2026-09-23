@@ -10,7 +10,6 @@ import { CONSULTATION_CONFIRM_ERROR_MESSAGES } from "@/constants/credits"
 import type { CreditWallet } from "@/types/credits"
 import type { AdminDialogMode } from "../components/admin-action-dialog"
 import type { RequestFormData } from "../components/create-request-panel"
-import type { AdminSessionFormData } from "../components/create-admin-session-panel"
 import type {
   ConsultationMessageItem,
   ConsultationRequestItem,
@@ -56,19 +55,11 @@ function readError(error: unknown, fallback: string) {
   return err.message || fallback
 }
 
-function toIsoOrNull(value: string) {
-  return value ? new Date(value).toISOString() : null
-}
-
 function localDateTimeIn(days: number) {
   const date = new Date()
   date.setDate(date.getDate() + days)
   date.setMinutes(date.getMinutes() - date.getTimezoneOffset())
   return date.toISOString().slice(0, 16)
-}
-
-function normalizeOptionalId(value: string) {
-  return value.trim() ? value.trim() : null
 }
 
 function makeClientMessageId() {
@@ -153,16 +144,6 @@ export function useConsultationsLogic() {
     preferredDoctorId: "",
     healthRecordId: "",
     reason: "",
-  })
-  const [adminSessionForm, setAdminSessionForm] = useState<AdminSessionFormData>({
-    memberId: "",
-    doctorId: "",
-    healthRecordId: "",
-    endsAt: localDateTimeIn(30),
-    supportEndsAt: localDateTimeIn(33),
-    initialSystemMessage: "Admin creates direct consultation session",
-    overrideReason: "",
-    serviceScope: "",
   })
   const [adminDialogMode, setAdminDialogMode] = useState<AdminDialogMode>(null)
   const [targetRequest, setTargetRequest] = useState<ConsultationRequestItem | null>(null)
@@ -911,63 +892,6 @@ export function useConsultationsLogic() {
     }
   }
 
-  async function handleCreateAdminSession(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-    setActionLoading(true)
-    setAlert(null)
-    try {
-      if (!adminSessionForm.overrideReason.trim()) {
-        setAlert({ type: "error", text: "Vui lòng nhập lý do ghi đè (overrideReason) của Quản trị viên." })
-        setActionLoading(false)
-        return
-      }
-
-      if (!adminSessionForm.serviceScope.trim()) {
-        setAlert({ type: "error", text: "Vui lòng nhập phạm vi dịch vụ (serviceScope) chỉ định cho phiên." })
-        setActionLoading(false)
-        return
-      }
-
-      const response = await consultationApi.createSessionByAdmin({
-        memberId: adminSessionForm.memberId.trim(),
-        doctorId: adminSessionForm.doctorId.trim(),
-        healthRecordId: normalizeOptionalId(adminSessionForm.healthRecordId),
-        startedAt: null,
-        endsAt: new Date(adminSessionForm.endsAt).toISOString(),
-        supportEndsAt: toIsoOrNull(adminSessionForm.supportEndsAt),
-        initialSystemMessage: adminSessionForm.initialSystemMessage.trim() || null,
-        overrideReason: adminSessionForm.overrideReason.trim(),
-        serviceScope: adminSessionForm.serviceScope.trim(),
-      })
-      setSelectedSession(response.data)
-      setAlert({ type: "success", text: `Đã tạo phiên tư vấn đặc biệt #${response.data.id}.` })
-      toast({
-        title: "Tạo phiên thành công",
-        description: `Đã tạo phiên tư vấn trực tiếp #${response.data.id}.`,
-      })
-      setAdminSessionForm({
-        memberId: "",
-        doctorId: "",
-        healthRecordId: "",
-        endsAt: localDateTimeIn(30),
-        supportEndsAt: localDateTimeIn(33),
-        initialSystemMessage: "Admin creates direct consultation session",
-        overrideReason: "",
-        serviceScope: "",
-      })
-      await loadData()
-    } catch (error) {
-      setAlert({ type: "error", text: readError(error, "Không thể tạo phiên tư vấn đặc biệt.") })
-      toast({
-        variant: "destructive",
-        title: "Lỗi tạo phiên tư vấn",
-        description: readError(error, "Đã có lỗi xảy ra khi tạo phiên tư vấn đặc biệt."),
-      })
-    } finally {
-      setActionLoading(false)
-    }
-  }
-
   function openApproveDialog(request: ConsultationRequestItem) {
     setTargetRequest(request)
     setDoctorId(String(request.preferredDoctorId ?? ""))
@@ -1293,8 +1217,6 @@ export function useConsultationsLogic() {
     isOutsideSupportHours,
     requestForm,
     setRequestForm,
-    adminSessionForm,
-    setAdminSessionForm,
     adminDialogMode,
     setAdminDialogMode,
     targetRequest,
@@ -1336,7 +1258,6 @@ export function useConsultationsLogic() {
     handleConfirmQueue,
     handleCancelQueue,
     handleCancelRequest,
-    handleCreateAdminSession,
     openApproveDialog,
     openRejectDialog,
     openCloseDialog,
