@@ -22,7 +22,7 @@
       "management-overview": "Bảng quản trị hệ thống",
       "user-management": "Quản lý người dùng",
       "admin-credit-packages": "Quản lý gói lượt",
-      "admin-credit-operations": "Vận hành & Đối soát lượt",
+      "admin-credit-operations": "Quản lý lượt tư vấn",
       "health-records-management": "Hồ sơ sức khỏe bệnh nhân",
       "doctor-consultations": "Phiên khám Bác sĩ"
     },
@@ -36,7 +36,7 @@
       "management-overview": "Tổng quan",
       "user-management": "Người dùng",
       "admin-credit-packages": "Gói lượt",
-      "admin-credit-operations": "Vận hành lượt",
+      "admin-credit-operations": "Lượt tư vấn",
       "health-records-management": "Hồ sơ bệnh",
       "doctor-consultations": "Phiên khám"
     }

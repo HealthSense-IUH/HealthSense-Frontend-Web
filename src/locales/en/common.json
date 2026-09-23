@@ -22,7 +22,7 @@
       "management-overview": "Admin dashboard",
       "user-management": "User management",
       "admin-credit-packages": "Credit packages",
-      "admin-credit-operations": "Credit operations & reconcile",
+      "admin-credit-operations": "Credit management",
       "health-records-management": "Patient health records",
       "doctor-consultations": "Doctor sessions"
     },
@@ -36,7 +36,7 @@
       "management-overview": "Overview",
       "user-management": "Users",
       "admin-credit-packages": "Packages",
-      "admin-credit-operations": "Operations",
+      "admin-credit-operations": "Credits",
       "health-records-management": "Records",
       "doctor-consultations": "Sessions"
     }
