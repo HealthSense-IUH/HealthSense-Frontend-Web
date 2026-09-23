@@ -133,6 +133,13 @@ export function MemberWalletDirectoryTab() {
   const [ledgerOperationFilter, setLedgerOperationFilter] = useState<string>("ALL")
   const [ledgerSourceTypeFilter, setLedgerSourceTypeFilter] = useState<string>("ALL")
 
+  // Manual Adjustment State
+  const [isAdjustInlineOpen, setIsAdjustInlineOpen] = useState(false)
+  const [adjustDelta, setAdjustDelta] = useState<number>(1)
+  const [adjustReason, setAdjustReason] = useState("")
+  const [adjustSubmitting, setAdjustSubmitting] = useState(false)
+  const adjustSubmittingRef = useRef(false)
+
   // Fetch fresh wallet detail from /api/admin/credits/wallets/{memberId}
   const loadFreshWallet = useCallback(async (memberId: string) => {
     setLoadingWalletDetail(true)
@@ -230,12 +237,6 @@ export function MemberWalletDirectoryTab() {
   /* =========================================================================
    * 3. Manual Adjustment State & Logic
    * ========================================================================= */
-  const [isAdjustInlineOpen, setIsAdjustInlineOpen] = useState(false)
-  const [adjustDelta, setAdjustDelta] = useState<number>(1)
-  const [adjustReason, setAdjustReason] = useState("")
-  const [adjustSubmitting, setAdjustSubmitting] = useState(false)
-  const adjustSubmittingRef = useRef(false)
-
   const handleToggleAdjustInline = () => {
     if (!isAdjustInlineOpen) {
       setAdjustDelta(1)
