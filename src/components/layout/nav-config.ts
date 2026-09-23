@@ -8,7 +8,6 @@ import {
   Stethoscope,
   User,
   Users,
-  Wrench,
   type LucideIcon,
 } from "lucide-react"
 
@@ -64,19 +63,11 @@ export const allNavigationGroups: NavigationGroup[] = [
         allowedRoles: [USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN],
       },
       {
-        id: "admin-credit-packages",
-        title: "Quản lý gói lượt",
-        shortTitle: "Gói lượt",
-        href: "/app/management/credit-packages",
-        icon: Coins,
-        allowedRoles: [USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN],
-      },
-      {
         id: "admin-credit-operations",
-        title: "Vận hành & Đối soát lượt",
-        shortTitle: "Vận hành lượt",
+        title: "Quản lý lượt tư vấn",
+        shortTitle: "Lượt tư vấn",
         href: "/app/management/credit-operations",
-        icon: Wrench,
+        icon: Coins,
         allowedRoles: [USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN],
       },
       {
