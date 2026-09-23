@@ -234,3 +234,27 @@ export interface PendingCreditPayment {
 
 // Giữ alias tương thích ngược tạm thời nếu có code cũ tham chiếu
 export type PendingCreditPurchaseIntent = CreditPurchaseIntent
+
+export type MemberAccountStatus = "ACTIVE" | "INACTIVE" | "PENDING_VERIFY"
+
+export interface AdminMemberCreditSummary {
+  memberId: string
+  displayName: string
+  email: string
+  phone: string | null
+  accountStatus: MemberAccountStatus
+  avatarUrl: string | null
+  walletInitialized: boolean
+  balance: number
+  reserved: number
+  available: number
+  walletUpdatedAt: string | null
+}
+
+export interface AdminMemberCreditsFilterParams {
+  keyword?: string
+  status?: MemberAccountStatus
+  page?: number
+  size?: number
+}
+
