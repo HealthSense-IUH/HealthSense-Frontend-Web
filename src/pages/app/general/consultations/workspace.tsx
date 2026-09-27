@@ -17,6 +17,7 @@ import {
   User,
 } from "lucide-react"
 
+import { Page, PageBody, PageHeader } from "@/components/layout/page"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -338,330 +339,335 @@ export default function MemberSessionWorkspacePage() {
 
   const canSend = session?.status === "ACTIVE" && !readOnlyMode
 
+  const breadcrumbs = [
+    { label: "Tư vấn & Chăm sóc", to: "/app/general/consultations?tab=sessions" },
+    { label: `Phiên tư vấn #${session?.id ?? sessionId}` },
+  ]
+
   if (initialLoading && !session) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[500px] gap-3">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        <p className="text-sm text-muted-foreground">Đang tải không gian tư vấn...</p>
-      </div>
+      <Page width="full" fill>
+        <PageHeader
+          compact
+          breadcrumbs={breadcrumbs}
+          icon={<Stethoscope className="w-5 h-5" />}
+          title={`Phiên tư vấn #${sessionId}`}
+        />
+        <PageBody className="items-center justify-center text-center gap-3">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <p className="text-sm text-muted-foreground">Đang tải không gian tư vấn...</p>
+        </PageBody>
+      </Page>
     )
   }
 
   if (!session) {
     return (
-      <div className="mx-auto flex max-w-lg flex-col items-center justify-center gap-4 py-24 text-center">
-        <ShieldAlert className="h-10 w-10 text-red-500" />
-        <h2 className="text-2xl font-bold text-foreground">Không tìm thấy phiên tư vấn</h2>
-        <p className="text-sm text-muted-foreground">
-          Phiên khám #{sessionId} không tồn tại hoặc bạn không có quyền truy cập.
-        </p>
-        <Button onClick={() => navigate("/app/general/consultations?tab=sessions")}>
-          <ArrowLeft className="mr-2 h-4 w-4" /> Quay lại danh sách phiên
-        </Button>
-      </div>
+      <Page width="full" fill>
+        <PageHeader
+          compact
+          breadcrumbs={breadcrumbs}
+          icon={<Stethoscope className="w-5 h-5" />}
+          title={`Phiên tư vấn #${sessionId}`}
+        />
+        <PageBody className="items-center justify-center text-center">
+          <div className="flex max-w-lg flex-col items-center gap-4">
+            <ShieldAlert className="h-10 w-10 text-red-500" />
+            <h2 className="text-2xl font-bold text-foreground">Không tìm thấy phiên tư vấn</h2>
+            <p className="text-sm text-muted-foreground">
+              Phiên khám #{sessionId} không tồn tại hoặc bạn không có quyền truy cập.
+            </p>
+            <Button onClick={() => navigate("/app/general/consultations?tab=sessions")}>
+              <ArrowLeft className="mr-2 h-4 w-4" /> Quay lại danh sách phiên
+            </Button>
+          </div>
+        </PageBody>
+      </Page>
     )
   }
 
   return (
-    <div className="flex flex-col h-[calc(100vh-85px)] w-full gap-3 pb-1">
-      {/* 1. Header Bar */}
-      <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-3 bg-background p-4 rounded-2xl shadow-sm border border-border shrink-0">
-        <div className="flex items-center gap-3 min-w-0">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => navigate("/app/general/consultations?tab=sessions")}
-            className="h-9 px-2 text-muted-foreground hover:text-foreground shrink-0"
-          >
-            <ArrowLeft className="h-4 w-4 mr-1" />
-            <span className="hidden sm:inline">Danh sách</span>
-          </Button>
-
-          <div className="h-6 w-px bg-border shrink-0" />
-
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 border border-primary/20 text-primary shrink-0">
-            <Stethoscope className="h-5 w-5" />
-          </div>
-
-          <div className="flex flex-col min-w-0">
-            <div className="flex items-center gap-2 flex-wrap">
-              <h1 className="text-lg font-bold tracking-tight text-foreground truncate">
-                Phiên tư vấn #{session.id}
-              </h1>
-              {statusBadge(session.status)}
-            </div>
-            <div className="flex items-center gap-3 text-xs text-muted-foreground mt-0.5">
-              <span className="flex items-center gap-1">
-                <User className="h-3.5 w-3.5 text-primary" />
-                <span className="font-medium text-foreground">{doctorDisplayName}</span>
+    <Page width="full" fill>
+      <PageHeader
+        compact
+        breadcrumbs={breadcrumbs}
+        icon={<Stethoscope className="w-5 h-5" />}
+        title={`Phiên tư vấn #${session.id}`}
+        meta={
+          <>
+            {statusBadge(session.status)}
+            <span className="flex items-center gap-1 text-xs text-muted-foreground">
+              <User className="h-3.5 w-3.5 text-primary" />
+              <span className="font-medium text-foreground">{doctorDisplayName}</span>
+            </span>
+            {session.endsAt && (
+              <span className="hidden sm:inline-flex items-center gap-1 text-xs text-muted-foreground">
+                <Clock className="h-3.5 w-3.5" />
+                Hạn kết thúc: {formatDate(session.endsAt)}
               </span>
-              {session.endsAt && (
-                <span className="flex items-center gap-1 hidden sm:inline-flex">
-                  <Clock className="h-3.5 w-3.5" />
-                  Hạn kết thúc: {formatDate(session.endsAt)}
-                </span>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Action Buttons */}
-        <div className="flex items-center gap-2 flex-wrap self-end lg:self-center">
-          {session.status === "ACTIVE" && session.flowType !== "QUEUE_DISPATCH_V1" && (
-            <Button
-              variant="outline"
-              size="sm"
-              className="h-8 gap-1.5 text-primary border-primary/30 hover:bg-primary/5"
-              onClick={() => setIsRenewalOpen(true)}
-            >
-              <RefreshCw className="h-3.5 w-3.5" />
-              <span>Gia hạn</span>
-            </Button>
-          )}
-
-          {session.status === "ACTIVE" && (
-            <Button
-              variant="outline"
-              size="sm"
-              className="h-8 gap-1.5"
-              onClick={() => setIsShareRecordOpen(true)}
-            >
-              <Share2 className="h-3.5 w-3.5" />
-              <span>Chia sẻ hồ sơ</span>
-            </Button>
-          )}
-
-          {session.status !== "SCHEDULED" && (
-            <Button
-              variant={activeTab === "summary" ? "default" : "outline"}
-              size="sm"
-              className="h-8 gap-1.5"
-              onClick={() => setActiveTab("summary")}
-            >
-              <FileCheck className="h-3.5 w-3.5" />
-              <span>Tổng kết y khoa</span>
-            </Button>
-          )}
-        </div>
-      </div>
-
-      {/* 2. Main Content Tabs */}
-      <div className="flex-1 min-h-0 flex flex-col bg-background rounded-2xl shadow-sm border border-border overflow-hidden">
-        <div className="border-b border-border bg-muted/20 px-4 py-2 shrink-0 flex items-center justify-between">
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="h-9 bg-muted/60 p-1 rounded-xl">
-              <TabsTrigger value="chat" className="rounded-lg text-xs font-semibold gap-1.5 px-3">
-                <MessagesSquare className="w-3.5 h-3.5" />
-                <span>Trò chuyện trực tiếp</span>
-                {messages.length > 0 && (
-                  <span className="ml-1 px-1.5 py-0.2 rounded-full text-[10px] bg-primary/15 text-primary font-bold">
-                    {messages.length}
-                  </span>
-                )}
-              </TabsTrigger>
-              <TabsTrigger value="summary" className="rounded-lg text-xs font-semibold gap-1.5 px-3">
-                <FileText className="w-3.5 h-3.5" />
-                <span>Tổng kết từ Bác sĩ</span>
-                {isCompleted && (
-                  <span className="ml-1 px-1.5 py-0.2 rounded-full text-[10px] bg-green-500/15 text-green-700 dark:text-green-400 font-bold">
-                    Hoàn tất
-                  </span>
-                )}
-              </TabsTrigger>
-              <TabsTrigger value="records" className="rounded-lg text-xs font-semibold gap-1.5 px-3">
-                <Activity className="w-3.5 h-3.5" />
-                <span>Hồ sơ sức khỏe</span>
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
-        </div>
-
-        {/* Tab 1: Live Chat */}
-        {activeTab === "chat" && (
-          <div className="flex-1 min-h-0 flex flex-col relative">
-            <SessionContinuationBanner
-              session={session}
-              isDoctor={false}
-              isMember={true}
-              onSessionRefreshed={refreshSession}
-            />
-
-            {isOutsideSupportHours && (
-              <div className="border-b border-amber-200 bg-amber-50 px-4 py-2 text-xs text-amber-900 flex items-center gap-2 shrink-0">
-                <Clock className="h-4 w-4 text-amber-600 shrink-0" />
-                <span>
-                  Hiện ngoài khung giờ hỗ trợ của bác sĩ. Bạn vẫn có thể xem lại lịch sử trao đổi và gửi tin nhắn khi đến giờ trực.
-                </span>
-              </div>
+            )}
+          </>
+        }
+        actions={
+          <>
+            {session.status === "ACTIVE" && session.flowType !== "QUEUE_DISPATCH_V1" && (
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-8 gap-1.5 text-primary border-primary/30 hover:bg-primary/5"
+                onClick={() => setIsRenewalOpen(true)}
+              >
+                <RefreshCw className="h-3.5 w-3.5" />
+                <span>Gia hạn</span>
+              </Button>
             )}
 
-            <div className="flex-1 min-h-0 overflow-y-auto">
-              <ChatMessageList
-                messages={sortedMessages}
-                loadingMoreMessages={loadingMoreMessages}
-                hasMoreMessages={hasMoreMessages}
-                currentUserId={userSession?.userId}
+            {session.status === "ACTIVE" && (
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-8 gap-1.5"
+                onClick={() => setIsShareRecordOpen(true)}
+              >
+                <Share2 className="h-3.5 w-3.5" />
+                <span>Chia sẻ hồ sơ</span>
+              </Button>
+            )}
+
+            {session.status !== "SCHEDULED" && (
+              <Button
+                variant={activeTab === "summary" ? "default" : "outline"}
+                size="sm"
+                className="h-8 gap-1.5"
+                onClick={() => setActiveTab("summary")}
+              >
+                <FileCheck className="h-3.5 w-3.5" />
+                <span>Tổng kết y khoa</span>
+              </Button>
+            )}
+          </>
+        }
+      />
+
+      <PageBody>
+        {/* Main Content Tabs */}
+        <div className="flex-1 min-h-0 flex flex-col bg-background rounded-2xl shadow-sm border border-border overflow-hidden">
+          <div className="border-b border-border bg-muted/20 px-4 py-2 shrink-0 flex items-center justify-between">
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+              <TabsList className="h-9 bg-muted/60 p-1 rounded-xl">
+                <TabsTrigger value="chat" className="rounded-lg text-xs font-semibold gap-1.5 px-3">
+                  <MessagesSquare className="w-3.5 h-3.5" />
+                  <span>Trò chuyện trực tiếp</span>
+                  {messages.length > 0 && (
+                    <span className="ml-1 px-1.5 py-0.2 rounded-full text-[10px] bg-primary/15 text-primary font-bold">
+                      {messages.length}
+                    </span>
+                  )}
+                </TabsTrigger>
+                <TabsTrigger value="summary" className="rounded-lg text-xs font-semibold gap-1.5 px-3">
+                  <FileText className="w-3.5 h-3.5" />
+                  <span>Tổng kết từ Bác sĩ</span>
+                  {isCompleted && (
+                    <span className="ml-1 px-1.5 py-0.2 rounded-full text-[10px] bg-green-500/15 text-green-700 dark:text-green-400 font-bold">
+                      Hoàn tất
+                    </span>
+                  )}
+                </TabsTrigger>
+                <TabsTrigger value="records" className="rounded-lg text-xs font-semibold gap-1.5 px-3">
+                  <Activity className="w-3.5 h-3.5" />
+                  <span>Hồ sơ sức khỏe</span>
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
+          </div>
+
+          {/* Tab 1: Live Chat */}
+          {activeTab === "chat" && (
+            <div className="flex-1 min-h-0 flex flex-col relative">
+              <SessionContinuationBanner
+                session={session}
                 isDoctor={false}
                 isMember={true}
-                onLoadMore={handleLoadMoreMessages}
+                onSessionRefreshed={refreshSession}
+              />
+
+              {isOutsideSupportHours && (
+                <div className="border-b border-amber-200 bg-amber-50 px-4 py-2 text-xs text-amber-900 flex items-center gap-2 shrink-0">
+                  <Clock className="h-4 w-4 text-amber-600 shrink-0" />
+                  <span>
+                    Hiện ngoài khung giờ hỗ trợ của bác sĩ. Bạn vẫn có thể xem lại lịch sử trao đổi và gửi tin nhắn khi đến giờ trực.
+                  </span>
+                </div>
+              )}
+
+              <div className="flex-1 min-h-0 overflow-y-auto">
+                <ChatMessageList
+                  messages={sortedMessages}
+                  loadingMoreMessages={loadingMoreMessages}
+                  hasMoreMessages={hasMoreMessages}
+                  currentUserId={userSession?.userId}
+                  isDoctor={false}
+                  isMember={true}
+                  onLoadMore={handleLoadMoreMessages}
+                />
+              </div>
+
+              <ChatComposer
+                messageDraft={messageDraft}
+                attachmentUrl={attachmentUrl}
+                canSend={canSend}
+                loading={chatLoading}
+                readOnlyMode={readOnlyMode}
+                readOnlyReason={readOnlyReason}
+                onMessageChange={setMessageDraft}
+                onSubmit={handleSendMessage}
               />
             </div>
+          )}
 
-            <ChatComposer
-              messageDraft={messageDraft}
-              attachmentUrl={attachmentUrl}
-              canSend={canSend}
-              loading={chatLoading}
-              readOnlyMode={readOnlyMode}
-              readOnlyReason={readOnlyReason}
-              onMessageChange={setMessageDraft}
-              onSubmit={handleSendMessage}
-            />
-          </div>
-        )}
-
-        {/* Tab 2: Medical Summary */}
-        {activeTab === "summary" && (
-          <div className="flex-1 min-h-0 overflow-y-auto p-4 sm:p-6 max-w-4xl mx-auto w-full">
-            {summaryLoading ? (
-              <div className="space-y-4 py-8">
-                <Skeleton className="h-8 w-3/4" />
-                <Skeleton className="h-24 w-full" />
-                <Skeleton className="h-32 w-full" />
-              </div>
-            ) : !summary || summary.status !== "FINALIZED" ? (
-              <Card className="border-dashed">
-                <CardContent className="flex flex-col items-center justify-center py-16 text-center">
-                  <Activity className="h-12 w-12 text-muted-foreground/40 mb-3" />
-                  <h3 className="text-base font-semibold text-foreground">
-                    Bác sĩ đang hoàn tất tổng kết phiên tư vấn
-                  </h3>
-                  <p className="text-sm text-muted-foreground mt-1.5 max-w-md">
-                    Bản tổng kết y khoa chính thức (tóm tắt lâm sàng, nhận xét, lời dặn và kế hoạch theo dõi) sẽ hiển thị tại đây ngay sau khi bác sĩ phụ trách hoàn tất phiên khám.
-                  </p>
-                </CardContent>
-              </Card>
-            ) : (
-              <div className="space-y-6">
-                <div className="flex items-center justify-between rounded-xl border border-green-200 bg-green-50 p-4">
-                  <div className="flex items-center gap-3">
-                    <CheckCircle2 className="h-5 w-5 text-green-600 shrink-0" />
-                    <div>
-                      <p className="font-semibold text-green-900">Tổng kết y khoa đã được hoàn tất</p>
-                      <p className="text-xs text-green-700">
-                        Thời gian chốt: {formatDate(summary.finalizedAt)}
-                      </p>
-                    </div>
-                  </div>
-                  <Badge className="bg-green-600 hover:bg-green-700 text-white">Đã hoàn tất</Badge>
+          {/* Tab 2: Medical Summary */}
+          {activeTab === "summary" && (
+            <div className="flex-1 min-h-0 overflow-y-auto p-4 sm:p-6 max-w-4xl mx-auto w-full">
+              {summaryLoading ? (
+                <div className="space-y-4 py-8">
+                  <Skeleton className="h-8 w-3/4" />
+                  <Skeleton className="h-24 w-full" />
+                  <Skeleton className="h-32 w-full" />
                 </div>
-
-                <Card>
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
-                      Tóm tắt lâm sàng & Đánh giá của Bác sĩ
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="rounded-lg bg-muted/40 p-4 text-sm text-foreground whitespace-pre-wrap leading-relaxed">
-                      {summary.summary || <span className="text-muted-foreground italic">Không có nội dung tóm tắt</span>}
-                    </div>
-
-                    {summary.observations && (
-                      <div className="space-y-1">
-                        <h4 className="text-xs font-semibold text-muted-foreground">Nhận xét & Quan sát:</h4>
-                        <p className="text-sm text-foreground whitespace-pre-wrap">{summary.observations}</p>
-                      </div>
-                    )}
+              ) : !summary || summary.status !== "FINALIZED" ? (
+                <Card className="border-dashed">
+                  <CardContent className="flex flex-col items-center justify-center py-16 text-center">
+                    <Activity className="h-12 w-12 text-muted-foreground/40 mb-3" />
+                    <h3 className="text-base font-semibold text-foreground">
+                      Bác sĩ đang hoàn tất tổng kết phiên tư vấn
+                    </h3>
+                    <p className="text-sm text-muted-foreground mt-1.5 max-w-md">
+                      Bản tổng kết y khoa chính thức (tóm tắt lâm sàng, nhận xét, lời dặn và kế hoạch theo dõi) sẽ hiển thị tại đây ngay sau khi bác sĩ phụ trách hoàn tất phiên khám.
+                    </p>
                   </CardContent>
                 </Card>
+              ) : (
+                <div className="space-y-6">
+                  <div className="flex items-center justify-between rounded-xl border border-green-200 bg-green-50 p-4">
+                    <div className="flex items-center gap-3">
+                      <CheckCircle2 className="h-5 w-5 text-green-600 shrink-0" />
+                      <div>
+                        <p className="font-semibold text-green-900">Tổng kết y khoa đã được hoàn tất</p>
+                        <p className="text-xs text-green-700">
+                          Thời gian chốt: {formatDate(summary.finalizedAt)}
+                        </p>
+                      </div>
+                    </div>
+                    <Badge className="bg-green-600 hover:bg-green-700 text-white">Đã hoàn tất</Badge>
+                  </div>
 
-                {summary.recommendations && (
                   <Card>
                     <CardHeader className="pb-2">
                       <CardTitle className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
-                        Lời dặn & Khuyến nghị chăm sóc
+                        Tóm tắt lâm sàng & Đánh giá của Bác sĩ
                       </CardTitle>
                     </CardHeader>
-                    <CardContent>
-                      <div className="rounded-lg bg-blue-50/50 border border-blue-100 p-4 text-sm text-foreground whitespace-pre-wrap leading-relaxed">
-                        {summary.recommendations}
+                    <CardContent className="space-y-4">
+                      <div className="rounded-lg bg-muted/40 p-4 text-sm text-foreground whitespace-pre-wrap leading-relaxed">
+                        {summary.summary || <span className="text-muted-foreground italic">Không có nội dung tóm tắt</span>}
                       </div>
+
+                      {summary.observations && (
+                        <div className="space-y-1">
+                          <h4 className="text-xs font-semibold text-muted-foreground">Nhận xét & Quan sát:</h4>
+                          <p className="text-sm text-foreground whitespace-pre-wrap">{summary.observations}</p>
+                        </div>
+                      )}
                     </CardContent>
                   </Card>
-                )}
 
-                {summary.followUpRecommendation && (
-                  <div className="flex items-center gap-2 p-3.5 rounded-lg border border-amber-200 bg-amber-50 text-amber-900 text-sm">
-                    <Calendar className="h-4 w-4 text-amber-600 shrink-0" />
-                    <span>
-                      <strong>Tái khám:</strong> {summary.followUpRecommendation}
-                    </span>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-        )}
+                  {summary.recommendations && (
+                    <Card>
+                      <CardHeader className="pb-2">
+                        <CardTitle className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
+                          Lời dặn & Khuyến nghị chăm sóc
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="rounded-lg bg-blue-50/50 border border-blue-100 p-4 text-sm text-foreground whitespace-pre-wrap leading-relaxed">
+                          {summary.recommendations}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  )}
 
-        {/* Tab 3: Shared Health Records */}
-        {activeTab === "records" && (
-          <div className="flex-1 min-h-0 overflow-y-auto p-4 sm:p-6 max-w-4xl mx-auto w-full space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-base font-semibold text-foreground">Hồ sơ sức khỏe trong phiên khám</h3>
-                <p className="text-sm text-muted-foreground">
-                  Hồ sơ sức khỏe và dữ liệu sinh hiệu bác sĩ phụ trách được cấp quyền theo dõi.
-                </p>
-              </div>
-              {session.status === "ACTIVE" && (
-                <Button size="sm" onClick={() => setIsShareRecordOpen(true)} className="gap-1.5 shadow-sm">
-                  <Share2 className="h-3.5 w-3.5" />
-                  <span>Chia sẻ thêm hồ sơ</span>
-                </Button>
+                  {summary.followUpRecommendation && (
+                    <div className="flex items-center gap-2 p-3.5 rounded-lg border border-amber-200 bg-amber-50 text-amber-900 text-sm">
+                      <Calendar className="h-4 w-4 text-amber-600 shrink-0" />
+                      <span>
+                        <strong>Tái khám:</strong> {summary.followUpRecommendation}
+                      </span>
+                    </div>
+                  )}
+                </div>
               )}
             </div>
+          )}
 
-            {session.healthRecordId ? (
-              <Card>
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <Activity className="h-5 w-5 text-primary" />
-                      <CardTitle className="text-base">Hồ sơ sức khỏe #{session.healthRecordId}</CardTitle>
-                    </div>
-                    <Badge className="bg-emerald-500/10 text-emerald-700 border-emerald-200">Đã chia sẻ</Badge>
-                  </div>
-                  <CardDescription>
-                    Hồ sơ được đính kèm khi đăng ký phiên tư vấn hoặc được cấp quyền trong quá trình khám.
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-            ) : (
-              <Card className="border-dashed">
-                <CardContent className="flex flex-col items-center justify-center py-12 text-center">
-                  <Activity className="h-10 w-10 text-muted-foreground/40 mb-2" />
-                  <p className="text-sm font-medium text-foreground">Chưa có hồ sơ sức khỏe nào được chia sẻ</p>
-                  <p className="text-xs text-muted-foreground mt-1 max-w-sm">
-                    Bạn có thể chia sẻ các bản đo huyết áp, đường huyết hoặc điện tâm đồ để bác sĩ nắm rõ tình trạng sức khỏe.
+          {/* Tab 3: Shared Health Records */}
+          {activeTab === "records" && (
+            <div className="flex-1 min-h-0 overflow-y-auto p-4 sm:p-6 max-w-4xl mx-auto w-full space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-base font-semibold text-foreground">Hồ sơ sức khỏe trong phiên khám</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Hồ sơ sức khỏe và dữ liệu sinh hiệu bác sĩ phụ trách được cấp quyền theo dõi.
                   </p>
-                  {session.status === "ACTIVE" && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="mt-4 gap-1.5"
-                      onClick={() => setIsShareRecordOpen(true)}
-                    >
-                      <Share2 className="h-3.5 w-3.5" />
-                      Chia sẻ hồ sơ ngay
-                    </Button>
-                  )}
-                </CardContent>
-              </Card>
-            )}
-          </div>
-        )}
-      </div>
+                </div>
+                {session.status === "ACTIVE" && (
+                  <Button size="sm" onClick={() => setIsShareRecordOpen(true)} className="gap-1.5 shadow-sm">
+                    <Share2 className="h-3.5 w-3.5" />
+                    <span>Chia sẻ thêm hồ sơ</span>
+                  </Button>
+                )}
+              </div>
+
+              {session.healthRecordId ? (
+                <Card>
+                  <CardHeader>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Activity className="h-5 w-5 text-primary" />
+                        <CardTitle className="text-base">Hồ sơ sức khỏe #{session.healthRecordId}</CardTitle>
+                      </div>
+                      <Badge className="bg-emerald-500/10 text-emerald-700 border-emerald-200">Đã chia sẻ</Badge>
+                    </div>
+                    <CardDescription>
+                      Hồ sơ được đính kèm khi đăng ký phiên tư vấn hoặc được cấp quyền trong quá trình khám.
+                    </CardDescription>
+                  </CardHeader>
+                </Card>
+              ) : (
+                <Card className="border-dashed">
+                  <CardContent className="flex flex-col items-center justify-center py-12 text-center">
+                    <Activity className="h-10 w-10 text-muted-foreground/40 mb-2" />
+                    <p className="text-sm font-medium text-foreground">Chưa có hồ sơ sức khỏe nào được chia sẻ</p>
+                    <p className="text-xs text-muted-foreground mt-1 max-w-sm">
+                      Bạn có thể chia sẻ các bản đo huyết áp, đường huyết hoặc điện tâm đồ để bác sĩ nắm rõ tình trạng sức khỏe.
+                    </p>
+                    {session.status === "ACTIVE" && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="mt-4 gap-1.5"
+                        onClick={() => setIsShareRecordOpen(true)}
+                      >
+                        <Share2 className="h-3.5 w-3.5" />
+                        Chia sẻ hồ sơ ngay
+                      </Button>
+                    )}
+                  </CardContent>
+                </Card>
+              )}
+            </div>
+          )}
+        </div>
+      </PageBody>
 
       {/* Share Health Record Dialog */}
       <ShareHealthRecordDialog
@@ -679,6 +685,6 @@ export default function MemberSessionWorkspacePage() {
         onOpenChange={setIsRenewalOpen}
         onSessionRefreshed={refreshSession}
       />
-    </div>
+    </Page>
   )
 }

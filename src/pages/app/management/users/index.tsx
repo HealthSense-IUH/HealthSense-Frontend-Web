@@ -1,8 +1,10 @@
 import { useState, useEffect, useCallback } from "react"
 import { useNavigate } from "react-router-dom"
-import { ShieldAlert, Sparkles, CheckCircle2, AlertCircle } from "lucide-react"
+import { ShieldAlert, Sparkles, CheckCircle2, AlertCircle, Plus } from "lucide-react"
 import { useDebounce } from "@/hooks/use-debounce"
 import { useAppShell } from "@/components/layout/app-shell-context"
+import { Page, PageBody, PageHeader } from "@/components/layout/page"
+import { Button } from "@/components/ui/button"
 import { USER_ROLES } from "@/constants"
 import type { UserRole } from "@/types/auth"
 import { userManagementApi } from "@/services"
@@ -234,19 +236,23 @@ export default function UserManagementPage() {
   // Unauthorized screen for DOCTOR and MEMBER roles
   if (!isAuthorized) {
     return (
-      <div className="flex flex-col items-center justify-center py-24 px-6 text-center max-w-lg mx-auto">
-        <div className="p-5 rounded-3xl bg-red-50 text-red-600 border border-red-200/80 shadow-xs mb-5">
-          <ShieldAlert className="w-12 h-12 stroke-[2.2]" />
-        </div>
-        <h2 className="text-2xl font-black text-slate-900 tracking-tight">Từ chối truy cập: Trang được bảo vệ</h2>
-        <p className="text-sm font-medium text-slate-500 mt-2 leading-relaxed">
-          Phân hệ <strong className="text-slate-800">Quản lý người dùng & tài khoản</strong> chỉ dành riêng cho quyền <strong className="text-blue-600">ADMIN</strong> và <strong className="text-amber-600">SUPER_ADMIN</strong>. Vai trò hiện tại của bạn là <strong className="text-slate-900">{effectiveRole}</strong>.
-        </p>
-        <div className="mt-6 p-4 rounded-2xl bg-slate-50 border border-slate-200 w-full text-xs font-bold text-slate-600 flex items-center justify-center gap-2">
-          <Sparkles className="w-4 h-4 text-amber-500" />
-          <span>Vui lòng chuyển đổi vai trò sang ADMIN hoặc SUPER_ADMIN để truy cập trang này.</span>
-        </div>
-      </div>
+      <Page>
+        <PageBody className="items-center justify-center text-center">
+          <div className="flex flex-col items-center max-w-lg">
+            <div className="p-5 rounded-3xl bg-red-50 text-red-600 border border-red-200/80 shadow-xs mb-5">
+              <ShieldAlert className="w-12 h-12 stroke-[2.2]" />
+            </div>
+            <h2 className="text-2xl font-black text-slate-900 tracking-tight">Từ chối truy cập: Trang được bảo vệ</h2>
+            <p className="text-sm font-medium text-slate-500 mt-2 leading-relaxed">
+              Phân hệ <strong className="text-slate-800">Quản lý người dùng & tài khoản</strong> chỉ dành riêng cho quyền <strong className="text-blue-600">ADMIN</strong> và <strong className="text-amber-600">SUPER_ADMIN</strong>. Vai trò hiện tại của bạn là <strong className="text-slate-900">{effectiveRole}</strong>.
+            </p>
+            <div className="mt-6 p-4 rounded-2xl bg-slate-50 border border-slate-200 w-full text-xs font-bold text-slate-600 flex items-center justify-center gap-2">
+              <Sparkles className="w-4 h-4 text-amber-500" />
+              <span>Vui lòng chuyển đổi vai trò sang ADMIN hoặc SUPER_ADMIN để truy cập trang này.</span>
+            </div>
+          </div>
+        </PageBody>
+      </Page>
     )
   }
 
@@ -261,127 +267,142 @@ export default function UserManagementPage() {
   }
 
   return (
-    <div className="space-y-6 pb-12">
-      {/* Role Switcher Tabs (Fulfilling required API role parameter) */}
-      <UserRoleTabs selectedRole={selectedRole} onSelectRole={handleSelectRole} loading={loading} effectiveRole={effectiveRole} />
-
-      {/* Status Alert feedback box */}
-      {statusAlert && (
-        <div
-          className={`p-4 rounded-2xl border text-xs font-bold flex items-center justify-between transition-all ${
-            statusAlert.type === "success"
-              ? "bg-emerald-50 border-emerald-200 text-emerald-900 shadow-3xs shadow-emerald-500/10"
-              : "bg-red-50 border-red-200 text-red-900 shadow-3xs shadow-red-500/10"
-          }`}
-        >
-          <div className="flex items-center gap-3">
-            {statusAlert.type === "success" ? (
-              <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
-            ) : (
-              <AlertCircle className="w-5 h-5 text-red-600 shrink-0" />
-            )}
-            <span>{statusAlert.text}</span>
-          </div>
-          <button
-            type="button"
-            onClick={() => setStatusAlert(null)}
-            className="text-slate-400 hover:text-slate-700 font-extrabold px-2 cursor-pointer"
+    <Page>
+      <PageHeader
+        title="Quản lý tài khoản"
+        description="Tra cứu, tạo mới và cập nhật tài khoản người dùng theo từng vai trò trên hệ thống."
+        actions={
+          <Button
+            onClick={handleOpenCreate}
+            disabled={loading}
+            className="h-10 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs px-4.5 shadow-sm shadow-blue-500/25 flex items-center gap-2 transition-transform active:scale-95 cursor-pointer shrink-0"
           >
-            ✕
-          </button>
-        </div>
-      )}
+            <Plus className="h-4 w-4 stroke-[3]" />
+            <span>Thêm tài khoản</span>
+          </Button>
+        }
+      />
 
-      {/* Table Section with Header Controls */}
-      <section aria-label="Account Registry Data Table" className="space-y-4">
-        <UserTableHeader
-          searchQuery={searchQuery}
-          onSearchChange={(val) => {
-            setSearchQuery(val)
-            setPage(1)
-          }}
-          statusFilter={statusFilter}
-          onStatusFilterChange={(val) => {
-            setStatusFilter(val)
-            setPage(1)
-          }}
-          onOpenCreate={handleOpenCreate}
-          totalElements={totalElements}
-          currentRoleLabel={getRoleDisplayLabel()}
-          loading={loading}
+      <PageBody>
+        {/* Role Switcher Tabs (Fulfilling required API role parameter) */}
+        <UserRoleTabs selectedRole={selectedRole} onSelectRole={handleSelectRole} loading={loading} effectiveRole={effectiveRole} />
+
+        {/* Status Alert feedback box */}
+        {statusAlert && (
+          <div
+            className={`p-4 rounded-2xl border text-xs font-bold flex items-center justify-between transition-all ${
+              statusAlert.type === "success"
+                ? "bg-emerald-50 border-emerald-200 text-emerald-900 shadow-3xs shadow-emerald-500/10"
+                : "bg-red-50 border-red-200 text-red-900 shadow-3xs shadow-red-500/10"
+            }`}
+          >
+            <div className="flex items-center gap-3">
+              {statusAlert.type === "success" ? (
+                <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+              ) : (
+                <AlertCircle className="w-5 h-5 text-red-600 shrink-0" />
+              )}
+              <span>{statusAlert.text}</span>
+            </div>
+            <button
+              type="button"
+              onClick={() => setStatusAlert(null)}
+              className="text-slate-400 hover:text-slate-700 font-extrabold px-2 cursor-pointer"
+            >
+              ✕
+            </button>
+          </div>
+        )}
+
+        {/* Table Section with Header Controls */}
+        <section aria-label="Account Registry Data Table" className="space-y-4">
+          <UserTableHeader
+            searchQuery={searchQuery}
+            onSearchChange={(val) => {
+              setSearchQuery(val)
+              setPage(1)
+            }}
+            statusFilter={statusFilter}
+            onStatusFilterChange={(val) => {
+              setStatusFilter(val)
+              setPage(1)
+            }}
+            totalElements={totalElements}
+            currentRoleLabel={getRoleDisplayLabel()}
+          />
+
+          <UserTable
+            users={rawUsers}
+            loading={loading}
+            page={page}
+            size={size}
+            totalElements={totalElements}
+            totalPages={totalPages}
+            onPageChange={(p) => setPage(p)}
+            onSizeChange={(s) => {
+              setSize(s)
+              setPage(1)
+            }}
+            onView={handleOpenView}
+            onEdit={handleOpenEdit}
+            onDelete={handleOpenDelete}
+            onFakeRecord={handleOpenFakeRecord}
+            onManageCareProfile={(user) => setCareProfileDoctorId(String(user.id))}
+            onMemberDetail={(user) => navigate(`/app/management/users/${user.id}`)}
+          />
+        </section>
+
+        {/* Modals & Dialogs */}
+        <UserFormModal
+          isOpen={isFormOpen}
+          onClose={() => setIsFormOpen(false)}
+          onSave={handleSaveUser}
+          initialData={targetUser}
+          defaultRole={selectedRole}
+          loading={actionLoading}
+          effectiveRole={effectiveRole}
         />
 
-        <UserTable
-          users={rawUsers}
-          loading={loading}
-          page={page}
-          size={size}
-          totalElements={totalElements}
-          totalPages={totalPages}
-          onPageChange={(p) => setPage(p)}
-          onSizeChange={(s) => {
-            setSize(s)
-            setPage(1)
+        <UserDetailDrawer
+          isOpen={isDetailOpen}
+          onClose={() => setIsDetailOpen(false)}
+          user={targetUser}
+          onEdit={(u) => {
+            setIsDetailOpen(false)
+            handleOpenEdit(u)
           }}
-          onView={handleOpenView}
-          onEdit={handleOpenEdit}
-          onDelete={handleOpenDelete}
-          onFakeRecord={handleOpenFakeRecord}
-          onManageCareProfile={(user) => setCareProfileDoctorId(String(user.id))}
-          onMemberDetail={(user) => navigate(`/app/management/users/${user.id}`)}
         />
-      </section>
 
-      {/* Modals & Dialogs */}
-      <UserFormModal
-        isOpen={isFormOpen}
-        onClose={() => setIsFormOpen(false)}
-        onSave={handleSaveUser}
-        initialData={targetUser}
-        defaultRole={selectedRole}
-        loading={actionLoading}
-        effectiveRole={effectiveRole}
-      />
+        <UserDeleteDialog
+          isOpen={isDeleteOpen}
+          onClose={() => setIsDeleteOpen(false)}
+          onConfirm={handleDeleteConfirm}
+          user={targetUser}
+          loading={actionLoading}
+        />
 
-      <UserDetailDrawer
-        isOpen={isDetailOpen}
-        onClose={() => setIsDetailOpen(false)}
-        user={targetUser}
-        onEdit={(u) => {
-          setIsDetailOpen(false)
-          handleOpenEdit(u)
-        }}
-      />
+        <UserFakeRecordDialog
+          isOpen={isFakeRecordOpen}
+          onClose={() => setIsFakeRecordOpen(false)}
+          onConfirm={handleFakeRecordConfirm}
+          user={targetUser}
+          loading={actionLoading}
+        />
 
-      <UserDeleteDialog
-        isOpen={isDeleteOpen}
-        onClose={() => setIsDeleteOpen(false)}
-        onConfirm={handleDeleteConfirm}
-        user={targetUser}
-        loading={actionLoading}
-      />
-
-      <UserFakeRecordDialog
-        isOpen={isFakeRecordOpen}
-        onClose={() => setIsFakeRecordOpen(false)}
-        onConfirm={handleFakeRecordConfirm}
-        user={targetUser}
-        loading={actionLoading}
-      />
-
-      <DoctorCareProfileDialog
-        open={Boolean(careProfileDoctorId)}
-        onOpenChange={(open) => {
-          if (!open) setCareProfileDoctorId(null)
-        }}
-        doctorId={careProfileDoctorId}
-        onSuccess={() => {
-          setStatusAlert({
-            type: "success",
-            text: "Đã cập nhật hồ sơ điều phối và lịch tư vấn của bác sĩ thành công.",
-          })
-        }}
-      />
-    </div>
+        <DoctorCareProfileDialog
+          open={Boolean(careProfileDoctorId)}
+          onOpenChange={(open) => {
+            if (!open) setCareProfileDoctorId(null)
+          }}
+          doctorId={careProfileDoctorId}
+          onSuccess={() => {
+            setStatusAlert({
+              type: "success",
+              text: "Đã cập nhật hồ sơ điều phối và lịch tư vấn của bác sĩ thành công.",
+            })
+          }}
+        />
+      </PageBody>
+    </Page>
   )
 }

@@ -12,6 +12,7 @@ import {
   Ban,
 } from "lucide-react"
 
+import { Page, PageBody, PageHeader } from "@/components/layout/page"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { useToast } from "@/hooks/use-toast"
@@ -256,37 +257,58 @@ export default function CreditPaymentResultPage() {
     }
   }
 
+  const pageHeader = (
+    <PageHeader
+      breadcrumbs={[
+        { label: "Tư vấn & Chăm sóc", to: "/app/general/consultations" },
+        { label: "Lượt tư vấn", to: "/app/general/consultations?tab=credits" },
+        { label: "Kết quả thanh toán" },
+      ]}
+      title="Kết quả thanh toán"
+    />
+  )
+
   // 6. Loading state
   if (loading && !orderDetail) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] text-center p-6">
-        <RefreshCw className="h-10 w-10 text-primary animate-spin mb-4" />
-        <h2 className="text-lg font-bold text-foreground mb-1">
-          Đang kiểm tra kết quả giao dịch...
-        </h2>
-        <p className="text-xs text-muted-foreground max-w-sm">
-          Hệ thống đang kết nối máy chủ để xác thực trạng thái đơn hàng của bạn.
-        </p>
-      </div>
+      <Page width="narrow">
+        {pageHeader}
+        <PageBody className="items-center justify-center text-center">
+          <div className="flex flex-col items-center w-full max-w-md">
+            <RefreshCw className="h-10 w-10 text-primary animate-spin mb-4" />
+            <h2 className="text-lg font-bold text-foreground mb-1">
+              Đang kiểm tra kết quả giao dịch...
+            </h2>
+            <p className="text-xs text-muted-foreground max-w-sm">
+              Hệ thống đang kết nối máy chủ để xác thực trạng thái đơn hàng của bạn.
+            </p>
+          </div>
+        </PageBody>
+      </Page>
     )
   }
 
   // 7. Error state khi không tải được order
   if (errorText && !orderDetail) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] text-center max-w-md mx-auto p-6">
-        <XCircle className="h-12 w-12 text-destructive mb-3" />
-        <h2 className="text-lg font-bold text-foreground mb-2">Đã xảy ra lỗi</h2>
-        <p className="text-xs text-muted-foreground mb-6 leading-relaxed">{errorText}</p>
-        <div className="flex gap-3">
-          <Button variant="outline" onClick={() => void fetchOrder(false)} className="gap-2">
-            <RefreshCw className="h-4 w-4" /> Thử lại
-          </Button>
-          <Button onClick={() => navigate("/app/general/consultations?tab=credits&creditTab=orders")}>
-            <ShoppingBag className="h-4 w-4 mr-1.5" /> Về lịch sử đơn
-          </Button>
-        </div>
-      </div>
+      <Page width="narrow">
+        {pageHeader}
+        <PageBody className="items-center justify-center text-center">
+          <div className="flex flex-col items-center w-full max-w-md">
+            <XCircle className="h-12 w-12 text-destructive mb-3" />
+            <h2 className="text-lg font-bold text-foreground mb-2">Đã xảy ra lỗi</h2>
+            <p className="text-xs text-muted-foreground mb-6 leading-relaxed">{errorText}</p>
+            <div className="flex gap-3">
+              <Button variant="outline" onClick={() => void fetchOrder(false)} className="gap-2">
+                <RefreshCw className="h-4 w-4" /> Thử lại
+              </Button>
+              <Button onClick={() => navigate("/app/general/consultations?tab=credits&creditTab=orders")}>
+                <ShoppingBag className="h-4 w-4 mr-1.5" /> Về lịch sử đơn
+              </Button>
+            </div>
+          </div>
+        </PageBody>
+      </Page>
     )
   }
 
@@ -302,227 +324,232 @@ export default function CreditPaymentResultPage() {
     : null
 
   return (
-    <div className="mx-auto max-w-xl py-8 px-4 space-y-6">
-      {/* TRẠNG THÁI: PAID */}
-      {order.status === "PAID" && (
-        <div className="flex flex-col items-center text-center space-y-4">
-          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400">
-            <CheckCircle2 className="h-10 w-10" />
-          </div>
-          <div>
-            <h1 className="text-2xl font-bold text-foreground">Thanh toán thành công!</h1>
-            <p className="text-xs text-muted-foreground mt-1">
-              Giao dịch nạp lượt đã hoàn tất. Lượt tư vấn đã sẵn sàng trong ví của bạn.
-            </p>
-          </div>
-        </div>
-      )}
-
-      {/* TRẠNG THÁI: PENDING_PAYMENT */}
-      {order.status === "PENDING_PAYMENT" && (
-        <div className="flex flex-col items-center text-center space-y-4">
-          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-blue-100 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400">
-            <Clock className="h-10 w-10 animate-pulse" />
-          </div>
-          <div>
-            <h1 className="text-2xl font-bold text-foreground">
-              {payment?.status === "CREATING"
-                ? "Đang khởi tạo liên kết thanh toán..."
-                : "Đang chờ thanh toán"}
-            </h1>
-            <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
-              {payment?.status === "CREATING"
-                ? "Hệ thống đang kết nối cổng PayOS để chuẩn bị giao dịch. Vui lòng chờ trong giây lát."
-                : "Hệ thống đang tự động đồng bộ khi nhận được giao dịch từ PayOS. Bạn không cần thực hiện thêm thao tác nào."}
-            </p>
-          </div>
-
-          {/* Polling status banner */}
-          <div className="flex items-center gap-2 text-xs text-blue-700 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/30 px-3.5 py-1.5 rounded-full border border-blue-200/60">
-            <RefreshCw className={`h-3.5 w-3.5 ${!pollStopped ? "animate-spin" : ""}`} />
-            <span>
-              {!pollStopped
-                ? "Đang tự động kiểm tra giao dịch..."
-                : "Đã tạm dừng tự động kiểm tra"}
-            </span>
-            {pollStopped && (
-              <Button
-                variant="link"
-                size="sm"
-                onClick={() => {
-                  setPollStopped(false)
-                  setPollCount(0)
-                  void fetchOrder(false)
-                }}
-                className="h-auto p-0 text-xs font-semibold text-blue-700 underline"
-              >
-                Kiểm tra lại
-              </Button>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* TRẠNG THÁI: CANCELLED */}
-      {order.status === "CANCELLED" && (
-        <div className="flex flex-col items-center text-center space-y-4">
-          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400">
-            <XCircle className="h-10 w-10" />
-          </div>
-          <div>
-            <h1 className="text-2xl font-bold text-foreground">Giao dịch đã hủy</h1>
-            <p className="text-xs text-muted-foreground mt-1">
-              Đơn mua lượt này đã bị hủy. Bạn có thể chọn lại gói để mua lượt mới bất kỳ lúc nào.
-            </p>
-          </div>
-        </div>
-      )}
-
-      {/* TRẠNG THÁI: EXPIRED */}
-      {order.status === "EXPIRED" && (
-        <div className="flex flex-col items-center text-center space-y-4">
-          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-red-100 text-red-600 dark:bg-red-950/60 dark:text-red-400">
-            <Clock className="h-10 w-10" />
-          </div>
-          <div>
-            <h1 className="text-2xl font-bold text-foreground">Giao dịch đã hết hạn</h1>
-            <p className="text-xs text-muted-foreground mt-1">
-              Thời gian thanh toán cho đơn hàng đã kết thúc. Vui lòng tạo đơn mua mới nếu bạn vẫn muốn nạp lượt.
-            </p>
-          </div>
-        </div>
-      )}
-
-      {/* TRẠNG THÁI: REQUIRES_REVIEW */}
-      {order.status === "REQUIRES_REVIEW" && (
-        <div className="flex flex-col items-center text-center space-y-4">
-          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-orange-100 text-orange-600 dark:bg-orange-950/60 dark:text-orange-400">
-            <AlertTriangle className="h-10 w-10" />
-          </div>
-          <div>
-            <h1 className="text-2xl font-bold text-foreground">Giao dịch đang được kiểm tra</h1>
-            <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
-              Giao dịch đã được ghi nhận nhưng cần nhân viên đối soát thủ công. Lượt tư vấn sẽ được cộng ngay sau khi xác thực hoàn tất.
-            </p>
-          </div>
-        </div>
-      )}
-
-      {/* THẺ THÔNG TIN ĐƠN HÀNG */}
-      <div className="rounded-2xl border border-border bg-card p-5 shadow-xs space-y-3.5">
-        <div className="flex items-center justify-between text-xs pb-3 border-b border-border/70">
-          <span className="text-muted-foreground font-medium">Mã đơn hàng:</span>
-          <span className="font-mono font-semibold text-foreground">#{order.id}</span>
-        </div>
-
-        {payment?.orderCode && (
-          <div className="flex items-center justify-between text-xs pb-3 border-b border-border/70">
-            <span className="text-muted-foreground font-medium">Mã giao dịch PayOS:</span>
-            <span className="font-mono font-semibold text-foreground">
-              #{payment.orderCode}
-            </span>
-          </div>
-        )}
-
-        <div className="flex items-center justify-between text-xs">
-          <span className="text-muted-foreground">Tên gói lượt:</span>
-          <span className="font-semibold text-foreground">{order.packageName}</span>
-        </div>
-
-        <div className="flex items-center justify-between text-xs">
-          <span className="text-muted-foreground">Số lượt nhận:</span>
-          <span className="font-bold text-emerald-600 dark:text-emerald-400 text-sm">
-            +{formatCreditQuantity(order.creditQuantity)}
-          </span>
-        </div>
-
-        <div className="flex items-center justify-between text-xs">
-          <span className="text-muted-foreground">Tổng thanh toán:</span>
-          <span className="font-extrabold text-foreground text-sm">
-            {formatVnd(order.amountVnd)}
-          </span>
-        </div>
-
-        <div className="flex items-center justify-between text-xs">
-          <span className="text-muted-foreground">Phương thức:</span>
-          <span className="font-medium text-foreground">
-            {providerConfig?.label || payment?.provider}
-          </span>
-        </div>
-
-        <div className="flex items-center justify-between text-xs pt-1">
-          <span className="text-muted-foreground">Trạng thái đơn:</span>
-          <Badge className={`text-xs font-semibold ${orderStatusConfig?.className}`}>
-            {orderStatusConfig?.label || order.status}
-          </Badge>
-        </div>
-
-        {payment?.status && (
-          <div className="flex items-center justify-between text-xs pt-1">
-            <span className="text-muted-foreground">Trạng thái thanh toán:</span>
-            <Badge className={`text-xs font-medium ${paymentStatusConfig?.className}`}>
-              {paymentStatusConfig?.label || payment.status}
-            </Badge>
-          </div>
-        )}
-      </div>
-
-      {/* CÁC NÚT ĐIỀU HƯỚNG & HÀNH ĐỘNG */}
-      <div className="space-y-2.5 pt-2">
-        {/* Nút hành động khi PENDING_PAYMENT */}
-        {order.status === "PENDING_PAYMENT" && (
-          <>
-            {payment?.checkoutUrl && payment.checkoutUrl.startsWith("https://") && (
-              <Button
-                className="w-full gap-2 font-semibold shadow-xs"
-                onClick={() => {
-                  window.location.assign(payment.checkoutUrl!)
-                }}
-              >
-                <ExternalLink className="h-4 w-4" /> Mở trang thanh toán PayOS
-              </Button>
-            )}
-
-            <div className="flex gap-2.5">
-              <Button
-                variant="outline"
-                className="flex-1 gap-1.5"
-                onClick={() => void fetchOrder(false)}
-              >
-                <RefreshCw className="h-4 w-4" /> Kiểm tra lại
-              </Button>
-              <Button
-                variant="destructive"
-                className="flex-1 gap-1.5"
-                onClick={handleCancelOrder}
-                disabled={isCancelling}
-              >
-                <Ban className="h-4 w-4" />
-                {isCancelling ? "Đang hủy..." : "Hủy thanh toán"}
-              </Button>
+    <Page width="narrow">
+      {pageHeader}
+      <PageBody className="items-center">
+        <div className="w-full max-w-xl space-y-6">
+          {/* TRẠNG THÁI: PAID */}
+          {order.status === "PAID" && (
+            <div className="flex flex-col items-center text-center space-y-4">
+              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400">
+                <CheckCircle2 className="h-10 w-10" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-foreground">Thanh toán thành công!</h2>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Giao dịch nạp lượt đã hoàn tất. Lượt tư vấn đã sẵn sàng trong ví của bạn.
+                </p>
+              </div>
             </div>
-          </>
-        )}
+          )}
 
-        {/* Nút quay lại khi đã PAID / CANCELLED / EXPIRED / REVIEW */}
-        {order.status !== "PENDING_PAYMENT" && (
-          <div className="flex flex-col sm:flex-row gap-2.5">
-            <Button
-              className="flex-1 gap-1.5 font-semibold"
-              onClick={() => navigate("/app/general/consultations?tab=credits")}
-            >
-              <ArrowLeft className="h-4 w-4" /> Về ví lượt tư vấn
-            </Button>
-            <Button
-              variant="outline"
-              className="flex-1 gap-1.5"
-              onClick={() => navigate("/app/general/consultations?tab=credits&creditTab=orders")}
-            >
-              <ShoppingBag className="h-4 w-4" /> Xem lịch sử đơn mua
-            </Button>
+          {/* TRẠNG THÁI: PENDING_PAYMENT */}
+          {order.status === "PENDING_PAYMENT" && (
+            <div className="flex flex-col items-center text-center space-y-4">
+              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-blue-100 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400">
+                <Clock className="h-10 w-10 animate-pulse" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-foreground">
+                  {payment?.status === "CREATING"
+                    ? "Đang khởi tạo liên kết thanh toán..."
+                    : "Đang chờ thanh toán"}
+                </h2>
+                <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
+                  {payment?.status === "CREATING"
+                    ? "Hệ thống đang kết nối cổng PayOS để chuẩn bị giao dịch. Vui lòng chờ trong giây lát."
+                    : "Hệ thống đang tự động đồng bộ khi nhận được giao dịch từ PayOS. Bạn không cần thực hiện thêm thao tác nào."}
+                </p>
+              </div>
+
+              {/* Polling status banner */}
+              <div className="flex items-center gap-2 text-xs text-blue-700 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/30 px-3.5 py-1.5 rounded-full border border-blue-200/60">
+                <RefreshCw className={`h-3.5 w-3.5 ${!pollStopped ? "animate-spin" : ""}`} />
+                <span>
+                  {!pollStopped
+                    ? "Đang tự động kiểm tra giao dịch..."
+                    : "Đã tạm dừng tự động kiểm tra"}
+                </span>
+                {pollStopped && (
+                  <Button
+                    variant="link"
+                    size="sm"
+                    onClick={() => {
+                      setPollStopped(false)
+                      setPollCount(0)
+                      void fetchOrder(false)
+                    }}
+                    className="h-auto p-0 text-xs font-semibold text-blue-700 underline"
+                  >
+                    Kiểm tra lại
+                  </Button>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* TRẠNG THÁI: CANCELLED */}
+          {order.status === "CANCELLED" && (
+            <div className="flex flex-col items-center text-center space-y-4">
+              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400">
+                <XCircle className="h-10 w-10" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-foreground">Giao dịch đã hủy</h2>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Đơn mua lượt này đã bị hủy. Bạn có thể chọn lại gói để mua lượt mới bất kỳ lúc nào.
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* TRẠNG THÁI: EXPIRED */}
+          {order.status === "EXPIRED" && (
+            <div className="flex flex-col items-center text-center space-y-4">
+              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-red-100 text-red-600 dark:bg-red-950/60 dark:text-red-400">
+                <Clock className="h-10 w-10" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-foreground">Giao dịch đã hết hạn</h2>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Thời gian thanh toán cho đơn hàng đã kết thúc. Vui lòng tạo đơn mua mới nếu bạn vẫn muốn nạp lượt.
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* TRẠNG THÁI: REQUIRES_REVIEW */}
+          {order.status === "REQUIRES_REVIEW" && (
+            <div className="flex flex-col items-center text-center space-y-4">
+              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-orange-100 text-orange-600 dark:bg-orange-950/60 dark:text-orange-400">
+                <AlertTriangle className="h-10 w-10" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-foreground">Giao dịch đang được kiểm tra</h2>
+                <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
+                  Giao dịch đã được ghi nhận nhưng cần nhân viên đối soát thủ công. Lượt tư vấn sẽ được cộng ngay sau khi xác thực hoàn tất.
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* THẺ THÔNG TIN ĐƠN HÀNG */}
+          <div className="rounded-2xl border border-border bg-card p-5 shadow-xs space-y-3.5">
+            <div className="flex items-center justify-between text-xs pb-3 border-b border-border/70">
+              <span className="text-muted-foreground font-medium">Mã đơn hàng:</span>
+              <span className="font-mono font-semibold text-foreground">#{order.id}</span>
+            </div>
+
+            {payment?.orderCode && (
+              <div className="flex items-center justify-between text-xs pb-3 border-b border-border/70">
+                <span className="text-muted-foreground font-medium">Mã giao dịch PayOS:</span>
+                <span className="font-mono font-semibold text-foreground">
+                  #{payment.orderCode}
+                </span>
+              </div>
+            )}
+
+            <div className="flex items-center justify-between text-xs">
+              <span className="text-muted-foreground">Tên gói lượt:</span>
+              <span className="font-semibold text-foreground">{order.packageName}</span>
+            </div>
+
+            <div className="flex items-center justify-between text-xs">
+              <span className="text-muted-foreground">Số lượt nhận:</span>
+              <span className="font-bold text-emerald-600 dark:text-emerald-400 text-sm">
+                +{formatCreditQuantity(order.creditQuantity)}
+              </span>
+            </div>
+
+            <div className="flex items-center justify-between text-xs">
+              <span className="text-muted-foreground">Tổng thanh toán:</span>
+              <span className="font-extrabold text-foreground text-sm">
+                {formatVnd(order.amountVnd)}
+              </span>
+            </div>
+
+            <div className="flex items-center justify-between text-xs">
+              <span className="text-muted-foreground">Phương thức:</span>
+              <span className="font-medium text-foreground">
+                {providerConfig?.label || payment?.provider}
+              </span>
+            </div>
+
+            <div className="flex items-center justify-between text-xs pt-1">
+              <span className="text-muted-foreground">Trạng thái đơn:</span>
+              <Badge className={`text-xs font-semibold ${orderStatusConfig?.className}`}>
+                {orderStatusConfig?.label || order.status}
+              </Badge>
+            </div>
+
+            {payment?.status && (
+              <div className="flex items-center justify-between text-xs pt-1">
+                <span className="text-muted-foreground">Trạng thái thanh toán:</span>
+                <Badge className={`text-xs font-medium ${paymentStatusConfig?.className}`}>
+                  {paymentStatusConfig?.label || payment.status}
+                </Badge>
+              </div>
+            )}
           </div>
-        )}
-      </div>
-    </div>
+
+          {/* CÁC NÚT ĐIỀU HƯỚNG & HÀNH ĐỘNG */}
+          <div className="space-y-2.5 pt-2">
+            {/* Nút hành động khi PENDING_PAYMENT */}
+            {order.status === "PENDING_PAYMENT" && (
+              <>
+                {payment?.checkoutUrl && payment.checkoutUrl.startsWith("https://") && (
+                  <Button
+                    className="w-full gap-2 font-semibold shadow-xs"
+                    onClick={() => {
+                      window.location.assign(payment.checkoutUrl!)
+                    }}
+                  >
+                    <ExternalLink className="h-4 w-4" /> Mở trang thanh toán PayOS
+                  </Button>
+                )}
+
+                <div className="flex gap-2.5">
+                  <Button
+                    variant="outline"
+                    className="flex-1 gap-1.5"
+                    onClick={() => void fetchOrder(false)}
+                  >
+                    <RefreshCw className="h-4 w-4" /> Kiểm tra lại
+                  </Button>
+                  <Button
+                    variant="destructive"
+                    className="flex-1 gap-1.5"
+                    onClick={handleCancelOrder}
+                    disabled={isCancelling}
+                  >
+                    <Ban className="h-4 w-4" />
+                    {isCancelling ? "Đang hủy..." : "Hủy thanh toán"}
+                  </Button>
+                </div>
+              </>
+            )}
+
+            {/* Nút quay lại khi đã PAID / CANCELLED / EXPIRED / REVIEW */}
+            {order.status !== "PENDING_PAYMENT" && (
+              <div className="flex flex-col sm:flex-row gap-2.5">
+                <Button
+                  className="flex-1 gap-1.5 font-semibold"
+                  onClick={() => navigate("/app/general/consultations?tab=credits")}
+                >
+                  <ArrowLeft className="h-4 w-4" /> Về ví lượt tư vấn
+                </Button>
+                <Button
+                  variant="outline"
+                  className="flex-1 gap-1.5"
+                  onClick={() => navigate("/app/general/consultations?tab=credits&creditTab=orders")}
+                >
+                  <ShoppingBag className="h-4 w-4" /> Xem lịch sử đơn mua
+                </Button>
+              </div>
+            )}
+          </div>
+        </div>
+      </PageBody>
+    </Page>
   )
 }

@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import { ShieldAlert, CheckCircle2, Clock, XCircle, AlertTriangle, RefreshCw, ArrowLeft } from "lucide-react"
 
+import { Page, PageBody, PageHeader } from "@/components/layout/page"
 import { Button } from "@/components/ui/button"
 import { consultationApi } from "@/services"
 import type { ConsultationPaymentResponse, ConsultationPaymentAttemptItem, ConsultationRenewalResponse } from "@/types/consultation"
@@ -141,56 +142,86 @@ export default function PaymentResultPage() {
     }
   }
 
+  const pageHeader = (
+    <PageHeader
+      breadcrumbs={[
+        { label: "Tư vấn & Chăm sóc", to: "/app/general/consultations" },
+        { label: "Kết quả thanh toán" },
+      ]}
+      title="Kết quả thanh toán"
+    />
+  )
+
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center h-[calc(100vh-200px)]">
-        <RefreshCw className="h-8 w-8 text-neutral-400 animate-spin mb-4" />
-        <p className="text-neutral-500 font-medium">Đang kiểm tra giao dịch thanh toán...</p>
-      </div>
+      <Page width="narrow">
+        {pageHeader}
+        <PageBody className="items-center justify-center text-center">
+          <div className="flex flex-col items-center w-full max-w-md">
+            <RefreshCw className="h-8 w-8 text-neutral-400 animate-spin mb-4" />
+            <p className="text-neutral-500 font-medium">Đang kiểm tra giao dịch thanh toán...</p>
+          </div>
+        </PageBody>
+      </Page>
     )
   }
 
   if (isMissingTarget) {
     return (
-      <div className="flex flex-col items-center justify-center h-[calc(100vh-200px)] text-center max-w-md mx-auto">
-        <ShieldAlert className="h-12 w-12 text-neutral-400 mb-4" />
-        <h2 className="text-xl font-bold text-neutral-900 dark:text-neutral-100 mb-2">Không tìm thấy yêu cầu</h2>
-        <p className="text-neutral-500 mb-6">Không tìm thấy mã giao dịch hoặc yêu cầu thanh toán hợp lệ trong phiên của bạn.</p>
-        <Button onClick={() => navigate("/app/general/consultations")}>
-          <ArrowLeft className="mr-2 h-4 w-4" /> Về trang Quản lý Tư vấn
-        </Button>
-      </div>
+      <Page width="narrow">
+        {pageHeader}
+        <PageBody className="items-center justify-center text-center">
+          <div className="flex flex-col items-center w-full max-w-md">
+            <ShieldAlert className="h-12 w-12 text-neutral-400 mb-4" />
+            <h2 className="text-xl font-bold text-neutral-900 dark:text-neutral-100 mb-2">Không tìm thấy yêu cầu</h2>
+            <p className="text-neutral-500 mb-6">Không tìm thấy mã giao dịch hoặc yêu cầu thanh toán hợp lệ trong phiên của bạn.</p>
+            <Button onClick={() => navigate("/app/general/consultations")}>
+              <ArrowLeft className="mr-2 h-4 w-4" /> Về trang Quản lý Tư vấn
+            </Button>
+          </div>
+        </PageBody>
+      </Page>
     )
   }
 
   if (isNotFound) {
     return (
-      <div className="flex flex-col items-center justify-center h-[calc(100vh-200px)] text-center max-w-md mx-auto">
-        <AlertTriangle className="h-12 w-12 text-orange-500 mb-4" />
-        <h2 className="text-xl font-bold text-neutral-900 dark:text-neutral-100 mb-2">Không có giao dịch</h2>
-        <p className="text-neutral-500 mb-6">Chưa có giao dịch thanh toán nào được ghi nhận cho yêu cầu này.</p>
-        <Button onClick={() => navigate("/app/general/consultations")}>
-          <ArrowLeft className="mr-2 h-4 w-4" /> Về trang Quản lý Tư vấn
-        </Button>
-      </div>
+      <Page width="narrow">
+        {pageHeader}
+        <PageBody className="items-center justify-center text-center">
+          <div className="flex flex-col items-center w-full max-w-md">
+            <AlertTriangle className="h-12 w-12 text-orange-500 mb-4" />
+            <h2 className="text-xl font-bold text-neutral-900 dark:text-neutral-100 mb-2">Không có giao dịch</h2>
+            <p className="text-neutral-500 mb-6">Chưa có giao dịch thanh toán nào được ghi nhận cho yêu cầu này.</p>
+            <Button onClick={() => navigate("/app/general/consultations")}>
+              <ArrowLeft className="mr-2 h-4 w-4" /> Về trang Quản lý Tư vấn
+            </Button>
+          </div>
+        </PageBody>
+      </Page>
     )
   }
 
   if (errorText) {
     return (
-      <div className="flex flex-col items-center justify-center h-[calc(100vh-200px)] text-center max-w-md mx-auto">
-        <XCircle className="h-12 w-12 text-red-500 mb-4" />
-        <h2 className="text-xl font-bold text-red-900 dark:text-red-300 mb-2">Đã xảy ra lỗi</h2>
-        <p className="text-neutral-600 dark:text-neutral-400 mb-6">{errorText}</p>
-        <div className="flex gap-3">
-          <Button variant="outline" onClick={handleRefresh}>
-            <RefreshCw className="mr-2 h-4 w-4" /> Thử lại
-          </Button>
-          <Button onClick={() => navigate("/app/general/consultations")}>
-            <ArrowLeft className="mr-2 h-4 w-4" /> Về trang Quản lý Tư vấn
-          </Button>
-        </div>
-      </div>
+      <Page width="narrow">
+        {pageHeader}
+        <PageBody className="items-center justify-center text-center">
+          <div className="flex flex-col items-center w-full max-w-md">
+            <XCircle className="h-12 w-12 text-red-500 mb-4" />
+            <h2 className="text-xl font-bold text-red-900 dark:text-red-300 mb-2">Đã xảy ra lỗi</h2>
+            <p className="text-neutral-600 dark:text-neutral-400 mb-6">{errorText}</p>
+            <div className="flex gap-3">
+              <Button variant="outline" onClick={handleRefresh}>
+                <RefreshCw className="mr-2 h-4 w-4" /> Thử lại
+              </Button>
+              <Button onClick={() => navigate("/app/general/consultations")}>
+                <ArrowLeft className="mr-2 h-4 w-4" /> Về trang Quản lý Tư vấn
+              </Button>
+            </div>
+          </div>
+        </PageBody>
+      </Page>
     )
   }
 
@@ -204,85 +235,90 @@ export default function PaymentResultPage() {
         : renewalAttempt?.status || renewalInfo?.status
 
     return (
-      <div className="flex flex-col items-center justify-center h-[calc(100vh-200px)] text-center max-w-md mx-auto p-4">
-        {status === "PAID" && (
-          <>
-            <CheckCircle2 className="h-16 w-16 text-emerald-500 mb-4" />
-            <h2 className="text-2xl font-bold text-emerald-900 dark:text-emerald-300 mb-2">Gia hạn thành công!</h2>
-            {renewalAttempt && (
-              <p className="text-emerald-700/80 dark:text-emerald-400/80 mb-2">
-                Mã giao dịch #{renewalAttempt.orderCode} &bull; Số tiền: {renewalAttempt.amount?.toLocaleString("vi-VN")} {renewalAttempt.currency || "VND"}
-              </p>
+      <Page width="narrow">
+        {pageHeader}
+        <PageBody className="items-center justify-center text-center">
+          <div className="flex flex-col items-center w-full max-w-md">
+            {status === "PAID" && (
+              <>
+                <CheckCircle2 className="h-16 w-16 text-emerald-500 mb-4" />
+                <h2 className="text-2xl font-bold text-emerald-900 dark:text-emerald-300 mb-2">Gia hạn thành công!</h2>
+                {renewalAttempt && (
+                  <p className="text-emerald-700/80 dark:text-emerald-400/80 mb-2">
+                    Mã giao dịch #{renewalAttempt.orderCode} &bull; Số tiền: {renewalAttempt.amount?.toLocaleString("vi-VN")} {renewalAttempt.currency || "VND"}
+                  </p>
+                )}
+                <p className="text-muted-foreground text-xs mb-8">
+                  Thời hạn chăm sóc của bạn đã được nối dài thành công cùng bác sĩ phụ trách. Toàn bộ dữ liệu trao đổi và hồ sơ theo dõi được giữ nguyên vẹn.
+                </p>
+                <Button onClick={handleBackToConsultations} className="w-full bg-emerald-600 hover:bg-emerald-700">
+                  Quay lại phiên tư vấn
+                </Button>
+              </>
             )}
-            <p className="text-muted-foreground text-xs mb-8">
-              Thời hạn chăm sóc của bạn đã được nối dài thành công cùng bác sĩ phụ trách. Toàn bộ dữ liệu trao đổi và hồ sơ theo dõi được giữ nguyên vẹn.
-            </p>
-            <Button onClick={handleBackToConsultations} className="w-full bg-emerald-600 hover:bg-emerald-700">
-              Quay lại phiên tư vấn
-            </Button>
-          </>
-        )}
 
-        {status === "PENDING" && (
-          <>
-            <Clock className="h-16 w-16 text-blue-500 mb-4" />
-            <h2 className="text-2xl font-bold text-blue-900 dark:text-blue-300 mb-2">Đang xác nhận thanh toán gia hạn</h2>
-            <p className="text-blue-700/80 dark:text-blue-400/80 mb-8">Vui lòng chờ trong giây lát. Hệ thống đang đồng bộ giao dịch từ PayOS.</p>
-            <Button onClick={handleRefresh} variant="outline" className="w-full mb-3 text-blue-600 border-blue-200 bg-blue-50 hover:bg-blue-100">
-              <RefreshCw className="mr-2 h-4 w-4" /> Làm mới trạng thái
-            </Button>
-            <Button variant="ghost" onClick={() => navigate("/app/general/consultations")} className="w-full">
-              <ArrowLeft className="mr-2 h-4 w-4" /> Quay lại sau
-            </Button>
-          </>
-        )}
+            {status === "PENDING" && (
+              <>
+                <Clock className="h-16 w-16 text-blue-500 mb-4" />
+                <h2 className="text-2xl font-bold text-blue-900 dark:text-blue-300 mb-2">Đang xác nhận thanh toán gia hạn</h2>
+                <p className="text-blue-700/80 dark:text-blue-400/80 mb-8">Vui lòng chờ trong giây lát. Hệ thống đang đồng bộ giao dịch từ PayOS.</p>
+                <Button onClick={handleRefresh} variant="outline" className="w-full mb-3 text-blue-600 border-blue-200 bg-blue-50 hover:bg-blue-100">
+                  <RefreshCw className="mr-2 h-4 w-4" /> Làm mới trạng thái
+                </Button>
+                <Button variant="ghost" onClick={() => navigate("/app/general/consultations")} className="w-full">
+                  <ArrowLeft className="mr-2 h-4 w-4" /> Quay lại sau
+                </Button>
+              </>
+            )}
 
-        {status === "EXPIRED" && (
-          <>
-            <Clock className="h-16 w-16 text-orange-500 mb-4" />
-            <h2 className="text-2xl font-bold text-orange-900 dark:text-orange-300 mb-2">Thanh toán gia hạn đã hết hạn</h2>
-            <p className="text-orange-700/80 dark:text-orange-400/80 mb-8">Thời hạn thanh toán cho yêu cầu gia hạn đã kết thúc. Bạn có thể gửi lại yêu cầu gia hạn mới nếu phiên vẫn còn hoạt động.</p>
-            <Button onClick={handleBackToConsultations} variant="outline" className="w-full">
-              <ArrowLeft className="mr-2 h-4 w-4" /> Về phiên tư vấn
-            </Button>
-          </>
-        )}
+            {status === "EXPIRED" && (
+              <>
+                <Clock className="h-16 w-16 text-orange-500 mb-4" />
+                <h2 className="text-2xl font-bold text-orange-900 dark:text-orange-300 mb-2">Thanh toán gia hạn đã hết hạn</h2>
+                <p className="text-orange-700/80 dark:text-orange-400/80 mb-8">Thời hạn thanh toán cho yêu cầu gia hạn đã kết thúc. Bạn có thể gửi lại yêu cầu gia hạn mới nếu phiên vẫn còn hoạt động.</p>
+                <Button onClick={handleBackToConsultations} variant="outline" className="w-full">
+                  <ArrowLeft className="mr-2 h-4 w-4" /> Về phiên tư vấn
+                </Button>
+              </>
+            )}
 
-        {status === "CANCELLED" && (
-          <>
-            <XCircle className="h-16 w-16 text-neutral-500 mb-4" />
-            <h2 className="text-2xl font-bold text-neutral-900 dark:text-neutral-300 mb-2">Gia hạn đã bị hủy</h2>
-            <p className="text-neutral-600 dark:text-neutral-400 mb-8">Yêu cầu gia hạn hoặc giao dịch thanh toán đã bị hủy. Thời hạn phiên chăm sóc hiện tại không đổi.</p>
-            <Button onClick={handleBackToConsultations} variant="outline" className="w-full">
-              <ArrowLeft className="mr-2 h-4 w-4" /> Về phiên tư vấn
-            </Button>
-          </>
-        )}
+            {status === "CANCELLED" && (
+              <>
+                <XCircle className="h-16 w-16 text-neutral-500 mb-4" />
+                <h2 className="text-2xl font-bold text-neutral-900 dark:text-neutral-300 mb-2">Gia hạn đã bị hủy</h2>
+                <p className="text-neutral-600 dark:text-neutral-400 mb-8">Yêu cầu gia hạn hoặc giao dịch thanh toán đã bị hủy. Thời hạn phiên chăm sóc hiện tại không đổi.</p>
+                <Button onClick={handleBackToConsultations} variant="outline" className="w-full">
+                  <ArrowLeft className="mr-2 h-4 w-4" /> Về phiên tư vấn
+                </Button>
+              </>
+            )}
 
-        {status === "FAILED" && (
-          <>
-            <XCircle className="h-16 w-16 text-red-500 mb-4" />
-            <h2 className="text-2xl font-bold text-red-900 dark:text-red-300 mb-2">Thanh toán gia hạn thất bại</h2>
-            <p className="text-red-700/80 dark:text-red-400/80 mb-8">Đã xảy ra lỗi trong quá trình xử lý giao dịch. Vui lòng thử lại sau.</p>
-            <Button onClick={handleBackToConsultations} variant="outline" className="w-full">
-              <ArrowLeft className="mr-2 h-4 w-4" /> Về phiên tư vấn
-            </Button>
-          </>
-        )}
+            {status === "FAILED" && (
+              <>
+                <XCircle className="h-16 w-16 text-red-500 mb-4" />
+                <h2 className="text-2xl font-bold text-red-900 dark:text-red-300 mb-2">Thanh toán gia hạn thất bại</h2>
+                <p className="text-red-700/80 dark:text-red-400/80 mb-8">Đã xảy ra lỗi trong quá trình xử lý giao dịch. Vui lòng thử lại sau.</p>
+                <Button onClick={handleBackToConsultations} variant="outline" className="w-full">
+                  <ArrowLeft className="mr-2 h-4 w-4" /> Về phiên tư vấn
+                </Button>
+              </>
+            )}
 
-        {status === "REQUIRES_REVIEW" && (
-          <>
-            <AlertTriangle className="h-16 w-16 text-yellow-500 mb-4" />
-            <h2 className="text-2xl font-bold text-yellow-900 dark:text-yellow-300 mb-2">Thanh toán cần được kiểm tra</h2>
-            <p className="text-yellow-700/80 dark:text-yellow-400/80 mb-8">
-              Giao dịch thanh toán gia hạn đã được ghi nhận nhưng cần điều phối viên kiểm tra thủ công. Thời hạn phiên sẽ được cập nhật sau khi hoàn tất xác thực.
-            </p>
-            <Button onClick={handleBackToConsultations} variant="outline" className="w-full">
-              <ArrowLeft className="mr-2 h-4 w-4" /> Về phiên tư vấn
-            </Button>
-          </>
-        )}
-      </div>
+            {status === "REQUIRES_REVIEW" && (
+              <>
+                <AlertTriangle className="h-16 w-16 text-yellow-500 mb-4" />
+                <h2 className="text-2xl font-bold text-yellow-900 dark:text-yellow-300 mb-2">Thanh toán cần được kiểm tra</h2>
+                <p className="text-yellow-700/80 dark:text-yellow-400/80 mb-8">
+                  Giao dịch thanh toán gia hạn đã được ghi nhận nhưng cần điều phối viên kiểm tra thủ công. Thời hạn phiên sẽ được cập nhật sau khi hoàn tất xác thực.
+                </p>
+                <Button onClick={handleBackToConsultations} variant="outline" className="w-full">
+                  <ArrowLeft className="mr-2 h-4 w-4" /> Về phiên tư vấn
+                </Button>
+              </>
+            )}
+          </div>
+        </PageBody>
+      </Page>
     )
   }
 
@@ -290,80 +326,85 @@ export default function PaymentResultPage() {
   if (!initialPayment) return null
 
   return (
-    <div className="flex flex-col items-center justify-center h-[calc(100vh-200px)] text-center max-w-md mx-auto p-4">
-      {initialPayment.status === "PAID" && (
-        <>
-          <CheckCircle2 className="h-16 w-16 text-emerald-500 mb-4" />
-          <h2 className="text-2xl font-bold text-emerald-900 dark:text-emerald-300 mb-2">Thanh toán thành công!</h2>
-          <p className="text-emerald-700/80 dark:text-emerald-400/80 mb-2">
-            Mã giao dịch #{initialPayment.orderCode} &bull; Số tiền: {initialPayment.amount?.toLocaleString("vi-VN")} {initialPayment.currency || "VND"}
-          </p>
-          <p className="text-muted-foreground text-xs mb-8">
-            Phiên tư vấn đã được kích hoạt thành công. Bác sĩ đã được phân công và sẵn sàng hỗ trợ bạn.
-          </p>
-          <Button onClick={handleBackToConsultations} className="w-full bg-emerald-600 hover:bg-emerald-700">
-            Xem phiên tư vấn của tôi
-          </Button>
-        </>
-      )}
+    <Page width="narrow">
+      {pageHeader}
+      <PageBody className="items-center justify-center text-center">
+        <div className="flex flex-col items-center w-full max-w-md">
+          {initialPayment.status === "PAID" && (
+            <>
+              <CheckCircle2 className="h-16 w-16 text-emerald-500 mb-4" />
+              <h2 className="text-2xl font-bold text-emerald-900 dark:text-emerald-300 mb-2">Thanh toán thành công!</h2>
+              <p className="text-emerald-700/80 dark:text-emerald-400/80 mb-2">
+                Mã giao dịch #{initialPayment.orderCode} &bull; Số tiền: {initialPayment.amount?.toLocaleString("vi-VN")} {initialPayment.currency || "VND"}
+              </p>
+              <p className="text-muted-foreground text-xs mb-8">
+                Phiên tư vấn đã được kích hoạt thành công. Bác sĩ đã được phân công và sẵn sàng hỗ trợ bạn.
+              </p>
+              <Button onClick={handleBackToConsultations} className="w-full bg-emerald-600 hover:bg-emerald-700">
+                Xem phiên tư vấn của tôi
+              </Button>
+            </>
+          )}
 
-      {initialPayment.status === "PENDING" && (
-        <>
-          <Clock className="h-16 w-16 text-blue-500 mb-4" />
-          <h2 className="text-2xl font-bold text-blue-900 dark:text-blue-300 mb-2">Đang xác nhận thanh toán</h2>
-          <p className="text-blue-700/80 dark:text-blue-400/80 mb-8">Vui lòng chờ trong giây lát. Hệ thống đang đồng bộ giao dịch từ cổng thanh toán.</p>
-          <Button onClick={handleRefresh} variant="outline" className="w-full mb-3 text-blue-600 border-blue-200 bg-blue-50 hover:bg-blue-100">
-            <RefreshCw className="mr-2 h-4 w-4" /> Làm mới trạng thái
-          </Button>
-          <Button variant="ghost" onClick={() => navigate("/app/general/consultations")} className="w-full">
-            <ArrowLeft className="mr-2 h-4 w-4" /> Quay lại sau
-          </Button>
-        </>
-      )}
+          {initialPayment.status === "PENDING" && (
+            <>
+              <Clock className="h-16 w-16 text-blue-500 mb-4" />
+              <h2 className="text-2xl font-bold text-blue-900 dark:text-blue-300 mb-2">Đang xác nhận thanh toán</h2>
+              <p className="text-blue-700/80 dark:text-blue-400/80 mb-8">Vui lòng chờ trong giây lát. Hệ thống đang đồng bộ giao dịch từ cổng thanh toán.</p>
+              <Button onClick={handleRefresh} variant="outline" className="w-full mb-3 text-blue-600 border-blue-200 bg-blue-50 hover:bg-blue-100">
+                <RefreshCw className="mr-2 h-4 w-4" /> Làm mới trạng thái
+              </Button>
+              <Button variant="ghost" onClick={() => navigate("/app/general/consultations")} className="w-full">
+                <ArrowLeft className="mr-2 h-4 w-4" /> Quay lại sau
+              </Button>
+            </>
+          )}
 
-      {initialPayment.status === "EXPIRED" && (
-        <>
-          <Clock className="h-16 w-16 text-orange-500 mb-4" />
-          <h2 className="text-2xl font-bold text-orange-900 dark:text-orange-300 mb-2">Thanh toán đã hết hạn</h2>
-          <p className="text-orange-700/80 dark:text-orange-400/80 mb-8">Thời hạn thanh toán cho yêu cầu này đã kết thúc. Vui lòng tạo lại yêu cầu nếu cần.</p>
-          <Button onClick={() => navigate("/app/general/consultations")} variant="outline" className="w-full">
-            <ArrowLeft className="mr-2 h-4 w-4" /> Về trang Quản lý Tư vấn
-          </Button>
-        </>
-      )}
+          {initialPayment.status === "EXPIRED" && (
+            <>
+              <Clock className="h-16 w-16 text-orange-500 mb-4" />
+              <h2 className="text-2xl font-bold text-orange-900 dark:text-orange-300 mb-2">Thanh toán đã hết hạn</h2>
+              <p className="text-orange-700/80 dark:text-orange-400/80 mb-8">Thời hạn thanh toán cho yêu cầu này đã kết thúc. Vui lòng tạo lại yêu cầu nếu cần.</p>
+              <Button onClick={() => navigate("/app/general/consultations")} variant="outline" className="w-full">
+                <ArrowLeft className="mr-2 h-4 w-4" /> Về trang Quản lý Tư vấn
+              </Button>
+            </>
+          )}
 
-      {initialPayment.status === "CANCELLED" && (
-        <>
-          <XCircle className="h-16 w-16 text-neutral-500 mb-4" />
-          <h2 className="text-2xl font-bold text-neutral-900 dark:text-neutral-300 mb-2">Thanh toán đã bị hủy</h2>
-          <p className="text-neutral-600 dark:text-neutral-400 mb-8">Giao dịch đã bị hủy bởi người dùng hoặc hệ thống thanh toán.</p>
-          <Button onClick={() => navigate("/app/general/consultations")} variant="outline" className="w-full">
-            <ArrowLeft className="mr-2 h-4 w-4" /> Về trang Quản lý Tư vấn
-          </Button>
-        </>
-      )}
+          {initialPayment.status === "CANCELLED" && (
+            <>
+              <XCircle className="h-16 w-16 text-neutral-500 mb-4" />
+              <h2 className="text-2xl font-bold text-neutral-900 dark:text-neutral-300 mb-2">Thanh toán đã bị hủy</h2>
+              <p className="text-neutral-600 dark:text-neutral-400 mb-8">Giao dịch đã bị hủy bởi người dùng hoặc hệ thống thanh toán.</p>
+              <Button onClick={() => navigate("/app/general/consultations")} variant="outline" className="w-full">
+                <ArrowLeft className="mr-2 h-4 w-4" /> Về trang Quản lý Tư vấn
+              </Button>
+            </>
+          )}
 
-      {initialPayment.status === "FAILED" && (
-        <>
-          <XCircle className="h-16 w-16 text-red-500 mb-4" />
-          <h2 className="text-2xl font-bold text-red-900 dark:text-red-300 mb-2">Thanh toán thất bại</h2>
-          <p className="text-red-700/80 dark:text-red-400/80 mb-8">Đã có lỗi xảy ra trong quá trình xử lý thanh toán. Vui lòng thử lại sau.</p>
-          <Button onClick={() => navigate("/app/general/consultations")} variant="outline" className="w-full">
-            <ArrowLeft className="mr-2 h-4 w-4" /> Về trang Quản lý Tư vấn
-          </Button>
-        </>
-      )}
+          {initialPayment.status === "FAILED" && (
+            <>
+              <XCircle className="h-16 w-16 text-red-500 mb-4" />
+              <h2 className="text-2xl font-bold text-red-900 dark:text-red-300 mb-2">Thanh toán thất bại</h2>
+              <p className="text-red-700/80 dark:text-red-400/80 mb-8">Đã có lỗi xảy ra trong quá trình xử lý thanh toán. Vui lòng thử lại sau.</p>
+              <Button onClick={() => navigate("/app/general/consultations")} variant="outline" className="w-full">
+                <ArrowLeft className="mr-2 h-4 w-4" /> Về trang Quản lý Tư vấn
+              </Button>
+            </>
+          )}
 
-      {initialPayment.status === "REQUIRES_REVIEW" && (
-        <>
-          <AlertTriangle className="h-16 w-16 text-yellow-500 mb-4" />
-          <h2 className="text-2xl font-bold text-yellow-900 dark:text-yellow-300 mb-2">Thanh toán cần được kiểm tra</h2>
-          <p className="text-yellow-700/80 dark:text-yellow-400/80 mb-8">Giao dịch đang cần kiểm tra thủ công. Vui lòng liên hệ bộ phận hỗ trợ.</p>
-          <Button onClick={() => navigate("/app/general/consultations")} variant="outline" className="w-full">
-            <ArrowLeft className="mr-2 h-4 w-4" /> Về trang Quản lý Tư vấn
-          </Button>
-        </>
-      )}
-    </div>
+          {initialPayment.status === "REQUIRES_REVIEW" && (
+            <>
+              <AlertTriangle className="h-16 w-16 text-yellow-500 mb-4" />
+              <h2 className="text-2xl font-bold text-yellow-900 dark:text-yellow-300 mb-2">Thanh toán cần được kiểm tra</h2>
+              <p className="text-yellow-700/80 dark:text-yellow-400/80 mb-8">Giao dịch đang cần kiểm tra thủ công. Vui lòng liên hệ bộ phận hỗ trợ.</p>
+              <Button onClick={() => navigate("/app/general/consultations")} variant="outline" className="w-full">
+                <ArrowLeft className="mr-2 h-4 w-4" /> Về trang Quản lý Tư vấn
+              </Button>
+            </>
+          )}
+        </div>
+      </PageBody>
+    </Page>
   )
 }
