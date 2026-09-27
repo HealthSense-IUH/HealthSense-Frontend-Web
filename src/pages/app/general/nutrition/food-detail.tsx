@@ -1,0 +1,421 @@
+import { useState } from "react"
+import { useParams, Link, useNavigate } from "react-router-dom"
+import {
+  ArrowLeft,
+  ChevronDown,
+  ChevronRight,
+  ChevronUp,
+  ExternalLink,
+  FileText,
+  Heart,
+  Info,
+  Pill,
+  Scale,
+  Sparkles,
+  Zap,
+  Image as ImageIcon,
+} from "lucide-react"
+
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { GuidanceBadge } from "./components/GuidanceBadge"
+import {
+  getFoodById,
+  getCategoryById,
+} from "@/data/mock-nutrition"
+import type { EvidenceSourceType, NutrientValue } from "@/types/nutrition"
+import { cn } from "@/lib/utils"
+
+export default function FoodDetailPage() {
+  const { foodId } = useParams<{ foodId: string }>()
+  const navigate = useNavigate()
+  const [showAllNutrients, setShowAllNutrients] = useState(false)
+
+  const food = foodId ? getFoodById(foodId) : undefined
+  const category = food ? getCategoryById(food.categoryId || food.group) : undefined
+
+  if (!food) {
+    return (
+      <div className="p-8 text-center space-y-4 max-w-md mx-auto">
+        <h2 className="text-xl font-bold">Không tìm thấy món ăn</h2>
+        <p className="text-muted-foreground text-sm">
+          Món ăn bạn đang tìm kiếm không tồn tại hoặc đã được cập nhật.
+        </p>
+        <Button onClick={() => navigate("/app/general/nutrition")}>
+          Quay lại trang Dinh dưỡng
+        </Button>
+      </div>
+    )
+  }
+
+  const guidanceType = food.guidance || food.primaryGuidanceType
+
+  // Split nutrients into Key vs Others
+  const keyNutrientCodes = [
+    "energy",
+    "protein",
+    "carbohydrate",
+    "fat_total",
+    "fat_saturated",
+    "sodium",
+    "potassium",
+    "magnesium",
+  ]
+  const keyNutrients = food.nutrients.filter((n) => keyNutrientCodes.includes(n.nutrientCode))
+  const otherNutrients = food.nutrients.filter((n) => !keyNutrientCodes.includes(n.nutrientCode))
+
+  const sourceTypeLabels: Record<EvidenceSourceType, { label: string; cls: string }> = {
+    GUIDELINE: {
+      label: "Hướng dẫn lâm sàng (Guideline)",
+      cls: "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/40 dark:text-blue-300 dark:border-blue-800",
+    },
+    SYSTEMATIC_REVIEW: {
+      label: "Tổng quan hệ thống (Systematic Review)",
+      cls: "bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-950/40 dark:text-purple-300 dark:border-purple-800",
+    },
+    META_ANALYSIS: {
+      label: "Phân tích gộp (Meta-analysis)",
+      cls: "bg-indigo-50 text-indigo-700 border-indigo-200 dark:bg-indigo-950/40 dark:text-indigo-300 dark:border-indigo-800",
+    },
+    RCT: {
+      label: "Thử nghiệm đối chứng ngẫu nhiên (RCT)",
+      cls: "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800",
+    },
+    OTHER: {
+      label: "Khuyến cáo chuyên khoa (Clinical Review)",
+      cls: "bg-slate-50 text-slate-700 border-slate-200 dark:bg-slate-900 dark:text-slate-300 dark:border-slate-800",
+    },
+  }
+
+  return (
+    <div className="space-y-6 pb-16 max-w-4xl mx-auto px-1 sm:px-2">
+      {/* Breadcrumb Navigation */}
+      <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs sm:text-sm text-muted-foreground flex-wrap">
+        <Link
+          to="/app/general/nutrition"
+          className="hover:text-primary transition-colors flex items-center gap-1 font-medium"
+        >
+          <ArrowLeft className="w-3.5 h-3.5" />
+          <span>Dinh dưỡng</span>
+        </Link>
+        {category && (
+          <>
+            <ChevronRight className="w-3.5 h-3.5 text-slate-300 dark:text-slate-600" />
+            <Link
+              to={`/app/general/nutrition/category/${category.slug || category.id}`}
+              className="hover:text-primary transition-colors line-clamp-1 font-medium"
+            >
+              {category.name}
+            </Link>
+          </>
+        )}
+        <ChevronRight className="w-3.5 h-3.5 text-slate-300 dark:text-slate-600" />
+        <span className="font-semibold text-slate-900 dark:text-foreground line-clamp-1">
+          {food.foodNameSpecific || food.name}
+        </span>
+      </nav>
+
+      {/* Food Image Banner / Placeholder */}
+      <div className="relative aspect-[21/9] sm:aspect-[24/8] w-full overflow-hidden rounded-3xl bg-slate-100 dark:bg-muted/50 border border-slate-200/80 dark:border-border shadow-xs">
+        {food.imageUrl ? (
+          <img
+            src={food.imageUrl}
+            alt={food.foodNameSpecific || food.name}
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <div className="w-full h-full flex flex-col sm:flex-row items-center justify-center text-slate-400 dark:text-muted-foreground gap-3 p-4 select-none bg-gradient-to-r from-slate-50 via-slate-100/70 to-slate-50 dark:from-muted/20 dark:via-muted/40 dark:to-muted/20">
+            <div className="p-3 rounded-2xl bg-white dark:bg-card shadow-2xs text-slate-400 border border-slate-200/60 dark:border-border/60">
+              <ImageIcon className="w-6 h-6 stroke-[1.5]" />
+            </div>
+            <div className="text-center sm:text-left">
+              <p className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                Hình ảnh thực phẩm
+              </p>
+              <p className="text-[11px] text-muted-foreground">
+                Khu vực hiển thị ảnh đại diện khi tích hợp dữ liệu hình ảnh
+              </p>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Basic Info Header Card */}
+      <div className="rounded-3xl border border-slate-200/80 bg-white p-6 sm:p-8 shadow-xs dark:border-border dark:bg-card space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+          <div className="space-y-2 flex-1">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-xs font-semibold text-primary bg-primary/10 px-2.5 py-0.5 rounded-md">
+                {food.groupName}
+              </span>
+              {food.foodName !== food.foodNameSpecific && (
+                <span className="text-xs font-medium text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-muted px-2.5 py-0.5 rounded-md">
+                  Loại: {food.foodName}
+                </span>
+              )}
+              {guidanceType && <GuidanceBadge type={guidanceType} size="md" />}
+            </div>
+
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-foreground">
+              {food.foodNameSpecific || food.name}
+            </h1>
+
+            {food.sourceDescription && (
+              <p className="text-xs text-muted-foreground italic">
+                Nguồn tham chiếu FNDDS: {food.sourceDescription}
+              </p>
+            )}
+          </div>
+
+          <div className="inline-flex items-center gap-1.5 self-start px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-muted text-xs font-medium text-slate-700 dark:text-slate-300 border border-slate-200/50 dark:border-muted/50">
+            <Scale className="w-3.5 h-3.5 text-primary" />
+            <span>Định lượng chuẩn: 100g</span>
+          </div>
+        </div>
+
+        {/* Member-Friendly Description */}
+        {food.description && (
+          <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed pt-1">
+            {food.description}
+          </p>
+        )}
+
+        {/* Guidance Summary Callout */}
+        {(food.guidanceTitle || food.guidanceReason) && (
+          <div className="rounded-2xl bg-gradient-to-br from-slate-50 to-primary/5 dark:from-muted/40 dark:to-primary/10 p-4 border border-slate-200/80 dark:border-border space-y-1.5">
+            <div className="flex items-center gap-2 text-sm font-semibold text-slate-900 dark:text-foreground">
+              <Sparkles className="w-4 h-4 text-primary" />
+              <span>{food.guidanceTitle}</span>
+            </div>
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+              {food.guidanceReason}
+            </p>
+          </div>
+        )}
+      </div>
+
+      {/* Section: Key Nutrition (Bảng thành phần dinh dưỡng) */}
+      <Card className="rounded-3xl border-slate-200/80 dark:border-border shadow-xs overflow-hidden">
+        <CardHeader className="bg-slate-50/60 dark:bg-muted/20 border-b border-slate-100 dark:border-border pb-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="text-lg font-bold">Thành phần dinh dưỡng</CardTitle>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                Tính trên mỗi 100g thực phẩm (chuẩn cơ sở dữ liệu USDA FNDDS 2021-2023)
+              </p>
+            </div>
+            <span className="text-xs font-medium text-slate-500 bg-white dark:bg-card px-2.5 py-1 rounded-lg border border-slate-200 dark:border-border">
+              Per 100g
+            </span>
+          </div>
+        </CardHeader>
+        <CardContent className="p-6 space-y-6">
+          {/* Key Nutrients Grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            {keyNutrients.map((item: NutrientValue) => (
+              <div
+                key={item.nutrientCode}
+                className="p-3.5 rounded-2xl bg-slate-50 dark:bg-muted/30 border border-slate-100 dark:border-border/60 flex flex-col justify-between"
+              >
+                <span className="text-xs text-muted-foreground font-normal line-clamp-1">
+                  {item.name}
+                </span>
+                <div className="mt-1 flex items-baseline gap-1">
+                  <span className="text-xl font-bold text-slate-900 dark:text-foreground">
+                    {item.amount}
+                  </span>
+                  <span className="text-xs font-medium text-muted-foreground">
+                    {item.unit}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Expandable Other Nutrients */}
+          {otherNutrients.length > 0 && (
+            <div className="pt-2 border-t border-slate-100 dark:border-border">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowAllNutrients(!showAllNutrients)}
+                className="w-full text-xs text-primary font-medium hover:bg-primary/5 flex items-center justify-center gap-1.5 h-9"
+              >
+                <span>
+                  {showAllNutrients
+                    ? "Thu gọn thành phần vi lượng"
+                    : `Xem thêm ${otherNutrients.length} thành phần dinh dưỡng chi tiết`}
+                </span>
+                {showAllNutrients ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+              </Button>
+
+              {showAllNutrients && (
+                <div className="mt-3 grid grid-cols-2 sm:grid-cols-3 gap-2.5 pt-2 animate-in fade-in duration-200">
+                  {otherNutrients.map((item: NutrientValue) => (
+                    <div
+                      key={item.nutrientCode}
+                      className="p-2.5 rounded-xl bg-slate-50/70 dark:bg-muted/20 border border-slate-100 dark:border-muted flex items-center justify-between text-xs"
+                    >
+                      <span className="text-muted-foreground">{item.name}</span>
+                      <span className="font-semibold text-slate-800 dark:text-slate-200">
+                        {item.amount} {item.unit}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Section: Why This Matters (Ý nghĩa đối với sức khỏe) */}
+      <div className="space-y-4">
+        <div className="flex items-center gap-2">
+          <Heart className="w-5 h-5 text-rose-500 fill-rose-500" />
+          <h2 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-foreground">
+            Ý nghĩa đối với sức khỏe của bạn
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Card 1: Cardiovascular Health */}
+          {food.cardiovascularContext && (
+            <Card className="rounded-2xl border-rose-100 bg-gradient-to-br from-rose-50/40 to-transparent dark:from-rose-950/20 dark:border-rose-900/40">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm sm:text-base font-semibold text-rose-900 dark:text-rose-200 flex items-center gap-2">
+                  <Heart className="w-4 h-4 text-rose-600" />
+                  <span>Sức khỏe tim mạch & Huyết áp</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                  {food.cardiovascularContext}
+                </p>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Card 2: AF / Atrial Fibrillation Context */}
+          {food.afContext && (
+            <Card className="rounded-2xl border-amber-100 bg-gradient-to-br from-amber-50/40 to-transparent dark:from-amber-950/20 dark:border-amber-900/40">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm sm:text-base font-semibold text-amber-900 dark:text-amber-200 flex items-center gap-2">
+                  <Zap className="w-4 h-4 text-amber-600" />
+                  <span>Rung tâm nhĩ & Nhịp tim</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                  {food.afContext}
+                </p>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Card 3: Medication Context (e.g. Warfarin / Vitamin K) */}
+          {food.medicationContext && (
+            <Card className="rounded-2xl border-blue-100 bg-gradient-to-br from-blue-50/40 to-transparent dark:from-blue-950/20 dark:border-blue-900/40 md:col-span-2">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm sm:text-base font-semibold text-blue-900 dark:text-blue-200 flex items-center gap-2">
+                  <Pill className="w-4 h-4 text-blue-600" />
+                  <span>Lưu ý khi sử dụng thuốc điều trị</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                  {food.medicationContext}
+                </p>
+              </CardContent>
+            </Card>
+          )}
+        </div>
+      </div>
+
+      {/* Section: Evidence Sources (Cơ sở nghiên cứu & Hướng dẫn y khoa) */}
+      {food.evidenceSources && food.evidenceSources.length > 0 && (
+        <div className="space-y-4 pt-4 border-t border-slate-200/60 dark:border-border/60">
+          <div className="flex items-center gap-2">
+            <FileText className="w-5 h-5 text-primary" />
+            <h2 className="text-lg font-bold text-slate-900 dark:text-foreground">
+              Cơ sở tham khảo & Bằng chứng y học
+            </h2>
+          </div>
+          <p className="text-xs text-muted-foreground -mt-2">
+            Các khuyến nghị dinh dưỡng trên được đối chiếu từ tài liệu hướng dẫn lâm sàng và thử nghiệm y khoa chính thống.
+          </p>
+
+          <div className="space-y-3">
+            {food.evidenceSources.map((source) => {
+              const meta = sourceTypeLabels[source.sourceType] || sourceTypeLabels.OTHER
+              return (
+                <div
+                  key={source.id}
+                  className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-2xs dark:border-border dark:bg-card space-y-2"
+                >
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <span
+                      className={cn(
+                        "text-[11px] font-medium px-2.5 py-0.5 rounded-full border",
+                        meta.cls
+                      )}
+                    >
+                      {meta.label}
+                    </span>
+                    {source.year && (
+                      <span className="text-xs text-muted-foreground">Năm {source.year}</span>
+                    )}
+                  </div>
+
+                  <h3 className="font-semibold text-xs sm:text-sm text-slate-900 dark:text-foreground leading-snug">
+                    {source.title}
+                  </h3>
+
+                  {(source.authors || source.journal) && (
+                    <p className="text-xs text-muted-foreground">
+                      {source.authors && <span>{source.authors}</span>}
+                      {source.journal && (
+                        <span className="font-medium italic text-slate-600 dark:text-slate-400">
+                          {" "}
+                          — {source.journal}
+                        </span>
+                      )}
+                    </p>
+                  )}
+
+                  {source.summary && (
+                    <p className="text-xs text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-muted/40 p-2.5 rounded-xl border border-slate-100 dark:border-muted/50 leading-relaxed">
+                      {source.summary}
+                    </p>
+                  )}
+
+                  {source.url && (
+                    <div className="pt-1">
+                      <a
+                        href={source.url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-xs text-primary hover:underline inline-flex items-center gap-1 font-medium"
+                      >
+                        <span>Xem tài liệu gốc</span>
+                        <ExternalLink className="w-3 h-3" />
+                      </a>
+                    </div>
+                  )}
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Bottom Disclaimer */}
+      <div className="rounded-2xl bg-slate-50 dark:bg-muted/20 p-4 border border-slate-200/60 dark:border-border flex items-start gap-2.5 text-xs text-slate-500 dark:text-slate-400">
+        <Info className="w-4 h-4 shrink-0 mt-0.5 text-slate-400" />
+        <p className="leading-relaxed">
+          Dữ liệu dinh dưỡng được trích xuất từ cơ sở dữ liệu USDA Food and Nutrient Database for Dietary Studies (FNDDS 2021-2023). Các thông tin về rung nhĩ và tim mạch chỉ mang tính giáo dục sức khỏe, không thay thế chẩn đoán hoặc phác đồ từ bác sĩ chuyên khoa tim mạch.
+        </p>
+      </div>
+    </div>
+  )
+}
