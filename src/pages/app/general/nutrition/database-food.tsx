@@ -44,7 +44,7 @@ export default function NutritionDatabaseFoodPage() {
     )
   }
 
-  const title = food.nameVi ?? food.name
+  const title = food.displayName
   const sourceInfo = REFERENCE_SOURCES[food.source]
   const portionIndex = selectedPortion === PER_100_GRAMS ? -1 : Number(selectedPortion)
   const portion = food.portions[portionIndex]
@@ -84,7 +84,9 @@ export default function NutritionDatabaseFoodPage() {
           </span>
         </div>
         <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-foreground">{title}</h1>
-        {food.nameVi && food.name !== food.nameVi && <p className="text-sm text-muted-foreground">{food.name}</p>}
+        {food.localName && food.localName !== food.displayName && (
+          <p className="text-sm text-muted-foreground">{food.localName}</p>
+        )}
         {food.wastePct != null && food.wastePct > 0 && (
           <p className="text-xs text-slate-600 dark:text-slate-300">
             Tỉ lệ thải bỏ khi sơ chế: <span className="font-semibold">{formatNutrientAmount(food.wastePct)}%</span>. Số

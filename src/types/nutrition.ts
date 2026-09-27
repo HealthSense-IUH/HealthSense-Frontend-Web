@@ -127,10 +127,14 @@ export interface ReferenceFoodSummary {
   id: string
   source: ReferenceFoodSource
   sourceFoodCode: string
-  /** Tên tiếng Anh */
-  name: string
-  /** Tên tiếng Việt (nguồn VN_FCT luôn có) */
-  nameVi?: string
+  /**
+   * Tên hiển thị. USDA: tên gốc tiếng Anh. Việt Nam: tên tiếng Việt.
+   */
+  displayName: string
+  /**
+   * Tên tiếng Việt. USDA: tên dịch (chưa dịch thì không có). Việt Nam: trùng displayName.
+   */
+  localName?: string
   category?: string
   energyKcal?: number
   proteinG?: number
@@ -148,8 +152,14 @@ export interface ReferenceFoodPortion {
 export interface ReferenceFood {
   id: string
   sourceFoodCode: string
-  name: string
-  nameVi?: string
+  /**
+   * Tên hiển thị. USDA: tên gốc tiếng Anh. Việt Nam: tên tiếng Việt.
+   */
+  displayName: string
+  /**
+   * Tên tiếng Việt. USDA: tên dịch (chưa dịch thì không có). Việt Nam: trùng displayName.
+   */
+  localName?: string
   category?: string
   source: ReferenceFoodSource
   sourceVersion: string

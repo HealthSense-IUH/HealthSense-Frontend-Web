@@ -214,14 +214,14 @@ export function ReferenceFoodBrowser() {
                   <div className="col-span-2 md:col-span-1 min-w-0">
                     <div className="flex items-center gap-2 min-w-0">
                       <p className="font-medium text-sm text-slate-900 dark:text-foreground group-hover:text-primary truncate">
-                        {food.nameVi ?? food.name}
+                        {food.displayName}
                       </p>
                       <span className="shrink-0 px-1.5 py-0.5 rounded-md text-[10px] font-semibold bg-slate-100 text-slate-600 dark:bg-muted dark:text-slate-300">
                         {REFERENCE_SOURCES[food.source].short}
                       </span>
                     </div>
                     <p className="text-[11px] text-muted-foreground truncate">
-                      {[food.nameVi && food.nameVi !== food.name ? food.name : null, food.category]
+                      {[food.localName && food.localName !== food.displayName ? food.localName : null, food.category]
                         .filter(Boolean)
                         .join(" · ")}
                     </p>
