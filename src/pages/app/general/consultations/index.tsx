@@ -65,7 +65,7 @@ export default function ConsultationsPage() {
 
   if (!logic.isAdmin && !logic.isDoctor && !logic.isMember) {
     return (
-      <Page fill>
+      <Page width="full" fill>
         <PageHeader icon={<Stethoscope className="w-5 h-5" />} title="Tư vấn & Chăm sóc" />
         <PageBody className="items-center justify-center text-center">
           <div className="flex max-w-lg flex-col items-center gap-4">
@@ -79,7 +79,7 @@ export default function ConsultationsPage() {
   }
 
   return (
-    <Page fill>
+    <Page width="full" fill>
       <PageHeader
         icon={<Stethoscope className="w-5 h-5" />}
         title="Tư vấn & Chăm sóc"
