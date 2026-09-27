@@ -24,7 +24,6 @@ import { Button } from "@/components/ui/button"
 import { healthRecordApi } from "@/services"
 import { HealthRecordDetailModal } from "@/pages/app/general/afib-history/components/HealthRecordDetailModal"
 import { HealthHeatmapCalendar } from "./health-heatmap-calendar"
-import { DailyInspirationQuote } from "./daily-inspiration-quote"
 import { 
   getPredictionMeta, 
   formatHrvNumber, 
@@ -282,11 +281,8 @@ export function MemberHealthDashboard() {
           />
         </div>
 
-        {/* Right Column: Daily Inspiration Quote + Recent Screenings Table (6 cols) */}
+        {/* Right Column: Recent Screenings Table (6 cols) */}
         <div className="lg:col-span-6 space-y-6 flex flex-col justify-start">
-          {/* Daily Inspiration Quote with auto Vietnamese translation */}
-          <DailyInspirationQuote />
-
           {/* Recent Screenings Table */}
           <Card className="rounded-3xl border border-border shadow-xs bg-white dark:bg-card flex flex-col justify-between overflow-hidden">
             <CardHeader className="flex flex-row items-center justify-between border-b border-border pb-4">
