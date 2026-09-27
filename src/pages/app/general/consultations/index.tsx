@@ -2,6 +2,7 @@ import { useEffect } from "react"
 import { Calendar, CheckCircle2, Coins, Inbox, PlusCircle, RefreshCw, ShieldAlert, Stethoscope, Users, XCircle } from "lucide-react"
 import { useNavigate, useSearchParams } from "react-router-dom"
 
+import { Page, PageBody, PageHeader } from "@/components/layout/page"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
@@ -64,31 +65,27 @@ export default function ConsultationsPage() {
 
   if (!logic.isAdmin && !logic.isDoctor && !logic.isMember) {
     return (
-      <div className="mx-auto flex max-w-lg flex-col items-center justify-center gap-4 py-24 text-center">
-        <ShieldAlert className="text-red-500" />
-        <h2 className="text-2xl font-bold text-neutral-950">Truy cập bị từ chối</h2>
-        <p className="text-sm text-neutral-500">Mô-đun tư vấn chỉ dành cho các vai trò Hội viên, Bác sĩ và Quản trị viên.</p>
-      </div>
+      <Page fill>
+        <PageHeader icon={<Stethoscope className="w-5 h-5" />} title="Tư vấn & Chăm sóc" />
+        <PageBody className="items-center justify-center text-center">
+          <div className="flex max-w-lg flex-col items-center gap-4">
+            <ShieldAlert className="text-red-500" />
+            <h2 className="text-2xl font-bold text-neutral-950">Truy cập bị từ chối</h2>
+            <p className="text-sm text-neutral-500">Mô-đun tư vấn chỉ dành cho các vai trò Hội viên, Bác sĩ và Quản trị viên.</p>
+          </div>
+        </PageBody>
+      </Page>
     )
   }
 
   return (
-    <>
-      <div className="flex flex-col h-[calc(100vh-100px)] w-full gap-4 pb-2">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-background p-4 rounded-2xl shadow-sm border border-border shrink-0">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-muted border border-border/50 text-muted-foreground shadow-sm">
-              <Stethoscope className="h-5 w-5" />
-            </div>
-            <div className="flex flex-col">
-              <h1 className="text-xl font-semibold tracking-tight text-foreground">Tư vấn & Chăm sóc</h1>
-              <p className="text-sm text-muted-foreground">
-                Quản lý các buổi và phiên tư vấn 1-1 của bạn.
-              </p>
-            </div>
-          </div>
-          
-          <div className="flex flex-wrap items-center gap-3">
+    <Page fill>
+      <PageHeader
+        icon={<Stethoscope className="w-5 h-5" />}
+        title="Tư vấn & Chăm sóc"
+        description="Quản lý các buổi và phiên tư vấn 1-1 của bạn."
+        meta={
+          <>
             <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-border/50 bg-muted/30">
               <span className="text-xs font-medium text-muted-foreground">Vai trò:</span>
               <span className="text-xs font-semibold text-foreground">{roleLabel}</span>
@@ -97,13 +94,17 @@ export default function ConsultationsPage() {
               <span className="text-xs font-medium text-muted-foreground">Mã ID:</span>
               <span className="text-xs font-semibold text-foreground">#{logic.userSession?.userId ?? "-"}</span>
             </div>
-            <Button variant="outline" size="sm" onClick={() => void logic.loadData()} disabled={logic.loading} className="shadow-sm">
-              <RefreshCw className="mr-2 h-4 w-4" />
-              Làm mới
-            </Button>
-          </div>
-        </div>
+          </>
+        }
+        actions={
+          <Button variant="outline" size="sm" onClick={() => void logic.loadData()} disabled={logic.loading} className="shadow-sm">
+            <RefreshCw className="mr-2 h-4 w-4" />
+            Làm mới
+          </Button>
+        }
+      />
 
+      <PageBody className="gap-4">
         {logic.alert && (
           <div
             className={cn(
@@ -123,7 +124,7 @@ export default function ConsultationsPage() {
           </div>
         )}
 
-        <Tabs value={activeTab} onValueChange={(val) => setSearchParams({ tab: val })} className="flex-1 min-w-0 flex flex-col bg-background rounded-2xl shadow-sm border border-border overflow-hidden h-full">
+        <Tabs value={activeTab} onValueChange={(val) => setSearchParams({ tab: val })} className="flex-1 min-h-0 min-w-0 flex flex-col bg-background rounded-2xl shadow-sm border border-border overflow-hidden">
           <div className="border-b border-border bg-muted/20 px-4 py-2 shrink-0 flex items-center justify-between overflow-x-auto">
             <TabsList className="h-10 bg-muted/60 p-1 rounded-xl">
               {logic.isMember && (
@@ -296,7 +297,7 @@ export default function ConsultationsPage() {
           </TabsContent>
         )}
         </Tabs>
-      </div>
+      </PageBody>
 
       <AdminActionDialog
         mode={logic.adminDialogMode}
@@ -468,6 +469,6 @@ export default function ConsultationsPage() {
         onGoToQueue={() => setSearchParams({ tab: "queue" })}
         queueNumber={logic.currentQueueState?.queueNumber}
       />
-    </>
+    </Page>
   )
 }

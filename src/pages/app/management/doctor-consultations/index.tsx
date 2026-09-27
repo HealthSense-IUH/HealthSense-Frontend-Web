@@ -1,14 +1,15 @@
 import { useEffect, useState, useCallback, useRef } from "react"
 import { useNavigate } from "react-router-dom"
-import { ShieldAlert } from "lucide-react"
+import { ShieldAlert, Stethoscope } from "lucide-react"
 
+import { Page, PageBody, PageHeader } from "@/components/layout/page"
 import { Button } from "@/components/ui/button"
 import { useToast } from "@/hooks/use-toast"
 import { USER_ROLES } from "@/constants"
 import { useAppShell } from "@/components/layout/app-shell-context"
 
 import { consultationApi } from "@/services"
-import type { 
+import type {
   DoctorConsultationSessionResponse,
   DoctorDispatchStatusResponse,
   DoctorConsultationOfferResponse,
@@ -54,7 +55,7 @@ export default function DoctorSessionsPage() {
   const [profileLoading, setProfileLoading] = useState(true)
   const [hasProfile, setHasProfile] = useState(false)
   const [isScheduleOpen, setIsScheduleOpen] = useState(false)
-  
+
   // Load sessions list
   const loadSessions = useCallback(async (pageNum: number, pageSize = size) => {
     if (!isDoctor) return
@@ -332,95 +333,106 @@ export default function DoctorSessionsPage() {
 
   if (!isDoctor) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 text-center">
-        <ShieldAlert className="h-12 w-12 text-red-500 mb-4" />
-        <h2 className="text-xl font-bold text-neutral-900 mb-2">Quyền truy cập bị từ chối</h2>
-        <p className="text-neutral-500 mb-6">Bạn không có quyền truy cập trang bác sĩ.</p>
-        <Button onClick={() => navigate("/app/general/dashboard")}>Về trang chủ</Button>
-      </div>
+      <Page>
+        <PageBody className="items-center justify-center text-center gap-0 py-20">
+          <ShieldAlert className="h-12 w-12 text-red-500 mb-4" />
+          <h2 className="text-xl font-bold text-neutral-900 mb-2">Quyền truy cập bị từ chối</h2>
+          <p className="text-neutral-500 mb-6">Bạn không có quyền truy cập trang bác sĩ.</p>
+          <Button onClick={() => navigate("/app/general/dashboard")}>Về trang chủ</Button>
+        </PageBody>
+      </Page>
     )
   }
 
   return (
-    <div className="space-y-6">
-      {/* 1. Doctor Dispatch Header */}
-      <DoctorDispatchHeader
-        dispatchStatus={dispatchStatus}
-        loading={loading}
-        actionLoading={actionLoading}
-        hasProfile={hasProfile}
-        profileLoading={profileLoading}
-        onToggleStatus={handleToggleDispatchStatus}
-        onToggleStopAfterCurrentSession={handleToggleStopAfterCurrentSession}
-        onRetryProfile={fetchCareProfile}
-        onOpenScheduleDialog={() => setIsScheduleOpen(true)}
+    <Page>
+      <PageHeader
+        icon={<Stethoscope className="w-5 h-5" />}
+        title="Quản lý phiên khám"
+        description="Bật trực điều phối để nhận ca tư vấn mới từ hàng đợi và theo dõi các phiên khám bạn đang phụ trách."
       />
 
-      {/* 2. Current Offer Card if any */}
-      {currentOffer && (
-        <DoctorOfferCard
-          offer={currentOffer}
+      <PageBody>
+        {/* 1. Doctor Dispatch Status Card */}
+        <DoctorDispatchHeader
+          dispatchStatus={dispatchStatus}
+          loading={loading}
           actionLoading={actionLoading}
-          onAccept={handleAcceptOffer}
-          onReject={handleRejectOffer}
-          onOfferExpired={fetchDispatchAndOffer}
+          hasProfile={hasProfile}
+          profileLoading={profileLoading}
+          onToggleStatus={handleToggleDispatchStatus}
+          onToggleStopAfterCurrentSession={handleToggleStopAfterCurrentSession}
+          onRetryProfile={fetchCareProfile}
+          onOpenScheduleDialog={() => setIsScheduleOpen(true)}
         />
-      )}
 
-      {/* 3. Session list header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2">
-        <div>
-          <h2 className="text-2xl font-black tracking-tight text-slate-800">Danh sách phiên khám (Active Care)</h2>
-          <p className="text-xs font-semibold text-slate-500">
-            Theo dõi danh sách phiên khám, trao đổi chuyên môn và quản lý tiến trình điều trị người bệnh.
-          </p>
-        </div>
-      </div>
+        {/* 2. Current Offer Card if any */}
+        {currentOffer && (
+          <DoctorOfferCard
+            offer={currentOffer}
+            actionLoading={actionLoading}
+            onAccept={handleAcceptOffer}
+            onReject={handleRejectOffer}
+            onOfferExpired={fetchDispatchAndOffer}
+          />
+        )}
 
-      {/* 4. Doctor Sessions Table with Pagination */}
-      <DoctorSessionsTable
-        sessions={sessions}
-        loading={loading}
-        page={page}
-        size={size}
-        totalElements={totalElements}
-        totalPages={totalPages}
-        onPageChange={(newPage) => {
-          setPage(newPage)
-          void loadSessions(newPage, size)
-        }}
-        onSizeChange={(newSize) => {
-          setSize(newSize)
-          setPage(1)
-          void loadSessions(1, newSize)
-        }}
-        onRefresh={() => {
-          void loadSessions(page, size)
-          void fetchDispatchAndOffer()
-        }}
-        onViewDetail={(sessionId) => setSelectedSessionId(sessionId)}
-      />
+        {/* 3. Session list: section header + table with its own pagination */}
+        <section className="flex flex-col gap-4">
+          <div className="space-y-1">
+            <h2 className="text-lg sm:text-xl font-bold tracking-tight text-slate-900 dark:text-foreground">
+              Danh sách phiên khám (Active Care)
+            </h2>
+            <p className="text-xs sm:text-sm text-muted-foreground">
+              Theo dõi danh sách phiên khám, trao đổi chuyên môn và quản lý tiến trình điều trị người bệnh.
+            </p>
+          </div>
 
-      {selectedSessionId && (
-        <DoctorSessionDetailDialog 
-          sessionId={selectedSessionId} 
-          open={!!selectedSessionId} 
-          onOpenChange={handleDoctorDetailOpenChange} 
-          onSessionRefreshed={() => {
-            void loadSessions(page, size)
-            void fetchDispatchAndOffer()
+          <DoctorSessionsTable
+            sessions={sessions}
+            loading={loading}
+            page={page}
+            size={size}
+            totalElements={totalElements}
+            totalPages={totalPages}
+            onPageChange={(newPage) => {
+              setPage(newPage)
+              void loadSessions(newPage, size)
+            }}
+            onSizeChange={(newSize) => {
+              setSize(newSize)
+              setPage(1)
+              void loadSessions(1, newSize)
+            }}
+            onRefresh={() => {
+              void loadSessions(page, size)
+              void fetchDispatchAndOffer()
+            }}
+            onViewDetail={(sessionId) => setSelectedSessionId(sessionId)}
+          />
+        </section>
+
+        {selectedSessionId && (
+          <DoctorSessionDetailDialog
+            sessionId={selectedSessionId}
+            open={!!selectedSessionId}
+            onOpenChange={handleDoctorDetailOpenChange}
+            onSessionRefreshed={() => {
+              void loadSessions(page, size)
+              void fetchDispatchAndOffer()
+            }}
+          />
+        )}
+
+        <DoctorScheduleDialog
+          isOpen={isScheduleOpen}
+          onClose={() => setIsScheduleOpen(false)}
+          currentProfile={careProfile}
+          onSuccess={() => {
+            void fetchCareProfile()
           }}
         />
-      )}
-
-      <DoctorScheduleDialog
-        isOpen={isScheduleOpen}
-        onClose={() => setIsScheduleOpen(false)}
-        currentProfile={careProfile}
-        onSuccess={() => {
-          void fetchCareProfile()
-        }}
-      />
-    </div>
+      </PageBody>
+    </Page>
   )
 }
