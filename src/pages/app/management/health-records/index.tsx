@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react"
 import { Plus } from "lucide-react"
 
+import { Page, PageBody, PageFooter, PageHeader } from "@/components/layout/page"
 import { Button } from "@/components/ui/button"
 import { HealthRecordsTable } from "@/pages/app/management/health-records/components/HealthRecordsTable"
 import { HealthRecordsFilters } from "@/pages/app/management/health-records/components/HealthRecordsFilters"
@@ -58,64 +59,68 @@ export default function AdminHealthRecordsPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h2 className="text-3xl font-bold tracking-tight">Health Records</h2>
-          <p className="text-neutral-500 dark:text-neutral-400">Manage member health records and HRV features.</p>
-        </div>
-        <Button onClick={() => setIsCreateOpen(true)}>
-          <Plus className="mr-2 h-4 w-4" />
-          Create Mock Record
-        </Button>
-      </div>
-
-      <SystemStatisticsChart />
-
-      <HealthRecordsFilters onFilterChange={handleFilterChange} />
-
-      <HealthRecordsTable
-        records={data?.content || []}
-        isLoading={isLoading}
-        onView={setSelectedRecordForView}
-      />
-
-      <div className="flex items-center justify-between">
-        <p className="text-sm text-neutral-500">
-          Showing page {data?.page || 1} of {data?.totalPages || 1}
-          {data?.totalElements !== undefined && ` (${data.totalElements} total records)`}
-        </p>
-        <div className="space-x-2">
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={() => setPage(p => Math.max(1, p - 1))}
-            disabled={page <= 1 || isLoading}
-          >
-            Previous
+    <Page>
+      <PageHeader
+        title="Hồ sơ sức khỏe"
+        description="Quản lý hồ sơ sức khỏe của hội viên và các đặc trưng HRV."
+        actions={
+          <Button onClick={() => setIsCreateOpen(true)}>
+            <Plus className="mr-2 h-4 w-4" />
+            Create Mock Record
           </Button>
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={() => setPage(p => p + 1)}
-            disabled={!data?.hasMore || isLoading}
-          >
-            Next
-          </Button>
+        }
+      />
+
+      <PageBody>
+        <SystemStatisticsChart />
+
+        <HealthRecordsFilters onFilterChange={handleFilterChange} />
+
+        <HealthRecordsTable
+          records={data?.content || []}
+          isLoading={isLoading}
+          onView={setSelectedRecordForView}
+        />
+
+        <HealthRecordDetailDialog
+          record={selectedRecordForView}
+          open={!!selectedRecordForView}
+          onOpenChange={(open) => !open && setSelectedRecordForView(null)}
+        />
+
+        <HealthRecordCreateDialog
+          open={isCreateOpen}
+          onOpenChange={setIsCreateOpen}
+          onSuccess={fetchRecords}
+        />
+      </PageBody>
+
+      <PageFooter>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <p>
+            Showing page {data?.page || 1} of {data?.totalPages || 1}
+            {data?.totalElements !== undefined && ` (${data.totalElements} total records)`}
+          </p>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setPage(p => Math.max(1, p - 1))}
+              disabled={page <= 1 || isLoading}
+            >
+              Previous
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setPage(p => p + 1)}
+              disabled={!data?.hasMore || isLoading}
+            >
+              Next
+            </Button>
+          </div>
         </div>
-      </div>
-
-      <HealthRecordDetailDialog
-        record={selectedRecordForView}
-        open={!!selectedRecordForView}
-        onOpenChange={(open) => !open && setSelectedRecordForView(null)}
-      />
-
-      <HealthRecordCreateDialog
-        open={isCreateOpen}
-        onOpenChange={setIsCreateOpen}
-        onSuccess={fetchRecords}
-      />
-    </div>
+      </PageFooter>
+    </Page>
   )
 }

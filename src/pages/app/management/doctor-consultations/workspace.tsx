@@ -1,7 +1,6 @@
 import { type FormEvent, useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { useNavigate, useParams, useSearchParams } from "react-router-dom"
 import {
-  ArrowLeft,
   Clock,
   FileText,
   History,
@@ -13,6 +12,7 @@ import {
   ShieldAlert,
 } from "lucide-react"
 
+import { Page, PageBody, PageHeader } from "@/components/layout/page"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -263,84 +263,80 @@ export default function DoctorSessionWorkspacePage() {
 
   if (initialLoading && !detail) {
     return (
-      <div className="flex h-[80vh] flex-col items-center justify-center gap-3">
-        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-        <p className="text-sm font-semibold text-slate-600">Đang tải không gian khám chuyên khoa...</p>
-      </div>
+      <Page width="full" fill>
+        <PageBody className="items-center justify-center text-center gap-3">
+          <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+          <p className="text-sm font-semibold text-slate-600">Đang tải không gian khám chuyên khoa...</p>
+        </PageBody>
+      </Page>
     )
   }
 
   if (!session) {
     return (
-      <div className="flex h-[80vh] flex-col items-center justify-center gap-4 text-center px-4">
-        <ShieldAlert className="h-12 w-12 text-rose-500" />
-        <h2 className="text-lg font-bold text-slate-800">Không tìm thấy phiên khám</h2>
-        <p className="text-xs text-slate-500 max-w-md">
-          Phiên tư vấn này không tồn tại hoặc bạn không được phân công phụ trách.
-        </p>
-        <Button onClick={() => navigate("/app/management/doctor/consultations")} className="rounded-xl">
-          Quay lại danh sách
-        </Button>
-      </div>
+      <Page width="full" fill>
+        <PageBody className="items-center justify-center text-center gap-4">
+          <ShieldAlert className="h-12 w-12 text-rose-500" />
+          <h2 className="text-lg font-bold text-slate-800">Không tìm thấy phiên khám</h2>
+          <p className="text-xs text-slate-500 max-w-md">
+            Phiên tư vấn này không tồn tại hoặc bạn không được phân công phụ trách.
+          </p>
+          <Button onClick={() => navigate("/app/management/doctor/consultations")} className="rounded-xl">
+            Quay lại danh sách
+          </Button>
+        </PageBody>
+      </Page>
     )
   }
 
   return (
-    <div className="flex flex-col h-[calc(100vh-4rem)] overflow-hidden bg-slate-50/50">
-      {/* Top Clinical Header */}
-      <div className="bg-white border-b border-slate-200/80 px-4 sm:px-6 py-3 shrink-0 shadow-xs">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
-          {/* Left: Back & Patient Identity */}
-          <div className="flex items-center gap-3">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => navigate("/app/management/doctor/consultations")}
-              className="h-9 w-9 p-0 rounded-xl text-slate-500 hover:text-slate-800 hover:bg-slate-100 shrink-0 cursor-pointer"
-              title="Quay lại danh sách phiên khám"
-            >
-              <ArrowLeft className="w-5 h-5" />
-            </Button>
-
-            <div className="h-10 w-10 rounded-full bg-blue-100/70 border border-blue-200 text-blue-700 font-black flex items-center justify-center text-sm shrink-0 shadow-xs">
-              {memberDisplayName.charAt(0).toUpperCase()}
-            </div>
-
-            <div className="min-w-0">
-              <div className="flex items-center gap-2 flex-wrap">
-                <h1 className="font-extrabold text-slate-900 text-sm sm:text-base leading-snug truncate">
-                  {memberDisplayName}
-                </h1>
-                {memberId && (
-                  <Badge variant="outline" className="font-mono text-[11px] px-1.5 py-0 border-slate-200 text-slate-500">
-                    ID: #{memberId}
-                  </Badge>
-                )}
-                {getSessionStatusBadge(session.status, session.meaningfulCareOccurred)}
-              </div>
-
-              <div className="flex items-center gap-3 text-xs text-slate-500 mt-0.5 flex-wrap">
-                {member?.phone && (
-                  <span className="inline-flex items-center gap-1 font-mono text-[11px]">
-                    <Phone className="w-3 h-3 text-slate-400" />
-                    {member.phone}
-                  </span>
-                )}
-                {member?.email && (
-                  <span className="inline-flex items-center gap-1 text-[11px]">
-                    <Mail className="w-3 h-3 text-slate-400" />
-                    {member.email}
-                  </span>
-                )}
-                <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-blue-600 bg-blue-50 px-2 py-0.2 rounded-md">
-                  {session.packageNameSnapshot || "Tư vấn chuyên khoa"}
+    <Page width="full" fill>
+      {/* Top Clinical Header: patient identity, status and quick clinical actions */}
+      <PageHeader
+        compact
+        breadcrumbs={[
+          { label: "Quản lý phiên khám", to: "/app/management/doctor/consultations" },
+          { label: memberDisplayName },
+        ]}
+        icon={
+          <span className="flex h-5 w-5 items-center justify-center text-sm font-black leading-none">
+            {memberDisplayName.charAt(0).toUpperCase()}
+          </span>
+        }
+        title={memberDisplayName}
+        description={
+          member?.phone || member?.email ? (
+            <div className="flex flex-wrap items-center gap-3">
+              {member?.phone && (
+                <span className="inline-flex items-center gap-1 font-mono text-[11px]">
+                  <Phone className="w-3 h-3 text-slate-400" />
+                  {member.phone}
                 </span>
-              </div>
+              )}
+              {member?.email && (
+                <span className="inline-flex items-center gap-1 text-[11px]">
+                  <Mail className="w-3 h-3 text-slate-400" />
+                  {member.email}
+                </span>
+              )}
             </div>
-          </div>
-
-          {/* Right: Quick Clinical Actions */}
-          <div className="flex items-center gap-2 flex-wrap shrink-0">
+          ) : undefined
+        }
+        meta={
+          <>
+            {memberId && (
+              <Badge variant="outline" className="font-mono text-[11px] px-1.5 py-0 border-slate-200 text-slate-500">
+                ID: #{memberId}
+              </Badge>
+            )}
+            {getSessionStatusBadge(session.status, session.meaningfulCareOccurred)}
+            <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-md">
+              {session.packageNameSnapshot || "Tư vấn chuyên khoa"}
+            </span>
+          </>
+        }
+        actions={
+          <>
             {/* Countdown / Duration Badge */}
             {session.status === "ACTIVE" && session.endsAt && (
               <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold shadow-2xs">
@@ -371,11 +367,14 @@ export default function DoctorSessionWorkspacePage() {
               <Info className="w-4 h-4 text-slate-500" />
               <span>Lịch & Chi tiết</span>
             </Button>
-          </div>
-        </div>
+          </>
+        }
+      />
 
+      {/* Workspace panel: tab bar + content that fills the remaining height and scrolls inside */}
+      <PageBody className="gap-0 overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-xs dark:border-border dark:bg-card">
         {/* Tab Navigation */}
-        <div className="mt-3 -mb-3 pt-1 border-t border-slate-100">
+        <div className="shrink-0 overflow-x-auto border-b border-slate-100 dark:border-border px-3 py-2">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="h-9 bg-slate-100/80 p-0.5 rounded-xl gap-1">
               <TabsTrigger
@@ -425,75 +424,75 @@ export default function DoctorSessionWorkspacePage() {
             </TabsList>
           </Tabs>
         </div>
-      </div>
 
-      {/* Main Workspace Content Area */}
-      <div className="flex-1 min-h-0 overflow-hidden relative">
-        {activeTab === "chat" && (
-          <div className="h-full flex flex-col bg-white">
-            {session && (
-              <SessionContinuationBanner
-                session={session as any}
+        {/* Main Workspace Content Area */}
+        <div className="flex-1 min-h-0 overflow-hidden relative">
+          {activeTab === "chat" && (
+            <div className="h-full flex flex-col bg-white">
+              {session && (
+                <SessionContinuationBanner
+                  session={session as any}
+                  isDoctor={true}
+                  isMember={false}
+                  onSessionRefreshed={refreshDetail}
+                />
+              )}
+              <ChatMessageList
+                messages={sortedMessages}
+                loadingMoreMessages={loadingMoreMessages}
+                hasMoreMessages={hasMoreMessages}
+                currentUserId={userSession?.userId}
                 isDoctor={true}
                 isMember={false}
-                onSessionRefreshed={refreshDetail}
+                onLoadMore={handleLoadMoreMessages}
               />
-            )}
-            <ChatMessageList
-              messages={sortedMessages}
-              loadingMoreMessages={loadingMoreMessages}
-              hasMoreMessages={hasMoreMessages}
-              currentUserId={userSession?.userId}
-              isDoctor={true}
-              isMember={false}
-              onLoadMore={handleLoadMoreMessages}
-            />
 
-            <ChatComposer
-              messageDraft={messageDraft}
-              attachmentUrl={attachmentUrl}
-              canSend={canSend}
-              loading={chatLoading}
-              readOnlyMode={readOnlyMode}
-              readOnlyReason={readOnlyReason}
-              onMessageChange={setMessageDraft}
-              onSubmit={handleSendMessage}
-            />
-          </div>
-        )}
-
-        {activeTab === "records" && (
-          <div className="h-full overflow-y-auto p-4 sm:p-6 bg-slate-50/70">
-            <div className="max-w-5xl mx-auto">
-              <DoctorScopedRecordsTab sessionId={session.id} />
-            </div>
-          </div>
-        )}
-
-        {activeTab === "summary" && (
-          <div className="h-full overflow-y-auto p-4 sm:p-6 bg-slate-50/70">
-            <div className="max-w-4xl mx-auto">
-              <DoctorFinalSummaryTab
-                sessionId={session.id}
-                sessionStatus={session.status}
-                meaningfulCareOccurred={session.meaningfulCareOccurred}
-                flowType={session.flowType}
-                summaryDueAt={session.summaryDueAt}
-                summaryClosureStatus={session.summaryClosureStatus}
-                onFinalized={refreshDetail}
+              <ChatComposer
+                messageDraft={messageDraft}
+                attachmentUrl={attachmentUrl}
+                canSend={canSend}
+                loading={chatLoading}
+                readOnlyMode={readOnlyMode}
+                readOnlyReason={readOnlyReason}
+                onMessageChange={setMessageDraft}
+                onSubmit={handleSendMessage}
               />
             </div>
-          </div>
-        )}
+          )}
 
-        {activeTab === "continuity" && (
-          <div className="h-full overflow-y-auto p-4 sm:p-6 bg-slate-50/70">
-            <div className="max-w-4xl mx-auto">
-              <DoctorContinuityTab sessionId={session.id} />
+          {activeTab === "records" && (
+            <div className="h-full overflow-y-auto p-4 sm:p-6 bg-slate-50/70">
+              <div className="max-w-5xl mx-auto">
+                <DoctorScopedRecordsTab sessionId={session.id} />
+              </div>
             </div>
-          </div>
-        )}
-      </div>
+          )}
+
+          {activeTab === "summary" && (
+            <div className="h-full overflow-y-auto p-4 sm:p-6 bg-slate-50/70">
+              <div className="max-w-4xl mx-auto">
+                <DoctorFinalSummaryTab
+                  sessionId={session.id}
+                  sessionStatus={session.status}
+                  meaningfulCareOccurred={session.meaningfulCareOccurred}
+                  flowType={session.flowType}
+                  summaryDueAt={session.summaryDueAt}
+                  summaryClosureStatus={session.summaryClosureStatus}
+                  onFinalized={refreshDetail}
+                />
+              </div>
+            </div>
+          )}
+
+          {activeTab === "continuity" && (
+            <div className="h-full overflow-y-auto p-4 sm:p-6 bg-slate-50/70">
+              <div className="max-w-4xl mx-auto">
+                <DoctorContinuityTab sessionId={session.id} />
+              </div>
+            </div>
+          )}
+        </div>
+      </PageBody>
 
       {/* Quick Session Details & Schedule Dialog */}
       {isDetailDialogOpen && (
@@ -504,6 +503,6 @@ export default function DoctorSessionWorkspacePage() {
           onSessionRefreshed={refreshDetail}
         />
       )}
-    </div>
+    </Page>
   )
 }

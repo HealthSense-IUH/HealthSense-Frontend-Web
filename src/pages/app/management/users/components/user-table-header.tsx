@@ -1,5 +1,4 @@
-import { Search, Plus, UserCheck } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { Search, UserCheck } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import {
   Select,
@@ -14,21 +13,18 @@ interface UserTableHeaderProps {
   onSearchChange: (query: string) => void
   statusFilter?: string
   onStatusFilterChange?: (status: string) => void
-  onOpenCreate: () => void
   totalElements?: number
   currentRoleLabel: string
-  loading?: boolean
 }
 
+/** Tiêu đề khu vực bảng + ô tìm kiếm, lọc trạng thái. Nút "Thêm tài khoản" nằm ở PageHeader của trang. */
 export function UserTableHeader({
   searchQuery,
   onSearchChange,
   statusFilter = "ALL",
   onStatusFilterChange,
-  onOpenCreate,
   totalElements = 0,
   currentRoleLabel,
-  loading,
 }: UserTableHeaderProps) {
   return (
     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 py-2">
@@ -74,15 +70,6 @@ export function UserTableHeader({
             <SelectItem value="PENDING_VERIFY">Chờ xác thực</SelectItem>
           </SelectContent>
         </Select>
-
-        <Button
-          onClick={onOpenCreate}
-          disabled={loading}
-          className="h-10 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs px-4.5 shadow-sm shadow-blue-500/25 flex items-center gap-2 transition-transform active:scale-95 cursor-pointer shrink-0"
-        >
-          <Plus className="h-4 w-4 stroke-[3]" />
-          <span>Thêm tài khoản</span>
-        </Button>
       </div>
     </div>
   )

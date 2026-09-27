@@ -18,6 +18,10 @@ import { SystemStatusCard } from "./system-status-card"
 import { RecentActivityTable } from "./recent-activity-table"
 import { PendingActionsCard } from "./pending-actions-card"
 
+/**
+ * Nội dung dashboard super admin, đặt trong PageBody. Trang chứa (management/hub) dựng Page + PageHeader với tiêu đề và
+ * nút thao tác (DashboardHeaderActions).
+ */
 export function SuperAdminDashboard() {
   const [filters, setFilters] = useState<DashboardFilters>({
     period: "30d",
@@ -29,8 +33,8 @@ export function SuperAdminDashboard() {
   }
 
   return (
-    <div className="space-y-8 pb-8">
-      {/* Top Header with interactive filter selectors */}
+    <>
+      {/* Interactive filter selectors */}
       <DashboardHeader filters={filters} onFilterChange={handleFilterChange} />
 
       {/* Section 1: KPI Summary Cards (4 columns on wide screen, 2 on laptop/narrower screens) */}
@@ -77,6 +81,6 @@ export function SuperAdminDashboard() {
           </div>
         </div>
       </section>
-    </div>
+    </>
   )
 }
