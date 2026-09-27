@@ -6,16 +6,8 @@ import {
   Layers,
   Sparkles,
   ArrowRight,
-  Fish,
-  Milk,
-  Carrot,
-  Apple,
-  Nut,
-  Coffee,
-  Wine,
-  Beef,
-  Utensils,
   CheckCircle2,
+  Database,
   AlertTriangle,
   Ban,
   LayoutGrid,
@@ -24,6 +16,8 @@ import {
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { FoodCard } from "./components/FoodCard"
+import { ReferenceFoodBrowser } from "./components/ReferenceFoodBrowser"
+import { FoodGroupIcon } from "./group-icons"
 import { useNutritionGroup, useNutritionGroupFoods, useNutritionGroups } from "./hooks/use-nutrition"
 import type { GuidanceType } from "@/types/nutrition"
 import { cn } from "@/lib/utils"
@@ -89,18 +83,7 @@ export default function CategoryExplorerPage() {
     )
   }
 
-  const categoryIcons: Record<string, React.ReactNode> = {
-    dairy: <Milk className="w-5 h-5 text-sky-500" />,
-    "fish-seafood": <Fish className="w-5 h-5 text-cyan-600" />,
-    vegetables: <Carrot className="w-5 h-5 text-emerald-600" />,
-    fruits: <Apple className="w-5 h-5 text-amber-500" />,
-    "legumes-nuts": <Nut className="w-5 h-5 text-amber-700" />,
-    "beverages-caution": <Coffee className="w-5 h-5 text-orange-600" />,
-    "beverages-alcohol": <Wine className="w-5 h-5 text-purple-600" />,
-    "processed-foods": <Beef className="w-5 h-5 text-rose-600" />,
-  }
-
-  const defaultIcon = categoryIcons[currentCategory.slug] || <Utensils className="w-5 h-5 text-primary" />
+  const defaultIcon = <FoodGroupIcon icon={currentCategory.icon} />
 
   return (
     <div className="w-full max-w-7xl mx-auto space-y-6 pb-12">
@@ -156,13 +139,13 @@ export default function CategoryExplorerPage() {
         </div>
       </div>
 
-      {/* VIEW 1: Khi chưa chọn món cụ thể -> SHOW DANH SÁCH CÁC LOẠI (Food Names: Cá hồi, Cá thu, Cá ngừ...) */}
-      {!selectedFoodName && (
+      {/* VIEW 1: Khi chưa chọn món cụ thể -> SHOW DANH SÁCH CÁC LOẠI CÓ KHUYẾN NGHỊ (Cá hồi, Cá thu, Cá ngừ...) */}
+      {!selectedFoodName && (isFoodsLoading || foodNames.length > 0) && (
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-foreground">
-                Các loại {currentCategory.name.toLowerCase()} ({foodNames.length})
+                Có khuyến nghị cho tim mạch ({foodNames.length})
               </h2>
               <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
                 Chọn một loại để xem chi tiết các biến thể và khuyến nghị dinh dưỡng.
@@ -357,6 +340,27 @@ export default function CategoryExplorerPage() {
         </div>
       )}
 
+      {/* VIEW 1b: Mọi thực phẩm của nhóm trong cơ sở dữ liệu tham chiếu (Việt Nam + USDA), chỉ có số liệu */}
+      {!selectedFoodName && (
+        <section className="space-y-4">
+          <div className="flex items-start gap-3">
+            <div className="p-2.5 rounded-xl bg-primary/10 text-primary shrink-0">
+              <Database className="w-5 h-5" />
+            </div>
+            <div>
+              <h2 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-foreground">
+                Tất cả thực phẩm trong nhóm ({currentCategory.foodCount.toLocaleString("vi-VN")})
+              </h2>
+              <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
+                Số liệu trên 100 g phần ăn được từ Bảng thành phần thực phẩm Việt Nam và USDA FNDDS, không kèm khuyến
+                nghị.
+              </p>
+            </div>
+          </div>
+          <ReferenceFoodBrowser fixedGroup={currentCategory.id} />
+        </section>
+      )}
+
       {/* Switch Group Quick Links */}
       <div className="pt-6 border-t border-slate-200/60 dark:border-border/60">
         <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">
@@ -369,8 +373,9 @@ export default function CategoryExplorerPage() {
               <Link
                 key={c.id}
                 to={`/app/general/nutrition/category/${c.slug || c.id}`}
-                className="px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-muted text-xs font-medium text-slate-700 dark:text-slate-300 hover:bg-primary/10 hover:text-primary transition-colors"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-muted text-xs font-medium text-slate-700 dark:text-slate-300 hover:bg-primary/10 hover:text-primary transition-colors"
               >
+                <FoodGroupIcon icon={c.icon} className="w-3.5 h-3.5" />
                 {c.name}
               </Link>
             ))}

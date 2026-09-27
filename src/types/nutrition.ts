@@ -48,15 +48,23 @@ export interface NutrientValue {
   isKey?: boolean
 }
 
+/** Nhóm thực phẩm chung cho mọi nguồn (Việt Nam, USDA) và cho món có khuyến nghị */
 export type FoodGroupId =
-  | 'FISH'
-  | 'DAIRY'
+  | 'CEREAL'
+  | 'TUBER'
+  | 'LEGUMES_NUTS'
   | 'VEGETABLE'
   | 'FRUIT'
-  | 'LEGUMES_NUTS'
-  | 'BEVERAGES_CAUTION'
-  | 'BEVERAGES_ALCOHOL'
-  | 'PROCESSED_FOODS'
+  | 'MEAT'
+  | 'FISH'
+  | 'EGG'
+  | 'DAIRY'
+  | 'FAT_OIL'
+  | 'SWEET'
+  | 'CONDIMENT'
+  | 'BEVERAGE'
+  | 'MIXED_DISH'
+  | 'OTHER'
 
 /**
  * Cấu trúc 5 Field cốt lõi của HealthSense:
@@ -103,12 +111,16 @@ export interface FoodGroup {
   id: FoodGroupId
   name: string
   slug: string
-  description: string
-  dietaryPattern: 'PRIORITIZE' | 'LIMIT' | 'CAUTION' | 'BALANCED'
+  description?: string
+  /** Tên icon lucide-react */
   icon?: string
   imageUrl?: string
-  /** Số món trong nhóm */
+  /** Số thực phẩm của nhóm trong cơ sở dữ liệu tham chiếu (mọi nguồn) */
   foodCount: number
+  /** Số thực phẩm theo nguồn; nguồn không có món nào thì không có khóa */
+  sourceCounts: Partial<Record<ReferenceFoodSource, number>>
+  /** Số món có khuyến nghị tim mạch trong nhóm */
+  guidanceFoodCount: number
 }
 
 // Aliases for compatibility
@@ -127,11 +139,17 @@ export interface ReferenceFoodSummary {
   id: string
   source: ReferenceFoodSource
   sourceFoodCode: string
-  /** Tên tiếng Anh */
-  name: string
-  /** Tên tiếng Việt (nguồn VN_FCT luôn có) */
-  nameVi?: string
-  category?: string
+  /**
+   * Tên hiển thị. USDA: tên gốc tiếng Anh. Việt Nam: tên tiếng Việt.
+   */
+  displayName: string
+  /**
+   * Tên tiếng Việt. USDA: tên dịch. Việt Nam: trùng displayName.
+   */
+  localName?: string
+  /** Nhóm chung */
+  group: FoodGroupId
+  groupName: string
   energyKcal?: number
   proteinG?: number
   carbohydrateG?: number
@@ -148,9 +166,19 @@ export interface ReferenceFoodPortion {
 export interface ReferenceFood {
   id: string
   sourceFoodCode: string
-  name: string
-  nameVi?: string
-  category?: string
+  /**
+   * Tên hiển thị. USDA: tên gốc tiếng Anh. Việt Nam: tên tiếng Việt.
+   */
+  displayName: string
+  /**
+   * Tên tiếng Việt. USDA: tên dịch. Việt Nam: trùng displayName.
+   */
+  localName?: string
+  /** Nhóm chung */
+  group: FoodGroupId
+  groupName: string
+  /** Phân loại gốc của nguồn (USDA: nhóm WWEIA tiếng Anh; Việt Nam: nhóm của sách) */
+  sourceCategory?: string
   source: ReferenceFoodSource
   sourceVersion: string
   /** Tỉ lệ thải bỏ khi sơ chế (%), chỉ nguồn VN_FCT có */
@@ -159,15 +187,10 @@ export interface ReferenceFood {
   portions: ReferenceFoodPortion[]
 }
 
-export interface ReferenceFoodCategory {
-  source: ReferenceFoodSource
-  name: string
-  foodCount: number
-}
-
 export interface ReferenceFoodSearchParams {
   q?: string
-  category?: string
+  /** id hoặc slug của nhóm chung */
+  group?: string
   source?: ReferenceFoodSource
   page?: number
   size?: number
