@@ -20,6 +20,9 @@ const ConsultationsPage = lazy(() => import("@/pages/app/general/consultations")
 const MemberSessionWorkspacePage = lazy(() => import("@/pages/app/general/consultations/workspace"))
 const PaymentResultPage = lazy(() => import("@/pages/app/general/payment-result"))
 const CreditPaymentResultPage = lazy(() => import("@/pages/app/general/credits/payment-result"))
+const NutritionHomePage = lazy(() => import("@/pages/app/general/nutrition"))
+const NutritionCategoryPage = lazy(() => import("@/pages/app/general/nutrition/category"))
+const NutritionFoodDetailPage = lazy(() => import("@/pages/app/general/nutrition/food-detail"))
 
 const ManagementPage = lazy(() => import("@/pages/app/management/hub"))
 const UserManagementPage = lazy(() => import("@/pages/app/management/users"))
@@ -141,6 +144,23 @@ export const router = createBrowserRouter([
                 {wrap(<CareHistoryPage />)}
               </ProtectedRoute>
             ),
+          },
+          {
+            path: "nutrition",
+            children: [
+              {
+                index: true,
+                element: wrap(<NutritionHomePage />),
+              },
+              {
+                path: "category/:categoryId",
+                element: wrap(<NutritionCategoryPage />),
+              },
+              {
+                path: "food/:foodId",
+                element: wrap(<NutritionFoodDetailPage />),
+              },
+            ],
           },
           {
             path: "packages/*",
