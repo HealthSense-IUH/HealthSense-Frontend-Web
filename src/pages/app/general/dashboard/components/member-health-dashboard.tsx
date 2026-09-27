@@ -2,28 +2,15 @@ import { useState, useEffect, useCallback } from "react"
 import { useNavigate } from "react-router-dom"
 import {
   Activity,
-  HeartPulse,
-  TrendingUp,
-  Sliders,
   ChevronRight,
   Eye,
 } from "lucide-react"
-import {
-  BarChart,
-  Bar,
-  ResponsiveContainer,
-  XAxis,
-  YAxis,
-  Tooltip,
-  Legend,
-  CartesianGrid,
-} from "recharts"
-
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { healthRecordApi } from "@/services"
 import { HealthRecordDetailModal } from "@/pages/app/general/afib-history/components/HealthRecordDetailModal"
 import { HealthHeatmapCalendar } from "./health-heatmap-calendar"
+import { MemberGreetingBanner } from "./member-greeting-banner"
 import { 
   getPredictionMeta, 
   formatHrvNumber, 
@@ -31,15 +18,12 @@ import {
 } from "@/lib"
 import type { MemberHealthRecord, HealthStatisticsResponse } from "@/types/health-record"
 
-type PeriodType = "DAY" | "WEEK" | "MONTH" | "YEAR"
-
 export function MemberHealthDashboard() {
   const navigate = useNavigate()
 
   // State for stats & recent records
   const [stats, setStats] = useState<HealthStatisticsResponse | null>(null)
   const [recentRecords, setRecentRecords] = useState<MemberHealthRecord[]>([])
-  const [period, setPeriod] = useState<PeriodType>("WEEK")
   const [loading, setLoading] = useState(true)
 
   // Modal states
@@ -52,7 +36,7 @@ export function MemberHealthDashboard() {
 
     try {
       const [statsRes, recordsRes] = await Promise.all([
-        healthRecordApi.getHealthStatistics({ period, timezone: "Asia/Ho_Chi_Minh" }),
+        healthRecordApi.getHealthStatistics({ timezone: "Asia/Ho_Chi_Minh" }),
         healthRecordApi.getMyRecords({ page: 1, size: 5 }),
       ])
 
@@ -63,7 +47,7 @@ export function MemberHealthDashboard() {
     } finally {
       setLoading(false)
     }
-  }, [period])
+  }, [])
 
   useEffect(() => {
     loadDashboardData()
@@ -83,17 +67,32 @@ export function MemberHealthDashboard() {
   const totalUncertain = stats?.totalUncertain || 0
   const totalScreenings = totalNormal + totalAfib + totalSuspected + totalUncertain
 
-  const chartData = stats?.chartData || []
-
   return (
     <div className="space-y-6 w-full pb-10">
+      {/* Top Greeting Banner */}
+      <MemberGreetingBanner />
+
       {/* 4 Overview Stat Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-y-8 gap-x-4 pt-6">
         {/* Latest Heart Rate */}
-        <Card className="rounded-3xl border border-border shadow-xs bg-white dark:bg-card">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <span className="text-xs font-medium text-muted-foreground">Lần đo gần nhất</span>
-            <HeartPulse className="h-4 w-4 text-rose-500" />
+        <Card className="relative rounded-3xl border border-border shadow-xs bg-white dark:bg-card hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 group overflow-visible">
+          {/* Subtle Ambient Glow behind 3D icon */}
+          <div className="absolute top-0 right-0 w-24 h-24 bg-rose-500/10 dark:bg-rose-500/15 rounded-full blur-2xl pointer-events-none" />
+
+          {/* Popped-out 3D Icon (Floating outside top-right) */}
+          <div className="absolute -top-7 right-2 w-16 h-16 sm:w-18 sm:h-18 z-20 pointer-events-none transition-all duration-300 ease-out group-hover:scale-125 group-hover:-translate-y-3 group-hover:rotate-6 drop-shadow-md group-hover:drop-shadow-2xl">
+            <img
+              src="/icons/3d/heart-rate-3d.png"
+              alt="Lần đo gần nhất"
+              className="w-full h-full object-contain filter"
+              onError={(e) => {
+                e.currentTarget.style.display = "none"
+              }}
+            />
+          </div>
+
+          <CardHeader className="flex flex-row items-center justify-between pb-2 pr-16 sm:pr-18">
+            <span className="text-xs font-semibold text-muted-foreground">Lần đo gần nhất</span>
           </CardHeader>
           <CardContent className="space-y-1">
             <div className="text-2xl font-bold text-foreground">
@@ -111,10 +110,24 @@ export function MemberHealthDashboard() {
         </Card>
 
         {/* Latest AFib Risk Assessment */}
-        <Card className="rounded-3xl border border-border shadow-xs bg-white dark:bg-card">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <span className="text-xs font-medium text-muted-foreground">Khả năng bị rung nhĩ</span>
-            <TrendingUp className="h-4 w-4 text-primary" />
+        <Card className="relative rounded-3xl border border-border shadow-xs bg-white dark:bg-card hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 group overflow-visible">
+          {/* Subtle Ambient Glow behind 3D icon */}
+          <div className="absolute top-0 right-0 w-24 h-24 bg-sky-500/10 dark:bg-sky-500/15 rounded-full blur-2xl pointer-events-none" />
+
+          {/* Popped-out 3D Icon (Floating outside top-right) */}
+          <div className="absolute -top-7 right-2 w-16 h-16 sm:w-18 sm:h-18 z-20 pointer-events-none transition-all duration-300 ease-out group-hover:scale-125 group-hover:-translate-y-3 group-hover:-rotate-6 drop-shadow-md group-hover:drop-shadow-2xl">
+            <img
+              src="/icons/3d/afib-trend-3d.png"
+              alt="Khả năng bị rung nhĩ"
+              className="w-full h-full object-contain filter"
+              onError={(e) => {
+                e.currentTarget.style.display = "none"
+              }}
+            />
+          </div>
+
+          <CardHeader className="flex flex-row items-center justify-between pb-2 pr-16 sm:pr-18">
+            <span className="text-xs font-semibold text-muted-foreground">Khả năng bị rung nhĩ</span>
           </CardHeader>
           <CardContent className="space-y-1.5">
             <div className="text-2xl font-bold text-foreground">
@@ -133,10 +146,24 @@ export function MemberHealthDashboard() {
         </Card>
 
         {/* HRV Metrics (RMSSD & SDNN) */}
-        <Card className="rounded-3xl border border-border shadow-xs bg-white dark:bg-card">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <span className="text-xs font-medium text-muted-foreground">Biến thiên nhịp (RMSSD)</span>
-            <Sliders className="h-4 w-4 text-indigo-500" />
+        <Card className="relative rounded-3xl border border-border shadow-xs bg-white dark:bg-card hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 group overflow-visible">
+          {/* Subtle Ambient Glow behind 3D icon */}
+          <div className="absolute top-0 right-0 w-24 h-24 bg-indigo-500/10 dark:bg-indigo-500/15 rounded-full blur-2xl pointer-events-none" />
+
+          {/* Popped-out 3D Icon (Floating outside top-right) */}
+          <div className="absolute -top-7 right-2 w-16 h-16 sm:w-18 sm:h-18 z-20 pointer-events-none transition-all duration-300 ease-out group-hover:scale-125 group-hover:-translate-y-3 group-hover:rotate-6 drop-shadow-md group-hover:drop-shadow-2xl">
+            <img
+              src="/icons/3d/hrv-sliders-3d.png"
+              alt="Biến thiên nhịp (RMSSD)"
+              className="w-full h-full object-contain filter"
+              onError={(e) => {
+                e.currentTarget.style.display = "none"
+              }}
+            />
+          </div>
+
+          <CardHeader className="flex flex-row items-center justify-between pb-2 pr-16 sm:pr-18">
+            <span className="text-xs font-semibold text-muted-foreground">Biến thiên nhịp (RMSSD)</span>
           </CardHeader>
           <CardContent className="space-y-1">
             <div className="text-2xl font-bold text-foreground">
@@ -150,10 +177,24 @@ export function MemberHealthDashboard() {
         </Card>
 
         {/* Total Screenings Summary */}
-        <Card className="rounded-3xl border border-border shadow-xs bg-white dark:bg-card">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <span className="text-xs font-medium text-muted-foreground">Tổng lượt tầm soát</span>
-            <Activity className="h-4 w-4 text-emerald-500" />
+        <Card className="relative rounded-3xl border border-border shadow-xs bg-white dark:bg-card hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 group overflow-visible">
+          {/* Subtle Ambient Glow behind 3D icon */}
+          <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-500/10 dark:bg-emerald-500/15 rounded-full blur-2xl pointer-events-none" />
+
+          {/* Popped-out 3D Icon (Floating outside top-right) */}
+          <div className="absolute -top-7 right-2 w-16 h-16 sm:w-18 sm:h-18 z-20 pointer-events-none transition-all duration-300 ease-out group-hover:scale-125 group-hover:-translate-y-3 group-hover:-rotate-6 drop-shadow-md group-hover:drop-shadow-2xl">
+            <img
+              src="/icons/3d/activity-check-3d.png"
+              alt="Tổng lượt tầm soát"
+              className="w-full h-full object-contain filter"
+              onError={(e) => {
+                e.currentTarget.style.display = "none"
+              }}
+            />
+          </div>
+
+          <CardHeader className="flex flex-row items-center justify-between pb-2 pr-16 sm:pr-18">
+            <span className="text-xs font-semibold text-muted-foreground">Tổng lượt tầm soát</span>
           </CardHeader>
           <CardContent className="space-y-1">
             <div className="text-2xl font-bold text-foreground">
@@ -166,113 +207,10 @@ export function MemberHealthDashboard() {
         </Card>
       </div>
 
-      {/* 2-Column Grid: Left (Chart + Heatmap) vs Right (Quote + Recent Table) */}
+      {/* 2-Column Grid: Health Heatmap Calendar (Left) vs Recent Screenings Table (Right) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        {/* Left Column: AI Chart on top + Heatmap Calendar below (6 cols) */}
+        {/* Left Column: Heatmap Calendar (6 cols) */}
         <div className="lg:col-span-6 space-y-6 flex flex-col justify-start">
-          {/* AI Screening Trends Chart */}
-          <Card className="rounded-3xl border border-border shadow-xs bg-white dark:bg-card flex flex-col justify-between overflow-hidden">
-            <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border pb-4">
-              <div>
-                <CardTitle className="text-base font-bold text-foreground">
-                  Thống kê Phân bổ Tầm soát AI
-                </CardTitle>
-                <CardDescription className="text-xs text-muted-foreground mt-0.5">
-                  Số lượng các lần đo theo mốc thời gian
-                </CardDescription>
-              </div>
-
-              {/* Period Selector Buttons */}
-              <div className="flex items-center gap-1 p-1 bg-slate-50 dark:bg-slate-800 border border-border rounded-xl">
-                <button
-                  type="button"
-                  onClick={() => setPeriod("DAY")}
-                  className={`px-2.5 py-1 text-xs font-semibold rounded-lg transition-all cursor-pointer ${
-                    period === "DAY"
-                      ? "bg-white dark:bg-card text-foreground shadow-2xs"
-                      : "text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  Hôm nay
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setPeriod("WEEK")}
-                  className={`px-2.5 py-1 text-xs font-semibold rounded-lg transition-all cursor-pointer ${
-                    period === "WEEK"
-                      ? "bg-white dark:bg-card text-foreground shadow-2xs"
-                      : "text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  Tuần
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setPeriod("MONTH")}
-                  className={`px-2.5 py-1 text-xs font-semibold rounded-lg transition-all cursor-pointer ${
-                    period === "MONTH"
-                      ? "bg-white dark:bg-card text-foreground shadow-2xs"
-                      : "text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  Tháng
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setPeriod("YEAR")}
-                  className={`px-2.5 py-1 text-xs font-semibold rounded-lg transition-all cursor-pointer ${
-                    period === "YEAR"
-                      ? "bg-white dark:bg-card text-foreground shadow-2xs"
-                      : "text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  Năm
-                </button>
-              </div>
-            </CardHeader>
-
-            <CardContent className="pt-6 flex-1 flex flex-col justify-center">
-              {loading ? (
-                <div className="h-72 w-full flex items-center justify-center p-4">
-                  <div className="h-48 w-full bg-slate-100 dark:bg-slate-800/40 rounded-2xl animate-pulse" />
-                </div>
-              ) : chartData.length === 0 ? (
-                <div className="h-64 flex flex-col items-center justify-center text-center gap-2 text-muted-foreground">
-                  <Activity className="h-8 w-8 text-slate-300" />
-                  <p className="text-xs font-medium">Chưa có dữ liệu đo lường trong khoảng thời gian này</p>
-                </div>
-              ) : (
-                <div className="h-72 w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                      <CartesianGrid strokeDasharray="3 3" vertical={false} className="stroke-slate-100 dark:stroke-slate-800" />
-                      <XAxis dataKey="label" stroke="#94a3b8" fontSize={11} tickLine={false} />
-                      <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} allowDecimals={false} />
-                      <Tooltip
-                        contentStyle={{
-                          backgroundColor: "var(--card, #ffffff)",
-                          borderRadius: "16px",
-                          border: "1px solid var(--border, #e2e8f0)",
-                          boxShadow: "0 4px 12px rgba(0,0,0,0.06)",
-                          fontSize: "12px",
-                          fontWeight: 500,
-                        }}
-                      />
-                      <Legend 
-                        wrapperStyle={{ paddingTop: "12px", fontSize: "11px" }}
-                      />
-                      <Bar dataKey="normalCount" name="Bình thường" fill="#10b981" radius={[4, 4, 0, 0]} />
-                      <Bar dataKey="afibSuspectedCount" name="Nghi ngờ" fill="#f59e0b" radius={[4, 4, 0, 0]} />
-                      <Bar dataKey="afibRiskCount" name="Rung nhĩ" fill="#f43f5e" radius={[4, 4, 0, 0]} />
-                      <Bar dataKey="uncertainCount" name="Chưa rõ" fill="#a855f7" radius={[4, 4, 0, 0]} />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-
-          {/* Health Heatmap Calendar (Directly below the Chart) */}
           <HealthHeatmapCalendar
             onSelectRecord={(rec) => {
               setSelectedRecord(rec)
