@@ -8,6 +8,7 @@ import {
   Stethoscope,
   User,
   Users,
+  UtensilsCrossed,
   type LucideIcon,
 } from "lucide-react"
 
@@ -144,6 +145,19 @@ export const allNavigationGroups: NavigationGroup[] = [
         allowedRoles: [
           USER_ROLES.SUPER_ADMIN,
           USER_ROLES.ADMIN,
+          USER_ROLES.MEMBER,
+        ],
+      },
+      {
+        id: "nutrition",
+        title: "Ăn uống",
+        shortTitle: "Ăn uống",
+        href: "/app/general/nutrition",
+        icon: UtensilsCrossed,
+        allowedRoles: [
+          USER_ROLES.SUPER_ADMIN,
+          USER_ROLES.ADMIN,
+          USER_ROLES.DOCTOR,
           USER_ROLES.MEMBER,
         ],
       },
