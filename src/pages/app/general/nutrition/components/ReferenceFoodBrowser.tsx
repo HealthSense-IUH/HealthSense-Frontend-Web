@@ -141,8 +141,10 @@ export function ReferenceFoodBrowser({ fixedGroup }: ReferenceFoodBrowserProps =
               <SelectItem value={ALL_GROUPS}>Tất cả nhóm</SelectItem>
               {groupOptions.map((g) => (
                 <SelectItem key={g.id} value={g.id}>
-                  <FoodGroupIcon icon={g.icon} className="w-4 h-4" />
-                  {g.name} ({g.count.toLocaleString("vi-VN")})
+                  <span className="inline-flex items-center gap-2">
+                    <FoodGroupIcon icon={g.icon} className="w-4 h-4 shrink-0" />
+                    {g.name} ({g.count.toLocaleString("vi-VN")})
+                  </span>
                 </SelectItem>
               ))}
             </SelectContent>
