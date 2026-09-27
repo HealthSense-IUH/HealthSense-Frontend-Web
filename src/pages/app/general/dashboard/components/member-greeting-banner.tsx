@@ -41,12 +41,12 @@ export function MemberGreetingBanner() {
       <div className="absolute -bottom-10 left-1/3 w-40 h-40 bg-emerald-400/15 dark:bg-emerald-400/10 rounded-full blur-2xl pointer-events-none" />
 
       <div className="relative z-10 space-y-1.5 max-w-2xl">
-        <h1 className="text-xl sm:text-2xl lg:text-3xl font-black tracking-tight text-foreground flex items-center flex-wrap gap-2">
+        <h2 className="text-lg sm:text-xl lg:text-2xl font-black tracking-tight text-foreground flex items-center flex-wrap gap-2">
           <span>{greetingInfo.text},</span>
           <span className="bg-gradient-to-r from-sky-600 via-primary to-indigo-600 bg-clip-text text-transparent">
             {displayName}
           </span>
-        </h1>
+        </h2>
         <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
           {greetingInfo.subtext}
         </p>

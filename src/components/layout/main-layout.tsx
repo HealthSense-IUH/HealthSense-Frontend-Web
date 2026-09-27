@@ -3,13 +3,18 @@ import { AppSidebar } from "./app-sidebar"
 import { Topbar } from "./topbar"
 import { AppShellProvider } from "./app-shell-provider"
 
+/**
+ * Khung chung của mọi trang trong app: sidebar + topbar + vùng nội dung có khoảng đệm thống nhất.
+ * Nội dung từng trang dựng bằng Page / PageHeader / PageBody / PageFooter (./page.tsx).
+ * --app-topbar-h và --app-page-pad để trang `fill` tính chiều cao còn lại.
+ */
 function AppShellInner() {
   return (
-    <div className="min-h-screen flex bg-slate-50/80 text-slate-900 font-sans transition-colors">
+    <div className="min-h-screen flex bg-slate-50/80 text-slate-900 font-sans transition-colors [--app-topbar-h:4rem]">
       <AppSidebar />
-      <div className="flex-1 flex flex-col pl-[92px]">
+      <div className="flex-1 min-w-0 flex flex-col pl-[92px]">
         <Topbar />
-        <main className="flex-1 flex flex-col w-full p-4">
+        <main className="flex-1 flex flex-col w-full min-w-0 p-(--app-page-pad) [--app-page-pad:1rem] sm:[--app-page-pad:1.5rem]">
           <Outlet />
         </main>
       </div>

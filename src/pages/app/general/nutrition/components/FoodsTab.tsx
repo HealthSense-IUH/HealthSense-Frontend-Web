@@ -1,4 +1,4 @@
-import { Database, Info } from "lucide-react"
+import { Database } from "lucide-react"
 
 import { FoodSearchBar } from "./FoodSearchBar"
 import { ReferenceFoodBrowser } from "./ReferenceFoodBrowser"
@@ -31,14 +31,6 @@ export function FoodsTab() {
 
         <ReferenceFoodBrowser />
       </section>
-
-      {/* Clinical Disclaimer Note */}
-      <div className="rounded-2xl bg-slate-50 dark:bg-muted/30 p-4 border border-slate-200/70 dark:border-border flex items-start gap-3 text-xs text-slate-600 dark:text-slate-400">
-        <Info className="w-4 h-4 text-slate-400 shrink-0 mt-0.5" />
-        <p className="leading-relaxed">
-          <strong>Lưu ý y khoa:</strong> Các khuyến cáo dinh dưỡng trên HealthSense được tham khảo từ hướng dẫn lâm sàng của Hội Tim mạch Hoa Kỳ (ACC/AHA) và các tổng quan hệ thống y khoa. Không có thực phẩm nào tự chữa khỏi hoặc hoàn toàn ngăn ngừa rung nhĩ. Mọi thay đổi lớn về chế độ ăn hoặc sử dụng chất bổ sung cần có sự tư vấn của bác sĩ điều trị.
-        </p>
-      </div>
     </div>
   )
 }
