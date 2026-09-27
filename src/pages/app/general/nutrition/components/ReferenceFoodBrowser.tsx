@@ -3,25 +3,18 @@ import { ChevronLeft, ChevronRight, Search, X } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Skeleton } from "@/components/ui/skeleton"
 import { cn } from "@/lib/utils"
 import type { ReferenceFoodSource } from "@/types/nutrition"
 import { formatNutrientAmount } from "../format"
-import { useReferenceCategories, useReferenceFoods } from "../hooks/use-nutrition"
+import { FoodGroupIcon } from "../group-icons"
+import { useNutritionGroups, useReferenceFoods } from "../hooks/use-nutrition"
 import { REFERENCE_SOURCES } from "../sources"
 
 const PAGE_SIZE = 20
-const ALL_CATEGORIES = "__all__"
-const FILTER_KEYS = ["q", "source", "category", "page"] as const
+const ALL_GROUPS = "__all__"
+const FILTER_KEYS = ["q", "source", "group", "page"] as const
 const SOURCE_ORDER: ReferenceFoodSource[] = ["VN_FCT", "USDA_FNDDS"]
 
 function parseSource(value: string | null): ReferenceFoodSource | undefined {
@@ -35,34 +28,39 @@ const SUMMARY_COLUMNS = [
   { key: "fatTotalG", label: "Chất béo", unit: "g" },
 ] as const
 
+interface ReferenceFoodBrowserProps {
+  /** Cố định một nhóm (trang của nhóm): ẩn ô chọn nhóm và không ghi nhóm lên URL */
+  fixedGroup?: string
+}
+
 /**
  * Tra cứu dữ liệu dinh dưỡng tham chiếu (Bảng TPTP Việt Nam 2007 + USDA FNDDS): chọn nguồn, ô tìm,
- * lọc nhóm, danh sách và phân trang. Từ khóa, nguồn, nhóm và trang nằm trên URL để Back giữ được
+ * lọc nhóm chung, danh sách và phân trang. Từ khóa, nguồn, nhóm và trang nằm trên URL để Back giữ được
  * kết quả; các tham số khác của trang chứa nó (ví dụ `tab`) được giữ nguyên.
  */
-export function ReferenceFoodBrowser() {
+export function ReferenceFoodBrowser({ fixedGroup }: ReferenceFoodBrowserProps = {}) {
   const [searchParams, setSearchParams] = useSearchParams()
   const q = searchParams.get("q") ?? ""
-  const category = searchParams.get("category") ?? ""
+  const group = fixedGroup ?? searchParams.get("group") ?? ""
   const source = parseSource(searchParams.get("source"))
   const page = Math.max(1, Number(searchParams.get("page")) || 1)
 
-  const { data: categories = [] } = useReferenceCategories()
+  const { data: groups = [] } = useNutritionGroups()
   const { data, isLoading, isError, isFetching, refetch } = useReferenceFoods({
     q: q || undefined,
-    category: category || undefined,
+    group: group || undefined,
     source,
     page,
     size: PAGE_SIZE,
   })
 
-  const updateParams = (next: { q?: string; source?: ReferenceFoodSource; category?: string; page?: number }) => {
-    const merged = { q, source, category, page, ...next }
+  const updateParams = (next: { q?: string; source?: ReferenceFoodSource; group?: string; page?: number }) => {
+    const merged = { q, source, group, page, ...next }
     const params = new URLSearchParams(searchParams)
     FILTER_KEYS.forEach((key) => params.delete(key))
     if (merged.q) params.set("q", merged.q)
     if (merged.source) params.set("source", merged.source)
-    if (merged.category) params.set("category", merged.category)
+    if (merged.group && !fixedGroup) params.set("group", merged.group)
     if (merged.page > 1) params.set("page", String(merged.page))
     setSearchParams(params)
   }
@@ -81,13 +79,18 @@ export function ReferenceFoodBrowser() {
 
   const foods = data?.content ?? []
   const totalPages = data?.totalPages ?? 0
-  const countBySource = (s: ReferenceFoodSource) =>
-    categories.filter((c) => c.source === s).reduce((sum, c) => sum + c.foodCount, 0)
+  // Số món theo nguồn: của nhóm đang cố định, hoặc cộng mọi nhóm
+  const countedGroups = fixedGroup ? groups.filter((g) => g.id === fixedGroup || g.slug === fixedGroup) : groups
+  const countBySource = (s?: ReferenceFoodSource) =>
+    countedGroups.reduce((sum, g) => sum + (s ? (g.sourceCounts[s] ?? 0) : g.foodCount), 0)
   const sourceOptions: { value?: ReferenceFoodSource; label: string; count: number }[] = [
-    { label: "Tất cả", count: categories.reduce((sum, c) => sum + c.foodCount, 0) },
+    { label: "Tất cả", count: countBySource() },
     ...SOURCE_ORDER.map((s) => ({ value: s, label: REFERENCE_SOURCES[s].short, count: countBySource(s) })),
   ]
-  const visibleSources = source ? [source] : SOURCE_ORDER
+  // Nhóm không có món nào ở nguồn đang chọn thì ẩn, trừ nhóm đang chọn
+  const groupOptions = groups
+    .map((g) => ({ ...g, count: source ? (g.sourceCounts[source] ?? 0) : g.foodCount }))
+    .filter((g) => g.count > 0 || g.id === group)
 
   return (
     <div className="space-y-4">
@@ -96,8 +99,7 @@ export function ReferenceFoodBrowser() {
           <button
             key={option.label}
             type="button"
-            // Đổi nguồn thì bỏ lọc nhóm, vì nhóm của hai nguồn khác nhau
-            onClick={() => updateParams({ source: option.value, category: "", page: 1 })}
+            onClick={() => updateParams({ source: option.value, page: 1 })}
             className={cn(
               "px-3 py-1.5 rounded-xl text-xs font-medium border cursor-pointer transition-colors",
               source === option.value
@@ -127,29 +129,25 @@ export function ReferenceFoodBrowser() {
             Tìm
           </Button>
         </form>
-        <Select
-          value={category || ALL_CATEGORIES}
-          onValueChange={(value) => updateParams({ category: value === ALL_CATEGORIES ? "" : value, page: 1 })}
-        >
-          <SelectTrigger className="h-11 rounded-2xl md:w-72 bg-white dark:bg-card">
-            <SelectValue placeholder="Tất cả nhóm" />
-          </SelectTrigger>
-          <SelectContent className="max-h-80">
-            <SelectItem value={ALL_CATEGORIES}>Tất cả nhóm</SelectItem>
-            {visibleSources.map((s) => (
-              <SelectGroup key={s}>
-                <SelectLabel>{REFERENCE_SOURCES[s].label}</SelectLabel>
-                {categories
-                  .filter((c) => c.source === s)
-                  .map((c) => (
-                    <SelectItem key={`${s}:${c.name}`} value={c.name}>
-                      {c.name} ({c.foodCount})
-                    </SelectItem>
-                  ))}
-              </SelectGroup>
-            ))}
-          </SelectContent>
-        </Select>
+        {!fixedGroup && (
+          <Select
+            value={group || ALL_GROUPS}
+            onValueChange={(value) => updateParams({ group: value === ALL_GROUPS ? "" : value, page: 1 })}
+          >
+            <SelectTrigger className="h-11 rounded-2xl md:w-72 bg-white dark:bg-card">
+              <SelectValue placeholder="Tất cả nhóm" />
+            </SelectTrigger>
+            <SelectContent className="max-h-80">
+              <SelectItem value={ALL_GROUPS}>Tất cả nhóm</SelectItem>
+              {groupOptions.map((g) => (
+                <SelectItem key={g.id} value={g.id}>
+                  <FoodGroupIcon icon={g.icon} className="w-4 h-4" />
+                  {g.name} ({g.count.toLocaleString("vi-VN")})
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )}
       </div>
 
       <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground">
@@ -162,7 +160,7 @@ export function ReferenceFoodBrowser() {
             </>
           )}
         </span>
-        {(q || category || source) && (
+        {(q || (group && !fixedGroup) || source) && (
           <button
             type="button"
             onClick={clearFilters}
@@ -221,7 +219,10 @@ export function ReferenceFoodBrowser() {
                       </span>
                     </div>
                     <p className="text-[11px] text-muted-foreground truncate">
-                      {[food.localName && food.localName !== food.displayName ? food.localName : null, food.category]
+                      {[
+                        food.localName && food.localName !== food.displayName ? food.localName : null,
+                        fixedGroup ? null : food.groupName,
+                      ]
                         .filter(Boolean)
                         .join(" · ")}
                     </p>

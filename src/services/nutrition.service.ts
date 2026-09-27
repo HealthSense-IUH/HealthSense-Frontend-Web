@@ -4,14 +4,13 @@ import type {
   Food,
   FoodGroup,
   ReferenceFood,
-  ReferenceFoodCategory,
   ReferenceFoodSearchParams,
   ReferenceFoodSummary,
 } from "@/types/nutrition"
 
 export const nutritionApi = {
   /**
-   * Danh sách nhóm thực phẩm (kèm số món mỗi nhóm), theo thứ tự hiển thị
+   * Danh sách nhóm thực phẩm chung, theo thứ tự hiển thị, kèm số thực phẩm theo nguồn và số món có khuyến nghị
    * GET /api/nutrition/groups
    */
   getGroups() {
@@ -29,7 +28,7 @@ export const nutritionApi = {
   },
 
   /**
-   * Tất cả món trong một nhóm, theo thứ tự hiển thị
+   * Các món có khuyến nghị trong một nhóm, theo thứ tự hiển thị
    * GET /api/nutrition/groups/{idOrSlug}/foods
    */
   getGroupFoods(idOrSlug: string) {
@@ -59,8 +58,9 @@ export const nutritionApi = {
   },
 
   /**
-   * Tra cứu toàn bộ dữ liệu USDA: không có q thì duyệt theo tên, có q thì tìm theo từ khóa tiếng Anh
-   * GET /api/nutrition/reference/foods?q=&category=&page=&size=
+   * Tra cứu toàn bộ dữ liệu (Việt Nam + USDA): không có q thì duyệt theo tên, có q thì tìm theo tên tiếng Việt
+   * (có hoặc không dấu) hoặc tiếng Anh
+   * GET /api/nutrition/reference/foods?q=&group=&source=&page=&size=
    */
   searchReferenceFoods(params: ReferenceFoodSearchParams) {
     return axiosClient.get<
@@ -70,22 +70,12 @@ export const nutritionApi = {
   },
 
   /**
-   * Chi tiết một thực phẩm USDA kèm khẩu phần
+   * Chi tiết một thực phẩm kèm khẩu phần
    * GET /api/nutrition/reference/foods/{id}
    */
   getReferenceFood(id: string) {
     return axiosClient.get<ApiResponse<ReferenceFood>, ApiResponse<ReferenceFood>>(
       `/api/nutrition/reference/foods/${encodeURIComponent(id)}`
-    )
-  },
-
-  /**
-   * Nhóm thực phẩm của USDA kèm số món
-   * GET /api/nutrition/reference/categories
-   */
-  getReferenceCategories() {
-    return axiosClient.get<ApiResponse<ReferenceFoodCategory[]>, ApiResponse<ReferenceFoodCategory[]>>(
-      "/api/nutrition/reference/categories"
     )
   },
 }

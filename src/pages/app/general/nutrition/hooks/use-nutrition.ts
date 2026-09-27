@@ -11,7 +11,6 @@ const nutritionKeys = {
   search: (q: string) => ["nutrition", "search", q] as const,
   referenceFoods: (params: ReferenceFoodSearchParams) => ["nutrition", "reference-foods", params] as const,
   referenceFood: (id: string) => ["nutrition", "reference-food", id] as const,
-  referenceCategories: ["nutrition", "reference-categories"] as const,
 }
 
 export function useNutritionGroups() {
@@ -56,7 +55,7 @@ export function useNutritionSearch(query: string) {
   })
 }
 
-/** Tra cứu toàn bộ dữ liệu USDA; giữ trang cũ trong lúc tải trang mới để bảng không nhảy. */
+/** Tra cứu toàn bộ dữ liệu tham chiếu; giữ trang cũ trong lúc tải trang mới để bảng không nhảy. */
 export function useReferenceFoods(params: ReferenceFoodSearchParams) {
   return useQuery({
     queryKey: nutritionKeys.referenceFoods(params),
@@ -70,12 +69,5 @@ export function useReferenceFood(id: string | undefined) {
     queryKey: nutritionKeys.referenceFood(id ?? ""),
     queryFn: async () => (await nutritionApi.getReferenceFood(id as string)).data,
     enabled: Boolean(id),
-  })
-}
-
-export function useReferenceCategories() {
-  return useQuery({
-    queryKey: nutritionKeys.referenceCategories,
-    queryFn: async () => (await nutritionApi.getReferenceCategories()).data,
   })
 }

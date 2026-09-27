@@ -75,9 +75,12 @@ export default function NutritionDatabaseFoodPage() {
 
       <div className="rounded-3xl border border-slate-200/80 bg-white p-6 sm:p-8 shadow-xs dark:border-border dark:bg-card space-y-4">
         <div className="flex flex-wrap items-center gap-2">
-          {food.category && (
-            <span className="text-xs font-semibold text-primary bg-primary/10 px-2.5 py-0.5 rounded-md">{food.category}</span>
-          )}
+          <Link
+            to={`/app/general/nutrition/category/${food.group}`}
+            className="text-xs font-semibold text-primary bg-primary/10 px-2.5 py-0.5 rounded-md hover:bg-primary/15 transition-colors"
+          >
+            {food.groupName}
+          </Link>
           <span className="inline-flex items-center gap-1 text-xs font-medium text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-muted px-2.5 py-0.5 rounded-md">
             <Database className="w-3 h-3" />
             {sourceInfo.label} · mã {food.sourceFoodCode}
@@ -86,6 +89,9 @@ export default function NutritionDatabaseFoodPage() {
         <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-foreground">{title}</h1>
         {food.localName && food.localName !== food.displayName && (
           <p className="text-sm text-muted-foreground">{food.localName}</p>
+        )}
+        {food.sourceCategory && (
+          <p className="text-xs text-muted-foreground">Phân loại gốc của nguồn: {food.sourceCategory}</p>
         )}
         {food.wastePct != null && food.wastePct > 0 && (
           <p className="text-xs text-slate-600 dark:text-slate-300">
