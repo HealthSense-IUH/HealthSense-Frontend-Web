@@ -70,8 +70,9 @@ export function MemberHealthDashboard() {
   const totalUncertain = stats?.totalUncertain || 0
   const totalScreenings = totalNormal + totalAfib + totalSuspected + totalUncertain
 
+  // Nội dung nằm trong <PageBody> của trang Tổng quan (PageBody lo khoảng cách giữa các khối)
   return (
-    <div className="space-y-6 w-full pb-10">
+    <>
       {/* Top Greeting Banner */}
       <MemberGreetingBanner />
 
@@ -278,7 +279,7 @@ export function MemberHealthDashboard() {
                               </Button>
                             </td>
                           </tr>
-                        );
+                        )
                       })}
                     </tbody>
                   </table>
@@ -298,6 +299,6 @@ export function MemberHealthDashboard() {
           setSelectedRecord(null)
         }}
       />
-    </div>
+    </>
   )
 }
