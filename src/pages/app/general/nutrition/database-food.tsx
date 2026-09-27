@@ -7,6 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { cn } from "@/lib/utils"
 import { formatNutrientAmount } from "./format"
 import { useReferenceFood } from "./hooks/use-nutrition"
+import { REFERENCE_SOURCES } from "./sources"
 import type { ReferenceFoodPortion } from "@/types/nutrition"
 
 const PER_100_GRAMS = "per-100g"
@@ -43,6 +44,8 @@ export default function NutritionDatabaseFoodPage() {
     )
   }
 
+  const title = food.nameVi ?? food.name
+  const sourceInfo = REFERENCE_SOURCES[food.source]
   const portionIndex = selectedPortion === PER_100_GRAMS ? -1 : Number(selectedPortion)
   const portion = food.portions[portionIndex]
   const grams = portion ? portion.gramWeight : 100
@@ -67,7 +70,7 @@ export default function NutritionDatabaseFoodPage() {
           Tra cứu toàn bộ dữ liệu
         </button>
         <ChevronRight className="w-3.5 h-3.5 text-slate-300 dark:text-slate-600" />
-        <span className="font-semibold text-slate-900 dark:text-foreground line-clamp-1">{food.name}</span>
+        <span className="font-semibold text-slate-900 dark:text-foreground line-clamp-1">{title}</span>
       </nav>
 
       <div className="rounded-3xl border border-slate-200/80 bg-white p-6 sm:p-8 shadow-xs dark:border-border dark:bg-card space-y-4">
@@ -77,12 +80,19 @@ export default function NutritionDatabaseFoodPage() {
           )}
           <span className="inline-flex items-center gap-1 text-xs font-medium text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-muted px-2.5 py-0.5 rounded-md">
             <Database className="w-3 h-3" />
-            USDA FNDDS {food.sourceVersion} · mã {food.sourceFoodCode}
+            {sourceInfo.label} · mã {food.sourceFoodCode}
           </span>
         </div>
-        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-foreground">{food.name}</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-foreground">{title}</h1>
+        {food.nameVi && food.name !== food.nameVi && <p className="text-sm text-muted-foreground">{food.name}</p>}
+        {food.wastePct != null && food.wastePct > 0 && (
+          <p className="text-xs text-slate-600 dark:text-slate-300">
+            Tỉ lệ thải bỏ khi sơ chế: <span className="font-semibold">{formatNutrientAmount(food.wastePct)}%</span>. Số
+            liệu bên dưới tính trên phần ăn được.
+          </p>
+        )}
         <p className="text-xs text-muted-foreground">
-          Tên gốc tiếng Anh của USDA. Đây là số liệu tham khảo, không kèm khuyến nghị cho tim mạch.
+          Đây là số liệu tham khảo, không kèm khuyến nghị cho tim mạch.
         </p>
       </div>
 
@@ -153,8 +163,12 @@ export default function NutritionDatabaseFoodPage() {
       <div className="rounded-2xl bg-slate-50 dark:bg-muted/20 p-4 border border-slate-200/60 dark:border-border flex items-start gap-2.5 text-xs text-slate-500 dark:text-slate-400">
         <Info className="w-4 h-4 shrink-0 mt-0.5 text-slate-400" />
         <p className="leading-relaxed">
-          Khẩu phần và số liệu theo USDA FNDDS, phản ánh món ăn phổ biến tại Mỹ; khẩu phần thực tế ở Việt Nam có thể
-          khác. Thông tin chỉ mang tính tham khảo, không thay thế tư vấn của bác sĩ hoặc chuyên gia dinh dưỡng.
+          {food.source === "VN_FCT"
+            ? "Số liệu tính trên 100 g phần ăn được. Chất nào sách không có số liệu thì không hiển thị. Chất xơ trong bảng này là xơ thô (celluloza), khác chất xơ tiêu hóa của USDA. "
+            : "Khẩu phần và số liệu theo USDA FNDDS, phản ánh món ăn phổ biến tại Mỹ; khẩu phần thực tế ở Việt Nam có thể khác. "}
+          Thông tin chỉ mang tính tham khảo, không thay thế tư vấn của bác sĩ hoặc chuyên gia dinh dưỡng.
+          <br />
+          <span className="italic">Nguồn: {sourceInfo.citation}</span>
         </p>
       </div>
     </div>

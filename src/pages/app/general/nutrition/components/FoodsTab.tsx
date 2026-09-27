@@ -22,8 +22,9 @@ export function FoodsTab() {
               Cơ sở dữ liệu dinh dưỡng
             </h2>
             <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 leading-relaxed">
-              Hơn 5.400 thực phẩm và món ăn từ USDA FNDDS 2021-2023. Giá trị tính trên 100 g; mở từng món để xem theo
-              khẩu phần thường dùng. Chỉ có số liệu, không kèm khuyến nghị tim mạch.
+              526 thực phẩm Việt Nam (Bảng thành phần thực phẩm Việt Nam, Viện Dinh dưỡng 2007) và 5.431 thực phẩm,
+              món ăn từ USDA FNDDS 2021-2023. Giá trị tính trên 100 g phần ăn được. Chỉ có số liệu, không kèm khuyến
+              nghị tim mạch.
             </p>
           </div>
         </div>
