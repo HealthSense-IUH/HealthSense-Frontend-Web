@@ -46,7 +46,6 @@ export function MemberGreetingBanner() {
           <span className="bg-gradient-to-r from-sky-600 via-primary to-indigo-600 bg-clip-text text-transparent">
             {displayName}
           </span>
-          <span className="inline-block animate-bounce text-xl sm:text-2xl">👋</span>
         </h1>
         <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
           {greetingInfo.subtext}

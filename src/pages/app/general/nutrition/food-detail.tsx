@@ -18,11 +18,9 @@ import {
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Skeleton } from "@/components/ui/skeleton"
 import { GuidanceBadge } from "./components/GuidanceBadge"
-import {
-  getFoodById,
-  getCategoryById,
-} from "@/data/mock-nutrition"
+import { useNutritionFood } from "./hooks/use-nutrition"
 import type { EvidenceSourceType, NutrientValue } from "@/types/nutrition"
 import { cn } from "@/lib/utils"
 
@@ -31,12 +29,22 @@ export default function FoodDetailPage() {
   const navigate = useNavigate()
   const [showAllNutrients, setShowAllNutrients] = useState(false)
 
-  const food = foodId ? getFoodById(foodId) : undefined
-  const category = food ? getCategoryById(food.categoryId || food.group) : undefined
+  const { data: food, isLoading } = useNutritionFood(foodId)
+
+  if (isLoading) {
+    return (
+      <div className="w-full max-w-4xl mx-auto space-y-6 pb-12">
+        <Skeleton className="h-5 w-64" />
+        <Skeleton className="aspect-[21/9] sm:aspect-[24/8] w-full rounded-3xl" />
+        <Skeleton className="h-48 rounded-3xl" />
+        <Skeleton className="h-64 rounded-3xl" />
+      </div>
+    )
+  }
 
   if (!food) {
     return (
-      <div className="p-8 text-center space-y-4 max-w-md mx-auto">
+      <div className="max-w-md mx-auto p-8 text-center space-y-4">
         <h2 className="text-xl font-bold">Không tìm thấy món ăn</h2>
         <p className="text-muted-foreground text-sm">
           Món ăn bạn đang tìm kiếm không tồn tại hoặc đã được cập nhật.
@@ -48,7 +56,7 @@ export default function FoodDetailPage() {
     )
   }
 
-  const guidanceType = food.guidance || food.primaryGuidanceType
+  const guidanceType = food.guidance
 
   // Split nutrients into Key vs Others
   const keyNutrientCodes = [
@@ -88,9 +96,9 @@ export default function FoodDetailPage() {
   }
 
   return (
-    <div className="space-y-6 pb-16 max-w-4xl mx-auto px-1 sm:px-2">
+    <div className="w-full max-w-4xl mx-auto space-y-6 pb-12">
       {/* Breadcrumb Navigation */}
-      <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs sm:text-sm text-muted-foreground flex-wrap">
+      <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-1.5 text-xs sm:text-sm text-muted-foreground">
         <Link
           to="/app/general/nutrition"
           className="hover:text-primary transition-colors flex items-center gap-1 font-medium"
@@ -98,20 +106,16 @@ export default function FoodDetailPage() {
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>Dinh dưỡng</span>
         </Link>
-        {category && (
-          <>
-            <ChevronRight className="w-3.5 h-3.5 text-slate-300 dark:text-slate-600" />
-            <Link
-              to={`/app/general/nutrition/category/${category.slug || category.id}`}
-              className="hover:text-primary transition-colors line-clamp-1 font-medium"
-            >
-              {category.name}
-            </Link>
-          </>
-        )}
+        <ChevronRight className="w-3.5 h-3.5 text-slate-300 dark:text-slate-600" />
+        <Link
+          to={`/app/general/nutrition/category/${food.group}`}
+          className="hover:text-primary transition-colors line-clamp-1 font-medium"
+        >
+          {food.groupName}
+        </Link>
         <ChevronRight className="w-3.5 h-3.5 text-slate-300 dark:text-slate-600" />
         <span className="font-semibold text-slate-900 dark:text-foreground line-clamp-1">
-          {food.foodNameSpecific || food.name}
+          {food.foodNameSpecific}
         </span>
       </nav>
 
@@ -120,7 +124,7 @@ export default function FoodDetailPage() {
         {food.imageUrl ? (
           <img
             src={food.imageUrl}
-            alt={food.foodNameSpecific || food.name}
+            alt={food.foodNameSpecific}
             className="w-full h-full object-cover"
           />
         ) : (
@@ -157,7 +161,7 @@ export default function FoodDetailPage() {
             </div>
 
             <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-foreground">
-              {food.foodNameSpecific || food.name}
+              {food.foodNameSpecific}
             </h1>
 
             {food.sourceDescription && (

@@ -81,9 +81,9 @@ export interface Food {
   afContext?: string
   medicationContext?: string
 
-  // Traceability to USDA FNDDS (internal only)
-  sourceFoodCode?: string
-  sourceDescription?: string
+  // Traceability to USDA FNDDS
+  sourceFoodCode: string
+  sourceDescription: string
 
   // Nutrition Profile
   servingReference: {
@@ -94,12 +94,7 @@ export interface Food {
   highlightNutrientCodes: NutrientCode[]
   evidenceSources: EvidenceSource[]
 
-  // Compatible / Visual assets
   imageUrl?: string
-  name?: string
-  categoryId?: string
-  familyId?: string
-  primaryGuidanceType?: GuidanceType
 }
 
 export interface FoodGroup {
@@ -110,7 +105,56 @@ export interface FoodGroup {
   dietaryPattern: 'PRIORITIZE' | 'LIMIT' | 'CAUTION' | 'BALANCED'
   icon?: string
   imageUrl?: string
+  /** Số món trong nhóm */
+  foodCount: number
 }
 
 // Aliases for compatibility
 export type FoodCategory = FoodGroup
+
+// ---------------------------------------------------------------------------
+// Tra cứu toàn bộ cơ sở dữ liệu tham chiếu (USDA FNDDS). Chỉ có số liệu, không kèm khuyến nghị.
+// Mọi giá trị tính trên 100 g.
+// ---------------------------------------------------------------------------
+
+export interface ReferenceFoodSummary {
+  id: string
+  sourceFoodCode: string
+  /** Tên gốc tiếng Anh của USDA */
+  name: string
+  category?: string
+  energyKcal?: number
+  proteinG?: number
+  carbohydrateG?: number
+  fatTotalG?: number
+}
+
+export interface ReferenceFoodPortion {
+  description: string
+  gramWeight: number
+  /** Khẩu phần nguồn dùng khi không rõ số lượng */
+  isDefault: boolean
+}
+
+export interface ReferenceFood {
+  id: string
+  sourceFoodCode: string
+  name: string
+  category?: string
+  source: string
+  sourceVersion: string
+  nutrients: NutrientValue[]
+  portions: ReferenceFoodPortion[]
+}
+
+export interface ReferenceFoodCategory {
+  name: string
+  foodCount: number
+}
+
+export interface ReferenceFoodSearchParams {
+  q?: string
+  category?: string
+  page?: number
+  size?: number
+}

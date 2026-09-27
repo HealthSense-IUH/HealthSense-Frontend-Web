@@ -23,6 +23,8 @@ const CreditPaymentResultPage = lazy(() => import("@/pages/app/general/credits/p
 const NutritionHomePage = lazy(() => import("@/pages/app/general/nutrition"))
 const NutritionCategoryPage = lazy(() => import("@/pages/app/general/nutrition/category"))
 const NutritionFoodDetailPage = lazy(() => import("@/pages/app/general/nutrition/food-detail"))
+const NutritionDatabasePage = lazy(() => import("@/pages/app/general/nutrition/database"))
+const NutritionDatabaseFoodPage = lazy(() => import("@/pages/app/general/nutrition/database-food"))
 
 const ManagementPage = lazy(() => import("@/pages/app/management/hub"))
 const UserManagementPage = lazy(() => import("@/pages/app/management/users"))
@@ -159,6 +161,14 @@ export const router = createBrowserRouter([
               {
                 path: "food/:foodId",
                 element: wrap(<NutritionFoodDetailPage />),
+              },
+              {
+                path: "database",
+                element: wrap(<NutritionDatabasePage />),
+              },
+              {
+                path: "database/:foodId",
+                element: wrap(<NutritionDatabaseFoodPage />),
               },
             ],
           },
