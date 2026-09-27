@@ -2,6 +2,9 @@ import { useState, useEffect, useCallback } from "react"
 import { useNavigate } from "react-router-dom"
 import {
   Activity,
+  HeartPulse,
+  TrendingUp,
+  Sliders,
   ChevronRight,
   Eye,
 } from "lucide-react"
@@ -73,26 +76,14 @@ export function MemberHealthDashboard() {
       <MemberGreetingBanner />
 
       {/* 4 Overview Stat Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-y-8 gap-x-4 pt-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Latest Heart Rate */}
-        <Card className="relative rounded-3xl border border-border shadow-xs bg-white dark:bg-card hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 group overflow-visible">
-          {/* Subtle Ambient Glow behind 3D icon */}
-          <div className="absolute top-0 right-0 w-24 h-24 bg-rose-500/10 dark:bg-rose-500/15 rounded-full blur-2xl pointer-events-none" />
-
-          {/* Popped-out 3D Icon (Floating outside top-right) */}
-          <div className="absolute -top-7 right-2 w-16 h-16 sm:w-18 sm:h-18 z-20 pointer-events-none transition-all duration-300 ease-out group-hover:scale-125 group-hover:-translate-y-3 group-hover:rotate-6 drop-shadow-md group-hover:drop-shadow-2xl">
-            <img
-              src="/icons/3d/heart-rate-3d.png"
-              alt="Lần đo gần nhất"
-              className="w-full h-full object-contain filter"
-              onError={(e) => {
-                e.currentTarget.style.display = "none"
-              }}
-            />
-          </div>
-
-          <CardHeader className="flex flex-row items-center justify-between pb-2 pr-16 sm:pr-18">
+        <Card className="rounded-2xl border border-border shadow-2xs bg-card hover:shadow-md transition-all duration-200">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
             <span className="text-xs font-semibold text-muted-foreground">Lần đo gần nhất</span>
+            <div className="h-9 w-9 rounded-xl bg-rose-500/10 text-rose-500 dark:text-rose-400 flex items-center justify-center">
+              <HeartPulse className="h-4.5 w-4.5" />
+            </div>
           </CardHeader>
           <CardContent className="space-y-1">
             <div className="text-2xl font-bold text-foreground">
@@ -110,24 +101,12 @@ export function MemberHealthDashboard() {
         </Card>
 
         {/* Latest AFib Risk Assessment */}
-        <Card className="relative rounded-3xl border border-border shadow-xs bg-white dark:bg-card hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 group overflow-visible">
-          {/* Subtle Ambient Glow behind 3D icon */}
-          <div className="absolute top-0 right-0 w-24 h-24 bg-sky-500/10 dark:bg-sky-500/15 rounded-full blur-2xl pointer-events-none" />
-
-          {/* Popped-out 3D Icon (Floating outside top-right) */}
-          <div className="absolute -top-7 right-2 w-16 h-16 sm:w-18 sm:h-18 z-20 pointer-events-none transition-all duration-300 ease-out group-hover:scale-125 group-hover:-translate-y-3 group-hover:-rotate-6 drop-shadow-md group-hover:drop-shadow-2xl">
-            <img
-              src="/icons/3d/afib-trend-3d.png"
-              alt="Khả năng bị rung nhĩ"
-              className="w-full h-full object-contain filter"
-              onError={(e) => {
-                e.currentTarget.style.display = "none"
-              }}
-            />
-          </div>
-
-          <CardHeader className="flex flex-row items-center justify-between pb-2 pr-16 sm:pr-18">
+        <Card className="rounded-2xl border border-border shadow-2xs bg-card hover:shadow-md transition-all duration-200">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
             <span className="text-xs font-semibold text-muted-foreground">Khả năng bị rung nhĩ</span>
+            <div className="h-9 w-9 rounded-xl bg-sky-500/10 text-sky-500 dark:text-sky-400 flex items-center justify-center">
+              <TrendingUp className="h-4.5 w-4.5" />
+            </div>
           </CardHeader>
           <CardContent className="space-y-1.5">
             <div className="text-2xl font-bold text-foreground">
@@ -146,24 +125,12 @@ export function MemberHealthDashboard() {
         </Card>
 
         {/* HRV Metrics (RMSSD & SDNN) */}
-        <Card className="relative rounded-3xl border border-border shadow-xs bg-white dark:bg-card hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 group overflow-visible">
-          {/* Subtle Ambient Glow behind 3D icon */}
-          <div className="absolute top-0 right-0 w-24 h-24 bg-indigo-500/10 dark:bg-indigo-500/15 rounded-full blur-2xl pointer-events-none" />
-
-          {/* Popped-out 3D Icon (Floating outside top-right) */}
-          <div className="absolute -top-7 right-2 w-16 h-16 sm:w-18 sm:h-18 z-20 pointer-events-none transition-all duration-300 ease-out group-hover:scale-125 group-hover:-translate-y-3 group-hover:rotate-6 drop-shadow-md group-hover:drop-shadow-2xl">
-            <img
-              src="/icons/3d/hrv-sliders-3d.png"
-              alt="Biến thiên nhịp (RMSSD)"
-              className="w-full h-full object-contain filter"
-              onError={(e) => {
-                e.currentTarget.style.display = "none"
-              }}
-            />
-          </div>
-
-          <CardHeader className="flex flex-row items-center justify-between pb-2 pr-16 sm:pr-18">
+        <Card className="rounded-2xl border border-border shadow-2xs bg-card hover:shadow-md transition-all duration-200">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
             <span className="text-xs font-semibold text-muted-foreground">Biến thiên nhịp (RMSSD)</span>
+            <div className="h-9 w-9 rounded-xl bg-indigo-500/10 text-indigo-500 dark:text-indigo-400 flex items-center justify-center">
+              <Sliders className="h-4.5 w-4.5" />
+            </div>
           </CardHeader>
           <CardContent className="space-y-1">
             <div className="text-2xl font-bold text-foreground">
@@ -177,24 +144,12 @@ export function MemberHealthDashboard() {
         </Card>
 
         {/* Total Screenings Summary */}
-        <Card className="relative rounded-3xl border border-border shadow-xs bg-white dark:bg-card hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 group overflow-visible">
-          {/* Subtle Ambient Glow behind 3D icon */}
-          <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-500/10 dark:bg-emerald-500/15 rounded-full blur-2xl pointer-events-none" />
-
-          {/* Popped-out 3D Icon (Floating outside top-right) */}
-          <div className="absolute -top-7 right-2 w-16 h-16 sm:w-18 sm:h-18 z-20 pointer-events-none transition-all duration-300 ease-out group-hover:scale-125 group-hover:-translate-y-3 group-hover:-rotate-6 drop-shadow-md group-hover:drop-shadow-2xl">
-            <img
-              src="/icons/3d/activity-check-3d.png"
-              alt="Tổng lượt tầm soát"
-              className="w-full h-full object-contain filter"
-              onError={(e) => {
-                e.currentTarget.style.display = "none"
-              }}
-            />
-          </div>
-
-          <CardHeader className="flex flex-row items-center justify-between pb-2 pr-16 sm:pr-18">
+        <Card className="rounded-2xl border border-border shadow-2xs bg-card hover:shadow-md transition-all duration-200">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
             <span className="text-xs font-semibold text-muted-foreground">Tổng lượt tầm soát</span>
+            <div className="h-9 w-9 rounded-xl bg-emerald-500/10 text-emerald-500 dark:text-emerald-400 flex items-center justify-center">
+              <Activity className="h-4.5 w-4.5" />
+            </div>
           </CardHeader>
           <CardContent className="space-y-1">
             <div className="text-2xl font-bold text-foreground">

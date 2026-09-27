@@ -22,13 +22,9 @@ import {
 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
+import { Skeleton } from "@/components/ui/skeleton"
 import { FoodCard } from "./components/FoodCard"
-import {
-  getCategoryById,
-  mockCategories,
-  getFoodNamesByGroup,
-  getFoodsByFoodName,
-} from "@/data/mock-nutrition"
+import { useNutritionGroup, useNutritionGroupFoods, useNutritionGroups } from "./hooks/use-nutrition"
 import type { GuidanceType } from "@/types/nutrition"
 import { cn } from "@/lib/utils"
 
@@ -43,21 +39,18 @@ export default function CategoryExplorerPage() {
   // Filter tab for selected food variants: ALL, PRIORITIZE, CAUTION, LIMIT
   const [guidanceFilter, setGuidanceFilter] = useState<"ALL" | GuidanceType>("ALL")
 
-  const currentCategory = useMemo(() => {
-    return categoryId ? getCategoryById(categoryId) : mockCategories[0]
-  }, [categoryId])
+  const { data: currentCategory, isLoading: isCategoryLoading } = useNutritionGroup(categoryId)
+  const { data: categories = [] } = useNutritionGroups()
+  const { data: foods = [], isLoading: isFoodsLoading } = useNutritionGroupFoods(categoryId)
 
   // Get distinct food_name items in this group (e.g., ["Cá hồi", "Cá thu", "Cá ngừ"])
-  const foodNames = useMemo(() => {
-    if (!currentCategory) return []
-    return getFoodNamesByGroup(currentCategory.id)
-  }, [currentCategory])
+  const foodNames = useMemo(() => Array.from(new Set(foods.map((f) => f.foodName))), [foods])
 
   // Get all variants for selected foodName
   const allVariants = useMemo(() => {
     if (!selectedFoodName) return []
-    return getFoodsByFoodName(selectedFoodName)
-  }, [selectedFoodName])
+    return foods.filter((f) => f.foodName === selectedFoodName)
+  }, [foods, selectedFoodName])
 
   // Filtered variants based on tab
   const displayedVariants = useMemo(() => {
@@ -75,9 +68,21 @@ export default function CategoryExplorerPage() {
     }
   }, [allVariants])
 
+  if (isCategoryLoading) {
+    return (
+      <div className="w-full max-w-7xl mx-auto space-y-6 pb-12">
+        <Skeleton className="h-5 w-48" />
+        <Skeleton className="h-36 rounded-3xl" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {Array.from({ length: 3 }, (_, i) => <Skeleton key={i} className="h-64 rounded-2xl" />)}
+        </div>
+      </div>
+    )
+  }
+
   if (!currentCategory) {
     return (
-      <div className="p-8 text-center space-y-4">
+      <div className="max-w-md mx-auto p-8 text-center space-y-4">
         <p className="text-muted-foreground">Không tìm thấy nhóm thực phẩm.</p>
         <Button onClick={() => navigate("/app/general/nutrition")}>Quay lại trang dinh dưỡng</Button>
       </div>
@@ -98,9 +103,9 @@ export default function CategoryExplorerPage() {
   const defaultIcon = categoryIcons[currentCategory.slug] || <Utensils className="w-5 h-5 text-primary" />
 
   return (
-    <div className="space-y-6 pb-12 max-w-7xl mx-auto px-1 sm:px-2">
+    <div className="w-full max-w-7xl mx-auto space-y-6 pb-12">
       {/* Breadcrumb Navigation */}
-      <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground flex-wrap">
+      <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-1.5 text-xs sm:text-sm text-muted-foreground">
         <Link
           to="/app/general/nutrition"
           className="hover:text-primary transition-colors flex items-center gap-1 font-medium"
@@ -166,8 +171,10 @@ export default function CategoryExplorerPage() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {isFoodsLoading &&
+              Array.from({ length: 3 }, (_, i) => <Skeleton key={i} className="h-64 rounded-2xl" />)}
             {foodNames.map((fn) => {
-              const variants = getFoodsByFoodName(fn)
+              const variants = foods.filter((f) => f.foodName === fn)
               const count = variants.length
               const sampleVariants = variants.map((v) => v.foodNameSpecific).slice(0, 3).join(", ")
               const thumbnail = variants.find((v) => v.imageUrl)?.imageUrl
@@ -332,14 +339,18 @@ export default function CategoryExplorerPage() {
           </div>
 
           {/* 3 CỘT CARDS (GRID 3 CỘT NHƯ CŨ, KHÔNG CHIA ROW) */}
-          {displayedVariants.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {isFoodsLoading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {Array.from({ length: 3 }, (_, i) => <Skeleton key={i} className="h-80 rounded-2xl" />)}
+            </div>
+          ) : displayedVariants.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {displayedVariants.map((food) => (
                 <FoodCard key={food.id} food={food} />
               ))}
             </div>
           ) : (
-            <div className="rounded-2xl border border-dashed border-slate-200 dark:border-border p-10 text-center text-muted-foreground text-sm">
+            <div className="rounded-2xl border border-dashed border-slate-200 dark:border-border p-8 text-center text-muted-foreground text-sm">
               Không có món nào thuộc nhóm khuyến nghị này.
             </div>
           )}
@@ -352,7 +363,7 @@ export default function CategoryExplorerPage() {
           Khám phá nhóm thực phẩm khác:
         </h3>
         <div className="flex flex-wrap gap-2">
-          {mockCategories
+          {categories
             .filter((c) => c.id !== currentCategory.id)
             .map((c) => (
               <Link

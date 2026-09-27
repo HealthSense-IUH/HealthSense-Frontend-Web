@@ -23,6 +23,8 @@ export type NutrientCode =
   | 'protein'
   | 'carbohydrate'
   | 'fiber'
+  /** Xơ thô (celluloza) - chỉ Bảng thành phần thực phẩm Việt Nam có; khác phương pháp với 'fiber' */
+  | 'fiber_crude'
   | 'sugars'
   | 'fat_total'
   | 'fat_saturated'
@@ -81,9 +83,9 @@ export interface Food {
   afContext?: string
   medicationContext?: string
 
-  // Traceability to USDA FNDDS (internal only)
-  sourceFoodCode?: string
-  sourceDescription?: string
+  // Traceability to USDA FNDDS
+  sourceFoodCode: string
+  sourceDescription: string
 
   // Nutrition Profile
   servingReference: {
@@ -94,12 +96,7 @@ export interface Food {
   highlightNutrientCodes: NutrientCode[]
   evidenceSources: EvidenceSource[]
 
-  // Compatible / Visual assets
   imageUrl?: string
-  name?: string
-  categoryId?: string
-  familyId?: string
-  primaryGuidanceType?: GuidanceType
 }
 
 export interface FoodGroup {
@@ -110,7 +107,68 @@ export interface FoodGroup {
   dietaryPattern: 'PRIORITIZE' | 'LIMIT' | 'CAUTION' | 'BALANCED'
   icon?: string
   imageUrl?: string
+  /** Số món trong nhóm */
+  foodCount: number
 }
 
 // Aliases for compatibility
 export type FoodCategory = FoodGroup
+
+// ---------------------------------------------------------------------------
+// Tra cứu toàn bộ cơ sở dữ liệu tham chiếu. Chỉ có số liệu, không kèm khuyến nghị.
+// Mọi giá trị tính trên 100 g phần ăn được. Hai nguồn:
+//   VN_FCT     - Bảng thành phần thực phẩm Việt Nam, Viện Dinh dưỡng 2007 (526 thực phẩm)
+//   USDA_FNDDS - USDA FNDDS 2021-2023 (5.431 thực phẩm, món ăn)
+// ---------------------------------------------------------------------------
+
+export type ReferenceFoodSource = 'VN_FCT' | 'USDA_FNDDS'
+
+export interface ReferenceFoodSummary {
+  id: string
+  source: ReferenceFoodSource
+  sourceFoodCode: string
+  /** Tên tiếng Anh */
+  name: string
+  /** Tên tiếng Việt (nguồn VN_FCT luôn có) */
+  nameVi?: string
+  category?: string
+  energyKcal?: number
+  proteinG?: number
+  carbohydrateG?: number
+  fatTotalG?: number
+}
+
+export interface ReferenceFoodPortion {
+  description: string
+  gramWeight: number
+  /** Khẩu phần nguồn dùng khi không rõ số lượng */
+  isDefault: boolean
+}
+
+export interface ReferenceFood {
+  id: string
+  sourceFoodCode: string
+  name: string
+  nameVi?: string
+  category?: string
+  source: ReferenceFoodSource
+  sourceVersion: string
+  /** Tỉ lệ thải bỏ khi sơ chế (%), chỉ nguồn VN_FCT có */
+  wastePct?: number
+  nutrients: NutrientValue[]
+  portions: ReferenceFoodPortion[]
+}
+
+export interface ReferenceFoodCategory {
+  source: ReferenceFoodSource
+  name: string
+  foodCount: number
+}
+
+export interface ReferenceFoodSearchParams {
+  q?: string
+  category?: string
+  source?: ReferenceFoodSource
+  page?: number
+  size?: number
+}
