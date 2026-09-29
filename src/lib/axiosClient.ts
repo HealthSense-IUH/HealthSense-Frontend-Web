@@ -1,6 +1,7 @@
 import axios, { AxiosError, type InternalAxiosRequestConfig } from "axios"
 
 import { env } from "@/config"
+import { currentLanguage } from "@/lib/i18n"
 import { useAuthStore } from "@/stores/auth-store"
 import type { LoginResponse } from "@/types/auth"
 import type { ApiResponse, ErrorResponse } from "@/types/base"
@@ -37,6 +38,12 @@ type RetriableRequestConfig = InternalAxiosRequestConfig & {
 
 let refreshPromise: Promise<string | null> | null = null
 
+/** Backend trả thông báo lỗi theo ngôn ngữ đang chọn trên giao diện (header `lang`: vi | en). */
+function languageHeaders() {
+  const lang = currentLanguage()
+  return { lang, "Accept-Language": lang }
+}
+
 function isAuthEndpoint(url?: string) {
   return Boolean(
     url?.includes("/api/auth/login") ||
@@ -53,6 +60,7 @@ export async function refreshAccessToken() {
       transformResponse: [parseJsonPreservingUnsafeIntegers],
       headers: {
         "Content-Type": "application/json",
+        ...languageHeaders(),
       },
     })
     .then((response) => {
@@ -76,6 +84,7 @@ export async function refreshAccessToken() {
 
 axiosClient.interceptors.request.use(
   (config) => {
+    config.headers.set(languageHeaders())
     const token = useAuthStore.getState().accessToken
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
