@@ -1,11 +1,15 @@
 import axiosClient from "@/lib/axiosClient"
 import type { ApiResponse, PageResponse } from "@/types/base"
 import type {
+  DietPrescription,
+  DietRule,
+  DietThreshold,
   Food,
   FoodGroup,
   ReferenceFood,
   ReferenceFoodSearchParams,
   ReferenceFoodSummary,
+  UpdateDietPrescriptionRequest,
 } from "@/types/nutrition"
 
 export const nutritionApi = {
@@ -76,6 +80,56 @@ export const nutritionApi = {
   getReferenceFood(id: string) {
     return axiosClient.get<ApiResponse<ReferenceFood>, ApiResponse<ReferenceFood>>(
       `/api/nutrition/reference/foods/${encodeURIComponent(id)}`
+    )
+  },
+
+  /**
+   * Đơn ăn uống của hội viên đang đăng nhập (chưa có đơn thì là lời khuyên chung)
+   * GET /api/nutrition/diet-prescription/me
+   */
+  getMyDietPrescription() {
+    return axiosClient.get<ApiResponse<DietPrescription>, ApiResponse<DietPrescription>>(
+      "/api/nutrition/diet-prescription/me"
+    )
+  },
+
+  /**
+   * Ngưỡng mặc định để chấm màu thực phẩm (chỉ admin)
+   * GET /api/admin/nutrition/diet-rules
+   */
+  getDietRules() {
+    return axiosClient.get<ApiResponse<DietRule[]>, ApiResponse<DietRule[]>>("/api/admin/nutrition/diet-rules")
+  },
+
+  /**
+   * Admin sửa ngưỡng mặc định; mức để trống = bỏ mức đó
+   * PUT /api/admin/nutrition/diet-rules
+   */
+  updateDietRules(thresholds: DietThreshold[]) {
+    return axiosClient.put<ApiResponse<DietRule[]>, ApiResponse<DietRule[]>>(
+      "/api/admin/nutrition/diet-rules",
+      thresholds
+    )
+  },
+
+  /**
+   * Bác sĩ xem đơn ăn uống của hội viên trong phiên tư vấn
+   * GET /api/doctor/consultation-sessions/{sessionId}/diet-prescription
+   */
+  getSessionDietPrescription(sessionId: string | number) {
+    return axiosClient.get<ApiResponse<DietPrescription>, ApiResponse<DietPrescription>>(
+      `/api/doctor/consultation-sessions/${encodeURIComponent(sessionId)}/diet-prescription`
+    )
+  },
+
+  /**
+   * Bác sĩ kê hoặc sửa đơn ăn uống (chỉ khi phiên đang diễn ra)
+   * PUT /api/doctor/consultation-sessions/{sessionId}/diet-prescription
+   */
+  updateSessionDietPrescription(sessionId: string | number, body: UpdateDietPrescriptionRequest) {
+    return axiosClient.put<ApiResponse<DietPrescription>, ApiResponse<DietPrescription>>(
+      `/api/doctor/consultation-sessions/${encodeURIComponent(sessionId)}/diet-prescription`,
+      body
     )
   },
 }

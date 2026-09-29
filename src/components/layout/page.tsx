@@ -2,6 +2,7 @@ import { Fragment, type ReactNode } from "react"
 import { Link } from "react-router-dom"
 import { ChevronRight } from "lucide-react"
 
+import { useDocumentTitle } from "@/hooks/use-document-title"
 import { cn } from "@/lib/utils"
 
 /*
@@ -104,6 +105,11 @@ interface PageHeaderProps {
   meta?: ReactNode
   /** Tiêu đề nhỏ hơn, dùng cho trang workspace cần nhường chỗ cho nội dung */
   compact?: boolean
+  /**
+   * Tiêu đề tab trình duyệt (cũng là tên file mặc định khi in / lưu PDF). Mặc định lấy `title` nếu là chuỗi;
+   * truyền riêng khi `title` là JSX.
+   */
+  documentTitle?: string
   className?: string
 }
 
@@ -116,8 +122,10 @@ export function PageHeader({
   actions,
   meta,
   compact = false,
+  documentTitle,
   className,
 }: PageHeaderProps) {
+  useDocumentTitle(documentTitle ?? (typeof title === "string" ? title : undefined))
   return (
     <header className={cn("flex flex-col gap-3 shrink-0", className)}>
       {breadcrumbs && breadcrumbs.length > 0 && <PageBreadcrumb items={breadcrumbs} />}

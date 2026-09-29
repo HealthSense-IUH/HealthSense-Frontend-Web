@@ -31,6 +31,7 @@ const UserManagementPage = lazy(() => import("@/pages/app/management/users"))
 const MemberDetailPage = lazy(() => import("@/pages/app/management/users/detail"))
 const AdminCreditOperationsPage = lazy(() => import("@/pages/app/management/credit-operations"))
 const AdminHealthRecordsPage = lazy(() => import("@/pages/app/management/health-records"))
+const AdminNutritionRulesPage = lazy(() => import("@/pages/app/management/nutrition-rules"))
 const DoctorSessionsPage = lazy(() => import("@/pages/app/management/doctor-consultations"))
 const DoctorSessionWorkspacePage = lazy(() => import("@/pages/app/management/doctor-consultations/workspace"))
 
@@ -266,6 +267,14 @@ export const router = createBrowserRouter([
             element: (
               <ProtectedRoute allowedRoles={[USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN]}>
                 {wrap(<AdminCreditOperationsPage />)}
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "nutrition-rules",
+            element: (
+              <ProtectedRoute allowedRoles={[USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN]}>
+                {wrap(<AdminNutritionRulesPage />)}
               </ProtectedRoute>
             ),
           },

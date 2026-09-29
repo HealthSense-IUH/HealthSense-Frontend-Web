@@ -9,6 +9,7 @@ import {
   Mail,
   MessageSquare,
   Phone,
+  Salad,
   ShieldAlert,
 } from "lucide-react"
 
@@ -33,6 +34,7 @@ import { useConsultationSocket } from "@/pages/app/general/consultations/hooks/u
 import { DoctorScopedRecordsTab } from "@/pages/app/general/consultations/components/doctor-scoped-records-tab"
 import { DoctorFinalSummaryTab } from "@/pages/app/general/consultations/components/doctor-final-summary-tab"
 import { DoctorContinuityTab } from "@/pages/app/general/consultations/components/doctor-continuity-tab"
+import { DoctorDietPrescriptionTab } from "@/pages/app/general/consultations/components/doctor-diet-prescription-tab"
 import { DoctorSessionDetailDialog } from "@/pages/app/general/consultations/components/doctor-session-detail-dialog"
 import { getSessionStatusBadge } from "./components/doctor-sessions-table"
 
@@ -421,6 +423,14 @@ export default function DoctorSessionWorkspacePage() {
                 <History className="w-3.5 h-3.5" />
                 <span>Tiền sử chăm sóc</span>
               </TabsTrigger>
+
+              <TabsTrigger
+                value="nutrition"
+                className="text-xs font-bold rounded-lg px-3 data-[state=active]:bg-white data-[state=active]:text-blue-700 data-[state=active]:shadow-xs flex items-center gap-1.5"
+              >
+                <Salad className="w-3.5 h-3.5" />
+                <span>Dinh dưỡng</span>
+              </TabsTrigger>
             </TabsList>
           </Tabs>
         </div>
@@ -488,6 +498,14 @@ export default function DoctorSessionWorkspacePage() {
             <div className="h-full overflow-y-auto p-4 sm:p-6 bg-slate-50/70">
               <div className="max-w-4xl mx-auto">
                 <DoctorContinuityTab sessionId={session.id} />
+              </div>
+            </div>
+          )}
+
+          {activeTab === "nutrition" && (
+            <div className="h-full overflow-y-auto p-4 sm:p-6 bg-slate-50/70">
+              <div className="max-w-4xl mx-auto">
+                <DoctorDietPrescriptionTab sessionId={session.id} readOnly={session.status !== "ACTIVE"} />
               </div>
             </div>
           )}

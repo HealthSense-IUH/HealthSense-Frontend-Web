@@ -1,9 +1,10 @@
 import { useSearchParams } from "react-router-dom"
-import { Camera, Heart, Info, Salad, Search } from "lucide-react"
+import { Camera, ClipboardList, Heart, Info, Search } from "lucide-react"
 
 import { Page, PageBody, PageFooter, PageHeader } from "@/components/layout/page"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ComingSoonTab } from "./components/ComingSoonTab"
+import { DietPrescriptionTab } from "./components/DietPrescriptionTab"
 import { FoodsTab } from "./components/FoodsTab"
 
 const NUTRITION_TABS = ["foods", "diet", "scan"] as const
@@ -44,9 +45,8 @@ export default function NutritionHomePage() {
                 <span>Tra cứu thực phẩm</span>
               </TabsTrigger>
               <TabsTrigger value="diet" className="rounded-lg text-xs sm:text-sm font-semibold gap-1.5 px-3">
-                <Salad className="w-3.5 h-3.5" />
-                <span>Chế độ ăn</span>
-                {comingSoonBadge}
+                <ClipboardList className="w-3.5 h-3.5" />
+                <span>Đơn ăn uống</span>
               </TabsTrigger>
               <TabsTrigger value="scan" className="rounded-lg text-xs sm:text-sm font-semibold gap-1.5 px-3">
                 <Camera className="w-3.5 h-3.5" />
@@ -61,17 +61,7 @@ export default function NutritionHomePage() {
           </TabsContent>
 
           <TabsContent value="diet">
-            <ComingSoonTab
-              icon={Salad}
-              title="Chế độ ăn cho tim mạch"
-              description="Gợi ý mục tiêu dinh dưỡng và bữa ăn hằng ngày phù hợp với người có bệnh tim mạch và rung nhĩ."
-              highlights={[
-                "Mục tiêu năng lượng, natri và kali mỗi ngày",
-                "Gợi ý bữa ăn từ các thực phẩm nên ưu tiên",
-                "Lưu ý khi dùng thuốc, ví dụ vitamin K với thuốc chống đông warfarin",
-              ]}
-              note="Chế độ ăn cá nhân cần được bác sĩ điều trị xem xét trước khi áp dụng."
-            />
+            <DietPrescriptionTab />
           </TabsContent>
 
           <TabsContent value="scan">

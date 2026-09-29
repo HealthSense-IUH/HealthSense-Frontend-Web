@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils"
 import { formatNutrientAmount } from "./format"
 import { useReferenceFood } from "./hooks/use-nutrition"
 import { REFERENCE_SOURCES } from "./sources"
+import { DietAdviceNote } from "./components/DietAdvice"
 import type { ReferenceFoodPortion } from "@/types/nutrition"
 
 const PER_100_GRAMS = "per-100g"
@@ -85,6 +86,7 @@ export default function NutritionDatabaseFoodPage() {
       />
 
       <PageBody>
+        <DietAdviceNote advice={food.advice} />
         {food.wastePct != null && food.wastePct > 0 && (
           <p className="text-xs text-slate-600 dark:text-slate-300">
             Tỉ lệ thải bỏ khi sơ chế: <span className="font-semibold">{formatNutrientAmount(food.wastePct)}%</span>. Số

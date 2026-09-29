@@ -8,6 +8,7 @@ import {
   Stethoscope,
   User,
   Users,
+  SlidersHorizontal,
   UtensilsCrossed,
   type LucideIcon,
 } from "lucide-react"
@@ -77,6 +78,14 @@ export const allNavigationGroups: NavigationGroup[] = [
         shortTitle: "Hồ sơ bệnh",
         href: "/app/management/health-records",
         icon: Activity,
+        allowedRoles: [USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN],
+      },
+      {
+        id: "nutrition-rules",
+        title: "Ngưỡng đánh giá dinh dưỡng",
+        shortTitle: "Dinh dưỡng",
+        href: "/app/management/nutrition-rules",
+        icon: SlidersHorizontal,
         allowedRoles: [USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN],
       },
     ],

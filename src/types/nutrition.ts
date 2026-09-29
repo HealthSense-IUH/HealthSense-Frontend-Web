@@ -154,6 +154,8 @@ export interface ReferenceFoodSummary {
   proteinG?: number
   carbohydrateG?: number
   fatTotalG?: number
+  /** Màu theo đơn ăn uống; chỉ có khi người xem là hội viên */
+  advice?: DietAdvice
 }
 
 export interface ReferenceFoodPortion {
@@ -185,6 +187,8 @@ export interface ReferenceFood {
   wastePct?: number
   nutrients: NutrientValue[]
   portions: ReferenceFoodPortion[]
+  /** Màu và lý do theo đơn ăn uống; chỉ có khi người xem là hội viên */
+  advice?: DietAdvice
 }
 
 export interface ReferenceFoodSearchParams {
@@ -194,4 +198,87 @@ export interface ReferenceFoodSearchParams {
   source?: ReferenceFoodSource
   page?: number
   size?: number
+}
+
+// ---------------------------------------------------------------------------
+// Đơn ăn uống: bác sĩ tick vài cờ, mọi món hội viên tra cứu được chấm xanh/vàng/đỏ theo đơn.
+// ---------------------------------------------------------------------------
+
+/** OK = xanh, CAUTION = vàng, LIMIT = đỏ, UNKNOWN = xám (thiếu số liệu để đánh giá) */
+export type DietAdviceLevel = 'OK' | 'CAUTION' | 'LIMIT' | 'UNKNOWN'
+
+export interface DietAdviceReason {
+  code: string
+  level: DietAdviceLevel
+  message: string
+}
+
+export interface DietAdvice {
+  level: DietAdviceLevel
+  /** Nặng trước; OK thì rỗng */
+  reasons: DietAdviceReason[]
+  /** true: theo đơn của bác sĩ; false: theo lời khuyên chung */
+  personalized: boolean
+}
+
+export interface DietPrescriptionFlags {
+  limitSodium: boolean
+  /** Đang dùng warfarin: giữ lượng vitamin K ổn định */
+  onWarfarin: boolean
+  avoidAlcohol: boolean
+  limitCaffeine: boolean
+}
+
+export type DietRuleCode = 'SODIUM' | 'ALCOHOL' | 'CAFFEINE' | 'VITAMIN_K'
+
+/**
+ * Ngưỡng trên 100 g, so "từ mức này trở lên": limit = đỏ (Nên hạn chế), caution = vàng (Cần lưu ý).
+ * Vắng = không có mức đó (admin) hoặc dùng mặc định (ngưỡng riêng của bác sĩ).
+ */
+export interface DietThreshold {
+  code: DietRuleCode
+  limit?: number | null
+  caution?: number | null
+}
+
+/** Ngưỡng mặc định của cả hệ thống (trang quản trị) */
+export interface DietRule {
+  code: DietRuleCode
+  name: string
+  unit: string
+  limit?: number
+  caution?: number
+  updatedAt?: string
+  updatedBy?: string
+}
+
+/** Một quy tắc trong đơn: mặc định, ngưỡng riêng (nếu bác sĩ chỉnh) và ngưỡng đang áp dụng */
+export interface DietPrescriptionRule {
+  code: DietRuleCode
+  name: string
+  unit: string
+  enabled: boolean
+  defaultLimit?: number
+  defaultCaution?: number
+  limit?: number
+  caution?: number
+  effectiveLimit?: number
+  effectiveCaution?: number
+}
+
+export interface DietPrescription extends DietPrescriptionFlags {
+  memberId: number
+  /** false: bác sĩ chưa kê, các cờ là lời khuyên chung */
+  personalized: boolean
+  note?: string
+  prescribedBy?: number
+  consultationSessionId?: number
+  updatedAt?: string
+  rules: DietPrescriptionRule[]
+}
+
+export interface UpdateDietPrescriptionRequest extends DietPrescriptionFlags {
+  note?: string
+  /** Ngưỡng riêng cho hội viên; quy tắc/mức không gửi thì dùng mặc định */
+  thresholds?: DietThreshold[]
 }

@@ -25,6 +25,7 @@
       "admin-credit-packages": "Quản lý gói lượt",
       "admin-credit-operations": "Quản lý lượt tư vấn",
       "health-records-management": "Hồ sơ sức khỏe bệnh nhân",
+      "nutrition-rules": "Ngưỡng đánh giá dinh dưỡng",
       "doctor-consultations": "Phiên khám Bác sĩ"
     },
     "short": {
@@ -40,6 +41,7 @@
       "admin-credit-packages": "Gói lượt",
       "admin-credit-operations": "Lượt tư vấn",
       "health-records-management": "Hồ sơ bệnh",
+      "nutrition-rules": "Dinh dưỡng",
       "doctor-consultations": "Phiên khám"
     }
   },

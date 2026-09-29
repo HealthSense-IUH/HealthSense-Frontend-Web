@@ -11,6 +11,7 @@ const nutritionKeys = {
   search: (q: string) => ["nutrition", "search", q] as const,
   referenceFoods: (params: ReferenceFoodSearchParams) => ["nutrition", "reference-foods", params] as const,
   referenceFood: (id: string) => ["nutrition", "reference-food", id] as const,
+  myDietPrescription: ["nutrition", "diet-prescription", "me"] as const,
 }
 
 export function useNutritionGroups() {
@@ -69,5 +70,14 @@ export function useReferenceFood(id: string | undefined) {
     queryKey: nutritionKeys.referenceFood(id ?? ""),
     queryFn: async () => (await nutritionApi.getReferenceFood(id as string)).data,
     enabled: Boolean(id),
+  })
+}
+
+/** Đơn ăn uống của hội viên đang đăng nhập; chỉ gọi khi người dùng là hội viên. */
+export function useMyDietPrescription(enabled: boolean) {
+  return useQuery({
+    queryKey: nutritionKeys.myDietPrescription,
+    queryFn: async () => (await nutritionApi.getMyDietPrescription()).data,
+    enabled,
   })
 }

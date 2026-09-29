@@ -11,6 +11,7 @@ import { formatNutrientAmount } from "../format"
 import { FoodGroupIcon } from "../group-icons"
 import { useNutritionGroups, useReferenceFoods } from "../hooks/use-nutrition"
 import { REFERENCE_SOURCES } from "../sources"
+import { DietAdviceBadge } from "./DietAdvice"
 
 const PAGE_SIZE = 20
 const ALL_GROUPS = "__all__"
@@ -219,6 +220,7 @@ export function ReferenceFoodBrowser({ fixedGroup }: ReferenceFoodBrowserProps =
                       <span className="shrink-0 px-1.5 py-0.5 rounded-md text-[10px] font-semibold bg-slate-100 text-slate-600 dark:bg-muted dark:text-slate-300">
                         {REFERENCE_SOURCES[food.source].short}
                       </span>
+                      <DietAdviceBadge advice={food.advice} />
                     </div>
                     <p className="text-[11px] text-muted-foreground truncate">
                       {[

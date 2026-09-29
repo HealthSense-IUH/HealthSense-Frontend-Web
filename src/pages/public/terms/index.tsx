@@ -11,6 +11,7 @@ import {
   Check
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { formatDocumentTitle, useDocumentTitle } from "@/hooks/use-document-title"
 
 type ViewStyle = "interactive" | "document"
 
@@ -38,11 +39,27 @@ const handleScrollToTop = () => {
   window.scrollTo({ top: 0, behavior: "smooth" })
 }
 
+const TERMS_TITLE = "Điều khoản sử dụng và miễn trừ trách nhiệm y tế"
+/** Ngày cập nhật của văn bản (trùng dòng "Cập nhật lần cuối" trên trang), dùng trong tên file PDF. */
+const TERMS_UPDATED = "23-08-2026"
+
+/**
+ * "Tải PDF" dùng hộp thoại in của trình duyệt; tên file mặc định lấy từ tiêu đề tab, nên đổi tiêu đề trong lúc in
+ * để file có tên rõ ràng, rồi trả lại như cũ.
+ */
 const handleDownloadPdf = () => {
+  const previous = document.title
+  document.title = formatDocumentTitle(`${TERMS_TITLE} (cập nhật ${TERMS_UPDATED})`)
+  const restore = () => {
+    document.title = previous
+    window.removeEventListener("afterprint", restore)
+  }
+  window.addEventListener("afterprint", restore)
   window.print()
 }
 
 export default function TermsAndConditionsPage() {
+  useDocumentTitle(TERMS_TITLE)
   const [viewStyle, setViewStyle] = useState<ViewStyle>("interactive")
   const [activeSection, setActiveSection] = useState("section-1")
   const [showScrollTop, setShowScrollTop] = useState(false)

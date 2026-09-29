@@ -25,6 +25,7 @@
       "admin-credit-packages": "Credit packages",
       "admin-credit-operations": "Credit management",
       "health-records-management": "Patient health records",
+      "nutrition-rules": "Nutrition rating thresholds",
       "doctor-consultations": "Doctor sessions"
     },
     "short": {
@@ -40,6 +41,7 @@
       "admin-credit-packages": "Packages",
       "admin-credit-operations": "Credits",
       "health-records-management": "Records",
+      "nutrition-rules": "Nutrition",
       "doctor-consultations": "Sessions"
     }
   },
