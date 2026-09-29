@@ -65,6 +65,10 @@ export type FoodGroupId =
   | 'BEVERAGE'
   | 'MIXED_DISH'
   | 'OTHER'
+  // Legacy guidance groups used by the curated nutrition catalogue.
+  | 'BEVERAGES_CAUTION'
+  | 'BEVERAGES_ALCOHOL'
+  | 'PROCESSED_FOODS'
 
 /**
  * Cấu trúc 5 Field cốt lõi của HealthSense:
@@ -92,8 +96,8 @@ export interface Food {
   medicationContext?: string
 
   // Traceability to USDA FNDDS
-  sourceFoodCode: string
-  sourceDescription: string
+  sourceFoodCode?: string
+  sourceDescription?: string
 
   // Nutrition Profile
   servingReference: {
@@ -105,22 +109,28 @@ export interface Food {
   evidenceSources: EvidenceSource[]
 
   imageUrl?: string
+  // Compatibility fields used by the curated catalogue restored from 0ba2aa1.
+  name?: string
+  categoryId?: string
+  familyId?: string
+  primaryGuidanceType?: GuidanceType
 }
 
 export interface FoodGroup {
   id: FoodGroupId
   name: string
   slug: string
-  description?: string
+  description: string
+  dietaryPattern?: 'PRIORITIZE' | 'LIMIT' | 'CAUTION' | 'BALANCED'
   /** Tên icon lucide-react */
   icon?: string
   imageUrl?: string
   /** Số thực phẩm của nhóm trong cơ sở dữ liệu tham chiếu (mọi nguồn) */
-  foodCount: number
+  foodCount?: number
   /** Số thực phẩm theo nguồn; nguồn không có món nào thì không có khóa */
-  sourceCounts: Partial<Record<ReferenceFoodSource, number>>
+  sourceCounts?: Partial<Record<ReferenceFoodSource, number>>
   /** Số món có khuyến nghị tim mạch trong nhóm */
-  guidanceFoodCount: number
+  guidanceFoodCount?: number
 }
 
 // Aliases for compatibility

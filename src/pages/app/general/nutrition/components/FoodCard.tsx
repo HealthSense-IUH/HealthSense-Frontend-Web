@@ -18,8 +18,8 @@ export function FoodCard({
   className,
   showDescription = true,
 }: FoodCardProps) {
-  const guidanceType = food.guidance
-  const title = food.foodNameSpecific
+  const guidanceType = food.guidance || food.primaryGuidanceType
+  const title = food.foodNameSpecific || food.name
   const subtitle = food.foodName !== food.foodNameSpecific ? food.foodName : undefined
 
   return (
