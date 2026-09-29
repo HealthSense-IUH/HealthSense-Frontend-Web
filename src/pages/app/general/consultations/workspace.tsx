@@ -346,14 +346,15 @@ export default function MemberSessionWorkspacePage() {
 
   if (initialLoading && !session) {
     return (
-      <Page width="full" fill>
+      <Page width="full" fill bleed>
         <PageHeader
           compact
+          className="px-4 sm:px-6 py-3 border-b border-border bg-background"
           breadcrumbs={breadcrumbs}
           icon={<Stethoscope className="w-5 h-5" />}
           title={`Phiên tư vấn #${sessionId}`}
         />
-        <PageBody className="items-center justify-center text-center gap-3">
+        <PageBody className="items-center justify-center text-center gap-3 p-6">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
           <p className="text-sm text-muted-foreground">Đang tải không gian tư vấn...</p>
         </PageBody>
@@ -363,14 +364,15 @@ export default function MemberSessionWorkspacePage() {
 
   if (!session) {
     return (
-      <Page width="full" fill>
+      <Page width="full" fill bleed>
         <PageHeader
           compact
+          className="px-4 sm:px-6 py-3 border-b border-border bg-background"
           breadcrumbs={breadcrumbs}
           icon={<Stethoscope className="w-5 h-5" />}
           title={`Phiên tư vấn #${sessionId}`}
         />
-        <PageBody className="items-center justify-center text-center">
+        <PageBody className="items-center justify-center text-center p-6">
           <div className="flex max-w-lg flex-col items-center gap-4">
             <ShieldAlert className="h-10 w-10 text-red-500" />
             <h2 className="text-2xl font-bold text-foreground">Không tìm thấy phiên tư vấn</h2>
@@ -387,9 +389,10 @@ export default function MemberSessionWorkspacePage() {
   }
 
   return (
-    <Page width="full" fill>
+    <Page width="full" fill bleed>
       <PageHeader
         compact
+        className="px-4 sm:px-6 py-3 border-b border-border bg-background"
         breadcrumbs={breadcrumbs}
         icon={<Stethoscope className="w-5 h-5" />}
         title={`Phiên tư vấn #${session.id}`}
@@ -449,10 +452,10 @@ export default function MemberSessionWorkspacePage() {
         }
       />
 
-      <PageBody>
-        {/* Main Content Tabs */}
-        <div className="flex-1 min-h-0 flex flex-col bg-background rounded-2xl shadow-sm border border-border overflow-hidden">
-          <div className="border-b border-border bg-muted/20 px-4 py-2 shrink-0 flex items-center justify-between">
+      <PageBody className="gap-0 bg-background">
+        {/* Main Content Tabs: tràn hết vùng nội dung, không bọc thẻ */}
+        <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
+          <div className="border-b border-border bg-background px-4 sm:px-6 py-2 shrink-0 flex items-center justify-between overflow-x-auto">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
               <TabsList className="h-9 bg-muted/60 p-1 rounded-xl">
                 <TabsTrigger value="chat" className="rounded-lg text-xs font-semibold gap-1.5 px-3">

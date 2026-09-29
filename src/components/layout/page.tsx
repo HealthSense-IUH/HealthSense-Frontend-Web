@@ -34,17 +34,26 @@ interface PageProps {
    * trong, header và footer luôn hiện. Mặc định trang cao theo nội dung và cả cửa sổ cuộn.
    */
   fill?: boolean
+  /**
+   * Tràn hết vùng nội dung, bỏ khoảng đệm của <main> (chat, workspace): trang dính sát topbar và sidebar, cao đúng
+   * phần màn hình còn lại. Dùng kèm `fill`; header và body tự lo khoảng đệm bên trong.
+   */
+  bleed?: boolean
   className?: string
 }
 
-export function Page({ children, width = "default", fill = false, className }: PageProps) {
+export function Page({ children, width = "default", fill = false, bleed = false, className }: PageProps) {
   return (
     <div
       className={cn(
-        "w-full mx-auto flex flex-col gap-6",
-        PAGE_WIDTH[width],
-        // Chiều cao còn lại = màn hình - topbar - khoảng đệm trên dưới của <main> (biến đặt ở MainLayout)
-        fill ? "h-[calc(100dvh_-_var(--app-topbar-h)_-_2*var(--app-page-pad))] min-h-[32rem] gap-4" : "flex-1",
+        "flex flex-col gap-6",
+        bleed ? "w-auto max-w-none -m-(--app-page-pad)" : cn("w-full mx-auto", PAGE_WIDTH[width]),
+        bleed
+          ? "h-[calc(100dvh_-_var(--app-topbar-h))] min-h-[32rem] gap-0"
+          : // Chiều cao còn lại = màn hình - topbar - khoảng đệm trên dưới của <main> (biến đặt ở MainLayout)
+            fill
+            ? "h-[calc(100dvh_-_var(--app-topbar-h)_-_2*var(--app-page-pad))] min-h-[32rem] gap-4"
+            : "flex-1",
         className
       )}
     >

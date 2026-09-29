@@ -1,4 +1,4 @@
-import { type FormEvent, type KeyboardEvent, useEffect, useRef, useState, memo } from "react"
+import { useCallback, type FormEvent, type KeyboardEvent, useEffect, useRef, useState, memo } from "react"
 import { Send, Paperclip } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
@@ -33,13 +33,31 @@ export const ChatComposer = memo(function ChatComposer({
   }, [messageDraft])
 
   // Auto-resize textarea
-  useEffect(() => {
+  const resizeTextarea = useCallback(() => {
     const textarea = textareaRef.current
     if (!textarea) return
 
     textarea.style.height = "auto"
     textarea.style.height = `${Math.min(textarea.scrollHeight, 160)}px`
-  }, [localDraft])
+  }, [])
+
+  useEffect(() => {
+    resizeTextarea()
+  }, [localDraft, resizeTextarea])
+
+  // Tính lại khi ô nhập đổi độ rộng: lúc mới hiện ô còn hẹp, placeholder xuống dòng làm chiều cao bị kẹt ở mức tối đa
+  useEffect(() => {
+    const container = textareaRef.current?.parentElement
+    if (!container || typeof ResizeObserver === "undefined") return
+    let lastWidth = container.clientWidth
+    const observer = new ResizeObserver(() => {
+      if (container.clientWidth === lastWidth) return
+      lastWidth = container.clientWidth
+      resizeTextarea()
+    })
+    observer.observe(container)
+    return () => observer.disconnect()
+  }, [resizeTextarea])
 
   const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -66,7 +84,7 @@ export const ChatComposer = memo(function ChatComposer({
 
   if (readOnlyMode) {
     return (
-      <div className="flex w-full items-center justify-center border-t border-border bg-muted/30 p-6">
+      <div className="flex w-full items-center justify-center border-t border-border bg-muted/30 px-4 py-4">
         <p className="text-sm font-medium text-muted-foreground text-center">
           {readOnlyReason || "Bạn không thể gửi tin nhắn trong phiên này."}
         </p>
@@ -76,7 +94,7 @@ export const ChatComposer = memo(function ChatComposer({
 
   if (!canSend) {
     return (
-      <div className="flex w-full items-center justify-center border-t border-border bg-muted/30 p-6">
+      <div className="flex w-full items-center justify-center border-t border-border bg-muted/30 px-4 py-4">
         <p className="text-sm font-medium text-muted-foreground text-center">
           Phiên tư vấn chưa mở hoặc không còn hoạt động.
         </p>
@@ -85,11 +103,8 @@ export const ChatComposer = memo(function ChatComposer({
   }
 
   return (
-    <div className="border-t border-border bg-background p-4">
-      <form 
-        onSubmit={handleSubmit}
-        className="flex w-full flex-col gap-2 bg-background p-1 transition-all duration-200"
-      >
+    <div className="border-t border-border bg-background px-3 py-2.5 sm:px-6">
+      <form onSubmit={handleSubmit} className="flex w-full flex-col gap-2 bg-background transition-all duration-200">
         <div className="flex items-center gap-2">
           {/* Decorative Paperclip Button */}
           <Button 
@@ -102,10 +117,10 @@ export const ChatComposer = memo(function ChatComposer({
             <Paperclip className="h-5 w-5" />
           </Button>
           
-          <div className="flex flex-1 items-center bg-background border border-input focus-within:border-primary focus-within:ring-1 focus-within:ring-primary rounded-full px-4 py-1">
+          <div className="flex flex-1 items-center bg-background border border-input focus-within:border-primary focus-within:ring-1 focus-within:ring-primary rounded-3xl px-4">
             <textarea
               ref={textareaRef}
-              className="max-h-[120px] min-h-[24px] w-full resize-none bg-transparent py-2.5 text-[14px] text-foreground outline-none placeholder:text-muted-foreground"
+              className="max-h-[160px] min-h-[24px] w-full resize-none bg-transparent py-2 text-[14px] text-foreground outline-none placeholder:text-muted-foreground"
               placeholder="Nhập tin nhắn..."
               value={localDraft}
               onChange={(e) => setLocalDraft(e.target.value)}

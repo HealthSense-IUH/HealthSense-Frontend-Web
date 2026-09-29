@@ -34,7 +34,7 @@ export const ChatMessageGroup = memo(function ChatMessageGroup({ group, currentU
 
   return (
     <div className={cn("flex w-full flex-col mb-4", mine ? "items-end" : "items-start")}>
-      <div className="group relative flex w-full max-w-[85%] sm:max-w-[75%] flex-col gap-1">
+      <div className="group relative flex w-full max-w-[85%] sm:max-w-[75%] xl:max-w-3xl flex-col gap-1">
         
         {/* Messages */}
         <div className={cn("flex flex-col gap-1 w-full", mine ? "items-end" : "items-start")}>

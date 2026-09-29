@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-import { Calendar, CheckCircle2, Coins, Inbox, PlusCircle, RefreshCw, ShieldAlert, Stethoscope, Users, XCircle } from "lucide-react"
+import { Calendar, CheckCircle2, Coins, Inbox, PlusCircle, RefreshCw, ShieldAlert, Stethoscope, Users, XCircle, X } from "lucide-react"
 import { useNavigate, useSearchParams } from "react-router-dom"
 
 import { Page, PageBody, PageHeader } from "@/components/layout/page"
@@ -61,11 +61,10 @@ export default function ConsultationsPage() {
     }
   }, [searchParams, logic.isMember, logic.setRequestForm])
 
-  const roleLabel = logic.isAdmin ? "Quản trị viên" : logic.isDoctor ? "Bác sĩ" : "Hội viên"
 
   if (!logic.isAdmin && !logic.isDoctor && !logic.isMember) {
     return (
-      <Page width="full" fill>
+      <Page>
         <PageHeader icon={<Stethoscope className="w-5 h-5" />} title="Tư vấn & Chăm sóc" />
         <PageBody className="items-center justify-center text-center">
           <div className="flex max-w-lg flex-col items-center gap-4">
@@ -79,23 +78,11 @@ export default function ConsultationsPage() {
   }
 
   return (
-    <Page width="full" fill>
+    <Page>
       <PageHeader
         icon={<Stethoscope className="w-5 h-5" />}
         title="Tư vấn & Chăm sóc"
         description="Quản lý các buổi và phiên tư vấn 1-1 của bạn."
-        meta={
-          <>
-            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-border/50 bg-muted/30">
-              <span className="text-xs font-medium text-muted-foreground">Vai trò:</span>
-              <span className="text-xs font-semibold text-foreground">{roleLabel}</span>
-            </div>
-            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-border/50 bg-muted/30">
-              <span className="text-xs font-medium text-muted-foreground">Mã ID:</span>
-              <span className="text-xs font-semibold text-foreground">#{logic.userSession?.userId ?? "-"}</span>
-            </div>
-          </>
-        }
         actions={
           <Button variant="outline" size="sm" onClick={() => void logic.loadData()} disabled={logic.loading} className="shadow-sm">
             <RefreshCw className="mr-2 h-4 w-4" />
@@ -108,24 +95,27 @@ export default function ConsultationsPage() {
         {logic.alert && (
           <div
             className={cn(
-              "flex flex-col gap-2 rounded-lg border p-3 text-sm font-medium shrink-0",
+              "flex items-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-medium shrink-0",
               logic.alert.type === "success"
                 ? "border-green-200 bg-green-50 text-green-900"
                 : "border-red-200 bg-red-50 text-red-900"
             )}
           >
-            <div className="flex items-start gap-2">
-              {logic.alert.type === "success" ? <CheckCircle2 className="h-4 w-4 shrink-0 mt-0.5" /> : <XCircle className="h-4 w-4 shrink-0 mt-0.5" />}
-              <span className="flex-1">{logic.alert.text}</span>
-            </div>
-            <Button variant="ghost" size="sm" className="h-7 px-2 self-end" onClick={() => logic.setAlert(null)}>
-              Đóng
-            </Button>
+            {logic.alert.type === "success" ? <CheckCircle2 className="h-4 w-4 shrink-0" /> : <XCircle className="h-4 w-4 shrink-0" />}
+            <span className="flex-1">{logic.alert.text}</span>
+            <button
+              type="button"
+              aria-label="Đóng thông báo"
+              className="rounded-md p-1 opacity-60 hover:opacity-100 hover:bg-black/5 cursor-pointer"
+              onClick={() => logic.setAlert(null)}
+            >
+              <X className="h-4 w-4" />
+            </button>
           </div>
         )}
 
-        <Tabs value={activeTab} onValueChange={(val) => setSearchParams({ tab: val })} className="flex-1 min-h-0 min-w-0 flex flex-col bg-background rounded-2xl shadow-sm border border-border overflow-hidden">
-          <div className="border-b border-border bg-muted/20 px-4 py-2 shrink-0 flex items-center justify-between overflow-x-auto">
+        <Tabs value={activeTab} onValueChange={(val) => setSearchParams({ tab: val })} className="min-w-0 gap-4">
+          <div className="overflow-x-auto pb-1">
             <TabsList className="h-10 bg-muted/60 p-1 rounded-xl">
               {logic.isMember && (
                 <>
@@ -198,7 +188,7 @@ export default function ConsultationsPage() {
           </div>
 
           {logic.isMember && (
-            <TabsContent value="queue" className="m-0 flex-1 min-h-0 overflow-y-auto p-4 sm:p-6">
+            <TabsContent value="queue" className="m-0">
               <MemberQueuePanel
                 queueState={logic.currentQueueState}
                 latestRequest={logic.requests[0] ?? null}
@@ -217,7 +207,7 @@ export default function ConsultationsPage() {
           )}
 
         {logic.isMember && (
-          <TabsContent value="create-request" className="m-0 flex-1 min-h-0 overflow-y-auto p-4 sm:p-6">
+          <TabsContent value="create-request" className="m-0">
             <CreateRequestPanel
               form={logic.requestForm}
               healthRecords={logic.healthRecords}
@@ -235,7 +225,7 @@ export default function ConsultationsPage() {
         )}
 
         {logic.isAdmin && (
-          <TabsContent value="admin-requests" className="m-0 flex-1 min-h-0 overflow-y-auto p-4 sm:p-6">
+          <TabsContent value="admin-requests" className="m-0">
             <RequestsPanel
               isAdmin={logic.isAdmin}
               requests={logic.requests}
@@ -252,7 +242,7 @@ export default function ConsultationsPage() {
           </TabsContent>
         )}
 
-        <TabsContent value="sessions" className="m-0 flex-1 min-h-0 overflow-y-auto p-4 sm:p-6 space-y-4">
+        <TabsContent value="sessions" className="m-0 space-y-4">
           {logic.isDoctor && (
             <>
               <DoctorDispatchHeader
@@ -292,7 +282,7 @@ export default function ConsultationsPage() {
         </TabsContent>
 
         {logic.isMember && (
-          <TabsContent value="credits" className="m-0 flex-1 min-h-0 overflow-y-auto p-4 sm:p-6 space-y-6">
+          <TabsContent value="credits" className="m-0 space-y-6">
             <MemberCreditsPanel />
           </TabsContent>
         )}

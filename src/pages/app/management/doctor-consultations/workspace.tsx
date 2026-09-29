@@ -265,8 +265,8 @@ export default function DoctorSessionWorkspacePage() {
 
   if (initialLoading && !detail) {
     return (
-      <Page width="full" fill>
-        <PageBody className="items-center justify-center text-center gap-3">
+      <Page width="full" fill bleed>
+        <PageBody className="items-center justify-center text-center gap-3 p-6">
           <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
           <p className="text-sm font-semibold text-slate-600">Đang tải không gian khám chuyên khoa...</p>
         </PageBody>
@@ -276,8 +276,8 @@ export default function DoctorSessionWorkspacePage() {
 
   if (!session) {
     return (
-      <Page width="full" fill>
-        <PageBody className="items-center justify-center text-center gap-4">
+      <Page width="full" fill bleed>
+        <PageBody className="items-center justify-center text-center gap-4 p-6">
           <ShieldAlert className="h-12 w-12 text-rose-500" />
           <h2 className="text-lg font-bold text-slate-800">Không tìm thấy phiên khám</h2>
           <p className="text-xs text-slate-500 max-w-md">
@@ -292,10 +292,11 @@ export default function DoctorSessionWorkspacePage() {
   }
 
   return (
-    <Page width="full" fill>
+    <Page width="full" fill bleed>
       {/* Top Clinical Header: patient identity, status and quick clinical actions */}
       <PageHeader
         compact
+        className="px-4 sm:px-6 py-3 border-b border-border bg-background"
         breadcrumbs={[
           { label: "Quản lý phiên khám", to: "/app/management/doctor/consultations" },
           { label: memberDisplayName },
@@ -374,9 +375,9 @@ export default function DoctorSessionWorkspacePage() {
       />
 
       {/* Workspace panel: tab bar + content that fills the remaining height and scrolls inside */}
-      <PageBody className="gap-0 overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-xs dark:border-border dark:bg-card">
+      <PageBody className="gap-0 overflow-hidden bg-white dark:bg-card">
         {/* Tab Navigation */}
-        <div className="shrink-0 overflow-x-auto border-b border-slate-100 dark:border-border px-3 py-2">
+        <div className="shrink-0 overflow-x-auto border-b border-slate-100 dark:border-border px-4 sm:px-6 py-2">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="h-9 bg-slate-100/80 p-0.5 rounded-xl gap-1">
               <TabsTrigger
