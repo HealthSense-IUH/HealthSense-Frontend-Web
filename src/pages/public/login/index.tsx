@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react"
+import { useState, useEffect, type FormEvent } from "react"
 import { 
   ArrowLeft, 
   ArrowUpRight, 
@@ -28,6 +28,8 @@ type LoginLocationState = {
   from?: {
     pathname?: string
   }
+  email?: string
+  successMessage?: string
 }
 
 type AuthMode = "login" | "register"
@@ -35,7 +37,7 @@ type AuthMode = "login" | "register"
 export default function LoginPage() {
   const location = useLocation()
   const navigate = useNavigate()
-  const [searchParams, setSearchParams] = useSearchParams()
+  const [searchParams] = useSearchParams()
   const setAuthenticatedSession = useAuthStore((state) => state.setAuthenticatedSession)
 
   // Derive active mode directly from URL pathname or search params
@@ -44,8 +46,11 @@ export default function LoginPage() {
       ? "register"
       : "login"
 
+  const state = location.state as LoginLocationState | null
+  const redirectTo = state?.from?.pathname ?? "/app/general/dashboard"
+
   // Login form state
-  const [loginEmail, setLoginEmail] = useState("")
+  const [loginEmail, setLoginEmail] = useState(state?.email || "")
   const [loginPassword, setLoginPassword] = useState("")
   const [showLoginPassword, setShowLoginPassword] = useState(false)
 
@@ -59,25 +64,26 @@ export default function LoginPage() {
 
   // Feedback states
   const [errorMessage, setErrorMessage] = useState("")
-  const [successMessage, setSuccessMessage] = useState("")
+  const [successMessage, setSuccessMessage] = useState(state?.successMessage || "")
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const state = location.state as LoginLocationState | null
-  const redirectTo = state?.from?.pathname ?? "/app/general/dashboard"
+  useEffect(() => {
+    if (state?.email) {
+      setLoginEmail(state.email)
+    }
+    if (state?.successMessage) {
+      setSuccessMessage(state.successMessage)
+    }
+  }, [state])
 
   const handleSwitchMode = (newMode: AuthMode) => {
     setErrorMessage("")
     setSuccessMessage("")
-    setSearchParams((prev) => {
-      const next = new URLSearchParams(prev)
-      if (newMode === "register") {
-        next.set("tab", "register")
-      } else {
-        next.delete("tab")
-        next.delete("mode")
-      }
-      return next
-    })
+    if (newMode === "register") {
+      navigate("/register")
+    } else {
+      navigate("/login")
+    }
   }
 
   // Handle Login submission
@@ -153,8 +159,14 @@ export default function LoginPage() {
         // If automatic login fails, switch to login tab with pre-filled email
         setLoginEmail(email)
         setLoginPassword("")
-        handleSwitchMode("login")
-        setSuccessMessage("Đăng ký tài khoản thành công! Vui lòng đăng nhập để tiếp tục.")
+        navigate("/login", {
+          state: {
+            ...state,
+            email,
+            successMessage: "Đăng ký tài khoản thành công! Vui lòng đăng nhập để tiếp tục.",
+          },
+          replace: true,
+        })
       }
     } catch (error) {
       setErrorMessage(getAuthErrorMessage(error))
