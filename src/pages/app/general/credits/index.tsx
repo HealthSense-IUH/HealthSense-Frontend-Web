@@ -7,7 +7,6 @@ import {
   RefreshCw,
   ShieldAlert,
   ShoppingBag,
-  Sparkles,
 } from "lucide-react"
 import { useAuthStore } from "@/stores/auth-store"
 import { USER_ROLES } from "@/constants/roles"
@@ -23,6 +22,8 @@ import { PurchaseDialog } from "./components/purchase-dialog"
 import { OrdersHistoryTable } from "./components/orders-history-table"
 import { OrderDetailDialog } from "./components/order-detail-dialog"
 import { CreditLedgerTable } from "./components/credit-ledger-table"
+import { MemberPaymentKpiCards } from "./components/member-payment-kpi-cards"
+import { MemberPaymentFilterBar } from "./components/member-payment-filter-bar"
 import type { CreditPackage } from "@/types/credits"
 
 export default function CreditsPage() {
@@ -54,11 +55,28 @@ export default function CreditsPage() {
     isFeatureDisabled,
     loadPackages,
 
+    overview,
+    loadingOverview,
+    overviewError,
+    loadOverview,
+
     orders,
     ordersPage,
+    ordersSize,
     loadingOrders,
     ordersError,
     loadOrders,
+    handlePageChange,
+    handlePageSizeChange,
+
+    datePreset,
+    dateFrom,
+    dateTo,
+    orderStatus,
+    handleDatePresetChange,
+    handleStatusChange,
+    resetFilters,
+    refreshOrdersTab,
 
     ledger,
     ledgerPage,
@@ -71,25 +89,22 @@ export default function CreditsPage() {
 
   // Purchase hook
   const purchaseState = useCreditPurchase((detail) => {
-    // 1. Thông báo mua thành công
     toast({
       title: "Thành công",
-      description: "Mua lượt tư vấn giả lập thành công!",
+      description: "Mua lượt tư vấn thành công!",
     })
 
-    // 2. Tách biệt lỗi POST và GET: Cập nhật ví ngay lập tức từ snapshot response POST
     if (detail.wallet) {
       updateWalletDirectly(detail.wallet)
     }
 
-    // 3. Tải lại danh sách đơn mua và ledger về trang 1
-    void loadOrders(1)
+    void loadOverview({ from: dateFrom, to: dateTo })
+    void loadOrders({ page: 1, size: ordersSize, status: orderStatus, from: dateFrom, to: dateTo })
     void loadLedger(1)
     void loadPackages()
   })
 
-  // Nếu PayOS điều hướng về root /app/general/credits có query params,
-  // chuyển tiếp về trang chuyên biệt payment-result để đối soát authoritative từ backend
+  // Nếu PayOS điều hướng về có query params, chuyển tiếp về trang payment-result
   useEffect(() => {
     const codeParam = searchParams.get("code")
     const statusParam = searchParams.get("status")
@@ -100,13 +115,11 @@ export default function CreditsPage() {
     }
   }, [searchParams, navigate])
 
-  // Chọn gói mở dialog
   const handleSelectPackage = (pkg: CreditPackage) => {
     purchaseState.selectPackage(pkg)
     setPurchaseDialogOpen(true)
   }
 
-  // Mở chi tiết đơn hàng
   const handleOpenOrderDetail = (orderId: string) => {
     setDetailOrderId(orderId)
     setDetailDialogOpen(true)
@@ -116,7 +129,6 @@ export default function CreditsPage() {
     })
   }
 
-  // Đóng chi tiết đơn hàng
   const handleCloseOrderDetail = (open: boolean) => {
     setDetailDialogOpen(open)
     if (!open) {
@@ -128,7 +140,6 @@ export default function CreditsPage() {
     }
   }
 
-  // Đổi tab
   const handleTabChange = (newTab: string) => {
     setSearchParams((prev) => {
       prev.set("tab", newTab)
@@ -136,63 +147,52 @@ export default function CreditsPage() {
     })
   }
 
-  // Chặn truy cập nếu không phải MEMBER
   if (!isMember) {
     return (
-      <div className="mx-auto flex max-w-lg flex-col items-center justify-center gap-4 py-24 text-center">
-        <ShieldAlert className="h-12 w-12 text-red-500" />
-        <h2 className="text-2xl font-bold text-foreground">Truy cập bị từ chối</h2>
-        <p className="text-sm text-muted-foreground">
-          Chức năng Ví lượt tư vấn chỉ dành riêng cho tài khoản Hội viên (MEMBER).
+      <div className="flex h-96 flex-col items-center justify-center space-y-4 text-center">
+        <ShieldAlert className="h-12 w-12 text-destructive" />
+        <h2 className="text-xl font-bold tracking-tight text-foreground">
+          Truy cập bị từ chối
+        </h2>
+        <p className="max-w-md text-xs text-muted-foreground">
+          Trang mua và quản lý ví lượt tư vấn chỉ dành cho Hội viên (Member).
         </p>
       </div>
     )
   }
 
   return (
-    <div className="space-y-6 pb-12">
-      {/* 1. Header Banner */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-background p-6 rounded-2xl shadow-xs border border-border">
-        <div className="flex items-center gap-3.5">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 border border-primary/20 text-primary shadow-xs shrink-0">
-            <Coins className="h-6 w-6" />
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-2xl font-bold tracking-tight text-foreground">
-                Lượt tư vấn
-              </h1>
-              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-400 text-xs font-semibold">
-                <Sparkles className="h-3 w-3" /> Hội viên
-              </span>
-            </div>
-            <p className="text-sm text-muted-foreground mt-0.5">
-              Quản lý số dư ví lượt tư vấn, mua thêm lượt và theo dõi lịch sử giao dịch minh bạch.
-            </p>
-          </div>
+    <div className="container max-w-6xl mx-auto py-6 px-4 space-y-6">
+      {/* 1. Wallet Overview Header */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-2 border-b border-border">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight text-foreground flex items-center gap-2">
+            <Coins className="w-6 h-6 text-primary" />
+            Ví lượt tư vấn
+          </h1>
+          <p className="text-xs text-muted-foreground mt-1">
+            Quản lý số dư lượt tư vấn, mua thêm lượt và theo dõi lịch sử giao dịch minh bạch.
+          </p>
         </div>
-
-        <div className="flex items-center gap-2 self-stretch sm:self-auto justify-end">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => void refreshAll()}
-            disabled={loadingWallet || loadingPackages || loadingOrders || loadingLedger}
-            className="gap-2 shadow-xs"
-          >
-            <RefreshCw
-              className={`h-4 w-4 ${
-                loadingWallet || loadingPackages || loadingOrders || loadingLedger
-                  ? "animate-spin"
-                  : ""
-              }`}
-            />
-            Làm mới
-          </Button>
-        </div>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => void refreshAll()}
+          disabled={loadingWallet || loadingPackages || loadingOrders || loadingLedger || loadingOverview}
+          className="gap-2 shadow-xs shrink-0"
+        >
+          <RefreshCw
+            className={`h-4 w-4 ${
+              loadingWallet || loadingPackages || loadingOrders || loadingLedger || loadingOverview
+                ? "animate-spin"
+                : ""
+            }`}
+          />
+          Làm mới ví & gói
+        </Button>
       </div>
 
-      {/* 2. Wallet Overview Cards */}
+      {/* 2. Wallet Summary Cards */}
       <WalletSummaryCards
         wallet={wallet}
         loading={loadingWallet}
@@ -200,7 +200,7 @@ export default function CreditsPage() {
         onRetry={loadWallet}
       />
 
-      {/* 3. Main Tabs Navigation */}
+      {/* 3. Tabs */}
       <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-6">
         <div className="border-b border-border pb-1">
           <TabsList className="bg-muted/60 p-1">
@@ -219,7 +219,7 @@ export default function CreditsPage() {
           </TabsList>
         </div>
 
-        {/* Tab 1: Gói lượt & Mua lượt */}
+        {/* Tab 1: Gói lượt tư vấn */}
         <TabsContent value="packages" className="space-y-4 focus-visible:outline-hidden">
           <div className="flex items-center justify-between">
             <div>
@@ -242,25 +242,49 @@ export default function CreditsPage() {
           />
         </TabsContent>
 
-        {/* Tab 2: Lịch sử đơn mua */}
-        <TabsContent value="orders" className="space-y-4 focus-visible:outline-hidden">
+        {/* Tab 2: Lịch sử đơn mua & Tổng kết */}
+        <TabsContent value="orders" className="space-y-6 focus-visible:outline-hidden">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-lg font-bold text-foreground">Lịch sử đơn mua</h2>
+              <h2 className="text-lg font-bold text-foreground">Tổng kết & Lịch sử đơn mua</h2>
               <p className="text-xs text-muted-foreground">
-                Xem lại danh sách tất cả các đơn mua gói lượt tư vấn của bạn.
+                Theo dõi tổng quan tài chính token đã mua và chi tiết các đơn nạp lượt tư vấn.
               </p>
             </div>
           </div>
 
+          {/* KPI Cards */}
+          <MemberPaymentKpiCards
+            overview={overview}
+            loading={loadingOverview}
+            error={overviewError}
+            onRetry={() => void loadOverview({ from: dateFrom, to: dateTo })}
+          />
+
+          {/* Filter Bar */}
+          <MemberPaymentFilterBar
+            preset={datePreset}
+            onPresetChange={handleDatePresetChange}
+            status={orderStatus}
+            onStatusChange={handleStatusChange}
+            pageSize={ordersSize}
+            onPageSizeChange={handlePageSizeChange}
+            onRefresh={() => void refreshOrdersTab()}
+            onReset={resetFilters}
+            loading={loadingOverview || loadingOrders}
+          />
+
+          {/* Table */}
           <OrdersHistoryTable
             ordersData={orders}
             loading={loadingOrders}
             error={ordersError}
             page={ordersPage}
-            onPageChange={loadOrders}
+            onPageChange={handlePageChange}
             onViewDetail={handleOpenOrderDetail}
-            onRetry={() => void loadOrders(ordersPage)}
+            onRetry={() => void loadOrders()}
+            isFiltered={datePreset !== "all" || Boolean(orderStatus)}
+            onResetFilters={resetFilters}
           />
         </TabsContent>
 
@@ -289,7 +313,7 @@ export default function CreditsPage() {
         </TabsContent>
       </Tabs>
 
-      {/* 4. Purchase Confirmation & Success Dialog */}
+      {/* 4. Dialogs */}
       <PurchaseDialog
         open={purchaseDialogOpen}
         onOpenChange={setPurchaseDialogOpen}
@@ -297,7 +321,6 @@ export default function CreditsPage() {
         onViewOrderDetail={handleOpenOrderDetail}
       />
 
-      {/* 5. Order Detail Dialog (API 6) */}
       <OrderDetailDialog
         orderId={detailOrderId}
         open={detailDialogOpen}
