@@ -1,5 +1,5 @@
-import { useEffect } from "react"
-import { Calendar, CheckCircle2, Coins, Inbox, PlusCircle, RefreshCw, ShieldAlert, Stethoscope, Users, XCircle, X } from "lucide-react"
+import { useEffect, useState } from "react"
+import { Calendar, CheckCircle2, Coins, Inbox, RefreshCw, ShieldAlert, Stethoscope, Users, XCircle, X } from "lucide-react"
 import { useNavigate, useSearchParams } from "react-router-dom"
 
 import { Page, PageBody, PageHeader } from "@/components/layout/page"
@@ -31,6 +31,8 @@ export default function ConsultationsPage() {
   const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
 
+  const [showRegisterForm, setShowRegisterForm] = useState(false)
+
   const hasActiveQueue = Boolean(
     logic.currentQueueState &&
     (logic.currentQueueState.queueStatus === "WAITING" ||
@@ -42,24 +44,40 @@ export default function ConsultationsPage() {
      logic.currentQueueState.phase === "ACTIVE_SESSION")
   )
 
+  // Khi đã có hàng đợi hoạt động, luôn ẩn form đăng ký
+  useEffect(() => {
+    if (hasActiveQueue) {
+      setShowRegisterForm(false)
+    }
+  }, [hasActiveQueue])
+
   const tabParam = searchParams.get("tab")
   const defaultTab = logic.isAdmin 
     ? "admin-requests" 
     : logic.isMember 
-      ? (hasActiveQueue ? "queue" : "create-request") 
+      ? "queue" 
       : "sessions"
   const activeTab = tabParam === "requests"
-    ? (logic.isAdmin ? "admin-requests" : "create-request")
-    : tabParam === "chat"
-      ? "sessions"
-      : (tabParam || defaultTab)
+    ? (logic.isAdmin ? "admin-requests" : "queue")
+    : tabParam === "create-request"
+      ? "queue"
+      : tabParam === "chat"
+        ? "sessions"
+        : (tabParam || defaultTab)
 
   useEffect(() => {
     const pkgId = searchParams.get("packageId")
     if (pkgId && logic.isMember) {
       logic.setRequestForm((prev) => (prev.packageId === pkgId ? prev : { ...prev, packageId: pkgId }))
+      setShowRegisterForm(true)
     }
   }, [searchParams, logic.isMember, logic.setRequestForm])
+
+  useEffect(() => {
+    if (tabParam === "create-request") {
+      setShowRegisterForm(true)
+    }
+  }, [tabParam])
 
 
   if (!logic.isAdmin && !logic.isDoctor && !logic.isMember) {
@@ -78,7 +96,7 @@ export default function ConsultationsPage() {
   }
 
   return (
-    <Page>
+    <Page width="full">
       <PageHeader
         icon={<Stethoscope className="w-5 h-5" />}
         title="Tư vấn & Chăm sóc"
@@ -127,10 +145,6 @@ export default function ConsultationsPage() {
                         Đang chờ
                       </span>
                     )}
-                  </TabsTrigger>
-                  <TabsTrigger value="create-request" className="rounded-lg text-xs font-semibold gap-1.5 px-3">
-                    <PlusCircle className="w-3.5 h-3.5" />
-                    <span>Đăng ký tư vấn</span>
                   </TabsTrigger>
                   <TabsTrigger value="sessions" className="rounded-lg text-xs font-semibold gap-1.5 px-3">
                     <Calendar className="w-3.5 h-3.5" />
@@ -188,41 +202,47 @@ export default function ConsultationsPage() {
           </div>
 
           {logic.isMember && (
-            <TabsContent value="queue" className="m-0">
-              <MemberQueuePanel
-                queueState={logic.currentQueueState}
-                latestRequest={logic.requests[0] ?? null}
-                loading={logic.loading}
-                actionLoading={logic.actionLoading}
-                insufficientCredits={logic.insufficientCredits}
-                onConfirm={logic.handleConfirmQueue}
-                onCancel={logic.handleCancelQueue}
-                onRefresh={logic.fetchCurrentQueueState}
-                onOpenSession={(sessionId: string | number) => {
-                  navigate(`/app/general/consultations/${sessionId}`)
-                }}
-                onRegisterNew={() => setSearchParams({ tab: "create-request" })}
-              />
+            <TabsContent value="queue" className="m-0 space-y-4">
+              {hasActiveQueue || !showRegisterForm ? (
+                <MemberQueuePanel
+                  queueState={logic.currentQueueState}
+                  latestRequest={logic.requests[0] ?? null}
+                  loading={logic.loading}
+                  actionLoading={logic.actionLoading}
+                  insufficientCredits={logic.insufficientCredits}
+                  onConfirm={logic.handleConfirmQueue}
+                  onCancel={(requestId) => {
+                    logic.handleCancelQueue(requestId)
+                    setShowRegisterForm(false)
+                  }}
+                  onRefresh={logic.fetchCurrentQueueState}
+                  onOpenSession={(sessionId: string | number) => {
+                    navigate(`/app/general/consultations/${sessionId}`)
+                  }}
+                  onRegisterNew={() => setShowRegisterForm(true)}
+                />
+              ) : (
+                <CreateRequestPanel
+                  form={logic.requestForm}
+                  healthRecords={logic.healthRecords}
+                  packages={logic.packages}
+                  availableCredits={logic.wallet?.available}
+                  hasActiveQueue={hasActiveQueue}
+                  loading={logic.actionLoading}
+                  insufficientCredits={logic.insufficientCredits}
+                  queueStatistics={logic.queueStatistics}
+                  onChange={logic.setRequestForm}
+                  onSubmit={(e) =>
+                    logic.handleCreateRequest(e, () => {
+                      setShowRegisterForm(false)
+                    })
+                  }
+                  onPendingConflict={() => logic.setIsPendingConflictDialogOpen(true)}
+                  onCancel={() => setShowRegisterForm(false)}
+                />
+              )}
             </TabsContent>
           )}
-
-        {logic.isMember && (
-          <TabsContent value="create-request" className="m-0">
-            <CreateRequestPanel
-              form={logic.requestForm}
-              healthRecords={logic.healthRecords}
-              packages={logic.packages}
-              availableCredits={logic.wallet?.available}
-              hasActiveQueue={hasActiveQueue}
-              loading={logic.actionLoading}
-              insufficientCredits={logic.insufficientCredits}
-              queueStatistics={logic.queueStatistics}
-              onChange={logic.setRequestForm}
-              onSubmit={(e) => logic.handleCreateRequest(e, () => setSearchParams({ tab: "queue" }))}
-              onPendingConflict={() => logic.setIsPendingConflictDialogOpen(true)}
-            />
-          </TabsContent>
-        )}
 
         {logic.isAdmin && (
           <TabsContent value="admin-requests" className="m-0">
@@ -275,8 +295,6 @@ export default function ConsultationsPage() {
             loading={logic.loading || logic.actionLoading}
             selectedSessionId={logic.selectedSession?.id ?? null}
             onClose={logic.openCloseDialog}
-            onExpireOverdue={logic.handleExpireOverdue}
-            onActivateScheduled={logic.handleActivateScheduledSessions}
             onSessionRefreshed={logic.loadData}
           />
         </TabsContent>
