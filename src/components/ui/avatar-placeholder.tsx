@@ -29,31 +29,31 @@ const sizeClasses: Record<AvatarSize, { root: string; text: string; icon: string
 }
 
 const statusColors: Record<AvatarStatus, string> = {
-  online: "bg-emerald-500",
+  online: "bg-success-500",
   offline: "bg-slate-400",
-  busy: "bg-rose-500",
-  away: "bg-amber-500",
+  busy: "bg-danger-500",
+  away: "bg-warning-500",
 }
 
 const colorSchemes: Record<string, string> = {
-  blue: "bg-gradient-to-tr from-blue-600 to-sky-500 text-white",
-  sky: "bg-gradient-to-tr from-sky-500 to-cyan-400 text-white",
-  indigo: "bg-gradient-to-tr from-indigo-600 to-purple-500 text-white",
-  emerald: "bg-gradient-to-tr from-emerald-600 to-teal-400 text-white",
-  amber: "bg-gradient-to-tr from-amber-500 to-orange-400 text-white",
-  rose: "bg-gradient-to-tr from-rose-600 to-pink-500 text-white",
-  purple: "bg-gradient-to-tr from-purple-600 to-violet-400 text-white",
-  neutral: "bg-slate-200 text-slate-700 dark:bg-slate-800 dark:text-slate-200",
+  blue: "bg-gradient-to-tr from-primary-600 to-primary-500 text-white",
+  sky: "bg-gradient-to-tr from-primary-500 to-primary-400 text-white",
+  indigo: "bg-gradient-to-tr from-primary-600 to-primary-500 text-white",
+  emerald: "bg-gradient-to-tr from-success-600 to-success-400 text-white",
+  amber: "bg-gradient-to-tr from-warning-500 to-warning-400 text-white",
+  rose: "bg-gradient-to-tr from-danger-600 to-danger-500 text-white",
+  purple: "bg-gradient-to-tr from-primary-600 to-primary-400 text-white",
+  neutral: "bg-slate-200 text-slate-700",
 }
 
 const autoGradients = [
-  "bg-gradient-to-tr from-blue-600 to-sky-500 text-white",
-  "bg-gradient-to-tr from-indigo-600 to-purple-500 text-white",
-  "bg-gradient-to-tr from-sky-600 to-cyan-500 text-white",
-  "bg-gradient-to-tr from-emerald-600 to-teal-500 text-white",
-  "bg-gradient-to-tr from-violet-600 to-pink-500 text-white",
-  "bg-gradient-to-tr from-cyan-600 to-blue-500 text-white",
-  "bg-gradient-to-tr from-rose-600 to-orange-500 text-white",
+  "bg-gradient-to-tr from-primary-600 to-primary-500 text-white",
+  "bg-gradient-to-tr from-primary-600 to-primary-500 text-white",
+  "bg-gradient-to-tr from-primary-600 to-primary-500 text-white",
+  "bg-gradient-to-tr from-success-600 to-success-500 text-white",
+  "bg-gradient-to-tr from-primary-600 to-danger-500 text-white",
+  "bg-gradient-to-tr from-primary-600 to-primary-500 text-white",
+  "bg-gradient-to-tr from-danger-600 to-warning-500 text-white",
 ]
 
 function getInitials(name?: string | null): string {
@@ -133,7 +133,7 @@ export const AvatarPlaceholder = React.forwardRef<HTMLDivElement, AvatarPlacehol
         {status ? (
           <span
             className={cn(
-              "absolute rounded-full ring-white dark:ring-slate-950",
+              "absolute rounded-full ring-white",
               statusColors[status],
               sizeConfig.status
             )}

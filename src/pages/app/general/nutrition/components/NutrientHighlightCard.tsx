@@ -58,12 +58,12 @@ export function NutrientHighlightCard({
       {displayedNutrients.map((item) => (
         <div
           key={item.nutrientCode}
-          className="rounded-lg bg-slate-50 dark:bg-muted/40 px-2.5 py-1.5 flex flex-col justify-between border border-slate-100 dark:border-muted/50"
+          className="rounded-lg bg-slate-50 px-2.5 py-1.5 flex flex-col justify-between border border-slate-100"
         >
           <span className="text-[11px] text-muted-foreground truncate font-normal">
             {shortLabels[item.nutrientCode] || item.name}
           </span>
-          <span className="font-semibold text-slate-800 dark:text-slate-200 mt-0.5">
+          <span className="font-semibold text-slate-800 mt-0.5">
             {item.amount} <span className="text-[10px] font-normal text-muted-foreground">{item.unit}</span>
           </span>
         </div>

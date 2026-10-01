@@ -39,9 +39,9 @@ export function CareHistoryDetailDialog({
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "ACTIVE":
-        return <Badge className="bg-emerald-600 hover:bg-emerald-700 text-white">Đang diễn ra</Badge>
+        return <Badge className="bg-success-600 hover:bg-success-700 text-white">Đang diễn ra</Badge>
       case "COMPLETED":
-        return <Badge className="bg-blue-600 hover:bg-blue-700 text-white">Đã hoàn thành</Badge>
+        return <Badge className="bg-primary-600 hover:bg-primary-700 text-white">Đã hoàn thành</Badge>
       case "CANCELLED":
         return <Badge variant="destructive">Đã hủy</Badge>
       case "SCHEDULED":
@@ -132,7 +132,7 @@ export function CareHistoryDetailDialog({
               </div>
 
               {episode.closureStatus && (
-                <div className="p-4 rounded-xl border bg-slate-50 dark:bg-slate-900/40 text-xs flex items-center justify-between">
+                <div className="p-4 rounded-xl border bg-slate-50 text-xs flex items-center justify-between">
                   <span className="text-muted-foreground">Trạng thái đóng hồ sơ:</span>
                   <Badge variant="outline">{episode.closureStatus}</Badge>
                 </div>
@@ -143,8 +143,8 @@ export function CareHistoryDetailDialog({
             <TabsContent value="summary" className="m-0 space-y-4">
               {finalSummary ? (
                 <div className="space-y-4">
-                  <div className="p-4 rounded-xl border bg-blue-50/50 dark:bg-blue-950/20 border-blue-100 dark:border-blue-900 space-y-2">
-                    <div className="flex items-center gap-2 text-xs font-bold text-blue-800 dark:text-blue-300">
+                  <div className="p-4 rounded-xl border bg-primary-50/50 border-primary-100 space-y-2">
+                    <div className="flex items-center gap-2 text-xs font-bold text-primary-800">
                       <FileText className="h-4 w-4" />
                       Tóm tắt chung
                     </div>
@@ -165,8 +165,8 @@ export function CareHistoryDetailDialog({
                   )}
 
                   {finalSummary.recommendations && (
-                    <div className="p-4 rounded-xl border bg-emerald-50/50 dark:bg-emerald-950/20 border-emerald-100 dark:border-emerald-900 space-y-2">
-                      <div className="flex items-center gap-2 text-xs font-bold text-emerald-800 dark:text-emerald-300">
+                    <div className="p-4 rounded-xl border bg-success-50/50 border-success-100 space-y-2">
+                      <div className="flex items-center gap-2 text-xs font-bold text-success-800">
                         <CheckCircle2 className="h-4 w-4" />
                         Khuyến nghị điều trị & Lối sống
                       </div>
@@ -177,8 +177,8 @@ export function CareHistoryDetailDialog({
                   )}
 
                   {finalSummary.followUpRecommendation && (
-                    <div className="p-4 rounded-xl border bg-amber-50/50 dark:bg-amber-950/20 border-amber-100 dark:border-amber-900 space-y-2">
-                      <div className="flex items-center gap-2 text-xs font-bold text-amber-800 dark:text-amber-300">
+                    <div className="p-4 rounded-xl border bg-warning-50/50 border-warning-100 space-y-2">
+                      <div className="flex items-center gap-2 text-xs font-bold text-warning-800">
                         <Calendar className="h-4 w-4" />
                         Kế hoạch tái khám / Theo dõi
                       </div>
@@ -224,7 +224,7 @@ export function CareHistoryDetailDialog({
                       className="flex items-center justify-between p-3 rounded-xl border bg-muted/20 hover:bg-muted/40 transition-colors text-xs"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="h-8 w-8 rounded-lg bg-red-50 text-red-600 flex items-center justify-center font-bold">
+                        <div className="h-8 w-8 rounded-lg bg-danger-50 text-danger-600 flex items-center justify-center font-bold">
                           <HeartPulse className="h-4 w-4" />
                         </div>
                         <div>

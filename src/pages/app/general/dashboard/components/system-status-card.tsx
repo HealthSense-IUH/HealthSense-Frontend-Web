@@ -48,7 +48,7 @@ export function SystemStatusCard({ services }: { services: SystemServiceStatus[]
 
       <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500 font-medium">
         <span>Global SLA: <strong>99.96%</strong></span>
-        <span className="text-emerald-600 font-bold">All nodes active</span>
+        <span className="text-success-600 font-bold">All nodes active</span>
       </div>
     </div>
   )

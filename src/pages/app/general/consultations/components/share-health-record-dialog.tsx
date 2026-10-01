@@ -114,7 +114,7 @@ export function ShareHealthRecordDialog({
 
         <div className="p-6 flex-1 overflow-hidden flex flex-col space-y-4">
           {!isSessionActive && (
-            <div className="flex items-start gap-2 p-3 bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/40 rounded-xl text-xs text-amber-800 dark:text-amber-300">
+            <div className="flex items-start gap-2 p-3 bg-warning-50 border border-warning-200 rounded-xl text-xs text-warning-800">
               <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
               <span>
                 Phiên chăm sóc hiện đang ở trạng thái <strong>{sessionStatus || "INACTIVE"}</strong>. Bạn chỉ có thể chia sẻ thêm hồ sơ đo đạc khi phiên tư vấn đang hoạt động (ACTIVE).

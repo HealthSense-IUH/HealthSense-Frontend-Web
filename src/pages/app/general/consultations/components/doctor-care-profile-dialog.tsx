@@ -324,7 +324,7 @@ export function DoctorCareProfileDialog({
                           className="flex-1"
                         />
                         
-                        <Button variant="ghost" size="icon" onClick={() => removeRow(index)} className="text-red-500 hover:text-red-600 hover:bg-red-50 shrink-0">
+                        <Button variant="ghost" size="icon" onClick={() => removeRow(index)} className="text-danger-500 hover:text-danger-600 hover:bg-danger-50 shrink-0">
                           <Trash2 className="w-4 h-4" />
                         </Button>
                       </div>

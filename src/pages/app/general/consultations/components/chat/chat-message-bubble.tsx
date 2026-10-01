@@ -23,7 +23,7 @@ export function ChatMessageBubble({ message, mine, isFirstInGroup, isLastInGroup
 
   const colorClass = mine
     ? "bg-white text-slate-800 border border-slate-100 shadow-sm"
-    : "bg-[#84D396] text-white shadow-sm"
+    : "bg-primary-600 text-white shadow-sm"
 
   return (
     <div className={cn("relative px-4 py-2 text-[15px] leading-relaxed max-w-full break-words", roundedClass, colorClass)}>

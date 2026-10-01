@@ -124,7 +124,7 @@ export default function ReportsPage() {
             variant="outline"
             onClick={() => void loadData()}
             disabled={loading}
-            className="rounded-xl bg-white dark:bg-card border-0 shadow-sm h-10"
+            className="rounded-xl bg-white border-0 shadow-sm h-10"
           >
             {loading ? (
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -138,16 +138,16 @@ export default function ReportsPage() {
 
       <PageBody>
         {error && (
-          <div className="rounded-2xl border border-red-200 bg-red-50 dark:bg-red-950/30 dark:border-red-900 p-4 text-sm text-red-700 dark:text-red-300">
+          <div className="rounded-2xl border border-danger-200 bg-danger-50 p-4 text-sm text-danger-700">
             {error}
           </div>
         )}
 
         <div className="grid gap-6 md:grid-cols-3">
-          <Card className="rounded-3xl border-0 shadow-sm bg-white dark:bg-card">
+          <Card className="rounded-2xl border-0 shadow-sm bg-white">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-1.5">
-                <HeartPulse className="h-4 w-4 text-rose-500" /> Nhịp tim trung bình
+                <HeartPulse className="h-4 w-4 text-danger-500" /> Nhịp tim trung bình
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -161,10 +161,10 @@ export default function ReportsPage() {
             </CardContent>
           </Card>
 
-          <Card className="rounded-3xl border-0 shadow-sm bg-white dark:bg-card">
+          <Card className="rounded-2xl border-0 shadow-sm bg-white">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-1.5">
-                <Droplets className="h-4 w-4 text-sky-500" /> SpO2 trung bình
+                <Droplets className="h-4 w-4 text-primary-500" /> SpO2 trung bình
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -182,10 +182,10 @@ export default function ReportsPage() {
             </CardContent>
           </Card>
 
-          <Card className="rounded-3xl border-0 shadow-sm bg-white dark:bg-card">
+          <Card className="rounded-2xl border-0 shadow-sm bg-white">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-1.5">
-                <Activity className="h-4 w-4 text-emerald-500" /> HRV trung bình (RMSSD)
+                <Activity className="h-4 w-4 text-success-500" /> HRV trung bình (RMSSD)
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -206,14 +206,14 @@ export default function ReportsPage() {
         {stats && totalScreened > 0 && (
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {[
-              { label: "Bình thường", value: stats.totalNormal, cls: "text-emerald-600" },
-              { label: "Chưa chắc chắn", value: stats.totalUncertain, cls: "text-amber-600" },
-              { label: "Nghi ngờ rung nhĩ", value: stats.totalAfibSuspected, cls: "text-orange-600" },
-              { label: "Rung nhĩ", value: stats.totalAfibRisk, cls: "text-red-600" },
+              { label: "Bình thường", value: stats.totalNormal, cls: "text-success-600" },
+              { label: "Chưa chắc chắn", value: stats.totalUncertain, cls: "text-warning-600" },
+              { label: "Nghi ngờ rung nhĩ", value: stats.totalAfibSuspected, cls: "text-warning-600" },
+              { label: "Rung nhĩ", value: stats.totalAfibRisk, cls: "text-danger-600" },
             ].map((item) => (
               <div
                 key={item.label}
-                className="p-3.5 rounded-2xl bg-white dark:bg-card border-0 shadow-sm"
+                className="p-3.5 rounded-2xl bg-white border-0 shadow-sm"
               >
                 <span className="text-xs text-muted-foreground font-medium block">{item.label}</span>
                 <span className={`text-2xl font-bold ${item.cls}`}>{item.value}</span>
@@ -224,7 +224,7 @@ export default function ReportsPage() {
         )}
 
         {/* Xu hướng nhịp tim theo ngày */}
-        <Card className="rounded-3xl border-0 shadow-sm bg-white dark:bg-card">
+        <Card className="rounded-2xl border-0 shadow-sm bg-white">
           <CardHeader>
             <CardTitle>Xu hướng Nhịp tim theo ngày</CardTitle>
             <CardDescription>
@@ -244,9 +244,9 @@ export default function ReportsPage() {
             ) : (
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={trend} margin={{ top: 20, right: 20, left: 0, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(0,0,0,0.1)" />
-                  <XAxis dataKey="label" stroke="#888888" fontSize={12} tickLine={false} axisLine={false} />
-                  <YAxis stroke="#888888" fontSize={12} tickLine={false} axisLine={false} />
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--color-slate-200)" />
+                  <XAxis dataKey="label" stroke="var(--color-slate-400)" fontSize={12} tickLine={false} axisLine={false} />
+                  <YAxis stroke="var(--color-slate-400)" fontSize={12} tickLine={false} axisLine={false} />
                   <Tooltip
                     contentStyle={{ borderRadius: "12px", border: "none", boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}
                     formatter={(value, name) => [`${String(value ?? "--")} BPM`, name]}
@@ -256,7 +256,7 @@ export default function ReportsPage() {
                     type="monotone"
                     dataKey="maxHr"
                     name="Cao nhất"
-                    stroke="var(--color-health-heart, #ef4444)"
+                    stroke="var(--color-danger-500)"
                     strokeWidth={2}
                     dot={{ r: 3 }}
                     connectNulls
@@ -265,7 +265,7 @@ export default function ReportsPage() {
                     type="monotone"
                     dataKey="avgHr"
                     name="Trung bình"
-                    stroke="var(--color-primary, #0ea5e9)"
+                    stroke="var(--color-primary-500)"
                     strokeWidth={3}
                     dot={{ r: 4, strokeWidth: 2 }}
                     connectNulls
@@ -274,7 +274,7 @@ export default function ReportsPage() {
                     type="monotone"
                     dataKey="minHr"
                     name="Thấp nhất"
-                    stroke="#94a3b8"
+                    stroke="var(--color-slate-400)"
                     strokeWidth={2}
                     dot={{ r: 3 }}
                     connectNulls

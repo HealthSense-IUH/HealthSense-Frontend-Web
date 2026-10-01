@@ -335,9 +335,9 @@ export default function DoctorSessionsPage() {
     return (
       <Page>
         <PageBody className="items-center justify-center text-center gap-0 py-20">
-          <ShieldAlert className="h-12 w-12 text-red-500 mb-4" />
-          <h2 className="text-xl font-bold text-neutral-900 mb-2">Quyền truy cập bị từ chối</h2>
-          <p className="text-neutral-500 mb-6">Bạn không có quyền truy cập trang bác sĩ.</p>
+          <ShieldAlert className="h-12 w-12 text-danger-500 mb-4" />
+          <h2 className="text-xl font-bold text-slate-900 mb-2">Quyền truy cập bị từ chối</h2>
+          <p className="text-slate-500 mb-6">Bạn không có quyền truy cập trang bác sĩ.</p>
           <Button onClick={() => navigate("/app/general/dashboard")}>Về trang chủ</Button>
         </PageBody>
       </Page>
@@ -380,7 +380,7 @@ export default function DoctorSessionsPage() {
         {/* 3. Session list: section header + table with its own pagination */}
         <section className="flex flex-col gap-4">
           <div className="space-y-1">
-            <h2 className="text-lg sm:text-xl font-bold tracking-tight text-slate-900 dark:text-foreground">
+            <h2 className="text-lg sm:text-xl font-bold tracking-tight text-slate-900">
               Danh sách phiên khám (Active Care)
             </h2>
             <p className="text-xs sm:text-sm text-muted-foreground">

@@ -34,12 +34,12 @@ export function GuidanceBadge({
       return (
         <span
           className={cn(
-            "inline-flex items-center rounded-full bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 border border-emerald-200/80 dark:border-emerald-800/50",
+            "inline-flex items-center rounded-full bg-success-50 text-success-700 border border-success-200/80",
             sizeStyles,
             className
           )}
         >
-          {showIcon && <CheckCircle2 className={cn(iconSizes, "text-emerald-600 dark:text-emerald-400")} />}
+          {showIcon && <CheckCircle2 className={cn(iconSizes, "text-success-600")} />}
           <span>Nên ưu tiên</span>
         </span>
       )
@@ -47,12 +47,12 @@ export function GuidanceBadge({
       return (
         <span
           className={cn(
-            "inline-flex items-center rounded-full bg-rose-50 text-rose-700 dark:bg-rose-950/40 dark:text-rose-300 border border-rose-200/80 dark:border-rose-800/50",
+            "inline-flex items-center rounded-full bg-danger-50 text-danger-700 border border-danger-200/80",
             sizeStyles,
             className
           )}
         >
-          {showIcon && <AlertTriangle className={cn(iconSizes, "text-rose-600 dark:text-rose-400")} />}
+          {showIcon && <AlertTriangle className={cn(iconSizes, "text-danger-600")} />}
           <span>Nên hạn chế</span>
         </span>
       )
@@ -60,12 +60,12 @@ export function GuidanceBadge({
       return (
         <span
           className={cn(
-            "inline-flex items-center rounded-full bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 border border-amber-200/80 dark:border-amber-800/50",
+            "inline-flex items-center rounded-full bg-warning-50 text-warning-700 border border-warning-200/80",
             sizeStyles,
             className
           )}
         >
-          {showIcon && <AlertCircle className={cn(iconSizes, "text-amber-600 dark:text-amber-400")} />}
+          {showIcon && <AlertCircle className={cn(iconSizes, "text-warning-600")} />}
           <span>Cần lưu ý</span>
         </span>
       )
@@ -73,7 +73,7 @@ export function GuidanceBadge({
       return (
         <span
           className={cn(
-            "inline-flex items-center rounded-full bg-slate-50 text-slate-700 dark:bg-slate-900 dark:text-slate-300 border border-slate-200 dark:border-slate-800",
+            "inline-flex items-center rounded-full bg-slate-50 text-slate-700 border border-slate-200",
             sizeStyles,
             className
           )}

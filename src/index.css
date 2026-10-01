@@ -2,76 +2,112 @@
 
 @plugin "tailwindcss-animate";
 
-@custom-variant dark (&:is(.dark *));
-
+/*
+ * MỘT theme (sáng) và MỘT bảng màu cho toàn bộ HealthSense:
+ *   primary  — màu thương hiệu (xanh y tế)          success — thành công / bình thường
+ *   warning  — cảnh báo / chờ xử lý                  danger  — lỗi / nguy hiểm
+ *   slate    — trung tính (chữ, nền, viền)            white, black
+ * Mỗi màu có thang 50…950 (bg-primary-50, text-success-700, border-danger-200…). Các bảng màu khác của Tailwind
+ * (blue, emerald, red, gray…) bị tắt: viết bg-blue-500 sẽ không ra màu, nên giao diện không lệch khỏi bảng này.
+ * Token ngữ nghĩa kiểu shadcn (--primary, --muted-foreground, --border…) bên dưới cũng lấy từ chính bảng này.
+ */
 :root {
-  /* Canvas & Text Hierarchy */
-  --background: oklch(0.984 0.006 247.8); /* #f8fafc Slate-50 */
-  --foreground: #000051;                  /* Midnight Blue / Deep Text (#000051) */
-  --card: #ffffff;                        /* Pure White (#FFFFFF) */
-  --card-foreground: #000051;
-  --popover: #ffffff;
-  --popover-foreground: #000051;
+  --background: var(--color-slate-50);
+  --foreground: var(--color-slate-900);
+  --card: var(--color-white);
+  --card-foreground: var(--color-slate-900);
+  --popover: var(--color-white);
+  --popover-foreground: var(--color-slate-900);
 
-  /* Brand Colors (Medical + NEXT Guideline Fusion) */
-  --primary: #0284c7;                     /* Electric Medical Blue (#0284C7 / #034CA9) */
-  --primary-foreground: #ffffff;          /* Pure White */
-  --secondary: #f1f5f9;                   /* Soft Slate */
-  --secondary-foreground: #000051;
-  --muted: #f1f5f9;
-  --muted-foreground: #64748b;            /* Slate-500 */
-  --accent: #f1f5f9;
-  --accent-foreground: #000051;
-  --warning: #f59e0b;                     /* Amber-500 */
-  --warning-foreground: #000051;
-  --destructive: #eb1d2f;                 /* NEXT Red / Pulse Red (#EB1D2F) */
-  --destructive-foreground: #ffffff;
-  --border: #e2e8f0;                      /* Slate-200 */
-  --input: #e2e8f0;
-  --ring: #0284c7;
+  --primary: var(--color-primary-600);
+  --primary-foreground: var(--color-white);
+  --secondary: var(--color-slate-100);
+  --secondary-foreground: var(--color-slate-900);
+  --muted: var(--color-slate-100);
+  --muted-foreground: var(--color-slate-500);
+  --accent: var(--color-slate-100);
+  --accent-foreground: var(--color-slate-900);
+  --success: var(--color-success-600);
+  --success-foreground: var(--color-white);
+  --warning: var(--color-warning-500);
+  --warning-foreground: var(--color-slate-900);
+  --destructive: var(--color-danger-600);
+  --destructive-foreground: var(--color-white);
+  --border: var(--color-slate-200);
+  --input: var(--color-slate-200);
+  --ring: var(--color-primary-600);
   --radius: 0.75rem;
-
-  /* Custom Health & Brand Indicators */
-  --health-heart: #eb1d2f;                /* NEXT Red / Heart Rate (#EB1D2F) */
-  --health-spo2: #0284c7;                 /* Electric Sky Blue (#0284C7) */
-  --health-sleep: #8b5cf6;                /* Violet-500 */
-  --health-normal: #10b981;               /* Emerald-500 */
-  --brand-midnight: #000051;              /* Midnight Blue (#000051) */
-  --brand-electric: #034ca9;              /* Electric Blue (#034CA9) */
-  --brand-red: #eb1d2f;                   /* NEXT Red (#EB1D2F) */
 }
 
-.dark {
-  --background: #070d1e;                 /* Deep Midnight Navy */
-  --foreground: #f8fafc;
-  --card: #0f172a;                       /* Slate-900 */
-  --card-foreground: #f8fafc;
-  --popover: #0f172a;
-  --popover-foreground: #f8fafc;
-  --primary: #38bdf8;                    /* Radiant Sky-400 */
-  --primary-foreground: #070d1e;
-  --secondary: #1e293b;
-  --secondary-foreground: #f8fafc;
-  --muted: #1e293b;
-  --muted-foreground: #94a3b8;
-  --accent: #1e293b;
-  --accent-foreground: #f8fafc;
-  --warning: #fbbf24;
-  --warning-foreground: #070d1e;
-  --destructive: #f87171;
-  --destructive-foreground: #ffffff;
-  --border: #334155;
-  --input: #334155;
-  --ring: #38bdf8;
+@theme {
+  --color-*: initial;
+  --color-white: #fff;
+  --color-black: #000;
 
-  /* Custom Health Indicators (Dark Mode) */
-  --health-heart: #f87171;
-  --health-spo2: #38bdf8;
-  --health-sleep: #a78bfa;
-  --health-normal: #34d399;
-  --brand-midnight: #000051;
-  --brand-electric: #38bdf8;
-  --brand-red: #f87171;
+  /* Thương hiệu: nút chính, liên kết, trạng thái đang chọn, thông tin */
+  --color-primary-50: oklch(97.7% 0.013 236.62);
+  --color-primary-100: oklch(95.1% 0.026 236.824);
+  --color-primary-200: oklch(90.1% 0.058 230.902);
+  --color-primary-300: oklch(82.8% 0.111 230.318);
+  --color-primary-400: oklch(74.6% 0.16 232.661);
+  --color-primary-500: oklch(68.5% 0.169 237.323);
+  --color-primary-600: oklch(58.8% 0.158 241.966);
+  --color-primary-700: oklch(50% 0.134 242.749);
+  --color-primary-800: oklch(44.3% 0.11 240.79);
+  --color-primary-900: oklch(39.1% 0.09 240.876);
+  --color-primary-950: oklch(29.3% 0.066 243.157);
+
+  /* Thành công, bình thường, đã hoàn tất */
+  --color-success-50: oklch(97.9% 0.021 166.113);
+  --color-success-100: oklch(95% 0.052 163.051);
+  --color-success-200: oklch(90.5% 0.093 164.15);
+  --color-success-300: oklch(84.5% 0.143 164.978);
+  --color-success-400: oklch(76.5% 0.177 163.223);
+  --color-success-500: oklch(69.6% 0.17 162.48);
+  --color-success-600: oklch(59.6% 0.145 163.225);
+  --color-success-700: oklch(50.8% 0.118 165.612);
+  --color-success-800: oklch(43.2% 0.095 166.913);
+  --color-success-900: oklch(37.8% 0.077 168.94);
+  --color-success-950: oklch(26.2% 0.051 172.552);
+
+  /* Cảnh báo, chờ xử lý, cần chú ý */
+  --color-warning-50: oklch(98.7% 0.022 95.277);
+  --color-warning-100: oklch(96.2% 0.059 95.617);
+  --color-warning-200: oklch(92.4% 0.12 95.746);
+  --color-warning-300: oklch(87.9% 0.169 91.605);
+  --color-warning-400: oklch(82.8% 0.189 84.429);
+  --color-warning-500: oklch(76.9% 0.188 70.08);
+  --color-warning-600: oklch(66.6% 0.179 58.318);
+  --color-warning-700: oklch(55.5% 0.163 48.998);
+  --color-warning-800: oklch(47.3% 0.137 46.201);
+  --color-warning-900: oklch(41.4% 0.112 45.904);
+  --color-warning-950: oklch(27.9% 0.077 45.635);
+
+  /* Lỗi, nguy hiểm, nhịp tim bất thường */
+  --color-danger-50: oklch(97.1% 0.013 17.38);
+  --color-danger-100: oklch(93.6% 0.032 17.717);
+  --color-danger-200: oklch(88.5% 0.062 18.334);
+  --color-danger-300: oklch(80.8% 0.114 19.571);
+  --color-danger-400: oklch(70.4% 0.191 22.216);
+  --color-danger-500: oklch(63.7% 0.237 25.331);
+  --color-danger-600: oklch(57.7% 0.245 27.325);
+  --color-danger-700: oklch(50.5% 0.213 27.518);
+  --color-danger-800: oklch(44.4% 0.177 26.899);
+  --color-danger-900: oklch(39.6% 0.141 25.723);
+  --color-danger-950: oklch(25.8% 0.092 26.042);
+
+  /* Trung tính: chữ, nền, viền */
+  --color-slate-50: oklch(98.4% 0.003 247.858);
+  --color-slate-100: oklch(96.8% 0.007 247.896);
+  --color-slate-200: oklch(92.9% 0.013 255.508);
+  --color-slate-300: oklch(86.9% 0.022 252.894);
+  --color-slate-400: oklch(70.4% 0.04 256.788);
+  --color-slate-500: oklch(55.4% 0.046 257.417);
+  --color-slate-600: oklch(44.6% 0.043 257.281);
+  --color-slate-700: oklch(37.2% 0.044 257.287);
+  --color-slate-800: oklch(27.9% 0.041 260.031);
+  --color-slate-900: oklch(20.8% 0.042 265.755);
+  --color-slate-950: oklch(12.9% 0.042 264.695);
 }
 
 @theme inline {
@@ -97,6 +133,8 @@
   --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
   --color-warning: var(--warning);
   --color-warning-foreground: var(--warning-foreground);
   --color-destructive: var(--destructive);
@@ -104,19 +142,11 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  
+
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-
-  --color-health-heart: var(--health-heart);
-  --color-health-spo2: var(--health-spo2);
-  --color-health-sleep: var(--health-sleep);
-  --color-health-normal: var(--health-normal);
-  --color-brand-midnight: var(--brand-midnight);
-  --color-brand-electric: var(--brand-electric);
-  --color-brand-red: var(--brand-red);
 }
 
 @layer base {
@@ -131,20 +161,4 @@
     font-family: var(--font-heading);
     letter-spacing: -0.02em;
   }
-}
-
-.glass-card {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.6) 100%);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  box-shadow: 0 12px 36px 0 rgba(0, 0, 81, 0.06);
-}
-
-.glass-dark-card {
-  background: linear-gradient(135deg, rgba(15, 23, 42, 0.85) 0%, rgba(7, 13, 30, 0.75) 100%);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 16px 40px 0 rgba(0, 0, 0, 0.4);
 }

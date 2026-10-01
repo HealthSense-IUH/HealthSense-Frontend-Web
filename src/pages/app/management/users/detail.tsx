@@ -124,12 +124,12 @@ export default function MemberDetailPage() {
       <Page>
         <PageBody className="items-center justify-center text-center">
           <div className="flex flex-col items-center max-w-lg">
-            <div className="p-5 rounded-3xl bg-red-50 text-red-600 border border-red-200/80 shadow-xs mb-5">
+            <div className="p-5 rounded-2xl bg-danger-50 text-danger-600 border border-danger-200/80 shadow-xs mb-5">
               <ShieldAlert className="w-12 h-12 stroke-[2.2]" />
             </div>
             <h2 className="text-2xl font-black text-slate-900 tracking-tight">Access Denied: Protected Route</h2>
             <p className="text-sm font-medium text-slate-500 mt-2 leading-relaxed">
-              The <strong className="text-slate-800">User Detail</strong> view is restricted solely to tenant <strong className="text-blue-600">ADMIN</strong> and <strong className="text-amber-600">SUPER_ADMIN</strong> authorities.
+              The <strong className="text-slate-800">User Detail</strong> view is restricted solely to tenant <strong className="text-primary-600">ADMIN</strong> and <strong className="text-warning-600">SUPER_ADMIN</strong> authorities.
             </p>
           </div>
         </PageBody>
@@ -142,7 +142,7 @@ export default function MemberDetailPage() {
       <Page>
         <PageBody className="items-center justify-center text-center">
           <div className="flex flex-col items-center">
-            <Loader2 className="w-8 h-8 text-blue-600 animate-spin mb-3" />
+            <Loader2 className="w-8 h-8 text-primary-600 animate-spin mb-3" />
             <span className="text-sm font-bold text-slate-700">Đang tải thông tin hồ sơ Member #{id}...</span>
           </div>
         </PageBody>
@@ -167,15 +167,15 @@ export default function MemberDetailPage() {
           <div
             className={`p-4 rounded-2xl border text-xs font-bold flex items-center justify-between transition-all ${
               statusAlert.type === "success"
-                ? "bg-emerald-50 border-emerald-200 text-emerald-900 shadow-3xs shadow-emerald-500/10"
-                : "bg-red-50 border-red-200 text-red-900 shadow-3xs shadow-red-500/10"
+                ? "bg-success-50 border-success-200 text-success-900 shadow-3xs shadow-success-500/10"
+                : "bg-danger-50 border-danger-200 text-danger-900 shadow-3xs shadow-danger-500/10"
             }`}
           >
             <div className="flex items-center gap-3">
               {statusAlert.type === "success" ? (
-                <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+                <CheckCircle2 className="w-5 h-5 text-success-600 shrink-0" />
               ) : (
-                <AlertCircle className="w-5 h-5 text-red-600 shrink-0" />
+                <AlertCircle className="w-5 h-5 text-danger-600 shrink-0" />
               )}
               <span>{statusAlert.text}</span>
             </div>
@@ -194,7 +194,7 @@ export default function MemberDetailPage() {
           <TabsList className="bg-slate-100/90 p-1.5 rounded-2xl border border-slate-200/80 h-auto flex flex-wrap gap-1.5">
             <TabsTrigger
               value="personal"
-              className="rounded-xl px-4 py-2.5 font-extrabold text-xs flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:text-blue-700 data-[state=active]:shadow-xs transition-all cursor-pointer"
+              className="rounded-xl px-4 py-2.5 font-extrabold text-xs flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:text-primary-700 data-[state=active]:shadow-xs transition-all cursor-pointer"
             >
               <User className="w-4 h-4" />
               <span>1. Thông tin cá nhân</span>
@@ -202,12 +202,12 @@ export default function MemberDetailPage() {
 
             <TabsTrigger
               value="records"
-              className="rounded-xl px-4 py-2.5 font-extrabold text-xs flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:text-blue-700 data-[state=active]:shadow-xs transition-all cursor-pointer"
+              className="rounded-xl px-4 py-2.5 font-extrabold text-xs flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:text-primary-700 data-[state=active]:shadow-xs transition-all cursor-pointer"
             >
               <Activity className="w-4 h-4" />
               <span>2. Lịch sử các bản đo</span>
               {memberDetail?.totalHealthRecords != null && (
-                <span className="ml-1 px-2 py-0.5 rounded-full text-[10px] font-black bg-blue-100 text-blue-800">
+                <span className="ml-1 px-2 py-0.5 rounded-full text-[10px] font-black bg-primary-100 text-primary-800">
                   {memberDetail.totalHealthRecords}
                 </span>
               )}
@@ -215,7 +215,7 @@ export default function MemberDetailPage() {
 
             <TabsTrigger
               value="consultations"
-              className="rounded-xl px-4 py-2.5 font-extrabold text-xs flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:text-blue-700 data-[state=active]:shadow-xs transition-all cursor-pointer"
+              className="rounded-xl px-4 py-2.5 font-extrabold text-xs flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:text-primary-700 data-[state=active]:shadow-xs transition-all cursor-pointer"
             >
               <MessagesSquare className="w-4 h-4" />
               <span>3. Lịch sử các lần tư vấn</span>

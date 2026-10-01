@@ -26,7 +26,7 @@ export function PendingConflictDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader className="flex flex-col items-center text-center pb-2">
-          <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-600 flex items-center justify-center mb-3">
+          <div className="w-12 h-12 rounded-2xl bg-warning-500/10 border border-warning-500/20 text-warning-600 flex items-center justify-center mb-3">
             <Clock className="w-6 h-6" />
           </div>
           <DialogTitle className="text-lg font-bold">
@@ -38,7 +38,7 @@ export function PendingConflictDialog({
         </DialogHeader>
 
         <div className="space-y-3 py-2 text-xs">
-          <div className="rounded-xl border border-amber-500/20 bg-amber-500/10 p-3.5 text-amber-950 dark:text-amber-200 leading-relaxed">
+          <div className="rounded-xl border border-warning-500/20 bg-warning-500/10 p-3.5 text-warning-950 leading-relaxed">
             Hệ thống ghi nhận bạn <strong>đang có một yêu cầu tư vấn trong hàng đợi</strong>
             {queueNumber ? ` (Số thứ tự #${String(queueNumber).padStart(3, "0")})` : ""} hoặc đang chờ bác sĩ tiếp nhận.
           </div>

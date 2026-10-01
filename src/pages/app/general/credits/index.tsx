@@ -140,7 +140,7 @@ export default function CreditsPage() {
   if (!isMember) {
     return (
       <div className="mx-auto flex max-w-lg flex-col items-center justify-center gap-4 py-24 text-center">
-        <ShieldAlert className="h-12 w-12 text-red-500" />
+        <ShieldAlert className="h-12 w-12 text-danger-500" />
         <h2 className="text-2xl font-bold text-foreground">Truy cập bị từ chối</h2>
         <p className="text-sm text-muted-foreground">
           Chức năng Ví lượt tư vấn chỉ dành riêng cho tài khoản Hội viên (MEMBER).
@@ -162,7 +162,7 @@ export default function CreditsPage() {
               <h1 className="text-2xl font-bold tracking-tight text-foreground">
                 Lượt tư vấn
               </h1>
-              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-400 text-xs font-semibold">
+              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-success-50 text-success-700 text-xs font-semibold">
                 <Sparkles className="h-3 w-3" /> Hội viên
               </span>
             </div>

@@ -111,7 +111,7 @@ export default function TermsAndConditionsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-sky-500 selection:text-white">
+    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-primary-500 selection:text-white">
       {/* Embedded Print CSS for pristine A4 PDF export */}
       <style>{`
         @media print {
@@ -174,7 +174,7 @@ export default function TermsAndConditionsPage() {
               type="button"
               onClick={() => setViewStyle("interactive")}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${viewStyle === "interactive"
-                  ? "bg-white text-sky-700 shadow-xs border border-slate-200/80"
+                  ? "bg-white text-primary-700 shadow-xs border border-slate-200/80"
                   : "text-slate-600 hover:text-slate-900"
                 }`}
             >
@@ -187,7 +187,7 @@ export default function TermsAndConditionsPage() {
               type="button"
               onClick={() => setViewStyle("document")}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${viewStyle === "document"
-                  ? "bg-white text-sky-700 shadow-xs border border-slate-200/80"
+                  ? "bg-white text-primary-700 shadow-xs border border-slate-200/80"
                   : "text-slate-600 hover:text-slate-900"
                 }`}
             >
@@ -200,7 +200,7 @@ export default function TermsAndConditionsPage() {
           {/* Right Actions: Đăng nhập */}
           <div className="flex items-center gap-2.5">
             <Link to="/login">
-              <Button size="sm" className="rounded-xl bg-sky-600 hover:bg-sky-700 text-white text-xs font-bold shadow-2xs">
+              <Button size="sm" className="rounded-xl bg-primary-600 hover:bg-primary-700 text-white text-xs font-bold shadow-2xs">
                 Đăng nhập
               </Button>
             </Link>
@@ -209,9 +209,9 @@ export default function TermsAndConditionsPage() {
       </header>
 
       {/* Hero Banner Section (Hidden in print) */}
-      <section className="w-full bg-gradient-to-b from-[#070D1E] to-[#0D182E] text-white py-10 px-4 sm:px-6 relative overflow-hidden border-b border-white/10 print:hidden">
-        <div className="absolute -right-10 -top-10 w-96 h-96 bg-blue-600/20 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -left-10 bottom-0 w-80 h-80 bg-sky-500/15 rounded-full blur-3xl pointer-events-none" />
+      <section className="w-full bg-gradient-to-b from-slate-950 to-slate-900 text-white py-10 px-4 sm:px-6 relative overflow-hidden border-b border-white/10 print:hidden">
+        <div className="absolute -right-10 -top-10 w-96 h-96 bg-primary-600/20 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -left-10 bottom-0 w-80 h-80 bg-primary-500/15 rounded-full blur-3xl pointer-events-none" />
 
         <div className="w-full text-center relative z-10 space-y-3">
           <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black font-heading tracking-tight text-white">
@@ -233,15 +233,15 @@ export default function TermsAndConditionsPage() {
         <main className="w-full px-4 sm:px-6 py-6 print:hidden">
 
           {/* Critical Emergency Alert Banner */}
-          <div className="w-full mb-6 rounded-2xl border-2 border-red-300 bg-red-50/90 p-5 sm:p-6 shadow-xs flex flex-col md:flex-row items-start gap-4">
-            <div className="p-3 rounded-2xl bg-red-100 text-red-600 shrink-0">
+          <div className="w-full mb-6 rounded-2xl border-2 border-danger-300 bg-danger-50/90 p-5 sm:p-6 shadow-xs flex flex-col md:flex-row items-start gap-4">
+            <div className="p-3 rounded-2xl bg-danger-100 text-danger-600 shrink-0">
               <ShieldAlert className="w-7 h-7 stroke-[2.2]" />
             </div>
             <div className="space-y-1.5">
-              <h3 className="text-base font-black text-red-900 tracking-tight font-heading flex items-center gap-2">
+              <h3 className="text-base font-black text-danger-900 tracking-tight font-heading flex items-center gap-2">
                 <span>CẢNH BÁO QUAN TRỌNG: ĐÂY LÀ SẢN PHẨM THỬ NGHIỆM – KHÔNG DÙNG CHO CẤP CỨU Y TẾ</span>
               </h3>
-              <p className="text-xs sm:text-sm text-red-800 leading-relaxed font-sans">
+              <p className="text-xs sm:text-sm text-danger-800 leading-relaxed font-sans">
                 HealthSense là <strong>nền tảng nghiên cứu và thử nghiệm công nghệ AI</strong> trong việc theo dõi nhịp tim và tầm soát rung nhĩ (AFib).
                 Hệ thống <strong>KHÔNG PHẢI</strong> là cơ sở y tế, <strong>KHÔNG CÓ</strong> chức năng cấp cứu tự động và <strong>KHÔNG THAY THẾ</strong> chẩn đoán trực tiếp của bác sĩ chuyên khoa tim mạch.
                 Nếu bạn cảm thấy đau ngực, khó thở, chóng mặt hoặc có dấu hiệu đột quỵ, hãy gọi ngay <strong>Cấp cứu 115</strong> hoặc đến bệnh viện gần nhất.
@@ -265,12 +265,12 @@ export default function TermsAndConditionsPage() {
                         key={item.id}
                         onClick={() => scrollToSection(item.id)}
                         className={`w-full text-left text-xs font-bold py-2.5 px-3 rounded-xl transition-colors flex items-center justify-between cursor-pointer ${isActive
-                            ? "bg-sky-50 text-sky-700 font-extrabold border border-sky-200/80 shadow-2xs"
+                            ? "bg-primary-50 text-primary-700 font-extrabold border border-primary-200/80 shadow-2xs"
                             : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                           }`}
                       >
                         <span className="truncate pr-2">{item.title}</span>
-                        {isActive && <ChevronRight className="w-3.5 h-3.5 text-sky-600 shrink-0" />}
+                        {isActive && <ChevronRight className="w-3.5 h-3.5 text-primary-600 shrink-0" />}
                       </button>
                     )
                   })}
@@ -287,7 +287,7 @@ export default function TermsAndConditionsPage() {
                   <Button
                     size="sm"
                     onClick={handleDownloadPdf}
-                    className="w-full rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold gap-1.5 shadow-2xs cursor-pointer"
+                    className="w-full rounded-xl bg-danger-600 hover:bg-danger-700 text-white text-xs font-bold gap-1.5 shadow-2xs cursor-pointer"
                   >
                     <FileDown className="w-3.5 h-3.5" />
                     <span>Tải tài liệu PDF</span>
@@ -350,8 +350,8 @@ export default function TermsAndConditionsPage() {
                   </p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
                     {EMERGENCY_SYMPTOMS.map((symptom) => (
-                      <div key={symptom} className="flex items-start gap-2 p-2.5 rounded-xl bg-red-50/60 border border-red-100 text-xs text-red-900 font-medium">
-                        <span className="text-red-500 font-bold">•</span>
+                      <div key={symptom} className="flex items-start gap-2 p-2.5 rounded-xl bg-danger-50/60 border border-danger-100 text-xs text-danger-900 font-medium">
+                        <span className="text-danger-500 font-bold">•</span>
                         <span>{symptom}</span>
                       </div>
                     ))}
@@ -466,7 +466,7 @@ export default function TermsAndConditionsPage() {
         {/* Document Action Toolbar (Screen only) */}
         <div className="max-w-4xl mx-auto mb-6 flex flex-wrap items-center justify-between gap-3 p-3.5 bg-white border border-slate-200 rounded-2xl shadow-xs print:hidden">
           <div className="flex items-center gap-2">
-            <span className="flex h-2.5 w-2.5 rounded-full bg-emerald-500" />
+            <span className="flex h-2.5 w-2.5 rounded-full bg-success-500" />
             <span className="text-xs font-bold text-slate-700">Định dạng Văn bản Soạn thảo Chuẩn A4</span>
           </div>
 
@@ -474,7 +474,7 @@ export default function TermsAndConditionsPage() {
             <Button
               size="sm"
               onClick={handleDownloadPdf}
-              className="rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold gap-1.5 shadow-2xs cursor-pointer"
+              className="rounded-xl bg-danger-600 hover:bg-danger-700 text-white text-xs font-bold gap-1.5 shadow-2xs cursor-pointer"
               title="Tải tài liệu dạng PDF (Lưu / In PDF)"
             >
               <FileDown className="w-3.5 h-3.5" />
@@ -487,7 +487,7 @@ export default function TermsAndConditionsPage() {
               onClick={handleCopyText}
               className="rounded-xl text-xs font-bold gap-1.5 text-slate-700 hover:bg-slate-100"
             >
-              {copied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
+              {copied ? <Check className="w-3.5 h-3.5 text-success-600" /> : <Copy className="w-3.5 h-3.5" />}
               <span>{copied ? "Đã sao chép" : "Sao chép toàn bộ"}</span>
             </Button>
           </div>
@@ -529,11 +529,11 @@ export default function TermsAndConditionsPage() {
           </div>
 
           {/* Critical Box in Document */}
-          <div className="border-2 border-red-600 bg-red-50 p-4 sm:p-5 rounded-lg mb-8 space-y-2">
-            <p className="text-xs sm:text-sm font-bold text-red-900 uppercase text-center">
+          <div className="border-2 border-danger-600 bg-danger-50 p-4 sm:p-5 rounded-lg mb-8 space-y-2">
+            <p className="text-xs sm:text-sm font-bold text-danger-900 uppercase text-center">
               ⚠️ ĐIỀU KHOẢN ĐẶC BIỆT: KHÔNG THAY THẾ CHẨN ĐOÁN VÀ CẤP CỨU Y TẾ
             </p>
-            <p className="text-xs text-red-800 text-justify leading-relaxed">
+            <p className="text-xs text-danger-800 text-justify leading-relaxed">
               HealthSense là công trình thử nghiệm kỹ thuật số hỗ trợ nghiên cứu sức khỏe. Mọi thông báo, chỉ số, cảnh báo AFib hay điểm số tim mạch được tạo ra từ thuật toán máy tính chỉ có giá trị tham khảo. Hệ thống <strong>tuyệt đối không phải là thiết bị chẩn đoán y khoa</strong>, không được dùng để thay thế bác sĩ và <strong>không có khả năng cấp cứu</strong> trong các tình huống khẩn cấp.
             </p>
           </div>
@@ -665,7 +665,7 @@ export default function TermsAndConditionsPage() {
               <p className="font-bold uppercase text-slate-800">BAN ĐIỀU HÀNH HEALTHSENSE</p>
               <p className="text-[11px] text-slate-500 italic">(Đã ký duyệt phát hành)</p>
               <div className="h-16 flex items-center justify-center">
-                <span className="text-sky-700 font-bold tracking-wider text-sm border-b border-sky-300 pb-0.5">
+                <span className="text-primary-700 font-bold tracking-wider text-sm border-b border-primary-300 pb-0.5">
                   HealthSense Development Team
                 </span>
               </div>
@@ -683,7 +683,7 @@ export default function TermsAndConditionsPage() {
           <div className="flex items-center gap-4">
             <Link to="/" className="hover:text-slate-900 transition-colors">Trang chủ</Link>
             <Link to="/login" className="hover:text-slate-900 transition-colors">Đăng nhập</Link>
-            <button onClick={() => setViewStyle("document")} className="text-sky-600 font-bold hover:underline cursor-pointer">
+            <button onClick={() => setViewStyle("document")} className="text-primary-600 font-bold hover:underline cursor-pointer">
               Xem văn bản soạn thảo A4
             </button>
           </div>
@@ -695,7 +695,7 @@ export default function TermsAndConditionsPage() {
         <button
           onClick={handleScrollToTop}
           type="button"
-          className="fixed bottom-6 right-6 z-50 p-3 rounded-full bg-white/95 backdrop-blur-md border border-slate-200/90 shadow-xl text-slate-700 hover:text-sky-600 hover:border-sky-300 hover:bg-sky-50 transition-colors duration-200 hover:-translate-y-1 active:translate-y-0 cursor-pointer group print:hidden"
+          className="fixed bottom-6 right-6 z-50 p-3 rounded-full bg-white/95 backdrop-blur-md border border-slate-200/90 shadow-xl text-slate-700 hover:text-primary-600 hover:border-primary-300 hover:bg-primary-50 transition-colors duration-200 hover:-translate-y-1 active:translate-y-0 cursor-pointer group print:hidden"
           title="Cuộn lên đầu trang"
           aria-label="Scroll to top"
         >

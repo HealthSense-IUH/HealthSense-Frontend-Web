@@ -79,7 +79,7 @@ export function PaginationControl({
   const pageNumbers = getPageNumbers()
 
   return (
-    <div className={`flex flex-col sm:flex-row items-center justify-between gap-4 p-3.5 sm:px-5 sm:py-3 bg-white dark:bg-card border border-border rounded-2xl shadow-xs ${className}`}>
+    <div className={`flex flex-col sm:flex-row items-center justify-between gap-4 p-3.5 sm:px-5 sm:py-3 bg-white border border-border rounded-2xl shadow-xs ${className}`}>
       {/* Left: Total Records Info & Page Size Selector */}
       <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground order-2 sm:order-1">
         {showTotalInfo && totalElements !== undefined && (
@@ -98,14 +98,14 @@ export function PaginationControl({
 
         {showPageSize && onPageSizeChange && (
           <div className="flex items-center gap-1.5 ml-0 sm:ml-2">
-            <span className="text-slate-300 dark:text-slate-700">|</span>
+            <span className="text-slate-300">|</span>
             <span>Hiển thị:</span>
             <Select
               value={String(pageSize)}
               onValueChange={(val) => onPageSizeChange(Number(val))}
               disabled={isLoading}
             >
-              <SelectTrigger className="h-8 w-[72px] bg-white dark:bg-slate-800 border border-border shadow-2xs text-xs font-semibold rounded-xl">
+              <SelectTrigger className="h-8 w-[72px] bg-white border border-border shadow-2xs text-xs font-semibold rounded-xl">
                 <SelectValue placeholder={String(pageSize)} />
               </SelectTrigger>
               <SelectContent className="rounded-xl text-xs font-medium min-w-[72px]">
@@ -130,7 +130,7 @@ export function PaginationControl({
           title="Trang đầu tiên"
           disabled={currentPage <= 1 || isLoading}
           onClick={() => onPageChange(1)}
-          className="h-8 w-8 p-0 rounded-xl bg-white dark:bg-slate-800 border border-border text-foreground shadow-2xs hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer disabled:opacity-40"
+          className="h-8 w-8 p-0 rounded-xl bg-white border border-border text-foreground shadow-2xs hover:bg-slate-50 cursor-pointer disabled:opacity-40"
         >
           <ChevronsLeft className="h-4 w-4" />
         </Button>
@@ -142,7 +142,7 @@ export function PaginationControl({
           title="Trang trước"
           disabled={currentPage <= 1 || isLoading}
           onClick={() => onPageChange(currentPage - 1)}
-          className="h-8 w-8 p-0 rounded-xl bg-white dark:bg-slate-800 border border-border text-foreground shadow-2xs hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer disabled:opacity-40"
+          className="h-8 w-8 p-0 rounded-xl bg-white border border-border text-foreground shadow-2xs hover:bg-slate-50 cursor-pointer disabled:opacity-40"
         >
           <ChevronLeft className="h-4 w-4" />
         </Button>
@@ -173,7 +173,7 @@ export function PaginationControl({
                 className={`h-8 w-8 p-0 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                   isActive
                     ? "bg-primary text-primary-foreground border border-primary shadow-xs pointer-events-none"
-                    : "bg-white dark:bg-slate-800 border border-border shadow-2xs hover:bg-slate-50 dark:hover:bg-slate-700 text-foreground"
+                    : "bg-white border border-border shadow-2xs hover:bg-slate-50 text-foreground"
                 }`}
               >
                 {p}
@@ -189,7 +189,7 @@ export function PaginationControl({
           title="Trang sau"
           disabled={currentPage >= totalPages || isLoading}
           onClick={() => onPageChange(currentPage + 1)}
-          className="h-8 w-8 p-0 rounded-xl bg-white dark:bg-slate-800 border border-border text-foreground shadow-2xs hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer disabled:opacity-40"
+          className="h-8 w-8 p-0 rounded-xl bg-white border border-border text-foreground shadow-2xs hover:bg-slate-50 cursor-pointer disabled:opacity-40"
         >
           <ChevronRight className="h-4 w-4" />
         </Button>
@@ -201,7 +201,7 @@ export function PaginationControl({
           title="Trang cuối cùng"
           disabled={currentPage >= totalPages || isLoading}
           onClick={() => onPageChange(totalPages)}
-          className="h-8 w-8 p-0 rounded-xl bg-white dark:bg-slate-800 border border-border text-foreground shadow-2xs hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer disabled:opacity-40"
+          className="h-8 w-8 p-0 rounded-xl bg-white border border-border text-foreground shadow-2xs hover:bg-slate-50 cursor-pointer disabled:opacity-40"
         >
           <ChevronsRight className="h-4 w-4" />
         </Button>

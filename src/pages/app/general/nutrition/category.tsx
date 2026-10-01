@@ -75,7 +75,7 @@ export default function CategoryExplorerPage() {
 
   if (!currentCategory) {
     return (
-      <div className="max-w-md mx-auto p-8 text-center space-y-4">
+      <div className="max-w-md mx-auto p-6 text-center space-y-4">
         <p className="text-muted-foreground">Không tìm thấy nhóm thực phẩm.</p>
         <Button onClick={() => navigate("/app/general/nutrition")}>Quay lại trang dinh dưỡng</Button>
       </div>
@@ -117,7 +117,7 @@ export default function CategoryExplorerPage() {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-foreground">
+                <h2 className="text-lg sm:text-xl font-bold text-slate-900">
                   Có khuyến nghị cho tim mạch ({foodNames.length})
                 </h2>
                 <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
@@ -143,11 +143,11 @@ export default function CategoryExplorerPage() {
                       setSearchParams({ food: fn })
                       setGuidanceFilter("ALL")
                     }}
-                    className="group relative flex flex-col justify-between rounded-2xl border border-slate-200/80 bg-white p-4 text-left shadow-xs transition-all hover:border-primary/50 hover:shadow-md dark:border-border dark:bg-card cursor-pointer overflow-hidden"
+                    className="group relative flex flex-col justify-between rounded-2xl border border-slate-200/80 bg-white p-4 text-left shadow-xs transition-all hover:border-primary/50 hover:shadow-md cursor-pointer overflow-hidden"
                   >
                     <div className="w-full">
                       {/* Thumbnail Image / Placeholder */}
-                      <div className="relative aspect-[16/9] w-full overflow-hidden rounded-xl bg-slate-100 dark:bg-muted/50 mb-3.5 border border-slate-200/60 dark:border-border/60">
+                      <div className="relative aspect-[16/9] w-full overflow-hidden rounded-xl bg-slate-100 mb-3.5 border border-slate-200/60">
                         {thumbnail ? (
                           <img
                             src={thumbnail}
@@ -156,22 +156,22 @@ export default function CategoryExplorerPage() {
                             loading="lazy"
                           />
                         ) : (
-                          <div className="w-full h-full flex flex-col items-center justify-center text-slate-400 dark:text-muted-foreground gap-1.5 p-3 text-center bg-gradient-to-b from-slate-50 to-slate-100/80 dark:from-muted/20 dark:to-muted/50 group-hover:from-primary/5 group-hover:to-primary/10 transition-colors">
-                            <div className="p-2 rounded-xl bg-white dark:bg-card shadow-2xs text-slate-400 group-hover:text-primary transition-colors border border-slate-200/50 dark:border-border/50">
+                          <div className="w-full h-full flex flex-col items-center justify-center text-slate-400 gap-1.5 p-3 text-center bg-gradient-to-b from-slate-50 to-slate-100/80 group-hover:from-primary/5 group-hover:to-primary/10 transition-colors">
+                            <div className="p-2 rounded-xl bg-white shadow-2xs text-slate-400 group-hover:text-primary transition-colors border border-slate-200/50">
                               {defaultIcon}
                             </div>
-                            <span className="text-[11px] font-medium text-slate-400 dark:text-muted-foreground">
+                            <span className="text-[11px] font-medium text-slate-400">
                               Hình ảnh thực phẩm
                             </span>
                           </div>
                         )}
-                        <span className="absolute top-2.5 right-2.5 text-xs font-semibold text-primary bg-white/95 dark:bg-card/95 backdrop-blur-xs px-2.5 py-0.5 rounded-full shadow-2xs border border-slate-200/60 dark:border-border">
+                        <span className="absolute top-2.5 right-2.5 text-xs font-semibold text-primary bg-white/95 backdrop-blur-xs px-2.5 py-0.5 rounded-full shadow-2xs border border-slate-200/60">
                           {count} món
                         </span>
                       </div>
 
                       <div className="space-y-1">
-                        <h3 className="font-bold text-slate-900 dark:text-foreground group-hover:text-primary transition-colors text-base sm:text-lg">
+                        <h3 className="font-bold text-slate-900 group-hover:text-primary transition-colors text-base sm:text-lg">
                           {fn}
                         </h3>
                         {sampleVariants && (
@@ -183,7 +183,7 @@ export default function CategoryExplorerPage() {
                       </div>
                     </div>
 
-                    <div className="pt-3 mt-3 w-full border-t border-slate-100 dark:border-border/60 flex items-center justify-between text-xs text-primary font-medium">
+                    <div className="pt-3 mt-3 w-full border-t border-slate-100 flex items-center justify-between text-xs text-primary font-medium">
                       <span>Xem các lựa chọn</span>
                       <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                     </div>
@@ -198,11 +198,11 @@ export default function CategoryExplorerPage() {
         {selectedFoodName && (
           <div className="space-y-6">
             {/* Top Bar with title, quick back and counts */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-200/60 dark:border-border/60">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-200/60">
               <div className="flex items-center gap-2">
                 <Sparkles className="w-5 h-5 text-primary" />
                 <div>
-                  <h2 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-foreground">
+                  <h2 className="text-lg sm:text-xl font-bold text-slate-900">
                     Lựa chọn cho: <span className="text-primary">{selectedFoodName}</span>
                   </h2>
                   <span className="text-xs text-muted-foreground">
@@ -233,8 +233,8 @@ export default function CategoryExplorerPage() {
                 className={cn(
                   "px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-medium transition-all shrink-0 cursor-pointer flex items-center gap-1.5",
                   guidanceFilter === "ALL"
-                    ? "bg-slate-900 text-white dark:bg-primary dark:text-primary-foreground shadow-xs"
-                    : "bg-white dark:bg-card border border-slate-200 dark:border-border text-muted-foreground hover:text-foreground"
+                    ? "bg-slate-900 text-white shadow-xs"
+                    : "bg-white border border-slate-200 text-muted-foreground hover:text-foreground"
                 )}
               >
                 <LayoutGrid className="w-3.5 h-3.5" />
@@ -249,8 +249,8 @@ export default function CategoryExplorerPage() {
                   className={cn(
                     "px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-medium transition-all shrink-0 cursor-pointer flex items-center gap-1.5",
                     guidanceFilter === "PRIORITIZE"
-                      ? "bg-emerald-600 text-white shadow-xs"
-                      : "bg-emerald-50/70 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 hover:bg-emerald-100"
+                      ? "bg-success-600 text-white shadow-xs"
+                      : "bg-success-50/70 border border-success-200 text-success-800 hover:bg-success-100"
                   )}
                 >
                   <CheckCircle2 className="w-3.5 h-3.5" />
@@ -266,8 +266,8 @@ export default function CategoryExplorerPage() {
                   className={cn(
                     "px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-medium transition-all shrink-0 cursor-pointer flex items-center gap-1.5",
                     guidanceFilter === "CAUTION"
-                      ? "bg-amber-500 text-white shadow-xs"
-                      : "bg-amber-50/70 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-300 hover:bg-amber-100"
+                      ? "bg-warning-500 text-white shadow-xs"
+                      : "bg-warning-50/70 border border-warning-200 text-warning-800 hover:bg-warning-100"
                   )}
                 >
                   <AlertTriangle className="w-3.5 h-3.5" />
@@ -283,8 +283,8 @@ export default function CategoryExplorerPage() {
                   className={cn(
                     "px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-medium transition-all shrink-0 cursor-pointer flex items-center gap-1.5",
                     guidanceFilter === "LIMIT"
-                      ? "bg-rose-600 text-white shadow-xs"
-                      : "bg-rose-50/70 dark:bg-rose-950/20 border border-rose-200 dark:border-rose-800 text-rose-800 dark:text-rose-300 hover:bg-rose-100"
+                      ? "bg-danger-600 text-white shadow-xs"
+                      : "bg-danger-50/70 border border-danger-200 text-danger-800 hover:bg-danger-100"
                   )}
                 >
                   <Ban className="w-3.5 h-3.5" />
@@ -306,7 +306,7 @@ export default function CategoryExplorerPage() {
                 ))}
               </div>
             ) : (
-              <div className="rounded-2xl border border-dashed border-slate-200 dark:border-border p-8 text-center text-muted-foreground text-sm">
+              <div className="rounded-2xl border border-dashed border-slate-200 p-6 text-center text-muted-foreground text-sm">
                 Không có món nào thuộc nhóm khuyến nghị này.
               </div>
             )}
@@ -321,7 +321,7 @@ export default function CategoryExplorerPage() {
                 <Database className="w-5 h-5" />
               </div>
               <div>
-                <h2 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-foreground">
+                <h2 className="text-lg sm:text-xl font-bold text-slate-900">
                   Tất cả thực phẩm trong nhóm ({currentCategory.foodCount.toLocaleString("vi-VN")})
                 </h2>
                 <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
@@ -348,7 +348,7 @@ export default function CategoryExplorerPage() {
               <Link
                 key={c.id}
                 to={`/app/general/nutrition/category/${c.slug || c.id}`}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-muted text-xs font-medium text-slate-700 dark:text-slate-300 hover:bg-primary/10 hover:text-primary transition-colors"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 text-xs font-medium text-slate-700 hover:bg-primary/10 hover:text-primary transition-colors"
               >
                 <FoodGroupIcon icon={c.icon} className="w-3.5 h-3.5" />
                 {c.name}

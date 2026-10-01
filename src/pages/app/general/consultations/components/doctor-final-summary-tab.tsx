@@ -325,8 +325,8 @@ export function DoctorFinalSummaryTab({
   if (errorMsg) {
     return (
       <div className="py-8 text-center">
-        <AlertCircle className="mx-auto h-8 w-8 text-red-500 mb-2" />
-        <p className="text-red-700 font-medium">{errorMsg}</p>
+        <AlertCircle className="mx-auto h-8 w-8 text-danger-500 mb-2" />
+        <p className="text-danger-700 font-medium">{errorMsg}</p>
         <Button variant="outline" className="mt-4" onClick={fetchSummary}>
           Thử lại
         </Button>
@@ -343,32 +343,32 @@ export function DoctorFinalSummaryTab({
   return (
     <div className="py-4 space-y-6">
       {isFinalized && (
-        <div className="flex items-center justify-between rounded-lg border border-green-200 bg-green-50 p-4">
+        <div className="flex items-center justify-between rounded-lg border border-success-200 bg-success-50 p-4">
           <div className="flex items-center gap-3">
-            <CheckCircle2 className="h-5 w-5 text-green-600 shrink-0" />
+            <CheckCircle2 className="h-5 w-5 text-success-600 shrink-0" />
             <div>
-              <p className="font-medium text-green-900">Tổng kết phiên tư vấn (Đã khóa / Bất biến)</p>
-              <p className="text-xs text-green-700">
+              <p className="font-medium text-success-900">Tổng kết phiên tư vấn (Đã khóa / Bất biến)</p>
+              <p className="text-xs text-success-700">
                 Đã hoàn tất lúc: {formatDate(summary?.finalizedAt) || "-"}
               </p>
             </div>
           </div>
-          <Badge className="bg-green-600 hover:bg-green-700 shrink-0">FINALIZED</Badge>
+          <Badge className="bg-success-600 hover:bg-success-700 shrink-0">FINALIZED</Badge>
         </div>
       )}
 
       {!isFinalized && flowType === "QUEUE_DISPATCH_V1" && sessionStatus === "COMPLETED" && !isSummaryOverdue && summaryDueAt && (
-        <div className="flex items-center justify-between rounded-lg border border-amber-200 bg-amber-50 dark:bg-amber-950/40 p-4">
+        <div className="flex items-center justify-between rounded-lg border border-warning-200 bg-warning-50 p-4">
           <div className="flex items-center gap-3">
-            <Clock className="h-5 w-5 text-amber-600 dark:text-amber-400 shrink-0" />
+            <Clock className="h-5 w-5 text-warning-600 shrink-0" />
             <div>
-              <p className="font-medium text-amber-900 dark:text-amber-200 text-sm">Thời hạn hoàn tất tổng kết phiên</p>
-              <p className="text-xs text-amber-700 dark:text-amber-300 mt-0.5">
+              <p className="font-medium text-warning-900 text-sm">Thời hạn hoàn tất tổng kết phiên</p>
+              <p className="text-xs text-warning-700 mt-0.5">
                 Vui lòng hoàn tất trong thời hạn 10 phút. Lưu nháp sẽ không giải phóng trạng thái trực và không dừng thời hạn.
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-200/80 dark:bg-amber-900/60 text-amber-900 dark:text-amber-200 font-mono text-xs font-bold shrink-0">
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-warning-200/80 text-warning-900 font-mono text-xs font-bold shrink-0">
             <Clock className="w-3.5 h-3.5" />
             <span>{formatCountdown(summaryDueAtMs - currentTime)}</span>
           </div>
@@ -376,12 +376,12 @@ export function DoctorFinalSummaryTab({
       )}
 
       {!isFinalized && flowType === "QUEUE_DISPATCH_V1" && sessionStatus === "COMPLETED" && isSummaryOverdue && (
-        <div className="flex flex-col gap-2 rounded-lg border border-red-200 bg-red-50 dark:bg-red-950/40 p-4 text-xs">
+        <div className="flex flex-col gap-2 rounded-lg border border-danger-200 bg-danger-50 p-4 text-xs">
           <div className="flex items-start gap-3">
-            <AlertCircle className="h-5 w-5 text-red-600 dark:text-red-400 shrink-0 mt-0.5" />
+            <AlertCircle className="h-5 w-5 text-danger-600 shrink-0 mt-0.5" />
             <div>
-              <p className="font-medium text-red-900 dark:text-red-200 text-sm">Tổng kết chưa hoàn tất (Đã quá thời hạn 10 phút)</p>
-              <p className="text-xs text-red-700 dark:text-red-300 mt-1">
+              <p className="font-medium text-danger-900 text-sm">Tổng kết chưa hoàn tất (Đã quá thời hạn 10 phút)</p>
+              <p className="text-xs text-danger-700 mt-1">
                 {latestDispatchStatus?.dispatchStatus === "UNAVAILABLE"
                   ? "Trạng thái nhận tư vấn: Không nhận tư vấn (hệ thống đã giải phóng tự động)."
                   : latestDispatchStatus?.dispatchStatus === "AVAILABLE"
@@ -397,7 +397,7 @@ export function DoctorFinalSummaryTab({
       )}
 
       {!isFinalized && sessionStatus === "ACTIVE" && (
-        <div className="flex items-start gap-2 rounded-md bg-blue-50 p-3 text-xs text-blue-700">
+        <div className="flex items-start gap-2 rounded-md bg-primary-50 p-3 text-xs text-primary-700">
           <Info className="h-4 w-4 shrink-0 mt-0.5" />
           <p>
             Bạn có thể soạn bản nháp trong khi phiên đang diễn ra. Tổng kết chỉ có thể được hoàn tất sau khi phiên kết thúc (COMPLETED).
@@ -406,7 +406,7 @@ export function DoctorFinalSummaryTab({
       )}
 
       {!isFinalized && isCancelledWithCare && (
-        <div className="flex items-start gap-2 rounded-md bg-blue-50 p-3 text-xs text-blue-700">
+        <div className="flex items-start gap-2 rounded-md bg-primary-50 p-3 text-xs text-primary-700">
           <Info className="h-4 w-4 shrink-0 mt-0.5" />
           <p>
             Phiên tư vấn đã bị hủy nhưng đã phát sinh chăm sóc thực tế (meaningful care). Bạn có thể soạn và hoàn tất bản tổng kết.
@@ -415,7 +415,7 @@ export function DoctorFinalSummaryTab({
       )}
 
       {!isFinalized && sessionStatus === "CANCELLED" && !meaningfulCareOccurred && (
-        <div className="flex items-start gap-2 rounded-md bg-orange-50 p-3 text-xs text-orange-700">
+        <div className="flex items-start gap-2 rounded-md bg-warning-50 p-3 text-xs text-warning-700">
           <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
           <p>
             Không thể lập tổng kết cho phiên tư vấn đã bị hủy khi chưa phát sinh chăm sóc thực tế.
@@ -424,7 +424,7 @@ export function DoctorFinalSummaryTab({
       )}
       
       {!isFinalized && (sessionStatus === "SCHEDULED" || sessionStatus === "EXPIRED") && (
-        <div className="flex items-start gap-2 rounded-md bg-orange-50 p-3 text-xs text-orange-700">
+        <div className="flex items-start gap-2 rounded-md bg-warning-50 p-3 text-xs text-warning-700">
           <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
           <p>
             Không thể lập tổng kết cho phiên tư vấn đang ở trạng thái {sessionStatus}.
@@ -435,8 +435,8 @@ export function DoctorFinalSummaryTab({
       <div className="space-y-4">
         {/* Main fields */}
         <div className="space-y-1.5">
-          <label className="text-xs font-semibold text-neutral-700">
-            Tổng kết đánh giá lâm sàng <span className="text-red-500">*</span>
+          <label className="text-xs font-semibold text-slate-700">
+            Tổng kết đánh giá lâm sàng <span className="text-danger-500">*</span>
           </label>
           {isEditable ? (
             <Textarea
@@ -446,15 +446,15 @@ export function DoctorFinalSummaryTab({
               className="min-h-[90px] text-xs"
             />
           ) : (
-            <div className="rounded-md border bg-neutral-50 p-3 text-xs whitespace-pre-wrap min-h-[70px]">
-              {summaryText || <span className="text-neutral-400 italic">Không có dữ liệu</span>}
+            <div className="rounded-md border bg-slate-50 p-3 text-xs whitespace-pre-wrap min-h-[70px]">
+              {summaryText || <span className="text-slate-400 italic">Không có dữ liệu</span>}
             </div>
           )}
         </div>
 
         <div className="space-y-1.5">
-          <label className="text-xs font-semibold text-neutral-700">
-            Ghi nhận & Triệu chứng {isFinalized ? "" : <span className="text-red-500">* (khi hoàn tất)</span>}
+          <label className="text-xs font-semibold text-slate-700">
+            Ghi nhận & Triệu chứng {isFinalized ? "" : <span className="text-danger-500">* (khi hoàn tất)</span>}
           </label>
           {isEditable ? (
             <Textarea
@@ -464,15 +464,15 @@ export function DoctorFinalSummaryTab({
               className="min-h-[70px] text-xs"
             />
           ) : (
-            <div className="rounded-md border bg-neutral-50 p-3 text-xs whitespace-pre-wrap min-h-[50px]">
-              {observations || <span className="text-neutral-400 italic">Không có dữ liệu</span>}
+            <div className="rounded-md border bg-slate-50 p-3 text-xs whitespace-pre-wrap min-h-[50px]">
+              {observations || <span className="text-slate-400 italic">Không có dữ liệu</span>}
             </div>
           )}
         </div>
 
         <div className="space-y-1.5">
-          <label className="text-xs font-semibold text-neutral-700">
-            Khuyến nghị y tế & Lối sống {isFinalized ? "" : <span className="text-red-500">* (khi hoàn tất)</span>}
+          <label className="text-xs font-semibold text-slate-700">
+            Khuyến nghị y tế & Lối sống {isFinalized ? "" : <span className="text-danger-500">* (khi hoàn tất)</span>}
           </label>
           {isEditable ? (
             <Textarea
@@ -482,14 +482,14 @@ export function DoctorFinalSummaryTab({
               className="min-h-[70px] text-xs"
             />
           ) : (
-            <div className="rounded-md border bg-neutral-50 p-3 text-xs whitespace-pre-wrap min-h-[50px]">
-              {recommendations || <span className="text-neutral-400 italic">Không có dữ liệu</span>}
+            <div className="rounded-md border bg-slate-50 p-3 text-xs whitespace-pre-wrap min-h-[50px]">
+              {recommendations || <span className="text-slate-400 italic">Không có dữ liệu</span>}
             </div>
           )}
         </div>
 
         <div className="space-y-1.5">
-          <label className="text-xs font-semibold text-neutral-700">Khuyến nghị theo dõi & Tái khám (Tùy chọn)</label>
+          <label className="text-xs font-semibold text-slate-700">Khuyến nghị theo dõi & Tái khám (Tùy chọn)</label>
           {isEditable ? (
             <Textarea
               placeholder="Kế hoạch tái khám hoặc theo dõi tiếp theo..."
@@ -498,15 +498,15 @@ export function DoctorFinalSummaryTab({
               className="min-h-[60px] text-xs"
             />
           ) : (
-            <div className="rounded-md border bg-neutral-50 p-3 text-xs whitespace-pre-wrap min-h-[50px]">
-              {followUpRecommendation || <span className="text-neutral-400 italic">Không có dữ liệu</span>}
+            <div className="rounded-md border bg-slate-50 p-3 text-xs whitespace-pre-wrap min-h-[50px]">
+              {followUpRecommendation || <span className="text-slate-400 italic">Không có dữ liệu</span>}
             </div>
           )}
         </div>
 
         {/* Referenced Health Records */}
         <div className="space-y-2 pt-2 border-t">
-          <label className="text-xs font-semibold text-neutral-700 flex items-center justify-between">
+          <label className="text-xs font-semibold text-slate-700 flex items-center justify-between">
             <span>Hồ sơ đo đạc tham chiếu ({selectedRecordIds.length})</span>
             {isEditable && <span className="text-[11px] font-normal text-muted-foreground">Chọn các hồ sơ đo đạc trong phạm vi phiên tư vấn</span>}
           </label>
@@ -561,7 +561,7 @@ export function DoctorFinalSummaryTab({
           ) : (
             <div className="flex flex-wrap gap-2">
               {selectedRecordIds.length === 0 ? (
-                <span className="text-xs text-neutral-400 italic">Không có hồ sơ nào được tham chiếu.</span>
+                <span className="text-xs text-slate-400 italic">Không có hồ sơ nào được tham chiếu.</span>
               ) : (
                 selectedRecordIds.map((recId) => (
                   <Badge key={recId} variant="secondary" className="text-xs py-1 px-2 gap-1">
@@ -579,13 +579,13 @@ export function DoctorFinalSummaryTab({
           <div className="space-y-3 pt-3 border-t">
             <div className="flex items-center justify-between">
               <h4 className="text-xs font-semibold text-foreground flex items-center gap-1.5">
-                <FileText className="w-3.5 h-3.5 text-amber-600" />
+                <FileText className="w-3.5 h-3.5 text-warning-600" />
                 Phụ lục & Đính chính sau hoàn tất ({summary?.addenda?.length || 0})
               </h4>
               <Button
                 variant="outline"
                 size="sm"
-                className="h-7 text-xs gap-1 border-amber-300 hover:bg-amber-50 text-amber-900"
+                className="h-7 text-xs gap-1 border-warning-300 hover:bg-warning-50 text-warning-900"
                 onClick={() => setAddendumOpen(true)}
               >
                 <PlusCircle className="w-3.5 h-3.5" />
@@ -598,9 +598,9 @@ export function DoctorFinalSummaryTab({
                 {summary.addenda.map((addendum) => (
                   <div
                     key={addendum.id}
-                    className="p-3 rounded-lg bg-amber-50/60 dark:bg-amber-950/20 border border-amber-200/60 dark:border-amber-900/40 text-xs"
+                    className="p-3 rounded-lg bg-warning-50/60 border border-warning-200/60 text-xs"
                   >
-                    <div className="flex items-center justify-between font-medium text-amber-950 dark:text-amber-300 mb-1">
+                    <div className="flex items-center justify-between font-medium text-warning-950 mb-1">
                       <span>Lý do: {addendum.reason}</span>
                       <span className="text-[10px] text-muted-foreground">{formatDate(addendum.createdAt)}</span>
                     </div>
@@ -647,7 +647,7 @@ export function DoctorFinalSummaryTab({
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Hoàn tất tổng kết chăm sóc?</DialogTitle>
-            <DialogDescription className="pt-2 text-neutral-800 text-sm">
+            <DialogDescription className="pt-2 text-slate-800 text-sm">
               Sau khi hoàn tất, bản tổng kết gốc sẽ được khóa bất biến. Mọi đính chính sau này sẽ được ghi nhận dưới dạng Phụ lục (Addendum).
             </DialogDescription>
           </DialogHeader>
@@ -667,7 +667,7 @@ export function DoctorFinalSummaryTab({
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-base">
-              <FileText className="w-4 h-4 text-amber-600" />
+              <FileText className="w-4 h-4 text-warning-600" />
               Thêm Phụ lục / Đính chính Tổng kết
             </DialogTitle>
             <DialogDescription className="text-xs">
@@ -677,7 +677,7 @@ export function DoctorFinalSummaryTab({
           <div className="space-y-3 py-2 text-xs">
             <div className="space-y-1">
               <label className="font-medium text-foreground">
-                Lý do đính chính / bổ sung <span className="text-red-500">*</span>
+                Lý do đính chính / bổ sung <span className="text-danger-500">*</span>
               </label>
               <Input
                 placeholder="VD: Cập nhật kết quả cận lâm sàng bổ sung, Điều chỉnh liều khuyến nghị..."
@@ -688,7 +688,7 @@ export function DoctorFinalSummaryTab({
             </div>
             <div className="space-y-1">
               <label className="font-medium text-foreground">
-                Nội dung bổ sung <span className="text-red-500">*</span>
+                Nội dung bổ sung <span className="text-danger-500">*</span>
               </label>
               <Textarea
                 placeholder="Nhập chi tiết nội dung đính chính hoặc khuyến nghị bổ sung..."

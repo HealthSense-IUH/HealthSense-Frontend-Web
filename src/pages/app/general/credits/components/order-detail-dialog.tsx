@@ -197,9 +197,9 @@ export function OrderDetailDialog({
         )}
 
         {error && (
-          <div className="rounded-xl border border-red-200 bg-red-50/60 dark:border-red-900/50 dark:bg-red-950/20 p-4 space-y-3 text-center my-2">
-            <AlertCircle className="h-8 w-8 text-red-600 dark:text-red-400 mx-auto" />
-            <p className="text-xs text-red-700 dark:text-red-300">{error}</p>
+          <div className="rounded-xl border border-danger-200 bg-danger-50/60 p-4 space-y-3 text-center my-2">
+            <AlertCircle className="h-8 w-8 text-danger-600 mx-auto" />
+            <p className="text-xs text-danger-700">{error}</p>
             <Button
               variant="outline"
               size="sm"
@@ -245,7 +245,7 @@ export function OrderDetailDialog({
               )}
               <div className="flex items-center justify-between text-xs">
                 <span className="text-muted-foreground">Số lượt cấp:</span>
-                <span className="font-bold text-emerald-600 dark:text-emerald-400">
+                <span className="font-bold text-success-600">
                   +{formatCreditQuantity(detail.order.creditQuantity)}
                 </span>
               </div>
@@ -271,7 +271,7 @@ export function OrderDetailDialog({
             <div className="rounded-xl border border-border bg-muted/20 p-4 space-y-2.5">
               <div className="flex items-center justify-between text-xs pb-2 border-b border-border/60">
                 <span className="font-semibold text-foreground flex items-center gap-1.5">
-                  <Sparkles className="h-4 w-4 text-blue-600 dark:text-blue-400" /> Thanh toán
+                  <Sparkles className="h-4 w-4 text-primary-600" /> Thanh toán
                 </span>
                 <Badge variant="outline" className={`text-[11px] font-medium ${paymentStatusCfg?.className}`}>
                   {paymentStatusCfg?.label}
@@ -309,19 +309,19 @@ export function OrderDetailDialog({
 
             {/* 3. Snapshot số dư ví hiện tại */}
             {detail.wallet && (
-              <div className="rounded-xl border border-emerald-200 bg-emerald-50/40 dark:border-emerald-900/50 dark:bg-emerald-950/20 p-3.5 flex items-center justify-between">
+              <div className="rounded-xl border border-success-200 bg-success-50/40 p-3.5 flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
-                  <Coins className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+                  <Coins className="h-5 w-5 text-success-600" />
                   <div>
-                    <div className="text-xs font-semibold text-emerald-950 dark:text-emerald-300">
+                    <div className="text-xs font-semibold text-success-950">
                       Số dư ví hiện tại
                     </div>
-                    <div className="text-[11px] text-emerald-700/80 dark:text-emerald-400/80">
+                    <div className="text-[11px] text-success-700/80">
                       Tổng số lượt: {detail.wallet.balance}
                     </div>
                   </div>
                 </div>
-                <div className="text-base font-extrabold text-emerald-700 dark:text-emerald-400">
+                <div className="text-base font-extrabold text-success-700">
                   {detail.wallet.available.toLocaleString("vi-VN")} lượt
                 </div>
               </div>

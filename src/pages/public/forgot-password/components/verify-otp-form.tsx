@@ -75,7 +75,7 @@ export function VerifyOtpForm({ email, onSuccess, onBack }: VerifyOtpFormProps) 
   return (
     <div className="w-full flex flex-col gap-6 animate-in fade-in zoom-in-95 duration-300">
       <div className="flex flex-col items-center text-center">
-        <div className="w-12 h-12 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center mb-4 shadow-2xs border border-blue-200/60">
+        <div className="w-12 h-12 rounded-full bg-primary-50 text-primary-600 flex items-center justify-center mb-4 shadow-2xs border border-primary-200/60">
           <KeyRound className="w-6 h-6" />
         </div>
         <h2 className="text-2xl font-black text-slate-900 tracking-tight">Verify Code</h2>
@@ -86,15 +86,15 @@ export function VerifyOtpForm({ email, onSuccess, onBack }: VerifyOtpFormProps) 
 
       <form onSubmit={handleVerifySubmit} className="flex flex-col gap-4 w-full">
         {errorMessage && (
-          <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-bold flex items-center gap-2.5 shadow-2xs animate-in fade-in duration-200">
-            <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
+          <div className="p-3 rounded-xl bg-danger-50 border border-danger-200 text-danger-700 text-xs font-bold flex items-center gap-2.5 shadow-2xs animate-in fade-in duration-200">
+            <AlertCircle className="w-4 h-4 text-danger-600 shrink-0" />
             <span className="leading-normal flex-1">{errorMessage}</span>
           </div>
         )}
 
         {successMessage && (
-          <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold flex items-center gap-2.5 shadow-2xs animate-in fade-in duration-200">
-            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+          <div className="p-3 rounded-xl bg-success-50 border border-success-200 text-success-700 text-xs font-bold flex items-center gap-2.5 shadow-2xs animate-in fade-in duration-200">
+            <CheckCircle2 className="w-4 h-4 text-success-600 shrink-0" />
             <span className="leading-normal flex-1">{successMessage}</span>
           </div>
         )}

@@ -119,19 +119,19 @@ export function RefundDetailDialog({
   const getStatusBadge = (status?: string) => {
     switch (status) {
       case "SUCCEEDED":
-        return <Badge className="bg-emerald-500 hover:bg-emerald-600 font-bold">Thành công (SUCCEEDED)</Badge>
+        return <Badge className="bg-success-500 hover:bg-success-600 font-bold">Thành công (SUCCEEDED)</Badge>
       case "APPROVED":
-        return <Badge className="bg-blue-500 hover:bg-blue-600 font-bold">Đã duyệt (APPROVED)</Badge>
+        return <Badge className="bg-primary-500 hover:bg-primary-600 font-bold">Đã duyệt (APPROVED)</Badge>
       case "RECOMMENDED":
-        return <Badge className="bg-amber-500 hover:bg-amber-600 font-bold">Đã đề xuất (RECOMMENDED)</Badge>
+        return <Badge className="bg-warning-500 hover:bg-warning-600 font-bold">Đã đề xuất (RECOMMENDED)</Badge>
       case "REVIEW_REQUIRED":
-        return <Badge className="bg-purple-500 hover:bg-purple-600 font-bold">Cần đánh giá (REVIEW_REQUIRED)</Badge>
+        return <Badge className="bg-primary-500 hover:bg-primary-600 font-bold">Cần đánh giá (REVIEW_REQUIRED)</Badge>
       case "REJECTED":
-        return <Badge className="bg-rose-500 hover:bg-rose-600 font-bold">Bác bỏ (REJECTED)</Badge>
+        return <Badge className="bg-danger-500 hover:bg-danger-600 font-bold">Bác bỏ (REJECTED)</Badge>
       case "FAILED":
-        return <Badge className="bg-rose-600 hover:bg-rose-700 font-bold">Thất bại (FAILED)</Badge>
+        return <Badge className="bg-danger-600 hover:bg-danger-700 font-bold">Thất bại (FAILED)</Badge>
       case "PROCESSING":
-        return <Badge className="bg-indigo-500 hover:bg-indigo-600 font-bold">Đang xử lý (PROCESSING)</Badge>
+        return <Badge className="bg-primary-500 hover:bg-primary-600 font-bold">Đang xử lý (PROCESSING)</Badge>
       default:
         return <Badge variant="outline">{status || "UNKNOWN"}</Badge>
     }
@@ -170,7 +170,7 @@ export function RefundDetailDialog({
                 {/* Notice on Payment immutability */}
                 <div className="p-3 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between">
                   <span className="text-slate-600 font-medium">Trạng thái thanh toán gốc (Payment #{refund.paymentId}):</span>
-                  <Badge variant="outline" className="font-bold bg-white text-emerald-700 border-emerald-300">
+                  <Badge variant="outline" className="font-bold bg-white text-success-700 border-success-300">
                     Lịch sử: PAID (Bảo lưu)
                   </Badge>
                 </div>
@@ -183,9 +183,9 @@ export function RefundDetailDialog({
                       {(refund.originalPaidAmount ?? refund.originalAmount)?.toLocaleString("vi-VN")} {refund.currency || "VND"}
                     </span>
                   </div>
-                  <div className="p-4 rounded-2xl border border-blue-100 bg-blue-50/40">
-                    <span className="text-[11px] text-blue-600 font-bold block mb-1">Số tiền phê duyệt</span>
-                    <span className="text-base font-black text-blue-900 font-mono">
+                  <div className="p-4 rounded-2xl border border-primary-100 bg-primary-50/40">
+                    <span className="text-[11px] text-primary-600 font-bold block mb-1">Số tiền phê duyệt</span>
+                    <span className="text-base font-black text-primary-900 font-mono">
                       {refund.approvedAmount ? `${refund.approvedAmount.toLocaleString("vi-VN")} ${refund.currency || "VND"}` : "—"}
                     </span>
                   </div>
@@ -226,7 +226,7 @@ export function RefundDetailDialog({
                 {/* Real Business Audit Events for this Refund */}
                 <div className="space-y-2 pt-2">
                   <h4 className="font-bold text-slate-700 flex items-center gap-1.5 text-xs">
-                    <FileSearch className="w-3.5 h-3.5 text-blue-600" />
+                    <FileSearch className="w-3.5 h-3.5 text-primary-600" />
                     <span>Nhật ký Kiểm toán (Business Audit Trail)</span>
                   </h4>
                   {loadingAudit ? (
@@ -240,7 +240,7 @@ export function RefundDetailDialog({
                       {auditEvents.map((ev) => (
                         <div key={ev.id} className="p-3 text-[11px] space-y-1">
                           <div className="flex items-center justify-between">
-                            <span className="font-mono font-bold text-blue-700">{ev.eventType}</span>
+                            <span className="font-mono font-bold text-primary-700">{ev.eventType}</span>
                             <span className="text-slate-400 text-[10px]">
                               {new Date(ev.occurredAt).toLocaleString("vi-VN")}
                             </span>
@@ -269,7 +269,7 @@ export function RefundDetailDialog({
                 <Button
                   size="sm"
                   onClick={() => setDecideOpen(true)}
-                  className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold"
+                  className="bg-primary-600 hover:bg-primary-700 text-white text-xs font-bold"
                 >
                   Phê duyệt / Từ chối
                 </Button>
@@ -289,7 +289,7 @@ export function RefundDetailDialog({
                 <Button
                   size="sm"
                   onClick={() => setReconcileOpen(true)}
-                  className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold"
+                  className="bg-success-600 hover:bg-success-700 text-white text-xs font-bold"
                 >
                   Đối soát hoàn tiền
                 </Button>

@@ -65,8 +65,8 @@ export function ResetPasswordForm({ resetToken, onComplete, isCompleted }: Reset
   if (isCompleted) {
     return (
       <div className="w-full flex flex-col items-center text-center py-4 gap-6 animate-in fade-in zoom-in-95 duration-500">
-        <div className="w-16 h-16 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center shadow-lg border border-emerald-200">
-          <CheckCircle2 className="w-8 h-8 text-emerald-600" />
+        <div className="w-16 h-16 rounded-full bg-success-50 text-success-600 flex items-center justify-center shadow-lg border border-success-200">
+          <CheckCircle2 className="w-8 h-8 text-success-600" />
         </div>
 
         <div className="space-y-2">
@@ -94,7 +94,7 @@ export function ResetPasswordForm({ resetToken, onComplete, isCompleted }: Reset
   return (
     <div className="w-full flex flex-col gap-6 animate-in fade-in zoom-in-95 duration-300">
       <div className="flex flex-col items-center text-center">
-        <div className="w-12 h-12 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mb-4 shadow-2xs border border-emerald-200/60">
+        <div className="w-12 h-12 rounded-full bg-success-50 text-success-600 flex items-center justify-center mb-4 shadow-2xs border border-success-200/60">
           <ShieldCheck className="w-6 h-6" />
         </div>
         <h2 className="text-2xl font-black text-slate-900 tracking-tight">Create New Password</h2>
@@ -105,8 +105,8 @@ export function ResetPasswordForm({ resetToken, onComplete, isCompleted }: Reset
 
       <form onSubmit={handleResetSubmit} className="flex flex-col gap-4 w-full">
         {errorMessage && (
-          <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-bold flex items-center gap-2.5 shadow-2xs animate-in fade-in duration-200">
-            <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
+          <div className="p-3 rounded-xl bg-danger-50 border border-danger-200 text-danger-700 text-xs font-bold flex items-center gap-2.5 shadow-2xs animate-in fade-in duration-200">
+            <AlertCircle className="w-4 h-4 text-danger-600 shrink-0" />
             <span className="leading-normal flex-1">{errorMessage}</span>
           </div>
         )}
@@ -168,16 +168,16 @@ export function ResetPasswordForm({ resetToken, onComplete, isCompleted }: Reset
         {/* Concise Security Rules Checklist */}
         <div className="p-3 rounded-xl bg-slate-50 border border-slate-200/70 text-[11px] font-medium text-slate-600 space-y-1.5">
           <div className="font-bold text-slate-800 mb-1">Password requirements:</div>
-          <div className={`flex items-center gap-2 ${hasMinLength ? "text-emerald-600 font-semibold" : ""}`}>
-            <span className={`w-1.5 h-1.5 rounded-full ${hasMinLength ? "bg-emerald-500" : "bg-slate-300"}`} />
+          <div className={`flex items-center gap-2 ${hasMinLength ? "text-success-600 font-semibold" : ""}`}>
+            <span className={`w-1.5 h-1.5 rounded-full ${hasMinLength ? "bg-success-500" : "bg-slate-300"}`} />
             <span>At least 8 characters long</span>
           </div>
-          <div className={`flex items-center gap-2 ${hasLettersAndNumbers ? "text-emerald-600 font-semibold" : ""}`}>
-            <span className={`w-1.5 h-1.5 rounded-full ${hasLettersAndNumbers ? "bg-emerald-500" : "bg-slate-300"}`} />
+          <div className={`flex items-center gap-2 ${hasLettersAndNumbers ? "text-success-600 font-semibold" : ""}`}>
+            <span className={`w-1.5 h-1.5 rounded-full ${hasLettersAndNumbers ? "bg-success-500" : "bg-slate-300"}`} />
             <span>Includes both letters and numbers</span>
           </div>
-          <div className={`flex items-center gap-2 ${isMatching ? "text-emerald-600 font-semibold" : ""}`}>
-            <span className={`w-1.5 h-1.5 rounded-full ${isMatching ? "bg-emerald-500" : "bg-slate-300"}`} />
+          <div className={`flex items-center gap-2 ${isMatching ? "text-success-600 font-semibold" : ""}`}>
+            <span className={`w-1.5 h-1.5 rounded-full ${isMatching ? "bg-success-500" : "bg-slate-300"}`} />
             <span>Confirm password matches new password</span>
           </div>
         </div>

@@ -73,8 +73,8 @@ export function DoctorScopedRecordsTab({ sessionId }: DoctorScopedRecordsTabProp
   if (errorMsg) {
     return (
       <div className="py-8 text-center">
-        <AlertCircle className="mx-auto h-8 w-8 text-red-500 mb-2" />
-        <p className="text-red-700 font-medium">{errorMsg}</p>
+        <AlertCircle className="mx-auto h-8 w-8 text-danger-500 mb-2" />
+        <p className="text-danger-700 font-medium">{errorMsg}</p>
         <Button variant="outline" className="mt-4" onClick={fetchRecords}>
           Thử lại
         </Button>
@@ -86,8 +86,8 @@ export function DoctorScopedRecordsTab({ sessionId }: DoctorScopedRecordsTabProp
     <div className="py-4">
       {records.length === 0 ? (
         <div className="py-12 text-center">
-          <FileText className="mx-auto h-12 w-12 text-neutral-300 mb-3" />
-          <p className="text-neutral-500 font-medium">Chưa có hồ sơ sức khỏe nào trong phạm vi tư vấn.</p>
+          <FileText className="mx-auto h-12 w-12 text-slate-300 mb-3" />
+          <p className="text-slate-500 font-medium">Chưa có hồ sơ sức khỏe nào trong phạm vi tư vấn.</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -103,32 +103,32 @@ export function DoctorScopedRecordsTab({ sessionId }: DoctorScopedRecordsTabProp
                   setSelectedRecordId(item.record.id)
                   setIsDetailOpen(true)
                 }}
-                className={`flex cursor-pointer flex-col gap-2 rounded-xl border p-4 transition-colors hover:bg-neutral-50 ${
-                  hasAttention ? "border-orange-200 bg-orange-50/30" : ""
+                className={`flex cursor-pointer flex-col gap-2 rounded-xl border p-4 transition-colors hover:bg-slate-50 ${
+                  hasAttention ? "border-warning-200 bg-warning-50/30" : ""
                 }`}
               >
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-2">
-                    <FileText className="h-4 w-4 text-neutral-500" />
-                    <span className="font-medium text-neutral-900 line-clamp-1" title={item.record.fileName || item.record.originalFileName}>
+                    <FileText className="h-4 w-4 text-slate-500" />
+                    <span className="font-medium text-slate-900 line-clamp-1" title={item.record.fileName || item.record.originalFileName}>
                       {item.record.fileName || item.record.originalFileName || `Hồ sơ #${item.record.id}`}
                     </span>
                   </div>
                   {hasAttention && (
-                    <Badge variant="outline" className="bg-orange-100 text-orange-700 border-orange-200 gap-1">
+                    <Badge variant="outline" className="bg-warning-100 text-warning-700 border-warning-200 gap-1">
                       <AlertTriangle className="h-3 w-3" />
                       Cần xem
                     </Badge>
                   )}
                   {isReviewed && (
-                    <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 gap-1">
+                    <Badge variant="outline" className="bg-success-50 text-success-700 border-success-200 gap-1">
                       <CheckCircle2 className="h-3 w-3" />
                       Đã xem
                     </Badge>
                   )}
                 </div>
 
-                <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-neutral-500">
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-slate-500">
                   <span>{formatDate(item.record.createdAt) || "-"}</span>
                   <span className="flex items-center gap-1.5">
                     Trạng thái: <Badge variant="secondary" className="text-[10px] px-1.5 py-0">{item.record.status || "UNKNOWN"}</Badge>

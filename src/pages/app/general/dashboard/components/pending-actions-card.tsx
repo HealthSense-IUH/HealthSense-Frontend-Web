@@ -7,15 +7,15 @@ export function PendingActionsCard({ actions }: { actions: PendingActionItem[] }
     switch (severity) {
       case "critical":
         return {
-          bg: "bg-red-50/80 border-red-200 text-red-900",
-          icon: <AlertCircle className="h-4 w-4 text-red-600 shrink-0 mt-0.5" />,
-          btn: "bg-red-600 hover:bg-red-700 text-white shadow-red-500/20",
+          bg: "bg-danger-50/80 border-danger-200 text-danger-900",
+          icon: <AlertCircle className="h-4 w-4 text-danger-600 shrink-0 mt-0.5" />,
+          btn: "bg-danger-600 hover:bg-danger-700 text-white shadow-danger-500/20",
         }
       case "warning":
         return {
-          bg: "bg-amber-50/80 border-amber-200 text-amber-900",
-          icon: <Clock className="h-4 w-4 text-amber-600 shrink-0 mt-0.5" />,
-          btn: "bg-amber-600 hover:bg-amber-700 text-white shadow-amber-500/20",
+          bg: "bg-warning-50/80 border-warning-200 text-warning-900",
+          icon: <Clock className="h-4 w-4 text-warning-600 shrink-0 mt-0.5" />,
+          btn: "bg-warning-600 hover:bg-warning-700 text-white shadow-warning-500/20",
         }
       default:
         return {
@@ -34,7 +34,7 @@ export function PendingActionsCard({ actions }: { actions: PendingActionItem[] }
             <h3 className="text-base font-bold text-slate-900">Pending Actions</h3>
             <p className="text-xs text-slate-500">Items requiring administrative interventions</p>
           </div>
-          <span className="rounded-full bg-red-100 text-red-700 font-bold px-2.5 py-0.5 text-xs">
+          <span className="rounded-full bg-danger-100 text-danger-700 font-bold px-2.5 py-0.5 text-xs">
             {actions.length} Reqs
           </span>
         </div>

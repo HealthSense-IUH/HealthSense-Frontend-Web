@@ -2,7 +2,6 @@ import { Link, useLocation } from "react-router-dom"
 import { allNavigationGroups, type NavigationItem } from "./nav-config"
 import { useAppShell } from "./app-shell-context"
 import { useNavLabel } from "./use-nav-label"
-import { USER_ROLES } from "@/constants"
 import {
   Tooltip,
   TooltipContent,
@@ -15,7 +14,6 @@ export function SidebarContent() {
   const { effectiveRole } = useAppShell()
   const { itemLabel, itemShortLabel } = useNavLabel()
 
-  const isStaff = effectiveRole !== USER_ROLES.MEMBER
   const currentGroups = allNavigationGroups
 
   function isItemActive(item: NavigationItem): boolean {
@@ -41,11 +39,7 @@ export function SidebarContent() {
           return (
             <div key={group.id} className="space-y-1.5">
               {groupIdx > 0 && (
-                <div
-                  className={`my-2.5 w-8 mx-auto border-t transition-colors ${
-                    isStaff ? "border-indigo-900/50" : "border-sky-950/60"
-                  }`}
-                />
+                <div className="my-2.5 w-8 mx-auto border-t border-slate-200" />
               )}
 
               <div className="space-y-1.5">
@@ -60,43 +54,23 @@ export function SidebarContent() {
                   const linkElement = (
                     <Link
                       to={targetHref}
-                      className={`group relative flex flex-col items-center justify-center w-full py-2.5 px-1 rounded-2xl transition-all duration-200 ${
-                        active
-                          ? isStaff
-                            ? "bg-gradient-to-b from-indigo-500/35 to-purple-600/25 text-white font-bold border border-indigo-400/60 shadow-[0_0_15px_rgba(129,140,248,0.35)]"
-                            : "bg-gradient-to-b from-sky-500/25 to-cyan-500/20 text-white font-bold border border-sky-400/60 shadow-[0_0_15px_rgba(56,189,248,0.3)]"
-                          : isStaff
-                          ? "text-indigo-200/60 hover:bg-white/[0.08] hover:text-white"
-                          : "text-slate-400 hover:bg-white/[0.08] hover:text-white"
+                      className={`group relative flex flex-col items-center justify-center w-full py-2.5 px-1 rounded-xl transition-colors ${
+                        active ? "bg-primary-50 text-primary-700" : "text-slate-500 hover:bg-slate-100 hover:text-slate-900"
                       }`}
                     >
                       <div className="relative">
                         <Icon
                           className={`h-5 w-5 shrink-0 transition-colors ${
-                            active
-                              ? isStaff
-                                ? "text-indigo-200 drop-shadow-[0_0_8px_rgba(129,140,248,0.8)]"
-                                : "text-sky-300 drop-shadow-[0_0_8px_rgba(56,189,248,0.8)]"
-                              : "text-slate-400 group-hover:text-slate-200"
+                            active ? "text-primary-600" : "text-slate-400 group-hover:text-slate-700"
                           }`}
                         />
                         {item.badge && (
-                          <span
-                            className={`absolute -top-1 -right-1.5 h-2 w-2 rounded-full ring-2 ${
-                              isStaff
-                                ? "bg-indigo-400 shadow-[0_0_8px_#818cf8] ring-[#110E24]"
-                                : "bg-sky-400 shadow-[0_0_8px_#38bdf8] ring-[#0B132B]"
-                            }`}
-                          />
+                          <span className="absolute -top-1 -right-1.5 h-2 w-2 rounded-full bg-danger-500 ring-2 ring-white" />
                         )}
                       </div>
                       <span
                         className={`text-[10px] text-center leading-tight mt-1 max-w-[76px] truncate tracking-tight ${
-                          active
-                            ? "font-bold text-white"
-                            : isStaff
-                            ? "font-semibold text-indigo-200/70 group-hover:text-white"
-                            : "font-semibold text-slate-400 group-hover:text-white"
+                          active ? "font-bold text-primary-700" : "font-semibold text-slate-500 group-hover:text-slate-900"
                         }`}
                       >
                         {itemShortLabel(item)}
@@ -112,7 +86,7 @@ export function SidebarContent() {
                       <TooltipContent
                         side="right"
                         sideOffset={12}
-                        className="font-bold bg-slate-900 text-white border border-slate-700 shadow-2xl text-xs py-1.5 px-3 rounded-xl z-50"
+                        className="font-semibold bg-slate-900 text-white text-xs py-1.5 px-3 rounded-lg z-50"
                       >
                         {itemLabel(item)}
                         {item.badge ? ` (${item.badge})` : ""}

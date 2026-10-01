@@ -99,8 +99,8 @@ export function TerminationRequestDialog({
       <DialogContent className="sm:max-w-[500px]">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
-            <div className="flex items-center gap-2.5 text-rose-600 mb-1">
-              <div className="p-2 rounded-xl bg-rose-50 border border-rose-100">
+            <div className="flex items-center gap-2.5 text-danger-600 mb-1">
+              <div className="p-2 rounded-xl bg-danger-50 border border-danger-100">
                 <AlertTriangle className="w-5 h-5" />
               </div>
               <DialogTitle className="text-lg font-bold text-slate-900">
@@ -115,7 +115,7 @@ export function TerminationRequestDialog({
           <div className="py-4 space-y-4 text-xs">
             <div className="space-y-1.5">
               <Label htmlFor="termination-reason" className="text-xs font-semibold text-slate-700">
-                Lý do kết thúc <span className="text-rose-500">*</span>
+                Lý do kết thúc <span className="text-danger-500">*</span>
               </Label>
               <Select
                 value={reason}
@@ -137,7 +137,7 @@ export function TerminationRequestDialog({
 
             <div className="space-y-1.5">
               <Label htmlFor="termination-details" className="text-xs font-semibold text-slate-700">
-                Giải trình chi tiết <span className="text-rose-500">*</span>
+                Giải trình chi tiết <span className="text-danger-500">*</span>
               </Label>
               <Textarea
                 id="termination-details"
@@ -171,7 +171,7 @@ export function TerminationRequestDialog({
               type="submit"
               size="sm"
               disabled={loading || !details.trim()}
-              className="bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold gap-1.5"
+              className="bg-danger-600 hover:bg-danger-700 text-white text-xs font-bold gap-1.5"
             >
               {loading ? (
                 <>

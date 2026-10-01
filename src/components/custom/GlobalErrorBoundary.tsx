@@ -24,7 +24,7 @@ export function GlobalErrorBoundary() {
 
   return (
     <main className="flex min-h-screen w-full items-center justify-center bg-background px-4 text-foreground">
-      <section className="flex w-full max-w-md flex-col items-center gap-6 rounded-lg border bg-card p-8 text-center shadow-sm">
+      <section className="flex w-full max-w-md flex-col items-center gap-6 rounded-lg border bg-card p-6 text-center shadow-sm">
         <div className="flex size-16 items-center justify-center rounded-full bg-destructive/10 text-destructive">
           <AlertTriangle />
         </div>

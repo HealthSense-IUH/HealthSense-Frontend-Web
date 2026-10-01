@@ -195,35 +195,35 @@ export function SessionContinuationBanner({
     const isButtonsDisabled = isGraceExpired || actionLoading || myDecision === "CONTINUE" || myDecision === "STOP"
 
     return (
-      <div className="flex flex-col gap-2 p-4 bg-amber-50 dark:bg-amber-950/40 border-b border-amber-200 dark:border-amber-800 text-amber-950 dark:text-amber-100 animate-in fade-in slide-in-from-top-2 duration-200">
+      <div className="flex flex-col gap-2 p-4 bg-warning-50 border-b border-warning-200 text-warning-950 animate-in fade-in slide-in-from-top-2 duration-200">
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-start gap-2.5">
-            <AlertCircle className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+            <AlertCircle className="w-5 h-5 text-warning-600 shrink-0 mt-0.5" />
             <div>
               <h4 className="font-semibold text-sm">
                 Phiên tư vấn hiện tại đã kết thúc (15 phút).
               </h4>
-              <p className="text-xs text-amber-800 dark:text-amber-200 mt-0.5">
+              <p className="text-xs text-warning-800 mt-0.5">
                 Bạn có muốn tiếp tục thêm 15 phút không? Cả hai bên cần đồng ý để tiếp tục phiên.
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-200/60 dark:bg-amber-900/60 text-amber-900 dark:text-amber-200 font-mono text-xs font-medium shrink-0">
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-warning-200/60 text-warning-900 font-mono text-xs font-medium shrink-0">
             <Clock className="w-3.5 h-3.5" />
             <span>{formatCountdown(graceRemainingMs)}</span>
           </div>
         </div>
 
-        <div className="flex items-center justify-between pt-1 border-t border-amber-200/60 dark:border-amber-800/60 mt-1">
+        <div className="flex items-center justify-between pt-1 border-t border-warning-200/60 mt-1">
           <div className="text-xs">
             {myDecision === "CONTINUE" ? (
-              <span className="flex items-center gap-1.5 text-emerald-700 dark:text-emerald-300 font-medium">
+              <span className="flex items-center gap-1.5 text-success-700 font-medium">
                 <CheckCircle2 className="w-4 h-4" />
                 Bạn đã chọn tiếp tục. Đang chờ người còn lại xác nhận...
               </span>
             ) : myDecision === "STOP" ? (
-              <span className="flex items-center gap-1.5 text-neutral-600 dark:text-neutral-400 font-medium">
+              <span className="flex items-center gap-1.5 text-slate-600 font-medium">
                 <XCircle className="w-4 h-4" />
                 Bạn đã chọn kết thúc phiên. Đang hoàn tất...
               </span>
@@ -243,7 +243,7 @@ export function SessionContinuationBanner({
               <Button
                 variant="outline"
                 size="sm"
-                className="h-8 border-amber-300 hover:bg-amber-100/50 text-amber-900 text-xs"
+                className="h-8 border-warning-300 hover:bg-warning-100/50 text-warning-900 text-xs"
                 disabled={isButtonsDisabled}
                 onClick={() => void handleDecision("STOP")}
               >
@@ -252,7 +252,7 @@ export function SessionContinuationBanner({
               <Button
                 variant="default"
                 size="sm"
-                className="h-8 bg-emerald-600 hover:bg-emerald-700 text-white text-xs gap-1.5"
+                className="h-8 bg-success-600 hover:bg-success-700 text-white text-xs gap-1.5"
                 disabled={isButtonsDisabled}
                 onClick={() => void handleDecision("CONTINUE")}
               >
@@ -269,15 +269,15 @@ export function SessionContinuationBanner({
   // 3. If session is ACTIVE and block ended, but continuation data has not yet arrived or is preparing
   if (isActive && isBlockEnded && !continuation) {
     return (
-      <div className="flex items-center justify-between px-4 py-2.5 bg-amber-50/70 dark:bg-amber-950/30 border-b border-amber-200/50 text-xs text-amber-900 dark:text-amber-200">
+      <div className="flex items-center justify-between px-4 py-2.5 bg-warning-50/70 border-b border-warning-200/50 text-xs text-warning-900">
         <div className="flex items-center gap-2">
-          <RefreshCw className="w-3.5 h-3.5 animate-spin text-amber-600" />
+          <RefreshCw className="w-3.5 h-3.5 animate-spin text-warning-600" />
           <span>Hết block 15 phút. Đang kiểm tra trạng thái tiếp tục phiên tư vấn...</span>
         </div>
         <Button
           variant="ghost"
           size="sm"
-          className="h-6 text-[11px] px-2 text-amber-800 hover:text-amber-950"
+          className="h-6 text-[11px] px-2 text-warning-800 hover:text-warning-950"
           onClick={() => {
             void fetchCurrentContinuation()
             onSessionRefreshedRef.current()

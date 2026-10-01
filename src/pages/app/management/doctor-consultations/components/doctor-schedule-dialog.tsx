@@ -172,7 +172,7 @@ export function DoctorScheduleDialog({
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <div className="flex items-center gap-2">
-            <Calendar className="w-5 h-5 text-blue-600" />
+            <Calendar className="w-5 h-5 text-primary-600" />
             <DialogTitle>Quản lý lịch làm việc & Khung giờ trực</DialogTitle>
           </div>
           <DialogDescription>
@@ -181,7 +181,7 @@ export function DoctorScheduleDialog({
         </DialogHeader>
 
         {errorMessage && (
-          <div className="p-3 bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg flex items-start gap-2">
+          <div className="p-3 bg-danger-50 border border-danger-200 text-danger-700 text-sm rounded-lg flex items-start gap-2">
             <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
             <span>{errorMessage}</span>
           </div>
@@ -189,9 +189,9 @@ export function DoctorScheduleDialog({
 
         {/* Manager-controlled fields (Read-Only) */}
         {!currentProfile ? (
-          <div className="p-4 bg-amber-500/10 border border-amber-300 dark:border-amber-700 rounded-xl space-y-2 text-amber-800 dark:text-amber-300 text-xs">
+          <div className="p-4 bg-warning-500/10 border border-warning-300 rounded-xl space-y-2 text-warning-800 text-xs">
             <div className="flex items-center gap-1.5 font-bold">
-              <AlertCircle className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+              <AlertCircle className="w-4 h-4 text-warning-600" />
               <span>Chưa có hồ sơ tiếp nhận tư vấn (Care Profile)</span>
             </div>
             <p className="leading-relaxed">
@@ -202,7 +202,7 @@ export function DoctorScheduleDialog({
           <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-600">
-                <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                <ShieldCheck className="w-4 h-4 text-success-600" />
                 <span>Cấu hình hồ sơ chuyên môn do Điều phối viên / Quản trị viên quản lý:</span>
               </div>
               <Badge variant="outline" className="text-slate-500 text-[10px]">Chỉ xem</Badge>
@@ -216,7 +216,7 @@ export function DoctorScheduleDialog({
               </div>
               <div>
                 <span className="text-slate-500 block">Nhận tư vấn 1-1:</span>
-                <strong className={currentProfile?.acceptsOneOnOneCare ? "text-emerald-700 font-medium" : "text-slate-600 font-medium"}>
+                <strong className={currentProfile?.acceptsOneOnOneCare ? "text-success-700 font-medium" : "text-slate-600 font-medium"}>
                   {currentProfile?.acceptsOneOnOneCare ? "Có tiếp nhận" : "Không tiếp nhận"}
                 </strong>
               </div>
@@ -318,7 +318,7 @@ export function DoctorScheduleDialog({
                       <button
                         type="button"
                         onClick={() => handleRemoveSlot(index)}
-                        className="p-1.5 text-slate-400 hover:text-red-600 rounded-md hover:bg-red-50 ml-auto sm:ml-0"
+                        className="p-1.5 text-slate-400 hover:text-danger-600 rounded-md hover:bg-danger-50 ml-auto sm:ml-0"
                         title="Xóa khung giờ"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -343,7 +343,7 @@ export function DoctorScheduleDialog({
             <Button
               type="submit"
               disabled={submitting}
-              className="text-xs bg-blue-600 hover:bg-blue-700 text-white"
+              className="text-xs bg-primary-600 hover:bg-primary-700 text-white"
             >
               {submitting ? "Đang lưu..." : "Lưu thay đổi"}
             </Button>

@@ -55,8 +55,8 @@ export function RequestOtpForm({ initialEmail, onSuccess }: RequestOtpFormProps)
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full">
         {errorMessage && (
-          <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-bold flex items-center gap-2.5 shadow-2xs animate-in fade-in duration-200">
-            <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
+          <div className="p-3 rounded-xl bg-danger-50 border border-danger-200 text-danger-700 text-xs font-bold flex items-center gap-2.5 shadow-2xs animate-in fade-in duration-200">
+            <AlertCircle className="w-4 h-4 text-danger-600 shrink-0" />
             <span className="leading-normal flex-1">{errorMessage}</span>
           </div>
         )}

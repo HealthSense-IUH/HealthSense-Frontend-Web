@@ -271,7 +271,7 @@ export default function CreditPaymentResultPage() {
   // 6. Loading state
   if (loading && !orderDetail) {
     return (
-      <Page width="narrow">
+      <Page>
         {pageHeader}
         <PageBody className="items-center justify-center text-center">
           <div className="flex flex-col items-center w-full max-w-md">
@@ -291,7 +291,7 @@ export default function CreditPaymentResultPage() {
   // 7. Error state khi không tải được order
   if (errorText && !orderDetail) {
     return (
-      <Page width="narrow">
+      <Page>
         {pageHeader}
         <PageBody className="items-center justify-center text-center">
           <div className="flex flex-col items-center w-full max-w-md">
@@ -324,14 +324,14 @@ export default function CreditPaymentResultPage() {
     : null
 
   return (
-    <Page width="narrow">
+    <Page>
       {pageHeader}
       <PageBody className="items-center">
         <div className="w-full max-w-xl space-y-6">
           {/* TRẠNG THÁI: PAID */}
           {order.status === "PAID" && (
             <div className="flex flex-col items-center text-center space-y-4">
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400">
+              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-success-100 text-success-600">
                 <CheckCircle2 className="h-10 w-10" />
               </div>
               <div>
@@ -346,7 +346,7 @@ export default function CreditPaymentResultPage() {
           {/* TRẠNG THÁI: PENDING_PAYMENT */}
           {order.status === "PENDING_PAYMENT" && (
             <div className="flex flex-col items-center text-center space-y-4">
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-blue-100 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400">
+              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary-100 text-primary-600">
                 <Clock className="h-10 w-10 animate-pulse" />
               </div>
               <div>
@@ -363,7 +363,7 @@ export default function CreditPaymentResultPage() {
               </div>
 
               {/* Polling status banner */}
-              <div className="flex items-center gap-2 text-xs text-blue-700 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/30 px-3.5 py-1.5 rounded-full border border-blue-200/60">
+              <div className="flex items-center gap-2 text-xs text-primary-700 bg-primary-50 px-3.5 py-1.5 rounded-full border border-primary-200/60">
                 <RefreshCw className={`h-3.5 w-3.5 ${!pollStopped ? "animate-spin" : ""}`} />
                 <span>
                   {!pollStopped
@@ -379,7 +379,7 @@ export default function CreditPaymentResultPage() {
                       setPollCount(0)
                       void fetchOrder(false)
                     }}
-                    className="h-auto p-0 text-xs font-semibold text-blue-700 underline"
+                    className="h-auto p-0 text-xs font-semibold text-primary-700 underline"
                   >
                     Kiểm tra lại
                   </Button>
@@ -391,7 +391,7 @@ export default function CreditPaymentResultPage() {
           {/* TRẠNG THÁI: CANCELLED */}
           {order.status === "CANCELLED" && (
             <div className="flex flex-col items-center text-center space-y-4">
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400">
+              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-slate-100 text-slate-600">
                 <XCircle className="h-10 w-10" />
               </div>
               <div>
@@ -406,7 +406,7 @@ export default function CreditPaymentResultPage() {
           {/* TRẠNG THÁI: EXPIRED */}
           {order.status === "EXPIRED" && (
             <div className="flex flex-col items-center text-center space-y-4">
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-red-100 text-red-600 dark:bg-red-950/60 dark:text-red-400">
+              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-danger-100 text-danger-600">
                 <Clock className="h-10 w-10" />
               </div>
               <div>
@@ -421,7 +421,7 @@ export default function CreditPaymentResultPage() {
           {/* TRẠNG THÁI: REQUIRES_REVIEW */}
           {order.status === "REQUIRES_REVIEW" && (
             <div className="flex flex-col items-center text-center space-y-4">
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-orange-100 text-orange-600 dark:bg-orange-950/60 dark:text-orange-400">
+              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-warning-100 text-warning-600">
                 <AlertTriangle className="h-10 w-10" />
               </div>
               <div>
@@ -456,7 +456,7 @@ export default function CreditPaymentResultPage() {
 
             <div className="flex items-center justify-between text-xs">
               <span className="text-muted-foreground">Số lượt nhận:</span>
-              <span className="font-bold text-emerald-600 dark:text-emerald-400 text-sm">
+              <span className="font-bold text-success-600 text-sm">
                 +{formatCreditQuantity(order.creditQuantity)}
               </span>
             </div>

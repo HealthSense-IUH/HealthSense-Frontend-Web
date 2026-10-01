@@ -153,12 +153,12 @@ export function RequestsPanel({
                         </span>
                       )}
                     </div>
-                    <span className="max-w-64 text-xs text-neutral-500 whitespace-pre-wrap">
+                    <span className="max-w-64 text-xs text-slate-500 whitespace-pre-wrap">
                       {request.reasonForCare || request.reason || "Yêu cầu tư vấn"}
                     </span>
                     
                     {request.flowType !== "QUEUE_DISPATCH_V1" && request.status === "WAITING_ACCEPTANCE" && (
-                      <div className="mt-1 text-xs text-amber-800 bg-amber-50 dark:bg-amber-950/20 p-2 rounded-md border border-amber-200">
+                      <div className="mt-1 text-xs text-warning-800 bg-warning-50 p-2 rounded-md border border-warning-200">
                         Bác sĩ đã được giữ chỗ. Vui lòng xem và xác nhận Thỏa thuận dịch vụ để tiến hành thanh toán.
                         {request.paymentDeadline && (
                           <div className="mt-1 font-semibold">
@@ -169,7 +169,7 @@ export function RequestsPanel({
                     )}
 
                     {request.flowType !== "QUEUE_DISPATCH_V1" && request.status === "WAITING_PAYMENT" && (
-                      <div className="mt-1 text-xs text-blue-700 bg-blue-50 dark:bg-blue-950/20 p-2 rounded-md border border-blue-200">
+                      <div className="mt-1 text-xs text-primary-700 bg-primary-50 p-2 rounded-md border border-primary-200">
                         Đã xác nhận thỏa thuận. Đang chờ thanh toán.
                         {request.paymentDeadline && (
                           <div className="mt-1 font-semibold">
@@ -180,13 +180,13 @@ export function RequestsPanel({
                     )}
 
                     {request.status === "NEED_MORE_INFO" && request.moreInfoReason && (
-                      <div className="mt-1 text-xs text-orange-700 bg-orange-50 dark:bg-orange-950/20 p-2 rounded-md border border-orange-200">
+                      <div className="mt-1 text-xs text-warning-700 bg-warning-50 p-2 rounded-md border border-warning-200">
                         <strong>Lý do cần bổ sung:</strong> {request.moreInfoReason}
                       </div>
                     )}
 
                     {request.memberAdditionalNote && (
-                      <div className="mt-1 text-xs text-neutral-600 bg-neutral-50 dark:bg-neutral-900/30 p-2 rounded-md">
+                      <div className="mt-1 text-xs text-slate-600 bg-slate-50 p-2 rounded-md">
                         <strong>Thông tin đã bổ sung:</strong> {request.memberAdditionalNote}
                       </div>
                     )}
@@ -204,7 +204,7 @@ export function RequestsPanel({
                         size="sm"
                         onClick={() => onReviewAgreement(request)}
                         disabled={loading}
-                        className="bg-amber-600 hover:bg-amber-700 text-white gap-1.5 shadow-xs"
+                        className="bg-warning-600 hover:bg-warning-700 text-white gap-1.5 shadow-xs"
                       >
                         <Shield className="h-4 w-4" />
                         Xem & Chấp nhận thỏa thuận
@@ -240,7 +240,7 @@ export function RequestsPanel({
                           }
                         }}
                         disabled={loading}
-                        className="text-neutral-600 hover:text-red-600 hover:border-red-200"
+                        className="text-slate-600 hover:text-danger-600 hover:border-danger-200"
                       >
                         Hủy yêu cầu
                       </Button>

@@ -22,22 +22,22 @@ const ROLE_TABS: RoleTabConfig[] = [
     role: USER_ROLES.MEMBER,
     label: "Bệnh nhân / Hội viên",
     description: "Tài khoản theo dõi sức khỏe lâm sàng",
-    icon: <Users className="w-4 h-4 text-blue-600 shrink-0" />,
-    activeColor: "border-blue-600 bg-blue-50/70 text-blue-950 shadow-sm",
+    icon: <Users className="w-4 h-4 text-primary-600 shrink-0" />,
+    activeColor: "border-primary-600 bg-primary-50/70 text-primary-950 shadow-sm",
   },
   {
     role: USER_ROLES.DOCTOR,
     label: "Bác sĩ / Lâm sàng",
     description: "Bác sĩ chẩn đoán và theo dõi từ xa",
-    icon: <Stethoscope className="w-4 h-4 text-teal-600 shrink-0" />,
-    activeColor: "border-teal-600 bg-teal-50/70 text-teal-950 shadow-sm",
+    icon: <Stethoscope className="w-4 h-4 text-success-600 shrink-0" />,
+    activeColor: "border-success-600 bg-success-50/70 text-success-950 shadow-sm",
   },
   {
     role: USER_ROLES.ADMIN,
     label: "Quản trị viên bệnh viện",
     description: "Quản lý vận hành hệ thống bệnh viện",
-    icon: <ShieldCheck className="w-4 h-4 text-purple-600 shrink-0" />,
-    activeColor: "border-purple-600 bg-purple-50/70 text-purple-950 shadow-sm",
+    icon: <ShieldCheck className="w-4 h-4 text-primary-600 shrink-0" />,
+    activeColor: "border-primary-600 bg-primary-50/70 text-primary-950 shadow-sm",
   },
 ]
 
@@ -78,7 +78,7 @@ export function UserRoleTabs({ selectedRole, onSelectRole, loading, effectiveRol
               <div className="flex items-center justify-between gap-1">
                 <span className="text-sm font-black tracking-tight truncate">{tab.label}</span>
                 {isSelected && (
-                  <span className="h-2 w-2 rounded-full bg-blue-600 shrink-0" title="Active Filter" />
+                  <span className="h-2 w-2 rounded-full bg-primary-600 shrink-0" title="Active Filter" />
                 )}
               </div>
               <p className="text-xs font-medium text-slate-500 truncate mt-0.5">{tab.description}</p>

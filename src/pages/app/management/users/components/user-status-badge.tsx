@@ -9,14 +9,14 @@ export function UserStatusBadge({ status }: UserStatusBadgeProps) {
     switch (status) {
       case "ACTIVE":
         return {
-          bg: "bg-emerald-50 text-emerald-700 border-emerald-200/80",
-          dot: "bg-emerald-500",
+          bg: "bg-success-50 text-success-700 border-success-200/80",
+          dot: "bg-success-500",
           label: "Hoạt động",
         }
       case "PENDING_VERIFY":
         return {
-          bg: "bg-amber-50 text-amber-700 border-amber-200/80",
-          dot: "bg-amber-500 animate-pulse",
+          bg: "bg-warning-50 text-warning-700 border-warning-200/80",
+          dot: "bg-warning-500 animate-pulse",
           label: "Chờ xác thực",
         }
       case "INACTIVE":
@@ -27,20 +27,20 @@ export function UserStatusBadge({ status }: UserStatusBadgeProps) {
         }
       case "LOCKED":
         return {
-          bg: "bg-red-50 text-red-700 border-red-200/80",
-          dot: "bg-red-500",
+          bg: "bg-danger-50 text-danger-700 border-danger-200/80",
+          dot: "bg-danger-500",
           label: "Đã khóa",
         }
       case "BANNED":
         return {
-          bg: "bg-purple-50 text-purple-700 border-purple-200/80",
-          dot: "bg-purple-600",
+          bg: "bg-primary-50 text-primary-700 border-primary-200/80",
+          dot: "bg-primary-600",
           label: "Bị cấm",
         }
       default:
         return {
-          bg: "bg-emerald-50 text-emerald-700 border-emerald-200/80",
-          dot: "bg-emerald-500",
+          bg: "bg-success-50 text-success-700 border-success-200/80",
+          dot: "bg-success-500",
           label: status ? String(status) : "Hoạt động",
         }
     }

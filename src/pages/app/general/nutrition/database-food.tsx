@@ -28,17 +28,17 @@ export default function NutritionDatabaseFoodPage() {
 
   if (isLoading) {
     return (
-      <Page width="narrow">
+      <Page>
         <Skeleton className="h-5 w-64" />
         <Skeleton className="h-16 w-full max-w-xl rounded-2xl" />
-        <Skeleton className="h-72 rounded-3xl" />
+        <Skeleton className="h-72 rounded-2xl" />
       </Page>
     )
   }
 
   if (!food) {
     return (
-      <div className="max-w-md mx-auto p-8 text-center space-y-4">
+      <div className="max-w-md mx-auto p-6 text-center space-y-4">
         <h2 className="text-xl font-bold">Không tìm thấy thực phẩm</h2>
         <p className="text-muted-foreground text-sm">Thực phẩm này không có trong cơ sở dữ liệu dinh dưỡng.</p>
         <Button onClick={() => navigate("/app/general/nutrition")}>Quay lại tra cứu</Button>
@@ -56,7 +56,7 @@ export default function NutritionDatabaseFoodPage() {
   const otherNutrients = food.nutrients.filter((n) => !n.isKey)
 
   return (
-    <Page width="narrow">
+    <Page>
       <PageHeader
         breadcrumbs={[
           { label: "Dinh dưỡng", to: "/app/general/nutrition" },
@@ -74,7 +74,7 @@ export default function NutritionDatabaseFoodPage() {
             >
               {food.groupName}
             </Link>
-            <span className="inline-flex items-center gap-1 text-xs font-medium text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-muted px-2.5 py-0.5 rounded-md">
+            <span className="inline-flex items-center gap-1 text-xs font-medium text-slate-600 bg-slate-100 px-2.5 py-0.5 rounded-md">
               <Database className="w-3 h-3" />
               {sourceInfo.label} · mã {food.sourceFoodCode}
             </span>
@@ -88,14 +88,14 @@ export default function NutritionDatabaseFoodPage() {
       <PageBody>
         <DietAdviceNote advice={food.advice} />
         {food.wastePct != null && food.wastePct > 0 && (
-          <p className="text-xs text-slate-600 dark:text-slate-300">
+          <p className="text-xs text-slate-600">
             Tỉ lệ thải bỏ khi sơ chế: <span className="font-semibold">{formatNutrientAmount(food.wastePct)}%</span>. Số
             liệu bên dưới tính trên phần ăn được.
           </p>
         )}
 
-        <div className="rounded-3xl border border-slate-200/80 bg-white shadow-xs dark:border-border dark:bg-card overflow-hidden">
-          <div className="bg-slate-50/60 dark:bg-muted/20 border-b border-slate-100 dark:border-border p-6 space-y-3">
+        <div className="rounded-2xl border border-slate-200/80 bg-white shadow-xs overflow-hidden">
+          <div className="bg-slate-50/60 border-b border-slate-100 p-6 space-y-3">
             <div className="flex items-center gap-2">
               <Scale className="w-4 h-4 text-primary" />
               <h2 className="text-lg font-bold">Thành phần dinh dưỡng</h2>
@@ -112,8 +112,8 @@ export default function NutritionDatabaseFoodPage() {
                   className={cn(
                     "px-3 py-1.5 rounded-xl text-xs font-medium border cursor-pointer transition-colors",
                     selectedPortion === option.value
-                      ? "bg-slate-900 text-white border-slate-900 dark:bg-primary dark:text-primary-foreground dark:border-primary"
-                      : "bg-white dark:bg-card border-slate-200 dark:border-border text-muted-foreground hover:text-foreground"
+                      ? "bg-slate-900 text-white border-slate-900"
+                      : "bg-white border-slate-200 text-muted-foreground hover:text-foreground"
                   )}
                 >
                   {option.label}
@@ -129,10 +129,10 @@ export default function NutritionDatabaseFoodPage() {
           <div className="p-6 space-y-6">
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {keyNutrients.map((n) => (
-                <div key={n.nutrientCode} className="p-3.5 rounded-2xl bg-slate-50 dark:bg-muted/30 border border-slate-100 dark:border-border/60">
+                <div key={n.nutrientCode} className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100">
                   <span className="text-xs text-muted-foreground line-clamp-1">{n.name}</span>
                   <div className="mt-1 flex items-baseline gap-1">
-                    <span className="text-xl font-bold text-slate-900 dark:text-foreground">
+                    <span className="text-xl font-bold text-slate-900">
                       {formatNutrientAmount(n.amount * factor)}
                     </span>
                     <span className="text-xs font-medium text-muted-foreground">{n.unit}</span>
@@ -141,14 +141,14 @@ export default function NutritionDatabaseFoodPage() {
               ))}
             </div>
             {otherNutrients.length > 0 && (
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 pt-4 border-t border-slate-100 dark:border-border">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 pt-4 border-t border-slate-100">
                 {otherNutrients.map((n) => (
                   <div
                     key={n.nutrientCode}
-                    className="p-2.5 rounded-xl bg-slate-50/70 dark:bg-muted/20 border border-slate-100 dark:border-muted flex items-center justify-between gap-2 text-xs"
+                    className="p-2.5 rounded-xl bg-slate-50/70 border border-slate-100 flex items-center justify-between gap-2 text-xs"
                   >
                     <span className="text-muted-foreground">{n.name}</span>
-                    <span className="font-semibold text-slate-800 dark:text-slate-200 whitespace-nowrap">
+                    <span className="font-semibold text-slate-800 whitespace-nowrap">
                       {formatNutrientAmount(n.amount * factor)} {n.unit}
                     </span>
                   </div>

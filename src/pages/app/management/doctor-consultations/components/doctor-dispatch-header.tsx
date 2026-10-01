@@ -58,9 +58,9 @@ export function DoctorDispatchHeader({
       <CardContent className="p-4 sm:p-5 flex flex-col gap-4">
         {/* Missing Care Profile Alert Banner */}
         {!hasProfile && !profileLoading && (
-          <div className="p-3.5 bg-amber-500/10 border border-amber-300 dark:border-amber-700 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-amber-800 dark:text-amber-300 text-xs">
+          <div className="p-3.5 bg-warning-500/10 border border-warning-300 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-warning-800 text-xs">
             <div className="flex items-start sm:items-center gap-2.5">
-              <AlertCircle className="w-5 h-5 shrink-0 text-amber-600 dark:text-amber-400 mt-0.5 sm:mt-0" />
+              <AlertCircle className="w-5 h-5 shrink-0 text-warning-600 mt-0.5 sm:mt-0" />
               <span>
                 <strong>Tài khoản chưa được thiết lập hồ sơ trực:</strong> Vui lòng liên hệ Người quản lý hoặc Điều phối viên để thiết lập hồ sơ chuyên khoa và kích hoạt nhận bệnh trước khi bật chế độ trực.
               </span>
@@ -71,7 +71,7 @@ export function DoctorDispatchHeader({
                 size="sm"
                 onClick={onRetryProfile}
                 disabled={profileLoading}
-                className="h-7 text-xs border-amber-300 hover:bg-amber-100 dark:border-amber-700 text-amber-900 dark:text-amber-200 shrink-0 font-medium cursor-pointer"
+                className="h-7 text-xs border-warning-300 hover:bg-warning-100 text-warning-900 shrink-0 font-medium cursor-pointer"
               >
                 <RefreshCw className={`w-3.5 h-3.5 mr-1 ${profileLoading ? "animate-spin" : ""}`} />
                 <span>Thử lại</span>
@@ -86,9 +86,9 @@ export function DoctorDispatchHeader({
             <div
               className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border ${
                 isBusy
-                  ? "bg-amber-500/10 border-amber-300 text-amber-600 dark:border-amber-700"
+                  ? "bg-warning-500/10 border-warning-300 text-warning-600"
                   : isAvailable
-                  ? "bg-emerald-500/10 border-emerald-300 text-emerald-600 dark:border-emerald-700"
+                  ? "bg-success-500/10 border-success-300 text-success-600"
                   : "bg-muted border-border text-muted-foreground"
               }`}
             >
@@ -107,18 +107,18 @@ export function DoctorDispatchHeader({
                   Trạng thái Trực điều phối
                 </h2>
                 {isBusy && (
-                  <Badge className="bg-amber-500 hover:bg-amber-600 text-white font-medium border-none shadow-sm">
+                  <Badge className="bg-warning-500 hover:bg-warning-600 text-white font-medium border-none shadow-sm">
                     Đang bận phiên khám
                   </Badge>
                 )}
                 {isAvailable && effectivelyDispatchable && (
-                  <Badge className="bg-emerald-600 hover:bg-emerald-700 text-white font-medium border-none shadow-sm flex items-center gap-1">
+                  <Badge className="bg-success-600 hover:bg-success-700 text-white font-medium border-none shadow-sm flex items-center gap-1">
                     <Sparkles className="w-3 h-3" />
                     Sẵn sàng nhận bệnh
                   </Badge>
                 )}
                 {isAvailable && !effectivelyDispatchable && (
-                  <Badge variant="outline" className="border-amber-300 bg-amber-50 text-amber-800 font-medium">
+                  <Badge variant="outline" className="border-warning-300 bg-warning-50 text-warning-800 font-medium">
                     Đang phân phối lượt chờ
                   </Badge>
                 )}
@@ -153,7 +153,7 @@ export function DoctorDispatchHeader({
                 onClick={onOpenScheduleDialog}
                 className="text-xs font-medium shadow-xs border-border hover:bg-muted cursor-pointer"
               >
-                <Calendar className="mr-1.5 h-3.5 w-3.5 text-blue-600" />
+                <Calendar className="mr-1.5 h-3.5 w-3.5 text-primary-600" />
                 <span>Lịch làm việc</span>
               </Button>
             )}
@@ -178,7 +178,7 @@ export function DoctorDispatchHeader({
               onClick={handleStatusChange}
               disabled={!hasProfile || isBusy || actionLoading || loading}
               className={`font-medium shadow-xs cursor-pointer ${
-                !isAvailable && !isBusy && hasProfile ? "bg-emerald-600 hover:bg-emerald-700 text-white" : ""
+                !isAvailable && !isBusy && hasProfile ? "bg-success-600 hover:bg-success-700 text-white" : ""
               }`}
             >
               <Power className="mr-1.5 h-4 w-4" />

@@ -15,20 +15,8 @@ import { cn } from "@/lib/utils"
  *   </Page>
  */
 
-type PageWidth = "default" | "narrow" | "full"
-
-const PAGE_WIDTH: Record<PageWidth, string> = {
-  /** Danh sách, bảng, dashboard */
-  default: "max-w-7xl",
-  /** Trang chi tiết, form */
-  narrow: "max-w-4xl",
-  /** Workspace, chat */
-  full: "max-w-none",
-}
-
 interface PageProps {
   children: ReactNode
-  width?: PageWidth
   /**
    * Trang kiểu ứng dụng cao đúng bằng phần màn hình còn lại (chat, workspace): PageBody co giãn và tự cuộn bên
    * trong, header và footer luôn hiện. Mặc định trang cao theo nội dung và cả cửa sổ cuộn.
@@ -42,17 +30,18 @@ interface PageProps {
   className?: string
 }
 
-export function Page({ children, width = "default", fill = false, bleed = false, className }: PageProps) {
+/** Mọi trang trải hết chiều rộng vùng nội dung; khoảng đệm quanh trang do MainLayout quyết định (--app-page-pad). */
+export function Page({ children, fill = false, bleed = false, className }: PageProps) {
   return (
     <div
       className={cn(
-        "flex flex-col gap-6",
-        bleed ? "w-auto max-w-none -m-(--app-page-pad)" : cn("w-full mx-auto", PAGE_WIDTH[width]),
+        "flex flex-col gap-4",
+        bleed ? "w-auto -m-(--app-page-pad)" : "w-full",
         bleed
           ? "h-[calc(100dvh_-_var(--app-topbar-h))] min-h-[32rem] gap-0"
           : // Chiều cao còn lại = màn hình - topbar - khoảng đệm trên dưới của <main> (biến đặt ở MainLayout)
             fill
-            ? "h-[calc(100dvh_-_var(--app-topbar-h)_-_2*var(--app-page-pad))] min-h-[32rem] gap-4"
+            ? "h-[calc(100dvh_-_var(--app-topbar-h)_-_2*var(--app-page-pad))] min-h-[32rem]"
             : "flex-1",
         className
       )}
@@ -77,9 +66,9 @@ export function PageBreadcrumb({ items, className }: { items: PageBreadcrumbItem
         const linkClass = "font-medium hover:text-primary transition-colors cursor-pointer"
         return (
           <Fragment key={index}>
-            {index > 0 && <ChevronRight className="w-3.5 h-3.5 text-slate-300 dark:text-slate-600 shrink-0" />}
+            {index > 0 && <ChevronRight className="w-3.5 h-3.5 text-slate-300 shrink-0" />}
             {isLast && !item.to && !item.onClick ? (
-              <span aria-current="page" className="font-semibold text-slate-900 dark:text-foreground line-clamp-1">
+              <span aria-current="page" className="font-semibold text-slate-900 line-clamp-1">
                 {item.label}
               </span>
             ) : item.to ? (
@@ -147,7 +136,7 @@ export function PageHeader({
             {eyebrow && <div className="text-xs font-semibold text-primary">{eyebrow}</div>}
             <h1
               className={cn(
-                "font-bold tracking-tight text-slate-900 dark:text-foreground break-words",
+                "font-bold tracking-tight text-slate-900 break-words",
                 compact ? "text-lg sm:text-xl" : "text-2xl sm:text-3xl"
               )}
             >
@@ -167,7 +156,7 @@ export function PageHeader({
 
 /** Nội dung chính. Trong trang `fill`, phần này chiếm chỗ còn lại; phần tử con tự lo cuộn. */
 export function PageBody({ children, className }: { children: ReactNode; className?: string }) {
-  return <div className={cn("flex-1 min-h-0 min-w-0 flex flex-col gap-6", className)}>{children}</div>
+  return <div className={cn("flex-1 min-h-0 min-w-0 flex flex-col gap-4", className)}>{children}</div>
 }
 
 /** Chân trang: phân trang, nguồn dữ liệu, lưu ý y khoa, liên kết liên quan. Luôn nằm cuối trang. */
@@ -175,7 +164,7 @@ export function PageFooter({ children, className }: { children: ReactNode; class
   return (
     <footer
       className={cn(
-        "shrink-0 flex flex-col gap-3 border-t border-slate-200/70 dark:border-border pt-4 text-xs text-muted-foreground leading-relaxed",
+        "shrink-0 flex flex-col gap-3 border-t border-border pt-3 text-xs text-muted-foreground leading-relaxed",
         className
       )}
     >

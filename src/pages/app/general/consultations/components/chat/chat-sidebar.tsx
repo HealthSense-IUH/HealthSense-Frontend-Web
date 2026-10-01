@@ -43,13 +43,13 @@ export const ChatSidebar = memo(function ChatSidebar({ sessions, selectedSession
                 className={cn(
                   "flex w-full flex-col px-5 py-4 transition-all duration-200 border-l-[3px]",
                   isSelected
-                    ? "bg-[#EBF7EE] border-[#84D396]"
+                    ? "bg-primary-50 border-primary-300"
                     : "bg-transparent border-transparent hover:bg-muted/30"
                 )}
               >
                 <div className="flex items-center gap-3 w-full">
                   <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full border border-border/50 bg-muted/50 flex items-center justify-center">
-                    <User className={cn("h-5 w-5", isSelected ? "text-[#84D396]" : "text-muted-foreground")} />
+                    <User className={cn("h-5 w-5", isSelected ? "text-primary-600" : "text-muted-foreground")} />
                   </div>
                   <div className="flex flex-col flex-1 min-w-0 text-left">
                     <div className="flex items-center justify-between">

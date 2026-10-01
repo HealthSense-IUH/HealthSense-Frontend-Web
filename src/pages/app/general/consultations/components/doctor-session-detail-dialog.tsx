@@ -87,35 +87,35 @@ export function DoctorSessionDetailDialog({ sessionId, open, onOpenChange, onSes
 
   const renderSupportSchedule = () => {
     const jsonStr = detail?.session.supportScheduleSnapshotJson
-    if (!jsonStr) return <p className="text-sm text-neutral-500 italic">Chưa cấu hình lịch hỗ trợ</p>
+    if (!jsonStr) return <p className="text-sm text-slate-500 italic">Chưa cấu hình lịch hỗ trợ</p>
     
     try {
       const schedule = JSON.parse(jsonStr)
       if (!schedule.weekly || !Array.isArray(schedule.weekly) || schedule.weekly.length === 0) {
-        return <p className="text-sm text-neutral-500 italic">Chưa cấu hình lịch hỗ trợ</p>
+        return <p className="text-sm text-slate-500 italic">Chưa cấu hình lịch hỗ trợ</p>
       }
 
       return (
         <div className="space-y-2 mt-2">
           {schedule.weekly.map((slot: { dayOfWeek: string; start: string; end: string }) => (
             <div key={`${slot.dayOfWeek}-${slot.start}-${slot.end}`} className="flex justify-between items-center text-sm border-b pb-1 last:border-0 last:pb-0">
-              <span className="font-medium text-neutral-700">
+              <span className="font-medium text-slate-700">
                 {DAYS_OF_WEEK_MAP[slot.dayOfWeek] || slot.dayOfWeek}
               </span>
-              <span className="text-neutral-600 font-mono">
+              <span className="text-slate-600 font-mono">
                 {slot.start} - {slot.end}
               </span>
             </div>
           ))}
           {detail.session.supportTimezoneSnapshot && (
-            <div className="text-xs text-neutral-400 text-right mt-1">
+            <div className="text-xs text-slate-400 text-right mt-1">
               Múi giờ: {detail.session.supportTimezoneSnapshot}
             </div>
           )}
         </div>
       )
     } catch (e) {
-      return <p className="text-sm text-neutral-500 italic">Chưa cấu hình lịch hỗ trợ</p>
+      return <p className="text-sm text-slate-500 italic">Chưa cấu hình lịch hỗ trợ</p>
     }
   }
 
@@ -128,9 +128,9 @@ export function DoctorSessionDetailDialog({ sessionId, open, onOpenChange, onSes
           </DialogHeader>
           <div className="py-12 flex justify-center">
             <div className="animate-pulse flex space-x-2">
-              <div className="h-2 w-2 bg-neutral-300 rounded-full"></div>
-              <div className="h-2 w-2 bg-neutral-300 rounded-full"></div>
-              <div className="h-2 w-2 bg-neutral-300 rounded-full"></div>
+              <div className="h-2 w-2 bg-slate-300 rounded-full"></div>
+              <div className="h-2 w-2 bg-slate-300 rounded-full"></div>
+              <div className="h-2 w-2 bg-slate-300 rounded-full"></div>
             </div>
           </div>
         </DialogContent>
@@ -159,12 +159,12 @@ export function DoctorSessionDetailDialog({ sessionId, open, onOpenChange, onSes
               </DialogDescription>
             </div>
             {session.status === "CANCELLED" && session.meaningfulCareOccurred ? (
-              <Badge variant="outline" className="bg-amber-50 text-amber-800 border-amber-300">
+              <Badge variant="outline" className="bg-warning-50 text-warning-800 border-warning-300">
                 Đã hủy (Có chăm sóc)
               </Badge>
             ) : (
               <Badge variant={session.status === "ACTIVE" ? "default" : "outline"} className={
-                session.status === "ACTIVE" ? "bg-emerald-500 hover:bg-emerald-600" : ""
+                session.status === "ACTIVE" ? "bg-success-500 hover:bg-success-600" : ""
               }>
                 {session.status}
               </Badge>
@@ -182,55 +182,55 @@ export function DoctorSessionDetailDialog({ sessionId, open, onOpenChange, onSes
           
           <TabsContent value="info" className="grid gap-6 py-4 outline-none">
             {session.unresolvedAttentionCount > 0 && (
-              <div className="bg-orange-50 border border-orange-100 rounded-lg p-4 flex gap-3">
-                <AlertTriangle className="h-5 w-5 text-orange-500 shrink-0 mt-0.5" />
+              <div className="bg-warning-50 border border-warning-100 rounded-lg p-4 flex gap-3">
+                <AlertTriangle className="h-5 w-5 text-warning-500 shrink-0 mt-0.5" />
                 <div>
-                  <h4 className="font-medium text-orange-900">Có {session.unresolvedAttentionCount} hồ sơ/chỉ số cần xem</h4>
-                  <p className="text-sm text-orange-700 mt-1">Hệ thống ghi nhận có dữ liệu mới từ bệnh nhân. Vui lòng chuyển sang tab "Hồ sơ đo" để xem.</p>
+                  <h4 className="font-medium text-warning-900">Có {session.unresolvedAttentionCount} hồ sơ/chỉ số cần xem</h4>
+                  <p className="text-sm text-warning-700 mt-1">Hệ thống ghi nhận có dữ liệu mới từ bệnh nhân. Vui lòng chuyển sang tab "Hồ sơ đo" để xem.</p>
                 </div>
               </div>
             )}
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1">
-              <div className="flex items-center gap-2 text-sm text-neutral-500 mb-1">
+              <div className="flex items-center gap-2 text-sm text-slate-500 mb-1">
                 <Calendar className="h-4 w-4" /> Bắt đầu
               </div>
-              <p className="font-medium text-neutral-900">{formatDate(session.startedAt) || '---'}</p>
+              <p className="font-medium text-slate-900">{formatDate(session.startedAt) || '---'}</p>
             </div>
             <div className="space-y-1">
-              <div className="flex items-center gap-2 text-sm text-neutral-500 mb-1">
+              <div className="flex items-center gap-2 text-sm text-slate-500 mb-1">
                 <Clock className="h-4 w-4" /> Kết thúc dự kiến
               </div>
-              <p className="font-medium text-neutral-900">{formatDate(session.endsAt) || '---'}</p>
+              <p className="font-medium text-slate-900">{formatDate(session.endsAt) || '---'}</p>
             </div>
           </div>
 
-          <div className="bg-neutral-50 rounded-lg p-4 border border-neutral-100">
+          <div className="bg-slate-50 rounded-lg p-4 border border-slate-100">
             <div className="flex gap-2 items-center mb-3">
               <User className="h-5 w-5 text-primary" />
-              <h3 className="font-semibold text-neutral-900">Thông tin bệnh nhân</h3>
+              <h3 className="font-semibold text-slate-900">Thông tin bệnh nhân</h3>
             </div>
-            <div className="text-sm text-neutral-600 space-y-2">
-              <p><span className="font-medium text-neutral-800">Tên bệnh nhân:</span> {memberDisplayName}</p>
-              <p><span className="font-medium text-neutral-800">Mã bệnh nhân:</span> #{session.memberId}</p>
-              <p className="italic text-neutral-400">Các thông tin cơ bản khác sẽ hiển thị nếu được chia sẻ.</p>
+            <div className="text-sm text-slate-600 space-y-2">
+              <p><span className="font-medium text-slate-800">Tên bệnh nhân:</span> {memberDisplayName}</p>
+              <p><span className="font-medium text-slate-800">Mã bệnh nhân:</span> #{session.memberId}</p>
+              <p className="italic text-slate-400">Các thông tin cơ bản khác sẽ hiển thị nếu được chia sẻ.</p>
             </div>
           </div>
 
-          <div className="bg-neutral-50 rounded-lg p-4 border border-neutral-100">
+          <div className="bg-slate-50 rounded-lg p-4 border border-slate-100">
             <div className="flex gap-2 items-center mb-3">
               <BriefcaseMedical className="h-5 w-5 text-primary" />
-              <h3 className="font-semibold text-neutral-900">Hồ sơ ban đầu</h3>
+              <h3 className="font-semibold text-slate-900">Hồ sơ ban đầu</h3>
             </div>
             {initialHealthRecord ? (
               <div className="flex items-center gap-3 p-3 bg-white border rounded-md">
-                <FileText className="h-8 w-8 text-neutral-400" />
+                <FileText className="h-8 w-8 text-slate-400" />
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-neutral-900 truncate">
+                  <p className="text-sm font-medium text-slate-900 truncate">
                     {initialHealthRecord.originalFileName || `Hồ sơ #${initialHealthRecord.id}`}
                   </p>
-                  <p className="text-xs text-neutral-500">
+                  <p className="text-xs text-slate-500">
                     Cập nhật: {formatDate(initialHealthRecord.updatedAt || initialHealthRecord.createdAt)}
                   </p>
                 </div>
@@ -239,14 +239,14 @@ export function DoctorSessionDetailDialog({ sessionId, open, onOpenChange, onSes
                 </Badge>
               </div>
             ) : (
-              <p className="text-sm text-neutral-500 italic">Không có hồ sơ đính kèm khi bắt đầu.</p>
+              <p className="text-sm text-slate-500 italic">Không có hồ sơ đính kèm khi bắt đầu.</p>
             )}
           </div>
 
-          <div className="bg-blue-50/50 rounded-lg p-4 border border-blue-100">
+          <div className="bg-primary-50/50 rounded-lg p-4 border border-primary-100">
             <div className="flex gap-2 items-center mb-3">
-              <Clock className="h-5 w-5 text-blue-600" />
-              <h3 className="font-semibold text-blue-900">Khung giờ hỗ trợ đã cam kết</h3>
+              <Clock className="h-5 w-5 text-primary-600" />
+              <h3 className="font-semibold text-primary-900">Khung giờ hỗ trợ đã cam kết</h3>
             </div>
             {renderSupportSchedule()}
           </div>

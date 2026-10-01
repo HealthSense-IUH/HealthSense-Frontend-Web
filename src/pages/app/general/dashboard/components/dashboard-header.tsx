@@ -27,7 +27,7 @@ export function DashboardHeaderActions() {
 
       <Button
         size="sm"
-        className="h-10 rounded-xl font-bold text-xs bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-500/20"
+        className="h-10 rounded-xl font-bold text-xs bg-primary-600 hover:bg-primary-700 text-white shadow-md shadow-primary-500/20"
         onClick={() => alert("Opening Add User Dialog...")}
       >
         <Plus className="mr-1.5 h-4 w-4" />
@@ -51,7 +51,7 @@ export function DashboardHeader({ filters, onFilterChange }: DashboardHeaderProp
           aria-label="Chọn khoảng thời gian"
           value={filters.period}
           onChange={(event) => onFilterChange({ period: event.target.value as DashboardFilters["period"] })}
-          className="appearance-none rounded-xl border border-slate-200/80 bg-white px-3.5 py-1.5 pr-8 text-xs font-bold text-slate-700 shadow-2xs hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 cursor-pointer"
+          className="appearance-none rounded-xl border border-slate-200/80 bg-white px-3.5 py-1.5 pr-8 text-xs font-bold text-slate-700 shadow-2xs hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-primary-600 cursor-pointer"
         >
           <option value="7d">Last 7 days</option>
           <option value="30d">Last 30 days</option>
@@ -71,7 +71,7 @@ export function DashboardHeader({ filters, onFilterChange }: DashboardHeaderProp
           aria-label="Chọn cơ sở y tế hoặc tổ chức"
           value={filters.organizationId}
           onChange={(event) => onFilterChange({ organizationId: event.target.value })}
-          className="appearance-none rounded-xl border border-slate-200/80 bg-white pl-8 pr-8 py-1.5 text-xs font-bold text-slate-700 shadow-2xs hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 cursor-pointer"
+          className="appearance-none rounded-xl border border-slate-200/80 bg-white pl-8 pr-8 py-1.5 text-xs font-bold text-slate-700 shadow-2xs hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-primary-600 cursor-pointer"
         >
           <option value="all">All organizations</option>
           <option value="org-1">Chợ Rẫy Hospital</option>

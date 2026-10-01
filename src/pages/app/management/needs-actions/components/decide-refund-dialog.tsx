@@ -121,7 +121,7 @@ export function DecideRefundDialog({
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-slate-500 font-medium">Đề xuất của Điều phối:</span>
-                <span className="font-bold text-blue-600">
+                <span className="font-bold text-primary-600">
                   {refund.recommendation === "FULL"
                     ? "Hoàn 100%"
                     : refund.recommendation === "PARTIAL"
@@ -144,11 +144,11 @@ export function DecideRefundDialog({
                   type="button"
                   onClick={() => setApproved(true)}
                   className={`flex flex-col items-center justify-between rounded-xl border p-3.5 cursor-pointer text-center transition-all ${
-                    approved ? "border-emerald-600 bg-emerald-50/40 shadow-xs" : "border-slate-200 hover:bg-slate-50"
+                    approved ? "border-success-600 bg-success-50/40 shadow-xs" : "border-slate-200 hover:bg-slate-50"
                   }`}
                   disabled={loading}
                 >
-                  <span className="font-bold text-emerald-700">Phê duyệt hoàn</span>
+                  <span className="font-bold text-success-700">Phê duyệt hoàn</span>
                   <span className="text-[10px] text-slate-500 mt-0.5">Chấp thuận chi hoàn trả</span>
                 </button>
 
@@ -156,11 +156,11 @@ export function DecideRefundDialog({
                   type="button"
                   onClick={() => setApproved(false)}
                   className={`flex flex-col items-center justify-between rounded-xl border p-3.5 cursor-pointer text-center transition-all ${
-                    !approved ? "border-rose-600 bg-rose-50/40 shadow-xs" : "border-slate-200 hover:bg-slate-50"
+                    !approved ? "border-danger-600 bg-danger-50/40 shadow-xs" : "border-slate-200 hover:bg-slate-50"
                   }`}
                   disabled={loading}
                 >
-                  <span className="font-bold text-rose-700">Từ chối hoàn</span>
+                  <span className="font-bold text-danger-700">Từ chối hoàn</span>
                   <span className="text-[10px] text-slate-500 mt-0.5">Bác bỏ yêu cầu hoàn</span>
                 </button>
               </div>
@@ -186,7 +186,7 @@ export function DecideRefundDialog({
 
             <div className="space-y-1.5">
               <Label htmlFor="decisionReason" className="text-xs font-bold text-slate-700">
-                Lý do quyết định <span className="text-rose-500">*</span>
+                Lý do quyết định <span className="text-danger-500">*</span>
               </Label>
               <Textarea
                 id="decisionReason"
@@ -211,7 +211,7 @@ export function DecideRefundDialog({
             <Button
               type="submit"
               disabled={loading}
-              className={approved ? "bg-emerald-600 hover:bg-emerald-700 text-white" : "bg-rose-600 hover:bg-rose-700 text-white"}
+              className={approved ? "bg-success-600 hover:bg-success-700 text-white" : "bg-danger-600 hover:bg-danger-700 text-white"}
             >
               {loading ? "Đang xử lý..." : approved ? "Phê duyệt hoàn tiền" : "Từ chối hoàn tiền"}
             </Button>

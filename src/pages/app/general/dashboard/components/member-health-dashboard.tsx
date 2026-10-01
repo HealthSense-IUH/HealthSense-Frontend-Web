@@ -82,7 +82,7 @@ export function MemberHealthDashboard() {
         <Card className="rounded-2xl border border-border shadow-2xs bg-card hover:shadow-md transition-all duration-200">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <span className="text-xs font-semibold text-muted-foreground">Lần đo gần nhất</span>
-            <div className="h-9 w-9 rounded-xl bg-rose-500/10 text-rose-500 dark:text-rose-400 flex items-center justify-center">
+            <div className="h-9 w-9 rounded-xl bg-danger-500/10 text-danger-500 flex items-center justify-center">
               <HeartPulse className="h-4.5 w-4.5" />
             </div>
           </CardHeader>
@@ -105,7 +105,7 @@ export function MemberHealthDashboard() {
         <Card className="rounded-2xl border border-border shadow-2xs bg-card hover:shadow-md transition-all duration-200">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <span className="text-xs font-semibold text-muted-foreground">Khả năng bị rung nhĩ</span>
-            <div className="h-9 w-9 rounded-xl bg-sky-500/10 text-sky-500 dark:text-sky-400 flex items-center justify-center">
+            <div className="h-9 w-9 rounded-xl bg-primary-500/10 text-primary-500 flex items-center justify-center">
               <TrendingUp className="h-4.5 w-4.5" />
             </div>
           </CardHeader>
@@ -129,7 +129,7 @@ export function MemberHealthDashboard() {
         <Card className="rounded-2xl border border-border shadow-2xs bg-card hover:shadow-md transition-all duration-200">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <span className="text-xs font-semibold text-muted-foreground">Biến thiên nhịp (RMSSD)</span>
-            <div className="h-9 w-9 rounded-xl bg-indigo-500/10 text-indigo-500 dark:text-indigo-400 flex items-center justify-center">
+            <div className="h-9 w-9 rounded-xl bg-primary-500/10 text-primary-500 flex items-center justify-center">
               <Sliders className="h-4.5 w-4.5" />
             </div>
           </CardHeader>
@@ -148,7 +148,7 @@ export function MemberHealthDashboard() {
         <Card className="rounded-2xl border border-border shadow-2xs bg-card hover:shadow-md transition-all duration-200">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <span className="text-xs font-semibold text-muted-foreground">Tổng lượt tầm soát</span>
-            <div className="h-9 w-9 rounded-xl bg-emerald-500/10 text-emerald-500 dark:text-emerald-400 flex items-center justify-center">
+            <div className="h-9 w-9 rounded-xl bg-success-500/10 text-success-500 flex items-center justify-center">
               <Activity className="h-4.5 w-4.5" />
             </div>
           </CardHeader>
@@ -178,7 +178,7 @@ export function MemberHealthDashboard() {
         {/* Right Column: Recent Screenings Table (6 cols) */}
         <div className="lg:col-span-6 space-y-6 flex flex-col justify-start">
           {/* Recent Screenings Table */}
-          <Card className="rounded-3xl border border-border shadow-xs bg-white dark:bg-card flex flex-col justify-between overflow-hidden">
+          <Card className="rounded-2xl border border-border shadow-xs bg-white flex flex-col justify-between overflow-hidden">
             <CardHeader className="flex flex-row items-center justify-between border-b border-border pb-4">
               <div>
                 <CardTitle className="text-base font-bold text-foreground">
@@ -192,7 +192,7 @@ export function MemberHealthDashboard() {
                 variant="ghost"
                 size="sm"
                 onClick={() => navigate("/app/general/afib-history")}
-                className="text-xs font-semibold text-primary hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl gap-1 cursor-pointer"
+                className="text-xs font-semibold text-primary hover:bg-slate-50 rounded-xl gap-1 cursor-pointer"
               >
                 <span>Xem tất cả</span>
                 <ChevronRight className="w-3.5 h-3.5" />
@@ -203,7 +203,7 @@ export function MemberHealthDashboard() {
               {loading ? (
                 <div className="p-6 space-y-3">
                   {[...Array(4)].map((_, i) => (
-                    <div key={i} className="h-10 bg-slate-100 dark:bg-slate-800/40 rounded-xl animate-pulse" />
+                    <div key={i} className="h-10 bg-slate-100 rounded-xl animate-pulse" />
                   ))}
                 </div>
               ) : recentRecords.length === 0 ? (
@@ -215,7 +215,7 @@ export function MemberHealthDashboard() {
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-xs border-collapse">
                     <thead>
-                      <tr className="border-b border-border text-muted-foreground font-semibold bg-slate-50/50 dark:bg-slate-900/30">
+                      <tr className="border-b border-border text-muted-foreground font-semibold bg-slate-50/50">
                         <th className="py-3 px-4">Thời gian đo</th>
                         <th className="py-3 px-4">Kết luận AI</th>
                         <th className="py-3 px-4 text-center">Khả năng AFib</th>
@@ -237,7 +237,7 @@ export function MemberHealthDashboard() {
                               setSelectedRecord(record)
                               setIsDetailOpen(true)
                             }}
-                            className="hover:bg-slate-50/80 dark:hover:bg-slate-800/50 transition-colors cursor-pointer group"
+                            className="hover:bg-slate-50/80 transition-colors cursor-pointer group"
                           >
                             <td className="py-3 px-4">
                               <div className="font-semibold text-foreground group-hover:text-primary transition-colors">
@@ -272,7 +272,7 @@ export function MemberHealthDashboard() {
                                   setSelectedRecord(record)
                                   setIsDetailOpen(true)
                                 }}
-                                className="h-8 px-3 rounded-xl bg-white dark:bg-slate-800 border border-border text-foreground hover:bg-slate-50 dark:hover:bg-slate-700 text-xs font-semibold gap-1.5 cursor-pointer shadow-2xs"
+                                className="h-8 px-3 rounded-xl bg-white border border-border text-foreground hover:bg-slate-50 text-xs font-semibold gap-1.5 cursor-pointer shadow-2xs"
                               >
                                 <Eye className="w-3.5 h-3.5 text-muted-foreground" />
                                 <span>Xem chi tiết</span>

@@ -19,7 +19,7 @@ export function UserDistributionChart({ data }: { data: UserDistributionItem[] }
               contentStyle={{
                 backgroundColor: "#ffffff",
                 borderRadius: "12px",
-                borderColor: "#e2e8f0",
+                borderColor: "var(--color-slate-200)",
                 boxShadow: "0 10px 15px -3px rgba(0,0,0,0.1)",
                 fontSize: "12px",
                 fontWeight: 600,

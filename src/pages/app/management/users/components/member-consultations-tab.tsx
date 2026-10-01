@@ -60,15 +60,15 @@ export function MemberConsultationsTab({ memberId, memberDisplayName }: MemberCo
   const renderStatusBadge = (status: ConsultationSessionResponse["status"]) => {
     switch (status) {
       case "ACTIVE":
-        return <Badge className="bg-emerald-500 hover:bg-emerald-600 text-white font-bold">Đang diễn ra</Badge>
+        return <Badge className="bg-success-500 hover:bg-success-600 text-white font-bold">Đang diễn ra</Badge>
       case "COMPLETED":
-        return <Badge className="bg-blue-600 hover:bg-blue-700 text-white font-bold">Hoàn tất</Badge>
+        return <Badge className="bg-primary-600 hover:bg-primary-700 text-white font-bold">Hoàn tất</Badge>
       case "CLOSED":
         return <Badge variant="secondary" className="font-bold text-slate-700">Đã đóng</Badge>
       case "SCHEDULED":
-        return <Badge variant="outline" className="text-amber-600 border-amber-500 bg-amber-50 font-bold">Đã lên lịch</Badge>
+        return <Badge variant="outline" className="text-warning-600 border-warning-500 bg-warning-50 font-bold">Đã lên lịch</Badge>
       case "EXTENSION_PENDING":
-        return <Badge className="bg-purple-600 hover:bg-purple-700 text-white font-bold">Chờ gia hạn</Badge>
+        return <Badge className="bg-primary-600 hover:bg-primary-700 text-white font-bold">Chờ gia hạn</Badge>
       case "CANCELLED":
         return <Badge variant="destructive" className="font-bold">Đã hủy</Badge>
       default:
@@ -80,11 +80,11 @@ export function MemberConsultationsTab({ memberId, memberDisplayName }: MemberCo
     if (!status) return <span className="text-slate-400 font-mono">—</span>
     switch (status) {
       case "FINALIZED":
-        return <Badge className="bg-emerald-50 text-emerald-700 border-emerald-300 font-bold">Đã tổng kết</Badge>
+        return <Badge className="bg-success-50 text-success-700 border-success-300 font-bold">Đã tổng kết</Badge>
       case "ESCALATED":
-        return <Badge className="bg-red-50 text-red-700 border-red-300 font-bold">Leo thang</Badge>
+        return <Badge className="bg-danger-50 text-danger-700 border-danger-300 font-bold">Leo thang</Badge>
       case "PENDING":
-        return <Badge className="bg-amber-50 text-amber-700 border-amber-300 font-bold">Chờ tổng kết</Badge>
+        return <Badge className="bg-warning-50 text-warning-700 border-warning-300 font-bold">Chờ tổng kết</Badge>
       default:
         return <Badge variant="outline">{status}</Badge>
     }
@@ -142,7 +142,7 @@ export function MemberConsultationsTab({ memberId, memberDisplayName }: MemberCo
                 <tr>
                   <td colSpan={12} className="py-16 text-center text-slate-400">
                     <div className="flex flex-col items-center justify-center gap-3">
-                      <Loader2 className="w-7 h-7 text-blue-600 animate-spin" />
+                      <Loader2 className="w-7 h-7 text-primary-600 animate-spin" />
                       <span className="text-sm font-bold text-slate-700">Đang tải lịch sử phiên tư vấn...</span>
                     </div>
                   </td>
@@ -191,7 +191,7 @@ export function MemberConsultationsTab({ memberId, memberDisplayName }: MemberCo
                     <td className="py-3.5 px-4 text-[11px]">
                       {session.packagePriceSnapshot != null ? (
                         <div>
-                          <span className="font-bold text-emerald-700">
+                          <span className="font-bold text-success-700">
                             {formatVND(session.packagePriceSnapshot)}
                           </span>
                           {session.packageDurationDaysSnapshot && (
@@ -227,12 +227,12 @@ export function MemberConsultationsTab({ memberId, memberDisplayName }: MemberCo
                     <td className="py-3.5 px-4 text-center whitespace-nowrap">
                       <div className="flex items-center justify-center gap-1">
                         {session.operationalReviewRequired && (
-                          <span title="Cần rà soát vận hành" className="text-rose-600 bg-rose-50 p-1 rounded-md">
+                          <span title="Cần rà soát vận hành" className="text-danger-600 bg-danger-50 p-1 rounded-md">
                             <ShieldAlert className="w-3.5 h-3.5" />
                           </span>
                         )}
                         {session.exceptionalOverride && (
-                          <span title="Ghi đè ngoại lệ" className="text-amber-600 bg-amber-50 p-1 rounded-md">
+                          <span title="Ghi đè ngoại lệ" className="text-warning-600 bg-warning-50 p-1 rounded-md">
                             <AlertTriangle className="w-3.5 h-3.5" />
                           </span>
                         )}
@@ -246,7 +246,7 @@ export function MemberConsultationsTab({ memberId, memberDisplayName }: MemberCo
                         variant="ghost"
                         size="sm"
                         onClick={() => setSelectedSession(session)}
-                        className="h-8 px-2.5 rounded-lg text-slate-600 hover:text-blue-600 hover:bg-blue-50 font-bold text-xs cursor-pointer"
+                        className="h-8 px-2.5 rounded-lg text-slate-600 hover:text-primary-600 hover:bg-primary-50 font-bold text-xs cursor-pointer"
                         title="Xem chi tiết phiên tư vấn"
                       >
                         <Eye className="w-4 h-4 mr-1" />
@@ -279,7 +279,7 @@ export function MemberConsultationsTab({ memberId, memberDisplayName }: MemberCo
                   setPage(1)
                 }}
                 disabled={loading}
-                className="bg-white border border-slate-200 rounded-lg px-2 py-1 text-xs font-extrabold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+                className="bg-white border border-slate-200 rounded-lg px-2 py-1 text-xs font-extrabold text-slate-800 focus:outline-none focus:ring-2 focus:ring-primary-500 cursor-pointer"
               >
                 <option value={10}>10</option>
                 <option value={20}>20</option>

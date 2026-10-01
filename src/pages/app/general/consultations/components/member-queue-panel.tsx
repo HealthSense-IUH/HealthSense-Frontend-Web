@@ -108,12 +108,12 @@ export function MemberQueuePanel({
   if (queueState?.phase === "ACTIVE_SESSION" && queueState.sessionId) {
     return (
       <Card className="shadow-sm border rounded-2xl overflow-hidden max-w-2xl mx-auto">
-        <div className="bg-emerald-500/10 border-b border-emerald-500/20 p-6 flex items-center gap-4">
-          <div className="h-12 w-12 rounded-xl bg-emerald-500/20 text-emerald-600 flex items-center justify-center shrink-0">
+        <div className="bg-success-500/10 border-b border-success-500/20 p-6 flex items-center gap-4">
+          <div className="h-12 w-12 rounded-xl bg-success-500/20 text-success-600 flex items-center justify-center shrink-0">
             <Stethoscope className="h-6 w-6" />
           </div>
           <div>
-            <Badge className="bg-emerald-500 hover:bg-emerald-600 text-white mb-1.5">Phiên tư vấn đang diễn ra</Badge>
+            <Badge className="bg-success-500 hover:bg-success-600 text-white mb-1.5">Phiên tư vấn đang diễn ra</Badge>
             <h2 className="text-xl font-bold text-foreground">Bác sĩ đang đợi bạn trong phòng tư vấn</h2>
             <p className="text-xs text-muted-foreground mt-0.5">
               Phiên tư vấn #{queueState.sessionId} đã được kích hoạt thành công.
@@ -219,7 +219,7 @@ export function MemberQueuePanel({
             </div>
             <div className="flex items-center justify-between text-sm">
               <span className="text-muted-foreground">Trạng thái:</span>
-              <span className="font-semibold text-emerald-600">Bác sĩ đã chấp nhận kết nối</span>
+              <span className="font-semibold text-success-600">Bác sĩ đã chấp nhận kết nối</span>
             </div>
             {creditDisplay && (
               <div className="flex items-center justify-between text-sm pt-2 border-t">
@@ -232,9 +232,9 @@ export function MemberQueuePanel({
           </div>
 
           {insufficientCredits && (
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-amber-500/10 border border-amber-500/30 rounded-2xl gap-3 text-amber-950 dark:text-amber-200">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-warning-500/10 border border-warning-500/30 rounded-2xl gap-3 text-warning-950">
               <div className="flex items-start sm:items-center gap-2.5">
-                <AlertCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5 sm:mt-0" />
+                <AlertCircle className="w-5 h-5 text-warning-600 shrink-0 mt-0.5 sm:mt-0" />
                 <div>
                   <p className="font-semibold text-sm text-foreground">Không còn đủ lượt tại thời điểm bắt đầu phiên</p>
                   <p className="text-xs text-muted-foreground mt-0.5">
@@ -255,15 +255,15 @@ export function MemberQueuePanel({
           )}
 
           {isConfirmExpired ? (
-            <div className="p-3 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900 rounded-xl text-xs text-red-800 dark:text-red-300 flex items-start gap-2">
-              <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-red-600" />
+            <div className="p-3 bg-danger-50 border border-danger-200 rounded-xl text-xs text-danger-800 flex items-start gap-2">
+              <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-danger-600" />
               <span>
                 Đã hết thời gian xác nhận. Hệ thống đang làm mới trạng thái hàng đợi...
               </span>
             </div>
           ) : (
-            <div className="p-3 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-900 rounded-xl text-xs text-blue-800 dark:text-blue-300 flex items-start gap-2">
-              <Info className="w-4 h-4 shrink-0 mt-0.5 text-blue-600" />
+            <div className="p-3 bg-primary-50 border border-primary-200 rounded-xl text-xs text-primary-800 flex items-start gap-2">
+              <Info className="w-4 h-4 shrink-0 mt-0.5 text-primary-600" />
               <span>
                 {creditPolicy === "PER_SESSION_CONFIRM_V2"
                   ? "Bạn có tối đa 15 phút để xác nhận. Sau khi bạn xác nhận, 1 lượt tư vấn sẽ được trừ và phiên tư vấn sẽ được bắt đầu ngay lập tức."
@@ -290,7 +290,7 @@ export function MemberQueuePanel({
           <Button
             variant="outline"
             size="lg"
-            className="h-12 rounded-xl text-muted-foreground hover:text-red-600 hover:border-red-200"
+            className="h-12 rounded-xl text-muted-foreground hover:text-danger-600 hover:border-danger-200"
             disabled={actionLoading}
             onClick={() => {
               if (window.confirm("Bạn có chắc chắn muốn hủy lượt tư vấn này?")) {
@@ -376,10 +376,10 @@ export function MemberQueuePanel({
 
           {/* Neutral connecting message when OFFERING_DOCTOR */}
           {isOfferingDoctor && (
-            <div className="flex items-center gap-3 p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-900 dark:text-amber-200 text-xs">
+            <div className="flex items-center gap-3 p-4 rounded-xl bg-warning-500/10 border border-warning-500/20 text-warning-900 text-xs">
               <div className="relative flex h-3 w-3 shrink-0">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-3 w-3 bg-amber-500"></span>
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-warning-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-warning-500"></span>
               </div>
               <p className="font-medium">
                 Hệ thống đang kết nối bạn với bác sĩ... Vui lòng giữ màn hình này và chờ phản hồi từ bác sĩ.
@@ -410,11 +410,11 @@ export function MemberQueuePanel({
               </div>
               <div className="p-2.5 rounded-lg bg-background border">
                 <span className="text-[11px] text-muted-foreground block">Sẵn sàng</span>
-                <span className="text-base font-bold text-emerald-600 font-mono">{queueState.availableDoctors}</span>
+                <span className="text-base font-bold text-success-600 font-mono">{queueState.availableDoctors}</span>
               </div>
               <div className="p-2.5 rounded-lg bg-background border">
                 <span className="text-[11px] text-muted-foreground block">Đang bận</span>
-                <span className="text-base font-bold text-amber-600 font-mono">{queueState.busyDoctors}</span>
+                <span className="text-base font-bold text-warning-600 font-mono">{queueState.busyDoctors}</span>
               </div>
             </div>
           </div>
@@ -427,7 +427,7 @@ export function MemberQueuePanel({
           <Button
             variant="outline"
             size="sm"
-            className="text-xs text-muted-foreground hover:text-red-600 hover:border-red-200"
+            className="text-xs text-muted-foreground hover:text-danger-600 hover:border-danger-200"
             disabled={actionLoading}
             onClick={() => {
               if (window.confirm("Bạn có chắc chắn muốn rời khỏi hàng đợi tư vấn?")) {
@@ -446,8 +446,8 @@ export function MemberQueuePanel({
   // 4. Fallback / Terminal states from History (TIMED_OUT or CANCELLED)
   if (latestRequest?.status === "TIMED_OUT") {
     return (
-      <Card className="shadow-sm border border-amber-200 dark:border-amber-900 bg-amber-50/50 dark:bg-amber-950/10 rounded-2xl overflow-hidden max-w-xl mx-auto p-6 text-center space-y-4">
-        <div className="mx-auto h-12 w-12 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-600 flex items-center justify-center">
+      <Card className="shadow-sm border border-warning-200 bg-warning-50/50 rounded-2xl overflow-hidden max-w-xl mx-auto p-6 text-center space-y-4">
+        <div className="mx-auto h-12 w-12 rounded-full bg-warning-100 text-warning-600 flex items-center justify-center">
           <Clock className="w-6 h-6" />
         </div>
         <div className="space-y-1">
@@ -502,7 +502,7 @@ export function MemberQueuePanel({
 
   // 5. Default: No Active Request
   return (
-    <Card className="shadow-sm border border-dashed rounded-2xl max-w-xl mx-auto p-8 text-center space-y-4">
+    <Card className="shadow-sm border border-dashed rounded-2xl max-w-xl mx-auto p-6 text-center space-y-4">
       <div className="mx-auto h-14 w-14 rounded-2xl bg-primary/10 text-primary flex items-center justify-center">
         <Stethoscope className="w-7 h-7" />
       </div>

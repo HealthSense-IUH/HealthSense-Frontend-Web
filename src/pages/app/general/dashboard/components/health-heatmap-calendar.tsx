@@ -140,7 +140,7 @@ export function HealthHeatmapCalendar({ onSelectRecord, className = "" }: Health
   }, [calendarDays])
 
   return (
-    <Card className={`rounded-3xl border border-border shadow-xs bg-white dark:bg-card overflow-hidden flex flex-col justify-between ${className}`}>
+    <Card className={`rounded-2xl border border-border shadow-xs bg-white overflow-hidden flex flex-col justify-between ${className}`}>
       <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border pb-4">
         <div>
           <div className="flex items-center gap-2">
@@ -156,11 +156,11 @@ export function HealthHeatmapCalendar({ onSelectRecord, className = "" }: Health
 
         {/* Month Navigation & Legend */}
         <div className="flex flex-wrap items-center gap-3">
-          <div className="flex items-center gap-1.5 p-1 bg-slate-50 dark:bg-slate-800 border border-border rounded-xl">
+          <div className="flex items-center gap-1.5 p-1 bg-slate-50 border border-border rounded-xl">
             <button
               type="button"
               onClick={prevMonth}
-              className="p-1 rounded-lg hover:bg-white dark:hover:bg-card text-muted-foreground hover:text-foreground transition-all cursor-pointer"
+              className="p-1 rounded-lg hover:bg-white text-muted-foreground hover:text-foreground transition-all cursor-pointer"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
@@ -170,7 +170,7 @@ export function HealthHeatmapCalendar({ onSelectRecord, className = "" }: Health
             <button
               type="button"
               onClick={nextMonth}
-              className="p-1 rounded-lg hover:bg-white dark:hover:bg-card text-muted-foreground hover:text-foreground transition-all cursor-pointer"
+              className="p-1 rounded-lg hover:bg-white text-muted-foreground hover:text-foreground transition-all cursor-pointer"
             >
               <ChevronRight className="w-4 h-4" />
             </button>
@@ -180,7 +180,7 @@ export function HealthHeatmapCalendar({ onSelectRecord, className = "" }: Health
             variant="ghost"
             size="sm"
             onClick={resetToToday}
-            className="h-8 text-xs font-semibold rounded-xl text-primary hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer"
+            className="h-8 text-xs font-semibold rounded-xl text-primary hover:bg-slate-50 cursor-pointer"
           >
             Hôm nay
           </Button>
@@ -190,8 +190,8 @@ export function HealthHeatmapCalendar({ onSelectRecord, className = "" }: Health
       <CardContent className="pt-6 space-y-5">
         {/* Top Summary Badges */}
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-          <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border border-border flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400">
+          <div className="p-3 rounded-2xl bg-slate-50 border border-border flex items-center gap-3">
+            <div className="p-2 rounded-xl bg-success-100 text-success-600">
               <ShieldCheck className="w-4 h-4" />
             </div>
             <div>
@@ -200,8 +200,8 @@ export function HealthHeatmapCalendar({ onSelectRecord, className = "" }: Health
             </div>
           </div>
 
-          <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border border-border flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-amber-100 dark:bg-amber-950 text-amber-600 dark:text-amber-400">
+          <div className="p-3 rounded-2xl bg-slate-50 border border-border flex items-center gap-3">
+            <div className="p-2 rounded-xl bg-warning-100 text-warning-600">
               <Flame className="w-4 h-4" />
             </div>
             <div>
@@ -210,20 +210,20 @@ export function HealthHeatmapCalendar({ onSelectRecord, className = "" }: Health
             </div>
           </div>
 
-          <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border border-border col-span-2 sm:col-span-1 flex items-center justify-between px-4">
+          <div className="p-3 rounded-2xl bg-slate-50 border border-border col-span-2 sm:col-span-1 flex items-center justify-between px-4">
             <div className="flex items-center gap-2">
-              <span className="h-3 w-3 rounded-md bg-emerald-500" />
+              <span className="h-3 w-3 rounded-md bg-success-500" />
               <span className="text-xs text-muted-foreground font-medium">Có bản ghi đo</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="h-3 w-3 rounded-md bg-slate-100 dark:bg-slate-800 border border-border" />
+              <span className="h-3 w-3 rounded-md bg-slate-100 border border-border" />
               <span className="text-xs text-muted-foreground font-medium">Chưa đo</span>
             </div>
           </div>
         </div>
 
         {/* Heatmap Month Grid */}
-        <div className="border border-border rounded-2xl p-4 bg-slate-50/40 dark:bg-slate-900/20">
+        <div className="border border-border rounded-2xl p-4 bg-slate-50/40">
           {/* Day of week header */}
           <div className="grid grid-cols-7 gap-2 mb-2 text-center text-[11px] font-bold text-muted-foreground">
             {DAY_LABELS.map((d) => (
@@ -250,18 +250,18 @@ export function HealthHeatmapCalendar({ onSelectRecord, className = "" }: Health
                   className={`h-11 rounded-xl flex flex-col items-center justify-center transition-all relative font-semibold text-xs ${
                     day.hasData
                       ? isSelected
-                        ? "bg-emerald-600 text-white ring-2 ring-emerald-500 ring-offset-2 shadow-md cursor-pointer scale-105"
-                        : "bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-900 dark:text-emerald-300 border border-emerald-400/30 hover:border-emerald-500 cursor-pointer shadow-2xs"
+                        ? "bg-success-600 text-white ring-2 ring-success-500 ring-offset-2 shadow-md cursor-pointer scale-105"
+                        : "bg-success-500/15 hover:bg-success-500/25 text-success-900 border border-success-400/30 hover:border-success-500 cursor-pointer shadow-2xs"
                       : day.isToday
-                        ? "bg-white dark:bg-card border-2 border-primary text-primary font-bold"
+                        ? "bg-white border-2 border-primary text-primary font-bold"
                         : day.isFuture
-                          ? "bg-slate-100/40 dark:bg-slate-800/20 text-slate-300 dark:text-slate-700 cursor-not-allowed"
-                          : "bg-white dark:bg-card border border-border text-muted-foreground hover:bg-slate-100 dark:hover:bg-slate-800/60 cursor-default"
+                          ? "bg-slate-100/40 text-slate-300 cursor-not-allowed"
+                          : "bg-white border border-border text-muted-foreground hover:bg-slate-100 cursor-default"
                   }`}
                 >
                   <span>{day.dayOfMonth}</span>
                   {day.hasData && (
-                    <span className={`h-1.5 w-1.5 rounded-full mt-0.5 ${isSelected ? "bg-white" : "bg-emerald-500"}`} />
+                    <span className={`h-1.5 w-1.5 rounded-full mt-0.5 ${isSelected ? "bg-white" : "bg-success-500"}`} />
                   )}
                 </button>
               )
@@ -271,13 +271,13 @@ export function HealthHeatmapCalendar({ onSelectRecord, className = "" }: Health
 
         {/* Selected Date Measurements Panel */}
         {selectedDate && (
-          <div className="p-4 rounded-2xl bg-white dark:bg-card border border-border shadow-xs space-y-3 animate-in fade-in slide-in-from-top-2 duration-200">
+          <div className="p-4 rounded-2xl bg-white border border-border shadow-xs space-y-3 animate-in fade-in slide-in-from-top-2 duration-200">
             <div className="flex items-center justify-between border-b border-border pb-2.5">
               <div className="flex items-center gap-2">
                 <span className="text-xs font-bold text-foreground">
                   Các lần đo ngày {selectedDate}
                 </span>
-                <span className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-900 border border-emerald-200">
+                <span className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-success-50 text-success-900 border border-success-200">
                   {selectedDateRecords.length} lần đo
                 </span>
               </div>
@@ -312,7 +312,7 @@ export function HealthHeatmapCalendar({ onSelectRecord, className = "" }: Health
                     <div
                       key={record.id}
                       onClick={() => onSelectRecord?.(record)}
-                      className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-border flex items-center justify-between hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+                      className="p-3 rounded-xl bg-slate-50 border border-border flex items-center justify-between hover:bg-slate-100 transition-colors cursor-pointer"
                     >
                       <div className="space-y-0.5 min-w-0">
                         <span className="text-xs font-bold text-foreground truncate block">
@@ -326,7 +326,7 @@ export function HealthHeatmapCalendar({ onSelectRecord, className = "" }: Health
                       <Button
                         variant="outline"
                         size="sm"
-                        className="h-7 text-xs font-semibold rounded-lg bg-white dark:bg-card shrink-0"
+                        className="h-7 text-xs font-semibold rounded-lg bg-white shrink-0"
                       >
                         Chi tiết
                       </Button>

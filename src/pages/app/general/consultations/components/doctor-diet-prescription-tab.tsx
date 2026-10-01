@@ -147,8 +147,8 @@ export function DoctorDietPrescriptionTab({ sessionId, readOnly }: DoctorDietPre
   if (errorMsg || !prescription) {
     return (
       <Card className="rounded-2xl border-dashed">
-        <CardContent className="p-8 text-center space-y-3">
-          <AlertCircle className="w-6 h-6 text-rose-500 mx-auto" />
+        <CardContent className="p-6 text-center space-y-3">
+          <AlertCircle className="w-6 h-6 text-danger-500 mx-auto" />
           <p className="text-sm text-muted-foreground">{errorMsg ?? "Không có dữ liệu."}</p>
           <Button variant="outline" size="sm" onClick={() => void load()} className="rounded-xl gap-1.5">
             <RefreshCw className="w-3.5 h-3.5" />
@@ -180,7 +180,7 @@ export function DoctorDietPrescriptionTab({ sessionId, readOnly }: DoctorDietPre
             const rule = ruleOf(flag.code)
             const on = flags[flag.key]
             return (
-              <div key={flag.key} className="rounded-xl border border-slate-200/80 dark:border-border p-3 space-y-3">
+              <div key={flag.key} className="rounded-xl border border-slate-200/80 p-3 space-y-3">
                 <label className="flex items-start gap-3 cursor-pointer has-[:disabled]:cursor-default">
                   <Checkbox
                     checked={on}
@@ -189,7 +189,7 @@ export function DoctorDietPrescriptionTab({ sessionId, readOnly }: DoctorDietPre
                     className="mt-0.5"
                   />
                   <span className="space-y-0.5">
-                    <span className="block text-sm font-semibold text-slate-900 dark:text-foreground">{flag.title}</span>
+                    <span className="block text-sm font-semibold text-slate-900">{flag.title}</span>
                     <span className="block text-xs text-muted-foreground">{flag.detail}</span>
                   </span>
                 </label>
@@ -201,7 +201,7 @@ export function DoctorDietPrescriptionTab({ sessionId, readOnly }: DoctorDietPre
                       return (
                         <label key={field} className="space-y-1">
                           <span className="flex items-center gap-1 text-[11px] font-medium text-muted-foreground">
-                            <span className={field === "limit" ? "w-1.5 h-1.5 rounded-full bg-rose-500" : "w-1.5 h-1.5 rounded-full bg-amber-500"} />
+                            <span className={field === "limit" ? "w-1.5 h-1.5 rounded-full bg-danger-500" : "w-1.5 h-1.5 rounded-full bg-warning-500"} />
                             {field === "limit" ? "Đỏ từ" : "Vàng từ"} ({rule.unit}/100 g)
                           </span>
                           <Input
@@ -221,7 +221,7 @@ export function DoctorDietPrescriptionTab({ sessionId, readOnly }: DoctorDietPre
                       )
                     })}
                     {errors[flag.code] && (
-                      <p className="col-span-2 text-[11px] font-medium text-rose-600">{errors[flag.code]}</p>
+                      <p className="col-span-2 text-[11px] font-medium text-danger-600">{errors[flag.code]}</p>
                     )}
                   </div>
                 )}
@@ -231,7 +231,7 @@ export function DoctorDietPrescriptionTab({ sessionId, readOnly }: DoctorDietPre
         </div>
 
         <div className="space-y-1.5">
-          <label htmlFor="diet-note" className="text-sm font-semibold text-slate-900 dark:text-foreground">
+          <label htmlFor="diet-note" className="text-sm font-semibold text-slate-900">
             Dặn thêm
           </label>
           <Textarea

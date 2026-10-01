@@ -33,21 +33,21 @@ export function HealthRecordDetailDialog({ record, open, onOpenChange }: HealthR
         <ScrollArea className="flex-1 pr-4">
           <div className="grid grid-cols-2 gap-4 text-sm mb-6">
             <div>
-              <span className="font-semibold text-neutral-500">Member ID:</span>
+              <span className="font-semibold text-slate-500">Member ID:</span>
               <p>{record.userId}</p>
             </div>
             <div>
-              <span className="font-semibold text-neutral-500">File Name:</span>
+              <span className="font-semibold text-slate-500">File Name:</span>
               <p>{record.fileName || '-'}</p>
             </div>
             <div>
-              <span className="font-semibold text-neutral-500">Status:</span>
+              <span className="font-semibold text-slate-500">Status:</span>
               <p>
                 <Badge variant="outline">{record.status}</Badge>
               </p>
             </div>
             <div>
-              <span className="font-semibold text-neutral-500">Prediction:</span>
+              <span className="font-semibold text-slate-500">Prediction:</span>
               <p>
                 {record.predictionLabel ? (
                   <Badge variant="outline">{record.predictionLabel}</Badge>
@@ -55,11 +55,11 @@ export function HealthRecordDetailDialog({ record, open, onOpenChange }: HealthR
               </p>
             </div>
             <div>
-              <span className="font-semibold text-neutral-500">Confidence:</span>
+              <span className="font-semibold text-slate-500">Confidence:</span>
               <p>{record.confidence ? `${(record.confidence * 100).toFixed(2)}%` : '-'}</p>
             </div>
             <div>
-              <span className="font-semibold text-neutral-500">Date:</span>
+              <span className="font-semibold text-slate-500">Date:</span>
               <p>{formatRecordDate(record.createdAt)}</p>
             </div>
           </div>
@@ -80,14 +80,14 @@ export function HealthRecordDetailDialog({ record, open, onOpenChange }: HealthR
                     typeof value === "number" || typeof value === "string" || typeof value === "boolean"
                   )
                   .map(([key, value]) => (
-                    <div key={key} className="bg-neutral-50 dark:bg-neutral-900 p-2 rounded-md border text-xs">
-                      <span className="font-medium block text-neutral-500">{key}</span>
+                    <div key={key} className="bg-slate-50 p-2 rounded-md border text-xs">
+                      <span className="font-medium block text-slate-500">{key}</span>
                       <span className="block truncate" title={String(value)}>{String(value)}</span>
                     </div>
                   ))}
               </div>
             ) : (
-              <p className="text-sm text-neutral-500 italic">No HRV features available.</p>
+              <p className="text-sm text-slate-500 italic">No HRV features available.</p>
             )}
           </div>
         </ScrollArea>

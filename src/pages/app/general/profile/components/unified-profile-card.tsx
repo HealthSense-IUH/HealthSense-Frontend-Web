@@ -48,15 +48,15 @@ function StatusBadge({ status }: { status?: ProfileAccountStatus }) {
   const getBadgeStyle = () => {
     switch (status) {
       case "ACTIVE":
-        return { bg: "bg-emerald-50 text-emerald-700 border-emerald-200", dot: "bg-emerald-500", label: "Đang hoạt động" }
+        return { bg: "bg-success-50 text-success-700 border-success-200", dot: "bg-success-500", label: "Đang hoạt động" }
       case "PENDING_VERIFY":
-        return { bg: "bg-amber-50 text-amber-700 border-amber-200", dot: "bg-amber-500", label: "Chờ xác thực" }
+        return { bg: "bg-warning-50 text-warning-700 border-warning-200", dot: "bg-warning-500", label: "Chờ xác thực" }
       case "INACTIVE":
         return { bg: "bg-slate-100 text-slate-600 border-slate-200", dot: "bg-slate-400", label: "Không hoạt động" }
       case "LOCKED":
-        return { bg: "bg-red-50 text-red-700 border-red-200", dot: "bg-red-500", label: "Đã khóa" }
+        return { bg: "bg-danger-50 text-danger-700 border-danger-200", dot: "bg-danger-500", label: "Đã khóa" }
       case "BANNED":
-        return { bg: "bg-purple-50 text-purple-700 border-purple-200", dot: "bg-purple-600", label: "Bị cấm" }
+        return { bg: "bg-primary-50 text-primary-700 border-primary-200", dot: "bg-primary-600", label: "Bị cấm" }
       default:
         return { bg: "bg-slate-100 text-slate-700 border-slate-200", dot: "bg-slate-500", label: status === "ACTIVE" ? "Đang hoạt động" : (status || "Đang hoạt động") }
     }
@@ -335,9 +335,9 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
   }
 
   return (
-    <div className="rounded-3xl border border-slate-200/80 bg-white shadow-sm overflow-hidden">
+    <div className="rounded-2xl border border-slate-200/80 bg-white shadow-sm overflow-hidden">
       {/* Top Banner & Header Section */}
-      <div className="bg-gradient-to-r from-blue-500/10 via-indigo-500/5 to-slate-50/80 p-8 border-b border-slate-100">
+      <div className="bg-gradient-to-r from-primary-500/10 via-primary-500/5 to-slate-50/80 p-6 border-b border-slate-100">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
           <div className="flex items-center gap-5">
             {/* Interactive Avatar */}
@@ -378,7 +378,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
             {/* Name, Role & Email */}
             <div className="space-y-1.5 min-w-0">
               <div className="flex items-center gap-2 flex-wrap">
-                <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-[11px] font-extrabold bg-blue-600 text-white uppercase tracking-wider shadow-xs shadow-blue-500/20">
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-[11px] font-extrabold bg-primary-600 text-white uppercase tracking-wider shadow-xs shadow-primary-500/20">
                   {user.role === "SUPER_ADMIN" ? "Quản trị cấp cao" : user.role === "ADMIN" ? "Quản trị viên" : user.role === "DOCTOR" ? "Bác sĩ" : "Hội viên"}
                 </span>
                 <StatusBadge status={user.status} />
@@ -405,7 +405,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                 <span>Chỉnh sửa hồ sơ & Định danh</span>
               </Button>
             ) : (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-50 text-blue-700 text-xs font-bold border border-blue-200">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-primary-50 text-primary-700 text-xs font-bold border border-primary-200">
                 <Edit2 className="w-3.5 h-3.5 animate-pulse" />
                 <span>Đang chỉnh sửa</span>
               </span>
@@ -415,17 +415,17 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
       </div>
 
       {/* Body Content */}
-      <div className="p-8">
+      <div className="p-6">
         {errorMsg && (
-          <div className="mb-6 p-4 rounded-2xl bg-red-50 border border-red-200 text-red-800 text-xs font-bold flex items-center gap-3">
-            <AlertCircle className="w-5 h-5 text-red-600 shrink-0" />
+          <div className="mb-6 p-4 rounded-2xl bg-danger-50 border border-danger-200 text-danger-800 text-xs font-bold flex items-center gap-3">
+            <AlertCircle className="w-5 h-5 text-danger-600 shrink-0" />
             <span>{errorMsg}</span>
           </div>
         )}
 
         {successMsg && !isEditing && (
-          <div className="mb-6 p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold flex items-center gap-3">
-            <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+          <div className="mb-6 p-4 rounded-2xl bg-success-50 border border-success-200 text-success-800 text-xs font-bold flex items-center gap-3">
+            <CheckCircle2 className="w-5 h-5 text-success-600 shrink-0" />
             <span>{successMsg}</span>
           </div>
         )}
@@ -486,13 +486,13 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
             <div className="pt-6 border-t border-slate-100">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-sm font-extrabold text-slate-400 uppercase tracking-wider flex items-center gap-2">
-                  <CreditCard className="w-4 h-4 text-indigo-500" />
+                  <CreditCard className="w-4 h-4 text-primary-500" />
                   <span>Thông tin định danh (CCCD / CMND)</span>
                 </h3>
                 <button
                   type="button"
                   onClick={() => setShowSensitive((prev) => !prev)}
-                  className="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-600 hover:text-indigo-700 cursor-pointer"
+                  className="inline-flex items-center gap-1.5 text-xs font-bold text-primary-600 hover:text-primary-700 cursor-pointer"
                 >
                   {showSensitive ? (
                     <>
@@ -509,9 +509,9 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                <div className="p-4 rounded-2xl bg-indigo-50/40 border border-indigo-100/60 flex flex-col gap-1">
-                  <span className="text-[11px] font-extrabold text-indigo-500 uppercase tracking-wider flex items-center gap-1.5">
-                    <CreditCard className="w-3.5 h-3.5 text-indigo-500" />
+                <div className="p-4 rounded-2xl bg-primary-50/40 border border-primary-100/60 flex flex-col gap-1">
+                  <span className="text-[11px] font-extrabold text-primary-500 uppercase tracking-wider flex items-center gap-1.5">
+                    <CreditCard className="w-3.5 h-3.5 text-primary-500" />
                     <span>Số Căn cước công dân (CCCD)</span>
                   </span>
                   <span className="text-sm font-bold font-mono text-slate-800 pl-5">
@@ -523,9 +523,9 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                   </span>
                 </div>
 
-                <div className="p-4 rounded-2xl bg-indigo-50/40 border border-indigo-100/60 flex flex-col gap-1">
-                  <span className="text-[11px] font-extrabold text-indigo-500 uppercase tracking-wider flex items-center gap-1.5">
-                    <Building2 className="w-3.5 h-3.5 text-indigo-500" />
+                <div className="p-4 rounded-2xl bg-primary-50/40 border border-primary-100/60 flex flex-col gap-1">
+                  <span className="text-[11px] font-extrabold text-primary-500 uppercase tracking-wider flex items-center gap-1.5">
+                    <Building2 className="w-3.5 h-3.5 text-primary-500" />
                     <span>Tài khoản ngân hàng</span>
                   </span>
                   <span className="text-sm font-bold font-mono text-slate-800 pl-5">
@@ -537,9 +537,9 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                   </span>
                 </div>
 
-                <div className="p-4 rounded-2xl bg-indigo-50/40 border border-indigo-100/60 flex flex-col gap-1">
-                  <span className="text-[11px] font-extrabold text-indigo-500 uppercase tracking-wider flex items-center gap-1.5">
-                    <HeartHandshake className="w-3.5 h-3.5 text-indigo-500" />
+                <div className="p-4 rounded-2xl bg-primary-50/40 border border-primary-100/60 flex flex-col gap-1">
+                  <span className="text-[11px] font-extrabold text-primary-500 uppercase tracking-wider flex items-center gap-1.5">
+                    <HeartHandshake className="w-3.5 h-3.5 text-primary-500" />
                     <span>Mã số Thẻ BHYT</span>
                   </span>
                   <span className="text-sm font-bold font-mono text-slate-800 pl-5">
@@ -558,7 +558,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                 <div className="rounded-2xl border border-slate-200/80 bg-slate-50/40 p-4 flex flex-col items-center">
                   <div className="w-full flex items-center justify-between mb-3">
                     <span className="text-xs font-extrabold text-slate-700 flex items-center gap-1.5">
-                      <FileCheck className="w-4 h-4 text-emerald-600" />
+                      <FileCheck className="w-4 h-4 text-success-600" />
                       <span>CCCD Mặt Trước</span>
                     </span>
                     {user.identityCardFrontUrl && (
@@ -571,7 +571,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                             rotate: user.identityCardFrontRotate ?? 0,
                           })
                         }
-                        className="inline-flex items-center gap-1 text-[11px] font-bold text-blue-600 hover:text-blue-700 cursor-pointer"
+                        className="inline-flex items-center gap-1 text-[11px] font-bold text-primary-600 hover:text-primary-700 cursor-pointer"
                       >
                         <Maximize2 className="w-3.5 h-3.5" />
                         <span>Xem chi tiết</span>
@@ -602,7 +602,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                 <div className="rounded-2xl border border-slate-200/80 bg-slate-50/40 p-4 flex flex-col items-center">
                   <div className="w-full flex items-center justify-between mb-3">
                     <span className="text-xs font-extrabold text-slate-700 flex items-center gap-1.5">
-                      <FileCheck className="w-4 h-4 text-emerald-600" />
+                      <FileCheck className="w-4 h-4 text-success-600" />
                       <span>CCCD Mặt Sau</span>
                     </span>
                     {user.identityCardBackUrl && (
@@ -615,7 +615,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                             rotate: user.identityCardBackRotate ?? 0,
                           })
                         }
-                        className="inline-flex items-center gap-1 text-[11px] font-bold text-blue-600 hover:text-blue-700 cursor-pointer"
+                        className="inline-flex items-center gap-1 text-[11px] font-bold text-primary-600 hover:text-primary-700 cursor-pointer"
                       >
                         <Maximize2 className="w-3.5 h-3.5" />
                         <span>Xem chi tiết</span>
@@ -647,7 +647,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
             {/* System Security & Timestamps */}
             <div className="pt-6 border-t border-slate-100">
               <h3 className="text-sm font-extrabold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4 text-blue-500" />
+                <ShieldCheck className="w-4 h-4 text-primary-500" />
                 <span>Bảo mật & Thời gian hệ thống</span>
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -677,7 +677,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                 Cập nhật hồ sơ & Định danh cá nhân
               </h3>
               <span className="text-xs text-slate-500">
-                Các trường đánh dấu <span className="text-red-500 font-bold">*</span> là bắt buộc.
+                Các trường đánh dấu <span className="text-danger-500 font-bold">*</span> là bắt buộc.
               </span>
             </div>
 
@@ -689,7 +689,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div className="space-y-2">
                   <Label htmlFor="display-name-input" className="text-xs font-bold text-slate-700">
-                    Tên hiển thị <span className="text-red-500">*</span>
+                    Tên hiển thị <span className="text-danger-500">*</span>
                   </Label>
                   <Input
                     id="display-name-input"
@@ -699,7 +699,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                     placeholder="Nhập họ và tên hiển thị"
                     maxLength={120}
                     required
-                    className="h-11 rounded-xl border-slate-200 text-xs font-semibold focus:ring-2 focus:ring-blue-500"
+                    className="h-11 rounded-xl border-slate-200 text-xs font-semibold focus:ring-2 focus:ring-primary-500"
                   />
                 </div>
 
@@ -714,7 +714,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder="VD: 0909 123 456"
                     maxLength={30}
-                    className="h-11 rounded-xl border-slate-200 text-xs font-mono font-semibold focus:ring-2 focus:ring-blue-500"
+                    className="h-11 rounded-xl border-slate-200 text-xs font-mono font-semibold focus:ring-2 focus:ring-primary-500"
                   />
                 </div>
               </div>
@@ -730,7 +730,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                     disabled={loading}
                     value={dateOfBirth}
                     onChange={(e) => setDateOfBirth(e.target.value)}
-                    className="h-11 rounded-xl border-slate-200 text-xs font-mono font-semibold cursor-pointer focus:ring-2 focus:ring-blue-500"
+                    className="h-11 rounded-xl border-slate-200 text-xs font-mono font-semibold cursor-pointer focus:ring-2 focus:ring-primary-500"
                   />
                 </div>
 
@@ -744,7 +744,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                     disabled={loading}
                     value={gender}
                     onChange={(e) => setGender(e.target.value)}
-                    className="w-full h-11 rounded-xl border border-slate-200 bg-white px-3 text-xs font-extrabold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+                    className="w-full h-11 rounded-xl border border-slate-200 bg-white px-3 text-xs font-extrabold text-slate-800 focus:outline-none focus:ring-2 focus:ring-primary-500 cursor-pointer"
                   >
                     <option value="MALE">Nam</option>
                     <option value="FEMALE">Nữ</option>
@@ -764,7 +764,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                   onChange={(e) => setAddress(e.target.value)}
                   placeholder="Nhập địa chỉ, số nhà, phường/xã, quận/huyện, tỉnh/thành phố"
                   maxLength={500}
-                  className="h-11 rounded-xl border-slate-200 text-xs font-medium focus:ring-2 focus:ring-blue-500"
+                  className="h-11 rounded-xl border-slate-200 text-xs font-medium focus:ring-2 focus:ring-primary-500"
                 />
               </div>
             </div>
@@ -772,7 +772,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
             {/* Section 2: Sensitive Numbers */}
             <div className="space-y-5 pt-4 border-t border-slate-100">
               <h4 className="text-xs font-extrabold text-slate-400 uppercase tracking-wider flex items-center gap-2">
-                <CreditCard className="w-4 h-4 text-indigo-500" />
+                <CreditCard className="w-4 h-4 text-primary-500" />
                 <span>2. Thông tin định danh & Bảo mật</span>
               </h4>
 
@@ -788,7 +788,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                     onChange={(e) => setCitizenId(e.target.value)}
                     placeholder="VD: 079204001234"
                     maxLength={20}
-                    className="h-11 rounded-xl border-slate-200 text-xs font-mono font-semibold focus:ring-2 focus:ring-indigo-500"
+                    className="h-11 rounded-xl border-slate-200 text-xs font-mono font-semibold focus:ring-2 focus:ring-primary-500"
                   />
                 </div>
 
@@ -803,7 +803,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                     onChange={(e) => setBankAccount(e.target.value)}
                     placeholder="VD: 1029384756 - Vietcombank"
                     maxLength={100}
-                    className="h-11 rounded-xl border-slate-200 text-xs font-mono font-semibold focus:ring-2 focus:ring-indigo-500"
+                    className="h-11 rounded-xl border-slate-200 text-xs font-mono font-semibold focus:ring-2 focus:ring-primary-500"
                   />
                 </div>
 
@@ -818,7 +818,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                     onChange={(e) => setHealthInsuranceNumber(e.target.value)}
                     placeholder="VD: DN4790123456789"
                     maxLength={50}
-                    className="h-11 rounded-xl border-slate-200 text-xs font-mono font-semibold focus:ring-2 focus:ring-indigo-500"
+                    className="h-11 rounded-xl border-slate-200 text-xs font-mono font-semibold focus:ring-2 focus:ring-primary-500"
                   />
                 </div>
               </div>
@@ -828,7 +828,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
             <div className="space-y-5 pt-4 border-t border-slate-100">
               <div className="flex items-center justify-between">
                 <h4 className="text-xs font-extrabold text-slate-400 uppercase tracking-wider flex items-center gap-2">
-                  <UploadCloud className="w-4 h-4 text-blue-500" />
+                  <UploadCloud className="w-4 h-4 text-primary-500" />
                   <span>3. Tải lên ảnh Căn cước công dân (CCCD 2 mặt)</span>
                 </h4>
                 <span className="text-[11px] text-slate-400 italic">
@@ -841,11 +841,11 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                 <div className="rounded-2xl border border-slate-200 bg-slate-50/50 p-5 flex flex-col gap-3">
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-extrabold text-slate-800 flex items-center gap-1.5">
-                      <CreditCard className="w-4 h-4 text-blue-600" />
+                      <CreditCard className="w-4 h-4 text-primary-600" />
                       <span>CCCD Mặt Trước</span>
                     </span>
                     {identityCardFrontUrl && (
-                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200">
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-success-50 text-success-700 border border-success-200">
                         Xoay: {identityCardFrontRotate * 90}°
                       </span>
                     )}
@@ -855,7 +855,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                   <div className="relative w-full h-48 rounded-xl bg-slate-900/5 border border-slate-200/80 overflow-hidden flex items-center justify-center p-2 group">
                     {uploadingFrontCccd ? (
                       <div className="flex flex-col items-center gap-2 text-slate-500">
-                        <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+                        <Loader2 className="w-8 h-8 animate-spin text-primary-600" />
                         <span className="text-xs font-bold">Đang tải lên S3...</span>
                       </div>
                     ) : identityCardFrontUrl ? (
@@ -899,7 +899,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                       disabled={uploadingFrontCccd}
                       className="h-9 rounded-xl text-xs font-bold border-slate-200 hover:bg-white cursor-pointer"
                     >
-                      <UploadCloud className="w-3.5 h-3.5 mr-1.5 text-blue-600" />
+                      <UploadCloud className="w-3.5 h-3.5 mr-1.5 text-primary-600" />
                       <span>{identityCardFrontUrl ? "Đổi ảnh" : "Tải ảnh lên"}</span>
                     </Button>
 
@@ -934,7 +934,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                             setIdentityCardFrontRotate(0)
                           }}
                           title="Xóa ảnh này"
-                          className="h-9 w-9 p-0 rounded-xl text-red-500 hover:bg-red-50 hover:text-red-600 cursor-pointer"
+                          className="h-9 w-9 p-0 rounded-xl text-danger-500 hover:bg-danger-50 hover:text-danger-600 cursor-pointer"
                         >
                           <Trash2 className="w-4 h-4" />
                         </Button>
@@ -947,11 +947,11 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                 <div className="rounded-2xl border border-slate-200 bg-slate-50/50 p-5 flex flex-col gap-3">
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-extrabold text-slate-800 flex items-center gap-1.5">
-                      <CreditCard className="w-4 h-4 text-blue-600" />
+                      <CreditCard className="w-4 h-4 text-primary-600" />
                       <span>CCCD Mặt Sau</span>
                     </span>
                     {identityCardBackUrl && (
-                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200">
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-success-50 text-success-700 border border-success-200">
                         Xoay: {identityCardBackRotate * 90}°
                       </span>
                     )}
@@ -961,7 +961,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                   <div className="relative w-full h-48 rounded-xl bg-slate-900/5 border border-slate-200/80 overflow-hidden flex items-center justify-center p-2 group">
                     {uploadingBackCccd ? (
                       <div className="flex flex-col items-center gap-2 text-slate-500">
-                        <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+                        <Loader2 className="w-8 h-8 animate-spin text-primary-600" />
                         <span className="text-xs font-bold">Đang tải lên S3...</span>
                       </div>
                     ) : identityCardBackUrl ? (
@@ -1005,7 +1005,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                       disabled={uploadingBackCccd}
                       className="h-9 rounded-xl text-xs font-bold border-slate-200 hover:bg-white cursor-pointer"
                     >
-                      <UploadCloud className="w-3.5 h-3.5 mr-1.5 text-blue-600" />
+                      <UploadCloud className="w-3.5 h-3.5 mr-1.5 text-primary-600" />
                       <span>{identityCardBackUrl ? "Đổi ảnh" : "Tải ảnh lên"}</span>
                     </Button>
 
@@ -1040,7 +1040,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                             setIdentityCardBackRotate(0)
                           }}
                           title="Xóa ảnh này"
-                          className="h-9 w-9 p-0 rounded-xl text-red-500 hover:bg-red-50 hover:text-red-600 cursor-pointer"
+                          className="h-9 w-9 p-0 rounded-xl text-danger-500 hover:bg-danger-50 hover:text-danger-600 cursor-pointer"
                         >
                           <Trash2 className="w-4 h-4" />
                         </Button>
@@ -1066,7 +1066,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
               <Button
                 type="submit"
                 disabled={loading || uploadingFrontCccd || uploadingBackCccd}
-                className="h-11 rounded-xl bg-blue-600 hover:bg-blue-700 font-extrabold text-white text-xs px-6 shadow-md shadow-blue-500/25 flex items-center gap-2 cursor-pointer transition-transform active:scale-95"
+                className="h-11 rounded-xl bg-primary-600 hover:bg-primary-700 font-extrabold text-white text-xs px-6 shadow-md shadow-primary-500/25 flex items-center gap-2 cursor-pointer transition-transform active:scale-95"
               >
                 {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
                 <span>Lưu thay đổi</span>
@@ -1079,10 +1079,10 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
       {/* Lightbox / Preview Modal for CCCD */}
       {previewImage && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-xs p-4 animate-in fade-in duration-200">
-          <div className="relative max-w-3xl w-full bg-slate-900 rounded-3xl p-6 flex flex-col items-center gap-4 text-white shadow-2xl">
+          <div className="relative max-w-3xl w-full bg-slate-900 rounded-2xl p-6 flex flex-col items-center gap-4 text-white shadow-2xl">
             <div className="w-full flex items-center justify-between border-b border-slate-800 pb-3">
               <h4 className="text-sm font-extrabold flex items-center gap-2">
-                <CreditCard className="w-4 h-4 text-blue-400" />
+                <CreditCard className="w-4 h-4 text-primary-400" />
                 <span>{previewImage.title}</span>
               </h4>
               <button
@@ -1139,7 +1139,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                 type="button"
                 size="sm"
                 onClick={() => setPreviewImage(null)}
-                className="rounded-xl bg-blue-600 hover:bg-blue-500 font-extrabold text-xs px-5 text-white"
+                className="rounded-xl bg-primary-600 hover:bg-primary-500 font-extrabold text-xs px-5 text-white"
               >
                 Đóng
               </Button>

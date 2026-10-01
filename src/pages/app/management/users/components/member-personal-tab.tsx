@@ -55,10 +55,10 @@ export function MemberPersonalTab({
   return (
     <div className="space-y-6">
       {/* Overview Profile Card */}
-      <div className="p-6 rounded-3xl border border-slate-200/80 bg-white shadow-xs">
+      <div className="p-6 rounded-2xl border border-slate-200/80 bg-white shadow-xs">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            <div className="h-16 w-16 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-500 text-white font-black text-2xl flex items-center justify-center shadow-md shadow-blue-500/20 shrink-0">
+            <div className="h-16 w-16 rounded-2xl bg-gradient-to-tr from-primary-600 to-primary-500 text-white font-black text-2xl flex items-center justify-center shadow-md shadow-primary-500/20 shrink-0">
               {user.displayName ? user.displayName.charAt(0).toUpperCase() : "M"}
             </div>
             <div>
@@ -69,7 +69,7 @@ export function MemberPersonalTab({
                 <span className="font-mono text-xs font-bold text-slate-400">
                   #{user.id}
                 </span>
-                <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-extrabold bg-blue-50 text-blue-800 border border-blue-200">
+                <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-extrabold bg-primary-50 text-primary-800 border border-primary-200">
                   {user.role}
                 </span>
                 <UserStatusBadge status={user.status} />
@@ -95,9 +95,9 @@ export function MemberPersonalTab({
                 variant="outline"
                 size="sm"
                 onClick={onFakeRecord}
-                className="h-9 rounded-xl border-emerald-200 bg-emerald-50/50 text-emerald-800 hover:bg-emerald-100 font-extrabold text-xs cursor-pointer"
+                className="h-9 rounded-xl border-success-200 bg-success-50/50 text-success-800 hover:bg-success-100 font-extrabold text-xs cursor-pointer"
               >
-                <FilePlus className="w-4 h-4 mr-1.5 text-emerald-600" />
+                <FilePlus className="w-4 h-4 mr-1.5 text-success-600" />
                 Tạo bản đo giả lập
               </Button>
             )}
@@ -105,7 +105,7 @@ export function MemberPersonalTab({
               <Button
                 size="sm"
                 onClick={() => onEdit(user)}
-                className="h-9 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs px-4 shadow-sm shadow-blue-500/20 cursor-pointer"
+                className="h-9 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-extrabold text-xs px-4 shadow-sm shadow-primary-500/20 cursor-pointer"
               >
                 <Edit3 className="w-4 h-4 mr-1.5" />
                 Chỉnh sửa
@@ -118,9 +118,9 @@ export function MemberPersonalTab({
       {/* Grid: Demographics + Clinical Overview */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Card 1: Contact & Demographics */}
-        <div className="p-6 rounded-3xl border border-slate-200/80 bg-white shadow-xs space-y-4">
+        <div className="p-6 rounded-2xl border border-slate-200/80 bg-white shadow-xs space-y-4">
           <div className="flex items-center gap-2 text-slate-700 font-black text-sm">
-            <User className="w-4 h-4 text-blue-600" />
+            <User className="w-4 h-4 text-primary-600" />
             <span>Thông tin nhân khẩu học & Liên hệ</span>
           </div>
 
@@ -165,9 +165,9 @@ export function MemberPersonalTab({
         </div>
 
         {/* Card 2: Account & Health Snapshot */}
-        <div className="p-6 rounded-3xl border border-slate-200/80 bg-white shadow-xs space-y-4">
+        <div className="p-6 rounded-2xl border border-slate-200/80 bg-white shadow-xs space-y-4">
           <div className="flex items-center gap-2 text-slate-700 font-black text-sm">
-            <ShieldCheck className="w-4 h-4 text-teal-600" />
+            <ShieldCheck className="w-4 h-4 text-success-600" />
             <span>Trạng thái tài khoản & Dữ liệu sức khỏe</span>
           </div>
 
@@ -187,17 +187,17 @@ export function MemberPersonalTab({
             </div>
             <div className="py-3 flex items-center justify-between">
               <span className="text-slate-500 flex items-center gap-2">
-                <Activity className="w-4 h-4 text-blue-600" />
+                <Activity className="w-4 h-4 text-primary-600" />
                 <span>Tổng số bản đo sức khỏe</span>
               </span>
-              <Badge variant="secondary" className="font-extrabold text-blue-700 bg-blue-50">
+              <Badge variant="secondary" className="font-extrabold text-primary-700 bg-primary-50">
                 {totalHealthRecords} bản đo
               </Badge>
             </div>
             {latestRecord && (
               <div className="py-3 flex items-center justify-between">
                 <span className="text-slate-500 flex items-center gap-2">
-                  <HeartPulse className="w-4 h-4 text-red-500" />
+                  <HeartPulse className="w-4 h-4 text-danger-500" />
                   <span>Kết quả đo gần nhất</span>
                 </span>
                 <div className="flex items-center gap-1.5">

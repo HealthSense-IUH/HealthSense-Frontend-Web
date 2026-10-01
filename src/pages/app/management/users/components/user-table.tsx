@@ -67,7 +67,7 @@ export function UserTable({
               <tr>
                 <td colSpan={7} className="py-16 text-center text-slate-400">
                   <div className="flex flex-col items-center justify-center gap-3">
-                    <Loader2 className="w-7 h-7 text-blue-600 animate-spin" />
+                    <Loader2 className="w-7 h-7 text-primary-600 animate-spin" />
                     <span className="text-sm font-bold text-slate-700">Đang tải danh sách tài khoản người dùng...</span>
                   </div>
                 </td>
@@ -109,7 +109,7 @@ export function UserTable({
                     </div>
                   </td>
                   <td className="py-4 px-4">
-                    <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-extrabold bg-blue-50/80 text-blue-800 border border-blue-200/60">
+                    <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-extrabold bg-primary-50/80 text-primary-800 border border-primary-200/60">
                       {item.role}
                     </span>
                   </td>
@@ -128,7 +128,7 @@ export function UserTable({
                         type="button"
                         onClick={() => onView(item)}
                         title="Xem chi tiết tài khoản"
-                        className="p-2 rounded-lg text-slate-500 hover:text-blue-600 hover:bg-blue-50/80 transition-colors cursor-pointer"
+                        className="p-2 rounded-lg text-slate-500 hover:text-primary-600 hover:bg-primary-50/80 transition-colors cursor-pointer"
                       >
                         <Eye className="w-4 h-4" />
                       </button>
@@ -137,7 +137,7 @@ export function UserTable({
                           type="button"
                           onClick={() => onMemberDetail(item)}
                           title="Xem chi tiết hồ sơ Member (Thông tin, Bản đo & Tư vấn)"
-                          className="p-2 rounded-lg text-slate-500 hover:text-indigo-600 hover:bg-indigo-50/80 transition-colors cursor-pointer"
+                          className="p-2 rounded-lg text-slate-500 hover:text-primary-600 hover:bg-primary-50/80 transition-colors cursor-pointer"
                         >
                           <FolderHeart className="w-4 h-4" />
                         </button>
@@ -147,7 +147,7 @@ export function UserTable({
                           type="button"
                           onClick={() => onFakeRecord(item)}
                           title="Tạo hồ sơ sức khỏe mẫu (giả lập)"
-                          className="p-2 rounded-lg text-slate-500 hover:text-emerald-600 hover:bg-emerald-50/80 transition-colors cursor-pointer"
+                          className="p-2 rounded-lg text-slate-500 hover:text-success-600 hover:bg-success-50/80 transition-colors cursor-pointer"
                         >
                           <FilePlus className="w-4 h-4" />
                         </button>
@@ -157,7 +157,7 @@ export function UserTable({
                           type="button"
                           onClick={() => onManageCareProfile(item)}
                           title="Quản lý hồ sơ tư vấn & lịch nhận lịch"
-                          className="p-2 rounded-lg text-slate-500 hover:text-cyan-600 hover:bg-cyan-50/80 transition-colors cursor-pointer"
+                          className="p-2 rounded-lg text-slate-500 hover:text-primary-600 hover:bg-primary-50/80 transition-colors cursor-pointer"
                         >
                           <Stethoscope className="w-4 h-4" />
                         </button>
@@ -166,7 +166,7 @@ export function UserTable({
                         type="button"
                         onClick={() => onEdit(item)}
                         title="Chỉnh sửa thông tin tài khoản"
-                        className="p-2 rounded-lg text-slate-500 hover:text-amber-600 hover:bg-amber-50/80 transition-colors cursor-pointer"
+                        className="p-2 rounded-lg text-slate-500 hover:text-warning-600 hover:bg-warning-50/80 transition-colors cursor-pointer"
                       >
                         <Edit3 className="w-4 h-4" />
                       </button>
@@ -174,7 +174,7 @@ export function UserTable({
                         type="button"
                         onClick={() => onDelete(item)}
                         title="Xóa tài khoản"
-                        className="p-2 rounded-lg text-slate-500 hover:text-red-600 hover:bg-red-50/80 transition-colors cursor-pointer"
+                        className="p-2 rounded-lg text-slate-500 hover:text-danger-600 hover:bg-danger-50/80 transition-colors cursor-pointer"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -203,7 +203,7 @@ export function UserTable({
               value={size}
               onChange={(e) => onSizeChange(Number(e.target.value))}
               disabled={loading}
-              className="bg-white border border-slate-200 rounded-lg px-2 py-1 text-xs font-extrabold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+              className="bg-white border border-slate-200 rounded-lg px-2 py-1 text-xs font-extrabold text-slate-800 focus:outline-none focus:ring-2 focus:ring-primary-500 cursor-pointer"
             >
               <option value={10}>10</option>
               <option value={20}>20</option>

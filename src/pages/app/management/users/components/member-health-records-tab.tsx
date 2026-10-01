@@ -64,11 +64,11 @@ export function MemberHealthRecordsTab({ memberId, memberDisplayName }: MemberHe
   const renderStatusBadge = (status: HealthRecord["status"]) => {
     switch (status) {
       case "COMPLETED":
-        return <Badge className="bg-emerald-500 hover:bg-emerald-600 text-white font-bold">Completed</Badge>
+        return <Badge className="bg-success-500 hover:bg-success-600 text-white font-bold">Completed</Badge>
       case "PROCESSING":
-        return <Badge className="bg-blue-500 hover:bg-blue-600 text-white font-bold">Processing</Badge>
+        return <Badge className="bg-primary-500 hover:bg-primary-600 text-white font-bold">Processing</Badge>
       case "PENDING_UPLOAD":
-        return <Badge variant="outline" className="text-amber-600 border-amber-500 bg-amber-50 font-bold">Pending</Badge>
+        return <Badge variant="outline" className="text-warning-600 border-warning-500 bg-warning-50 font-bold">Pending</Badge>
       case "FAILED":
         return <Badge variant="destructive" className="font-bold">Failed</Badge>
       default:
@@ -81,25 +81,25 @@ export function MemberHealthRecordsTab({ memberId, memberDisplayName }: MemberHe
     switch (prediction) {
       case "NORMAL":
         return (
-          <Badge variant="outline" className="text-emerald-700 border-emerald-300 bg-emerald-50 font-extrabold">
+          <Badge variant="outline" className="text-success-700 border-success-300 bg-success-50 font-extrabold">
             Bình thường (NORMAL)
           </Badge>
         )
       case "AFIB":
         return (
-          <Badge variant="outline" className="text-rose-700 border-rose-300 bg-rose-50 font-extrabold">
+          <Badge variant="outline" className="text-danger-700 border-danger-300 bg-danger-50 font-extrabold">
             Rung nhĩ (AFIB)
           </Badge>
         )
       case "AFIB_SUSPECTED":
         return (
-          <Badge variant="outline" className="text-amber-700 border-amber-300 bg-amber-50 font-extrabold">
+          <Badge variant="outline" className="text-warning-700 border-warning-300 bg-warning-50 font-extrabold">
             Nghi ngờ (AFIB_SUSPECTED)
           </Badge>
         )
       case "UNCERTAIN":
         return (
-          <Badge variant="outline" className="text-orange-700 border-orange-300 bg-orange-50 font-extrabold">
+          <Badge variant="outline" className="text-warning-700 border-warning-300 bg-warning-50 font-extrabold">
             Chưa chắc chắn (UNCERTAIN)
           </Badge>
         )
@@ -138,7 +138,7 @@ export function MemberHealthRecordsTab({ memberId, memberDisplayName }: MemberHe
             size="sm"
             onClick={handleCreateMockRecord}
             disabled={actionLoading}
-            className="h-8 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs shadow-xs cursor-pointer"
+            className="h-8 px-3 rounded-xl bg-success-600 hover:bg-success-700 text-white font-extrabold text-xs shadow-xs cursor-pointer"
           >
             <FilePlus className="w-3.5 h-3.5 mr-1.5" />
             {actionLoading ? "Đang tạo..." : "Tạo bản đo mẫu"}
@@ -167,7 +167,7 @@ export function MemberHealthRecordsTab({ memberId, memberDisplayName }: MemberHe
                 <tr>
                   <td colSpan={8} className="py-16 text-center text-slate-400">
                     <div className="flex flex-col items-center justify-center gap-3">
-                      <Loader2 className="w-7 h-7 text-blue-600 animate-spin" />
+                      <Loader2 className="w-7 h-7 text-primary-600 animate-spin" />
                       <span className="text-sm font-bold text-slate-700">Đang tải lịch sử bản đo...</span>
                     </div>
                   </td>
@@ -222,7 +222,7 @@ export function MemberHealthRecordsTab({ memberId, memberDisplayName }: MemberHe
                         variant="ghost"
                         size="sm"
                         onClick={() => setSelectedRecord(record)}
-                        className="h-8 px-2.5 rounded-lg text-slate-600 hover:text-blue-600 hover:bg-blue-50 font-bold text-xs cursor-pointer"
+                        className="h-8 px-2.5 rounded-lg text-slate-600 hover:text-primary-600 hover:bg-primary-50 font-bold text-xs cursor-pointer"
                         title="Xem chi tiết bản đo"
                       >
                         <Eye className="w-4 h-4 mr-1" />
@@ -255,7 +255,7 @@ export function MemberHealthRecordsTab({ memberId, memberDisplayName }: MemberHe
                   setPage(1)
                 }}
                 disabled={loading}
-                className="bg-white border border-slate-200 rounded-lg px-2 py-1 text-xs font-extrabold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+                className="bg-white border border-slate-200 rounded-lg px-2 py-1 text-xs font-extrabold text-slate-800 focus:outline-none focus:ring-2 focus:ring-primary-500 cursor-pointer"
               >
                 <option value={10}>10</option>
                 <option value={20}>20</option>

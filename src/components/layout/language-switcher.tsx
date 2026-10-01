@@ -37,12 +37,12 @@ export function LanguageSwitcher() {
             onClick={() => void i18n.changeLanguage(lng)}
             className={`flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-xs font-bold transition-colors cursor-pointer ${
               active === lng
-                ? "bg-sky-50 text-sky-700"
+                ? "bg-primary-50 text-primary-700"
                 : "text-slate-700 hover:bg-slate-100 hover:text-slate-900"
             }`}
           >
             {t(`lang.${lng}`)}
-            {active === lng && <span className="text-sky-600">✓</span>}
+            {active === lng && <span className="text-primary-600">✓</span>}
           </button>
         ))}
       </PopoverContent>

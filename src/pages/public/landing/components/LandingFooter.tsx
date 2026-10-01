@@ -10,11 +10,11 @@ export function LandingFooter() {
   }
 
   return (
-    <footer className="w-full bg-[#070D1E] text-slate-300 relative overflow-hidden border-t border-white/10 pt-16 sm:pt-20 pb-12">
+    <footer className="w-full bg-slate-950 text-slate-300 relative overflow-hidden border-t border-white/10 pt-16 sm:pt-20 pb-12">
       
       {/* Dynamic Ambient Background Glow */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-600/15 rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-sky-600/10 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary-600/15 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-primary-600/10 rounded-full blur-[140px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 relative z-10">
         
@@ -120,7 +120,7 @@ export function LandingFooter() {
                 </Link>
               </li>
               <li>
-                <Link to="/terms" className="hover:text-white text-sky-400 transition-colors flex items-center gap-1 font-bold">
+                <Link to="/terms" className="hover:text-white text-primary-400 transition-colors flex items-center gap-1 font-bold">
                   <span>Điều khoản &amp; Miễn trừ y khoa</span>
                   <ArrowUpRight className="w-3.5 h-3.5 opacity-80" />
                 </Link>
@@ -133,7 +133,7 @@ export function LandingFooter() {
         {/* Medical Disclaimer & Copyright Bottom Bar */}
         <div className="pt-8 flex flex-col md:flex-row items-center justify-between gap-6 text-xs text-slate-500 font-sans">
           <p className="text-[11px] leading-relaxed max-w-2xl text-center md:text-left text-slate-500">
-            <strong>Tuyên bố miễn trừ y khoa:</strong> HealthSense là nền tảng thử nghiệm công nghệ AI hỗ trợ theo dõi nhịp tim và tầm soát Rung nhĩ. Kết quả mang tính tham khảo và không thay thế chẩn đoán từ bác sĩ. Xem chi tiết tại <Link to="/terms" className="text-sky-400 underline font-bold hover:text-sky-300">Điều khoản sử dụng &amp; Miễn trừ trách nhiệm</Link>.
+            <strong>Tuyên bố miễn trừ y khoa:</strong> HealthSense là nền tảng thử nghiệm công nghệ AI hỗ trợ theo dõi nhịp tim và tầm soát Rung nhĩ. Kết quả mang tính tham khảo và không thay thế chẩn đoán từ bác sĩ. Xem chi tiết tại <Link to="/terms" className="text-primary-400 underline font-bold hover:text-primary-300">Điều khoản sử dụng &amp; Miễn trừ trách nhiệm</Link>.
           </p>
           <div className="text-center md:text-right shrink-0 text-slate-400">
             © {new Date().getFullYear()} HealthSense. All rights reserved.

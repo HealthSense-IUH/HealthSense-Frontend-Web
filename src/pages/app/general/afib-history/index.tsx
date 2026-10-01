@@ -112,7 +112,7 @@ export default function AfibHistoryPage() {
               size="sm"
               onClick={() => fetchRecords(true)}
               disabled={loading || refreshing}
-              className="h-10 rounded-xl bg-white dark:bg-card border-0 shadow-xs text-xs font-semibold gap-1.5 cursor-pointer"
+              className="h-10 rounded-xl bg-white border-0 shadow-xs text-xs font-semibold gap-1.5 cursor-pointer"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? "animate-spin text-primary" : ""}`} />
               <span>Làm mới</span>
@@ -141,11 +141,11 @@ export default function AfibHistoryPage() {
                   value={searchKeyword}
                   onChange={(e) => setSearchKeyword(e.target.value)}
                   placeholder="Tìm kiếm theo ngày / tên file..."
-                  className="w-full pl-9 bg-white dark:bg-card border-0 rounded-xl shadow-xs h-10 text-xs font-medium"
+                  className="w-full pl-9 bg-white border-0 rounded-xl shadow-xs h-10 text-xs font-medium"
                 />
               </div>
               <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className="w-[200px] bg-white dark:bg-card border-0 rounded-xl shadow-xs h-10 text-xs font-medium">
+                <SelectTrigger className="w-[200px] bg-white border-0 rounded-xl shadow-xs h-10 text-xs font-medium">
                   <SelectValue placeholder="Trạng thái" />
                 </SelectTrigger>
                 <SelectContent className="rounded-xl text-xs">
@@ -158,14 +158,14 @@ export default function AfibHistoryPage() {
             </div>
 
             {/* View Mode Switcher (Table vs Card) */}
-            <div className="flex items-center gap-1 p-1 bg-white dark:bg-card border border-border rounded-xl shadow-xs self-start sm:self-auto">
+            <div className="flex items-center gap-1 p-1 bg-white border border-border rounded-xl shadow-xs self-start sm:self-auto">
               <button
                 type="button"
                 onClick={() => setViewMode("table")}
                 title="Dạng bảng (Table view)"
                 className={`p-1.5 rounded-lg transition-all cursor-pointer flex items-center gap-1.5 text-xs font-semibold px-3 ${
                   viewMode === "table"
-                    ? "bg-slate-100 dark:bg-slate-800 text-primary shadow-2xs font-bold"
+                    ? "bg-slate-100 text-primary shadow-2xs font-bold"
                     : "text-muted-foreground hover:text-foreground"
                 }`}
               >
@@ -178,7 +178,7 @@ export default function AfibHistoryPage() {
                 title="Dạng thẻ (Card view)"
                 className={`p-1.5 rounded-lg transition-all cursor-pointer flex items-center gap-1.5 text-xs font-semibold px-3 ${
                   viewMode === "card"
-                    ? "bg-slate-100 dark:bg-slate-800 text-primary shadow-2xs font-bold"
+                    ? "bg-slate-100 text-primary shadow-2xs font-bold"
                     : "text-muted-foreground hover:text-foreground"
                 }`}
               >
@@ -189,7 +189,7 @@ export default function AfibHistoryPage() {
           </div>
 
           {/* Badge Legend */}
-          <div className="flex flex-wrap items-center gap-2.5 p-3 px-4 rounded-2xl bg-white dark:bg-card border border-border shadow-xs text-xs text-muted-foreground">
+          <div className="flex flex-wrap items-center gap-2.5 p-3 px-4 rounded-2xl bg-white border border-border shadow-xs text-xs text-muted-foreground">
             <span className="font-semibold text-foreground shrink-0 mr-1">Chú thích AI:</span>
 
             <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border shadow-2xs ${PREDICTION_LABEL_CONFIG.NORMAL.badgeClass}`}>
@@ -218,23 +218,23 @@ export default function AfibHistoryPage() {
         <div className="flex-1 w-full flex flex-col justify-start">
           {loading ? (
             viewMode === "table" ? (
-              <Card className="rounded-3xl border border-border shadow-xs bg-white dark:bg-card overflow-hidden">
+              <Card className="rounded-2xl border border-border shadow-xs bg-white overflow-hidden">
                 <CardContent className="p-6 space-y-3">
                   {[...Array(6)].map((_, i) => (
-                    <div key={i} className="h-12 bg-slate-100 dark:bg-slate-800/40 rounded-xl animate-pulse" />
+                    <div key={i} className="h-12 bg-slate-100 rounded-xl animate-pulse" />
                   ))}
                 </CardContent>
               </Card>
             ) : (
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {[...Array(6)].map((_, i) => (
-                  <div key={i} className="h-44 rounded-3xl bg-slate-100 dark:bg-slate-800/40 animate-pulse" />
+                  <div key={i} className="h-44 rounded-2xl bg-slate-100 animate-pulse" />
                 ))}
               </div>
             )
           ) : filteredRecords.length === 0 ? (
-            <div className="flex-1 min-h-[360px] rounded-3xl bg-white dark:bg-card p-16 text-center flex flex-col items-center justify-center gap-3 shadow-xs">
-              <div className="p-4 rounded-full bg-slate-100 dark:bg-slate-800 text-muted-foreground">
+            <div className="flex-1 min-h-[360px] rounded-2xl bg-white p-16 text-center flex flex-col items-center justify-center gap-3 shadow-xs">
+              <div className="p-4 rounded-full bg-slate-100 text-muted-foreground">
                 <HeartPulse className="w-8 h-8" />
               </div>
               <h3 className="text-base font-bold text-foreground">
@@ -252,12 +252,12 @@ export default function AfibHistoryPage() {
             </div>
           ) : viewMode === "table" ? (
             /* ================= TABLE VIEW ================= */
-            <Card className="rounded-3xl border border-border shadow-xs bg-white dark:bg-card overflow-hidden">
+            <Card className="rounded-2xl border border-border shadow-xs bg-white overflow-hidden">
               <CardContent className="p-0">
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-xs border-collapse">
                     <thead>
-                      <tr className="border-b border-border text-muted-foreground font-semibold bg-slate-50/50 dark:bg-slate-900/30">
+                      <tr className="border-b border-border text-muted-foreground font-semibold bg-slate-50/50">
                         <th className="py-3.5 px-5">Thời gian đo & File</th>
                         <th className="py-3.5 px-4 text-center">Nhịp tim TB</th>
                         <th className="py-3.5 px-4">Biến thiên HRV</th>
@@ -282,7 +282,7 @@ export default function AfibHistoryPage() {
                           <tr
                             key={record.id}
                             onClick={() => handleOpenDetail(record)}
-                            className="hover:bg-slate-50/80 dark:hover:bg-slate-800/50 transition-colors cursor-pointer group"
+                            className="hover:bg-slate-50/80 transition-colors cursor-pointer group"
                           >
                             {/* Col 1: Time & File */}
                             <td className="py-3.5 px-5">
@@ -335,7 +335,7 @@ export default function AfibHistoryPage() {
                                   e.stopPropagation()
                                   handleOpenDetail(record)
                                 }}
-                                className="h-8 px-3 rounded-xl bg-white dark:bg-slate-800 border border-border text-foreground hover:bg-slate-50 dark:hover:bg-slate-700 text-xs font-semibold gap-1.5 cursor-pointer shadow-2xs"
+                                className="h-8 px-3 rounded-xl bg-white border border-border text-foreground hover:bg-slate-50 text-xs font-semibold gap-1.5 cursor-pointer shadow-2xs"
                               >
                                 <Eye className="w-3.5 h-3.5 text-muted-foreground" />
                                 <span>Xem chi tiết</span>
@@ -365,7 +365,7 @@ export default function AfibHistoryPage() {
                   <Card
                     key={record.id}
                     onClick={() => handleOpenDetail(record)}
-                    className="rounded-3xl border border-border shadow-xs bg-white dark:bg-card overflow-hidden hover:shadow-md transition-all cursor-pointer group"
+                    className="rounded-2xl border border-border shadow-xs bg-white overflow-hidden hover:shadow-md transition-all cursor-pointer group"
                   >
                     <div className={`h-1.5 w-full ${meta.topBarClass}`} />
                     <CardHeader className="pb-3 pt-4 px-5">
@@ -378,14 +378,14 @@ export default function AfibHistoryPage() {
                         </span>
                       </div>
                       <CardDescription className="flex items-center gap-1.5 mt-1 text-xs text-muted-foreground">
-                        <HeartPulse className="h-4 w-4 text-rose-500 shrink-0" />
+                        <HeartPulse className="h-4 w-4 text-danger-500 shrink-0" />
                         <span>Nhịp tim: {hrMean ? `${hrMean} BPM` : "-- BPM"}</span>
                         <span>•</span>
                         <span className="truncate max-w-[120px]">{record.fileName}</span>
                       </CardDescription>
                     </CardHeader>
                     <CardContent className="px-5 pb-5 pt-0">
-                      <div className="flex items-center justify-between gap-3 p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border border-border">
+                      <div className="flex items-center justify-between gap-3 p-3.5 rounded-2xl bg-slate-50 border border-border">
                         <div className="space-y-0.5 min-w-0">
                           <p className={`font-semibold text-sm truncate ${meta.statusTextClass}`}>
                             {meta.label}

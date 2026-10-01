@@ -32,18 +32,18 @@ export default function FoodDetailPage() {
 
   if (isLoading) {
     return (
-      <Page width="narrow">
+      <Page>
         <Skeleton className="h-5 w-64" />
-        <Skeleton className="aspect-[21/9] sm:aspect-[24/8] w-full rounded-3xl" />
-        <Skeleton className="h-48 rounded-3xl" />
-        <Skeleton className="h-64 rounded-3xl" />
+        <Skeleton className="aspect-[21/9] sm:aspect-[24/8] w-full rounded-2xl" />
+        <Skeleton className="h-48 rounded-2xl" />
+        <Skeleton className="h-64 rounded-2xl" />
       </Page>
     )
   }
 
   if (!food) {
     return (
-      <div className="max-w-md mx-auto p-8 text-center space-y-4">
+      <div className="max-w-md mx-auto p-6 text-center space-y-4">
         <h2 className="text-xl font-bold">Không tìm thấy món ăn</h2>
         <p className="text-muted-foreground text-sm">
           Món ăn bạn đang tìm kiếm không tồn tại hoặc đã được cập nhật.
@@ -74,28 +74,28 @@ export default function FoodDetailPage() {
   const sourceTypeLabels: Record<EvidenceSourceType, { label: string; cls: string }> = {
     GUIDELINE: {
       label: "Hướng dẫn lâm sàng (Guideline)",
-      cls: "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/40 dark:text-blue-300 dark:border-blue-800",
+      cls: "bg-primary-50 text-primary-700 border-primary-200",
     },
     SYSTEMATIC_REVIEW: {
       label: "Tổng quan hệ thống (Systematic Review)",
-      cls: "bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-950/40 dark:text-purple-300 dark:border-purple-800",
+      cls: "bg-primary-50 text-primary-700 border-primary-200",
     },
     META_ANALYSIS: {
       label: "Phân tích gộp (Meta-analysis)",
-      cls: "bg-indigo-50 text-indigo-700 border-indigo-200 dark:bg-indigo-950/40 dark:text-indigo-300 dark:border-indigo-800",
+      cls: "bg-primary-50 text-primary-700 border-primary-200",
     },
     RCT: {
       label: "Thử nghiệm đối chứng ngẫu nhiên (RCT)",
-      cls: "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800",
+      cls: "bg-success-50 text-success-700 border-success-200",
     },
     OTHER: {
       label: "Khuyến cáo chuyên khoa (Clinical Review)",
-      cls: "bg-slate-50 text-slate-700 border-slate-200 dark:bg-slate-900 dark:text-slate-300 dark:border-slate-800",
+      cls: "bg-slate-50 text-slate-700 border-slate-200",
     },
   }
 
   return (
-    <Page width="narrow">
+    <Page>
       <PageHeader
         breadcrumbs={[
           { label: "Dinh dưỡng", to: "/app/general/nutrition" },
@@ -113,12 +113,12 @@ export default function FoodDetailPage() {
               {food.groupName}
             </Link>
             {food.foodName !== food.foodNameSpecific && (
-              <span className="text-xs font-medium text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-muted px-2.5 py-0.5 rounded-md">
+              <span className="text-xs font-medium text-slate-600 bg-slate-100 px-2.5 py-0.5 rounded-md">
                 Loại: {food.foodName}
               </span>
             )}
             {guidanceType && <GuidanceBadge type={guidanceType} size="md" />}
-            <span className="inline-flex items-center gap-1 text-xs font-medium text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-muted px-2.5 py-0.5 rounded-md">
+            <span className="inline-flex items-center gap-1 text-xs font-medium text-slate-600 bg-slate-100 px-2.5 py-0.5 rounded-md">
               <Scale className="w-3 h-3 text-primary" />
               Định lượng chuẩn: 100 g
             </span>
@@ -129,7 +129,7 @@ export default function FoodDetailPage() {
       <PageBody>
 
         {/* Food Image Banner / Placeholder */}
-        <div className="relative aspect-[21/9] sm:aspect-[24/8] w-full overflow-hidden rounded-3xl bg-slate-100 dark:bg-muted/50 border border-slate-200/80 dark:border-border shadow-xs">
+        <div className="relative aspect-[21/9] sm:aspect-[24/8] w-full overflow-hidden rounded-2xl bg-slate-100 border border-slate-200/80 shadow-xs">
           {food.imageUrl ? (
             <img
               src={food.imageUrl}
@@ -137,12 +137,12 @@ export default function FoodDetailPage() {
               className="w-full h-full object-cover"
             />
           ) : (
-            <div className="w-full h-full flex flex-col sm:flex-row items-center justify-center text-slate-400 dark:text-muted-foreground gap-3 p-4 select-none bg-gradient-to-r from-slate-50 via-slate-100/70 to-slate-50 dark:from-muted/20 dark:via-muted/40 dark:to-muted/20">
-              <div className="p-3 rounded-2xl bg-white dark:bg-card shadow-2xs text-slate-400 border border-slate-200/60 dark:border-border/60">
+            <div className="w-full h-full flex flex-col sm:flex-row items-center justify-center text-slate-400 gap-3 p-4 select-none bg-gradient-to-r from-slate-50 via-slate-100/70 to-slate-50">
+              <div className="p-3 rounded-2xl bg-white shadow-2xs text-slate-400 border border-slate-200/60">
                 <ImageIcon className="w-6 h-6 stroke-[1.5]" />
               </div>
               <div className="text-center sm:text-left">
-                <p className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                <p className="text-xs font-semibold text-slate-700">
                   Hình ảnh thực phẩm
                 </p>
                 <p className="text-[11px] text-muted-foreground">
@@ -155,22 +155,22 @@ export default function FoodDetailPage() {
 
         {/* Basic Info Card: mô tả + tóm tắt khuyến nghị */}
         {(food.description || food.guidanceTitle || food.guidanceReason) && (
-        <div className="rounded-3xl border border-slate-200/80 bg-white p-6 sm:p-8 shadow-xs dark:border-border dark:bg-card space-y-4">
+        <div className="rounded-2xl border border-slate-200/80 bg-white p-6 sm:p-6 shadow-xs space-y-4">
           {/* Member-Friendly Description */}
           {food.description && (
-            <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+            <p className="text-sm text-slate-600 leading-relaxed">
               {food.description}
             </p>
           )}
 
           {/* Guidance Summary Callout */}
           {(food.guidanceTitle || food.guidanceReason) && (
-            <div className="rounded-2xl bg-gradient-to-br from-slate-50 to-primary/5 dark:from-muted/40 dark:to-primary/10 p-4 border border-slate-200/80 dark:border-border space-y-1.5">
-              <div className="flex items-center gap-2 text-sm font-semibold text-slate-900 dark:text-foreground">
+            <div className="rounded-2xl bg-gradient-to-br from-slate-50 to-primary/5 p-4 border border-slate-200/80 space-y-1.5">
+              <div className="flex items-center gap-2 text-sm font-semibold text-slate-900">
                 <Sparkles className="w-4 h-4 text-primary" />
                 <span>{food.guidanceTitle}</span>
               </div>
-              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
                 {food.guidanceReason}
               </p>
             </div>
@@ -179,8 +179,8 @@ export default function FoodDetailPage() {
         )}
 
         {/* Section: Key Nutrition (Bảng thành phần dinh dưỡng) */}
-        <Card className="rounded-3xl border-slate-200/80 dark:border-border shadow-xs overflow-hidden">
-          <CardHeader className="bg-slate-50/60 dark:bg-muted/20 border-b border-slate-100 dark:border-border pb-4">
+        <Card className="rounded-2xl border-slate-200/80 shadow-xs overflow-hidden">
+          <CardHeader className="bg-slate-50/60 border-b border-slate-100 pb-4">
             <div className="flex items-center justify-between">
               <div>
                 <CardTitle className="text-lg font-bold">Thành phần dinh dưỡng</CardTitle>
@@ -188,7 +188,7 @@ export default function FoodDetailPage() {
                   Tính trên mỗi 100g thực phẩm (chuẩn cơ sở dữ liệu USDA FNDDS 2021-2023)
                 </p>
               </div>
-              <span className="text-xs font-medium text-slate-500 bg-white dark:bg-card px-2.5 py-1 rounded-lg border border-slate-200 dark:border-border">
+              <span className="text-xs font-medium text-slate-500 bg-white px-2.5 py-1 rounded-lg border border-slate-200">
                 Per 100g
               </span>
             </div>
@@ -199,13 +199,13 @@ export default function FoodDetailPage() {
               {keyNutrients.map((item: NutrientValue) => (
                 <div
                   key={item.nutrientCode}
-                  className="p-3.5 rounded-2xl bg-slate-50 dark:bg-muted/30 border border-slate-100 dark:border-border/60 flex flex-col justify-between"
+                  className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100 flex flex-col justify-between"
                 >
                   <span className="text-xs text-muted-foreground font-normal line-clamp-1">
                     {item.name}
                   </span>
                   <div className="mt-1 flex items-baseline gap-1">
-                    <span className="text-xl font-bold text-slate-900 dark:text-foreground">
+                    <span className="text-xl font-bold text-slate-900">
                       {item.amount}
                     </span>
                     <span className="text-xs font-medium text-muted-foreground">
@@ -218,7 +218,7 @@ export default function FoodDetailPage() {
 
             {/* Expandable Other Nutrients */}
             {otherNutrients.length > 0 && (
-              <div className="pt-2 border-t border-slate-100 dark:border-border">
+              <div className="pt-2 border-t border-slate-100">
                 <Button
                   variant="ghost"
                   size="sm"
@@ -238,10 +238,10 @@ export default function FoodDetailPage() {
                     {otherNutrients.map((item: NutrientValue) => (
                       <div
                         key={item.nutrientCode}
-                        className="p-2.5 rounded-xl bg-slate-50/70 dark:bg-muted/20 border border-slate-100 dark:border-muted flex items-center justify-between text-xs"
+                        className="p-2.5 rounded-xl bg-slate-50/70 border border-slate-100 flex items-center justify-between text-xs"
                       >
                         <span className="text-muted-foreground">{item.name}</span>
-                        <span className="font-semibold text-slate-800 dark:text-slate-200">
+                        <span className="font-semibold text-slate-800">
                           {item.amount} {item.unit}
                         </span>
                       </div>
@@ -256,8 +256,8 @@ export default function FoodDetailPage() {
         {/* Section: Why This Matters (Ý nghĩa đối với sức khỏe) */}
         <div className="space-y-4">
           <div className="flex items-center gap-2">
-            <Heart className="w-5 h-5 text-rose-500 fill-rose-500" />
-            <h2 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-foreground">
+            <Heart className="w-5 h-5 text-danger-500 fill-danger-500" />
+            <h2 className="text-lg sm:text-xl font-bold text-slate-900">
               Ý nghĩa đối với sức khỏe của bạn
             </h2>
           </div>
@@ -265,15 +265,15 @@ export default function FoodDetailPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Card 1: Cardiovascular Health */}
             {food.cardiovascularContext && (
-              <Card className="rounded-2xl border-rose-100 bg-gradient-to-br from-rose-50/40 to-transparent dark:from-rose-950/20 dark:border-rose-900/40">
+              <Card className="rounded-2xl border-danger-100 bg-gradient-to-br from-danger-50/40 to-transparent">
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-sm sm:text-base font-semibold text-rose-900 dark:text-rose-200 flex items-center gap-2">
-                    <Heart className="w-4 h-4 text-rose-600" />
+                  <CardTitle className="text-sm sm:text-base font-semibold text-danger-900 flex items-center gap-2">
+                    <Heart className="w-4 h-4 text-danger-600" />
                     <span>Sức khỏe tim mạch & Huyết áp</span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
                     {food.cardiovascularContext}
                   </p>
                 </CardContent>
@@ -282,15 +282,15 @@ export default function FoodDetailPage() {
 
             {/* Card 2: AF / Atrial Fibrillation Context */}
             {food.afContext && (
-              <Card className="rounded-2xl border-amber-100 bg-gradient-to-br from-amber-50/40 to-transparent dark:from-amber-950/20 dark:border-amber-900/40">
+              <Card className="rounded-2xl border-warning-100 bg-gradient-to-br from-warning-50/40 to-transparent">
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-sm sm:text-base font-semibold text-amber-900 dark:text-amber-200 flex items-center gap-2">
-                    <Zap className="w-4 h-4 text-amber-600" />
+                  <CardTitle className="text-sm sm:text-base font-semibold text-warning-900 flex items-center gap-2">
+                    <Zap className="w-4 h-4 text-warning-600" />
                     <span>Rung tâm nhĩ & Nhịp tim</span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
                     {food.afContext}
                   </p>
                 </CardContent>
@@ -299,15 +299,15 @@ export default function FoodDetailPage() {
 
             {/* Card 3: Medication Context (e.g. Warfarin / Vitamin K) */}
             {food.medicationContext && (
-              <Card className="rounded-2xl border-blue-100 bg-gradient-to-br from-blue-50/40 to-transparent dark:from-blue-950/20 dark:border-blue-900/40 md:col-span-2">
+              <Card className="rounded-2xl border-primary-100 bg-gradient-to-br from-primary-50/40 to-transparent md:col-span-2">
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-sm sm:text-base font-semibold text-blue-900 dark:text-blue-200 flex items-center gap-2">
-                    <Pill className="w-4 h-4 text-blue-600" />
+                  <CardTitle className="text-sm sm:text-base font-semibold text-primary-900 flex items-center gap-2">
+                    <Pill className="w-4 h-4 text-primary-600" />
                     <span>Lưu ý khi sử dụng thuốc điều trị</span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
                     {food.medicationContext}
                   </p>
                 </CardContent>
@@ -318,10 +318,10 @@ export default function FoodDetailPage() {
 
         {/* Section: Evidence Sources (Cơ sở nghiên cứu & Hướng dẫn y khoa) */}
         {food.evidenceSources && food.evidenceSources.length > 0 && (
-          <div className="space-y-4 pt-4 border-t border-slate-200/60 dark:border-border/60">
+          <div className="space-y-4 pt-4 border-t border-slate-200/60">
             <div className="flex items-center gap-2">
               <FileText className="w-5 h-5 text-primary" />
-              <h2 className="text-lg font-bold text-slate-900 dark:text-foreground">
+              <h2 className="text-lg font-bold text-slate-900">
                 Cơ sở tham khảo & Bằng chứng y học
               </h2>
             </div>
@@ -335,7 +335,7 @@ export default function FoodDetailPage() {
                 return (
                   <div
                     key={source.id}
-                    className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-2xs dark:border-border dark:bg-card space-y-2"
+                    className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-2xs space-y-2"
                   >
                     <div className="flex flex-wrap items-center justify-between gap-2">
                       <span
@@ -351,7 +351,7 @@ export default function FoodDetailPage() {
                       )}
                     </div>
 
-                    <h3 className="font-semibold text-xs sm:text-sm text-slate-900 dark:text-foreground leading-snug">
+                    <h3 className="font-semibold text-xs sm:text-sm text-slate-900 leading-snug">
                       {source.title}
                     </h3>
 
@@ -359,7 +359,7 @@ export default function FoodDetailPage() {
                       <p className="text-xs text-muted-foreground">
                         {source.authors && <span>{source.authors}</span>}
                         {source.journal && (
-                          <span className="font-medium italic text-slate-600 dark:text-slate-400">
+                          <span className="font-medium italic text-slate-600">
                             {" "}
                             — {source.journal}
                           </span>
@@ -368,7 +368,7 @@ export default function FoodDetailPage() {
                     )}
 
                     {source.summary && (
-                      <p className="text-xs text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-muted/40 p-2.5 rounded-xl border border-slate-100 dark:border-muted/50 leading-relaxed">
+                      <p className="text-xs text-slate-600 bg-slate-50 p-2.5 rounded-xl border border-slate-100 leading-relaxed">
                         {source.summary}
                       </p>
                     )}

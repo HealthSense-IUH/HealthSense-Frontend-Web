@@ -25,26 +25,26 @@ export function statusBadge(status: string) {
     case "NEED_MORE_INFO":
       label = "Cần bổ sung TT"
       variant = "outline"
-      className = "text-orange-500 border-orange-500 bg-orange-50 dark:bg-orange-950/20"
+      className = "text-warning-500 border-warning-500 bg-warning-50"
       break
     case "WAITING_ACCEPTANCE":
-      return <Badge variant="outline" className="bg-amber-50 text-amber-800 border-amber-300">Chờ xác nhận thỏa thuận</Badge>
+      return <Badge variant="outline" className="bg-warning-50 text-warning-800 border-warning-300">Chờ xác nhận thỏa thuận</Badge>
     case "WAITING_PAYMENT":
-      return <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">Chờ thanh toán</Badge>
+      return <Badge variant="outline" className="bg-primary-50 text-primary-700 border-primary-200">Chờ thanh toán</Badge>
     case "QUEUED":
-      return <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">Đang trong hàng đợi</Badge>
+      return <Badge variant="outline" className="bg-primary-50 text-primary-700 border-primary-200">Đang trong hàng đợi</Badge>
     case "WAITING":
-      return <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">Đang chờ bác sĩ</Badge>
+      return <Badge variant="outline" className="bg-primary-50 text-primary-700 border-primary-200">Đang chờ bác sĩ</Badge>
     case "OFFERING_DOCTOR":
-      return <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-300">Đang kết nối bác sĩ</Badge>
+      return <Badge variant="outline" className="bg-warning-50 text-warning-700 border-warning-300">Đang kết nối bác sĩ</Badge>
     case "WAITING_MEMBER_CONFIRMATION":
-      return <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-300">Chờ bạn xác nhận</Badge>
+      return <Badge variant="outline" className="bg-success-50 text-success-700 border-success-300">Chờ bạn xác nhận</Badge>
     case "TIMED_OUT":
-      return <Badge variant="destructive" className="bg-neutral-100 text-neutral-600 border-neutral-300">Hết thời gian xác nhận</Badge>
+      return <Badge variant="destructive" className="bg-slate-100 text-slate-600 border-slate-300">Hết thời gian xác nhận</Badge>
     case "FULFILLED":
-      return <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200">Đã kích hoạt tư vấn</Badge>
+      return <Badge variant="outline" className="bg-success-50 text-success-700 border-success-200">Đã kích hoạt tư vấn</Badge>
     case "SCHEDULED":
-      return <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-200">Đã lên lịch</Badge>
+      return <Badge variant="outline" className="bg-primary-50 text-primary-700 border-primary-200">Đã lên lịch</Badge>
     case "COMPLETED":
       return <Badge variant="outline" className="bg-slate-100 text-slate-700 border-slate-300">Đã hoàn thành</Badge>
     case "REJECTED":
@@ -92,7 +92,7 @@ export function statusBadge(status: string) {
 export function EmptyRow({ colSpan, text }: { colSpan: number; text: string }) {
   return (
     <TableRow>
-      <TableCell colSpan={colSpan} className="h-24 text-center text-sm text-neutral-500">
+      <TableCell colSpan={colSpan} className="h-24 text-center text-sm text-slate-500">
         {text}
       </TableCell>
     </TableRow>

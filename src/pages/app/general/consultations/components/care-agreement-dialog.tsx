@@ -118,7 +118,7 @@ export function CareAgreementDialog({
               </div>
             </div>
             {agreement?.status && (
-              <Badge variant="outline" className="bg-amber-50 text-amber-800 border-amber-300 font-medium">
+              <Badge variant="outline" className="bg-warning-50 text-warning-800 border-warning-300 font-medium">
                 {agreement.status === "PENDING_ACCEPTANCE" ? "Chờ bạn xác nhận" : agreement.status}
               </Badge>
             )}
@@ -135,8 +135,8 @@ export function CareAgreementDialog({
             <div className="space-y-6">
               {/* Validity notice banner */}
               {agreement.validUntil && (
-                <div className="flex items-start gap-2.5 p-3.5 bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/40 rounded-xl text-xs text-amber-900 dark:text-amber-200">
-                  <Clock className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+                <div className="flex items-start gap-2.5 p-3.5 bg-warning-50 border border-warning-200 rounded-xl text-xs text-warning-900">
+                  <Clock className="w-4 h-4 text-warning-600 shrink-0 mt-0.5" />
                   <div>
                     <strong>Thời hạn chấp nhận & giữ chỗ:</strong> Thỏa thuận này có hiệu lực đến{" "}
                     <span className="font-semibold">{formatDate(agreement.validUntil)}</span>. Sau thời gian này nếu chưa hoàn tất thanh toán, bác sĩ sẽ được giải phóng cho hội viên khác.
@@ -243,7 +243,7 @@ export function CareAgreementDialog({
                   </div>
                 )}
 
-                <div className="pt-2 border-t text-neutral-500 leading-relaxed">
+                <div className="pt-2 border-t text-slate-500 leading-relaxed">
                   * Lưu ý: Dịch vụ tư vấn trực tuyến và theo dõi sức khỏe này không thay thế cho việc cấp cứu y tế khẩn cấp hoặc chỉ định điều trị nội trú. Trong trường hợp có các dấu hiệu nguy kịch như đau thắt ngực dữ dội, khó thở cấp tính, vui lòng liên hệ ngay cơ sở y tế gần nhất hoặc gọi 115.
                 </div>
               </div>

@@ -111,7 +111,7 @@ export function HealthRecordCreateDialog({ open, onOpenChange, onSuccess }: Heal
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4 py-4">
-          {error && <div className="p-3 bg-red-100 text-red-600 text-sm rounded-md">{error}</div>}
+          {error && <div className="p-3 bg-danger-100 text-danger-600 text-sm rounded-md">{error}</div>}
           
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">

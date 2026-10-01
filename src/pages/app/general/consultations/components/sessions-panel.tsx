@@ -96,18 +96,18 @@ export function SessionsPanel({
       </CardHeader>
       <CardContent className="space-y-4">
         {!isAdmin && !isDoctor && activeSession && (
-          <div className="p-4 rounded-xl border border-emerald-500/30 bg-emerald-500/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xs">
+          <div className="p-4 rounded-xl border border-success-500/30 bg-success-500/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xs">
             <div className="flex items-center gap-3">
               <span className="relative flex h-3 w-3 shrink-0">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-success-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-success-500"></span>
               </span>
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="font-semibold text-emerald-950 dark:text-emerald-100 text-sm">
+                  <span className="font-semibold text-success-950 text-sm">
                     Bạn đang có phiên tư vấn trực tiếp đang diễn ra!
                   </span>
-                  <Badge className="bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] font-bold">
+                  <Badge className="bg-success-600 hover:bg-success-700 text-white text-[10px] font-bold">
                     Đang hoạt động
                   </Badge>
                 </div>
@@ -122,7 +122,7 @@ export function SessionsPanel({
             <Button
               size="sm"
               onClick={() => navigate(`/app/general/consultations/${activeSession.id}`)}
-              className="gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm shrink-0"
+              className="gap-1.5 bg-success-600 hover:bg-success-700 text-white shadow-sm shrink-0"
             >
               <MessagesSquare className="w-4 h-4" />
               Vào phòng tư vấn ngay
@@ -148,7 +148,7 @@ export function SessionsPanel({
               <TableRow 
                 key={session.id} 
                 data-state={String(selectedSessionId) === String(session.id) ? "selected" : undefined}
-                className={session.status === "ACTIVE" ? "bg-emerald-50/40 dark:bg-emerald-950/20 hover:bg-emerald-50/60 dark:hover:bg-emerald-950/30 font-medium" : undefined}
+                className={session.status === "ACTIVE" ? "bg-success-50/40 hover:bg-success-50/60 font-medium" : undefined}
               >
                 <TableCell className="font-medium">#{session.id}</TableCell>
                 <TableCell>{session.memberDisplayName || `#${session.memberId}`}</TableCell>
@@ -157,7 +157,7 @@ export function SessionsPanel({
                   <div className="flex items-center gap-1.5 flex-wrap">
                     {statusBadge(session.status)}
                     {isDoctor && session.status === "COMPLETED" && session.summaryClosureStatus === "SUMMARY_PENDING" && (
-                      <Badge className="bg-amber-500 hover:bg-amber-600 text-white text-[10px]">
+                      <Badge className="bg-warning-500 hover:bg-warning-600 text-white text-[10px]">
                         Cần tổng kết
                       </Badge>
                     )}
@@ -166,7 +166,7 @@ export function SessionsPanel({
                 <TableCell>{formatDate(session.createdAt)}</TableCell>
                 <TableCell>{formatDate(session.endsAt)}</TableCell>
                 <TableCell>
-                  <span className="block max-w-48 truncate text-neutral-500">{session.lastMessagePreview ?? "Chưa có tin nhắn"}</span>
+                  <span className="block max-w-48 truncate text-slate-500">{session.lastMessagePreview ?? "Chưa có tin nhắn"}</span>
                 </TableCell>
                 <TableCell className="text-right">
                   <div className="flex justify-end gap-2 flex-wrap">
@@ -219,7 +219,7 @@ export function SessionsPanel({
                         variant="outline"
                         size="sm"
                         onClick={() => setDoctorSessionId(session.id)}
-                        className="gap-1 text-emerald-700 border-emerald-300 hover:bg-emerald-50"
+                        className="gap-1 text-success-700 border-success-300 hover:bg-success-50"
                       >
                         <FileText className="w-3.5 h-3.5" />
                         Tổng kết / Chi tiết

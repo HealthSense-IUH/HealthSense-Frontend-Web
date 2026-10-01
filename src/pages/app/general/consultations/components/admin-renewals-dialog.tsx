@@ -234,19 +234,19 @@ export function AdminRenewalsDialog({
                             </div>
                           )}
                           {r.paymentDeadline && (
-                            <div className="text-amber-700 dark:text-amber-400">
+                            <div className="text-warning-700">
                               Hạn chót thanh toán: <strong>{formatDate(r.paymentDeadline)}</strong>
                             </div>
                           )}
                           {r.appliedAt && (
-                            <div className="text-emerald-600 dark:text-emerald-400">
+                            <div className="text-success-600">
                               Đã áp dụng lúc: <strong>{formatDate(r.appliedAt)}</strong>
                             </div>
                           )}
                         </div>
 
                         {r.rejectionReason && (
-                          <div className="p-2.5 rounded-md bg-red-50 dark:bg-red-950/20 text-red-700 dark:text-red-300 border border-red-200 dark:border-red-900/30">
+                          <div className="p-2.5 rounded-md bg-danger-50 text-danger-700 border border-danger-200">
                             <strong>Lý do từ chối:</strong> {r.rejectionReason}
                           </div>
                         )}
@@ -271,7 +271,7 @@ export function AdminRenewalsDialog({
                                 size="sm"
                                 onClick={() => handleApprove(r.id)}
                                 disabled={isActing}
-                                className="bg-emerald-600 hover:bg-emerald-700 text-white gap-1.5"
+                                className="bg-success-600 hover:bg-success-700 text-white gap-1.5"
                               >
                                 <CheckCircle2 className="w-4 h-4" />
                                 {isActing ? "Đang xử lý..." : "Phê duyệt gia hạn"}
@@ -285,7 +285,7 @@ export function AdminRenewalsDialog({
                                   setRejectionReason("")
                                 }}
                                 disabled={isActing}
-                                className="text-red-600 hover:bg-red-50 border-red-200"
+                                className="text-danger-600 hover:bg-danger-50 border-danger-200"
                               >
                                 <XCircle className="w-4 h-4 mr-1" />
                                 Từ chối
@@ -316,7 +316,7 @@ export function AdminRenewalsDialog({
                     <div key={ext.id ?? `ext-${ext.appliedAt}-${idx}`} className="p-3.5 rounded-xl border bg-card text-xs space-y-2">
                       <div className="flex items-center justify-between">
                         <span className="font-semibold text-foreground">Mốc gia hạn #{idx + 1}</span>
-                        <Badge variant="outline" className="text-[10px] bg-emerald-50 text-emerald-700 border-emerald-200">
+                        <Badge variant="outline" className="text-[10px] bg-success-50 text-success-700 border-success-200">
                           Áp dụng: {formatDate(ext.appliedAt)}
                         </Badge>
                       </div>
@@ -351,7 +351,7 @@ export function AdminRenewalsDialog({
         <Dialog open={!!rejectingRenewalId} onOpenChange={(open) => !open && setRejectingRenewalId(null)}>
           <DialogContent className="max-w-md">
             <DialogHeader>
-              <DialogTitle className="text-red-600 flex items-center gap-2">
+              <DialogTitle className="text-danger-600 flex items-center gap-2">
                 <XCircle className="w-5 h-5" />
                 Từ chối Yêu cầu Gia hạn #{rejectingRenewalId}
               </DialogTitle>

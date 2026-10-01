@@ -69,16 +69,16 @@ export function UserDetailDrawer({ isOpen, onClose, user, onEdit }: UserDetailDr
 
   return (
     <Dialog open={isOpen} onOpenChange={(val) => !val && onClose()}>
-      <DialogContent className="sm:max-w-2xl w-[95vw] p-0 overflow-hidden bg-white rounded-3xl shadow-2xl border border-slate-200 flex flex-col">
+      <DialogContent className="sm:max-w-2xl w-[95vw] p-0 overflow-hidden bg-white rounded-2xl shadow-2xl border border-slate-200 flex flex-col">
         <DialogHeader className="p-6 bg-slate-50/90 border-b border-slate-100 flex flex-row items-center justify-between text-left space-y-0 pr-12">
           <div className="flex items-center gap-3 min-w-0">
-            <div className="h-12 w-12 rounded-2xl bg-white shadow-xs border border-slate-200 flex items-center justify-center text-blue-600 text-lg font-black shrink-0">
+            <div className="h-12 w-12 rounded-2xl bg-white shadow-xs border border-slate-200 flex items-center justify-center text-primary-600 text-lg font-black shrink-0">
               {user?.displayName ? user.displayName.charAt(0).toUpperCase() : "U"}
             </div>
             <div className="min-w-0">
               <div className="flex items-center gap-2">
                 <span className="text-xs font-mono text-slate-400 font-bold">#{user?.id || "N/A"}</span>
-                <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-extrabold bg-blue-100 text-blue-800 uppercase tracking-wider">
+                <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-extrabold bg-primary-100 text-primary-800 uppercase tracking-wider">
                   {user?.role || "MEMBER"}
                 </span>
               </div>
@@ -93,7 +93,7 @@ export function UserDetailDrawer({ isOpen, onClose, user, onEdit }: UserDetailDr
           {/* Status Section */}
           <div className="flex items-center justify-between gap-3 p-4 rounded-2xl border border-slate-100 bg-slate-50/50">
             <div className="flex items-center gap-2.5 text-slate-600 font-extrabold shrink-0">
-              <ShieldCheck className="w-5 h-5 text-teal-600" />
+              <ShieldCheck className="w-5 h-5 text-success-600" />
               <span>Trạng thái hoạt động</span>
             </div>
             <div className="shrink-0">
@@ -158,10 +158,10 @@ export function UserDetailDrawer({ isOpen, onClose, user, onEdit }: UserDetailDr
           ) : memberDetail && (
             <div className="space-y-3">
               <h4 className="font-black text-slate-400 uppercase tracking-wider text-[11px] flex items-center gap-1.5">
-                <Activity className="w-3.5 h-3.5 text-blue-600" />
+                <Activity className="w-3.5 h-3.5 text-primary-600" />
                 <span>Tổng quan hồ sơ sức khỏe</span>
               </h4>
-              <div className="p-4 rounded-2xl border border-slate-100 bg-blue-50/40 space-y-2.5">
+              <div className="p-4 rounded-2xl border border-slate-100 bg-primary-50/40 space-y-2.5">
                 <div className="flex items-center justify-between gap-3">
                   <span className="text-slate-600 font-medium">Tổng số bản ghi sức khỏe:</span>
                   <Badge variant="secondary" className="font-bold shrink-0">
@@ -171,7 +171,7 @@ export function UserDetailDrawer({ isOpen, onClose, user, onEdit }: UserDetailDr
                 {memberDetail.latestHealthRecord && (
                   <div className="pt-2 border-t border-slate-200/60 flex items-center justify-between gap-3 text-[11px]">
                     <span className="text-slate-500 flex items-center gap-1 shrink-0">
-                      <HeartPulse className="w-3.5 h-3.5 text-red-500" />
+                      <HeartPulse className="w-3.5 h-3.5 text-danger-500" />
                       Lần đo gần nhất:
                     </span>
                     <div className="flex items-center gap-1.5 shrink-0">
@@ -209,9 +209,9 @@ export function UserDetailDrawer({ isOpen, onClose, user, onEdit }: UserDetailDr
                   onClose()
                   navigate(`/app/management/users/${user.id}`)
                 }}
-                className="h-9 rounded-xl border-indigo-200 bg-indigo-50/70 text-indigo-700 hover:bg-indigo-100 font-extrabold text-xs px-3.5 flex items-center gap-1.5 cursor-pointer shadow-3xs w-full sm:w-auto justify-center"
+                className="h-9 rounded-xl border-primary-200 bg-primary-50/70 text-primary-700 hover:bg-primary-100 font-extrabold text-xs px-3.5 flex items-center gap-1.5 cursor-pointer shadow-3xs w-full sm:w-auto justify-center"
               >
-                <FolderHeart className="w-4 h-4 text-indigo-600 shrink-0" />
+                <FolderHeart className="w-4 h-4 text-primary-600 shrink-0" />
                 <span>Xem hồ sơ chi tiết (Bản đo & Tư vấn)</span>
               </Button>
             )}
@@ -231,7 +231,7 @@ export function UserDetailDrawer({ isOpen, onClose, user, onEdit }: UserDetailDr
                   onClose()
                   onEdit(user)
                 }}
-                className="h-9 rounded-xl bg-blue-600 hover:bg-blue-700 font-extrabold text-white text-xs px-4 shadow-sm shadow-blue-500/20 flex items-center gap-1.5 cursor-pointer"
+                className="h-9 rounded-xl bg-primary-600 hover:bg-primary-700 font-extrabold text-white text-xs px-4 shadow-sm shadow-primary-500/20 flex items-center gap-1.5 cursor-pointer"
               >
                 <Edit3 className="w-4 h-4 shrink-0" />
                 <span>Chỉnh sửa</span>

@@ -346,7 +346,7 @@ export default function MemberSessionWorkspacePage() {
 
   if (initialLoading && !session) {
     return (
-      <Page width="full" fill bleed>
+      <Page fill bleed>
         <PageHeader
           compact
           className="px-4 sm:px-6 py-3 border-b border-border bg-background"
@@ -364,7 +364,7 @@ export default function MemberSessionWorkspacePage() {
 
   if (!session) {
     return (
-      <Page width="full" fill bleed>
+      <Page fill bleed>
         <PageHeader
           compact
           className="px-4 sm:px-6 py-3 border-b border-border bg-background"
@@ -374,7 +374,7 @@ export default function MemberSessionWorkspacePage() {
         />
         <PageBody className="items-center justify-center text-center p-6">
           <div className="flex max-w-lg flex-col items-center gap-4">
-            <ShieldAlert className="h-10 w-10 text-red-500" />
+            <ShieldAlert className="h-10 w-10 text-danger-500" />
             <h2 className="text-2xl font-bold text-foreground">Không tìm thấy phiên tư vấn</h2>
             <p className="text-sm text-muted-foreground">
               Phiên khám #{sessionId} không tồn tại hoặc bạn không có quyền truy cập.
@@ -389,7 +389,7 @@ export default function MemberSessionWorkspacePage() {
   }
 
   return (
-    <Page width="full" fill bleed>
+    <Page fill bleed>
       <PageHeader
         compact
         className="px-4 sm:px-6 py-3 border-b border-border bg-background"
@@ -471,7 +471,7 @@ export default function MemberSessionWorkspacePage() {
                   <FileText className="w-3.5 h-3.5" />
                   <span>Tổng kết từ Bác sĩ</span>
                   {isCompleted && (
-                    <span className="ml-1 px-1.5 py-0.2 rounded-full text-[10px] bg-green-500/15 text-green-700 dark:text-green-400 font-bold">
+                    <span className="ml-1 px-1.5 py-0.2 rounded-full text-[10px] bg-success-500/15 text-success-700 font-bold">
                       Hoàn tất
                     </span>
                   )}
@@ -495,8 +495,8 @@ export default function MemberSessionWorkspacePage() {
               />
 
               {isOutsideSupportHours && (
-                <div className="border-b border-amber-200 bg-amber-50 px-4 py-2 text-xs text-amber-900 flex items-center gap-2 shrink-0">
-                  <Clock className="h-4 w-4 text-amber-600 shrink-0" />
+                <div className="border-b border-warning-200 bg-warning-50 px-4 py-2 text-xs text-warning-900 flex items-center gap-2 shrink-0">
+                  <Clock className="h-4 w-4 text-warning-600 shrink-0" />
                   <span>
                     Hiện ngoài khung giờ hỗ trợ của bác sĩ. Bạn vẫn có thể xem lại lịch sử trao đổi và gửi tin nhắn khi đến giờ trực.
                   </span>
@@ -530,7 +530,7 @@ export default function MemberSessionWorkspacePage() {
 
           {/* Tab 2: Medical Summary */}
           {activeTab === "summary" && (
-            <div className="flex-1 min-h-0 overflow-y-auto p-4 sm:p-6 max-w-4xl mx-auto w-full">
+            <div className="flex-1 min-h-0 overflow-y-auto p-3 sm:p-4 w-full">
               {summaryLoading ? (
                 <div className="space-y-4 py-8">
                   <Skeleton className="h-8 w-3/4" />
@@ -551,17 +551,17 @@ export default function MemberSessionWorkspacePage() {
                 </Card>
               ) : (
                 <div className="space-y-6">
-                  <div className="flex items-center justify-between rounded-xl border border-green-200 bg-green-50 p-4">
+                  <div className="flex items-center justify-between rounded-xl border border-success-200 bg-success-50 p-4">
                     <div className="flex items-center gap-3">
-                      <CheckCircle2 className="h-5 w-5 text-green-600 shrink-0" />
+                      <CheckCircle2 className="h-5 w-5 text-success-600 shrink-0" />
                       <div>
-                        <p className="font-semibold text-green-900">Tổng kết y khoa đã được hoàn tất</p>
-                        <p className="text-xs text-green-700">
+                        <p className="font-semibold text-success-900">Tổng kết y khoa đã được hoàn tất</p>
+                        <p className="text-xs text-success-700">
                           Thời gian chốt: {formatDate(summary.finalizedAt)}
                         </p>
                       </div>
                     </div>
-                    <Badge className="bg-green-600 hover:bg-green-700 text-white">Đã hoàn tất</Badge>
+                    <Badge className="bg-success-600 hover:bg-success-700 text-white">Đã hoàn tất</Badge>
                   </div>
 
                   <Card>
@@ -592,7 +592,7 @@ export default function MemberSessionWorkspacePage() {
                         </CardTitle>
                       </CardHeader>
                       <CardContent>
-                        <div className="rounded-lg bg-blue-50/50 border border-blue-100 p-4 text-sm text-foreground whitespace-pre-wrap leading-relaxed">
+                        <div className="rounded-lg bg-primary-50/50 border border-primary-100 p-4 text-sm text-foreground whitespace-pre-wrap leading-relaxed">
                           {summary.recommendations}
                         </div>
                       </CardContent>
@@ -600,8 +600,8 @@ export default function MemberSessionWorkspacePage() {
                   )}
 
                   {summary.followUpRecommendation && (
-                    <div className="flex items-center gap-2 p-3.5 rounded-lg border border-amber-200 bg-amber-50 text-amber-900 text-sm">
-                      <Calendar className="h-4 w-4 text-amber-600 shrink-0" />
+                    <div className="flex items-center gap-2 p-3.5 rounded-lg border border-warning-200 bg-warning-50 text-warning-900 text-sm">
+                      <Calendar className="h-4 w-4 text-warning-600 shrink-0" />
                       <span>
                         <strong>Tái khám:</strong> {summary.followUpRecommendation}
                       </span>
@@ -614,7 +614,7 @@ export default function MemberSessionWorkspacePage() {
 
           {/* Tab 3: Shared Health Records */}
           {activeTab === "records" && (
-            <div className="flex-1 min-h-0 overflow-y-auto p-4 sm:p-6 max-w-4xl mx-auto w-full space-y-4">
+            <div className="flex-1 min-h-0 overflow-y-auto p-3 sm:p-4 w-full space-y-4">
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="text-base font-semibold text-foreground">Hồ sơ sức khỏe trong phiên khám</h3>
@@ -638,7 +638,7 @@ export default function MemberSessionWorkspacePage() {
                         <Activity className="h-5 w-5 text-primary" />
                         <CardTitle className="text-base">Hồ sơ sức khỏe #{session.healthRecordId}</CardTitle>
                       </div>
-                      <Badge className="bg-emerald-500/10 text-emerald-700 border-emerald-200">Đã chia sẻ</Badge>
+                      <Badge className="bg-success-500/10 text-success-700 border-success-200">Đã chia sẻ</Badge>
                     </div>
                     <CardDescription>
                       Hồ sơ được đính kèm khi đăng ký phiên tư vấn hoặc được cấp quyền trong quá trình khám.

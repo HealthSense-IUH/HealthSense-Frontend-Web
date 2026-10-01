@@ -54,17 +54,17 @@ export function DietPrescriptionTab() {
 
   if (!isMember) {
     return (
-      <div className="rounded-2xl border border-dashed border-slate-200 dark:border-border p-8 text-center text-sm text-muted-foreground">
+      <div className="rounded-2xl border border-dashed border-slate-200 p-6 text-center text-sm text-muted-foreground">
         Đơn ăn uống chỉ dành cho hội viên. Bác sĩ kê đơn cho bệnh nhân trong tab "Dinh dưỡng" của phiên tư vấn.
       </div>
     )
   }
 
-  if (isLoading) return <Skeleton className="h-72 rounded-3xl" />
+  if (isLoading) return <Skeleton className="h-72 rounded-2xl" />
 
   if (isError || !prescription) {
     return (
-      <div className="rounded-2xl border border-dashed border-slate-200 dark:border-border p-8 text-center text-sm text-muted-foreground space-y-2">
+      <div className="rounded-2xl border border-dashed border-slate-200 p-6 text-center text-sm text-muted-foreground space-y-2">
         <p>Không tải được đơn ăn uống.</p>
         <button type="button" onClick={() => refetch()} className="text-primary font-medium hover:underline cursor-pointer">
           Thử lại
@@ -77,14 +77,14 @@ export function DietPrescriptionTab() {
 
   return (
     <div className="space-y-6">
-      <section className="rounded-3xl border border-slate-200/80 bg-white p-6 shadow-xs dark:border-border dark:bg-card space-y-4">
+      <section className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-xs space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
           <div className="flex items-start gap-3">
             <div className="p-2.5 rounded-xl bg-primary/10 text-primary shrink-0">
               <ClipboardList className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-slate-900 dark:text-foreground">
+              <h2 className="text-lg font-bold text-slate-900">
                 {prescription.personalized ? "Đơn ăn uống của bạn" : "Lời khuyên chung"}
               </h2>
               <p className="text-xs sm:text-sm text-muted-foreground">
@@ -113,12 +113,12 @@ export function DietPrescriptionTab() {
                   "rounded-2xl border p-4 flex items-start gap-3",
                   on
                     ? "border-primary/30 bg-primary/5"
-                    : "border-slate-200/80 bg-slate-50/60 opacity-70 dark:border-border dark:bg-muted/20"
+                    : "border-slate-200/80 bg-slate-50/60 opacity-70"
                 )}
               >
                 <Icon className={cn("w-5 h-5 shrink-0 mt-0.5", on ? "text-primary" : "text-slate-400")} />
                 <div className="space-y-1">
-                  <p className="text-sm font-semibold text-slate-900 dark:text-foreground">
+                  <p className="text-sm font-semibold text-slate-900">
                     {rule.title}
                     <span className={cn("ml-2 text-[11px] font-medium", on ? "text-primary" : "text-muted-foreground")}>
                       {on ? "Đang áp dụng" : "Không áp dụng"}
@@ -136,9 +136,9 @@ export function DietPrescriptionTab() {
         </ul>
 
         {prescription.note && (
-          <div className="rounded-2xl bg-slate-50 dark:bg-muted/30 border border-slate-200/70 dark:border-border p-4">
-            <p className="text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Bác sĩ dặn thêm</p>
-            <p className="text-sm text-slate-800 dark:text-slate-200 whitespace-pre-line">{prescription.note}</p>
+          <div className="rounded-2xl bg-slate-50 border border-slate-200/70 p-4">
+            <p className="text-xs font-semibold text-slate-600 mb-1">Bác sĩ dặn thêm</p>
+            <p className="text-sm text-slate-800 whitespace-pre-line">{prescription.note}</p>
           </div>
         )}
 
@@ -147,8 +147,8 @@ export function DietPrescriptionTab() {
         )}
       </section>
 
-      <section className="rounded-3xl border border-slate-200/80 bg-white p-6 shadow-xs dark:border-border dark:bg-card space-y-3">
-        <h2 className="text-base font-bold text-slate-900 dark:text-foreground">Cách đọc màu của món</h2>
+      <section className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-xs space-y-3">
+        <h2 className="text-base font-bold text-slate-900">Cách đọc màu của món</h2>
         <div className="grid gap-2 sm:grid-cols-2 text-xs text-muted-foreground">
           <p className="flex items-center gap-2">
             <DietAdviceBadge advice={{ level: "OK", reasons: [], personalized: true }} /> Không vướng điều nào trong đơn.

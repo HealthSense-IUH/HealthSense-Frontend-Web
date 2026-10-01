@@ -81,7 +81,7 @@ export function PurchaseDialog({
         {successResult ? (
           <div className="space-y-5">
             <DialogHeader>
-              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-950/50 dark:text-emerald-400 mb-2">
+              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-success-100 text-success-600 mb-2">
                 <CheckCircle2 className="h-8 w-8" />
               </div>
               <DialogTitle className="text-center text-xl font-bold text-foreground">
@@ -107,7 +107,7 @@ export function PurchaseDialog({
               </div>
               <div className="flex items-center justify-between text-xs">
                 <span className="text-muted-foreground">Số lượt nhận:</span>
-                <span className="font-bold text-emerald-600 dark:text-emerald-400 text-sm">
+                <span className="font-bold text-success-600 text-sm">
                   +{formatCreditQuantity(successResult.order.creditQuantity)}
                 </span>
               </div>
@@ -132,19 +132,19 @@ export function PurchaseDialog({
             </div>
 
             {/* Snapshot số dư ví sau mua */}
-            <div className="rounded-xl border border-emerald-200 bg-emerald-50/50 dark:border-emerald-900 dark:bg-emerald-950/20 p-3.5 flex items-center justify-between">
+            <div className="rounded-xl border border-success-200 bg-success-50/50 p-3.5 flex items-center justify-between">
               <div className="flex items-center gap-2.5">
-                <Coins className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+                <Coins className="h-5 w-5 text-success-600" />
                 <div>
-                  <div className="text-xs font-medium text-emerald-900 dark:text-emerald-300">
+                  <div className="text-xs font-medium text-success-900">
                     Số dư khả dụng hiện tại
                   </div>
-                  <div className="text-[11px] text-emerald-700/80 dark:text-emerald-400/80">
+                  <div className="text-[11px] text-success-700/80">
                     Tổng: {successResult.wallet.balance} | Tạm giữ: {successResult.wallet.reserved}
                   </div>
                 </div>
               </div>
-              <div className="text-lg font-black text-emerald-700 dark:text-emerald-400">
+              <div className="text-lg font-black text-success-700">
                 {successResult.wallet.available.toLocaleString("vi-VN")} lượt
               </div>
             </div>
@@ -183,12 +183,12 @@ export function PurchaseDialog({
             </DialogHeader>
 
             {/* Thông tin bảo vệ giao dịch */}
-            <Alert className="border-blue-200 bg-blue-50/50 dark:border-blue-900/50 dark:bg-blue-950/20 text-xs py-3">
-              <ShieldCheck className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-              <AlertTitle className="text-xs font-semibold text-blue-900 dark:text-blue-300 mb-0.5">
+            <Alert className="border-primary-200 bg-primary-50/50 text-xs py-3">
+              <ShieldCheck className="h-4 w-4 text-primary-600" />
+              <AlertTitle className="text-xs font-semibold text-primary-900 mb-0.5">
                 Giao dịch được bảo vệ
               </AlertTitle>
-              <AlertDescription className="text-[11px] text-blue-700 dark:text-blue-400 leading-relaxed">
+              <AlertDescription className="text-[11px] text-primary-700 leading-relaxed">
                 Hệ thống tự động bảo toàn mã giao dịch duy nhất (Idempotency-Key) nhằm đảm bảo an toàn tuyệt đối, không phát sinh trùng lặp.
               </AlertDescription>
             </Alert>
@@ -203,7 +203,7 @@ export function PurchaseDialog({
               </div>
               <div className="flex items-center justify-between text-xs">
                 <span className="text-muted-foreground">Số lượt tư vấn nhận:</span>
-                <span className="font-bold text-emerald-600 dark:text-emerald-400 text-sm">
+                <span className="font-bold text-success-600 text-sm">
                   +{formatCreditQuantity(selectedPackage.creditQuantity)}
                 </span>
               </div>
@@ -217,12 +217,12 @@ export function PurchaseDialog({
 
             {/* Thông báo nếu đang có giao dịch dở dang (Pending Retry) */}
             {hasPendingRetry && !isFeatureDisabled && (
-              <Alert className="border-amber-200 bg-amber-50/60 dark:border-amber-900/50 dark:bg-amber-950/20 text-xs py-3">
-                <RotateCcw className="h-4 w-4 text-amber-600 dark:text-amber-400" />
-                <AlertTitle className="text-xs font-semibold text-amber-900 dark:text-amber-300">
+              <Alert className="border-warning-200 bg-warning-50/60 text-xs py-3">
+                <RotateCcw className="h-4 w-4 text-warning-600" />
+                <AlertTitle className="text-xs font-semibold text-warning-900">
                   Tiếp tục yêu cầu trước đó
                 </AlertTitle>
-                <AlertDescription className="text-[11px] text-amber-800 dark:text-amber-400 leading-relaxed">
+                <AlertDescription className="text-[11px] text-warning-800 leading-relaxed">
                   Lần kết nối trước bị gián đoạn mạng hoặc chưa nhận được kết quả. Hệ thống sẽ tiếp tục kiểm tra lại với cùng mã giao dịch an toàn.
                 </AlertDescription>
               </Alert>
@@ -230,12 +230,12 @@ export function PurchaseDialog({
 
             {/* Thông báo khởi tạo CREATING */}
             {purchaseState.creatingNotice && (
-              <Alert className="border-sky-200 bg-sky-50/60 dark:border-sky-900/50 dark:bg-sky-950/20 text-xs py-3">
-                <Clock className="h-4 w-4 text-sky-600 dark:text-sky-400" />
-                <AlertTitle className="text-xs font-semibold text-sky-900 dark:text-sky-300">
+              <Alert className="border-primary-200 bg-primary-50/60 text-xs py-3">
+                <Clock className="h-4 w-4 text-primary-600" />
+                <AlertTitle className="text-xs font-semibold text-primary-900">
                   Đang khởi tạo liên kết
                 </AlertTitle>
-                <AlertDescription className="text-[11px] text-sky-800 dark:text-sky-400 leading-relaxed">
+                <AlertDescription className="text-[11px] text-primary-800 leading-relaxed">
                   {purchaseState.creatingNotice}
                 </AlertDescription>
               </Alert>
@@ -243,12 +243,12 @@ export function PurchaseDialog({
 
             {/* Lỗi hiển thị nếu có */}
             {lastError && (
-              <Alert className="border-red-200 bg-red-50/60 dark:border-red-900/50 dark:bg-red-950/20 text-xs py-3">
-                <AlertCircle className="h-4 w-4 text-red-600 dark:text-red-400" />
-                <AlertTitle className="text-xs font-semibold text-red-900 dark:text-red-300">
+              <Alert className="border-danger-200 bg-danger-50/60 text-xs py-3">
+                <AlertCircle className="h-4 w-4 text-danger-600" />
+                <AlertTitle className="text-xs font-semibold text-danger-900">
                   {errorCode === 4108 ? "Chức năng chưa mở" : "Không thể hoàn tất giao dịch"}
                 </AlertTitle>
-                <AlertDescription className="text-[11px] text-red-800 dark:text-red-400 leading-relaxed">
+                <AlertDescription className="text-[11px] text-danger-800 leading-relaxed">
                   {lastError}
                 </AlertDescription>
               </Alert>

@@ -60,7 +60,7 @@ export function DoctorOfferCard({
       <CardHeader className="pb-3 border-b border-border/60">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div className="flex items-center gap-2">
-            <span className="flex h-3 w-3 rounded-full bg-emerald-500 animate-ping" />
+            <span className="flex h-3 w-3 rounded-full bg-success-500 animate-ping" />
             <CardTitle className="text-base sm:text-lg font-bold text-foreground flex items-center gap-2">
               <Sparkles className="w-5 h-5 text-primary" />
               {isWaitingMember ? "Đang chờ bệnh nhân xác nhận" : "Lời mời nhận ca tư vấn mới!"}
@@ -73,7 +73,7 @@ export function DoctorOfferCard({
                 variant="outline"
                 className={`font-mono text-xs px-2.5 py-1 ${
                   secondsRemaining <= 10
-                    ? "border-red-500 bg-red-50 text-red-700 animate-pulse font-bold"
+                    ? "border-danger-500 bg-danger-50 text-danger-700 animate-pulse font-bold"
                     : "border-primary/50 bg-primary/10 text-primary"
                 }`}
               >
@@ -83,7 +83,7 @@ export function DoctorOfferCard({
             )}
 
             {isWaitingMember && (
-              <Badge variant="outline" className="border-amber-400 bg-amber-50 text-amber-800 font-medium">
+              <Badge variant="outline" className="border-warning-400 bg-warning-50 text-warning-800 font-medium">
                 <Loader2 className="w-3.5 h-3.5 mr-1 animate-spin" />
                 Đã tiếp nhận - Chờ bệnh nhân
               </Badge>
@@ -139,11 +139,11 @@ export function DoctorOfferCard({
         </div>
 
         {isWaitingMember && (
-          <div className="rounded-lg bg-amber-50 border border-amber-200 p-3.5 flex items-start gap-2.5 text-xs text-amber-900">
-            <AlertCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+          <div className="rounded-lg bg-warning-50 border border-warning-200 p-3.5 flex items-start gap-2.5 text-xs text-warning-900">
+            <AlertCircle className="w-4 h-4 text-warning-600 shrink-0 mt-0.5" />
             <div className="space-y-1">
               <p className="font-medium">Bạn đã chấp nhận ca tư vấn này.</p>
-              <p className="text-amber-700">
+              <p className="text-warning-700">
                 Hệ thống đang chờ bệnh nhân bấm xác nhận bắt đầu phiên tư vấn. Khi hoàn tất, phiên chat sẽ tự động kích hoạt.
               </p>
             </div>
@@ -170,7 +170,7 @@ export function DoctorOfferCard({
               size="sm"
               onClick={() => onAccept(offer.offerId)}
               disabled={actionLoading || (secondsRemaining !== null && secondsRemaining <= 0)}
-              className="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white font-medium shadow-sm"
+              className="w-full sm:w-auto bg-success-600 hover:bg-success-700 text-white font-medium shadow-sm"
             >
               <CheckCircle2 className="w-4 h-4 mr-1.5" />
               {actionLoading ? "Đang tiếp nhận..." : "Tiếp nhận ca tư vấn"}

@@ -68,9 +68,9 @@ export default function ConsultationsPage() {
         <PageHeader icon={<Stethoscope className="w-5 h-5" />} title="Tư vấn & Chăm sóc" />
         <PageBody className="items-center justify-center text-center">
           <div className="flex max-w-lg flex-col items-center gap-4">
-            <ShieldAlert className="text-red-500" />
-            <h2 className="text-2xl font-bold text-neutral-950">Truy cập bị từ chối</h2>
-            <p className="text-sm text-neutral-500">Mô-đun tư vấn chỉ dành cho các vai trò Hội viên, Bác sĩ và Quản trị viên.</p>
+            <ShieldAlert className="text-danger-500" />
+            <h2 className="text-2xl font-bold text-slate-950">Truy cập bị từ chối</h2>
+            <p className="text-sm text-slate-500">Mô-đun tư vấn chỉ dành cho các vai trò Hội viên, Bác sĩ và Quản trị viên.</p>
           </div>
         </PageBody>
       </Page>
@@ -97,8 +97,8 @@ export default function ConsultationsPage() {
             className={cn(
               "flex items-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-medium shrink-0",
               logic.alert.type === "success"
-                ? "border-green-200 bg-green-50 text-green-900"
-                : "border-red-200 bg-red-50 text-red-900"
+                ? "border-success-200 bg-success-50 text-success-900"
+                : "border-danger-200 bg-danger-50 text-danger-900"
             )}
           >
             {logic.alert.type === "success" ? <CheckCircle2 className="h-4 w-4 shrink-0" /> : <XCircle className="h-4 w-4 shrink-0" />}
@@ -123,7 +123,7 @@ export default function ConsultationsPage() {
                     <Users className="w-3.5 h-3.5" />
                     <span>Hàng đợi tư vấn</span>
                     {hasActiveQueue && (
-                      <span className="ml-1 px-1.5 py-0.5 rounded-full text-[10px] bg-amber-500 text-white font-bold animate-pulse">
+                      <span className="ml-1 px-1.5 py-0.5 rounded-full text-[10px] bg-warning-500 text-white font-bold animate-pulse">
                         Đang chờ
                       </span>
                     )}

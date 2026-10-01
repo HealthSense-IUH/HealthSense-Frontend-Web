@@ -12,21 +12,21 @@ export function StatusIndicator({ status, showText = true }: StatusIndicatorProp
   switch (status) {
     case "Operational":
     case "Success":
-      badgeColor = "bg-emerald-50 text-emerald-700 border-emerald-200"
-      dotColor = "bg-emerald-500"
-      pingColor = "bg-emerald-400"
+      badgeColor = "bg-success-50 text-success-700 border-success-200"
+      dotColor = "bg-success-500"
+      pingColor = "bg-success-400"
       isAnimate = true
       break
     case "Degraded":
     case "Warning":
-      badgeColor = "bg-amber-50 text-amber-700 border-amber-200"
-      dotColor = "bg-amber-500"
-      pingColor = "bg-amber-400"
+      badgeColor = "bg-warning-50 text-warning-700 border-warning-200"
+      dotColor = "bg-warning-500"
+      pingColor = "bg-warning-400"
       break
     case "Critical":
-      badgeColor = "bg-red-50 text-red-700 border-red-200"
-      dotColor = "bg-red-500"
-      pingColor = "bg-red-400"
+      badgeColor = "bg-danger-50 text-danger-700 border-danger-200"
+      dotColor = "bg-danger-500"
+      pingColor = "bg-danger-400"
       isAnimate = true
       break
     default:

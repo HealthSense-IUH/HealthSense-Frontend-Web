@@ -22,16 +22,16 @@ export function getPredictionMeta(
       shortLabel: "Đang xử lý",
       badgeText: "Đang phân tích",
       badgeClass:
-        "bg-blue-50 text-blue-900 border-blue-300 dark:bg-blue-950/70 dark:text-blue-200 dark:border-blue-700",
-      dotClass: "bg-blue-500 animate-pulse",
-      topBarClass: "bg-blue-500",
-      statusTextClass: "text-blue-700 dark:text-blue-400 font-semibold",
+        "bg-primary-50 text-primary-900 border-primary-300",
+      dotClass: "bg-primary-500 animate-pulse",
+      topBarClass: "bg-primary-500",
+      statusTextClass: "text-primary-700 font-semibold",
       advice:
         "Dữ liệu đang được phân tích qua mô hình AI. Vui lòng đợi trong giây lát...",
       isRisk: false,
       probabilityRangeText: "Đang xử lý",
       icon: React.createElement(Activity, {
-        className: "w-5 h-5 text-blue-600 dark:text-blue-400 animate-spin",
+        className: "w-5 h-5 text-primary-600 animate-spin",
       }),
     }
   }
@@ -43,10 +43,10 @@ export function getPredictionMeta(
       shortLabel: "Lỗi",
       badgeText: "Lỗi",
       badgeClass:
-        "bg-slate-100 text-slate-900 border-slate-300 dark:bg-slate-800 dark:text-slate-200 dark:border-slate-700",
+        "bg-slate-100 text-slate-900 border-slate-300",
       dotClass: "bg-slate-400",
       topBarClass: "bg-slate-400",
-      statusTextClass: "text-slate-700 dark:text-slate-400 font-semibold",
+      statusTextClass: "text-slate-700 font-semibold",
       advice:
         "Tín hiệu đo quá ngắn hoặc chứa nhiều nhiễu động. Khuyến nghị thực hiện đo lại trong trạng thái nghỉ ngơi.",
       isRisk: false,
@@ -67,10 +67,10 @@ export function getPredictionMeta(
     shortLabel: label || "Chưa rõ",
     badgeText: label || "Chưa rõ",
     badgeClass:
-      "bg-slate-100 text-slate-900 border-slate-300 dark:bg-slate-800 dark:text-slate-200 dark:border-slate-700",
+      "bg-slate-100 text-slate-900 border-slate-300",
     dotClass: "bg-slate-400",
     topBarClass: "bg-slate-400",
-    statusTextClass: "text-slate-700 dark:text-slate-400 font-semibold",
+    statusTextClass: "text-slate-700 font-semibold",
     advice: "Bản ghi đang chờ đồng bộ hóa dữ liệu.",
     isRisk: false,
     probabilityRangeText: "N/A",

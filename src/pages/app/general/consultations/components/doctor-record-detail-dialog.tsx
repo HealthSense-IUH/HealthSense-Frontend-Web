@@ -126,7 +126,7 @@ export function DoctorRecordDetailDialog({
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <FileText className="h-5 w-5 text-neutral-500" />
+            <FileText className="h-5 w-5 text-slate-500" />
             Chi tiết Hồ sơ sức khỏe
           </DialogTitle>
           <DialogDescription>ID Hồ sơ: {recordId}</DialogDescription>
@@ -140,15 +140,15 @@ export function DoctorRecordDetailDialog({
               <Skeleton className="h-20 w-full" />
             </div>
           ) : errorMsg ? (
-            <div className="rounded-md bg-red-50 p-4 text-sm text-red-700">{errorMsg}</div>
+            <div className="rounded-md bg-danger-50 p-4 text-sm text-danger-700">{errorMsg}</div>
           ) : detail?.record ? (
             <div className="space-y-6">
               {detail.attention?.status === "REQUIRES_ATTENTION" && detail.attention?.reason === "AFIB" && (
-                <div className="flex items-start gap-3 rounded-lg border border-orange-200 bg-orange-50 p-4">
-                  <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-orange-500" />
+                <div className="flex items-start gap-3 rounded-lg border border-warning-200 bg-warning-50 p-4">
+                  <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-warning-500" />
                   <div>
-                    <h4 className="font-medium text-orange-900">Kết quả AI cần bác sĩ xem lại.</h4>
-                    <p className="mt-1 text-sm text-orange-700">
+                    <h4 className="font-medium text-warning-900">Kết quả AI cần bác sĩ xem lại.</h4>
+                    <p className="mt-1 text-sm text-warning-700">
                       Hệ thống ghi nhận dấu hiệu bất thường (AFIB) trong hồ sơ này.
                     </p>
                   </div>
@@ -180,8 +180,8 @@ export function DoctorRecordDetailDialog({
                 </div>
               </div>
 
-              <div className="rounded-lg border bg-neutral-50 p-4">
-                <h4 className="mb-3 flex items-center gap-2 font-medium text-neutral-700">
+              <div className="rounded-lg border bg-slate-50 p-4">
+                <h4 className="mb-3 flex items-center gap-2 font-medium text-slate-700">
                   <Activity className="h-4 w-4" /> Kết quả phân tích AI
                 </h4>
                 <div className="grid grid-cols-2 gap-4 text-sm">

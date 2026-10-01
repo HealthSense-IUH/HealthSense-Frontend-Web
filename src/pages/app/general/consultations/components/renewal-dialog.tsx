@@ -32,15 +32,15 @@ function readError(error: unknown, fallback: string) {
 export function getRenewalStatusBadge(status: ConsultationRenewalStatus) {
   switch (status) {
     case "REQUESTED":
-      return <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200">Chờ tiếp nhận</Badge>
+      return <Badge variant="outline" className="bg-warning-50 text-warning-700 border-warning-200">Chờ tiếp nhận</Badge>
     case "UNDER_REVIEW":
-      return <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">Đang xem xét</Badge>
+      return <Badge variant="outline" className="bg-primary-50 text-primary-700 border-primary-200">Đang xem xét</Badge>
     case "PENDING_ACCEPTANCE":
-      return <Badge className="bg-indigo-600 hover:bg-indigo-700 text-white">Chờ xác nhận thỏa thuận</Badge>
+      return <Badge className="bg-primary-600 hover:bg-primary-700 text-white">Chờ xác nhận thỏa thuận</Badge>
     case "WAITING_PAYMENT":
-      return <Badge className="bg-amber-500 hover:bg-amber-600 text-white">Chờ thanh toán</Badge>
+      return <Badge className="bg-warning-500 hover:bg-warning-600 text-white">Chờ thanh toán</Badge>
     case "PAID":
-      return <Badge className="bg-emerald-600 hover:bg-emerald-700 text-white">Đã gia hạn thành công</Badge>
+      return <Badge className="bg-success-600 hover:bg-success-700 text-white">Đã gia hạn thành công</Badge>
     case "REJECTED":
       return <Badge variant="destructive">Bị từ chối</Badge>
     case "CANCELLED":
@@ -48,7 +48,7 @@ export function getRenewalStatusBadge(status: ConsultationRenewalStatus) {
     case "EXPIRED":
       return <Badge variant="secondary">Đã hết hạn</Badge>
     case "REQUIRES_REVIEW":
-      return <Badge className="bg-yellow-500 text-black hover:bg-yellow-600">Cần kiểm tra thủ công</Badge>
+      return <Badge className="bg-warning-500 text-black hover:bg-warning-600">Cần kiểm tra thủ công</Badge>
     default:
       return <Badge variant="outline">{status}</Badge>
   }
@@ -207,7 +207,7 @@ export function RenewalDialog({
                   </DialogDescription>
                 </div>
               </div>
-              <Badge variant={isSessionActive ? "default" : "outline"} className={isSessionActive ? "bg-emerald-600" : ""}>
+              <Badge variant={isSessionActive ? "default" : "outline"} className={isSessionActive ? "bg-success-600" : ""}>
                 {session.status}
               </Badge>
             </div>
@@ -238,18 +238,18 @@ export function RenewalDialog({
 
               {/* Unresolved Renewal Banner / Action */}
               {unresolvedRenewal ? (
-                <div className="p-4 rounded-xl border border-amber-200 bg-amber-50/50 dark:bg-amber-950/20 space-y-3">
+                <div className="p-4 rounded-xl border border-warning-200 bg-warning-50/50 space-y-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <ShieldCheck className="w-5 h-5 text-amber-600" />
-                      <span className="font-semibold text-amber-950 dark:text-amber-300 text-sm">
+                      <ShieldCheck className="w-5 h-5 text-warning-600" />
+                      <span className="font-semibold text-warning-950 text-sm">
                         Yêu cầu gia hạn #{unresolvedRenewal.id} đang xử lý
                       </span>
                     </div>
                     {getRenewalStatusBadge(unresolvedRenewal.status)}
                   </div>
 
-                  <div className="text-xs text-amber-900/90 dark:text-amber-300/90 space-y-1.5 pl-7">
+                  <div className="text-xs text-warning-900/90 space-y-1.5 pl-7">
                     {(unresolvedRenewal.proposedNewEndsAt || unresolvedRenewal.proposedEndsAt) && (
                       <p>
                         Thời hạn sau khi gia hạn: <strong>{formatDate(unresolvedRenewal.proposedNewEndsAt || unresolvedRenewal.proposedEndsAt)}</strong>
@@ -262,12 +262,12 @@ export function RenewalDialog({
                       </p>
                     )}
                     {unresolvedRenewal.paymentDeadline && (
-                      <p className="text-red-600 dark:text-red-400">
+                      <p className="text-danger-600">
                         Hạn chót thanh toán: <strong>{formatDate(unresolvedRenewal.paymentDeadline)}</strong>
                       </p>
                     )}
                     {unresolvedRenewal.rejectionReason && (
-                      <p className="text-red-700 dark:text-red-400">
+                      <p className="text-danger-700">
                         Lý do từ chối: <em>{unresolvedRenewal.rejectionReason}</em>
                       </p>
                     )}
@@ -291,7 +291,7 @@ export function RenewalDialog({
                         size="sm"
                         onClick={() => handlePayRenewal(unresolvedRenewal.id)}
                         disabled={payingId === unresolvedRenewal.id}
-                        className="bg-emerald-600 hover:bg-emerald-700 text-white gap-1.5"
+                        className="bg-success-600 hover:bg-success-700 text-white gap-1.5"
                       >
                         <CreditCard className="w-4 h-4" />
                         {payingId === unresolvedRenewal.id ? "Đang mở thanh toán..." : "Tiến hành thanh toán"}
@@ -304,7 +304,7 @@ export function RenewalDialog({
                         size="sm"
                         onClick={() => handleCancelRenewal(unresolvedRenewal.id)}
                         disabled={cancellingId === unresolvedRenewal.id}
-                        className="text-red-600 hover:bg-red-50 border-red-200"
+                        className="text-danger-600 hover:bg-danger-50 border-danger-200"
                       >
                         <XCircle className="w-4 h-4 mr-1" />
                         {cancellingId === unresolvedRenewal.id ? "Đang hủy..." : "Hủy yêu cầu"}
@@ -332,7 +332,7 @@ export function RenewalDialog({
                 </div>
               ) : (
                 <div className="p-4 rounded-xl border bg-muted/20 text-xs text-muted-foreground flex items-center gap-2">
-                  <AlertTriangle className="w-4 h-4 shrink-0 text-amber-500" />
+                  <AlertTriangle className="w-4 h-4 shrink-0 text-warning-500" />
                   <span>Phiên chăm sóc đã kết thúc hoặc không còn hoạt động, không thể yêu cầu gia hạn.</span>
                 </div>
               )}
@@ -384,7 +384,7 @@ export function RenewalDialog({
                     <div key={ext.id ?? `ext-${ext.appliedAt}-${idx}`} className="p-3.5 rounded-xl border bg-card text-xs space-y-2">
                       <div className="flex items-center justify-between">
                         <span className="font-semibold text-foreground">Gia hạn lần #{idx + 1}</span>
-                        <Badge variant="outline" className="text-[10px] bg-emerald-50 text-emerald-700 border-emerald-200">
+                        <Badge variant="outline" className="text-[10px] bg-success-50 text-success-700 border-success-200">
                           Đã áp dụng: {formatDate(ext.appliedAt)}
                         </Badge>
                       </div>

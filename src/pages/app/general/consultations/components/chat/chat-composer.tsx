@@ -117,7 +117,7 @@ export const ChatComposer = memo(function ChatComposer({
             <Paperclip className="h-5 w-5" />
           </Button>
           
-          <div className="flex flex-1 items-center bg-background border border-input focus-within:border-primary focus-within:ring-1 focus-within:ring-primary rounded-3xl px-4">
+          <div className="flex flex-1 items-center bg-background border border-input focus-within:border-primary focus-within:ring-1 focus-within:ring-primary rounded-2xl px-4">
             <textarea
               ref={textareaRef}
               className="max-h-[160px] min-h-[24px] w-full resize-none bg-transparent py-2 text-[14px] text-foreground outline-none placeholder:text-muted-foreground"

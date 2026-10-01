@@ -18,7 +18,7 @@ export function FoodsTab() {
             <Database className="w-5 h-5" />
           </div>
           <div>
-            <h2 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-foreground">
+            <h2 className="text-lg sm:text-xl font-bold text-slate-900">
               Cơ sở dữ liệu dinh dưỡng
             </h2>
             <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 leading-relaxed">

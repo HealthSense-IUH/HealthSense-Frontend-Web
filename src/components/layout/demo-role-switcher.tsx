@@ -12,10 +12,10 @@ import {
 import { Button } from "@/components/ui/button"
 
 const DEMO_ROLES: { value: UserRole; label: string; color: string }[] = [
-  { value: USER_ROLES.SUPER_ADMIN, label: "Super Admin", color: "bg-purple-50 text-purple-700 border-purple-200" },
-  { value: USER_ROLES.ADMIN, label: "Admin", color: "bg-blue-50 text-blue-700 border-blue-200" },
-  { value: USER_ROLES.DOCTOR, label: "Doctor", color: "bg-teal-50 text-teal-700 border-teal-200" },
-  { value: USER_ROLES.MEMBER, label: "Member", color: "bg-emerald-50 text-emerald-700 border-emerald-200" },
+  { value: USER_ROLES.SUPER_ADMIN, label: "Super Admin", color: "bg-primary-50 text-primary-700 border-primary-200" },
+  { value: USER_ROLES.ADMIN, label: "Admin", color: "bg-primary-50 text-primary-700 border-primary-200" },
+  { value: USER_ROLES.DOCTOR, label: "Doctor", color: "bg-success-50 text-success-700 border-success-200" },
+  { value: USER_ROLES.MEMBER, label: "Member", color: "bg-success-50 text-success-700 border-success-200" },
 ]
 
 export function DemoRoleSwitcher() {
@@ -33,11 +33,11 @@ export function DemoRoleSwitcher() {
           className={`h-8 gap-2 px-2.5 font-semibold text-xs border rounded-lg shadow-2xs transition-all hover:opacity-90 ${currentConfig.color}`}
           title="DEV ONLY: Demo Role Switcher"
         >
-          <ShieldAlert className="h-3.5 w-3.5 shrink-0 animate-pulse text-amber-500" />
+          <ShieldAlert className="h-3.5 w-3.5 shrink-0 animate-pulse text-warning-500" />
           <span className="hidden sm:inline-block text-slate-500 font-normal">Dev View:</span>
           <span>{currentConfig.label}</span>
           {demoRole && (
-            <span className="ml-1 rounded bg-amber-500/20 px-1 py-0.5 text-[9px] font-bold text-amber-700">
+            <span className="ml-1 rounded bg-warning-500/20 px-1 py-0.5 text-[9px] font-bold text-warning-700">
               OVERRIDE
             </span>
           )}
@@ -48,7 +48,7 @@ export function DemoRoleSwitcher() {
           <div className="flex items-center justify-between border-b border-slate-100 pb-2">
             <div>
               <h4 className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
-                <ShieldAlert className="w-3.5 h-3.5 text-amber-500" />
+                <ShieldAlert className="w-3.5 h-3.5 text-warning-500" />
                 Demo Role Switcher
               </h4>
               <p className="text-[10px] text-slate-400 mt-0.5">DEV ONLY utility. Real token unchanged.</p>
@@ -80,7 +80,7 @@ export function DemoRoleSwitcher() {
                       </span>
                     )}
                   </span>
-                  {isSelected && <Check className="h-3.5 w-3.5 text-blue-600" />}
+                  {isSelected && <Check className="h-3.5 w-3.5 text-primary-600" />}
                 </button>
               )
             })}
@@ -94,7 +94,7 @@ export function DemoRoleSwitcher() {
                   setDemoRole(null)
                   navigate(getDefaultRouteForRole(realRole))
                 }}
-                className="w-full rounded-lg bg-amber-50 py-1.5 text-center text-[11px] font-bold text-amber-700 transition-colors hover:bg-amber-100"
+                className="w-full rounded-lg bg-warning-50 py-1.5 text-center text-[11px] font-bold text-warning-700 transition-colors hover:bg-warning-100"
               >
                 Reset to Actual Role
               </button>

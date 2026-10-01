@@ -51,13 +51,13 @@ export function CreditLedgerTable({
 
   if (error && !ledgerData) {
     return (
-      <Card className="border-red-200 bg-red-50/50 dark:border-red-900/50 dark:bg-red-950/20 p-8 text-center">
+      <Card className="border-danger-200 bg-danger-50/50 p-6 text-center">
         <div className="max-w-md mx-auto space-y-3">
-          <AlertCircle className="h-8 w-8 text-red-600 dark:text-red-400 mx-auto" />
-          <h3 className="text-sm font-semibold text-red-800 dark:text-red-300">
+          <AlertCircle className="h-8 w-8 text-danger-600 mx-auto" />
+          <h3 className="text-sm font-semibold text-danger-800">
             Không thể tải lịch sử biến động lượt
           </h3>
-          <p className="text-xs text-red-600 dark:text-red-400">{error}</p>
+          <p className="text-xs text-danger-600">{error}</p>
           <Button variant="outline" size="sm" onClick={onRetry} className="gap-1.5 mt-2">
             <RefreshCw className="h-3.5 w-3.5" /> Thử lại
           </Button>
@@ -124,9 +124,9 @@ export function CreditLedgerTable({
                     <span
                       className={`text-xs font-bold ${
                         deltaAvailable > 0
-                          ? "text-emerald-600 dark:text-emerald-400"
+                          ? "text-success-600"
                           : deltaAvailable < 0
-                            ? "text-rose-600 dark:text-rose-400"
+                            ? "text-danger-600"
                             : "text-muted-foreground"
                       }`}
                     >
@@ -139,7 +139,7 @@ export function CreditLedgerTable({
                   </TableCell>
                   {/* Số dư sau giao dịch */}
                   <TableCell>
-                    <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400">
+                    <span className="text-xs font-bold text-success-600">
                       {availableAfter} khả dụng
                     </span>
                   </TableCell>

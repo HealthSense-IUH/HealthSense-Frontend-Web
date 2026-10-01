@@ -7,30 +7,30 @@ const LEVEL_STYLE: Record<DietAdviceLevel, { label: string; icon: LucideIcon; ba
   OK: {
     label: "Phù hợp",
     icon: CheckCircle2,
-    badge: "bg-emerald-50 text-emerald-700 border-emerald-200/80 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800/50",
-    icon_: "text-emerald-600 dark:text-emerald-400",
-    box: "bg-emerald-50/60 border-emerald-200/80 dark:bg-emerald-950/20 dark:border-emerald-800/50",
+    badge: "bg-success-50 text-success-700 border-success-200/80",
+    icon_: "text-success-600",
+    box: "bg-success-50/60 border-success-200/80",
   },
   CAUTION: {
     label: "Cần lưu ý",
     icon: AlertTriangle,
-    badge: "bg-amber-50 text-amber-700 border-amber-200/80 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800/50",
-    icon_: "text-amber-600 dark:text-amber-400",
-    box: "bg-amber-50/60 border-amber-200/80 dark:bg-amber-950/20 dark:border-amber-800/50",
+    badge: "bg-warning-50 text-warning-700 border-warning-200/80",
+    icon_: "text-warning-600",
+    box: "bg-warning-50/60 border-warning-200/80",
   },
   LIMIT: {
     label: "Nên hạn chế",
     icon: Ban,
-    badge: "bg-rose-50 text-rose-700 border-rose-200/80 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800/50",
-    icon_: "text-rose-600 dark:text-rose-400",
-    box: "bg-rose-50/60 border-rose-200/80 dark:bg-rose-950/20 dark:border-rose-800/50",
+    badge: "bg-danger-50 text-danger-700 border-danger-200/80",
+    icon_: "text-danger-600",
+    box: "bg-danger-50/60 border-danger-200/80",
   },
   UNKNOWN: {
     label: "Chưa đủ số liệu",
     icon: HelpCircle,
-    badge: "bg-slate-100 text-slate-600 border-slate-200 dark:bg-muted dark:text-slate-300 dark:border-border",
+    badge: "bg-slate-100 text-slate-600 border-slate-200",
     icon_: "text-slate-500",
-    box: "bg-slate-50 border-slate-200 dark:bg-muted/30 dark:border-border",
+    box: "bg-slate-50 border-slate-200",
   },
 }
 
@@ -61,7 +61,7 @@ export function DietAdviceNote({ advice }: { advice?: DietAdviceData }) {
   const Icon = style.icon
   return (
     <div className={cn("rounded-2xl border p-4 space-y-2", style.box)}>
-      <div className="flex items-center gap-2 text-sm font-semibold text-slate-900 dark:text-foreground">
+      <div className="flex items-center gap-2 text-sm font-semibold text-slate-900">
         <Icon className={cn("w-4 h-4", style.icon_)} />
         <span>
           {style.label}
@@ -69,13 +69,13 @@ export function DietAdviceNote({ advice }: { advice?: DietAdviceData }) {
         </span>
       </div>
       {advice.reasons.length > 0 ? (
-        <ul className="space-y-1 text-xs sm:text-sm text-slate-700 dark:text-slate-300 list-disc pl-5">
+        <ul className="space-y-1 text-xs sm:text-sm text-slate-700 list-disc pl-5">
           {advice.reasons.map((reason) => (
             <li key={reason.code}>{reason.message}</li>
           ))}
         </ul>
       ) : (
-        <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+        <p className="text-xs sm:text-sm text-slate-700">
           Không có điểm nào cần lưu ý với {advice.personalized ? "đơn của bạn" : "lời khuyên chung"}.
         </p>
       )}

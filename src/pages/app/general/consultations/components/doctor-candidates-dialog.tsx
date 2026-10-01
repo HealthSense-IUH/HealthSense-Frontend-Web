@@ -128,7 +128,7 @@ export function DoctorCandidatesDialog({
                       </Badge>
                     )}
                     {!doctor.eligible && (
-                      <Badge variant="destructive" className="bg-red-100 text-red-800 hover:bg-red-200 border-red-200">
+                      <Badge variant="destructive" className="bg-danger-100 text-danger-800 hover:bg-danger-200 border-danger-200">
                         Không đủ điều kiện
                       </Badge>
                     )}
@@ -140,7 +140,7 @@ export function DoctorCandidatesDialog({
                   </div>
                   
                   {!doctor.eligible && Array.isArray(doctor.ineligibleReasons) && doctor.ineligibleReasons.length > 0 && (
-                    <div className="mt-2 text-xs text-red-600 bg-red-50 p-2 rounded flex gap-1.5 items-start">
+                    <div className="mt-2 text-xs text-danger-600 bg-danger-50 p-2 rounded flex gap-1.5 items-start">
                       <AlertTriangle className="w-4 h-4 shrink-0" />
                       <ul className="list-disc list-inside">
                         {doctor.ineligibleReasons.map((r) => (

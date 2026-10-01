@@ -7,7 +7,7 @@ export function RecentActivityTable({ activities }: { activities: ActivityLogIte
     <div className="rounded-2xl border border-slate-200/80 bg-white shadow-sm overflow-hidden flex flex-col justify-between h-full">
       <div className="p-6 pb-4 border-b border-slate-100 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-xl bg-blue-50 text-blue-600">
+          <div className="p-2 rounded-xl bg-primary-50 text-primary-600">
             <History className="h-5 w-5" />
           </div>
           <div>

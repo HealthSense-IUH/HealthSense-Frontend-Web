@@ -85,17 +85,17 @@ export function UploadMeasurementModal({ isOpen, onClose, onSuccess }: UploadMea
       onClick={() => !isUploading && onClose()}
     >
       <div 
-        className="relative max-w-lg w-full bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 flex flex-col gap-6 shadow-2xl border border-slate-100 dark:border-slate-800 cursor-default"
+        className="relative max-w-lg w-full bg-white rounded-2xl p-6 sm:p-6 flex flex-col gap-6 shadow-2xl border border-slate-100 cursor-default"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
+        <div className="flex items-center justify-between border-b border-slate-100 pb-4">
           <div className="flex items-center gap-3">
-            <div className="p-3 rounded-2xl bg-blue-50 dark:bg-blue-950/50 text-blue-600">
+            <div className="p-3 rounded-2xl bg-primary-50 text-primary-600">
               <UploadCloud className="w-6 h-6" />
             </div>
             <div>
-              <h3 className="text-lg font-black text-slate-900 dark:text-white">
+              <h3 className="text-lg font-black text-slate-900">
                 Tải lên Bản ghi Đo Mới
               </h3>
               <p className="text-xs text-slate-500 mt-0.5">
@@ -107,15 +107,15 @@ export function UploadMeasurementModal({ isOpen, onClose, onSuccess }: UploadMea
             type="button"
             disabled={isUploading}
             onClick={onClose}
-            className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-700 dark:hover:text-white transition-colors cursor-pointer disabled:opacity-50"
+            className="p-2 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition-colors cursor-pointer disabled:opacity-50"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {errorMsg && (
-          <div className="p-4 rounded-2xl bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900/50 text-red-800 dark:text-red-300 text-xs font-bold flex items-center gap-3">
-            <AlertCircle className="w-5 h-5 text-red-600 shrink-0" />
+          <div className="p-4 rounded-2xl bg-danger-50 border border-danger-200 text-danger-800 text-xs font-bold flex items-center gap-3">
+            <AlertCircle className="w-5 h-5 text-danger-600 shrink-0" />
             <span>{errorMsg}</span>
           </div>
         )}
@@ -124,10 +124,10 @@ export function UploadMeasurementModal({ isOpen, onClose, onSuccess }: UploadMea
           {/* File Dropzone */}
           <div
             onClick={() => fileInputRef.current?.click()}
-            className={`border-2 border-dashed rounded-3xl p-8 flex flex-col items-center justify-center text-center cursor-pointer transition-colors ${
+            className={`border-2 border-dashed rounded-2xl p-6 flex flex-col items-center justify-center text-center cursor-pointer transition-colors ${
               selectedFile
-                ? "border-blue-500 bg-blue-50/40 dark:bg-blue-950/20"
-                : "border-slate-200 dark:border-slate-800 hover:border-blue-400 dark:hover:border-blue-500 bg-slate-50/50 dark:bg-slate-800/30"
+                ? "border-primary-500 bg-primary-50/40"
+                : "border-slate-200 hover:border-primary-400 bg-slate-50/50"
             }`}
           >
             <input
@@ -140,9 +140,9 @@ export function UploadMeasurementModal({ isOpen, onClose, onSuccess }: UploadMea
             />
 
             {selectedFile ? (
-              <div className="flex flex-col items-center gap-2 text-blue-600">
+              <div className="flex flex-col items-center gap-2 text-primary-600">
                 <FileText className="w-12 h-12" />
-                <span className="font-extrabold text-sm text-slate-900 dark:text-white">
+                <span className="font-extrabold text-sm text-slate-900">
                   {selectedFile.name}
                 </span>
                 <span className="text-xs text-slate-500">
@@ -151,11 +151,11 @@ export function UploadMeasurementModal({ isOpen, onClose, onSuccess }: UploadMea
               </div>
             ) : (
               <div className="flex flex-col items-center gap-3 text-slate-400">
-                <div className="p-4 rounded-full bg-blue-50 dark:bg-blue-950/50 text-blue-600">
+                <div className="p-4 rounded-full bg-primary-50 text-primary-600">
                   <UploadCloud className="w-8 h-8" />
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-slate-800 dark:text-slate-200">
+                  <p className="text-sm font-bold text-slate-800">
                     Bấm để chọn file hoặc kéo thả file vào đây
                   </p>
                   <p className="text-xs text-slate-400 mt-1">
@@ -180,7 +180,7 @@ export function UploadMeasurementModal({ isOpen, onClose, onSuccess }: UploadMea
             <Button
               type="submit"
               disabled={isUploading || !selectedFile}
-              className="h-10 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs px-6 shadow-md shadow-blue-500/20 flex items-center gap-2"
+              className="h-10 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-extrabold text-xs px-6 shadow-md shadow-primary-500/20 flex items-center gap-2"
             >
               {isUploading ? (
                 <>

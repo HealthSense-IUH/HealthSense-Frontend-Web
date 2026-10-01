@@ -144,22 +144,22 @@ export function NeedsActionDetailDialog({
   const getPriorityBadge = (priority: string) => {
     switch (priority) {
       case "CRITICAL":
-        return <Badge className="bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-[10px]">KHẨN CẤP (CRITICAL)</Badge>
+        return <Badge className="bg-danger-600 hover:bg-danger-700 text-white font-extrabold text-[10px]">KHẨN CẤP (CRITICAL)</Badge>
       case "HIGH":
-        return <Badge className="bg-orange-500 hover:bg-orange-600 text-white font-bold text-[10px]">CAO (HIGH)</Badge>
+        return <Badge className="bg-warning-500 hover:bg-warning-600 text-white font-bold text-[10px]">CAO (HIGH)</Badge>
       default:
-        return <Badge className="bg-blue-600 hover:bg-blue-700 text-white font-medium text-[10px]">BÌNH THƯỜNG (NORMAL)</Badge>
+        return <Badge className="bg-primary-600 hover:bg-primary-700 text-white font-medium text-[10px]">BÌNH THƯỜNG (NORMAL)</Badge>
     }
   }
 
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "RESOLVED":
-        return <Badge className="bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-[10px]">ĐÃ XỬ LÝ (RESOLVED)</Badge>
+        return <Badge className="bg-success-500 hover:bg-success-600 text-white font-bold text-[10px]">ĐÃ XỬ LÝ (RESOLVED)</Badge>
       case "CLAIMED":
-        return <Badge className="bg-sky-500 hover:bg-sky-600 text-white font-bold text-[10px]">ĐANG XỬ LÝ (CLAIMED)</Badge>
+        return <Badge className="bg-primary-500 hover:bg-primary-600 text-white font-bold text-[10px]">ĐANG XỬ LÝ (CLAIMED)</Badge>
       default:
-        return <Badge className="bg-amber-500 hover:bg-amber-600 text-white font-bold text-[10px]">CHỜ XỬ LÝ (OPEN)</Badge>
+        return <Badge className="bg-warning-500 hover:bg-warning-600 text-white font-bold text-[10px]">CHỜ XỬ LÝ (OPEN)</Badge>
     }
   }
 
@@ -196,20 +196,20 @@ export function NeedsActionDetailDialog({
               </div>
               <div className="p-3.5 rounded-2xl border border-slate-100 bg-slate-50/40">
                 <span className="text-[10px] text-slate-400 font-bold uppercase block mb-1">Vai trò phân công</span>
-                <span className="font-bold text-blue-600 text-xs">{item.assignedRole}</span>
+                <span className="font-bold text-primary-600 text-xs">{item.assignedRole}</span>
               </div>
             </div>
 
             {/* Reference info */}
             {item.referenceType && item.referenceId && (
-              <div className="p-3.5 rounded-2xl border border-slate-100 bg-blue-50/30 flex items-center justify-between">
+              <div className="p-3.5 rounded-2xl border border-slate-100 bg-primary-50/30 flex items-center justify-between">
                 <div>
                   <span className="text-[10px] text-slate-400 font-bold uppercase block">Đối tượng liên quan</span>
                   <span className="font-bold text-slate-800 text-xs">
                     {item.referenceType} #{item.referenceId}
                   </span>
                 </div>
-                <span className="text-[10px] font-bold text-blue-600 font-mono">
+                <span className="text-[10px] font-bold text-primary-600 font-mono">
                   Tham chiếu gốc
                 </span>
               </div>
@@ -232,13 +232,13 @@ export function NeedsActionDetailDialog({
                 </div>
               )}
               {item.resolvedAt && (
-                <div className="p-3.5 bg-emerald-50/40 space-y-1">
-                  <div className="flex items-center justify-between text-emerald-800 font-bold">
+                <div className="p-3.5 bg-success-50/40 space-y-1">
+                  <div className="flex items-center justify-between text-success-800 font-bold">
                     <span>Đã giải quyết bởi Tài khoản #{item.resolvedByUserId}:</span>
                     <span className="text-[10px] font-mono">{new Date(item.resolvedAt).toLocaleString("vi-VN")}</span>
                   </div>
                   {item.resolution && (
-                    <p className="text-emerald-900 font-medium text-xs mt-1 italic">
+                    <p className="text-success-900 font-medium text-xs mt-1 italic">
                       "{item.resolution}"
                     </p>
                   )}
@@ -268,7 +268,7 @@ export function NeedsActionDetailDialog({
                   variant="outline"
                   onClick={handleClaim}
                   disabled={loadingAction}
-                  className="text-xs font-bold text-blue-600 border-blue-200 hover:bg-blue-50"
+                  className="text-xs font-bold text-primary-600 border-primary-200 hover:bg-primary-50"
                 >
                   <UserCheck className="w-3.5 h-3.5 mr-1" />
                   Tiếp nhận xử lý
@@ -281,7 +281,7 @@ export function NeedsActionDetailDialog({
                   size="sm"
                   onClick={handleRetryCancellation}
                   disabled={loadingAction}
-                  className="bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold"
+                  className="bg-warning-600 hover:bg-warning-700 text-white text-xs font-bold"
                 >
                   <RotateCcw className="w-3.5 h-3.5 mr-1" />
                   Thử lại hủy PayOS
@@ -294,7 +294,7 @@ export function NeedsActionDetailDialog({
                   size="sm"
                   onClick={() => setRecommendRefundOpen(true)}
                   disabled={loadingAction}
-                  className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold"
+                  className="bg-primary-600 hover:bg-primary-700 text-white text-xs font-bold"
                 >
                   <DollarSign className="w-3.5 h-3.5 mr-1" />
                   Tạo đề xuất hoàn tiền
@@ -307,7 +307,7 @@ export function NeedsActionDetailDialog({
                   size="sm"
                   onClick={() => setRefundDetailOpen(true)}
                   disabled={loadingAction}
-                  className="bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold"
+                  className="bg-primary-600 hover:bg-primary-700 text-white text-xs font-bold"
                 >
                   <DollarSign className="w-3.5 h-3.5 mr-1" />
                   Xử lý hoàn tiền
@@ -320,7 +320,7 @@ export function NeedsActionDetailDialog({
                   size="sm"
                   onClick={() => setResolveDialogOpen(true)}
                   disabled={loadingAction}
-                  className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold"
+                  className="bg-success-600 hover:bg-success-700 text-white text-xs font-bold"
                 >
                   <CheckCircle2 className="w-3.5 h-3.5 mr-1" />
                   Hoàn tất xử lý
@@ -340,7 +340,7 @@ export function NeedsActionDetailDialog({
             </DialogHeader>
             <div className="py-4 space-y-2">
               <Label htmlFor="resText" className="text-xs font-bold text-slate-700">
-                Ghi chú giải quyết <span className="text-rose-500">*</span>
+                Ghi chú giải quyết <span className="text-danger-500">*</span>
               </Label>
               <Textarea
                 id="resText"
@@ -363,7 +363,7 @@ export function NeedsActionDetailDialog({
               <Button
                 type="submit"
                 disabled={loadingAction}
-                className="bg-emerald-600 hover:bg-emerald-700 text-white"
+                className="bg-success-600 hover:bg-success-700 text-white"
               >
                 {loadingAction ? "Đang lưu..." : "Xác nhận đóng công việc"}
               </Button>

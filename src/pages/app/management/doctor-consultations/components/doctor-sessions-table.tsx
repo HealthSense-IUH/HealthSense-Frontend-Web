@@ -41,13 +41,13 @@ export function getSessionStatusBadge(status: string, meaningfulCareOccurred?: b
   switch (status) {
     case "SCHEDULED":
       return (
-        <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 font-bold text-[11px]">
+        <Badge variant="outline" className="bg-primary-50 text-primary-700 border-primary-200 font-bold text-[11px]">
           Đã lên lịch
         </Badge>
       )
     case "ACTIVE":
       return (
-        <Badge className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[11px] flex items-center gap-1 shadow-xs">
+        <Badge className="bg-success-600 hover:bg-success-700 text-white font-bold text-[11px] flex items-center gap-1 shadow-xs">
           <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
           Đang chăm sóc
         </Badge>
@@ -60,17 +60,17 @@ export function getSessionStatusBadge(status: string, meaningfulCareOccurred?: b
       )
     case "CANCELLED":
       return meaningfulCareOccurred ? (
-        <Badge variant="outline" className="bg-amber-50 text-amber-800 border-amber-300 font-bold text-[11px]">
+        <Badge variant="outline" className="bg-warning-50 text-warning-800 border-warning-300 font-bold text-[11px]">
           Đã hủy (Có chăm sóc)
         </Badge>
       ) : (
-        <Badge variant="outline" className="bg-rose-50 text-rose-700 border-rose-200 font-bold text-[11px]">
+        <Badge variant="outline" className="bg-danger-50 text-danger-700 border-danger-200 font-bold text-[11px]">
           Đã hủy
         </Badge>
       )
     case "EXPIRED":
       return (
-        <Badge variant="outline" className="bg-neutral-100 text-neutral-600 border-neutral-300 font-bold text-[11px]">
+        <Badge variant="outline" className="bg-slate-100 text-slate-600 border-slate-300 font-bold text-[11px]">
           Đã hết hạn
         </Badge>
       )
@@ -100,8 +100,8 @@ export function getSummaryStatusBadge(session: DoctorConsultationSessionResponse
   if (closureStatus === "SUMMARY_FINALIZED" || closureStatus === "FINALIZED") {
     return (
       <div className="flex flex-col gap-0.5 items-start">
-        <Badge className="bg-emerald-50 text-emerald-700 border-emerald-300 font-bold text-[11px] flex items-center gap-1 shadow-2xs">
-          <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+        <Badge className="bg-success-50 text-success-700 border-success-300 font-bold text-[11px] flex items-center gap-1 shadow-2xs">
+          <CheckCircle2 className="w-3 h-3 text-success-600" />
           Đã tổng kết
         </Badge>
         <span className="text-[10px] text-slate-400">Đã khóa y khoa</span>
@@ -112,11 +112,11 @@ export function getSummaryStatusBadge(session: DoctorConsultationSessionResponse
   if (session.hasDraft) {
     return (
       <div className="flex flex-col gap-0.5 items-start">
-        <Badge className="bg-amber-50 text-amber-800 border-amber-300 font-bold text-[11px] flex items-center gap-1 shadow-2xs">
-          <Clock className="w-3 h-3 text-amber-600" />
+        <Badge className="bg-warning-50 text-warning-800 border-warning-300 font-bold text-[11px] flex items-center gap-1 shadow-2xs">
+          <Clock className="w-3 h-3 text-warning-600" />
           Đang lưu nháp
         </Badge>
-        <span className="text-[10px] text-amber-700 font-medium">Chưa hoàn tất</span>
+        <span className="text-[10px] text-warning-700 font-medium">Chưa hoàn tất</span>
       </div>
     )
   }
@@ -124,11 +124,11 @@ export function getSummaryStatusBadge(session: DoctorConsultationSessionResponse
   if (isOverdue) {
     return (
       <div className="flex flex-col gap-0.5 items-start">
-        <Badge className="bg-rose-50 text-rose-700 border-rose-300 font-extrabold text-[11px] flex items-center gap-1 shadow-2xs">
-          <AlertCircle className="w-3 h-3 text-rose-600" />
+        <Badge className="bg-danger-50 text-danger-700 border-danger-300 font-extrabold text-[11px] flex items-center gap-1 shadow-2xs">
+          <AlertCircle className="w-3 h-3 text-danger-600" />
           Quá hạn 10 phút
         </Badge>
-        <span className="text-[10px] text-rose-600 font-bold">Chưa tổng kết</span>
+        <span className="text-[10px] text-danger-600 font-bold">Chưa tổng kết</span>
       </div>
     )
   }
@@ -136,7 +136,7 @@ export function getSummaryStatusBadge(session: DoctorConsultationSessionResponse
   if (closureStatus === "ESCALATED") {
     return (
       <div className="flex flex-col gap-0.5 items-start">
-        <Badge className="bg-purple-50 text-purple-700 border-purple-300 font-bold text-[11px]">
+        <Badge className="bg-primary-50 text-primary-700 border-primary-300 font-bold text-[11px]">
           Leo thang (Escalated)
         </Badge>
       </div>
@@ -146,11 +146,11 @@ export function getSummaryStatusBadge(session: DoctorConsultationSessionResponse
   // Pending summary: Show prompt with remaining / due date
   return (
     <div className="flex flex-col gap-0.5 items-start">
-      <Badge className="bg-amber-50 text-amber-800 border-amber-300 font-extrabold text-[11px] flex items-center gap-1 animate-pulse shadow-2xs">
-        <Clock className="w-3 h-3 text-amber-600" />
+      <Badge className="bg-warning-50 text-warning-800 border-warning-300 font-extrabold text-[11px] flex items-center gap-1 animate-pulse shadow-2xs">
+        <Clock className="w-3 h-3 text-warning-600" />
         Chưa tổng kết
       </Badge>
-      <span className="text-[10px] text-amber-700 font-semibold">
+      <span className="text-[10px] text-warning-700 font-semibold">
         {session.summaryDueAt ? `Hạn: ${formatDate(session.summaryDueAt)}` : "Thời hạn 10 phút"}
       </span>
     </div>
@@ -254,12 +254,12 @@ export function DoctorSessionsTable({
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="ALL" className="text-xs font-medium">Tất cả trạng thái</SelectItem>
-                <SelectItem value="ACTIVE" className="text-xs font-bold text-emerald-600">Đang chăm sóc (Active)</SelectItem>
-                <SelectItem value="SCHEDULED" className="text-xs font-medium text-blue-600">Đã lên lịch</SelectItem>
-                <SelectItem value="SUMMARY_PENDING" className="text-xs font-bold text-amber-600">Cần lập tổng kết</SelectItem>
+                <SelectItem value="ACTIVE" className="text-xs font-bold text-success-600">Đang chăm sóc (Active)</SelectItem>
+                <SelectItem value="SCHEDULED" className="text-xs font-medium text-primary-600">Đã lên lịch</SelectItem>
+                <SelectItem value="SUMMARY_PENDING" className="text-xs font-bold text-warning-600">Cần lập tổng kết</SelectItem>
                 <SelectItem value="COMPLETED" className="text-xs font-medium text-slate-600">Đã hoàn tất</SelectItem>
-                <SelectItem value="CANCELLED" className="text-xs font-medium text-rose-600">Đã hủy</SelectItem>
-                <SelectItem value="EXPIRED" className="text-xs font-medium text-neutral-600">Hết hạn</SelectItem>
+                <SelectItem value="CANCELLED" className="text-xs font-medium text-danger-600">Đã hủy</SelectItem>
+                <SelectItem value="EXPIRED" className="text-xs font-medium text-slate-600">Hết hạn</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -289,12 +289,12 @@ export function DoctorSessionsTable({
                 navigate(`/app/management/doctor/consultations/${sessions[0].id}`)
               }
             }}
-            className="h-9 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs flex items-center gap-2 shadow-xs shrink-0 cursor-pointer"
+            className="h-9 px-4 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-extrabold text-xs flex items-center gap-2 shadow-xs shrink-0 cursor-pointer"
           >
             <MessageSquare className="w-4 h-4" />
             <span>{activeSessionCount > 0 ? "Vào ca khám hiện tại" : "Xem phiên gần nhất"}</span>
             {activeSessionCount > 0 && (
-              <span className="px-1.5 py-0.2 rounded-full text-[10px] font-black bg-white text-blue-700">
+              <span className="px-1.5 py-0.2 rounded-full text-[10px] font-black bg-white text-primary-700">
                 {activeSessionCount} đang khám
               </span>
             )}
@@ -325,7 +325,7 @@ export function DoctorSessionsTable({
                 <tr>
                   <td colSpan={9} className="py-16 text-center text-slate-400">
                     <div className="flex flex-col items-center justify-center gap-3">
-                      <Loader2 className="w-7 h-7 text-blue-600 animate-spin" />
+                      <Loader2 className="w-7 h-7 text-primary-600 animate-spin" />
                       <span className="text-sm font-bold text-slate-700">Đang tải danh sách phiên chăm sóc...</span>
                     </div>
                   </td>
@@ -368,7 +368,7 @@ export function DoctorSessionsTable({
                         const initial = memberName.charAt(0).toUpperCase()
                         return (
                           <div className="flex items-center gap-2.5">
-                            <div className="h-8 w-8 rounded-full bg-blue-50 border border-blue-200 text-blue-700 font-extrabold flex items-center justify-center text-xs shrink-0">
+                            <div className="h-8 w-8 rounded-full bg-primary-50 border border-primary-200 text-primary-700 font-extrabold flex items-center justify-center text-xs shrink-0">
                               {initial}
                             </div>
                             <div className="min-w-0">
@@ -424,13 +424,13 @@ export function DoctorSessionsTable({
                     {/* Clinical Notes / Alerts */}
                     <td className="py-3.5 px-4">
                       {session.unresolvedAttentionCount > 0 ? (
-                        <div className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg bg-orange-50 border border-orange-200 text-orange-800 text-[11px] font-bold">
-                          <AlertTriangle className="w-3.5 h-3.5 text-orange-500 shrink-0" />
+                        <div className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg bg-warning-50 border border-warning-200 text-warning-800 text-[11px] font-bold">
+                          <AlertTriangle className="w-3.5 h-3.5 text-warning-500 shrink-0" />
                           <span>{session.unresolvedAttentionCount} hồ sơ cần xem</span>
                         </div>
                       ) : session.status === "CANCELLED" && session.meaningfulCareOccurred ? (
-                        <div className="inline-flex items-center gap-1.5 text-[11px] text-amber-700">
-                          <FileText className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+                        <div className="inline-flex items-center gap-1.5 text-[11px] text-warning-700">
+                          <FileText className="w-3.5 h-3.5 text-warning-500 shrink-0" />
                           <span>Có chăm sóc</span>
                         </div>
                       ) : (
@@ -446,7 +446,7 @@ export function DoctorSessionsTable({
                           <Button
                             size="sm"
                             onClick={() => navigate(`/app/management/doctor/consultations/${session.id}`)}
-                            className="h-8 px-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs flex items-center gap-1.5 shadow-xs cursor-pointer"
+                            className="h-8 px-2.5 rounded-lg bg-primary-600 hover:bg-primary-700 text-white font-extrabold text-xs flex items-center gap-1.5 shadow-xs cursor-pointer"
                           >
                             <MessageSquare className="w-3.5 h-3.5" />
                             <span>Vào ca khám</span>
@@ -457,16 +457,16 @@ export function DoctorSessionsTable({
                               size="sm"
                               variant="outline"
                               onClick={() => navigate(`/app/management/doctor/consultations/${session.id}?tab=summary`)}
-                              className="h-8 px-2.5 rounded-lg border-emerald-300 text-emerald-700 hover:bg-emerald-50 hover:border-emerald-400 font-bold text-xs flex items-center gap-1.5 shadow-2xs cursor-pointer"
+                              className="h-8 px-2.5 rounded-lg border-success-300 text-success-700 hover:bg-success-50 hover:border-success-400 font-bold text-xs flex items-center gap-1.5 shadow-2xs cursor-pointer"
                             >
-                              <FileText className="w-3.5 h-3.5 text-emerald-600" />
+                              <FileText className="w-3.5 h-3.5 text-success-600" />
                               <span>Xem tổng kết</span>
                             </Button>
                           ) : (
                             <Button
                               size="sm"
                               onClick={() => navigate(`/app/management/doctor/consultations/${session.id}?tab=summary`)}
-                              className="h-8 px-2.5 rounded-lg bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-xs flex items-center gap-1.5 shadow-xs cursor-pointer animate-pulse"
+                              className="h-8 px-2.5 rounded-lg bg-warning-500 hover:bg-warning-600 text-white font-extrabold text-xs flex items-center gap-1.5 shadow-xs cursor-pointer animate-pulse"
                             >
                               <FileText className="w-3.5 h-3.5" />
                               <span>{session.hasDraft ? "Tiếp tục tổng kết" : "Lập tổng kết"}</span>
@@ -519,7 +519,7 @@ export function DoctorSessionsTable({
                 value={size}
                 onChange={(e) => onSizeChange(Number(e.target.value))}
                 disabled={loading}
-                className="bg-white border border-slate-200 rounded-lg px-2 py-1 text-xs font-extrabold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+                className="bg-white border border-slate-200 rounded-lg px-2 py-1 text-xs font-extrabold text-slate-800 focus:outline-none focus:ring-2 focus:ring-primary-500 cursor-pointer"
               >
                 <option value={10}>10</option>
                 <option value={20}>20</option>

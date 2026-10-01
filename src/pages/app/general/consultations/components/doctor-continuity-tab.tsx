@@ -66,8 +66,8 @@ export function DoctorContinuityTab({ sessionId }: DoctorContinuityTabProps) {
   if (errorMsg) {
     return (
       <div className="py-8 text-center">
-        <AlertCircle className="mx-auto h-8 w-8 text-red-500 mb-2" />
-        <p className="text-red-700 font-medium text-sm">{errorMsg}</p>
+        <AlertCircle className="mx-auto h-8 w-8 text-danger-500 mb-2" />
+        <p className="text-danger-700 font-medium text-sm">{errorMsg}</p>
         <Button variant="outline" size="sm" className="mt-4" onClick={fetchContinuity}>
           Thử lại
         </Button>
@@ -124,7 +124,7 @@ export function DoctorContinuityTab({ sessionId }: DoctorContinuityTabProps) {
                   <div className="flex-1 min-w-0">
                     <CardTitle className="text-sm font-semibold flex items-center gap-2">
                       <span>Đợt chăm sóc #{item.sessionId}</span>
-                      <Badge variant="outline" className="text-[10px] bg-emerald-50 text-emerald-700 border-emerald-200">
+                      <Badge variant="outline" className="text-[10px] bg-success-50 text-success-700 border-success-200">
                         <CheckCircle2 className="w-3 h-3 mr-1" /> Đã hoàn tất
                       </Badge>
                     </CardTitle>
@@ -202,14 +202,14 @@ export function DoctorContinuityTab({ sessionId }: DoctorContinuityTabProps) {
 
                   {addendaList.length > 0 && (
                     <div className="mt-3 pt-3 border-t space-y-2">
-                      <span className="font-semibold text-foreground flex items-center gap-1.5 text-xs text-amber-700 dark:text-amber-400">
+                      <span className="font-semibold text-foreground flex items-center gap-1.5 text-xs text-warning-700">
                         <FileText className="w-3.5 h-3.5" />
                         Phụ lục & Đính chính sau hoàn tất ({addendaList.length}):
                       </span>
                       <div className="space-y-2">
                         {addendaList.map((addendum) => (
-                          <div key={addendum.id} className="p-2.5 rounded-lg bg-amber-50/50 dark:bg-amber-950/20 border border-amber-200/60 dark:border-amber-900/40 text-xs">
-                            <div className="flex items-center justify-between font-medium text-amber-900 dark:text-amber-300 mb-1">
+                          <div key={addendum.id} className="p-2.5 rounded-lg bg-warning-50/50 border border-warning-200/60 text-xs">
+                            <div className="flex items-center justify-between font-medium text-warning-900 mb-1">
                               <span>Lý do: {addendum.reason}</span>
                               <span className="text-[10px] text-muted-foreground">{formatDate(addendum.createdAt)}</span>
                             </div>

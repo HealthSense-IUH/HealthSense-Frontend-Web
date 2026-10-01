@@ -172,9 +172,9 @@ export function AdminRequestDetailDialog({
             )}
 
             {detail.status === "WAITING_ACCEPTANCE" && (
-              <div className="p-3.5 bg-amber-50 border border-amber-200 text-amber-900 dark:bg-amber-950/20 dark:text-amber-200 rounded-xl text-sm">
+              <div className="p-3.5 bg-warning-50 border border-warning-200 text-warning-900 rounded-xl text-sm">
                 <div className="font-semibold flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-amber-600" /> Đã phân công bác sĩ - Chờ hội viên xác nhận thỏa thuận
+                  <CheckCircle2 className="w-4 h-4 text-warning-600" /> Đã phân công bác sĩ - Chờ hội viên xác nhận thỏa thuận
                 </div>
                 <div className="mt-1 text-xs">
                   Thời gian giữ bác sĩ: {formatDate(detail.doctorReservedAt)}<br />
@@ -184,7 +184,7 @@ export function AdminRequestDetailDialog({
             )}
 
             {detail.status === "WAITING_PAYMENT" && (
-              <div className="p-3 bg-blue-50 border border-blue-200 text-blue-800 rounded-md text-sm">
+              <div className="p-3 bg-primary-50 border border-primary-200 text-primary-800 rounded-md text-sm">
                 <div className="font-semibold flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4" /> Hội viên đã xác nhận thỏa thuận - Đang chờ thanh toán
                 </div>
@@ -196,7 +196,7 @@ export function AdminRequestDetailDialog({
             )}
 
             {detail.status === "NEED_MORE_INFO" && detail.moreInfoReason && (
-              <div className="p-3 bg-orange-50 border border-orange-200 text-orange-800 rounded-md text-sm">
+              <div className="p-3 bg-warning-50 border border-warning-200 text-warning-800 rounded-md text-sm">
                 <div className="font-semibold flex items-center gap-2">
                   <AlertCircle className="w-4 h-4" /> Đang chờ hội viên bổ sung thông tin
                 </div>
@@ -205,7 +205,7 @@ export function AdminRequestDetailDialog({
             )}
 
             {detail.memberAdditionalNote && (
-              <div className="p-3 bg-green-50 border border-green-200 text-green-800 rounded-md text-sm">
+              <div className="p-3 bg-success-50 border border-success-200 text-success-800 rounded-md text-sm">
                 <div className="font-semibold">Hội viên đã bổ sung thông tin:</div>
                 <div className="mt-1">{detail.memberAdditionalNote}</div>
               </div>

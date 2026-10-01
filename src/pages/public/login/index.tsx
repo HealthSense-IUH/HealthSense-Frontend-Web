@@ -164,14 +164,14 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] text-slate-900 font-sans flex flex-col justify-between relative overflow-hidden selection:bg-sky-500/20">
+    <div className="min-h-screen bg-background text-slate-900 font-sans flex flex-col justify-between relative overflow-hidden selection:bg-primary-500/20">
       
       {/* Background Grid Pattern */}
       <div className="absolute inset-0 bg-[radial-gradient(#0284c7_1px,transparent_1px)] [background-size:28px_28px] opacity-[0.035] pointer-events-none" />
 
       {/* Dynamic Ambient Glows */}
-      <div className="absolute -top-32 -left-32 w-[550px] h-[550px] rounded-full bg-gradient-to-br from-sky-400/20 via-cyan-300/15 to-transparent blur-[140px] pointer-events-none" />
-      <div className="absolute -bottom-32 -right-32 w-[550px] h-[550px] rounded-full bg-gradient-to-tl from-red-500/15 via-rose-400/10 to-transparent blur-[140px] pointer-events-none" />
+      <div className="absolute -top-32 -left-32 w-[550px] h-[550px] rounded-full bg-gradient-to-br from-primary-400/20 via-primary-300/15 to-transparent blur-[140px] pointer-events-none" />
+      <div className="absolute -bottom-32 -right-32 w-[550px] h-[550px] rounded-full bg-gradient-to-tl from-danger-500/15 via-danger-400/10 to-transparent blur-[140px] pointer-events-none" />
 
       {/* Top Header Bar */}
       <header className="relative top-0 left-0 right-0 p-4 sm:p-6 z-20 flex items-center justify-between max-w-7xl mx-auto w-full">
@@ -200,7 +200,7 @@ export default function LoginPage() {
       <div className="relative z-10 w-full max-w-md mx-auto px-4 sm:px-6 py-6 my-auto flex flex-col items-center">
         
         {/* Auth Card */}
-        <div className="w-full bg-white rounded-3xl p-7 sm:p-9 shadow-[0_20px_60px_-15px_rgba(0,0,81,0.08)] border border-slate-200/80 relative transition-all duration-300">
+        <div className="w-full bg-white rounded-3xl p-7 sm:p-9 shadow-[0_20px_60px_-15px_rgba(15,23,42,0.08)] border border-slate-200/80 relative transition-all duration-300">
           
           {/* Mode Switcher Tabs */}
           <div className="flex bg-slate-100/90 p-1.5 rounded-2xl border border-slate-200/80 mb-6">
@@ -214,7 +214,7 @@ export default function LoginPage() {
                   : "text-slate-500 hover:text-slate-800"
               )}
             >
-              <LogIn className={cn("w-4 h-4", mode === "login" ? "text-sky-600" : "text-slate-400")} />
+              <LogIn className={cn("w-4 h-4", mode === "login" ? "text-primary-600" : "text-slate-400")} />
               <span>Đăng nhập</span>
             </button>
             
@@ -228,7 +228,7 @@ export default function LoginPage() {
                   : "text-slate-500 hover:text-slate-800"
               )}
             >
-              <UserPlus className={cn("w-4 h-4", mode === "register" ? "text-sky-600" : "text-slate-400")} />
+              <UserPlus className={cn("w-4 h-4", mode === "register" ? "text-primary-600" : "text-slate-400")} />
               <span>Đăng ký</span>
             </button>
           </div>
@@ -247,15 +247,15 @@ export default function LoginPage() {
 
           {/* Alert Messages */}
           {errorMessage && (
-            <div className="mb-4 p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-bold flex items-center gap-2.5 shadow-2xs animate-in fade-in zoom-in-95 duration-200">
-              <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
+            <div className="mb-4 p-3 rounded-xl bg-danger-50 border border-danger-200 text-danger-700 text-xs font-bold flex items-center gap-2.5 shadow-2xs animate-in fade-in zoom-in-95 duration-200">
+              <AlertCircle className="w-4 h-4 text-danger-600 shrink-0" />
               <span className="leading-normal flex-1">{errorMessage}</span>
             </div>
           )}
 
           {successMessage && (
-            <div className="mb-4 p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold flex items-center gap-2.5 shadow-2xs animate-in fade-in zoom-in-95 duration-200">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+            <div className="mb-4 p-3 rounded-xl bg-success-50 border border-success-200 text-success-700 text-xs font-bold flex items-center gap-2.5 shadow-2xs animate-in fade-in zoom-in-95 duration-200">
+              <CheckCircle2 className="w-4 h-4 text-success-600 shrink-0" />
               <span className="leading-normal flex-1">{successMessage}</span>
             </div>
           )}
@@ -277,7 +277,7 @@ export default function LoginPage() {
                     onChange={(event) => setLoginEmail(event.target.value)}
                     required
                     placeholder="user@example.com hoặc bacsi@healthsense.vn"
-                    className="w-full pl-10 rounded-xl h-11 bg-slate-50/70 border border-slate-200 text-slate-900 placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:border-transparent transition-all text-xs sm:text-sm font-medium shadow-2xs hover:border-slate-300"
+                    className="w-full pl-10 rounded-xl h-11 bg-slate-50/70 border border-slate-200 text-slate-900 placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:border-transparent transition-all text-xs sm:text-sm font-medium shadow-2xs hover:border-slate-300"
                   />
                 </div>
               </div>
@@ -289,7 +289,7 @@ export default function LoginPage() {
                   </Label>
                   <Link
                     to="/forgot-password"
-                    className="text-xs font-bold text-sky-600 hover:text-sky-700 hover:underline transition-all cursor-pointer font-sans"
+                    className="text-xs font-bold text-primary-600 hover:text-primary-700 hover:underline transition-all cursor-pointer font-sans"
                   >
                     Quên mật khẩu?
                   </Link>
@@ -304,7 +304,7 @@ export default function LoginPage() {
                     onChange={(event) => setLoginPassword(event.target.value)}
                     required
                     placeholder="••••••••"
-                    className="w-full pl-10 pr-10 rounded-xl h-11 bg-slate-50/70 border border-slate-200 text-slate-900 placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:border-transparent transition-all text-xs sm:text-sm font-medium shadow-2xs hover:border-slate-300"
+                    className="w-full pl-10 pr-10 rounded-xl h-11 bg-slate-50/70 border border-slate-200 text-slate-900 placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:border-transparent transition-all text-xs sm:text-sm font-medium shadow-2xs hover:border-slate-300"
                   />
                   <button
                     type="button"
@@ -321,7 +321,7 @@ export default function LoginPage() {
               <Button 
                 type="submit" 
                 disabled={isSubmitting}
-                className="w-full rounded-xl h-11 mt-2 text-sm font-bold bg-gradient-to-r from-sky-600 via-sky-500 to-cyan-500 hover:from-sky-700 hover:to-cyan-600 text-white shadow-md shadow-sky-600/25 hover:shadow-lg hover:shadow-sky-600/35 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer font-heading"
+                className="w-full rounded-xl h-11 mt-2 text-sm font-bold bg-gradient-to-r from-primary-600 via-primary-500 to-primary-500 hover:from-primary-700 hover:to-primary-600 text-white shadow-md shadow-primary-600/25 hover:shadow-lg hover:shadow-primary-600/35 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer font-heading"
               >
                 {isSubmitting ? (
                   <div className="flex items-center justify-center gap-2">
@@ -355,7 +355,7 @@ export default function LoginPage() {
                     onChange={(event) => setRegisterFullName(event.target.value)}
                     required
                     placeholder="Nguyễn Văn A"
-                    className="w-full pl-10 rounded-xl h-11 bg-slate-50/70 border border-slate-200 text-slate-900 placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:border-transparent transition-all text-xs sm:text-sm font-medium shadow-2xs hover:border-slate-300"
+                    className="w-full pl-10 rounded-xl h-11 bg-slate-50/70 border border-slate-200 text-slate-900 placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:border-transparent transition-all text-xs sm:text-sm font-medium shadow-2xs hover:border-slate-300"
                   />
                 </div>
               </div>
@@ -374,7 +374,7 @@ export default function LoginPage() {
                     onChange={(event) => setRegisterEmail(event.target.value)}
                     required
                     placeholder="user@example.com"
-                    className="w-full pl-10 rounded-xl h-11 bg-slate-50/70 border border-slate-200 text-slate-900 placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:border-transparent transition-all text-xs sm:text-sm font-medium shadow-2xs hover:border-slate-300"
+                    className="w-full pl-10 rounded-xl h-11 bg-slate-50/70 border border-slate-200 text-slate-900 placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:border-transparent transition-all text-xs sm:text-sm font-medium shadow-2xs hover:border-slate-300"
                   />
                 </div>
               </div>
@@ -394,7 +394,7 @@ export default function LoginPage() {
                     required
                     placeholder="Tối thiểu 8 ký tự"
                     minLength={8}
-                    className="w-full pl-10 pr-10 rounded-xl h-11 bg-slate-50/70 border border-slate-200 text-slate-900 placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:border-transparent transition-all text-xs sm:text-sm font-medium shadow-2xs hover:border-slate-300"
+                    className="w-full pl-10 pr-10 rounded-xl h-11 bg-slate-50/70 border border-slate-200 text-slate-900 placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:border-transparent transition-all text-xs sm:text-sm font-medium shadow-2xs hover:border-slate-300"
                   />
                   <button
                     type="button"
@@ -423,7 +423,7 @@ export default function LoginPage() {
                     required
                     placeholder="Nhập lại mật khẩu"
                     minLength={8}
-                    className="w-full pl-10 pr-10 rounded-xl h-11 bg-slate-50/70 border border-slate-200 text-slate-900 placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:border-transparent transition-all text-xs sm:text-sm font-medium shadow-2xs hover:border-slate-300"
+                    className="w-full pl-10 pr-10 rounded-xl h-11 bg-slate-50/70 border border-slate-200 text-slate-900 placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:border-transparent transition-all text-xs sm:text-sm font-medium shadow-2xs hover:border-slate-300"
                   />
                   <button
                     type="button"
@@ -440,7 +440,7 @@ export default function LoginPage() {
               <Button 
                 type="submit" 
                 disabled={isSubmitting}
-                className="w-full rounded-xl h-11 mt-2 text-sm font-bold bg-gradient-to-r from-sky-600 via-sky-500 to-cyan-500 hover:from-sky-700 hover:to-cyan-600 text-white shadow-md shadow-sky-600/25 hover:shadow-lg hover:shadow-sky-600/35 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer font-heading"
+                className="w-full rounded-xl h-11 mt-2 text-sm font-bold bg-gradient-to-r from-primary-600 via-primary-500 to-primary-500 hover:from-primary-700 hover:to-primary-600 text-white shadow-md shadow-primary-600/25 hover:shadow-lg hover:shadow-primary-600/35 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer font-heading"
               >
                 {isSubmitting ? (
                   <div className="flex items-center justify-center gap-2">
@@ -457,7 +457,7 @@ export default function LoginPage() {
 
               <p className="text-[11px] text-slate-400 text-center leading-relaxed mt-1">
                 Bằng việc tiếp tục, bạn đồng ý với{" "}
-                <Link to="/terms" target="_blank" className="text-sky-600 font-bold hover:underline">
+                <Link to="/terms" target="_blank" className="text-primary-600 font-bold hover:underline">
                   Điều khoản sử dụng &amp; Miễn trừ y tế
                 </Link>{" "}
                 của HealthSense.
@@ -473,7 +473,7 @@ export default function LoginPage() {
                 <button
                   type="button"
                   onClick={() => handleSwitchMode("register")}
-                  className="font-bold text-sky-600 hover:text-sky-700 hover:underline cursor-pointer transition-colors"
+                  className="font-bold text-primary-600 hover:text-primary-700 hover:underline cursor-pointer transition-colors"
                 >
                   Đăng ký ngay
                 </button>
@@ -484,7 +484,7 @@ export default function LoginPage() {
                 <button
                   type="button"
                   onClick={() => handleSwitchMode("login")}
-                  className="font-bold text-sky-600 hover:text-sky-700 hover:underline cursor-pointer transition-colors"
+                  className="font-bold text-primary-600 hover:text-primary-700 hover:underline cursor-pointer transition-colors"
                 >
                   Đăng nhập ngay
                 </button>

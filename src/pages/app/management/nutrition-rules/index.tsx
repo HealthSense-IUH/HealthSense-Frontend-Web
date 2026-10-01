@@ -115,7 +115,7 @@ export default function AdminNutritionRulesPage() {
     setDraft((prev) => ({ ...prev, [code]: { ...prev[code], [field]: value } }))
 
   return (
-    <Page width="narrow">
+    <Page>
       <PageHeader
         icon={<SlidersHorizontal className="w-5 h-5" />}
         title="Ngưỡng đánh giá dinh dưỡng"
@@ -138,16 +138,16 @@ export default function AdminNutritionRulesPage() {
         {loading ? (
           <Skeleton className="h-80 rounded-2xl" />
         ) : errorMsg ? (
-          <div className="rounded-2xl border border-dashed border-slate-200 dark:border-border p-8 text-center text-sm text-muted-foreground">
+          <div className="rounded-2xl border border-dashed border-slate-200 p-6 text-center text-sm text-muted-foreground">
             {errorMsg}
           </div>
         ) : (
-          <div className="rounded-2xl border border-slate-200/80 bg-white shadow-xs dark:border-border dark:bg-card divide-y divide-slate-100 dark:divide-border">
+          <div className="rounded-2xl border border-slate-200/80 bg-white shadow-xs divide-y divide-slate-100">
             {rules.map((rule) => (
               <div key={rule.code} className="p-5 space-y-3">
                 <div className="flex flex-wrap items-start justify-between gap-2">
                   <div>
-                    <h2 className="text-base font-bold text-slate-900 dark:text-foreground">{rule.name}</h2>
+                    <h2 className="text-base font-bold text-slate-900">{rule.name}</h2>
                     <p className="text-xs text-muted-foreground">{RULE_HINT[rule.code]}</p>
                   </div>
                   <Button
@@ -163,8 +163,8 @@ export default function AdminNutritionRulesPage() {
                 <div className="grid gap-3 sm:grid-cols-2">
                   {(["limit", "caution"] as const).map((field) => (
                     <label key={field} className="space-y-1">
-                      <span className="flex items-center gap-1.5 text-xs font-semibold text-slate-700 dark:text-slate-300">
-                        <span className={field === "limit" ? "w-2 h-2 rounded-full bg-rose-500" : "w-2 h-2 rounded-full bg-amber-500"} />
+                      <span className="flex items-center gap-1.5 text-xs font-semibold text-slate-700">
+                        <span className={field === "limit" ? "w-2 h-2 rounded-full bg-danger-500" : "w-2 h-2 rounded-full bg-warning-500"} />
                         {field === "limit" ? "Đỏ (Nên hạn chế) từ" : "Vàng (Cần lưu ý) từ"}
                       </span>
                       <div className="flex items-center gap-2">
@@ -181,7 +181,7 @@ export default function AdminNutritionRulesPage() {
                     </label>
                   ))}
                 </div>
-                {errors[rule.code] && <p className="text-xs font-medium text-rose-600">{errors[rule.code]}</p>}
+                {errors[rule.code] && <p className="text-xs font-medium text-danger-600">{errors[rule.code]}</p>}
                 {rule.updatedAt && (
                   <p className="text-[11px] text-muted-foreground">
                     Cập nhật {new Date(rule.updatedAt).toLocaleString("vi-VN")}

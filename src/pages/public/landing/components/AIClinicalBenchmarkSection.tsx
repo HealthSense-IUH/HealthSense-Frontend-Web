@@ -29,8 +29,8 @@ export function AIClinicalBenchmarkSection() {
     <section className="w-full py-20 sm:py-28 relative overflow-hidden bg-gradient-to-b from-slate-50/50 via-white to-slate-50/70 border-t border-slate-200/80">
       
       {/* Ambient soft glow */}
-      <div className="absolute top-1/4 right-0 w-96 h-96 bg-sky-400/10 rounded-full blur-[100px] pointer-events-none" />
-      <div className="absolute bottom-1/4 left-0 w-96 h-96 bg-emerald-400/10 rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute top-1/4 right-0 w-96 h-96 bg-primary-400/10 rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute bottom-1/4 left-0 w-96 h-96 bg-success-400/10 rounded-full blur-[100px] pointer-events-none" />
 
       <div className="max-w-6xl mx-auto px-6 sm:px-8 lg:px-12 relative z-10">
         
@@ -40,9 +40,9 @@ export function AIClinicalBenchmarkSection() {
             initial={{ opacity: 0, y: 12 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold font-heading uppercase tracking-wider mb-3"
+            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-success-50 border border-success-200 text-success-700 text-xs font-bold font-heading uppercase tracking-wider mb-3"
           >
-            <ShieldCheck className="w-4 h-4 text-emerald-600" />
+            <ShieldCheck className="w-4 h-4 text-success-600" />
             <span>DỮ LIỆU &amp; KIỂM CHỨNG KHOA HỌC DỄ HIỂU</span>
           </motion.div>
 
@@ -53,7 +53,7 @@ export function AIClinicalBenchmarkSection() {
             className="text-3xl sm:text-4xl lg:text-5xl font-black font-heading tracking-tight text-slate-900 leading-tight uppercase mb-4"
           >
             Hiệu Suất Thực Nghiệm &amp; <br />
-            <span className="bg-gradient-to-r from-emerald-600 via-sky-600 to-blue-700 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-success-600 via-primary-600 to-primary-700 bg-clip-text text-transparent">
               Độ Tin Cậy Y Khoa Chuẩn Xác
             </span>
           </motion.h2>
@@ -77,9 +77,9 @@ export function AIClinicalBenchmarkSection() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="p-6 sm:p-7 rounded-3xl bg-white border border-slate-200/90 shadow-sm relative overflow-hidden group hover:border-sky-300 transition-all"
+            className="p-6 sm:p-7 rounded-3xl bg-white border border-slate-200/90 shadow-sm relative overflow-hidden group hover:border-primary-300 transition-all"
           >
-            <div className="w-11 h-11 rounded-2xl bg-sky-50 text-sky-600 flex items-center justify-center mb-4">
+            <div className="w-11 h-11 rounded-2xl bg-primary-50 text-primary-600 flex items-center justify-center mb-4">
               <Target className="w-6 h-6" />
             </div>
             <span className="text-3xl sm:text-4xl font-black font-heading text-slate-900 block mb-1">
@@ -99,12 +99,12 @@ export function AIClinicalBenchmarkSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="p-6 sm:p-7 rounded-3xl bg-white border border-slate-200/90 shadow-sm relative overflow-hidden group hover:border-emerald-300 transition-all"
+            className="p-6 sm:p-7 rounded-3xl bg-white border border-slate-200/90 shadow-sm relative overflow-hidden group hover:border-success-300 transition-all"
           >
-            <div className="w-11 h-11 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-4">
+            <div className="w-11 h-11 rounded-2xl bg-success-50 text-success-600 flex items-center justify-center mb-4">
               <ShieldCheck className="w-6 h-6" />
             </div>
-            <span className="text-3xl sm:text-4xl font-black font-heading text-emerald-600 block mb-1">
+            <span className="text-3xl sm:text-4xl font-black font-heading text-success-600 block mb-1">
               99.78%
             </span>
             <h3 className="text-sm font-bold font-heading text-slate-800 uppercase tracking-tight mb-2">
@@ -121,12 +121,12 @@ export function AIClinicalBenchmarkSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="p-6 sm:p-7 rounded-3xl bg-white border border-slate-200/90 shadow-sm relative overflow-hidden group hover:border-violet-300 transition-all"
+            className="p-6 sm:p-7 rounded-3xl bg-white border border-slate-200/90 shadow-sm relative overflow-hidden group hover:border-primary-300 transition-all"
           >
-            <div className="w-11 h-11 rounded-2xl bg-violet-50 text-violet-600 flex items-center justify-center mb-4">
+            <div className="w-11 h-11 rounded-2xl bg-primary-50 text-primary-600 flex items-center justify-center mb-4">
               <Zap className="w-6 h-6" />
             </div>
-            <span className="text-3xl sm:text-4xl font-black font-heading text-violet-600 block mb-1">
+            <span className="text-3xl sm:text-4xl font-black font-heading text-primary-600 block mb-1">
               &lt; 100ms
             </span>
             <h3 className="text-sm font-bold font-heading text-slate-800 uppercase tracking-tight mb-2">
@@ -154,7 +154,7 @@ export function AIClinicalBenchmarkSection() {
 
               <div className="space-y-4">
                 <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 flex items-start gap-3.5">
-                  <div className="w-8 h-8 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center font-heading font-black text-xs shrink-0">
+                  <div className="w-8 h-8 rounded-xl bg-primary-100 text-primary-700 flex items-center justify-center font-heading font-black text-xs shrink-0">
                     28%
                   </div>
                   <div>
@@ -164,7 +164,7 @@ export function AIClinicalBenchmarkSection() {
                 </div>
 
                 <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 flex items-start gap-3.5">
-                  <div className="w-8 h-8 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center font-heading font-black text-xs shrink-0">
+                  <div className="w-8 h-8 rounded-xl bg-primary-100 text-primary-700 flex items-center justify-center font-heading font-black text-xs shrink-0">
                     22%
                   </div>
                   <div>
@@ -174,7 +174,7 @@ export function AIClinicalBenchmarkSection() {
                 </div>
 
                 <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 flex items-start gap-3.5">
-                  <div className="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-heading font-black text-xs shrink-0">
+                  <div className="w-8 h-8 rounded-xl bg-success-100 text-success-700 flex items-center justify-center font-heading font-black text-xs shrink-0">
                     15%
                   </div>
                   <div>
@@ -186,7 +186,7 @@ export function AIClinicalBenchmarkSection() {
             </div>
 
             <div className="mt-6 pt-4 border-t border-slate-100 flex items-center gap-2 text-[11px] text-slate-500 font-sans">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+              <CheckCircle2 className="w-4 h-4 text-success-600 shrink-0" />
               <span>Khớp 100% với các triệu chứng lâm sàng được giảng dạy tại các trường y khoa.</span>
             </div>
           </div>
@@ -204,10 +204,10 @@ export function AIClinicalBenchmarkSection() {
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={easyXaiData} layout="vertical" margin={{ top: 0, right: 35, left: 10, bottom: 0 }}>
                   <XAxis type="number" hide domain={[0, 32]} />
-                  <YAxis dataKey="name" type="category" axisLine={false} tickLine={false} tick={{ fill: '#475569', fontSize: 11, fontWeight: 600 }} width={160} />
-                  <Tooltip cursor={{ fill: 'rgba(59, 130, 246, 0.05)' }} contentStyle={{ borderRadius: '8px', border: '1px solid #e2e8f0', fontSize: '11px' }} />
-                  <Bar dataKey="value" fill="#3b82f6" radius={[0, 4, 4, 0]} barSize={16}>
-                    <LabelList dataKey="value" position="right" formatter={(val: React.ReactNode) => `${String(val)}%`} style={{ fill: '#64748b', fontSize: 11, fontWeight: 600 }} />
+                  <YAxis dataKey="name" type="category" axisLine={false} tickLine={false} tick={{ fill: 'var(--color-slate-600)', fontSize: 11, fontWeight: 600 }} width={160} />
+                  <Tooltip cursor={{ fill: 'var(--color-primary-50)' }} contentStyle={{ borderRadius: '8px', border: '1px solid var(--color-slate-200)', fontSize: '11px' }} />
+                  <Bar dataKey="value" fill="var(--color-primary-500)" radius={[0, 4, 4, 0]} barSize={16}>
+                    <LabelList dataKey="value" position="right" formatter={(val: React.ReactNode) => `${String(val)}%`} style={{ fill: 'var(--color-slate-500)', fontSize: 11, fontWeight: 600 }} />
                   </Bar>
                 </BarChart>
               </ResponsiveContainer>

@@ -103,10 +103,10 @@ export const userGrowthData: UserGrowthItem[] = [
 ]
 
 export const userDistributionData: UserDistributionItem[] = [
-  { name: "Members", value: 11892, percentage: "88%", color: "#2563eb" }, // Blue-600
-  { name: "Doctors", value: 426, percentage: "8%", color: "#0d9488" },    // Teal-600
-  { name: "Admins", value: 130, percentage: "3%", color: "#6366f1" },     // Indigo-500
-  { name: "Super Admin", value: 32, percentage: "1%", color: "#475569" }, // Slate-600
+  { name: "Members", value: 11892, percentage: "88%", color: "var(--color-primary-600)" },
+  { name: "Doctors", value: 426, percentage: "8%", color: "var(--color-success-600)" },
+  { name: "Admins", value: 130, percentage: "3%", color: "var(--color-warning-500)" },
+  { name: "Super Admin", value: 32, percentage: "1%", color: "var(--color-slate-600)" },
 ]
 
 export const healthAlertsOverview = {

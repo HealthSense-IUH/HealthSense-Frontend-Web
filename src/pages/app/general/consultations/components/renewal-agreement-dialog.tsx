@@ -122,7 +122,7 @@ export function RenewalAgreementDialog({
               </div>
             </div>
             {agreement?.status && (
-              <Badge variant="outline" className="bg-amber-50 text-amber-800 border-amber-300 font-medium">
+              <Badge variant="outline" className="bg-warning-50 text-warning-800 border-warning-300 font-medium">
                 {agreement.status === "PENDING_ACCEPTANCE" ? "Chờ bạn xác nhận" : agreement.status}
               </Badge>
             )}
@@ -139,8 +139,8 @@ export function RenewalAgreementDialog({
             <div className="space-y-6">
               {/* Validity notice banner */}
               {agreement.validUntil && (
-                <div className="flex items-start gap-2.5 p-3.5 bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/40 rounded-xl text-xs text-amber-900 dark:text-amber-200">
-                  <Clock className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+                <div className="flex items-start gap-2.5 p-3.5 bg-warning-50 border border-warning-200 rounded-xl text-xs text-warning-900">
+                  <Clock className="w-4 h-4 text-warning-600 shrink-0 mt-0.5" />
                   <div>
                     <strong>Thời hạn chấp nhận & thanh toán:</strong> Thỏa thuận gia hạn này có hiệu lực đến{" "}
                     <span className="font-semibold">{formatDate(agreement.validUntil)}</span>. Sau thời gian này nếu chưa hoàn tất thanh toán, yêu cầu gia hạn sẽ tự động hết hạn và thời hạn phiên chăm sóc không thay đổi.
@@ -247,7 +247,7 @@ export function RenewalAgreementDialog({
                   </div>
                 )}
 
-                <div className="pt-2 border-t text-neutral-500 leading-relaxed">
+                <div className="pt-2 border-t text-slate-500 leading-relaxed">
                   * Lưu ý: Việc gia hạn sẽ nối dài thời hạn hiệu lực của phiên tư vấn hiện tại và giữ nguyên toàn bộ lịch sử tư vấn. Sau khi thanh toán thành công, thời hạn mới sẽ được cập nhật tự động.
                 </div>
               </div>

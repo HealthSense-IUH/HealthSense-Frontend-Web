@@ -40,13 +40,13 @@ export function PackagesGrid({
 
   if (isFeatureDisabled) {
     return (
-      <Card className="border-amber-200 bg-amber-50/50 dark:border-amber-900/50 dark:bg-amber-950/20 p-8 text-center">
+      <Card className="border-warning-200 bg-warning-50/50 p-6 text-center">
         <div className="max-w-md mx-auto space-y-3">
-          <AlertCircle className="h-10 w-10 text-amber-600 dark:text-amber-400 mx-auto" />
-          <h3 className="text-base font-semibold text-amber-800 dark:text-amber-300">
+          <AlertCircle className="h-10 w-10 text-warning-600 mx-auto" />
+          <h3 className="text-base font-semibold text-warning-800">
             Chức năng mua lượt tạm chưa khả dụng
           </h3>
-          <p className="text-xs text-amber-700 dark:text-amber-400 leading-relaxed">
+          <p className="text-xs text-warning-700 leading-relaxed">
             Hệ thống mua lượt tư vấn hiện đang tạm tắt trong môi trường này. Quý hội viên vui lòng quay lại sau.
           </p>
           <Button variant="outline" size="sm" onClick={onRetry} className="gap-1.5 mt-2">
@@ -59,13 +59,13 @@ export function PackagesGrid({
 
   if (error) {
     return (
-      <Card className="border-red-200 bg-red-50/50 dark:border-red-900/50 dark:bg-red-950/20 p-8 text-center">
+      <Card className="border-danger-200 bg-danger-50/50 p-6 text-center">
         <div className="max-w-md mx-auto space-y-3">
-          <AlertCircle className="h-10 w-10 text-red-600 dark:text-red-400 mx-auto" />
-          <h3 className="text-base font-semibold text-red-800 dark:text-red-300">
+          <AlertCircle className="h-10 w-10 text-danger-600 mx-auto" />
+          <h3 className="text-base font-semibold text-danger-800">
             Không thể tải danh sách gói lượt
           </h3>
-          <p className="text-xs text-red-600 dark:text-red-400">{error}</p>
+          <p className="text-xs text-danger-600">{error}</p>
           <Button variant="outline" size="sm" onClick={onRetry} className="gap-1.5 mt-2">
             <RefreshCw className="h-3.5 w-3.5" /> Thử lại
           </Button>
@@ -128,7 +128,7 @@ export function PackagesGrid({
             <div className="pt-2 border-t border-border/60 space-y-2">
               <div className="flex items-baseline justify-between">
                 <span className="text-xs text-muted-foreground">Số lượt nhận:</span>
-                <span className="text-base font-extrabold text-emerald-700 dark:text-emerald-400">
+                <span className="text-base font-extrabold text-success-700">
                   {formatCreditQuantity(pkg.creditQuantity)}
                 </span>
               </div>

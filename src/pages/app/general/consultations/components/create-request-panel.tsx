@@ -112,9 +112,9 @@ export function CreateRequestPanel({
         <CardContent className="p-6">
           <form className="flex flex-col gap-6" onSubmit={handleOpenConfirm}>
             {hasActiveQueue && (
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-amber-500/10 border border-amber-500/30 rounded-2xl gap-3 text-amber-950 dark:text-amber-200">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-warning-500/10 border border-warning-500/30 rounded-2xl gap-3 text-warning-950">
                 <div className="flex items-start sm:items-center gap-2.5">
-                  <Clock className="w-5 h-5 text-amber-600 shrink-0 mt-0.5 sm:mt-0" />
+                  <Clock className="w-5 h-5 text-warning-600 shrink-0 mt-0.5 sm:mt-0" />
                   <div>
                     <p className="font-semibold text-sm text-foreground">Bạn đang có yêu cầu tư vấn trong hàng đợi</p>
                     <p className="text-xs text-muted-foreground mt-0.5">
@@ -135,9 +135,9 @@ export function CreateRequestPanel({
             )}
 
             {hasInsufficientCredits && (
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-amber-500/10 border border-amber-500/30 rounded-2xl gap-3 text-amber-950 dark:text-amber-200">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-warning-500/10 border border-warning-500/30 rounded-2xl gap-3 text-warning-950">
                 <div className="flex items-start sm:items-center gap-2.5">
-                  <AlertCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5 sm:mt-0" />
+                  <AlertCircle className="w-5 h-5 text-warning-600 shrink-0 mt-0.5 sm:mt-0" />
                   <div>
                     <p className="font-semibold text-sm text-foreground">Bạn không đủ lượt tư vấn để vào hàng đợi</p>
                     <p className="text-xs text-muted-foreground mt-0.5">
@@ -167,9 +167,9 @@ export function CreateRequestPanel({
               </div>
 
               {hasNoRecords ? (
-                <div className="p-4 bg-rose-500/10 border border-rose-500/30 rounded-xl space-y-3">
+                <div className="p-4 bg-danger-500/10 border border-danger-500/30 rounded-xl space-y-3">
                   <div className="flex items-start gap-2.5">
-                    <AlertCircle className="w-5 h-5 text-rose-600 shrink-0 mt-0.5" />
+                    <AlertCircle className="w-5 h-5 text-danger-600 shrink-0 mt-0.5" />
                     <div>
                       <p className="font-semibold text-sm text-foreground">Chưa có dữ liệu đo điện tim (ECG)</p>
                       <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
@@ -181,7 +181,7 @@ export function CreateRequestPanel({
                     type="button"
                     variant="outline"
                     size="sm"
-                    className="w-full sm:w-auto h-9 text-xs font-medium border-rose-300 hover:bg-rose-100 dark:hover:bg-rose-950/40 gap-1.5 cursor-pointer"
+                    className="w-full sm:w-auto h-9 text-xs font-medium border-danger-300 hover:bg-danger-100 gap-1.5 cursor-pointer"
                     onClick={() => navigate("/app/general/dashboard")}
                   >
                     <span>Đi đến bảng điều khiển & kết nối thiết bị</span>
@@ -204,7 +204,7 @@ export function CreateRequestPanel({
                         </Badge>
                       )}
                     </div>
-                    <Badge className="bg-emerald-600/15 text-emerald-700 dark:text-emerald-400 border-0 text-[11px] font-semibold flex items-center gap-1 shrink-0">
+                    <Badge className="bg-success-600/15 text-success-700 border-0 text-[11px] font-semibold flex items-center gap-1 shrink-0">
                       <CheckCircle2 className="w-3 h-3" />
                       Tự động đính kèm mới nhất
                     </Badge>
@@ -222,7 +222,7 @@ export function CreateRequestPanel({
               <div className="grid grid-cols-1 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="reasonForCare" className="text-sm font-semibold">
-                    Lý do đăng ký chăm sóc / tư vấn <span className="text-red-500">*</span>
+                    Lý do đăng ký chăm sóc / tư vấn <span className="text-danger-500">*</span>
                   </Label>
                   <Input
                     id="reasonForCare"
@@ -237,7 +237,7 @@ export function CreateRequestPanel({
 
                 <div className="space-y-2">
                   <Label htmlFor="currentConcern" className="text-sm font-semibold">
-                    Triệu chứng & Vấn đề lo ngại hiện tại <span className="text-red-500">*</span>
+                    Triệu chứng & Vấn đề lo ngại hiện tại <span className="text-danger-500">*</span>
                   </Label>
                   <Textarea
                     id="currentConcern"
@@ -307,14 +307,14 @@ export function CreateRequestPanel({
               )}
               <div className="flex items-center justify-between pt-1 border-t border-border/50">
                 <span className="text-muted-foreground">Lượt tư vấn khả dụng:</span>
-                <span className="font-bold text-emerald-600 dark:text-emerald-400">
+                <span className="font-bold text-success-600">
                   {availableCredits !== undefined ? `${availableCredits} lượt` : "1 lượt"}
                 </span>
               </div>
             </div>
 
-            <div className="flex items-start gap-2.5 p-3.5 bg-blue-500/10 border border-blue-500/20 rounded-xl text-xs text-blue-950 dark:text-blue-200">
-              <AlertCircle className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
+            <div className="flex items-start gap-2.5 p-3.5 bg-primary-500/10 border border-primary-500/20 rounded-xl text-xs text-primary-950">
+              <AlertCircle className="w-4 h-4 text-primary-600 shrink-0 mt-0.5" />
               <div className="leading-relaxed">
                 Để tham gia hàng đợi, bạn cần có tối thiểu <strong>1 lượt tư vấn</strong>.
                 <br />

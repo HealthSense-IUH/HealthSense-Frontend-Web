@@ -144,13 +144,13 @@ export function OrdersHistoryTable({
 
   if (error && !ordersData) {
     return (
-      <Card className="border-red-200 bg-red-50/50 dark:border-red-900/50 dark:bg-red-950/20 p-8 text-center">
+      <Card className="border-danger-200 bg-danger-50/50 p-6 text-center">
         <div className="max-w-md mx-auto space-y-3">
-          <AlertCircle className="h-8 w-8 text-red-600 dark:text-red-400 mx-auto" />
-          <h3 className="text-sm font-semibold text-red-800 dark:text-red-300">
+          <AlertCircle className="h-8 w-8 text-danger-600 mx-auto" />
+          <h3 className="text-sm font-semibold text-danger-800">
             Không thể tải lịch sử đơn mua
           </h3>
-          <p className="text-xs text-red-600 dark:text-red-400">{error}</p>
+          <p className="text-xs text-danger-600">{error}</p>
           <Button variant="outline" size="sm" onClick={onRetry} className="gap-1.5 mt-2">
             <RefreshCw className="h-3.5 w-3.5" /> Thử lại
           </Button>
@@ -214,7 +214,7 @@ export function OrdersHistoryTable({
                       )}
                     </div>
                   </TableCell>
-                  <TableCell className="text-xs font-bold text-emerald-600 dark:text-emerald-400">
+                  <TableCell className="text-xs font-bold text-success-600">
                     +{formatCreditQuantity(order.creditQuantity)}
                   </TableCell>
                   <TableCell className="text-xs font-semibold text-foreground">

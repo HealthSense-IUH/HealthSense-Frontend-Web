@@ -31,8 +31,8 @@ function SqiBadge({ features }: { features: HRVFeatures }) {
     <span
       className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold border shadow-xs ${
         ok
-          ? "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800"
-          : "bg-red-50 text-red-700 border-red-200 dark:bg-red-950/40 dark:text-red-300 dark:border-red-800"
+          ? "bg-success-50 text-success-700 border-success-200"
+          : "bg-danger-50 text-danger-700 border-danger-200"
       }`}
     >
       {ok ? <ShieldCheck className="w-3.5 h-3.5" /> : <ShieldAlert className="w-3.5 h-3.5" />}
@@ -137,10 +137,10 @@ export function MeasurementVisuals({ features }: { features: HRVFeatures }) {
     <div className="space-y-3">
       {/* Sóng mạch PPG */}
       {hasWave && (
-        <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border border-border">
+        <div className="p-3.5 rounded-2xl bg-slate-50 border border-border">
           <div className="flex items-center justify-between flex-wrap gap-2 mb-1.5">
             <span className="text-xs font-semibold text-foreground uppercase tracking-wider flex items-center gap-1.5">
-              <Activity className="w-3.5 h-3.5 text-sky-500" />
+              <Activity className="w-3.5 h-3.5 text-primary-500" />
               Sóng mạch (PPG) trong phiên đo
             </span>
             <SqiBadge features={features} />
@@ -150,8 +150,8 @@ export function MeasurementVisuals({ features }: { features: HRVFeatures }) {
               <AreaChart data={waveData} margin={{ top: 4, right: 4, bottom: 0, left: 4 }}>
                 <defs>
                   <linearGradient id="ppgWaveFill" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#0ea5e9" stopOpacity={0.35} />
-                    <stop offset="100%" stopColor="#0ea5e9" stopOpacity={0.02} />
+                    <stop offset="0%" stopColor="var(--color-primary-500)" stopOpacity={0.35} />
+                    <stop offset="100%" stopColor="var(--color-primary-500)" stopOpacity={0.02} />
                   </linearGradient>
                 </defs>
                 <XAxis dataKey="i" hide />
@@ -159,7 +159,7 @@ export function MeasurementVisuals({ features }: { features: HRVFeatures }) {
                 <Area
                   type="monotone"
                   dataKey="v"
-                  stroke="#0ea5e9"
+                  stroke="var(--color-primary-500)"
                   strokeWidth={1.6}
                   fill="url(#ppgWaveFill)"
                   isAnimationActive={false}
@@ -181,9 +181,9 @@ export function MeasurementVisuals({ features }: { features: HRVFeatures }) {
           {extraTiles.map((tile) => {
             const Icon = tile.icon
             return (
-              <div key={tile.key} className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border border-border">
+              <div key={tile.key} className="p-3.5 rounded-2xl bg-slate-50 border border-border">
                 <span className="text-xs text-muted-foreground font-medium flex items-center gap-1.5">
-                  <Icon className="w-3.5 h-3.5 text-sky-500" />
+                  <Icon className="w-3.5 h-3.5 text-primary-500" />
                   {tile.label}
                 </span>
                 <div className="text-lg font-bold text-foreground mt-1">
@@ -202,7 +202,7 @@ export function MeasurementVisuals({ features }: { features: HRVFeatures }) {
       {/* Poincaré + chú giải */}
       {hasPoincare && (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border border-border">
+          <div className="p-3.5 rounded-2xl bg-slate-50 border border-border">
             <span className="text-xs font-semibold text-foreground uppercase tracking-wider block mb-1.5">
               Đồ thị Poincaré
             </span>
@@ -229,12 +229,12 @@ export function MeasurementVisuals({ features }: { features: HRVFeatures }) {
                       { x: domain[0], y: domain[0] },
                       { x: domain[1], y: domain[1] },
                     ]}
-                    stroke="#94a3b8"
+                    stroke="var(--color-slate-400)"
                     strokeDasharray="4 4"
                   />
                   <Scatter
                     data={poincareData}
-                    fill="#6366f1"
+                    fill="var(--color-primary-700)"
                     fillOpacity={0.65}
                     isAnimationActive={false}
                   />
@@ -243,7 +243,7 @@ export function MeasurementVisuals({ features }: { features: HRVFeatures }) {
             </div>
           </div>
 
-          <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border border-border flex flex-col justify-center gap-2">
+          <div className="p-3.5 rounded-2xl bg-slate-50 border border-border flex flex-col justify-center gap-2">
             <span className="text-xs font-semibold text-foreground uppercase tracking-wider">
               Cách đọc đồ thị
             </span>

@@ -29,7 +29,7 @@ export function UserTableHeader({
   return (
     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 py-2">
       <div className="flex items-center gap-3">
-        <div className="p-2.5 rounded-2xl bg-blue-50 border border-blue-100 text-blue-700 shadow-2xs">
+        <div className="p-2.5 rounded-2xl bg-primary-50 border border-primary-100 text-primary-700 shadow-2xs">
           <UserCheck className="h-6 w-6" />
         </div>
         <div>
@@ -52,7 +52,7 @@ export function UserTableHeader({
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
             placeholder="Tìm kiếm theo ID, email hoặc SĐT..."
-            className="pl-9 h-10 bg-white border-slate-200/80 rounded-xl text-xs font-medium shadow-3xs focus:border-blue-500 transition-all"
+            className="pl-9 h-10 bg-white border-slate-200/80 rounded-xl text-xs font-medium shadow-3xs focus:border-primary-500 transition-all"
           />
         </div>
 

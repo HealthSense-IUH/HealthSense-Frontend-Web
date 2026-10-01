@@ -18,76 +18,76 @@ export interface StatusConfig {
 export const CREDIT_ORDER_STATUS_CONFIG: Record<CreditOrderStatus, StatusConfig> = {
   PAID: {
     label: "Đã thanh toán",
-    className: "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-400 dark:border-emerald-800",
+    className: "bg-success-50 text-success-700 border-success-200",
   },
   PENDING_PAYMENT: {
     label: "Chờ thanh toán",
-    className: "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/40 dark:text-amber-400 dark:border-amber-800",
+    className: "bg-warning-50 text-warning-700 border-warning-200",
   },
   CANCELLED: {
     label: "Đã hủy",
-    className: "bg-neutral-100 text-neutral-600 border-neutral-200 dark:bg-neutral-900 dark:text-neutral-400 dark:border-neutral-800",
+    className: "bg-slate-100 text-slate-600 border-slate-200",
   },
   EXPIRED: {
     label: "Hết hạn",
-    className: "bg-red-50 text-red-700 border-red-200 dark:bg-red-950/40 dark:text-red-400 dark:border-red-800",
+    className: "bg-danger-50 text-danger-700 border-danger-200",
   },
   REQUIRES_REVIEW: {
     label: "Đang kiểm tra",
-    className: "bg-orange-50 text-orange-700 border-orange-200 dark:bg-orange-950/40 dark:text-orange-400 dark:border-orange-800",
+    className: "bg-warning-50 text-warning-700 border-warning-200",
   },
 }
 
 export const CREDIT_PACKAGE_STATUS_CONFIG: Record<CreditPackageStatus, StatusConfig> = {
   ACTIVE: {
     label: "Đang mở bán",
-    className: "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-400 dark:border-emerald-800",
+    className: "bg-success-50 text-success-700 border-success-200",
   },
   INACTIVE: {
     label: "Tạm dừng bán",
-    className: "bg-slate-100 text-slate-600 border-slate-200 dark:bg-slate-900 dark:text-slate-400 dark:border-slate-800",
+    className: "bg-slate-100 text-slate-600 border-slate-200",
   },
 }
 
 export const CREDIT_RESERVATION_STATUS_CONFIG: Record<CreditReservationStatus, StatusConfig> = {
   HELD: {
     label: "Lượt đang được tạm giữ",
-    className: "bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-950/40 dark:text-purple-400 dark:border-purple-800",
+    className: "bg-primary-50 text-primary-700 border-primary-200",
   },
   CAPTURED: {
     label: "Lượt đã được sử dụng",
-    className: "bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950/40 dark:text-rose-400 dark:border-rose-800",
+    className: "bg-danger-50 text-danger-700 border-danger-200",
   },
   RELEASED: {
     label: "Lượt đã được trả lại",
-    className: "bg-cyan-50 text-cyan-700 border-cyan-200 dark:bg-cyan-950/40 dark:text-cyan-400 dark:border-cyan-800",
+    className: "bg-primary-50 text-primary-700 border-primary-200",
   },
 }
 
 export const CREDIT_PAYMENT_STATUS_CONFIG: Record<CreditPaymentStatus, StatusConfig> = {
   CREATING: {
     label: "Đang khởi tạo",
-    className: "bg-sky-50 text-sky-700 border-sky-200 dark:bg-sky-950/40 dark:text-sky-400 dark:border-sky-800",
+    className: "bg-primary-50 text-primary-700 border-primary-200",
   },
   PENDING: {
     label: "Chờ thanh toán",
-    className: "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/40 dark:text-amber-400 dark:border-amber-800",
+    className: "bg-warning-50 text-warning-700 border-warning-200",
   },
   PAID: {
     label: "Đã thanh toán",
-    className: "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-400 dark:border-emerald-800",
+    className: "bg-success-50 text-success-700 border-success-200",
   },
   CANCELLED: {
     label: "Đã hủy",
-    className: "bg-neutral-100 text-neutral-600 border-neutral-200 dark:bg-neutral-900 dark:text-neutral-400 dark:border-neutral-800",
+    className: "bg-slate-100 text-slate-600 border-slate-200",
   },
   EXPIRED: {
     label: "Đã hết hạn",
-    className: "bg-red-50 text-red-700 border-red-200 dark:bg-red-950/40 dark:text-red-400 dark:border-red-800",
+    className: "bg-danger-50 text-danger-700 border-danger-200",
   },
   REQUIRES_REVIEW: {
     label: "Đang kiểm tra",
-    className: "bg-orange-50 text-orange-700 border-orange-200 dark:bg-orange-950/40 dark:text-orange-400 dark:border-orange-800",
+    className: "bg-warning-50 text-warning-700 border-warning-200",
   },
 }
 
@@ -112,37 +112,37 @@ export const CREDIT_OPERATION_CONFIG: Record<
   PURCHASE: {
     label: "Mua lượt",
     description: "Cộng lượt khi thanh toán đơn mua",
-    className: "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/40 dark:text-blue-400 dark:border-blue-800",
+    className: "bg-primary-50 text-primary-700 border-primary-200",
   },
   RESERVE: {
     label: "Giữ lượt tư vấn",
     description: "Tạm giữ lượt khi tham gia phiên tư vấn",
-    className: "bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-950/40 dark:text-purple-400 dark:border-purple-800",
+    className: "bg-primary-50 text-primary-700 border-primary-200",
   },
   CAPTURE: {
     label: "Sử dụng lượt",
     description: "Tiêu thụ lượt tư vấn đã giữ",
-    className: "bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950/40 dark:text-rose-400 dark:border-rose-800",
+    className: "bg-danger-50 text-danger-700 border-danger-200",
   },
   RELEASE: {
     label: "Trả lượt giữ",
     description: "Hoàn trả lượt đang giữ về lại khả dụng",
-    className: "bg-cyan-50 text-cyan-700 border-cyan-200 dark:bg-cyan-950/40 dark:text-cyan-400 dark:border-cyan-800",
+    className: "bg-primary-50 text-primary-700 border-primary-200",
   },
   SESSION_CHARGE: {
     label: "Đã dùng lượt khi bắt đầu phiên",
     description: "Tiêu thụ lượt tư vấn khi member xác nhận bắt đầu phiên",
-    className: "bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950/40 dark:text-rose-400 dark:border-rose-800",
+    className: "bg-danger-50 text-danger-700 border-danger-200",
   },
   ADJUSTMENT: {
     label: "Điều chỉnh",
     description: "Quản trị viên điều chỉnh lượt",
-    className: "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/40 dark:text-amber-400 dark:border-amber-800",
+    className: "bg-warning-50 text-warning-700 border-warning-200",
   },
   SESSION_REFUND: {
     label: "Bồi hoàn lượt",
     description: "Bồi hoàn lượt tư vấn của phiên",
-    className: "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-400 dark:border-emerald-800",
+    className: "bg-success-50 text-success-700 border-success-200",
   },
 }
 

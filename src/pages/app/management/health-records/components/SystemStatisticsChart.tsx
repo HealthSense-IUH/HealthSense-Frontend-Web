@@ -51,7 +51,7 @@ export function SystemStatisticsChart() {
             onChange={(e) => setFromDate(e.target.value)} 
             className="w-auto"
           />
-          <span className="text-neutral-500">-</span>
+          <span className="text-slate-500">-</span>
           <Input 
             type="date" 
             value={toDate} 
@@ -62,25 +62,25 @@ export function SystemStatisticsChart() {
       </CardHeader>
       <CardContent>
         {loading ? (
-          <div className="h-[350px] flex items-center justify-center text-neutral-500">Loading statistics...</div>
+          <div className="h-[350px] flex items-center justify-center text-slate-500">Loading statistics...</div>
         ) : data.length === 0 ? (
-          <div className="h-[350px] flex items-center justify-center text-neutral-500">
+          <div className="h-[350px] flex items-center justify-center text-slate-500">
             Không có dữ liệu thống kê nào trong khoảng thời gian đã chọn.
           </div>
         ) : (
           <div className="h-[350px] w-full mt-4">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={data}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#333" opacity={0.2} />
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--color-slate-200)" />
                 <XAxis dataKey="displayDate" tickLine={false} axisLine={false} tickMargin={8} minTickGap={30} />
                 <YAxis tickLine={false} axisLine={false} tickMargin={8} />
                 <Tooltip 
                   contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
                 />
                 <Legend verticalAlign="top" height={36}/>
-                <Line type="monotone" name="Normal" dataKey="totalNormal" stroke="#22c55e" strokeWidth={3} dot={false} />
-                <Line type="monotone" name="AFib" dataKey="totalAfib" stroke="#ef4444" strokeWidth={3} dot={false} />
-                <Line type="monotone" name="Uncertain" dataKey="totalUncertain" stroke="#eab308" strokeWidth={3} dot={false} />
+                <Line type="monotone" name="Normal" dataKey="totalNormal" stroke="var(--color-success-500)" strokeWidth={3} dot={false} />
+                <Line type="monotone" name="AFib" dataKey="totalAfib" stroke="var(--color-danger-500)" strokeWidth={3} dot={false} />
+                <Line type="monotone" name="Uncertain" dataKey="totalUncertain" stroke="var(--color-warning-500)" strokeWidth={3} dot={false} />
               </LineChart>
             </ResponsiveContainer>
           </div>

@@ -132,7 +132,7 @@ function UserFormModalContent({
   return (
     <>
       <DialogHeader className="p-6 pb-4 bg-slate-50/80 border-b border-slate-100 text-left">
-        <div className="flex items-center gap-2.5 text-blue-700 font-extrabold text-xs uppercase tracking-wider mb-1">
+        <div className="flex items-center gap-2.5 text-primary-700 font-extrabold text-xs uppercase tracking-wider mb-1">
           <ShieldCheck className="w-4 h-4" />
           <span>{isEditMode ? "Cập nhật hồ sơ tài khoản" : "Cổng cấp phát tài khoản mới"}</span>
         </div>
@@ -148,8 +148,8 @@ function UserFormModalContent({
 
       <form onSubmit={handleSubmit} className="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
         {errorMsg && (
-          <div className="p-3.5 rounded-2xl bg-red-50 border border-red-200 text-red-800 text-xs font-bold flex items-center gap-2.5">
-            <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
+          <div className="p-3.5 rounded-2xl bg-danger-50 border border-danger-200 text-danger-800 text-xs font-bold flex items-center gap-2.5">
+            <AlertCircle className="w-4 h-4 text-danger-600 shrink-0" />
             <span>{errorMsg}</span>
           </div>
         )}
@@ -159,7 +159,7 @@ function UserFormModalContent({
           <div className="space-y-1.5">
             <Label className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
               <Mail className="w-3.5 h-3.5 text-slate-400" />
-              <span>Địa chỉ Email <span className="text-red-500">*</span></span>
+              <span>Địa chỉ Email <span className="text-danger-500">*</span></span>
             </Label>
             <Input
               disabled={isEditMode || loading}
@@ -174,7 +174,7 @@ function UserFormModalContent({
 
           <div className="space-y-1.5">
             <Label htmlFor="user-role-select" className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
-              <span>Vai trò tài khoản <span className="text-red-500">*</span></span>
+              <span>Vai trò tài khoản <span className="text-danger-500">*</span></span>
             </Label>
             <select
               id="user-role-select"
@@ -182,7 +182,7 @@ function UserFormModalContent({
               disabled={isEditMode || loading}
               value={role}
               onChange={(e) => setRole(e.target.value as UserRole)}
-              className="w-full h-10 rounded-xl border border-slate-200 bg-white px-3 text-xs font-extrabold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer disabled:bg-slate-100 disabled:text-slate-500 disabled:cursor-not-allowed"
+              className="w-full h-10 rounded-xl border border-slate-200 bg-white px-3 text-xs font-extrabold text-slate-800 focus:outline-none focus:ring-2 focus:ring-primary-500 cursor-pointer disabled:bg-slate-100 disabled:text-slate-500 disabled:cursor-not-allowed"
             >
               <option value={USER_ROLES.MEMBER}>MEMBER - Bệnh nhân / Hội viên</option>
               <option value={USER_ROLES.DOCTOR}>DOCTOR - Bác sĩ lâm sàng</option>
@@ -198,7 +198,7 @@ function UserFormModalContent({
           <div className={`space-y-1.5 ${!isEditMode ? "sm:col-span-2" : ""}`}>
             <Label className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
               <User className="w-3.5 h-3.5 text-slate-400" />
-              <span>Tên hiển thị <span className="text-red-500">*</span></span>
+              <span>Tên hiển thị <span className="text-danger-500">*</span></span>
             </Label>
             <Input
               disabled={loading}
@@ -214,7 +214,7 @@ function UserFormModalContent({
           {isEditMode && (
             <div className="space-y-1.5">
               <Label htmlFor="account-status-select" className="text-xs font-bold text-slate-700">
-                Trạng thái tài khoản <span className="text-red-500">*</span>
+                Trạng thái tài khoản <span className="text-danger-500">*</span>
               </Label>
               <select
                 id="account-status-select"
@@ -222,7 +222,7 @@ function UserFormModalContent({
                 disabled={loading}
                 value={status}
                 onChange={(e) => setStatus(e.target.value as AccountStatus)}
-                className="w-full h-10 rounded-xl border border-slate-200 bg-white px-3 text-xs font-extrabold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+                className="w-full h-10 rounded-xl border border-slate-200 bg-white px-3 text-xs font-extrabold text-slate-800 focus:outline-none focus:ring-2 focus:ring-primary-500 cursor-pointer"
               >
                 <option value="ACTIVE">ACTIVE - Đang hoạt động</option>
                 <option value="PENDING_VERIFY">PENDING_VERIFY - Chờ xác thực email</option>
@@ -278,7 +278,7 @@ function UserFormModalContent({
               disabled={loading}
               value={gender}
               onChange={(e) => setGender(e.target.value)}
-              className="w-full h-10 rounded-xl border border-slate-200 bg-white px-3 text-xs font-extrabold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+              className="w-full h-10 rounded-xl border border-slate-200 bg-white px-3 text-xs font-extrabold text-slate-800 focus:outline-none focus:ring-2 focus:ring-primary-500 cursor-pointer"
             >
               <option value="MALE">Nam</option>
               <option value="FEMALE">Nữ</option>
@@ -303,9 +303,9 @@ function UserFormModalContent({
         </div>
 
         {!isEditMode && (
-          <div className="p-4 rounded-2xl bg-blue-50/60 border border-blue-100 flex items-start gap-3 mt-2">
-            <Sparkles className="w-5 h-5 text-blue-600 shrink-0 mt-0.5 animate-pulse" />
-            <div className="text-xs text-blue-900">
+          <div className="p-4 rounded-2xl bg-primary-50/60 border border-primary-100 flex items-start gap-3 mt-2">
+            <Sparkles className="w-5 h-5 text-primary-600 shrink-0 mt-0.5 animate-pulse" />
+            <div className="text-xs text-primary-900">
               <strong className="font-extrabold block">Thông báo bảo mật mật khẩu tự động</strong>
               Không cần thiết lập mật khẩu thủ công. Sau khi lưu, hệ thống sẽ tự động cấp mật khẩu tạm thời an toàn và gửi hướng dẫn kích hoạt tài khoản qua email.
             </div>
@@ -325,7 +325,7 @@ function UserFormModalContent({
           <Button
             type="submit"
             disabled={loading}
-            className="h-10 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs px-5 shadow-sm shadow-blue-500/25 flex items-center gap-2 cursor-pointer"
+            className="h-10 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-extrabold text-xs px-5 shadow-sm shadow-primary-500/25 flex items-center gap-2 cursor-pointer"
           >
             {loading && <Loader2 className="w-4 h-4 animate-spin" />}
             <span>{isEditMode ? "Lưu thay đổi" : "Tạo tài khoản"}</span>
@@ -342,7 +342,7 @@ export function UserFormModal({ isOpen, onClose, onSave, initialData, defaultRol
 
   return (
     <Dialog open={isOpen} onOpenChange={(val) => !loading && !val && onClose()}>
-      <DialogContent className="max-w-xl p-0 overflow-hidden bg-white rounded-3xl shadow-xl border border-slate-200">
+      <DialogContent className="max-w-xl p-0 overflow-hidden bg-white rounded-2xl shadow-xl border border-slate-200">
         {isOpen && (
           <UserFormModalContent
             key={formKey}

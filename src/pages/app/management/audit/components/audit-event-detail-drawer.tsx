@@ -53,7 +53,7 @@ export function AuditEventDetailDrawer({
                 {event.eventType}
               </DialogTitle>
             </div>
-            <span className="inline-flex items-center px-2 py-1 rounded-md text-[10px] font-black bg-blue-100 text-blue-800 uppercase tracking-wider">
+            <span className="inline-flex items-center px-2 py-1 rounded-md text-[10px] font-black bg-primary-100 text-primary-800 uppercase tracking-wider">
               {event.actorType}
             </span>
           </div>
@@ -79,7 +79,7 @@ export function AuditEventDetailDrawer({
             <div className="p-4 rounded-2xl border border-slate-100 bg-slate-50/30 space-y-2">
               <div className="flex items-center justify-between">
                 <span className="text-slate-500 font-medium flex items-center gap-1.5">
-                  {event.actorType === "USER" ? <User className="w-3.5 h-3.5 text-blue-600" /> : <Cpu className="w-3.5 h-3.5 text-purple-600" />}
+                  {event.actorType === "USER" ? <User className="w-3.5 h-3.5 text-primary-600" /> : <Cpu className="w-3.5 h-3.5 text-primary-600" />}
                   <span>Tác nhân thực hiện:</span>
                 </span>
                 <span className="font-bold text-slate-800">
@@ -103,7 +103,7 @@ export function AuditEventDetailDrawer({
                     {event.previousState || "INITIAL"}
                   </Badge>
                   <ArrowRight className="w-4 h-4 text-slate-400" />
-                  <Badge className="bg-blue-600 text-white">
+                  <Badge className="bg-primary-600 text-white">
                     {event.newState || "FINAL"}
                   </Badge>
                 </div>
@@ -114,7 +114,7 @@ export function AuditEventDetailDrawer({
             {metadataString && (
               <div className="space-y-1.5 pt-1">
                 <div className="flex items-center gap-1.5 text-slate-600 font-bold text-xs">
-                  <FileCode className="w-3.5 h-3.5 text-indigo-600" />
+                  <FileCode className="w-3.5 h-3.5 text-primary-600" />
                   <span>Metadata an toàn (Filtered Safe Context)</span>
                 </div>
                 <div className="p-3.5 rounded-2xl bg-slate-900 text-slate-100 font-mono text-[11px] overflow-x-auto leading-relaxed">

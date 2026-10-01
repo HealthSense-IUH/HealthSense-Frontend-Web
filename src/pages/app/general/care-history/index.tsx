@@ -57,9 +57,9 @@ export default function CareHistoryPage() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "ACTIVE":
-        return <Badge className="bg-emerald-600 hover:bg-emerald-700 text-white">Đang diễn ra</Badge>
+        return <Badge className="bg-success-600 hover:bg-success-700 text-white">Đang diễn ra</Badge>
       case "COMPLETED":
-        return <Badge className="bg-blue-600 hover:bg-blue-700 text-white">Đã hoàn thành</Badge>
+        return <Badge className="bg-primary-600 hover:bg-primary-700 text-white">Đã hoàn thành</Badge>
       case "CANCELLED":
         return <Badge variant="destructive">Đã hủy</Badge>
       case "SCHEDULED":
@@ -158,7 +158,7 @@ export default function CareHistoryPage() {
                 <CardContent className="p-5 pt-0 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-t mt-3 bg-muted/10">
                   <div className="flex items-center gap-3 text-xs text-muted-foreground">
                     {ep.finalSummary ? (
-                      <span className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-medium">
+                      <span className="flex items-center gap-1 text-success-600 font-medium">
                         <FileText className="h-3.5 w-3.5" /> Đã có Tổng kết Y khoa
                       </span>
                     ) : (

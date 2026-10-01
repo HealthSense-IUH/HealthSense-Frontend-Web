@@ -104,8 +104,8 @@ export function ReferenceFoodBrowser({ fixedGroup }: ReferenceFoodBrowserProps =
             className={cn(
               "px-3 py-1.5 rounded-xl text-xs font-medium border cursor-pointer transition-colors",
               source === option.value
-                ? "bg-slate-900 text-white border-slate-900 dark:bg-primary dark:text-primary-foreground dark:border-primary"
-                : "bg-white dark:bg-card border-slate-200 dark:border-border text-muted-foreground hover:text-foreground"
+                ? "bg-slate-900 text-white border-slate-900"
+                : "bg-white border-slate-200 text-muted-foreground hover:text-foreground"
             )}
           >
             {option.label}
@@ -123,7 +123,7 @@ export function ReferenceFoodBrowser({ fixedGroup }: ReferenceFoodBrowserProps =
               name="q"
               defaultValue={q}
               placeholder="Tên tiếng Việt hoặc tiếng Anh, ví dụ: rau muống, giò lụa, salmon..."
-              className="pl-10 h-11 rounded-2xl bg-white dark:bg-card"
+              className="pl-10 h-11 rounded-2xl bg-white"
             />
           </div>
           <Button type="submit" className="h-11 rounded-2xl px-5">
@@ -135,7 +135,7 @@ export function ReferenceFoodBrowser({ fixedGroup }: ReferenceFoodBrowserProps =
             value={group || ALL_GROUPS}
             onValueChange={(value) => updateParams({ group: value === ALL_GROUPS ? "" : value, page: 1 })}
           >
-            <SelectTrigger className="h-11 rounded-2xl md:w-72 bg-white dark:bg-card">
+            <SelectTrigger className="h-11 rounded-2xl md:w-72 bg-white">
               <SelectValue placeholder="Tất cả nhóm" />
             </SelectTrigger>
             <SelectContent className="max-h-80">
@@ -176,7 +176,7 @@ export function ReferenceFoodBrowser({ fixedGroup }: ReferenceFoodBrowserProps =
       </div>
 
       {isError ? (
-        <div className="rounded-2xl border border-dashed border-slate-200 dark:border-border p-8 text-center text-sm text-muted-foreground space-y-2">
+        <div className="rounded-2xl border border-dashed border-slate-200 p-6 text-center text-sm text-muted-foreground space-y-2">
           <p>Không tải được dữ liệu dinh dưỡng.</p>
           <button type="button" onClick={() => refetch()} className="text-primary font-medium hover:underline cursor-pointer">
             Thử lại
@@ -189,7 +189,7 @@ export function ReferenceFoodBrowser({ fixedGroup }: ReferenceFoodBrowserProps =
           ))}
         </div>
       ) : foods.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-slate-200 dark:border-border p-8 text-center text-sm text-muted-foreground space-y-1">
+        <div className="rounded-2xl border border-dashed border-slate-200 p-6 text-center text-sm text-muted-foreground space-y-1">
           <p>Không tìm thấy thực phẩm phù hợp.</p>
           <p className="text-xs">
             Thử tên tiếng Việt (có hoặc không dấu) hoặc tiếng Anh, ví dụ: rau muong, gio lua, chicken, rice.
@@ -210,14 +210,14 @@ export function ReferenceFoodBrowser({ fixedGroup }: ReferenceFoodBrowserProps =
               <li key={food.id}>
                 <Link
                   to={`/app/general/nutrition/database/${food.id}`}
-                  className="group grid grid-cols-2 md:grid-cols-[1fr_repeat(4,6.5rem)] gap-x-3 gap-y-2 items-center rounded-2xl border border-slate-200/80 bg-white px-4 py-3 shadow-2xs hover:border-primary/50 dark:border-border dark:bg-card"
+                  className="group grid grid-cols-2 md:grid-cols-[1fr_repeat(4,6.5rem)] gap-x-3 gap-y-2 items-center rounded-2xl border border-slate-200/80 bg-white px-4 py-3 shadow-2xs hover:border-primary/50"
                 >
                   <div className="col-span-2 md:col-span-1 min-w-0">
                     <div className="flex items-center gap-2 min-w-0">
-                      <p className="font-medium text-sm text-slate-900 dark:text-foreground group-hover:text-primary truncate">
+                      <p className="font-medium text-sm text-slate-900 group-hover:text-primary truncate">
                         {food.displayName}
                       </p>
-                      <span className="shrink-0 px-1.5 py-0.5 rounded-md text-[10px] font-semibold bg-slate-100 text-slate-600 dark:bg-muted dark:text-slate-300">
+                      <span className="shrink-0 px-1.5 py-0.5 rounded-md text-[10px] font-semibold bg-slate-100 text-slate-600">
                         {REFERENCE_SOURCES[food.source].short}
                       </span>
                       <DietAdviceBadge advice={food.advice} />
@@ -232,7 +232,7 @@ export function ReferenceFoodBrowser({ fixedGroup }: ReferenceFoodBrowserProps =
                     </p>
                   </div>
                   {SUMMARY_COLUMNS.map((col) => (
-                    <p key={col.key} className="text-xs md:text-sm md:text-right text-slate-700 dark:text-slate-300">
+                    <p key={col.key} className="text-xs md:text-sm md:text-right text-slate-700">
                       <span className="md:hidden text-muted-foreground">{col.label}: </span>
                       <span className="font-semibold">{formatNutrientAmount(food[col.key])}</span>
                       <span className="md:hidden text-muted-foreground"> {col.unit}</span>

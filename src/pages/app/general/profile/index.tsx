@@ -136,7 +136,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <Page width="narrow">
+    <Page>
       <PageHeader
         icon={<UserIcon className="w-5 h-5" />}
         title="Hồ sơ tài khoản"
@@ -148,7 +148,7 @@ export default function ProfilePage() {
         {loading && !user && (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 animate-pulse">
             <div className="lg:col-span-4 h-96 rounded-2xl bg-slate-100 border border-slate-200/60 flex flex-col items-center justify-center p-6 text-slate-400">
-              <Loader2 className="w-8 h-8 animate-spin mb-3 text-blue-600" />
+              <Loader2 className="w-8 h-8 animate-spin mb-3 text-primary-600" />
               <span className="text-xs font-bold text-slate-600">Đang tải thông tin tài khoản...</span>
             </div>
             <div className="lg:col-span-8 h-96 rounded-2xl bg-slate-100 border border-slate-200/60" />
@@ -157,15 +157,15 @@ export default function ProfilePage() {
 
         {/* Error Fallback with Inline Retry Button */}
         {error && !loading && !user && (
-          <div className="p-8 rounded-3xl bg-red-50/80 border border-red-200 text-center max-w-lg mx-auto my-8">
-            <AlertCircle className="w-10 h-10 text-red-600 mx-auto mb-3" />
+          <div className="p-6 rounded-2xl bg-danger-50/80 border border-danger-200 text-center max-w-lg mx-auto my-8">
+            <AlertCircle className="w-10 h-10 text-danger-600 mx-auto mb-3" />
             <h3 className="text-base font-black text-slate-900">Không thể tải thông tin hồ sơ</h3>
             <p className="text-xs font-medium text-slate-600 max-w-sm mx-auto mt-1 mb-5 leading-relaxed">
               {error}
             </p>
             <Button
               onClick={handleRetry}
-              className="h-9 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-extrabold px-5 shadow-sm shadow-red-500/20 flex items-center gap-2 mx-auto cursor-pointer"
+              className="h-9 rounded-xl bg-danger-600 hover:bg-danger-700 text-white text-xs font-extrabold px-5 shadow-sm shadow-danger-500/20 flex items-center gap-2 mx-auto cursor-pointer"
             >
               <RotateCw className="w-4 h-4" />
               <span>Thử kết nối lại</span>
@@ -179,7 +179,7 @@ export default function ProfilePage() {
             {user.role === USER_ROLES.DOCTOR && (
               <div className="bg-white border border-slate-200/80 rounded-2xl p-5 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div className="flex items-start sm:items-center gap-3.5">
-                  <div className="h-11 w-11 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 shrink-0">
+                  <div className="h-11 w-11 rounded-xl bg-primary-50 border border-primary-100 flex items-center justify-center text-primary-600 shrink-0">
                     <Stethoscope className="w-5 h-5" />
                   </div>
                   <div>
@@ -188,11 +188,11 @@ export default function ProfilePage() {
                         Hồ sơ Trực & Lịch làm việc Bác sĩ
                       </h3>
                       {careProfile ? (
-                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-success-50 text-success-700 border border-success-200">
                           Đã kích hoạt
                         </span>
                       ) : (
-                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200">
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-warning-50 text-warning-700 border border-warning-200">
                           Chưa khởi tạo
                         </span>
                       )}
@@ -209,9 +209,9 @@ export default function ProfilePage() {
                   variant="outline"
                   size="sm"
                   onClick={() => setIsScheduleOpen(true)}
-                  className="text-xs font-semibold shrink-0 cursor-pointer border-blue-200 text-blue-700 hover:bg-blue-50"
+                  className="text-xs font-semibold shrink-0 cursor-pointer border-primary-200 text-primary-700 hover:bg-primary-50"
                 >
-                  <Calendar className="w-3.5 h-3.5 mr-1.5 text-blue-600" />
+                  <Calendar className="w-3.5 h-3.5 mr-1.5 text-primary-600" />
                   <span>Cập nhật Lịch trực & Múi giờ</span>
                 </Button>
               </div>

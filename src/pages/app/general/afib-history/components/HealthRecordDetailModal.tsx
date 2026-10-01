@@ -51,7 +51,7 @@ export function HealthRecordDetailModal({ record, isOpen, onClose }: HealthRecor
       onClick={onClose}
     >
       <div 
-        className="relative max-w-4xl w-full bg-white dark:bg-card rounded-3xl p-6 sm:p-8 flex flex-col gap-6 shadow-xl border border-border max-h-[90vh] overflow-y-auto cursor-default"
+        className="relative max-w-4xl w-full bg-white rounded-2xl p-6 sm:p-6 flex flex-col gap-6 shadow-xl border border-border max-h-[90vh] overflow-y-auto cursor-default"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
@@ -71,14 +71,14 @@ export function HealthRecordDetailModal({ record, isOpen, onClose }: HealthRecor
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+            className="p-1.5 rounded-xl hover:bg-slate-100 text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Diagnosis Assessment */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border border-border">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-2xl bg-slate-50 border border-border">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
               <span className="text-xs text-muted-foreground font-medium">Kết luận AI:</span>
@@ -104,7 +104,7 @@ export function HealthRecordDetailModal({ record, isOpen, onClose }: HealthRecor
 
         {/* 4 Core Physiological Metrics */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border border-border">
+          <div className="p-3.5 rounded-2xl bg-slate-50 border border-border">
             <span className="text-xs text-muted-foreground font-medium block">Nhịp tim TB</span>
             <div className="text-xl font-bold text-foreground mt-1">
               {features.HR_mean ? formatHrvNumber(features.HR_mean, 0) : "--"}{" "}
@@ -113,7 +113,7 @@ export function HealthRecordDetailModal({ record, isOpen, onClose }: HealthRecor
             <span className="text-[11px] text-muted-foreground block mt-0.5">60 - 100 BPM</span>
           </div>
 
-          <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border border-border">
+          <div className="p-3.5 rounded-2xl bg-slate-50 border border-border">
             <span className="text-xs text-muted-foreground font-medium block">SDNN</span>
             <div className="text-xl font-bold text-foreground mt-1">
               {features.SDNN ? formatHrvNumber(features.SDNN, 1) : "--"}{" "}
@@ -122,7 +122,7 @@ export function HealthRecordDetailModal({ record, isOpen, onClose }: HealthRecor
             <span className="text-[11px] text-muted-foreground block mt-0.5">30 - 100 ms</span>
           </div>
 
-          <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border border-border">
+          <div className="p-3.5 rounded-2xl bg-slate-50 border border-border">
             <span className="text-xs text-muted-foreground font-medium block">RMSSD</span>
             <div className="text-xl font-bold text-foreground mt-1">
               {features.RMSSD ? formatHrvNumber(features.RMSSD, 1) : "--"}{" "}
@@ -131,7 +131,7 @@ export function HealthRecordDetailModal({ record, isOpen, onClose }: HealthRecor
             <span className="text-[11px] text-muted-foreground block mt-0.5">20 - 50 ms</span>
           </div>
 
-          <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border border-border">
+          <div className="p-3.5 rounded-2xl bg-slate-50 border border-border">
             <span className="text-xs text-muted-foreground font-medium block">Tỷ lệ LF/HF</span>
             <div className="text-xl font-bold text-foreground mt-1">
               {features.LF_HF_Ratio ? formatHrvNumber(features.LF_HF_Ratio, 2) : "--"}
@@ -149,7 +149,7 @@ export function HealthRecordDetailModal({ record, isOpen, onClose }: HealthRecor
           <div className="rounded-2xl border border-border overflow-hidden text-xs">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="bg-slate-50 dark:bg-slate-900/80 border-b border-border font-semibold text-muted-foreground">
+                <tr className="bg-slate-50 border-b border-border font-semibold text-muted-foreground">
                   <th className="py-2.5 px-4">Chỉ số</th>
                   <th className="py-2.5 px-4 text-right sm:text-left">Giá trị đo</th>
                   <th className="py-2.5 px-4 hidden md:table-cell">Dải tham chiếu</th>
@@ -157,7 +157,7 @@ export function HealthRecordDetailModal({ record, isOpen, onClose }: HealthRecor
                 </tr>
               </thead>
               <tbody className="divide-y divide-border font-normal text-foreground">
-                <tr className="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
+                <tr className="hover:bg-slate-50/50 transition-colors">
                   <td className="py-2 px-4 font-semibold">Mean_NN</td>
                   <td className="py-2 px-4 text-right sm:text-left font-medium">
                     {formatHrvNumber(features.Mean_NN, 1)} ms
@@ -167,7 +167,7 @@ export function HealthRecordDetailModal({ record, isOpen, onClose }: HealthRecor
                     Khoảng thời gian trung bình giữa 2 nhịp liên tiếp
                   </td>
                 </tr>
-                <tr className="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
+                <tr className="hover:bg-slate-50/50 transition-colors">
                   <td className="py-2 px-4 font-semibold">SDNN</td>
                   <td className="py-2 px-4 text-right sm:text-left font-medium">
                     {formatHrvNumber(features.SDNN, 1)} ms
@@ -177,7 +177,7 @@ export function HealthRecordDetailModal({ record, isOpen, onClose }: HealthRecor
                     Độ biến thiên tổng thể của hệ thần kinh tự chủ
                   </td>
                 </tr>
-                <tr className="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
+                <tr className="hover:bg-slate-50/50 transition-colors">
                   <td className="py-2 px-4 font-semibold">RMSSD</td>
                   <td className="py-2 px-4 text-right sm:text-left font-medium">
                     {formatHrvNumber(features.RMSSD, 1)} ms
@@ -187,7 +187,7 @@ export function HealthRecordDetailModal({ record, isOpen, onClose }: HealthRecor
                     Mức độ hoạt động thần kinh phó giao cảm (Vagal tone)
                   </td>
                 </tr>
-                <tr className="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
+                <tr className="hover:bg-slate-50/50 transition-colors">
                   <td className="py-2 px-4 font-semibold">pNN50</td>
                   <td className="py-2 px-4 text-right sm:text-left font-medium">
                     {formatHrvNumber(features.pNN50, 1)}%
@@ -197,7 +197,7 @@ export function HealthRecordDetailModal({ record, isOpen, onClose }: HealthRecor
                     Tỷ lệ các cặp nhịp tim liên tiếp chênh lệch &gt; 50ms
                   </td>
                 </tr>
-                <tr className="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
+                <tr className="hover:bg-slate-50/50 transition-colors">
                   <td className="py-2 px-4 font-semibold">CV</td>
                   <td className="py-2 px-4 text-right sm:text-left font-medium">
                     {formatHrvNumber(features.CV, 4)}
@@ -207,7 +207,7 @@ export function HealthRecordDetailModal({ record, isOpen, onClose }: HealthRecor
                     Hệ số biến thiên tương đối của nhịp tim
                   </td>
                 </tr>
-                <tr className="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
+                <tr className="hover:bg-slate-50/50 transition-colors">
                   <td className="py-2 px-4 font-semibold">LF</td>
                   <td className="py-2 px-4 text-right sm:text-left font-medium">
                     {formatHrvNumber(features.LF, 3)}
@@ -217,7 +217,7 @@ export function HealthRecordDetailModal({ record, isOpen, onClose }: HealthRecor
                     Năng lượng dải tần thấp (giao cảm và huyết áp)
                   </td>
                 </tr>
-                <tr className="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
+                <tr className="hover:bg-slate-50/50 transition-colors">
                   <td className="py-2 px-4 font-semibold">HF</td>
                   <td className="py-2 px-4 text-right sm:text-left font-medium">
                     {formatHrvNumber(features.HF, 3)}
@@ -227,7 +227,7 @@ export function HealthRecordDetailModal({ record, isOpen, onClose }: HealthRecor
                     Năng lượng dải tần cao (hô hấp và phó giao cảm)
                   </td>
                 </tr>
-                <tr className="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
+                <tr className="hover:bg-slate-50/50 transition-colors">
                   <td className="py-2 px-4 font-semibold">Tỷ lệ LF/HF</td>
                   <td className="py-2 px-4 text-right sm:text-left font-medium">
                     {formatHrvNumber(features.LF_HF_Ratio, 2)}

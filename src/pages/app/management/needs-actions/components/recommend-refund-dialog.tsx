@@ -123,7 +123,7 @@ export function RecommendRefundDialog({
                   type="button"
                   onClick={() => handleRecommendationChange("FULL")}
                   className={`flex flex-col items-center justify-between rounded-xl border p-3 cursor-pointer text-center transition-all ${
-                    recommendation === "FULL" ? "border-blue-600 bg-blue-50/40 shadow-xs" : "border-slate-200 hover:bg-slate-50"
+                    recommendation === "FULL" ? "border-primary-600 bg-primary-50/40 shadow-xs" : "border-slate-200 hover:bg-slate-50"
                   }`}
                   disabled={loading}
                 >
@@ -135,7 +135,7 @@ export function RecommendRefundDialog({
                   type="button"
                   onClick={() => handleRecommendationChange("PARTIAL")}
                   className={`flex flex-col items-center justify-between rounded-xl border p-3 cursor-pointer text-center transition-all ${
-                    recommendation === "PARTIAL" ? "border-blue-600 bg-blue-50/40 shadow-xs" : "border-slate-200 hover:bg-slate-50"
+                    recommendation === "PARTIAL" ? "border-primary-600 bg-primary-50/40 shadow-xs" : "border-slate-200 hover:bg-slate-50"
                   }`}
                   disabled={loading}
                 >
@@ -147,7 +147,7 @@ export function RecommendRefundDialog({
                   type="button"
                   onClick={() => handleRecommendationChange("NONE")}
                   className={`flex flex-col items-center justify-between rounded-xl border p-3 cursor-pointer text-center transition-all ${
-                    recommendation === "NONE" ? "border-blue-600 bg-blue-50/40 shadow-xs" : "border-slate-200 hover:bg-slate-50"
+                    recommendation === "NONE" ? "border-primary-600 bg-primary-50/40 shadow-xs" : "border-slate-200 hover:bg-slate-50"
                   }`}
                   disabled={loading}
                 >
@@ -177,7 +177,7 @@ export function RecommendRefundDialog({
 
             <div className="space-y-1.5">
               <Label htmlFor="reason" className="text-xs font-bold text-slate-700">
-                Lý do đề xuất <span className="text-rose-500">*</span>
+                Lý do đề xuất <span className="text-danger-500">*</span>
               </Label>
               <Textarea
                 id="reason"

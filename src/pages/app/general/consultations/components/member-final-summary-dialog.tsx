@@ -104,7 +104,7 @@ export function MemberFinalSummaryDialog({ sessionId, open, onOpenChange, isAdmi
               <Skeleton className="h-16 w-full" />
             </div>
           ) : errorMsg ? (
-            <div className="rounded-md bg-red-50 p-4 text-sm text-red-700">{errorMsg}</div>
+            <div className="rounded-md bg-danger-50 p-4 text-sm text-danger-700">{errorMsg}</div>
           ) : !summary || !isFinalized ? (
             <div className="flex flex-col items-center justify-center py-10 text-center">
               <Activity className="h-12 w-12 text-muted-foreground/40 mb-3" />
@@ -117,31 +117,31 @@ export function MemberFinalSummaryDialog({ sessionId, open, onOpenChange, isAdmi
             </div>
           ) : (
             <div className="space-y-6">
-              <div className="flex items-center justify-between rounded-lg border border-green-200 bg-green-50 p-4">
+              <div className="flex items-center justify-between rounded-lg border border-success-200 bg-success-50 p-4">
                 <div className="flex items-center gap-3">
-                  <CheckCircle2 className="h-5 w-5 text-green-600" />
+                  <CheckCircle2 className="h-5 w-5 text-success-600" />
                   <div>
-                    <p className="font-medium text-green-900">Bản tổng kết đã được hoàn tất</p>
-                    <p className="text-sm text-green-700">
+                    <p className="font-medium text-success-900">Bản tổng kết đã được hoàn tất</p>
+                    <p className="text-sm text-success-700">
                       Lúc: {formatDate(summary.finalizedAt) || "-"}
                     </p>
                   </div>
                 </div>
-                <Badge className="bg-green-600 hover:bg-green-700">Đã hoàn tất</Badge>
+                <Badge className="bg-success-600 hover:bg-success-700">Đã hoàn tất</Badge>
               </div>
 
               <div className="space-y-4">
                 <div className="space-y-1.5">
-                  <h4 className="text-sm font-semibold text-neutral-900">Tổng kết</h4>
-                  <div className="rounded-md border bg-neutral-50 p-4 text-sm text-neutral-800 whitespace-pre-wrap">
-                    {summary.summary || <span className="text-neutral-400 italic">Không có nội dung</span>}
+                  <h4 className="text-sm font-semibold text-slate-900">Tổng kết</h4>
+                  <div className="rounded-md border bg-slate-50 p-4 text-sm text-slate-800 whitespace-pre-wrap">
+                    {summary.summary || <span className="text-slate-400 italic">Không có nội dung</span>}
                   </div>
                 </div>
 
                 {summary.observations && (
                   <div className="space-y-1.5">
-                    <h4 className="text-sm font-semibold text-neutral-900">Nhận xét</h4>
-                    <div className="rounded-md border bg-neutral-50 p-4 text-sm text-neutral-800 whitespace-pre-wrap">
+                    <h4 className="text-sm font-semibold text-slate-900">Nhận xét</h4>
+                    <div className="rounded-md border bg-slate-50 p-4 text-sm text-slate-800 whitespace-pre-wrap">
                       {summary.observations}
                     </div>
                   </div>
@@ -149,8 +149,8 @@ export function MemberFinalSummaryDialog({ sessionId, open, onOpenChange, isAdmi
 
                 {summary.recommendations && (
                   <div className="space-y-1.5">
-                    <h4 className="text-sm font-semibold text-neutral-900">Khuyến nghị</h4>
-                    <div className="rounded-md border bg-neutral-50 p-4 text-sm text-neutral-800 whitespace-pre-wrap">
+                    <h4 className="text-sm font-semibold text-slate-900">Khuyến nghị</h4>
+                    <div className="rounded-md border bg-slate-50 p-4 text-sm text-slate-800 whitespace-pre-wrap">
                       {summary.recommendations}
                     </div>
                   </div>
@@ -158,8 +158,8 @@ export function MemberFinalSummaryDialog({ sessionId, open, onOpenChange, isAdmi
 
                 {summary.followUpRecommendation && (
                   <div className="space-y-1.5">
-                    <h4 className="text-sm font-semibold text-neutral-900">Khuyến nghị theo dõi</h4>
-                    <div className="rounded-md border bg-neutral-50 p-4 text-sm text-neutral-800 whitespace-pre-wrap">
+                    <h4 className="text-sm font-semibold text-slate-900">Khuyến nghị theo dõi</h4>
+                    <div className="rounded-md border bg-slate-50 p-4 text-sm text-slate-800 whitespace-pre-wrap">
                       {summary.followUpRecommendation}
                     </div>
                   </div>
@@ -168,7 +168,7 @@ export function MemberFinalSummaryDialog({ sessionId, open, onOpenChange, isAdmi
                 {/* Referenced Health Records */}
                 {summary.referencedHealthRecordIds && summary.referencedHealthRecordIds.length > 0 && (
                   <div className="space-y-1.5 pt-2 border-t">
-                    <h4 className="text-sm font-semibold text-neutral-900">Hồ sơ đo đạc tham chiếu</h4>
+                    <h4 className="text-sm font-semibold text-slate-900">Hồ sơ đo đạc tham chiếu</h4>
                     <div className="flex flex-wrap gap-2">
                       {summary.referencedHealthRecordIds.map((recId) => (
                         <Badge key={recId} variant="secondary" className="text-xs py-1 px-2.5 gap-1.5">
@@ -183,17 +183,17 @@ export function MemberFinalSummaryDialog({ sessionId, open, onOpenChange, isAdmi
                 {/* Addenda Section */}
                 {summary.addenda && summary.addenda.length > 0 && (
                   <div className="space-y-2.5 pt-3 border-t">
-                    <h4 className="text-sm font-semibold text-amber-900 dark:text-amber-300 flex items-center gap-1.5">
-                      <FileText className="w-4 h-4 text-amber-600" />
+                    <h4 className="text-sm font-semibold text-warning-900 flex items-center gap-1.5">
+                      <FileText className="w-4 h-4 text-warning-600" />
                       Phụ lục & Đính chính sau hoàn tất ({summary.addenda.length})
                     </h4>
                     <div className="space-y-2">
                       {summary.addenda.map((addendum) => (
                         <div
                           key={addendum.id}
-                          className="p-3 rounded-lg bg-amber-50/60 dark:bg-amber-950/20 border border-amber-200/60 dark:border-amber-900/40 text-xs"
+                          className="p-3 rounded-lg bg-warning-50/60 border border-warning-200/60 text-xs"
                         >
-                          <div className="flex items-center justify-between font-medium text-amber-950 dark:text-amber-300 mb-1">
+                          <div className="flex items-center justify-between font-medium text-warning-950 mb-1">
                             <span>Lý do: {addendum.reason}</span>
                             <span className="text-[10px] text-muted-foreground">{formatDate(addendum.createdAt)}</span>
                           </div>

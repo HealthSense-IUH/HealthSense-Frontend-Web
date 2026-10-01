@@ -68,7 +68,7 @@ export default function ForgotPasswordPage() {
       {/* Subtle Grid / Gradient background for depth */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary/5 via-transparent to-transparent pointer-events-none" />
       <div className="absolute top-1/3 right-1/4 w-96 h-96 bg-primary/10 rounded-full blur-[120px] -z-10 pointer-events-none" />
-      <div className="absolute bottom-1/3 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-[120px] -z-10 pointer-events-none" />
+      <div className="absolute bottom-1/3 left-1/4 w-96 h-96 bg-primary-500/10 rounded-full blur-[120px] -z-10 pointer-events-none" />
 
       {/* Header Navigation */}
       <div className="w-full px-4 sm:px-6 lg:px-8 pt-6 pb-4 z-50 relative">
@@ -124,7 +124,7 @@ export default function ForgotPasswordPage() {
 
           {/* Reserved area for general loading or state display if needed */}
           {loading && <div className="text-center text-xs text-slate-400 mt-2">Processing request...</div>}
-          {error && <div className="text-center text-xs text-red-500 mt-2">{error}</div>}
+          {error && <div className="text-center text-xs text-danger-500 mt-2">{error}</div>}
         </div>
 
         {/* Debug / Info notice */}

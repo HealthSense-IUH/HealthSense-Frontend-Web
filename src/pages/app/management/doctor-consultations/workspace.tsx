@@ -265,9 +265,9 @@ export default function DoctorSessionWorkspacePage() {
 
   if (initialLoading && !detail) {
     return (
-      <Page width="full" fill bleed>
+      <Page fill bleed>
         <PageBody className="items-center justify-center text-center gap-3 p-6">
-          <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+          <Loader2 className="h-8 w-8 animate-spin text-primary-600" />
           <p className="text-sm font-semibold text-slate-600">Đang tải không gian khám chuyên khoa...</p>
         </PageBody>
       </Page>
@@ -276,9 +276,9 @@ export default function DoctorSessionWorkspacePage() {
 
   if (!session) {
     return (
-      <Page width="full" fill bleed>
+      <Page fill bleed>
         <PageBody className="items-center justify-center text-center gap-4 p-6">
-          <ShieldAlert className="h-12 w-12 text-rose-500" />
+          <ShieldAlert className="h-12 w-12 text-danger-500" />
           <h2 className="text-lg font-bold text-slate-800">Không tìm thấy phiên khám</h2>
           <p className="text-xs text-slate-500 max-w-md">
             Phiên tư vấn này không tồn tại hoặc bạn không được phân công phụ trách.
@@ -292,7 +292,7 @@ export default function DoctorSessionWorkspacePage() {
   }
 
   return (
-    <Page width="full" fill bleed>
+    <Page fill bleed>
       {/* Top Clinical Header: patient identity, status and quick clinical actions */}
       <PageHeader
         compact
@@ -333,7 +333,7 @@ export default function DoctorSessionWorkspacePage() {
               </Badge>
             )}
             {getSessionStatusBadge(session.status, session.meaningfulCareOccurred)}
-            <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-md">
+            <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-primary-600 bg-primary-50 px-2 py-0.5 rounded-md">
               {session.packageNameSnapshot || "Tư vấn chuyên khoa"}
             </span>
           </>
@@ -342,8 +342,8 @@ export default function DoctorSessionWorkspacePage() {
           <>
             {/* Countdown / Duration Badge */}
             {session.status === "ACTIVE" && session.endsAt && (
-              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold shadow-2xs">
-                <Clock className="w-3.5 h-3.5 text-emerald-600 animate-pulse" />
+              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-success-50 border border-success-200 text-success-800 text-xs font-bold shadow-2xs">
+                <Clock className="w-3.5 h-3.5 text-success-600 animate-pulse" />
                 <span>Hạn kết thúc: {formatDate(session.endsAt)}</span>
               </div>
             )}
@@ -353,7 +353,7 @@ export default function DoctorSessionWorkspacePage() {
               <Button
                 size="sm"
                 onClick={() => setActiveTab("summary")}
-                className="h-9 px-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-xs shadow-xs cursor-pointer animate-pulse"
+                className="h-9 px-3 rounded-xl bg-warning-500 hover:bg-warning-600 text-white font-extrabold text-xs shadow-xs cursor-pointer animate-pulse"
               >
                 <FileText className="w-4 h-4 mr-1.5" />
                 Lập tổng kết y khoa
@@ -375,30 +375,30 @@ export default function DoctorSessionWorkspacePage() {
       />
 
       {/* Workspace panel: tab bar + content that fills the remaining height and scrolls inside */}
-      <PageBody className="gap-0 overflow-hidden bg-white dark:bg-card">
+      <PageBody className="gap-0 overflow-hidden bg-white">
         {/* Tab Navigation */}
-        <div className="shrink-0 overflow-x-auto border-b border-slate-100 dark:border-border px-4 sm:px-6 py-2">
+        <div className="shrink-0 overflow-x-auto border-b border-slate-100 px-4 sm:px-6 py-2">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="h-9 bg-slate-100/80 p-0.5 rounded-xl gap-1">
               <TabsTrigger
                 value="chat"
-                className="text-xs font-bold rounded-lg px-3 data-[state=active]:bg-white data-[state=active]:text-blue-700 data-[state=active]:shadow-xs flex items-center gap-1.5"
+                className="text-xs font-bold rounded-lg px-3 data-[state=active]:bg-white data-[state=active]:text-primary-700 data-[state=active]:shadow-xs flex items-center gap-1.5"
               >
                 <MessageSquare className="w-3.5 h-3.5" />
                 <span>Trò chuyện trực tiếp</span>
                 {session.status === "ACTIVE" && (
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+                  <span className="w-2 h-2 rounded-full bg-success-500 animate-ping" />
                 )}
               </TabsTrigger>
 
               <TabsTrigger
                 value="records"
-                className="text-xs font-bold rounded-lg px-3 data-[state=active]:bg-white data-[state=active]:text-blue-700 data-[state=active]:shadow-xs flex items-center gap-1.5"
+                className="text-xs font-bold rounded-lg px-3 data-[state=active]:bg-white data-[state=active]:text-primary-700 data-[state=active]:shadow-xs flex items-center gap-1.5"
               >
                 <FileText className="w-3.5 h-3.5" />
                 <span>Hồ sơ sức khỏe & Bản đo</span>
                 {session.unresolvedAttentionCount > 0 && (
-                  <Badge className="h-4 px-1.5 rounded-full bg-rose-500 text-white font-black text-[10px]">
+                  <Badge className="h-4 px-1.5 rounded-full bg-danger-500 text-white font-black text-[10px]">
                     {session.unresolvedAttentionCount}
                   </Badge>
                 )}
@@ -406,12 +406,12 @@ export default function DoctorSessionWorkspacePage() {
 
               <TabsTrigger
                 value="summary"
-                className="text-xs font-bold rounded-lg px-3 data-[state=active]:bg-white data-[state=active]:text-blue-700 data-[state=active]:shadow-xs flex items-center gap-1.5"
+                className="text-xs font-bold rounded-lg px-3 data-[state=active]:bg-white data-[state=active]:text-primary-700 data-[state=active]:shadow-xs flex items-center gap-1.5"
               >
                 <FileText className="w-3.5 h-3.5" />
                 <span>Tổng kết y khoa</span>
                 {session.summaryClosureStatus === "SUMMARY_PENDING" && (
-                  <Badge className="h-4 px-1.5 rounded-full bg-amber-500 text-white font-black text-[10px]">
+                  <Badge className="h-4 px-1.5 rounded-full bg-warning-500 text-white font-black text-[10px]">
                     Cần lập
                   </Badge>
                 )}
@@ -419,7 +419,7 @@ export default function DoctorSessionWorkspacePage() {
 
               <TabsTrigger
                 value="continuity"
-                className="text-xs font-bold rounded-lg px-3 data-[state=active]:bg-white data-[state=active]:text-blue-700 data-[state=active]:shadow-xs flex items-center gap-1.5"
+                className="text-xs font-bold rounded-lg px-3 data-[state=active]:bg-white data-[state=active]:text-primary-700 data-[state=active]:shadow-xs flex items-center gap-1.5"
               >
                 <History className="w-3.5 h-3.5" />
                 <span>Tiền sử chăm sóc</span>
@@ -427,7 +427,7 @@ export default function DoctorSessionWorkspacePage() {
 
               <TabsTrigger
                 value="nutrition"
-                className="text-xs font-bold rounded-lg px-3 data-[state=active]:bg-white data-[state=active]:text-blue-700 data-[state=active]:shadow-xs flex items-center gap-1.5"
+                className="text-xs font-bold rounded-lg px-3 data-[state=active]:bg-white data-[state=active]:text-primary-700 data-[state=active]:shadow-xs flex items-center gap-1.5"
               >
                 <Salad className="w-3.5 h-3.5" />
                 <span>Dinh dưỡng</span>
@@ -472,42 +472,34 @@ export default function DoctorSessionWorkspacePage() {
           )}
 
           {activeTab === "records" && (
-            <div className="h-full overflow-y-auto p-4 sm:p-6 bg-slate-50/70">
-              <div className="max-w-5xl mx-auto">
-                <DoctorScopedRecordsTab sessionId={session.id} />
-              </div>
+            <div className="h-full overflow-y-auto p-3 sm:p-4 bg-slate-50/70">
+              <DoctorScopedRecordsTab sessionId={session.id} />
             </div>
           )}
 
           {activeTab === "summary" && (
-            <div className="h-full overflow-y-auto p-4 sm:p-6 bg-slate-50/70">
-              <div className="max-w-4xl mx-auto">
-                <DoctorFinalSummaryTab
-                  sessionId={session.id}
-                  sessionStatus={session.status}
-                  meaningfulCareOccurred={session.meaningfulCareOccurred}
-                  flowType={session.flowType}
-                  summaryDueAt={session.summaryDueAt}
-                  summaryClosureStatus={session.summaryClosureStatus}
-                  onFinalized={refreshDetail}
-                />
-              </div>
+            <div className="h-full overflow-y-auto p-3 sm:p-4 bg-slate-50/70">
+              <DoctorFinalSummaryTab
+                sessionId={session.id}
+                sessionStatus={session.status}
+                meaningfulCareOccurred={session.meaningfulCareOccurred}
+                flowType={session.flowType}
+                summaryDueAt={session.summaryDueAt}
+                summaryClosureStatus={session.summaryClosureStatus}
+                onFinalized={refreshDetail}
+              />
             </div>
           )}
 
           {activeTab === "continuity" && (
-            <div className="h-full overflow-y-auto p-4 sm:p-6 bg-slate-50/70">
-              <div className="max-w-4xl mx-auto">
-                <DoctorContinuityTab sessionId={session.id} />
-              </div>
+            <div className="h-full overflow-y-auto p-3 sm:p-4 bg-slate-50/70">
+              <DoctorContinuityTab sessionId={session.id} />
             </div>
           )}
 
           {activeTab === "nutrition" && (
-            <div className="h-full overflow-y-auto p-4 sm:p-6 bg-slate-50/70">
-              <div className="max-w-4xl mx-auto">
-                <DoctorDietPrescriptionTab sessionId={session.id} readOnly={session.status !== "ACTIVE"} />
-              </div>
+            <div className="h-full overflow-y-auto p-3 sm:p-4 bg-slate-50/70">
+              <DoctorDietPrescriptionTab sessionId={session.id} readOnly={session.status !== "ACTIVE"} />
             </div>
           )}
         </div>

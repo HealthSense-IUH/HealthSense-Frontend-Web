@@ -239,15 +239,15 @@ export default function UserManagementPage() {
       <Page>
         <PageBody className="items-center justify-center text-center">
           <div className="flex flex-col items-center max-w-lg">
-            <div className="p-5 rounded-3xl bg-red-50 text-red-600 border border-red-200/80 shadow-xs mb-5">
+            <div className="p-5 rounded-2xl bg-danger-50 text-danger-600 border border-danger-200/80 shadow-xs mb-5">
               <ShieldAlert className="w-12 h-12 stroke-[2.2]" />
             </div>
             <h2 className="text-2xl font-black text-slate-900 tracking-tight">Từ chối truy cập: Trang được bảo vệ</h2>
             <p className="text-sm font-medium text-slate-500 mt-2 leading-relaxed">
-              Phân hệ <strong className="text-slate-800">Quản lý người dùng & tài khoản</strong> chỉ dành riêng cho quyền <strong className="text-blue-600">ADMIN</strong> và <strong className="text-amber-600">SUPER_ADMIN</strong>. Vai trò hiện tại của bạn là <strong className="text-slate-900">{effectiveRole}</strong>.
+              Phân hệ <strong className="text-slate-800">Quản lý người dùng & tài khoản</strong> chỉ dành riêng cho quyền <strong className="text-primary-600">ADMIN</strong> và <strong className="text-warning-600">SUPER_ADMIN</strong>. Vai trò hiện tại của bạn là <strong className="text-slate-900">{effectiveRole}</strong>.
             </p>
             <div className="mt-6 p-4 rounded-2xl bg-slate-50 border border-slate-200 w-full text-xs font-bold text-slate-600 flex items-center justify-center gap-2">
-              <Sparkles className="w-4 h-4 text-amber-500" />
+              <Sparkles className="w-4 h-4 text-warning-500" />
               <span>Vui lòng chuyển đổi vai trò sang ADMIN hoặc SUPER_ADMIN để truy cập trang này.</span>
             </div>
           </div>
@@ -275,7 +275,7 @@ export default function UserManagementPage() {
           <Button
             onClick={handleOpenCreate}
             disabled={loading}
-            className="h-10 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs px-4.5 shadow-sm shadow-blue-500/25 flex items-center gap-2 transition-transform active:scale-95 cursor-pointer shrink-0"
+            className="h-10 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-extrabold text-xs px-4.5 shadow-sm shadow-primary-500/25 flex items-center gap-2 transition-transform active:scale-95 cursor-pointer shrink-0"
           >
             <Plus className="h-4 w-4 stroke-[3]" />
             <span>Thêm tài khoản</span>
@@ -292,15 +292,15 @@ export default function UserManagementPage() {
           <div
             className={`p-4 rounded-2xl border text-xs font-bold flex items-center justify-between transition-all ${
               statusAlert.type === "success"
-                ? "bg-emerald-50 border-emerald-200 text-emerald-900 shadow-3xs shadow-emerald-500/10"
-                : "bg-red-50 border-red-200 text-red-900 shadow-3xs shadow-red-500/10"
+                ? "bg-success-50 border-success-200 text-success-900 shadow-3xs shadow-success-500/10"
+                : "bg-danger-50 border-danger-200 text-danger-900 shadow-3xs shadow-danger-500/10"
             }`}
           >
             <div className="flex items-center gap-3">
               {statusAlert.type === "success" ? (
-                <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+                <CheckCircle2 className="w-5 h-5 text-success-600 shrink-0" />
               ) : (
-                <AlertCircle className="w-5 h-5 text-red-600 shrink-0" />
+                <AlertCircle className="w-5 h-5 text-danger-600 shrink-0" />
               )}
               <span>{statusAlert.text}</span>
             </div>

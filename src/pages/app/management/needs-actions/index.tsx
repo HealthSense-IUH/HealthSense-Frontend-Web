@@ -110,22 +110,22 @@ export default function NeedsActionsPage() {
   const getPriorityBadge = (priority: string) => {
     switch (priority) {
       case "CRITICAL":
-        return <Badge className="bg-rose-600 hover:bg-rose-700 text-white font-black text-[10px]">CRITICAL</Badge>
+        return <Badge className="bg-danger-600 hover:bg-danger-700 text-white font-black text-[10px]">CRITICAL</Badge>
       case "HIGH":
-        return <Badge className="bg-orange-500 hover:bg-orange-600 text-white font-bold text-[10px]">HIGH</Badge>
+        return <Badge className="bg-warning-500 hover:bg-warning-600 text-white font-bold text-[10px]">HIGH</Badge>
       default:
-        return <Badge className="bg-blue-600 hover:bg-blue-700 text-white font-medium text-[10px]">NORMAL</Badge>
+        return <Badge className="bg-primary-600 hover:bg-primary-700 text-white font-medium text-[10px]">NORMAL</Badge>
     }
   }
 
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "RESOLVED":
-        return <Badge className="bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-[10px]">RESOLVED</Badge>
+        return <Badge className="bg-success-500 hover:bg-success-600 text-white font-bold text-[10px]">RESOLVED</Badge>
       case "CLAIMED":
-        return <Badge className="bg-sky-500 hover:bg-sky-600 text-white font-bold text-[10px]">CLAIMED</Badge>
+        return <Badge className="bg-primary-500 hover:bg-primary-600 text-white font-bold text-[10px]">CLAIMED</Badge>
       default:
-        return <Badge className="bg-amber-500 hover:bg-amber-600 text-white font-bold text-[10px]">OPEN</Badge>
+        return <Badge className="bg-warning-500 hover:bg-warning-600 text-white font-bold text-[10px]">OPEN</Badge>
     }
   }
 
@@ -135,7 +135,7 @@ export default function NeedsActionsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-2xl bg-amber-50 text-amber-600 border border-amber-200 shadow-xs">
+            <div className="p-2 rounded-2xl bg-warning-50 text-warning-600 border border-warning-200 shadow-xs">
               <ListTodo className="w-6 h-6" />
             </div>
             <div>
@@ -166,9 +166,9 @@ export default function NeedsActionsPage() {
         <Tabs value={statusTab} onValueChange={setStatusTab} className="w-full sm:w-auto">
           <TabsList className="grid grid-cols-4 w-full sm:w-auto bg-slate-100/80">
             <TabsTrigger value="ALL" className="text-xs font-bold">Tất cả</TabsTrigger>
-            <TabsTrigger value="OPEN" className="text-xs font-bold text-amber-600">Chờ xử lý</TabsTrigger>
-            <TabsTrigger value="CLAIMED" className="text-xs font-bold text-sky-600">Đang xử lý</TabsTrigger>
-            <TabsTrigger value="RESOLVED" className="text-xs font-bold text-emerald-600">Đã xong</TabsTrigger>
+            <TabsTrigger value="OPEN" className="text-xs font-bold text-warning-600">Chờ xử lý</TabsTrigger>
+            <TabsTrigger value="CLAIMED" className="text-xs font-bold text-primary-600">Đang xử lý</TabsTrigger>
+            <TabsTrigger value="RESOLVED" className="text-xs font-bold text-success-600">Đã xong</TabsTrigger>
           </TabsList>
         </Tabs>
 
@@ -207,13 +207,13 @@ export default function NeedsActionsPage() {
       {/* Items List */}
       {loading ? (
         <div className="flex flex-col items-center justify-center p-16 text-slate-400 space-y-3">
-          <RefreshCw className="w-6 h-6 animate-spin text-blue-500" />
+          <RefreshCw className="w-6 h-6 animate-spin text-primary-500" />
           <span className="text-xs font-medium">Đang tải danh sách hàng đợi công việc...</span>
         </div>
       ) : filteredItems.length === 0 ? (
-        <Card className="rounded-3xl border-slate-200 shadow-xs bg-slate-50/50">
+        <Card className="rounded-2xl border-slate-200 shadow-xs bg-slate-50/50">
           <CardContent className="flex flex-col items-center justify-center p-12 text-center space-y-2">
-            <div className="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center">
+            <div className="w-12 h-12 rounded-full bg-success-100 text-success-600 flex items-center justify-center">
               <CheckCircle2 className="w-6 h-6" />
             </div>
             <h3 className="text-sm font-black text-slate-800">Hàng đợi trống</h3>
@@ -231,7 +231,7 @@ export default function NeedsActionsPage() {
                 setSelectedItem(item)
                 setDetailOpen(true)
               }}
-              className="rounded-2xl border-slate-200 hover:border-blue-300 hover:shadow-md transition-all cursor-pointer overflow-hidden flex flex-col justify-between"
+              className="rounded-2xl border-slate-200 hover:border-primary-300 hover:shadow-md transition-all cursor-pointer overflow-hidden flex flex-col justify-between"
             >
               <CardContent className="p-5 space-y-3">
                 <div className="flex items-start justify-between gap-2">
@@ -265,7 +265,7 @@ export default function NeedsActionsPage() {
                     })}
                   </span>
                   {item.claimedByUserId && (
-                    <span className="text-blue-600 font-semibold">
+                    <span className="text-primary-600 font-semibold">
                       Phụ trách: #{item.claimedByUserId}
                     </span>
                   )}

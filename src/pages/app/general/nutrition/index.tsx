@@ -11,7 +11,7 @@ const NUTRITION_TABS = ["foods", "diet", "scan"] as const
 type NutritionTab = (typeof NUTRITION_TABS)[number]
 
 const comingSoonBadge = (
-  <span className="ml-1 px-1.5 py-0.5 rounded-full text-[10px] bg-amber-100 text-amber-700 font-semibold dark:bg-amber-950/40 dark:text-amber-300">
+  <span className="ml-1 px-1.5 py-0.5 rounded-full text-[10px] bg-warning-100 text-warning-700 font-semibold">
     Sắp ra mắt
   </span>
 )
@@ -84,7 +84,7 @@ export default function NutritionHomePage() {
         <p className="flex items-start gap-2">
           <Info className="w-4 h-4 shrink-0 mt-0.5 text-slate-400" />
           <span>
-            <strong className="text-slate-600 dark:text-slate-300">Lưu ý y khoa:</strong> Các khuyến cáo dinh dưỡng
+            <strong className="text-slate-600">Lưu ý y khoa:</strong> Các khuyến cáo dinh dưỡng
             trên HealthSense được tham khảo từ hướng dẫn lâm sàng của Hội Tim mạch Hoa Kỳ (ACC/AHA) và các tổng quan hệ
             thống y khoa. Không có thực phẩm nào tự chữa khỏi hoặc hoàn toàn ngăn ngừa rung nhĩ. Mọi thay đổi lớn về chế
             độ ăn hoặc sử dụng chất bổ sung cần có sự tư vấn của bác sĩ điều trị.

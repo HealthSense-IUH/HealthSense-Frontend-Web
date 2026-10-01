@@ -92,11 +92,11 @@ export function ReconcileRefundDialog({
 
           <div className="space-y-4 py-4 text-xs">
             {/* PayOS SDK notice */}
-            <Alert className="bg-amber-50/70 border-amber-200 text-amber-900">
-              <Info className="h-4 w-4 text-amber-600 shrink-0" />
+            <Alert className="bg-warning-50/70 border-warning-200 text-warning-900">
+              <Info className="h-4 w-4 text-warning-600 shrink-0" />
               <div className="space-y-1">
                 <AlertTitle className="text-xs font-bold">Lưu ý Vận hành & Cổng Thanh toán</AlertTitle>
-                <AlertDescription className="text-[11px] leading-relaxed text-amber-800">
+                <AlertDescription className="text-[11px] leading-relaxed text-warning-800">
                   Cổng PayOS hiện chưa hỗ trợ lệnh hoàn tiền trực tiếp qua API (lệnh <code>/execute</code> sẽ trả về trạng thái thất bại kỹ thuật). Quản trị viên cần thực hiện chuyển khoản hoàn tiền thủ công qua ngân hàng, sau đó đối soát và lưu mã giao dịch tại đây.
                 </AlertDescription>
               </div>
@@ -111,7 +111,7 @@ export function ReconcileRefundDialog({
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-slate-500 font-medium">Trạng thái hiện tại:</span>
-                <span className="font-bold text-blue-600">{refund.status}</span>
+                <span className="font-bold text-primary-600">{refund.status}</span>
               </div>
             </div>
 
@@ -123,7 +123,7 @@ export function ReconcileRefundDialog({
                   type="button"
                   onClick={() => setSucceeded(true)}
                   className={`p-3 rounded-xl border font-bold text-center cursor-pointer transition-all ${
-                    succeeded ? "border-emerald-600 bg-emerald-50 text-emerald-800 shadow-xs" : "border-slate-200 text-slate-600 hover:bg-slate-50"
+                    succeeded ? "border-success-600 bg-success-50 text-success-800 shadow-xs" : "border-slate-200 text-slate-600 hover:bg-slate-50"
                   }`}
                   disabled={loading}
                 >
@@ -133,7 +133,7 @@ export function ReconcileRefundDialog({
                   type="button"
                   onClick={() => setSucceeded(false)}
                   className={`p-3 rounded-xl border font-bold text-center cursor-pointer transition-all ${
-                    !succeeded ? "border-rose-600 bg-rose-50 text-rose-800 shadow-xs" : "border-slate-200 text-slate-600 hover:bg-slate-50"
+                    !succeeded ? "border-danger-600 bg-danger-50 text-danger-800 shadow-xs" : "border-slate-200 text-slate-600 hover:bg-slate-50"
                   }`}
                   disabled={loading}
                 >
@@ -157,7 +157,7 @@ export function ReconcileRefundDialog({
 
             <div className="space-y-1.5">
               <Label htmlFor="providerResult" className="text-xs font-bold text-slate-700">
-                Bằng chứng & Ghi chú đối soát <span className="text-rose-500">*</span>
+                Bằng chứng & Ghi chú đối soát <span className="text-danger-500">*</span>
               </Label>
               <Textarea
                 id="providerResult"
@@ -182,7 +182,7 @@ export function ReconcileRefundDialog({
             <Button
               type="submit"
               disabled={loading}
-              className="bg-blue-600 hover:bg-blue-700 text-white"
+              className="bg-primary-600 hover:bg-primary-700 text-white"
             >
               {loading ? "Đang ghi nhận..." : "Xác nhận đối soát hoàn tất"}
             </Button>

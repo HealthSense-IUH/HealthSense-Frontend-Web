@@ -17,11 +17,11 @@ export function HealthRecordsTable({ records, isLoading, onView }: HealthRecords
   const renderStatusBadge = (status: HealthRecord['status']) => {
     switch (status) {
       case 'COMPLETED':
-        return <Badge className="bg-green-500 hover:bg-green-600">Completed</Badge>
+        return <Badge className="bg-success-500 hover:bg-success-600">Completed</Badge>
       case 'PROCESSING':
-        return <Badge className="bg-blue-500 hover:bg-blue-600">Processing</Badge>
+        return <Badge className="bg-primary-500 hover:bg-primary-600">Processing</Badge>
       case 'PENDING_UPLOAD':
-        return <Badge variant="outline" className="text-yellow-600 border-yellow-600">Pending</Badge>
+        return <Badge variant="outline" className="text-warning-600 border-warning-600">Pending</Badge>
       case 'FAILED':
         return <Badge variant="destructive">Failed</Badge>
       default:
@@ -30,25 +30,25 @@ export function HealthRecordsTable({ records, isLoading, onView }: HealthRecords
   }
 
   const renderPredictionBadge = (prediction: HealthRecord['predictionLabel']) => {
-    if (!prediction) return <span className="text-neutral-400">-</span>
+    if (!prediction) return <span className="text-slate-400">-</span>
     switch (prediction) {
       case 'NORMAL':
-        return <Badge variant="outline" className="text-green-600 border-green-600 bg-green-50 dark:bg-green-950/20">Normal</Badge>
+        return <Badge variant="outline" className="text-success-600 border-success-600 bg-success-50">Normal</Badge>
       case 'AFIB':
-        return <Badge variant="outline" className="text-red-600 border-red-600 bg-red-50 dark:bg-red-950/20">AFib</Badge>
+        return <Badge variant="outline" className="text-danger-600 border-danger-600 bg-danger-50">AFib</Badge>
       case 'UNCERTAIN':
-        return <Badge variant="outline" className="text-orange-500 border-orange-500 bg-orange-50 dark:bg-orange-950/20">Uncertain</Badge>
+        return <Badge variant="outline" className="text-warning-500 border-warning-500 bg-warning-50">Uncertain</Badge>
       default:
         return <Badge variant="outline">{prediction}</Badge>
     }
   }
 
   if (isLoading) {
-    return <div className="py-10 text-center text-neutral-500">Loading records...</div>
+    return <div className="py-10 text-center text-slate-500">Loading records...</div>
   }
 
   if (!records?.length) {
-    return <div className="py-10 text-center text-neutral-500">No records found.</div>
+    return <div className="py-10 text-center text-slate-500">No records found.</div>
   }
 
   return (

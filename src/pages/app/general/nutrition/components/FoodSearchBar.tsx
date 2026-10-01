@@ -73,7 +73,7 @@ export function FoodSearchBar({
           onFocus={() => setIsOpen(true)}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
-          className="pl-10 pr-9 h-11 rounded-2xl bg-white dark:bg-card border-slate-200 dark:border-border shadow-xs focus-visible:ring-primary/20 text-sm"
+          className="pl-10 pr-9 h-11 rounded-2xl bg-white border-slate-200 shadow-xs focus-visible:ring-primary/20 text-sm"
         />
         {query && (
           <button
@@ -92,7 +92,7 @@ export function FoodSearchBar({
 
       {/* Results Dropdown / Flyout */}
       {isOpen && query.trim().length > 0 && (
-        <div className="absolute left-0 right-0 top-full mt-2 z-50 rounded-2xl border border-slate-200 bg-white/95 backdrop-blur-md shadow-xl overflow-hidden dark:border-border dark:bg-card/95 max-h-[380px] overflow-y-auto">
+        <div className="absolute left-0 right-0 top-full mt-2 z-50 rounded-2xl border border-slate-200 bg-white/95 backdrop-blur-md shadow-xl overflow-hidden max-h-[380px] overflow-y-auto">
           {results.length > 0 ? (
             <div className="p-2 space-y-1">
               <div className="px-3 py-1.5 text-[11px] font-medium text-muted-foreground flex items-center justify-between">
@@ -108,11 +108,11 @@ export function FoodSearchBar({
                     key={food.id}
                     type="button"
                     onClick={() => handleSelect(food)}
-                    className="w-full text-left p-2.5 rounded-xl hover:bg-slate-100/80 dark:hover:bg-muted/60 transition-colors flex items-center justify-between gap-3 group"
+                    className="w-full text-left p-2.5 rounded-xl hover:bg-slate-100/80 transition-colors flex items-center justify-between gap-3 group"
                   >
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
-                        <span className="font-medium text-sm text-slate-900 dark:text-foreground group-hover:text-primary transition-colors truncate">
+                        <span className="font-medium text-sm text-slate-900 group-hover:text-primary transition-colors truncate">
                           {title}
                         </span>
                         {subtitle && (
@@ -123,7 +123,7 @@ export function FoodSearchBar({
                         {guidanceType && <GuidanceBadge type={guidanceType} size="sm" />}
                       </div>
                       {food.description && (
-                        <p className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-1 mt-0.5">
+                        <p className="text-[11px] text-slate-500 line-clamp-1 mt-0.5">
                           {food.description}
                         </p>
                       )}
@@ -167,7 +167,7 @@ export function FoodSearchBar({
                 setQuery(tag)
                 setIsOpen(true)
               }}
-              className="shrink-0 px-2.5 py-1 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-muted dark:hover:bg-muted/80 text-slate-700 dark:text-slate-300 text-xs transition-colors"
+              className="shrink-0 px-2.5 py-1 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs transition-colors"
             >
               {tag}
             </button>

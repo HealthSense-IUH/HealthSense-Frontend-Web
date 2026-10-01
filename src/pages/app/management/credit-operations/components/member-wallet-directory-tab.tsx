@@ -354,7 +354,7 @@ export function MemberWalletDirectoryTab() {
         return (
           <Badge
             variant="outline"
-            className="text-[11px] font-semibold bg-emerald-500/10 text-emerald-600 border-emerald-500/30"
+            className="text-[11px] font-semibold bg-success-500/10 text-success-600 border-success-500/30"
           >
             Hoạt động
           </Badge>
@@ -363,7 +363,7 @@ export function MemberWalletDirectoryTab() {
         return (
           <Badge
             variant="outline"
-            className="text-[11px] font-semibold bg-amber-500/10 text-amber-600 border-amber-500/30"
+            className="text-[11px] font-semibold bg-warning-500/10 text-warning-600 border-warning-500/30"
           >
             Chờ xác thực
           </Badge>
@@ -526,7 +526,7 @@ export function MemberWalletDirectoryTab() {
                           <span
                             className={
                               member.available > 0
-                                ? "text-emerald-600 dark:text-emerald-400"
+                                ? "text-success-600"
                                 : "text-muted-foreground"
                             }
                           >
@@ -537,7 +537,7 @@ export function MemberWalletDirectoryTab() {
                         {/* Reserved */}
                         <TableCell className="text-center font-mono text-xs">
                           {member.reserved > 0 ? (
-                            <span className="text-amber-600 font-bold bg-amber-500/10 px-2 py-0.5 rounded-full">
+                            <span className="text-warning-600 font-bold bg-warning-500/10 px-2 py-0.5 rounded-full">
                               {member.reserved}
                             </span>
                           ) : (
@@ -557,7 +557,7 @@ export function MemberWalletDirectoryTab() {
                               Chưa phát sinh ví
                             </span>
                           ) : (
-                            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-500/10 text-emerald-600 border border-emerald-500/20">
+                            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-success-500/10 text-success-600 border border-success-500/20">
                               Đã khởi tạo
                             </span>
                           )}
@@ -699,7 +699,7 @@ export function MemberWalletDirectoryTab() {
                           />
                           <div className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground text-xs font-bold pointer-events-none">
                             {adjustDelta > 0 ? (
-                              <ArrowUpRight className="w-4 h-4 text-emerald-600" />
+                              <ArrowUpRight className="w-4 h-4 text-success-600" />
                             ) : adjustDelta < 0 ? (
                               <ArrowDownRight className="w-4 h-4 text-destructive" />
                             ) : (
@@ -753,21 +753,21 @@ export function MemberWalletDirectoryTab() {
                 )}
 
                 {/* Available Credits Card */}
-                <Card className="rounded-xl border shadow-2xs bg-emerald-500/5 border-emerald-500/20">
+                <Card className="rounded-xl border shadow-2xs bg-success-500/5 border-success-500/20">
                   <CardHeader className="pb-1.5 p-4 flex flex-row items-center justify-between">
                     <div>
-                      <CardDescription className="text-xs font-semibold text-emerald-700 dark:text-emerald-300">
+                      <CardDescription className="text-xs font-semibold text-success-700">
                         Lượt khả dụng
                       </CardDescription>
-                      <CardTitle className="text-3xl font-extrabold text-emerald-600 font-mono mt-1">
+                      <CardTitle className="text-3xl font-extrabold text-success-600 font-mono mt-1">
                         {loadingWalletDetail ? (
-                          <RefreshCw className="w-6 h-6 animate-spin text-emerald-600" />
+                          <RefreshCw className="w-6 h-6 animate-spin text-success-600" />
                         ) : (
                           `${memberWallet ? memberWallet.available : selectedMember.available} lượt`
                         )}
                       </CardTitle>
                     </div>
-                    <div className="p-3 rounded-2xl bg-emerald-500/10 text-emerald-600">
+                    <div className="p-3 rounded-2xl bg-success-500/10 text-success-600">
                       <Coins className="w-6 h-6" />
                     </div>
                   </CardHeader>
@@ -888,7 +888,7 @@ export function MemberWalletDirectoryTab() {
                                   </TableCell>
                                   <TableCell className="text-center font-mono font-bold text-xs">
                                     {isPositive && (
-                                      <span className="text-emerald-600">+{entry.deltaBalance}</span>
+                                      <span className="text-success-600">+{entry.deltaBalance}</span>
                                     )}
                                     {isNegative && (
                                       <span className="text-destructive">{entry.deltaBalance}</span>

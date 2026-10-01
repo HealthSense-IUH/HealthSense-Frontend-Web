@@ -9,24 +9,24 @@ export function MetricCard({ item }: { item: MetricItem }) {
   const getIcon = () => {
     switch (item.iconType) {
       case "users":
-        return <Users className="h-5 w-5 text-blue-600" />
+        return <Users className="h-5 w-5 text-primary-600" />
       case "doctors":
-        return <Stethoscope className="h-5 w-5 text-teal-600" />
+        return <Stethoscope className="h-5 w-5 text-success-600" />
       case "members":
-        return <UserCheck className="h-5 w-5 text-emerald-600" />
+        return <UserCheck className="h-5 w-5 text-success-600" />
       case "alerts":
-        return <AlertTriangle className="h-5 w-5 text-red-600" />
+        return <AlertTriangle className="h-5 w-5 text-danger-600" />
     }
   }
 
   const getBadgeStyle = () => {
     switch (item.changeStatus) {
       case "positive":
-        return "text-emerald-700 bg-emerald-50 border-emerald-200/80"
+        return "text-success-700 bg-success-50 border-success-200/80"
       case "warning":
-        return "text-amber-700 bg-amber-50 border-amber-200/80"
+        return "text-warning-700 bg-warning-50 border-warning-200/80"
       case "critical":
-        return "text-red-700 bg-red-50 border-red-200/80 font-bold"
+        return "text-danger-700 bg-danger-50 border-danger-200/80 font-bold"
       default:
         return "text-slate-700 bg-slate-50 border-slate-200"
     }
@@ -35,13 +35,13 @@ export function MetricCard({ item }: { item: MetricItem }) {
   const getLineColor = () => {
     switch (item.changeStatus) {
       case "positive":
-        return "#10b981" // emerald
+        return "var(--color-success-500)"
       case "warning":
-        return "#f59e0b" // amber
+        return "var(--color-warning-500)"
       case "critical":
-        return "#ef4444" // red
+        return "var(--color-danger-500)"
       default:
-        return "#64748b" // slate
+        return "var(--color-slate-500)"
     }
   }
 
