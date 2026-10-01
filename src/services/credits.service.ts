@@ -7,6 +7,8 @@ import type {
   AdminCreditOrdersFilterParams,
   AdminCreditOrderSummary,
   AdminCreditPackage,
+  AdminCreditPaymentOverview,
+  AdminCreditPaymentOverviewParams,
   AdminMemberCreditSummary,
   AdminMemberCreditsFilterParams,
   AdminMemberWallet,
@@ -22,6 +24,9 @@ import type {
   CreditWallet,
   CreditWalletReconciliation,
   CreditLedgerEntry,
+  MemberCreditPaymentOverview,
+  MemberCreditPaymentOverviewParams,
+  MemberCreditOrdersFilterParams,
   UpdateAdminCreditPackageRequest,
 } from "@/types/credits"
 
@@ -30,10 +35,7 @@ export interface GetLedgerParams {
   size?: number
 }
 
-export interface GetOrdersParams {
-  page?: number
-  size?: number
-}
+export type GetOrdersParams = MemberCreditOrdersFilterParams
 
 export const creditsApi = {
   /**
@@ -88,17 +90,37 @@ export const creditsApi = {
   },
 
   /**
+   * Member API: Tổng quan thanh toán token của Member
+   * GET /api/credits/payments/overview
+   */
+  getPaymentOverview(params?: MemberCreditPaymentOverviewParams) {
+    const queryParams: Record<string, string> = {}
+    if (params?.from?.trim()) queryParams.from = params.from.trim()
+    if (params?.to?.trim()) queryParams.to = params.to.trim()
+    return axiosClient.get<
+      ApiResponse<MemberCreditPaymentOverview>,
+      ApiResponse<MemberCreditPaymentOverview>
+    >("/api/credits/payments/overview", {
+      params: queryParams,
+    })
+  },
+
+  /**
    * API 5: Lấy danh sách lịch sử các đơn mua lượt của member
    * GET /api/credits/orders?page=1&size=10
    */
   getOrders(params?: GetOrdersParams) {
     const page = params?.page ?? 1
     const size = params?.size ?? 10
+    const queryParams: Record<string, any> = { page, size }
+    if (params?.status && params.status !== ("ALL" as any)) queryParams.status = params.status
+    if (params?.from?.trim()) queryParams.from = params.from.trim()
+    if (params?.to?.trim()) queryParams.to = params.to.trim()
     return axiosClient.get<
       ApiResponse<PageResponse<CreditOrderSummary>>,
       ApiResponse<PageResponse<CreditOrderSummary>>
     >("/api/credits/orders", {
-      params: { page, size },
+      params: queryParams,
     })
   },
 
@@ -216,25 +238,42 @@ export const creditsApi = {
   },
 
   /**
+   * ADMIN API: KPI tổng quan thanh toán token
+   * GET /api/admin/credits/payments/overview
+   */
+  adminGetPaymentOverview(params?: AdminCreditPaymentOverviewParams) {
+    const queryParams: Record<string, string> = {}
+    if (params?.memberId?.trim()) queryParams.memberId = params.memberId.trim()
+    if (params?.from?.trim()) queryParams.from = params.from.trim()
+    if (params?.to?.trim()) queryParams.to = params.to.trim()
+
+    return axiosClient.get<
+      ApiResponse<AdminCreditPaymentOverview>,
+      ApiResponse<AdminCreditPaymentOverview>
+    >("/api/admin/credits/payments/overview", {
+      params: queryParams,
+    })
+  },
+
+  /**
    * ADMIN API 6: Tra cứu danh sách đơn mua lượt toàn hệ thống
    * GET /api/admin/credits/orders
    */
   adminGetOrders(params?: AdminCreditOrdersFilterParams) {
     const page = params?.page ?? 1
-    const size = params?.size ?? 10
+    const size = params?.size ?? 20
+    const queryParams: Record<string, any> = { page, size }
+    if (params?.memberId?.trim()) queryParams.memberId = params.memberId.trim()
+    if (params?.status && params.status !== ("ALL" as any)) queryParams.status = params.status
+    if (params?.provider && params.provider !== ("ALL" as any)) queryParams.provider = params.provider
+    if (params?.from?.trim()) queryParams.from = params.from.trim()
+    if (params?.to?.trim()) queryParams.to = params.to.trim()
+
     return axiosClient.get<
       ApiResponse<PageResponse<AdminCreditOrderSummary>>,
       ApiResponse<PageResponse<AdminCreditOrderSummary>>
     >("/api/admin/credits/orders", {
-      params: {
-        page,
-        size,
-        ...(params?.memberId ? { memberId: params.memberId } : {}),
-        ...(params?.status ? { status: params.status } : {}),
-        ...(params?.provider ? { provider: params.provider } : {}),
-        ...(params?.from ? { from: params.from } : {}),
-        ...(params?.to ? { to: params.to } : {}),
-      },
+      params: queryParams,
     })
   },
 
