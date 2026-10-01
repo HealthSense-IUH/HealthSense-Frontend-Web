@@ -8,6 +8,7 @@ import {
   AlertCircle,
   ExternalLink,
   Loader2,
+  FilterX,
 } from "lucide-react"
 import {
   Table,
@@ -39,6 +40,8 @@ interface OrdersHistoryTableProps {
   onPageChange: (newPage: number) => void
   onViewDetail: (orderId: string) => void
   onRetry: () => void
+  isFiltered?: boolean
+  onResetFilters?: () => void
 }
 
 export function OrdersHistoryTable({
@@ -49,6 +52,8 @@ export function OrdersHistoryTable({
   onPageChange,
   onViewDetail,
   onRetry,
+  isFiltered = false,
+  onResetFilters,
 }: OrdersHistoryTableProps) {
   const { toast } = useToast()
   const userSession = useAuthStore((state) => state.userSession)
@@ -60,10 +65,11 @@ export function OrdersHistoryTable({
     setResumingOrderId(orderId)
 
     try {
-      const res = await creditsApi.getOrder(orderId)
+      // 1. Fetch on-demand detail
+      const res = await creditsApi.getOrderById(orderId)
       const data = res.data
 
-      // 1. Kiểm tra nếu đã PAID
+      // 2. Kiểm tra nếu đã PAID
       if (data.order.status === "PAID") {
         window.dispatchEvent(new CustomEvent("credits:refresh"))
         toast({
@@ -73,7 +79,7 @@ export function OrdersHistoryTable({
         return
       }
 
-      // 2. Kiểm tra nếu order không còn PENDING_PAYMENT
+      // 3. Kiểm tra nếu order không còn PENDING_PAYMENT
       if (data.order.status !== "PENDING_PAYMENT") {
         toast({
           title: "Đơn hàng không thể thanh toán",
@@ -82,8 +88,23 @@ export function OrdersHistoryTable({
         return
       }
 
-      // 3. Kiểm tra nếu payment đang CREATING
-      if (data.payment?.status === "CREATING") {
+      // 4. Kiểm tra hết hạn link
+      const payment = data.payment
+      const isExpired = payment?.expiresAt
+        ? new Date(payment.expiresAt).getTime() <= Date.now()
+        : false
+
+      if (isExpired) {
+        toast({
+          title: "Liên kết thanh toán đã hết hạn",
+          description: "Liên kết thanh toán PayOS đã hết hạn. Vui lòng tạo đơn mua mới.",
+          variant: "destructive",
+        })
+        return
+      }
+
+      // 5. Kiểm tra nếu payment đang CREATING
+      if (payment?.status === "CREATING") {
         toast({
           title: "Đang khởi tạo liên kết",
           description: "Liên kết thanh toán đang được khởi tạo bởi PayOS. Vui lòng thử lại sau vài giây.",
@@ -91,26 +112,27 @@ export function OrdersHistoryTable({
         return
       }
 
-      // 4. Nếu là PAYOS và có checkoutUrl HTTPS hợp lệ
+      // 6. Nếu là PAYOS và có checkoutUrl HTTPS hợp lệ và chưa hết hạn
       if (
-        data.payment?.provider === "PAYOS" &&
-        data.payment?.status === "PENDING" &&
-        data.payment.checkoutUrl &&
-        data.payment.checkoutUrl.startsWith("https://")
+        payment?.provider === "PAYOS" &&
+        payment?.status === "PENDING" &&
+        payment.checkoutUrl &&
+        payment.checkoutUrl.startsWith("https://")
       ) {
         if (userId) {
           saveStoredPendingPayment({
             userId,
             orderId: String(data.order.id),
-            attemptId: String(data.payment.attemptId),
+            attemptId: String(payment.attemptId),
             packageId: String(data.order.packageId),
-            orderCode: data.payment.orderCode,
-            checkoutUrl: data.payment.checkoutUrl,
-            expiresAt: data.payment.expiresAt,
+            orderCode: payment.orderCode,
+            checkoutUrl: payment.checkoutUrl,
+            expiresAt: payment.expiresAt,
             createdAt: data.order.createdAt,
           })
         }
-        window.location.assign(data.payment.checkoutUrl)
+        // Mở tab mới với noopener,noreferrer theo yêu cầu
+        window.open(payment.checkoutUrl, "_blank", "noopener,noreferrer")
         return
       }
 
@@ -134,9 +156,9 @@ export function OrdersHistoryTable({
   if (loading && !ordersData) {
     return (
       <div className="space-y-3">
-        <Skeleton className="h-10 w-full" />
+        <Skeleton className="h-10 w-full rounded-xl" />
         {[1, 2, 3, 4, 5].map((i) => (
-          <Skeleton key={i} className="h-14 w-full" />
+          <Skeleton key={i} className="h-14 w-full rounded-xl" />
         ))}
       </div>
     )
@@ -144,7 +166,7 @@ export function OrdersHistoryTable({
 
   if (error && !ordersData) {
     return (
-      <Card className="border-red-200 bg-red-50/50 dark:border-red-900/50 dark:bg-red-950/20 p-8 text-center">
+      <Card className="border-red-200 bg-red-50/50 dark:border-red-900/50 dark:bg-red-950/20 p-8 text-center rounded-2xl">
         <div className="max-w-md mx-auto space-y-3">
           <AlertCircle className="h-8 w-8 text-red-600 dark:text-red-400 mx-auto" />
           <h3 className="text-sm font-semibold text-red-800 dark:text-red-300">
@@ -164,8 +186,34 @@ export function OrdersHistoryTable({
   const totalElements = ordersData?.totalElements ?? 0
 
   if (content.length === 0) {
+    if (isFiltered) {
+      return (
+        <Card className="border-dashed border-border p-12 text-center rounded-2xl">
+          <div className="max-w-md mx-auto space-y-3">
+            <FilterX className="h-10 w-10 text-muted-foreground/40 mx-auto" />
+            <h3 className="text-base font-semibold text-foreground">
+              Không tìm thấy đơn mua phù hợp
+            </h3>
+            <p className="text-xs text-muted-foreground">
+              Không có đơn mua nào thỏa mãn bộ lọc ngày hoặc trạng thái đang chọn.
+            </p>
+            {onResetFilters && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={onResetFilters}
+                className="gap-1.5 mt-2 text-xs"
+              >
+                Xóa bộ lọc
+              </Button>
+            )}
+          </div>
+        </Card>
+      )
+    }
+
     return (
-      <Card className="border-dashed border-border p-12 text-center">
+      <Card className="border-dashed border-border p-12 text-center rounded-2xl">
         <div className="max-w-md mx-auto space-y-3">
           <ShoppingBag className="h-12 w-12 text-muted-foreground/40 mx-auto" />
           <h3 className="text-base font-semibold text-foreground">
@@ -181,7 +229,7 @@ export function OrdersHistoryTable({
 
   return (
     <div className="space-y-4">
-      <div className="rounded-xl border border-border overflow-hidden bg-card">
+      <div className="rounded-2xl border border-border overflow-hidden bg-card shadow-2xs">
         <Table>
           <TableHeader>
             <TableRow className="bg-muted/50 hover:bg-muted/50">
@@ -264,31 +312,33 @@ export function OrdersHistoryTable({
       </div>
 
       {/* Pagination Controls */}
-      {totalPages > 1 && (
-        <div className="flex items-center justify-between px-2 pt-1 text-xs text-muted-foreground">
+      {totalPages > 0 && (
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-2 pt-1 text-xs text-muted-foreground">
           <div>
-            Trang <span className="font-semibold text-foreground">{page}</span> / {totalPages} (Tổng {totalElements} đơn)
+            Trang <span className="font-semibold text-foreground">{page}</span> / {Math.max(1, totalPages)} (Tổng {totalElements.toLocaleString("vi-VN")} đơn)
           </div>
-          <div className="flex items-center gap-1.5">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => onPageChange(page - 1)}
-              disabled={page <= 1 || loading}
-              className="h-8 px-2.5 gap-1 text-xs"
-            >
-              <ChevronLeft className="h-3.5 w-3.5" /> Trước
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => onPageChange(page + 1)}
-              disabled={page >= totalPages || loading}
-              className="h-8 px-2.5 gap-1 text-xs"
-            >
-              Sau <ChevronRight className="h-3.5 w-3.5" />
-            </Button>
-          </div>
+          {totalPages > 1 && (
+            <div className="flex items-center gap-1.5">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => onPageChange(page - 1)}
+                disabled={page <= 1 || loading}
+                className="h-8 px-2.5 gap-1 text-xs"
+              >
+                <ChevronLeft className="h-3.5 w-3.5" /> Trước
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => onPageChange(page + 1)}
+                disabled={page >= totalPages || loading}
+                className="h-8 px-2.5 gap-1 text-xs"
+              >
+                Sau <ChevronRight className="h-3.5 w-3.5" />
+              </Button>
+            </div>
+          )}
         </div>
       )}
     </div>
