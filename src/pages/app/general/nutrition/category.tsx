@@ -2,7 +2,6 @@ import { useState, useMemo } from "react"
 import { useParams, useSearchParams, Link, useNavigate } from "react-router-dom"
 import {
   ArrowLeft,
-  Sparkles,
   ArrowRight,
   CheckCircle2,
   AlertTriangle,
@@ -10,7 +9,7 @@ import {
   LayoutGrid,
 } from "lucide-react"
 
-import { Page, PageBody, PageFooter, PageHeader } from "@/components/layout/page"
+import { Page, PageBody, PageFooter, PageHeader, PageSection } from "@/components/layout/page"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { FoodCard } from "./components/FoodCard"
@@ -113,15 +112,10 @@ export default function CategoryExplorerPage() {
 
         {/* VIEW 1: Khi chưa chọn món cụ thể -> SHOW DANH SÁCH CÁC LOẠI CÓ KHUYẾN NGHỊ (Cá hồi, Cá thu, Cá ngừ...) */}
         {!selectedFoodName && (isFoodsLoading || foodNames.length > 0) && (
-          <section className="space-y-4">
-            <div>
-              <h2 className="text-lg sm:text-xl font-bold text-foreground">
-                Có khuyến nghị cho tim mạch ({foodNames.length})
-              </h2>
-              <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
-                Chọn một loại để xem các biến thể và khuyến nghị dinh dưỡng.
-              </p>
-            </div>
+          <PageSection
+            title={`Có khuyến nghị cho tim mạch (${foodNames.length})`}
+            description="Chọn một loại để xem các biến thể và khuyến nghị dinh dưỡng."
+          >
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {isFoodsLoading &&
@@ -166,39 +160,30 @@ export default function CategoryExplorerPage() {
                 )
               })}
             </div>
-          </section>
+          </PageSection>
         )}
 
         {/* VIEW 2: Khi đã chọn một loại cụ thể (ví dụ: Cá hồi) -> HIỂN THỊ DẠNG 3 CỘT (CARD GRID) KHÔNG CHIA ROW */}
         {selectedFoodName && (
           <div className="space-y-6">
-            {/* Top Bar with title, quick back and counts */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-200/60">
-              <div className="flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-primary" />
-                <div>
-                  <h2 className="text-lg sm:text-xl font-bold text-slate-900">
-                    Lựa chọn cho: <span className="text-primary">{selectedFoodName}</span>
-                  </h2>
-                  <span className="text-xs text-muted-foreground">
-                    Hiển thị dạng 3 cột với khuyến nghị cụ thể trên từng món
-                  </span>
-                </div>
-              </div>
-
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => {
-                  setSearchParams({})
-                  setGuidanceFilter("ALL")
-                }}
-                className="self-start text-xs rounded-xl gap-1.5 cursor-pointer"
-              >
-                <ArrowLeft className="w-3.5 h-3.5" />
-                <span>Xem các loại {currentCategory.name.toLowerCase()} khác</span>
-              </Button>
-            </div>
+            <PageSection
+              title={`Các lựa chọn của ${selectedFoodName}`}
+              description="Mỗi biến thể kèm khuyến nghị cụ thể cho tim mạch."
+              actions={
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    setSearchParams({})
+                    setGuidanceFilter("ALL")
+                  }}
+                  className="text-xs gap-1.5"
+                >
+                  <ArrowLeft className="w-3.5 h-3.5" />
+                  <span>Xem các loại {currentCategory.name.toLowerCase()} khác</span>
+                </Button>
+              }
+            />
 
             {/* Quick Filter Tabs (Tất cả / Ưu tiên / Cần lưu ý / Hạn chế) */}
             <div className="flex items-center gap-2 overflow-x-auto pb-1">
@@ -290,18 +275,13 @@ export default function CategoryExplorerPage() {
 
         {/* VIEW 1b: Mọi thực phẩm của nhóm trong cơ sở dữ liệu tham chiếu (Việt Nam + USDA), chỉ có số liệu */}
         {!selectedFoodName && (
-          <section className={cn("space-y-4", foodNames.length > 0 && "border-t border-border pt-6")}>
-            <div>
-              <h2 className="text-lg sm:text-xl font-bold text-foreground">
-                Tất cả thực phẩm trong nhóm ({(currentCategory.foodCount ?? 0).toLocaleString("vi-VN")})
-              </h2>
-              <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
-                Số liệu trên 100 g phần ăn được từ Bảng thành phần thực phẩm Việt Nam và USDA FNDDS. Màu của từng món
-                theo các quy tắc cho người rung nhĩ.
-              </p>
-            </div>
+          <PageSection
+            title={`Tất cả thực phẩm trong nhóm (${(currentCategory.foodCount ?? 0).toLocaleString("vi-VN")})`}
+            description="Số liệu trên 100 g phần ăn được từ Bảng thành phần thực phẩm Việt Nam và USDA FNDDS. Màu của từng món theo các quy tắc cho người rung nhĩ."
+            className={cn(foodNames.length > 0 && "border-t border-border pt-6")}
+          >
             <ReferenceFoodBrowser fixedGroup={currentCategory.id} layout="cards" />
-          </section>
+          </PageSection>
         )}
 
       </PageBody>

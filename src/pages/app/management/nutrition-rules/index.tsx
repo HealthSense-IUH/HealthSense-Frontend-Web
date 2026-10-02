@@ -8,9 +8,15 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { useToast } from "@/hooks/use-toast"
 import { nutritionApi } from "@/services/nutrition.service"
 import type { DietRule, DietRuleCode } from "@/types/nutrition"
-import { DIET_RULE_META, PRIORITY_LABEL } from "@/pages/app/general/nutrition/diet-rules"
+import {
+  DIET_RULE_META,
+  PRIORITY_LABEL,
+  THRESHOLD_FIELD_STYLE,
+  thresholdFieldsOf as fieldsOf,
+  thresholdUnit,
+  type DietThresholdField as Field,
+} from "@/pages/app/general/nutrition/diet-rules"
 
-type Field = "limit" | "caution" | "good"
 type Values = Record<Field, string>
 
 /** Giá trị khởi tạo của V28, để admin khôi phục nhanh. */
@@ -23,22 +29,6 @@ const INITIAL: Record<DietRuleCode, Values> = {
   SATURATED_FAT: { limit: "5", caution: "1.5", good: "" },
   MAGNESIUM: { limit: "", caution: "", good: "50" },
   VITAMIN_K: { limit: "", caution: "100", good: "" },
-}
-
-/** Ô ngưỡng của từng quy tắc: magie chỉ có mức tốt, tỷ lệ Na/K có đỏ và mức tốt, còn lại đỏ / vàng. */
-function fieldsOf(code: DietRuleCode): Field[] {
-  if (code === "MAGNESIUM") return ["good"]
-  if (code === "NA_K_RATIO") return ["limit", "good"]
-  return ["limit", "caution"]
-}
-
-const FIELD_STYLE: Record<Field, { dot: string; label: (code: DietRuleCode) => string }> = {
-  limit: { dot: "bg-danger-500", label: () => "Đỏ (Nên hạn chế) khi trên" },
-  caution: { dot: "bg-warning-500", label: () => "Vàng (Cần lưu ý) khi trên" },
-  good: {
-    dot: "bg-success-500",
-    label: (code) => (code === "NA_K_RATIO" ? "Tốt khi từ mức này trở xuống" : "Tốt khi từ mức này trở lên"),
-  },
 }
 
 type Draft = Record<DietRuleCode, Values>
@@ -179,7 +169,7 @@ export default function AdminNutritionRulesPage() {
                   .map((rule) => {
                     const meta = DIET_RULE_META[rule.code]
                     const Icon = meta.icon
-                    const perUnit = rule.code === "NA_K_RATIO" ? "Na/K" : `${rule.unit} / 100 g`
+                    const perUnit = thresholdUnit(rule.code, rule.unit)
                     return (
                       <div key={rule.code} className="p-4 space-y-3">
                         <div className="flex flex-wrap items-start justify-between gap-2">
@@ -211,8 +201,8 @@ export default function AdminNutritionRulesPage() {
                           {fieldsOf(rule.code).map((field) => (
                             <label key={field} className="space-y-1">
                               <span className="flex items-center gap-1.5 text-xs font-semibold text-slate-700">
-                                <span className={`w-2 h-2 rounded-full ${FIELD_STYLE[field].dot}`} />
-                                {FIELD_STYLE[field].label(rule.code)}
+                                <span className={`w-2 h-2 rounded-full ${THRESHOLD_FIELD_STYLE[field].dot}`} />
+                                {field === "good" ? THRESHOLD_FIELD_STYLE.good.label(rule.code) : field === "limit" ? "Đỏ (Nên hạn chế) khi trên" : "Vàng (Cần lưu ý) khi trên"}
                               </span>
                               <div className="flex items-center gap-2">
                                 <Input

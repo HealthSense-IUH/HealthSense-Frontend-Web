@@ -224,12 +224,17 @@ export interface DietAdvice {
   personalized: boolean
 }
 
+/** Mỗi cờ ứng với một quy tắc bác sĩ dặn riêng; onWarfarin bật thêm quy tắc vitamin K */
 export interface DietPrescriptionFlags {
   limitSodium: boolean
   /** Đang dùng warfarin: giữ lượng vitamin K ổn định */
   onWarfarin: boolean
   avoidAlcohol: boolean
   limitCaffeine: boolean
+  limitSugars: boolean
+  watchSodiumPotassium: boolean
+  limitSaturatedFat: boolean
+  encourageMagnesium: boolean
 }
 
 /** Theo thứ tự ưu tiên (V28). VITAMIN_K chỉ áp dụng khi đơn ghi đang dùng warfarin. */
@@ -287,7 +292,10 @@ export interface DietPrescriptionRule {
   prescribed: boolean
   /** Bác sĩ chỉnh ngưỡng riêng được */
   overridable: boolean
+  defaultGood?: number
+  /** Mức tốt riêng của hội viên (Na/K, magie); vắng = dùng mặc định */
   good?: number
+  effectiveGood?: number
   defaultLimit?: number
   defaultCaution?: number
   limit?: number

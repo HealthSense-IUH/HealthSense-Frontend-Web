@@ -15,10 +15,10 @@ import { DietAdviceBadge } from "./DietAdvice"
 function describe(rule: DietPrescriptionRule, sodium?: DietPrescriptionRule) {
   const text = describeRuleThresholds(
     rule.code,
-    { unit: rule.unit, limit: rule.effectiveLimit, caution: rule.effectiveCaution, good: rule.good },
+    { unit: rule.unit, limit: rule.effectiveLimit, caution: rule.effectiveCaution, good: rule.effectiveGood },
     sodium && { limit: sodium.effectiveLimit, caution: sodium.effectiveCaution }
   )
-  const custom = rule.limit != null || rule.caution != null
+  const custom = rule.limit != null || rule.caution != null || rule.good != null
   return text ? `${text}${custom ? " (bác sĩ đặt riêng cho bạn)" : ""}.` : ""
 }
 

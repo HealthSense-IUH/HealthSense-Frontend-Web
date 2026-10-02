@@ -10,7 +10,9 @@ import { cn } from "@/lib/utils"
  *
  *   <Page>
  *     <PageHeader title="..." description="..." actions={...} />   tiêu đề
- *     <PageBody>...</PageBody>                                      nội dung
+ *     <PageBody>                                                    nội dung, chia phần bằng
+ *       <PageSection title="..." description="...">...</PageSection>
+ *     </PageBody>
  *     <PageFooter>...</PageFooter>                                  chân trang (tùy chọn): phân trang, nguồn, lưu ý
  *   </Page>
  */
@@ -157,6 +159,31 @@ export function PageHeader({
 /** Nội dung chính. Trong trang `fill`, phần này chiếm chỗ còn lại; phần tử con tự lo cuộn. */
 export function PageBody({ children, className }: { children: ReactNode; className?: string }) {
   return <div className={cn("flex-1 min-h-0 min-w-0 flex flex-col gap-4", className)}>{children}</div>
+}
+
+interface PageSectionProps {
+  title: ReactNode
+  description?: ReactNode
+  /** Nút thao tác bên phải tiêu đề */
+  actions?: ReactNode
+  children?: ReactNode
+  className?: string
+}
+
+/** Một phần trong PageBody: tiêu đề + mô tả cùng một kiểu ở mọi trang, nội dung bên dưới. */
+export function PageSection({ title, description, actions, children, className }: PageSectionProps) {
+  return (
+    <section className={cn("flex flex-col gap-3", className)}>
+      <div className="flex flex-wrap items-end justify-between gap-2">
+        <div className="min-w-0">
+          <h2 className="text-lg font-semibold tracking-tight text-foreground">{title}</h2>
+          {description && <p className="mt-0.5 text-sm text-muted-foreground">{description}</p>}
+        </div>
+        {actions && <div className="flex flex-wrap items-center gap-2 shrink-0">{actions}</div>}
+      </div>
+      {children}
+    </section>
+  )
 }
 
 /** Chân trang: phân trang, nguồn dữ liệu, lưu ý y khoa, liên kết liên quan. Luôn nằm cuối trang. */

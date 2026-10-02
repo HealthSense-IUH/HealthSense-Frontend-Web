@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
-import { Search, X, ChevronRight, Sparkles, Loader2 } from "lucide-react"
+import { Search, X, ChevronRight, Loader2 } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { useDebounce } from "@/hooks/use-debounce"
 import { GuidanceBadge } from "./GuidanceBadge"
@@ -149,29 +149,6 @@ export function FoodSearchBar({
               </p>
             </div>
           )}
-        </div>
-      )}
-
-      {/* Quick Search Chips */}
-      {!query && (
-        <div className="flex items-center gap-1.5 mt-2.5 overflow-x-auto pb-1 text-xs text-muted-foreground">
-          <span className="flex items-center gap-1 shrink-0 text-[11px] font-medium">
-            <Sparkles className="w-3 h-3 text-primary" />
-            Tìm nhanh:
-          </span>
-          {["Cá hồi nướng", "Sữa ít béo 1%", "Cà phê", "Rau chân vịt", "Chuối", "Bia"].map((tag) => (
-            <button
-              key={tag}
-              type="button"
-              onClick={() => {
-                setQuery(tag)
-                setIsOpen(true)
-              }}
-              className="shrink-0 px-2.5 py-1 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs transition-colors"
-            >
-              {tag}
-            </button>
-          ))}
         </div>
       )}
     </div>

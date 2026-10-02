@@ -499,7 +499,7 @@ export default function DoctorSessionWorkspacePage() {
 
           {activeTab === "nutrition" && (
             <div className="h-full overflow-y-auto p-3 sm:p-4 bg-slate-50/70">
-              <DoctorDietPrescriptionTab sessionId={session.id} readOnly={session.status !== "ACTIVE"} />
+              <DoctorDietPrescriptionTab sessionId={session.id} readOnly={session.status !== "ACTIVE" && session.status !== "SCHEDULED"} />
             </div>
           )}
         </div>

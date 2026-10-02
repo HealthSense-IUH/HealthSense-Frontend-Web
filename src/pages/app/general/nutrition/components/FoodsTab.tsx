@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom"
 import { ArrowRight, RefreshCw } from "lucide-react"
 
+import { PageSection } from "@/components/layout/page"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { FoodSearchBar } from "./FoodSearchBar"
@@ -72,19 +73,14 @@ function FoodGroupGrid() {
 export function FoodsTab() {
   return (
     <div className="space-y-6">
-      <div className="max-w-xl">
-        <FoodSearchBar />
-      </div>
+      <FoodSearchBar />
 
-      <section className="space-y-4">
-        <div>
-          <h2 className="text-lg sm:text-xl font-bold text-foreground">Khám phá theo nhóm thực phẩm</h2>
-          <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
-            Chọn một nhóm để xem các loại thực phẩm, biến thể và khuyến nghị cho tim mạch.
-          </p>
-        </div>
+      <PageSection
+        title="Khám phá theo nhóm thực phẩm"
+        description="Chọn một nhóm để xem các loại thực phẩm, biến thể và khuyến nghị cho tim mạch."
+      >
         <FoodGroupGrid />
-      </section>
+      </PageSection>
     </div>
   )
 }

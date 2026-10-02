@@ -32,6 +32,30 @@ export const DIET_RULE_META: Record<DietRuleCode, { icon: LucideIcon; summary: s
   },
 }
 
+export type DietThresholdField = "limit" | "caution" | "good"
+
+/** Ô ngưỡng của từng quy tắc: magie chỉ có mức tốt, tỷ lệ Na/K có đỏ và mức tốt, còn lại đỏ / vàng. */
+export function thresholdFieldsOf(code: DietRuleCode): DietThresholdField[] {
+  if (code === "MAGNESIUM") return ["good"]
+  if (code === "NA_K_RATIO") return ["limit", "good"]
+  return ["limit", "caution"]
+}
+
+/** Nhãn và màu chấm của từng loại ngưỡng */
+export const THRESHOLD_FIELD_STYLE: Record<DietThresholdField, { dot: string; label: (code: DietRuleCode) => string }> = {
+  limit: { dot: "bg-danger-500", label: () => "Đỏ khi trên" },
+  caution: { dot: "bg-warning-500", label: () => "Vàng khi trên" },
+  good: {
+    dot: "bg-success-500",
+    label: (code) => (code === "NA_K_RATIO" ? "Tốt khi từ mức này trở xuống" : "Tốt khi từ mức này trở lên"),
+  },
+}
+
+/** Đơn vị hiển thị cạnh ô ngưỡng */
+export function thresholdUnit(code: DietRuleCode, unit: string) {
+  return code === "NA_K_RATIO" ? "Na/K" : `${unit} / 100 g`
+}
+
 function amount(value: number) {
   return value.toLocaleString("vi-VN")
 }
