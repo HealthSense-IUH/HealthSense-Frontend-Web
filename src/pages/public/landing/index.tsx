@@ -15,6 +15,7 @@ import { AIClinicalBenchmarkSection } from "./components/AIClinicalBenchmarkSect
 import { HealthSenseBrandStorySection } from "./components/HealthSenseBrandStorySection"
 import { LandingFooter } from "./components/LandingFooter"
 import { useAuthStore } from "@/stores/auth-store"
+import { BrandSlogan } from "@/components/custom/BrandSlogan"
 
 const navItems = [
   { id: "about", label: "Về chúng tôi" },
@@ -104,7 +105,7 @@ export default function LandingPage() {
             />
             <div className="flex flex-col">
               <span className="text-xl font-black text-slate-900 tracking-tight font-heading whitespace-nowrap">HealthSense</span>
-              <span className="text-[11px] text-slate-500 font-medium hidden sm:block -mt-0.5 whitespace-nowrap">Hệ sinh thái Y tế Thông minh</span>
+              <BrandSlogan className="text-[11px] text-slate-500 font-medium hidden sm:block -mt-0.5 whitespace-nowrap" />
             </div>
           </Link>
 

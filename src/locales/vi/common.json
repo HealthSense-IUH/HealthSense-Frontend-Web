@@ -1,4 +1,8 @@
 {
+  "brand": {
+    "name": "HealthSense",
+    "slogan": "Người bạn đồng hành sức khỏe đáng tin cậy"
+  },
   "lang": {
     "label": "Ngôn ngữ",
     "vi": "Tiếng Việt",

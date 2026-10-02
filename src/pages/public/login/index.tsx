@@ -23,6 +23,7 @@ import { authApi } from "@/services"
 import { useAuthStore } from "@/stores/auth-store"
 import { getAuthErrorMessage } from "@/lib/errorHandler"
 import { getDefaultRouteForRole } from "@/constants"
+import { BrandSlogan } from "@/components/custom/BrandSlogan"
 
 type LoginLocationState = {
   from?: {
@@ -195,7 +196,7 @@ export default function LoginPage() {
           />
           <div className="flex flex-col">
             <span className="text-xl font-black text-slate-900 tracking-tight font-heading">HealthSense</span>
-            <span className="text-[11px] text-slate-500 font-medium hidden sm:block -mt-0.5">Hệ sinh thái Y tế Thông minh</span>
+            <BrandSlogan className="text-[11px] text-slate-500 font-medium hidden sm:block -mt-0.5" />
           </div>
         </Link>
 

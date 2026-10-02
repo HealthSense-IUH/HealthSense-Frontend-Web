@@ -1,5 +1,6 @@
 import { ArrowUpRight } from "lucide-react"
 import { Link } from "react-router-dom"
+import { BrandSlogan } from "@/components/custom/BrandSlogan"
 
 export function LandingFooter() {
   const scrollToSection = (id: string) => {
@@ -31,9 +32,10 @@ export function LandingFooter() {
                   alt="HealthSense Logo"
                   className="w-9 h-9 object-contain rounded-xl shrink-0"
                 />
-                <span className="text-xl font-black font-heading tracking-tight text-white uppercase">
-                  HEALTHSENSE
-                </span>
+                <div className="flex flex-col">
+                  <span className="text-xl font-black font-heading tracking-tight text-white">HealthSense</span>
+                  <BrandSlogan className="text-[11px] text-slate-400 font-medium -mt-0.5" />
+                </div>
               </div>
 
               <p className="text-xs sm:text-sm text-slate-400 leading-relaxed max-w-md font-sans">

@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom"
 import { RequestOtpForm } from "@/pages/public/forgot-password/components/request-otp-form"
 import { VerifyOtpForm } from "@/pages/public/forgot-password/components/verify-otp-form"
 import { ResetPasswordForm } from "@/pages/public/forgot-password/components/reset-password-form"
+import { BrandSlogan } from "@/components/custom/BrandSlogan"
 
 type Step = "request" | "verify" | "reset" | "success"
 
@@ -82,7 +83,10 @@ export default function ForgotPasswordPage() {
               alt="HealthSense Logo"
               className="w-10 h-10 object-contain rounded-xl group-hover:scale-105 transition-transform shrink-0"
             />
-            <span className="text-2xl font-bold font-heading text-white tracking-tight">HealthSense</span>
+            <div className="flex flex-col">
+              <span className="text-2xl font-bold font-heading text-white tracking-tight">HealthSense</span>
+              <BrandSlogan className="text-[11px] text-white/80 font-medium hidden sm:block -mt-0.5" />
+            </div>
           </div>
 
           <div className="flex items-center gap-4 text-sm font-semibold">

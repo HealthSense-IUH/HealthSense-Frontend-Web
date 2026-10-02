@@ -10,6 +10,7 @@
  * Mỗi màu có thang 50…950 (bg-primary-50, text-success-700, border-danger-200…). Các bảng màu khác của Tailwind
  * (blue, emerald, red, gray…) bị tắt: viết bg-blue-500 sẽ không ra màu, nên giao diện không lệch khỏi bảng này.
  * Token ngữ nghĩa kiểu shadcn (--primary, --muted-foreground, --border…) bên dưới cũng lấy từ chính bảng này.
+ * Riêng khung ứng dụng (sidebar + topbar) dùng nền navy thương hiệu: bg-shell, text-shell-foreground.
  */
 :root {
   --background: var(--color-slate-50);
@@ -37,6 +38,11 @@
   --input: var(--color-slate-200);
   --ring: var(--color-primary-600);
   --radius: 0.75rem;
+
+  /* Khung ứng dụng: sidebar + topbar */
+  --shell: #0b132b;
+  --shell-foreground: var(--color-slate-300);
+  --shell-border: rgb(255 255 255 / 0.1);
 }
 
 @theme {
@@ -142,6 +148,9 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  --color-shell: var(--shell);
+  --color-shell-foreground: var(--shell-foreground);
+  --color-shell-border: var(--shell-border);
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);

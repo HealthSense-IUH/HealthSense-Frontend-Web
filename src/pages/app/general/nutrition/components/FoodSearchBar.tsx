@@ -1,9 +1,10 @@
 import { useState, useRef, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
-import { Search, X, ChevronRight, Sparkles } from "lucide-react"
+import { Search, X, ChevronRight, Sparkles, Loader2 } from "lucide-react"
 import { Input } from "@/components/ui/input"
+import { useDebounce } from "@/hooks/use-debounce"
 import { GuidanceBadge } from "./GuidanceBadge"
-import { searchFoods } from "@/data/mock-nutrition"
+import { useNutritionSearch } from "../hooks/use-nutrition"
 import type { Food } from "@/types/nutrition"
 import { cn } from "@/lib/utils"
 
@@ -23,7 +24,11 @@ export function FoodSearchBar({
   const navigate = useNavigate()
   const containerRef = useRef<HTMLDivElement>(null)
 
-  const results = query.trim() ? searchFoods(query) : []
+  const debouncedQuery = useDebounce(query, 250)
+  const { data: searchResults = [], isFetching } = useNutritionSearch(debouncedQuery)
+  const results = query.trim() ? searchResults : []
+  // Chưa hết thời gian chờ gõ, hoặc đang gọi API: chưa được kết luận là "không tìm thấy"
+  const isSearching = isFetching || query.trim() !== debouncedQuery.trim()
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -95,8 +100,8 @@ export function FoodSearchBar({
                 <span className="text-[10px] text-primary">Bấm Enter để chọn món đầu tiên</span>
               </div>
               {results.map((food) => {
-                const guidanceType = food.guidance || food.primaryGuidanceType
-                const title = food.foodNameSpecific || food.name
+                const guidanceType = food.guidance
+                const title = food.foodNameSpecific
                 const subtitle = food.foodName !== food.foodNameSpecific ? food.foodName : undefined
                 return (
                   <button
@@ -127,6 +132,11 @@ export function FoodSearchBar({
                   </button>
                 )
               })}
+            </div>
+          ) : isSearching ? (
+            <div className="p-6 flex items-center justify-center gap-2 text-sm text-muted-foreground">
+              <Loader2 className="w-4 h-4 animate-spin" />
+              <span>Đang tìm...</span>
             </div>
           ) : (
             <div className="p-6 text-center text-sm text-muted-foreground">

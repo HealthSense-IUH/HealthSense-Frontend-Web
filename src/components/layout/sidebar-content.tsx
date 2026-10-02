@@ -39,7 +39,7 @@ export function SidebarContent() {
           return (
             <div key={group.id} className="space-y-1.5">
               {groupIdx > 0 && (
-                <div className="my-2.5 w-8 mx-auto border-t border-slate-200" />
+                <div className="my-2.5 w-8 mx-auto border-t border-shell-border" />
               )}
 
               <div className="space-y-1.5">
@@ -55,22 +55,22 @@ export function SidebarContent() {
                     <Link
                       to={targetHref}
                       className={`group relative flex flex-col items-center justify-center w-full py-2.5 px-1 rounded-xl transition-colors ${
-                        active ? "bg-primary-50 text-primary-700" : "text-slate-500 hover:bg-slate-100 hover:text-slate-900"
+                        active ? "bg-primary-500/20 text-white ring-1 ring-primary-400/40" : "text-slate-400 hover:bg-white/5 hover:text-white"
                       }`}
                     >
                       <div className="relative">
                         <Icon
                           className={`h-5 w-5 shrink-0 transition-colors ${
-                            active ? "text-primary-600" : "text-slate-400 group-hover:text-slate-700"
+                            active ? "text-primary-300" : "text-slate-400 group-hover:text-slate-200"
                           }`}
                         />
                         {item.badge && (
-                          <span className="absolute -top-1 -right-1.5 h-2 w-2 rounded-full bg-danger-500 ring-2 ring-white" />
+                          <span className="absolute -top-1 -right-1.5 h-2 w-2 rounded-full bg-danger-500 ring-2 ring-shell" />
                         )}
                       </div>
                       <span
                         className={`text-[10px] text-center leading-tight mt-1 max-w-[76px] truncate tracking-tight ${
-                          active ? "font-bold text-primary-700" : "font-semibold text-slate-500 group-hover:text-slate-900"
+                          active ? "font-bold text-white" : "font-semibold text-slate-400 group-hover:text-white"
                         }`}
                       >
                         {itemShortLabel(item)}

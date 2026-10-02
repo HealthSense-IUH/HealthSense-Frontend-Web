@@ -40,7 +40,7 @@ export function Topbar() {
 
   return (
     <header
-      className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-slate-200 bg-white px-3 sm:px-4"
+      className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-shell-border bg-shell text-shell-foreground px-3 sm:px-4"
     >
       <div className="flex-1" />
 
@@ -57,7 +57,7 @@ export function Topbar() {
           <PopoverTrigger asChild>
             <button
               type="button"
-              className="flex items-center gap-2.5 pl-1.5 pr-3 py-1 rounded-full border border-slate-200/90 bg-white/90 shadow-2xs hover:bg-slate-50 transition-all cursor-pointer"
+              className="flex items-center gap-2.5 pl-1.5 pr-3 py-1 rounded-full border border-white/15 bg-white/5 hover:bg-white/10 transition-colors cursor-pointer"
             >
               <AvatarPlaceholder
                 src={userSession?.avatarUrl}
@@ -65,7 +65,7 @@ export function Topbar() {
                 size="sm"
               />
               <div className="flex flex-col text-left text-xs max-w-[130px]">
-                <span className="font-bold text-slate-900 truncate text-[13px] leading-tight">
+                <span className="font-bold text-white truncate text-[13px] leading-tight">
                   {userSession?.fullName || "Huỳnh Đức Phú"}
                 </span>
                 <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider truncate font-mono">

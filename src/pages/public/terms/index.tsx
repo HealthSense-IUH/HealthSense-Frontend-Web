@@ -12,6 +12,7 @@ import {
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { formatDocumentTitle, useDocumentTitle } from "@/hooks/use-document-title"
+import { BrandSlogan } from "@/components/custom/BrandSlogan"
 
 type ViewStyle = "interactive" | "document"
 
@@ -162,8 +163,9 @@ export default function TermsAndConditionsPage() {
           <div className="flex items-center gap-4">
             <Link to="/" className="flex items-center gap-2.5">
               <img src="/logo.png" alt="HealthSense" className="w-8 h-8 object-contain rounded-lg" />
-              <span className="font-heading font-black text-lg tracking-tight text-slate-900 hidden sm:inline-block">
-                HEALTHSENSE
+              <span className="hidden sm:flex flex-col">
+                <span className="font-heading font-black text-lg tracking-tight text-slate-900">HealthSense</span>
+                <BrandSlogan className="text-[11px] text-slate-500 font-medium -mt-0.5" />
               </span>
             </Link>
           </div>
