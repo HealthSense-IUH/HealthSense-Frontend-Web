@@ -1,52 +1,36 @@
 import { Link } from "react-router-dom"
-import { ClipboardList, Coffee, Droplets, Pill, Search, Wine } from "lucide-react"
+import { ClipboardList, Search } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { USER_ROLES } from "@/constants/roles"
 import { useAuthStore } from "@/stores/auth-store"
 import { cn } from "@/lib/utils"
-import type { DietPrescription, DietPrescriptionRule, DietRuleCode } from "@/types/nutrition"
+import type { DietPrescriptionRule } from "@/types/nutrition"
 import { useMyDietPrescription } from "../hooks/use-nutrition"
+import { DIET_RULE_META, describeRuleThresholds } from "../diet-rules"
 import { DietAdviceBadge } from "./DietAdvice"
 
-const RULES = [
-  { key: "limitSodium", code: "SODIUM", icon: Droplets, title: "Hạn chế muối", extra: "" },
-  {
-    key: "avoidAlcohol",
-    code: "ALCOHOL",
-    icon: Wine,
-    title: "Tránh rượu bia",
-    extra: "Rượu bia là tác nhân hay gặp của cơn rung nhĩ.",
-  },
-  { key: "limitCaffeine", code: "CAFFEINE", icon: Coffee, title: "Hạn chế caffeine", extra: "" },
-  {
-    key: "onWarfarin",
-    code: "VITAMIN_K",
-    icon: Pill,
-    title: "Đang dùng thuốc chống đông warfarin",
-    extra: "Không cần kiêng món nhiều vitamin K, nhưng nên ăn lượng đều mỗi ngày để thuốc ổn định.",
-  },
-] as const satisfies readonly { key: keyof DietPrescription; code: DietRuleCode; icon: unknown; title: string; extra: string }[]
-
-function formatAmount(value: number) {
-  return value.toLocaleString("vi-VN")
-}
-
-/** "Đỏ từ 600 mg, vàng từ 120 mg trên 100 g" theo ngưỡng đang áp dụng; kèm "(riêng cho bạn)" nếu bác sĩ chỉnh. */
-function describeThreshold(rule?: DietPrescriptionRule) {
-  if (!rule) return ""
-  const parts = [
-    rule.effectiveLimit != null ? `đỏ từ ${formatAmount(rule.effectiveLimit)} ${rule.unit}` : null,
-    rule.effectiveCaution != null ? `vàng từ ${formatAmount(rule.effectiveCaution)} ${rule.unit}` : null,
-  ].filter(Boolean)
-  if (parts.length === 0) return ""
+/** Ngưỡng đang áp dụng của một quy tắc, kèm "(bác sĩ đặt riêng cho bạn)" nếu bác sĩ chỉnh. */
+function describe(rule: DietPrescriptionRule, sodium?: DietPrescriptionRule) {
+  const text = describeRuleThresholds(
+    rule.code,
+    { unit: rule.unit, limit: rule.effectiveLimit, caution: rule.effectiveCaution, good: rule.good },
+    sodium && { limit: sodium.effectiveLimit, caution: sodium.effectiveCaution }
+  )
   const custom = rule.limit != null || rule.caution != null
-  const text = parts.join(", ")
-  return `${text.charAt(0).toUpperCase()}${text.slice(1)} trên 100 g${custom ? " (bác sĩ đặt riêng cho bạn)" : ""}.`
+  return text ? `${text}${custom ? " (bác sĩ đặt riêng cho bạn)" : ""}.` : ""
 }
 
-/** Tab "Đơn ăn uống": đơn bác sĩ kê cho hội viên và cách các món được chấm màu theo đơn. */
+const LEGEND = [
+  { level: "GOOD", text: "Không có điểm xấu và có điểm tốt cho nhịp tim." },
+  { level: "OK", text: "Không vướng quy tắc nào, cũng chưa có điểm tốt nổi bật." },
+  { level: "CAUTION", text: "Ăn được, chú ý lượng." },
+  { level: "LIMIT", text: "Nên hạn chế hoặc tránh." },
+  { level: "UNKNOWN", text: "Nguồn dữ liệu thiếu số liệu để đánh giá." },
+] as const
+
+/** Tab "Đơn ăn uống": các quy tắc cho người rung nhĩ đang áp dụng, điều bác sĩ dặn riêng và cách đọc màu của món. */
 export function DietPrescriptionTab() {
   const role = useAuthStore((s) => s.userSession?.role)
   const isMember = role === USER_ROLES.MEMBER
@@ -73,61 +57,63 @@ export function DietPrescriptionTab() {
     )
   }
 
-  const activeRules = RULES.filter((rule) => prescription[rule.key])
+  const rules = prescription.rules ?? []
+  const sodium = rules.find((rule) => rule.code === "SODIUM")
+  const activeRules = rules.filter((rule) => rule.enabled)
 
   return (
     <div className="space-y-6">
-      <section className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-xs space-y-4">
+      <section className="rounded-2xl border border-border bg-card p-5 shadow-xs space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
           <div className="flex items-start gap-3">
             <div className="p-2.5 rounded-xl bg-primary/10 text-primary shrink-0">
               <ClipboardList className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-slate-900">
-                {prescription.personalized ? "Đơn ăn uống của bạn" : "Lời khuyên chung"}
+              <h2 className="text-lg font-bold text-foreground">
+                {prescription.personalized ? "Đơn ăn uống của bạn" : "Khuyến nghị cho người rung nhĩ"}
               </h2>
               <p className="text-xs sm:text-sm text-muted-foreground">
                 {prescription.personalized
-                  ? `Bác sĩ kê trong buổi tư vấn${prescription.updatedAt ? `, cập nhật ${new Date(prescription.updatedAt).toLocaleDateString("vi-VN")}` : ""}.`
-                  : "Bác sĩ chưa kê đơn riêng cho bạn. Đang áp dụng lời khuyên chung cho người bệnh tim mạch."}
+                  ? `Các quy tắc chung cho người rung nhĩ, cộng thêm điều bác sĩ dặn trong buổi tư vấn${
+                      prescription.updatedAt
+                        ? ` (cập nhật ${new Date(prescription.updatedAt).toLocaleDateString("vi-VN")})`
+                        : ""
+                    }.`
+                  : "Bác sĩ chưa kê đơn riêng cho bạn. Các món được chấm màu theo các quy tắc chung dưới đây."}
               </p>
             </div>
           </div>
-          <Button asChild variant="outline" size="sm" className="rounded-xl gap-1.5 self-start">
+          <Button asChild variant="outline" size="sm" className="gap-1.5 self-start">
             <Link to="/app/general/nutrition?tab=foods">
               <Search className="w-3.5 h-3.5" />
-              Tra cứu món theo đơn
+              Tra cứu món
             </Link>
           </Button>
         </div>
 
         <ul className="grid gap-3 sm:grid-cols-2">
-          {RULES.map((rule) => {
-            const on = prescription[rule.key]
-            const Icon = rule.icon
+          {activeRules.map((rule) => {
+            const meta = DIET_RULE_META[rule.code]
+            const Icon = meta.icon
             return (
               <li
-                key={rule.key}
+                key={rule.code}
                 className={cn(
-                  "rounded-2xl border p-4 flex items-start gap-3",
-                  on
-                    ? "border-primary/30 bg-primary/5"
-                    : "border-slate-200/80 bg-slate-50/60 opacity-70"
+                  "rounded-xl border p-4 flex items-start gap-3",
+                  rule.prescribed ? "border-primary-200 bg-primary-50/60" : "border-border bg-card"
                 )}
               >
-                <Icon className={cn("w-5 h-5 shrink-0 mt-0.5", on ? "text-primary" : "text-slate-400")} />
-                <div className="space-y-1">
-                  <p className="text-sm font-semibold text-slate-900">
-                    {rule.title}
-                    <span className={cn("ml-2 text-[11px] font-medium", on ? "text-primary" : "text-muted-foreground")}>
-                      {on ? "Đang áp dụng" : "Không áp dụng"}
-                    </span>
+                <Icon className="w-5 h-5 shrink-0 mt-0.5 text-primary" />
+                <div className="space-y-1 min-w-0">
+                  <p className="text-sm font-semibold text-foreground">
+                    {rule.name}
+                    {rule.prescribed && (
+                      <span className="ml-2 text-[11px] font-medium text-primary">Bác sĩ dặn riêng</span>
+                    )}
                   </p>
                   <p className="text-xs text-muted-foreground leading-relaxed">
-                    {[describeThreshold(prescription.rules?.find((r) => r.code === rule.code)), rule.extra]
-                      .filter(Boolean)
-                      .join(" ")}
+                    {[describe(rule, sodium), meta.summary].filter(Boolean).join(" ")}
                   </p>
                 </div>
               </li>
@@ -136,37 +122,25 @@ export function DietPrescriptionTab() {
         </ul>
 
         {prescription.note && (
-          <div className="rounded-2xl bg-slate-50 border border-slate-200/70 p-4">
+          <div className="rounded-xl bg-slate-50 border border-slate-200/70 p-4">
             <p className="text-xs font-semibold text-slate-600 mb-1">Bác sĩ dặn thêm</p>
             <p className="text-sm text-slate-800 whitespace-pre-line">{prescription.note}</p>
           </div>
         )}
-
-        {activeRules.length === 0 && (
-          <p className="text-sm text-muted-foreground">Đơn hiện không có giới hạn nào; các món đều hiện "Phù hợp".</p>
-        )}
       </section>
 
-      <section className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-xs space-y-3">
-        <h2 className="text-base font-bold text-slate-900">Cách đọc màu của món</h2>
+      <section className="rounded-2xl border border-border bg-card p-5 shadow-xs space-y-3">
+        <h2 className="text-base font-bold text-foreground">Cách đọc màu của món</h2>
         <div className="grid gap-2 sm:grid-cols-2 text-xs text-muted-foreground">
-          <p className="flex items-center gap-2">
-            <DietAdviceBadge advice={{ level: "OK", reasons: [], personalized: true }} /> Không vướng điều nào trong đơn.
-          </p>
-          <p className="flex items-center gap-2">
-            <DietAdviceBadge advice={{ level: "CAUTION", reasons: [], personalized: true }} /> Ăn được, chú ý lượng.
-          </p>
-          <p className="flex items-center gap-2">
-            <DietAdviceBadge advice={{ level: "LIMIT", reasons: [], personalized: true }} /> Vướng điều bác sĩ dặn hạn chế.
-          </p>
-          <p className="flex items-center gap-2">
-            <DietAdviceBadge advice={{ level: "UNKNOWN", reasons: [], personalized: true }} /> Nguồn dữ liệu thiếu số
-            liệu để đánh giá.
-          </p>
+          {LEGEND.map((item) => (
+            <p key={item.level} className="flex items-center gap-2">
+              <DietAdviceBadge advice={{ level: item.level, reasons: [], personalized: true }} /> {item.text}
+            </p>
+          ))}
         </div>
         <p className="text-xs text-muted-foreground">
-          Mở từng món để xem lý do. Đánh giá chỉ so số liệu trên 100 g với các giới hạn trong đơn, không thay thế lời khuyên
-          trực tiếp của bác sĩ.
+          Có điểm đỏ thì món là đỏ, không có đỏ mà có vàng thì là vàng. Mở từng món để xem lý do. Đánh giá chỉ so số liệu
+          trên 100 g với các ngưỡng, không thay thế lời khuyên trực tiếp của bác sĩ.
         </p>
       </section>
     </div>

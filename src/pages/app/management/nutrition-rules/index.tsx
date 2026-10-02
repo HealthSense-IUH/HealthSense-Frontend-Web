@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Info, RefreshCw, RotateCcw, Save, SlidersHorizontal } from "lucide-react"
+import { ExternalLink, Info, RefreshCw, RotateCcw, Save, SlidersHorizontal } from "lucide-react"
 
 import { Page, PageBody, PageFooter, PageHeader } from "@/components/layout/page"
 import { Button } from "@/components/ui/button"
@@ -8,28 +8,49 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { useToast } from "@/hooks/use-toast"
 import { nutritionApi } from "@/services/nutrition.service"
 import type { DietRule, DietRuleCode } from "@/types/nutrition"
+import { DIET_RULE_META, PRIORITY_LABEL } from "@/pages/app/general/nutrition/diet-rules"
 
-/** Giá trị ban đầu của V27, để admin khôi phục nhanh. */
-const INITIAL: Record<DietRuleCode, { limit: string; caution: string }> = {
-  SODIUM: { limit: "600", caution: "120" },
-  ALCOHOL: { limit: "0.5", caution: "" },
-  CAFFEINE: { limit: "", caution: "10" },
-  VITAMIN_K: { limit: "", caution: "100" },
+type Field = "limit" | "caution" | "good"
+type Values = Record<Field, string>
+
+/** Giá trị khởi tạo của V28, để admin khôi phục nhanh. */
+const INITIAL: Record<DietRuleCode, Values> = {
+  ALCOHOL: { limit: "0", caution: "", good: "" },
+  CAFFEINE: { limit: "", caution: "80", good: "" },
+  SUGARS: { limit: "10", caution: "2.5", good: "" },
+  NA_K_RATIO: { limit: "2", caution: "", good: "1" },
+  SODIUM: { limit: "400", caution: "140", good: "" },
+  SATURATED_FAT: { limit: "5", caution: "1.5", good: "" },
+  MAGNESIUM: { limit: "", caution: "", good: "50" },
+  VITAMIN_K: { limit: "", caution: "100", good: "" },
 }
 
-const RULE_HINT: Record<DietRuleCode, string> = {
-  SODIUM: "Áp dụng khi đơn có \"Hạn chế muối\" (và cho lời khuyên chung). Mặc định theo nhãn thực phẩm FSA (Anh).",
-  ALCOHOL: "Áp dụng khi đơn có \"Tránh rượu bia\" (và cho lời khuyên chung).",
-  CAFFEINE: "Áp dụng khi đơn có \"Hạn chế caffeine\".",
-  VITAMIN_K: "Áp dụng khi đơn có \"Đang dùng warfarin\": nhắc bệnh nhân giữ lượng vitamin K đều mỗi ngày.",
+/** Ô ngưỡng của từng quy tắc: magie chỉ có mức tốt, tỷ lệ Na/K có đỏ và mức tốt, còn lại đỏ / vàng. */
+function fieldsOf(code: DietRuleCode): Field[] {
+  if (code === "MAGNESIUM") return ["good"]
+  if (code === "NA_K_RATIO") return ["limit", "good"]
+  return ["limit", "caution"]
 }
 
-type Draft = Record<DietRuleCode, { limit: string; caution: string }>
+const FIELD_STYLE: Record<Field, { dot: string; label: (code: DietRuleCode) => string }> = {
+  limit: { dot: "bg-danger-500", label: () => "Đỏ (Nên hạn chế) khi trên" },
+  caution: { dot: "bg-warning-500", label: () => "Vàng (Cần lưu ý) khi trên" },
+  good: {
+    dot: "bg-success-500",
+    label: (code) => (code === "NA_K_RATIO" ? "Tốt khi từ mức này trở xuống" : "Tốt khi từ mức này trở lên"),
+  },
+}
+
+type Draft = Record<DietRuleCode, Values>
 
 function toDraft(rules: DietRule[]): Draft {
   const draft = { ...INITIAL }
   rules.forEach((rule) => {
-    draft[rule.code] = { limit: rule.limit?.toString() ?? "", caution: rule.caution?.toString() ?? "" }
+    draft[rule.code] = {
+      limit: rule.limit?.toString() ?? "",
+      caution: rule.caution?.toString() ?? "",
+      good: rule.good?.toString() ?? "",
+    }
   })
   return draft
 }
@@ -40,13 +61,17 @@ function parse(value: string): number | null {
 }
 
 /** Kiểm tra giống backend để báo lỗi ngay trên form. */
-function validate(draft: { limit: string; caution: string }): string | null {
+function validate(code: DietRuleCode, draft: Values): string | null {
+  const values = fieldsOf(code).map((field) => parse(draft[field]))
+  if (values.some((value) => value !== null && (Number.isNaN(value) || value < 0))) return "Ngưỡng phải là số không âm."
+  if (values.every((value) => value === null)) return "Cần ít nhất một ngưỡng."
   const limit = parse(draft.limit)
   const caution = parse(draft.caution)
-  if ((limit !== null && (Number.isNaN(limit) || limit < 0)) || (caution !== null && (Number.isNaN(caution) || caution < 0)))
-    return "Ngưỡng phải là số không âm."
-  if (limit === null && caution === null) return "Cần ít nhất một ngưỡng đỏ hoặc vàng."
-  if (limit !== null && caution !== null && limit < caution) return "Ngưỡng đỏ phải lớn hơn hoặc bằng ngưỡng vàng."
+  const good = parse(draft.good)
+  if (code !== "NA_K_RATIO" && limit !== null && caution !== null && limit < caution)
+    return "Ngưỡng đỏ phải lớn hơn hoặc bằng ngưỡng vàng."
+  if (code === "NA_K_RATIO" && limit !== null && good !== null && good > limit)
+    return "Mức tốt không được cao hơn ngưỡng đỏ."
   return null
 }
 
@@ -56,7 +81,7 @@ function readError(error: unknown, fallback: string) {
   return err.response?.data?.message || err.message || fallback
 }
 
-/** Admin đặt ngưỡng mặc định để chấm xanh/vàng/đỏ cho thực phẩm; bác sĩ vẫn chỉnh riêng được cho từng bệnh nhân. */
+/** Admin đặt ngưỡng mặc định của bộ quy tắc cho người rung nhĩ; bác sĩ vẫn chỉnh riêng một số quy tắc cho bệnh nhân. */
 export default function AdminNutritionRulesPage() {
   const { toast } = useToast()
   const [rules, setRules] = useState<DietRule[]>([])
@@ -87,21 +112,20 @@ export default function AdminNutritionRulesPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const errors = Object.fromEntries(rules.map((rule) => [rule.code, validate(draft[rule.code])]))
+  const errors = Object.fromEntries(rules.map((rule) => [rule.code, validate(rule.code, draft[rule.code])]))
   const hasErrors = Object.values(errors).some(Boolean)
-  const dirty = rules.some(
-    (rule) =>
-      parse(draft[rule.code].limit) !== (rule.limit ?? null) || parse(draft[rule.code].caution) !== (rule.caution ?? null)
-  )
+  const changed = (rule: DietRule) =>
+    fieldsOf(rule.code).some((field) => parse(draft[rule.code][field]) !== (rule[field] ?? null))
+  const dirty = rules.some(changed)
 
   const save = async () => {
     setSaving(true)
     try {
-      const thresholds = rules.map((rule) => ({
-        code: rule.code,
-        limit: parse(draft[rule.code].limit),
-        caution: parse(draft[rule.code].caution),
-      }))
+      const thresholds = rules.filter(changed).map((rule) => {
+        const fields = fieldsOf(rule.code)
+        const value = (field: Field) => (fields.includes(field) ? parse(draft[rule.code][field]) : null)
+        return { code: rule.code, limit: value("limit"), caution: value("caution"), good: value("good") }
+      })
       apply((await nutritionApi.updateDietRules(thresholds)).data)
       toast({ description: "Đã lưu ngưỡng. Màu của các món sẽ tính theo ngưỡng mới ngay lập tức." })
     } catch (err) {
@@ -111,22 +135,24 @@ export default function AdminNutritionRulesPage() {
     }
   }
 
-  const setField = (code: DietRuleCode, field: "limit" | "caution", value: string) =>
+  const setField = (code: DietRuleCode, field: Field, value: string) =>
     setDraft((prev) => ({ ...prev, [code]: { ...prev[code], [field]: value } }))
+
+  const priorities = Array.from(new Set(rules.map((rule) => rule.priority))).sort((a, b) => a - b)
 
   return (
     <Page>
       <PageHeader
         icon={<SlidersHorizontal className="w-5 h-5" />}
         title="Ngưỡng đánh giá dinh dưỡng"
-        description="Ngưỡng mặc định để chấm xanh / vàng / đỏ cho từng món bệnh nhân tra cứu. Bác sĩ vẫn chỉnh riêng được cho từng bệnh nhân khi kê đơn ăn uống."
+        description="Bộ quy tắc chấm xanh / vàng / đỏ cho người rung nhĩ, áp cho mọi món bệnh nhân tra cứu. Ngưỡng lưu trong cơ sở dữ liệu, sửa ở đây có hiệu lực ngay. Bác sĩ vẫn chỉnh riêng ngưỡng muối, cồn, caffeine, vitamin K cho từng bệnh nhân."
         actions={
           <>
-            <Button variant="outline" size="sm" onClick={() => void load()} disabled={loading || saving} className="rounded-xl gap-1.5">
+            <Button variant="outline" size="sm" onClick={() => void load()} disabled={loading || saving} className="gap-1.5">
               <RefreshCw className="w-3.5 h-3.5" />
               Tải lại
             </Button>
-            <Button size="sm" onClick={() => void save()} disabled={loading || saving || hasErrors || !dirty} className="rounded-xl gap-1.5">
+            <Button size="sm" onClick={() => void save()} disabled={loading || saving || hasErrors || !dirty} className="gap-1.5">
               <Save className="w-3.5 h-3.5" />
               {saving ? "Đang lưu..." : "Lưu thay đổi"}
             </Button>
@@ -142,55 +168,94 @@ export default function AdminNutritionRulesPage() {
             {errorMsg}
           </div>
         ) : (
-          <div className="rounded-2xl border border-slate-200/80 bg-white shadow-xs divide-y divide-slate-100">
-            {rules.map((rule) => (
-              <div key={rule.code} className="p-5 space-y-3">
-                <div className="flex flex-wrap items-start justify-between gap-2">
-                  <div>
-                    <h2 className="text-base font-bold text-slate-900">{rule.name}</h2>
-                    <p className="text-xs text-muted-foreground">{RULE_HINT[rule.code]}</p>
-                  </div>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setDraft((prev) => ({ ...prev, [rule.code]: INITIAL[rule.code] }))}
-                    className="rounded-xl gap-1.5 text-xs"
-                  >
-                    <RotateCcw className="w-3.5 h-3.5" />
-                    Giá trị ban đầu
-                  </Button>
-                </div>
-                <div className="grid gap-3 sm:grid-cols-2">
-                  {(["limit", "caution"] as const).map((field) => (
-                    <label key={field} className="space-y-1">
-                      <span className="flex items-center gap-1.5 text-xs font-semibold text-slate-700">
-                        <span className={field === "limit" ? "w-2 h-2 rounded-full bg-danger-500" : "w-2 h-2 rounded-full bg-warning-500"} />
-                        {field === "limit" ? "Đỏ (Nên hạn chế) từ" : "Vàng (Cần lưu ý) từ"}
-                      </span>
-                      <div className="flex items-center gap-2">
-                        <Input
-                          inputMode="decimal"
-                          value={draft[rule.code][field]}
-                          onChange={(event) => setField(rule.code, field, event.target.value)}
-                          placeholder="Không dùng"
-                          disabled={saving}
-                          className="rounded-xl"
-                        />
-                        <span className="text-xs text-muted-foreground whitespace-nowrap">{rule.unit} / 100 g</span>
+          priorities.map((priority) => (
+            <section key={priority} className="space-y-2">
+              <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                {PRIORITY_LABEL[priority] ?? `Ưu tiên ${priority}`}
+              </h2>
+              <div className="rounded-2xl border border-border bg-card shadow-xs divide-y divide-slate-100">
+                {rules
+                  .filter((rule) => rule.priority === priority)
+                  .map((rule) => {
+                    const meta = DIET_RULE_META[rule.code]
+                    const Icon = meta.icon
+                    const perUnit = rule.code === "NA_K_RATIO" ? "Na/K" : `${rule.unit} / 100 g`
+                    return (
+                      <div key={rule.code} className="p-4 space-y-3">
+                        <div className="flex flex-wrap items-start justify-between gap-2">
+                          <div className="flex items-start gap-3 min-w-0">
+                            <Icon className="w-5 h-5 shrink-0 mt-0.5 text-primary" />
+                            <div className="min-w-0">
+                              <h3 className="text-base font-bold text-foreground">
+                                {rule.name}
+                                {!rule.base && (
+                                  <span className="ml-2 text-[11px] font-medium text-muted-foreground">
+                                    chỉ khi đơn ghi đang dùng warfarin
+                                  </span>
+                                )}
+                              </h3>
+                              <p className="text-xs text-muted-foreground">{meta.summary}</p>
+                            </div>
+                          </div>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setDraft((prev) => ({ ...prev, [rule.code]: INITIAL[rule.code] }))}
+                            className="gap-1.5 text-xs"
+                          >
+                            <RotateCcw className="w-3.5 h-3.5" />
+                            Giá trị ban đầu
+                          </Button>
+                        </div>
+                        <div className="grid gap-3 sm:grid-cols-2">
+                          {fieldsOf(rule.code).map((field) => (
+                            <label key={field} className="space-y-1">
+                              <span className="flex items-center gap-1.5 text-xs font-semibold text-slate-700">
+                                <span className={`w-2 h-2 rounded-full ${FIELD_STYLE[field].dot}`} />
+                                {FIELD_STYLE[field].label(rule.code)}
+                              </span>
+                              <div className="flex items-center gap-2">
+                                <Input
+                                  inputMode="decimal"
+                                  value={draft[rule.code][field]}
+                                  onChange={(event) => setField(rule.code, field, event.target.value)}
+                                  placeholder="Không dùng"
+                                  disabled={saving}
+                                />
+                                <span className="text-xs text-muted-foreground whitespace-nowrap">{perUnit}</span>
+                              </div>
+                            </label>
+                          ))}
+                        </div>
+                        {errors[rule.code] && <p className="text-xs font-medium text-danger-600">{errors[rule.code]}</p>}
+                        {rule.evidence && (
+                          <p className="text-[11px] text-muted-foreground leading-relaxed">
+                            <span className="font-semibold text-slate-600">Nguồn: </span>
+                            {rule.evidence}
+                            {rule.evidenceUrl && (
+                              <a
+                                href={rule.evidenceUrl}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="ml-1 inline-flex items-center gap-0.5 text-primary hover:underline"
+                              >
+                                Xem bài báo <ExternalLink className="w-3 h-3" />
+                              </a>
+                            )}
+                          </p>
+                        )}
+                        {rule.updatedAt && (
+                          <p className="text-[11px] text-muted-foreground">
+                            Cập nhật {new Date(rule.updatedAt).toLocaleString("vi-VN")}
+                            {rule.updatedBy ? ` bởi ${rule.updatedBy}` : ""}
+                          </p>
+                        )}
                       </div>
-                    </label>
-                  ))}
-                </div>
-                {errors[rule.code] && <p className="text-xs font-medium text-danger-600">{errors[rule.code]}</p>}
-                {rule.updatedAt && (
-                  <p className="text-[11px] text-muted-foreground">
-                    Cập nhật {new Date(rule.updatedAt).toLocaleString("vi-VN")}
-                    {rule.updatedBy ? ` bởi ${rule.updatedBy}` : ""}
-                  </p>
-                )}
+                    )
+                  })}
               </div>
-            ))}
-          </div>
+            </section>
+          ))
         )}
       </PageBody>
 
@@ -198,9 +263,10 @@ export default function AdminNutritionRulesPage() {
         <p className="flex items-start gap-2">
           <Info className="w-4 h-4 shrink-0 mt-0.5 text-slate-400" />
           <span>
-            So sánh "từ mức này trở lên" trên 100 g phần ăn được: đạt ngưỡng đỏ là "Nên hạn chế", đạt ngưỡng vàng là "Cần
-            lưu ý". Để trống một ô nghĩa là quy tắc không có mức đó. Ngưỡng riêng bác sĩ đặt cho bệnh nhân luôn được ưu
-            tiên hơn ngưỡng mặc định ở đây.
+            So sánh "vượt quá" trên 100 g phần ăn được. Gộp màu: có quy tắc đỏ là đỏ; không có đỏ mà có vàng là vàng; không
+            có điểm xấu và có điểm tốt (Na/K thấp, hoặc giàu magie mà ít muối) là xanh. Tỷ lệ Na/K chỉ đỏ khi natri cũng
+            vượt ngưỡng đỏ của muối; điểm magie chỉ tính khi natri không vượt ngưỡng vàng của muối. Để trống một ô nghĩa là
+            quy tắc không có mức đó. Ngưỡng riêng bác sĩ đặt cho bệnh nhân luôn được ưu tiên hơn ngưỡng mặc định ở đây.
           </span>
         </p>
       </PageFooter>

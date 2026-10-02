@@ -25,7 +25,7 @@ export default function NutritionDatabasePage() {
           <Info className="w-4 h-4 shrink-0 mt-0.5 text-slate-400" />
           <span>
             Nguồn: Viện Dinh dưỡng - Bộ Y tế (2007), Bảng thành phần thực phẩm Việt Nam, Nhà xuất bản Y học; và USDA
-            FoodData Central, FNDDS 2021-2023. Đây là số liệu tham khảo, không kèm khuyến nghị cho tim mạch. Xem các
+            FoodData Central, FNDDS 2021-2023. Đây là số liệu tham khảo, màu đánh giá theo các quy tắc cho người rung nhĩ. Xem các
             khuyến nghị ở mục{" "}
             <Link to="/app/general/nutrition" className="text-primary font-medium hover:underline">
               Tra cứu thực phẩm

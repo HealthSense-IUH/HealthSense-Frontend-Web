@@ -13,10 +13,28 @@ import type { DietPrescription, DietPrescriptionFlags, DietPrescriptionRule, Die
 
 const NOTE_MAX = 1000
 
-const FLAGS: { key: keyof DietPrescriptionFlags; code: DietRuleCode; title: string; detail: string }[] = [
-  { key: "limitSodium", code: "SODIUM", title: "Hạn chế muối", detail: "Món nhiều natri hiện đỏ / vàng." },
-  { key: "avoidAlcohol", code: "ALCOHOL", title: "Tránh rượu bia", detail: "Đồ uống có cồn hiện đỏ." },
-  { key: "limitCaffeine", code: "CAFFEINE", title: "Hạn chế caffeine", detail: "Món có caffeine hiện vàng." },
+/** Quy tắc bác sĩ dặn riêng và chỉnh ngưỡng riêng được (các quy tắc nền khác chỉ admin sửa ngưỡng chung). */
+type OverridableCode = "SODIUM" | "ALCOHOL" | "CAFFEINE" | "VITAMIN_K"
+
+const FLAGS: { key: keyof DietPrescriptionFlags; code: OverridableCode; title: string; detail: string }[] = [
+  {
+    key: "limitSodium",
+    code: "SODIUM",
+    title: "Hạn chế muối",
+    detail: "Đã có trong quy tắc chung; tick để dặn riêng và đặt ngưỡng muối riêng cho bệnh nhân.",
+  },
+  {
+    key: "avoidAlcohol",
+    code: "ALCOHOL",
+    title: "Tránh rượu bia",
+    detail: "Đã có trong quy tắc chung (có cồn là đỏ); tick để dặn riêng.",
+  },
+  {
+    key: "limitCaffeine",
+    code: "CAFFEINE",
+    title: "Hạn chế caffeine",
+    detail: "Đã có trong quy tắc chung; tick để dặn riêng và đặt ngưỡng caffeine chặt hơn.",
+  },
   {
     key: "onWarfarin",
     code: "VITAMIN_K",
@@ -25,7 +43,7 @@ const FLAGS: { key: keyof DietPrescriptionFlags; code: DietRuleCode; title: stri
   },
 ]
 
-type Overrides = Record<DietRuleCode, { limit: string; caution: string }>
+type Overrides = Record<OverridableCode, { limit: string; caution: string }>
 
 const EMPTY_OVERRIDES: Overrides = {
   SODIUM: { limit: "", caution: "" },
@@ -90,7 +108,8 @@ export function DoctorDietPrescriptionTab({ sessionId, readOnly }: DoctorDietPre
     })
     const next = { ...EMPTY_OVERRIDES }
     data.rules.forEach((rule) => {
-      next[rule.code] = { limit: rule.limit?.toString() ?? "", caution: rule.caution?.toString() ?? "" }
+      if (rule.code in next)
+        next[rule.code as OverridableCode] = { limit: rule.limit?.toString() ?? "", caution: rule.caution?.toString() ?? "" }
     })
     setOverrides(next)
     setNote(data.note ?? "")
@@ -169,9 +188,10 @@ export function DoctorDietPrescriptionTab({ sessionId, readOnly }: DoctorDietPre
         <CardDescription>
           {prescription.personalized
             ? `Đơn hiện tại${prescription.updatedAt ? `, cập nhật ${new Date(prescription.updatedAt).toLocaleString("vi-VN")}` : ""}. Lưu lại sẽ ghi đè đơn cũ.`
-            : "Bệnh nhân chưa có đơn; app đang dùng lời khuyên chung (hạn chế muối, tránh rượu bia)."}{" "}
-          Mọi món bệnh nhân tra cứu sẽ hiện xanh / vàng / đỏ theo đơn này. Ô ngưỡng để trống là dùng mặc định của hệ
-          thống.
+            : "Bệnh nhân chưa có đơn; app đang dùng các quy tắc chung cho người rung nhĩ."}{" "}
+          Quy tắc chung (cồn, caffeine, đường, tỷ lệ natri/kali, muối, chất béo bão hòa, magie) luôn áp dụng; đơn thêm
+          điều bác sĩ dặn riêng, ngưỡng riêng và quy tắc vitamin K khi dùng warfarin. Ô ngưỡng để trống là dùng mặc
+          định của hệ thống.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -202,7 +222,7 @@ export function DoctorDietPrescriptionTab({ sessionId, readOnly }: DoctorDietPre
                         <label key={field} className="space-y-1">
                           <span className="flex items-center gap-1 text-[11px] font-medium text-muted-foreground">
                             <span className={field === "limit" ? "w-1.5 h-1.5 rounded-full bg-danger-500" : "w-1.5 h-1.5 rounded-full bg-warning-500"} />
-                            {field === "limit" ? "Đỏ từ" : "Vàng từ"} ({rule.unit}/100 g)
+                            {field === "limit" ? "Đỏ khi trên" : "Vàng khi trên"} ({rule.unit}/100 g)
                           </span>
                           <Input
                             inputMode="decimal"

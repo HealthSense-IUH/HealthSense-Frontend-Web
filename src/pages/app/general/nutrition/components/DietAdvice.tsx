@@ -1,15 +1,22 @@
-import { AlertTriangle, Ban, CheckCircle2, HelpCircle, type LucideIcon } from "lucide-react"
+import { AlertTriangle, Ban, Circle, HeartPulse, HelpCircle, type LucideIcon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import type { DietAdvice as DietAdviceData, DietAdviceLevel } from "@/types/nutrition"
 
 const LEVEL_STYLE: Record<DietAdviceLevel, { label: string; icon: LucideIcon; badge: string; icon_: string; box: string }> = {
-  OK: {
-    label: "Phù hợp",
-    icon: CheckCircle2,
+  GOOD: {
+    label: "Tốt cho nhịp tim",
+    icon: HeartPulse,
     badge: "bg-success-50 text-success-700 border-success-200/80",
     icon_: "text-success-600",
     box: "bg-success-50/60 border-success-200/80",
+  },
+  OK: {
+    label: "Không có lưu ý",
+    icon: Circle,
+    badge: "bg-slate-50 text-slate-600 border-slate-200",
+    icon_: "text-slate-500",
+    box: "bg-slate-50 border-slate-200",
   },
   CAUTION: {
     label: "Cần lưu ý",
@@ -34,7 +41,7 @@ const LEVEL_STYLE: Record<DietAdviceLevel, { label: string; icon: LucideIcon; ba
   },
 }
 
-/** Nhãn màu của một món theo đơn ăn uống (xanh / vàng / đỏ / xám). */
+/** Nhãn màu của một món theo quy tắc cho người rung nhĩ và đơn ăn uống (xanh / trung tính / vàng / đỏ / xám). */
 export function DietAdviceBadge({ advice, className }: { advice?: DietAdviceData; className?: string }) {
   if (!advice) return null
   const style = LEVEL_STYLE[advice.level]
@@ -65,7 +72,7 @@ export function DietAdviceNote({ advice }: { advice?: DietAdviceData }) {
         <Icon className={cn("w-4 h-4", style.icon_)} />
         <span>
           {style.label}
-          {advice.personalized ? " theo đơn ăn uống của bác sĩ" : " theo lời khuyên chung cho người bệnh tim"}
+          {advice.personalized ? " theo đơn ăn uống của bác sĩ" : " theo khuyến nghị cho người rung nhĩ"}
         </span>
       </div>
       {advice.reasons.length > 0 ? (
@@ -76,12 +83,14 @@ export function DietAdviceNote({ advice }: { advice?: DietAdviceData }) {
         </ul>
       ) : (
         <p className="text-xs sm:text-sm text-slate-700">
-          Không có điểm nào cần lưu ý với {advice.personalized ? "đơn của bạn" : "lời khuyên chung"}.
+          Không có điểm nào cần lưu ý, nhưng cũng chưa có điểm nổi bật cho nhịp tim (kali cao hơn natri, hoặc giàu
+          magie mà ít muối).
         </p>
       )}
       {!advice.personalized && (
         <p className="text-xs text-muted-foreground">
-          Bác sĩ chưa kê đơn ăn uống riêng cho bạn. Khi bác sĩ kê đơn trong buổi tư vấn, đánh giá sẽ theo đơn đó.
+          Bác sĩ chưa kê đơn ăn uống riêng cho bạn. Khi bác sĩ kê đơn trong buổi tư vấn, đánh giá sẽ thêm các điều
+          bác sĩ dặn.
         </p>
       )}
     </div>

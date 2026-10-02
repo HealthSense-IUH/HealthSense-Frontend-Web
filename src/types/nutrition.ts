@@ -127,7 +127,7 @@ export interface FoodGroup {
 export type FoodCategory = FoodGroup
 
 // ---------------------------------------------------------------------------
-// Tra cứu toàn bộ cơ sở dữ liệu tham chiếu. Chỉ có số liệu, không kèm khuyến nghị.
+// Tra cứu toàn bộ cơ sở dữ liệu tham chiếu: số liệu kèm đánh giá theo quy tắc cho người rung nhĩ (advice).
 // Mọi giá trị tính trên 100 g phần ăn được. Hai nguồn:
 //   VN_FCT     - Bảng thành phần thực phẩm Việt Nam, Viện Dinh dưỡng 2007 (526 thực phẩm)
 //   USDA_FNDDS - USDA FNDDS 2021-2023 (5.431 thực phẩm, món ăn)
@@ -204,8 +204,11 @@ export interface ReferenceFoodSearchParams {
 // Đơn ăn uống: bác sĩ tick vài cờ, mọi món hội viên tra cứu được chấm xanh/vàng/đỏ theo đơn.
 // ---------------------------------------------------------------------------
 
-/** OK = xanh, CAUTION = vàng, LIMIT = đỏ, UNKNOWN = xám (thiếu số liệu để đánh giá) */
-export type DietAdviceLevel = 'OK' | 'CAUTION' | 'LIMIT' | 'UNKNOWN'
+/**
+ * GOOD = xanh (tốt cho nhịp tim), OK = không có lưu ý, CAUTION = vàng, LIMIT = đỏ,
+ * UNKNOWN = xám (thiếu số liệu để đánh giá)
+ */
+export type DietAdviceLevel = 'GOOD' | 'OK' | 'CAUTION' | 'LIMIT' | 'UNKNOWN'
 
 export interface DietAdviceReason {
   code: string
@@ -215,9 +218,9 @@ export interface DietAdviceReason {
 
 export interface DietAdvice {
   level: DietAdviceLevel
-  /** Nặng trước; OK thì rỗng */
+  /** Nặng trước rồi theo mức ưu tiên; GOOD thì là các điểm tốt; OK thì rỗng */
   reasons: DietAdviceReason[]
-  /** true: theo đơn của bác sĩ; false: theo lời khuyên chung */
+  /** true: có đơn của bác sĩ; false: chỉ theo bộ quy tắc chung cho người rung nhĩ */
   personalized: boolean
 }
 
@@ -229,16 +232,27 @@ export interface DietPrescriptionFlags {
   limitCaffeine: boolean
 }
 
-export type DietRuleCode = 'SODIUM' | 'ALCOHOL' | 'CAFFEINE' | 'VITAMIN_K'
+/** Theo thứ tự ưu tiên (V28). VITAMIN_K chỉ áp dụng khi đơn ghi đang dùng warfarin. */
+export type DietRuleCode =
+  | 'ALCOHOL'
+  | 'CAFFEINE'
+  | 'SUGARS'
+  | 'NA_K_RATIO'
+  | 'SODIUM'
+  | 'SATURATED_FAT'
+  | 'MAGNESIUM'
+  | 'VITAMIN_K'
 
 /**
- * Ngưỡng trên 100 g, so "từ mức này trở lên": limit = đỏ (Nên hạn chế), caution = vàng (Cần lưu ý).
+ * Ngưỡng trên 100 g (tỷ lệ Na/K không có đơn vị), so "vượt quá": limit = đỏ (Nên hạn chế), caution = vàng
+ * (Cần lưu ý); good = mức tốt (Na/K: từ mức này trở xuống; magie: từ mức này trở lên, chỉ admin sửa).
  * Vắng = không có mức đó (admin) hoặc dùng mặc định (ngưỡng riêng của bác sĩ).
  */
 export interface DietThreshold {
   code: DietRuleCode
   limit?: number | null
   caution?: number | null
+  good?: number | null
 }
 
 /** Ngưỡng mặc định của cả hệ thống (trang quản trị) */
@@ -248,6 +262,16 @@ export interface DietRule {
   unit: string
   limit?: number
   caution?: number
+  good?: number
+  /** Mức ưu tiên 1-4; 5 = chỉ theo đơn (vitamin K) */
+  priority: number
+  /** Áp cho mọi người (bộ quy tắc nền cho người rung nhĩ) */
+  base: boolean
+  /** Bác sĩ chỉnh ngưỡng riêng cho từng hội viên được */
+  overridable: boolean
+  /** Nguồn của quy tắc */
+  evidence?: string
+  evidenceUrl?: string
   updatedAt?: string
   updatedBy?: string
 }
@@ -257,7 +281,13 @@ export interface DietPrescriptionRule {
   code: DietRuleCode
   name: string
   unit: string
+  /** Đang áp dụng cho hội viên (quy tắc nền luôn áp dụng; vitamin K khi dùng warfarin) */
   enabled: boolean
+  /** Bác sĩ dặn riêng */
+  prescribed: boolean
+  /** Bác sĩ chỉnh ngưỡng riêng được */
+  overridable: boolean
+  good?: number
   defaultLimit?: number
   defaultCaution?: number
   limit?: number

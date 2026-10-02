@@ -296,8 +296,8 @@ export default function CategoryExplorerPage() {
                 Tất cả thực phẩm trong nhóm ({(currentCategory.foodCount ?? 0).toLocaleString("vi-VN")})
               </h2>
               <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
-                Số liệu trên 100 g phần ăn được từ Bảng thành phần thực phẩm Việt Nam và USDA FNDDS, không kèm khuyến
-                nghị.
+                Số liệu trên 100 g phần ăn được từ Bảng thành phần thực phẩm Việt Nam và USDA FNDDS. Màu của từng món
+                theo các quy tắc cho người rung nhĩ.
               </p>
             </div>
             <ReferenceFoodBrowser fixedGroup={currentCategory.id} layout="cards" />
