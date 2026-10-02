@@ -1,10 +1,9 @@
 import { Link } from "react-router-dom"
-import { ArrowRight, Database, RefreshCw } from "lucide-react"
+import { ArrowRight, RefreshCw } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { FoodSearchBar } from "./FoodSearchBar"
-import { ReferenceFoodBrowser } from "./ReferenceFoodBrowser"
 import { FoodGroupIcon } from "../group-icons"
 import { useNutritionGroups } from "../hooks/use-nutrition"
 import type { FoodGroup } from "@/types/nutrition"
@@ -69,7 +68,7 @@ function FoodGroupGrid() {
   )
 }
 
-/** Tab "Tra cứu thực phẩm": tìm nhanh, duyệt theo nhóm thực phẩm và tra cứu toàn bộ cơ sở dữ liệu. */
+/** Tab "Tra cứu thực phẩm": tìm nhanh và duyệt theo nhóm thực phẩm (mỗi nhóm có danh sách đầy đủ ở trang nhóm). */
 export function FoodsTab() {
   return (
     <div className="space-y-6">
@@ -85,24 +84,6 @@ export function FoodsTab() {
           </p>
         </div>
         <FoodGroupGrid />
-      </section>
-
-      <section className="space-y-4 border-t border-border pt-6">
-        <div className="flex items-start gap-3">
-          <div className="p-2.5 rounded-xl bg-primary/10 text-primary shrink-0">
-            <Database className="w-5 h-5" />
-          </div>
-          <div>
-            <h2 className="text-lg sm:text-xl font-bold text-foreground">Cơ sở dữ liệu dinh dưỡng</h2>
-            <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 leading-relaxed">
-              526 thực phẩm Việt Nam (Bảng thành phần thực phẩm Việt Nam, Viện Dinh dưỡng 2007) và 5.431 thực phẩm,
-              món ăn từ USDA FNDDS 2021-2023. Giá trị tính trên 100 g phần ăn được. Chỉ có số liệu, không kèm khuyến
-              nghị tim mạch.
-            </p>
-          </div>
-        </div>
-
-        <ReferenceFoodBrowser />
       </section>
     </div>
   )

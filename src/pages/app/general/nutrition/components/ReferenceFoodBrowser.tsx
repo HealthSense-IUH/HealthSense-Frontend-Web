@@ -32,6 +32,8 @@ const SUMMARY_COLUMNS = [
 interface ReferenceFoodBrowserProps {
   /** Cố định một nhóm (trang của nhóm): ẩn ô chọn nhóm và không ghi nhóm lên URL */
   fixedGroup?: string
+  /** "list": hàng dạng bảng (trang cơ sở dữ liệu); "cards": lưới thẻ (trang nhóm) */
+  layout?: "list" | "cards"
 }
 
 /**
@@ -39,7 +41,7 @@ interface ReferenceFoodBrowserProps {
  * lọc nhóm chung, danh sách và phân trang. Từ khóa, nguồn, nhóm và trang nằm trên URL để Back giữ được
  * kết quả; các tham số khác của trang chứa nó (ví dụ `tab`) được giữ nguyên.
  */
-export function ReferenceFoodBrowser({ fixedGroup }: ReferenceFoodBrowserProps = {}) {
+export function ReferenceFoodBrowser({ fixedGroup, layout = "list" }: ReferenceFoodBrowserProps = {}) {
   const [searchParams, setSearchParams] = useSearchParams()
   const q = searchParams.get("q") ?? ""
   const group = fixedGroup ?? searchParams.get("group") ?? ""
@@ -194,6 +196,47 @@ export function ReferenceFoodBrowser({ fixedGroup }: ReferenceFoodBrowserProps =
           <p className="text-xs">
             Thử tên tiếng Việt (có hoặc không dấu) hoặc tiếng Anh, ví dụ: rau muong, gio lua, chicken, rice.
           </p>
+        </div>
+      ) : layout === "cards" ? (
+        <div
+          className={cn(
+            "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 transition-opacity",
+            isFetching && "opacity-60"
+          )}
+        >
+          {foods.map((food) => (
+            <Link
+              key={food.id}
+              to={`/app/general/nutrition/database/${food.id}`}
+              className="group flex flex-col rounded-2xl border border-border bg-card p-5 shadow-xs transition-all hover:border-primary-300 hover:shadow-md"
+            >
+              <div className="flex items-start justify-between gap-2">
+                <h3 className="font-semibold text-sm text-foreground group-hover:text-primary transition-colors line-clamp-2">
+                  {food.displayName}
+                </h3>
+                <span className="shrink-0 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-slate-100 text-slate-600">
+                  {REFERENCE_SOURCES[food.source].short}
+                </span>
+              </div>
+              {food.localName && food.localName !== food.displayName && (
+                <p className="mt-0.5 text-[11px] text-muted-foreground truncate">{food.localName}</p>
+              )}
+              <DietAdviceBadge advice={food.advice} className="mt-2 self-start" />
+              <div className="mt-auto pt-4">
+                <dl className="pt-3 grid grid-cols-4 gap-2 border-t border-slate-100">
+                  {SUMMARY_COLUMNS.map((col) => (
+                    <div key={col.key} className="min-w-0">
+                      <dt className="text-[10px] text-muted-foreground truncate">{col.label}</dt>
+                      <dd className="text-xs font-semibold text-slate-700">
+                        {formatNutrientAmount(food[col.key])}
+                        <span className="ml-0.5 font-normal text-muted-foreground">{col.unit}</span>
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+            </Link>
+          ))}
         </div>
       ) : (
         <div className={isFetching ? "opacity-60 transition-opacity" : "transition-opacity"}>

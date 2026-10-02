@@ -5,7 +5,6 @@ import {
   Sparkles,
   ArrowRight,
   CheckCircle2,
-  Database,
   AlertTriangle,
   Ban,
   LayoutGrid,
@@ -114,26 +113,23 @@ export default function CategoryExplorerPage() {
 
         {/* VIEW 1: Khi chưa chọn món cụ thể -> SHOW DANH SÁCH CÁC LOẠI CÓ KHUYẾN NGHỊ (Cá hồi, Cá thu, Cá ngừ...) */}
         {!selectedFoodName && (isFoodsLoading || foodNames.length > 0) && (
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-lg sm:text-xl font-bold text-slate-900">
-                  Có khuyến nghị cho tim mạch ({foodNames.length})
-                </h2>
-                <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
-                  Chọn một loại để xem chi tiết các biến thể và khuyến nghị dinh dưỡng.
-                </p>
-              </div>
+          <section className="space-y-4">
+            <div>
+              <h2 className="text-lg sm:text-xl font-bold text-foreground">
+                Có khuyến nghị cho tim mạch ({foodNames.length})
+              </h2>
+              <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
+                Chọn một loại để xem các biến thể và khuyến nghị dinh dưỡng.
+              </p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {isFoodsLoading &&
-                Array.from({ length: 3 }, (_, i) => <Skeleton key={i} className="h-64 rounded-2xl" />)}
+                Array.from({ length: 4 }, (_, i) => <Skeleton key={i} className="h-36 rounded-2xl" />)}
               {foodNames.map((fn) => {
                 const variants = foods.filter((f) => f.foodName === fn)
                 const count = variants.length
                 const sampleVariants = variants.map((v) => v.foodNameSpecific).slice(0, 3).join(", ")
-                const thumbnail = variants.find((v) => v.imageUrl)?.imageUrl
 
                 return (
                   <button
@@ -143,47 +139,26 @@ export default function CategoryExplorerPage() {
                       setSearchParams({ food: fn })
                       setGuidanceFilter("ALL")
                     }}
-                    className="group relative flex flex-col justify-between rounded-2xl border border-slate-200/80 bg-white p-4 text-left shadow-xs transition-all hover:border-primary/50 hover:shadow-md cursor-pointer overflow-hidden"
+                    className="group flex flex-col justify-between rounded-2xl border border-border bg-card p-5 text-left shadow-xs transition-all hover:border-primary-300 hover:shadow-md cursor-pointer"
                   >
-                    <div className="w-full">
-                      {/* Thumbnail Image / Placeholder */}
-                      <div className="relative aspect-[16/9] w-full overflow-hidden rounded-xl bg-slate-100 mb-3.5 border border-slate-200/60">
-                        {thumbnail ? (
-                          <img
-                            src={thumbnail}
-                            alt={fn}
-                            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                            loading="lazy"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex flex-col items-center justify-center text-slate-400 gap-1.5 p-3 text-center bg-gradient-to-b from-slate-50 to-slate-100/80 group-hover:from-primary/5 group-hover:to-primary/10 transition-colors">
-                            <div className="p-2 rounded-xl bg-white shadow-2xs text-slate-400 group-hover:text-primary transition-colors border border-slate-200/50">
-                              {defaultIcon}
-                            </div>
-                            <span className="text-[11px] font-medium text-slate-400">
-                              Hình ảnh thực phẩm
-                            </span>
-                          </div>
-                        )}
-                        <span className="absolute top-2.5 right-2.5 text-xs font-semibold text-primary bg-white/95 backdrop-blur-xs px-2.5 py-0.5 rounded-full shadow-2xs border border-slate-200/60">
+                    <div className="w-full space-y-1">
+                      <div className="flex items-start justify-between gap-2">
+                        <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors text-base">
+                          {fn}
+                        </h3>
+                        <span className="shrink-0 text-[11px] font-medium text-muted-foreground bg-slate-50 px-2 py-0.5 rounded-full border border-slate-100">
                           {count} món
                         </span>
                       </div>
-
-                      <div className="space-y-1">
-                        <h3 className="font-bold text-slate-900 group-hover:text-primary transition-colors text-base sm:text-lg">
-                          {fn}
-                        </h3>
-                        {sampleVariants && (
-                          <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
-                            Gồm có: {sampleVariants}
-                            {count > 3 ? "..." : ""}
-                          </p>
-                        )}
-                      </div>
+                      {sampleVariants && (
+                        <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
+                          Gồm có: {sampleVariants}
+                          {count > 3 ? "..." : ""}
+                        </p>
+                      )}
                     </div>
 
-                    <div className="pt-3 mt-3 w-full border-t border-slate-100 flex items-center justify-between text-xs text-primary font-medium">
+                    <div className="pt-3 mt-4 w-full border-t border-slate-100 flex items-center justify-between text-xs text-primary font-medium">
                       <span>Xem các lựa chọn</span>
                       <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                     </div>
@@ -191,7 +166,7 @@ export default function CategoryExplorerPage() {
                 )
               })}
             </div>
-          </div>
+          </section>
         )}
 
         {/* VIEW 2: Khi đã chọn một loại cụ thể (ví dụ: Cá hồi) -> HIỂN THỊ DẠNG 3 CỘT (CARD GRID) KHÔNG CHIA ROW */}
@@ -315,22 +290,17 @@ export default function CategoryExplorerPage() {
 
         {/* VIEW 1b: Mọi thực phẩm của nhóm trong cơ sở dữ liệu tham chiếu (Việt Nam + USDA), chỉ có số liệu */}
         {!selectedFoodName && (
-          <section className="space-y-4">
-            <div className="flex items-start gap-3">
-              <div className="p-2.5 rounded-xl bg-primary/10 text-primary shrink-0">
-                <Database className="w-5 h-5" />
-              </div>
-              <div>
-                <h2 className="text-lg sm:text-xl font-bold text-slate-900">
-                  Tất cả thực phẩm trong nhóm ({currentCategory.foodCount.toLocaleString("vi-VN")})
-                </h2>
-                <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
-                  Số liệu trên 100 g phần ăn được từ Bảng thành phần thực phẩm Việt Nam và USDA FNDDS, không kèm khuyến
-                  nghị.
-                </p>
-              </div>
+          <section className={cn("space-y-4", foodNames.length > 0 && "border-t border-border pt-6")}>
+            <div>
+              <h2 className="text-lg sm:text-xl font-bold text-foreground">
+                Tất cả thực phẩm trong nhóm ({(currentCategory.foodCount ?? 0).toLocaleString("vi-VN")})
+              </h2>
+              <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
+                Số liệu trên 100 g phần ăn được từ Bảng thành phần thực phẩm Việt Nam và USDA FNDDS, không kèm khuyến
+                nghị.
+              </p>
             </div>
-            <ReferenceFoodBrowser fixedGroup={currentCategory.id} />
+            <ReferenceFoodBrowser fixedGroup={currentCategory.id} layout="cards" />
           </section>
         )}
 

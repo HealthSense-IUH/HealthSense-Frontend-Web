@@ -20,7 +20,7 @@ export function LanguageSwitcher() {
           type="button"
           aria-label={t("lang.label")}
           title={t("lang.label")}
-          className="flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-2.5 py-1.5 text-slate-300 transition-colors hover:bg-white/10 hover:text-white cursor-pointer"
+          className="flex items-center gap-1.5 rounded-full border border-slate-200/90 bg-white/90 px-2.5 py-1.5 text-slate-600 shadow-2xs transition-all hover:bg-slate-50 hover:text-slate-900 cursor-pointer"
         >
           <Languages className="h-4 w-4" />
           <span className="text-[11px] font-bold uppercase tracking-wider">{active}</span>

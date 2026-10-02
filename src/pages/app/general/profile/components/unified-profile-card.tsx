@@ -31,6 +31,7 @@ import { AvatarPlaceholder } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useToast } from "@/hooks/use-toast"
 import { useAuthStore } from "@/stores/auth-store"
 import { profileApi } from "@/services"
@@ -673,7 +674,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
           /* EDITABLE FORM MODE */
           <form onSubmit={handleSubmit} className="space-y-8">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-              <h3 className="text-base font-extrabold text-slate-900">
+              <h3 className="text-base font-bold text-foreground">
                 Cập nhật hồ sơ & Định danh cá nhân
               </h3>
               <span className="text-xs text-slate-500">
@@ -682,13 +683,13 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
             </div>
 
             {/* Section 1: Basic Info */}
-            <div className="space-y-5">
-              <h4 className="text-xs font-extrabold text-slate-400 uppercase tracking-wider">
+            <div className="space-y-4">
+              <h4 className="text-sm font-semibold text-foreground">
                 1. Thông tin cá nhân cơ bản
               </h4>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                <div className="space-y-2">
-                  <Label htmlFor="display-name-input" className="text-xs font-bold text-slate-700">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <Label htmlFor="display-name-input">
                     Tên hiển thị <span className="text-danger-500">*</span>
                   </Label>
                   <Input
@@ -699,12 +700,11 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                     placeholder="Nhập họ và tên hiển thị"
                     maxLength={120}
                     required
-                    className="h-11 rounded-xl border-slate-200 text-xs font-semibold focus:ring-2 focus:ring-primary-500"
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="phone-input" className="text-xs font-bold text-slate-700">
+                <div className="space-y-1.5">
+                  <Label htmlFor="phone-input">
                     Số điện thoại
                   </Label>
                   <Input
@@ -714,14 +714,13 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder="VD: 0909 123 456"
                     maxLength={30}
-                    className="h-11 rounded-xl border-slate-200 text-xs font-mono font-semibold focus:ring-2 focus:ring-primary-500"
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                <div className="space-y-2">
-                  <Label htmlFor="dob-input" className="text-xs font-bold text-slate-700">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <Label htmlFor="dob-input">
                     Ngày sinh
                   </Label>
                   <Input
@@ -730,31 +729,28 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                     disabled={loading}
                     value={dateOfBirth}
                     onChange={(e) => setDateOfBirth(e.target.value)}
-                    className="h-11 rounded-xl border-slate-200 text-xs font-mono font-semibold cursor-pointer focus:ring-2 focus:ring-primary-500"
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="gender-select" className="text-xs font-bold text-slate-700">
+                <div className="space-y-1.5">
+                  <Label htmlFor="gender-select">
                     Giới tính
                   </Label>
-                  <select
-                    id="gender-select"
-                    aria-label="Gender selection"
-                    disabled={loading}
-                    value={gender}
-                    onChange={(e) => setGender(e.target.value)}
-                    className="w-full h-11 rounded-xl border border-slate-200 bg-white px-3 text-xs font-extrabold text-slate-800 focus:outline-none focus:ring-2 focus:ring-primary-500 cursor-pointer"
-                  >
-                    <option value="MALE">Nam</option>
-                    <option value="FEMALE">Nữ</option>
-                    <option value="OTHER">Khác</option>
-                  </select>
+                  <Select value={gender} onValueChange={setGender} disabled={loading}>
+                    <SelectTrigger id="gender-select" aria-label="Giới tính">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="MALE">Nam</SelectItem>
+                      <SelectItem value="FEMALE">Nữ</SelectItem>
+                      <SelectItem value="OTHER">Khác</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="address-input" className="text-xs font-bold text-slate-700">
+              <div className="space-y-1.5">
+                <Label htmlFor="address-input">
                   Địa chỉ liên hệ
                 </Label>
                 <Input
@@ -764,21 +760,20 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                   onChange={(e) => setAddress(e.target.value)}
                   placeholder="Nhập địa chỉ, số nhà, phường/xã, quận/huyện, tỉnh/thành phố"
                   maxLength={500}
-                  className="h-11 rounded-xl border-slate-200 text-xs font-medium focus:ring-2 focus:ring-primary-500"
                 />
               </div>
             </div>
 
             {/* Section 2: Sensitive Numbers */}
-            <div className="space-y-5 pt-4 border-t border-slate-100">
-              <h4 className="text-xs font-extrabold text-slate-400 uppercase tracking-wider flex items-center gap-2">
+            <div className="space-y-4 pt-6 border-t border-slate-100">
+              <h4 className="text-sm font-semibold text-foreground flex items-center gap-2">
                 <CreditCard className="w-4 h-4 text-primary-500" />
                 <span>2. Thông tin định danh & Bảo mật</span>
               </h4>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                <div className="space-y-2">
-                  <Label htmlFor="citizen-id-input" className="text-xs font-bold text-slate-700">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="space-y-1.5">
+                  <Label htmlFor="citizen-id-input">
                     Số CCCD / CMND
                   </Label>
                   <Input
@@ -788,12 +783,11 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                     onChange={(e) => setCitizenId(e.target.value)}
                     placeholder="VD: 079204001234"
                     maxLength={20}
-                    className="h-11 rounded-xl border-slate-200 text-xs font-mono font-semibold focus:ring-2 focus:ring-primary-500"
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="bank-account-input" className="text-xs font-bold text-slate-700">
+                <div className="space-y-1.5">
+                  <Label htmlFor="bank-account-input">
                     Tài khoản ngân hàng
                   </Label>
                   <Input
@@ -803,12 +797,11 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                     onChange={(e) => setBankAccount(e.target.value)}
                     placeholder="VD: 1029384756 - Vietcombank"
                     maxLength={100}
-                    className="h-11 rounded-xl border-slate-200 text-xs font-mono font-semibold focus:ring-2 focus:ring-primary-500"
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="health-ins-input" className="text-xs font-bold text-slate-700">
+                <div className="space-y-1.5">
+                  <Label htmlFor="health-ins-input">
                     Mã số Thẻ BHYT
                   </Label>
                   <Input
@@ -818,16 +811,15 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                     onChange={(e) => setHealthInsuranceNumber(e.target.value)}
                     placeholder="VD: DN4790123456789"
                     maxLength={50}
-                    className="h-11 rounded-xl border-slate-200 text-xs font-mono font-semibold focus:ring-2 focus:ring-primary-500"
                   />
                 </div>
               </div>
             </div>
 
             {/* Section 3: CCCD Front & Back Image Upload with Rotation */}
-            <div className="space-y-5 pt-4 border-t border-slate-100">
+            <div className="space-y-4 pt-6 border-t border-slate-100">
               <div className="flex items-center justify-between">
-                <h4 className="text-xs font-extrabold text-slate-400 uppercase tracking-wider flex items-center gap-2">
+                <h4 className="text-sm font-semibold text-foreground flex items-center gap-2">
                   <UploadCloud className="w-4 h-4 text-primary-500" />
                   <span>3. Tải lên ảnh Căn cước công dân (CCCD 2 mặt)</span>
                 </h4>
