@@ -71,7 +71,7 @@ function readError(error: unknown, fallback: string) {
   return err.response?.data?.message || err.message || fallback
 }
 
-/** Admin đặt ngưỡng mặc định của bộ quy tắc cho người rung nhĩ; bác sĩ vẫn chỉnh riêng một số quy tắc cho bệnh nhân. */
+/** Admin đặt ngưỡng mặc định của bộ quy tắc cho người rung nhĩ; quy tắc chỉ áp dụng khi bác sĩ tick trong đơn và cho bệnh nhân. */
 export default function AdminNutritionRulesPage() {
   const { toast } = useToast()
   const [rules, setRules] = useState<DietRule[]>([])
@@ -135,7 +135,7 @@ export default function AdminNutritionRulesPage() {
       <PageHeader
         icon={<SlidersHorizontal className="w-5 h-5" />}
         title="Ngưỡng đánh giá dinh dưỡng"
-        description="Bộ quy tắc chấm xanh / vàng / đỏ cho người rung nhĩ, áp cho mọi món bệnh nhân tra cứu. Ngưỡng lưu trong cơ sở dữ liệu, sửa ở đây có hiệu lực ngay. Bác sĩ vẫn chỉnh riêng ngưỡng muối, cồn, caffeine, vitamin K cho từng bệnh nhân."
+        description="Ngưỡng mặc định của các quy tắc chấm xanh / vàng / đỏ cho người rung nhĩ. Quy tắc chỉ áp dụng cho bệnh nhân khi bác sĩ tick trong đơn ăn uống; bác sĩ có thể đặt ngưỡng riêng. Ngưỡng lưu trong cơ sở dữ liệu, sửa ở đây có hiệu lực ngay."
         actions={
           <>
             <Button variant="outline" size="sm" onClick={() => void load()} disabled={loading || saving} className="gap-1.5">
@@ -176,14 +176,7 @@ export default function AdminNutritionRulesPage() {
                           <div className="flex items-start gap-3 min-w-0">
                             <Icon className="w-5 h-5 shrink-0 mt-0.5 text-primary" />
                             <div className="min-w-0">
-                              <h3 className="text-base font-bold text-foreground">
-                                {rule.name}
-                                {!rule.base && (
-                                  <span className="ml-2 text-[11px] font-medium text-muted-foreground">
-                                    chỉ khi đơn ghi đang dùng warfarin
-                                  </span>
-                                )}
-                              </h3>
+                              <h3 className="text-base font-bold text-foreground">{rule.name}</h3>
                               <p className="text-xs text-muted-foreground">{meta.summary}</p>
                             </div>
                           </div>

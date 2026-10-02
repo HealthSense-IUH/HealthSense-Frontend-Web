@@ -127,7 +127,7 @@ export interface FoodGroup {
 export type FoodCategory = FoodGroup
 
 // ---------------------------------------------------------------------------
-// Tra cứu toàn bộ cơ sở dữ liệu tham chiếu: số liệu kèm đánh giá theo quy tắc cho người rung nhĩ (advice).
+// Tra cứu toàn bộ cơ sở dữ liệu tham chiếu: số liệu, kèm đánh giá (advice) khi hội viên có đơn ăn uống.
 // Mọi giá trị tính trên 100 g phần ăn được. Hai nguồn:
 //   VN_FCT     - Bảng thành phần thực phẩm Việt Nam, Viện Dinh dưỡng 2007 (526 thực phẩm)
 //   USDA_FNDDS - USDA FNDDS 2021-2023 (5.431 thực phẩm, món ăn)
@@ -220,7 +220,7 @@ export interface DietAdvice {
   level: DietAdviceLevel
   /** Nặng trước rồi theo mức ưu tiên; GOOD thì là các điểm tốt; OK thì rỗng */
   reasons: DietAdviceReason[]
-  /** true: có đơn của bác sĩ; false: chỉ theo bộ quy tắc chung cho người rung nhĩ */
+  /** Luôn true: chỉ đánh giá khi bác sĩ đã kê đơn (chưa có đơn thì món không có advice) */
   personalized: boolean
 }
 
@@ -270,8 +270,6 @@ export interface DietRule {
   good?: number
   /** Mức ưu tiên 1-4; 5 = chỉ theo đơn (vitamin K) */
   priority: number
-  /** Áp cho mọi người (bộ quy tắc nền cho người rung nhĩ) */
-  base: boolean
   /** Bác sĩ chỉnh ngưỡng riêng cho từng hội viên được */
   overridable: boolean
   /** Nguồn của quy tắc */

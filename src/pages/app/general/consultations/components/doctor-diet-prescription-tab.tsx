@@ -21,35 +21,35 @@ import {
 
 const NOTE_MAX = 1000
 
-/** Mỗi ô ứng với một quy tắc, theo thứ tự ưu tiên. Quy tắc nền luôn áp dụng; ô warfarin bật thêm quy tắc vitamin K. */
+/** Mỗi ô ứng với một quy tắc, theo thứ tự ưu tiên. Chỉ quy tắc được tick mới chấm màu món cho bệnh nhân. */
 const FLAGS: { key: keyof DietPrescriptionFlags; code: DietRuleCode; title: string; detail: string }[] = [
-  { key: "avoidAlcohol", code: "ALCOHOL", title: "Tránh rượu bia", detail: "Đã có trong quy tắc chung (có cồn là đỏ); tick để dặn riêng." },
-  { key: "limitCaffeine", code: "CAFFEINE", title: "Hạn chế caffeine", detail: "Tick để dặn riêng và đặt ngưỡng caffeine chặt hơn." },
-  { key: "limitSugars", code: "SUGARS", title: "Hạn chế đường", detail: "Tick để dặn riêng và đặt ngưỡng đường (không áp cho trái cây, sữa)." },
+  { key: "avoidAlcohol", code: "ALCOHOL", title: "Tránh rượu bia", detail: "Đồ uống có cồn hiện đỏ." },
+  { key: "limitCaffeine", code: "CAFFEINE", title: "Hạn chế caffeine", detail: "Món nhiều caffeine hiện vàng." },
+  { key: "limitSugars", code: "SUGARS", title: "Hạn chế đường", detail: "Món nhiều đường hiện vàng / đỏ (không áp cho trái cây, sữa)." },
   {
     key: "watchSodiumPotassium",
     code: "NA_K_RATIO",
     title: "Theo dõi tỷ lệ natri/kali",
-    detail: "Tick để dặn riêng và đặt ngưỡng Na/K đỏ, mức Na/K tốt riêng.",
+    detail: "Món mặn mà ít kali hiện đỏ; món kali bằng hoặc hơn natri được tính là tốt.",
   },
-  { key: "limitSodium", code: "SODIUM", title: "Hạn chế muối", detail: "Tick để dặn riêng và đặt ngưỡng muối riêng cho bệnh nhân." },
+  { key: "limitSodium", code: "SODIUM", title: "Hạn chế muối", detail: "Món nhiều natri hiện vàng / đỏ." },
   {
     key: "limitSaturatedFat",
     code: "SATURATED_FAT",
     title: "Hạn chế chất béo bão hòa",
-    detail: "Tick để dặn riêng và đặt ngưỡng chất béo bão hòa riêng.",
+    detail: "Món nhiều chất béo bão hòa hiện vàng / đỏ.",
   },
   {
     key: "encourageMagnesium",
     code: "MAGNESIUM",
     title: "Khuyến khích món giàu magie",
-    detail: "Tick để nhắc bệnh nhân và đặt mức magie được tính là tốt.",
+    detail: "Món giàu magie mà ít muối được tính là tốt (xanh).",
   },
   {
     key: "onWarfarin",
     code: "VITAMIN_K",
     title: "Đang dùng warfarin",
-    detail: "Bật thêm quy tắc vitamin K: món nhiều vitamin K hiện vàng, nhắc giữ lượng ăn đều mỗi ngày.",
+    detail: "Món nhiều vitamin K hiện vàng, nhắc giữ lượng ăn đều mỗi ngày.",
   },
 ]
 
@@ -214,9 +214,9 @@ export function DoctorDietPrescriptionTab({ sessionId, readOnly }: DoctorDietPre
         <CardDescription>
           {prescription.personalized
             ? `Đơn hiện tại${prescription.updatedAt ? `, cập nhật ${new Date(prescription.updatedAt).toLocaleString("vi-VN")}` : ""}. Lưu lại sẽ ghi đè đơn cũ.`
-            : "Bệnh nhân chưa có đơn; app đang dùng các quy tắc chung cho người rung nhĩ."}{" "}
-          Quy tắc chung luôn áp dụng. Tick một ô để dặn riêng quy tắc đó và đặt ngưỡng riêng (ô để trống là dùng mặc định
-          của hệ thống); ô warfarin bật thêm quy tắc vitamin K.
+            : "Bệnh nhân chưa có đơn nên các món chưa được chấm màu."}{" "}
+          Chỉ các quy tắc được tick mới chấm xanh / vàng / đỏ cho món bệnh nhân tra cứu. Ô ngưỡng để trống là dùng mặc
+          định của hệ thống.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">

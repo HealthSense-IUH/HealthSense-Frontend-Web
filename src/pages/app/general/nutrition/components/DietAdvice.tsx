@@ -41,7 +41,7 @@ const LEVEL_STYLE: Record<DietAdviceLevel, { label: string; icon: LucideIcon; ba
   },
 }
 
-/** Nhãn màu của một món theo quy tắc cho người rung nhĩ và đơn ăn uống (xanh / trung tính / vàng / đỏ / xám). */
+/** Nhãn màu của một món theo đơn ăn uống bác sĩ kê (xanh / trung tính / vàng / đỏ / xám). */
 export function DietAdviceBadge({ advice, className }: { advice?: DietAdviceData; className?: string }) {
   if (!advice) return null
   const style = LEVEL_STYLE[advice.level]
@@ -72,7 +72,7 @@ export function DietAdviceNote({ advice }: { advice?: DietAdviceData }) {
         <Icon className={cn("w-4 h-4", style.icon_)} />
         <span>
           {style.label}
-          {advice.personalized ? " theo đơn ăn uống của bác sĩ" : " theo khuyến nghị cho người rung nhĩ"}
+          {" theo đơn ăn uống của bác sĩ"}
         </span>
       </div>
       {advice.reasons.length > 0 ? (

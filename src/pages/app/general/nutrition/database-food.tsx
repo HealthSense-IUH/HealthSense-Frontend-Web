@@ -167,7 +167,7 @@ export default function NutritionDatabaseFoodPage() {
             {food.source === "VN_FCT"
               ? "Số liệu tính trên 100 g phần ăn được. Chất nào sách không có số liệu thì không hiển thị. Chất xơ trong bảng này là xơ thô (celluloza), khác chất xơ tiêu hóa của USDA. "
               : "Khẩu phần và số liệu theo USDA FNDDS, phản ánh món ăn phổ biến tại Mỹ; khẩu phần thực tế ở Việt Nam có thể khác. "}
-            Đây là số liệu tham khảo; màu đánh giá chỉ so số liệu với các quy tắc cho người rung nhĩ, không thay thế tư
+            Đây là số liệu tham khảo; màu đánh giá (nếu có đơn ăn uống) chỉ so số liệu với các quy tắc bác sĩ kê, không thay thế tư
             vấn của bác sĩ hoặc chuyên gia dinh dưỡng.
           </span>
         </p>

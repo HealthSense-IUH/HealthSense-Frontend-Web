@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { USER_ROLES } from "@/constants/roles"
 import { useAuthStore } from "@/stores/auth-store"
-import { cn } from "@/lib/utils"
 import type { DietPrescriptionRule } from "@/types/nutrition"
 import { useMyDietPrescription } from "../hooks/use-nutrition"
 import { DIET_RULE_META, describeRuleThresholds } from "../diet-rules"
@@ -30,7 +29,7 @@ const LEGEND = [
   { level: "UNKNOWN", text: "Nguồn dữ liệu thiếu số liệu để đánh giá." },
 ] as const
 
-/** Tab "Đơn ăn uống": các quy tắc cho người rung nhĩ đang áp dụng, điều bác sĩ dặn riêng và cách đọc màu của món. */
+/** Tab "Đơn ăn uống": các quy tắc bác sĩ áp dụng trong đơn, lời dặn thêm và cách đọc màu của món. */
 export function DietPrescriptionTab() {
   const role = useAuthStore((s) => s.userSession?.role)
   const isMember = role === USER_ROLES.MEMBER
@@ -71,16 +70,16 @@ export function DietPrescriptionTab() {
             </div>
             <div>
               <h2 className="text-lg font-bold text-foreground">
-                {prescription.personalized ? "Đơn ăn uống của bạn" : "Khuyến nghị cho người rung nhĩ"}
+                Đơn ăn uống của bạn
               </h2>
               <p className="text-xs sm:text-sm text-muted-foreground">
-                {prescription.personalized
-                  ? `Các quy tắc chung cho người rung nhĩ, cộng thêm điều bác sĩ dặn trong buổi tư vấn${
+                {activeRules.length > 0
+                  ? `Bác sĩ kê trong buổi tư vấn${
                       prescription.updatedAt
                         ? ` (cập nhật ${new Date(prescription.updatedAt).toLocaleDateString("vi-VN")})`
                         : ""
-                    }.`
-                  : "Bác sĩ chưa kê đơn riêng cho bạn. Các món được chấm màu theo các quy tắc chung dưới đây."}
+                    }. Các món được chấm màu theo những quy tắc dưới đây.`
+                  : "Bác sĩ chưa kê quy tắc ăn uống nào cho bạn nên các món chưa được chấm màu, chỉ hiện số liệu dinh dưỡng."}
               </p>
             </div>
           </div>
@@ -92,34 +91,28 @@ export function DietPrescriptionTab() {
           </Button>
         </div>
 
-        <ul className="grid gap-3 sm:grid-cols-2">
-          {activeRules.map((rule) => {
-            const meta = DIET_RULE_META[rule.code]
-            const Icon = meta.icon
-            return (
-              <li
-                key={rule.code}
-                className={cn(
-                  "rounded-xl border p-4 flex items-start gap-3",
-                  rule.prescribed ? "border-primary-200 bg-primary-50/60" : "border-border bg-card"
-                )}
-              >
-                <Icon className="w-5 h-5 shrink-0 mt-0.5 text-primary" />
-                <div className="space-y-1 min-w-0">
-                  <p className="text-sm font-semibold text-foreground">
-                    {rule.name}
-                    {rule.prescribed && (
-                      <span className="ml-2 text-[11px] font-medium text-primary">Bác sĩ dặn riêng</span>
-                    )}
-                  </p>
-                  <p className="text-xs text-muted-foreground leading-relaxed">
-                    {[describe(rule, sodium), meta.summary].filter(Boolean).join(" ")}
-                  </p>
-                </div>
-              </li>
-            )
-          })}
-        </ul>
+        {activeRules.length > 0 && (
+          <ul className="grid gap-3 sm:grid-cols-2">
+            {activeRules.map((rule) => {
+              const meta = DIET_RULE_META[rule.code]
+              const Icon = meta.icon
+              return (
+                <li
+                  key={rule.code}
+                  className="rounded-xl border border-primary-200 bg-primary-50/60 p-4 flex items-start gap-3"
+                >
+                  <Icon className="w-5 h-5 shrink-0 mt-0.5 text-primary" />
+                  <div className="space-y-1 min-w-0">
+                    <p className="text-sm font-semibold text-foreground">{rule.name}</p>
+                    <p className="text-xs text-muted-foreground leading-relaxed">
+                      {[describe(rule, sodium), meta.summary].filter(Boolean).join(" ")}
+                    </p>
+                  </div>
+                </li>
+              )
+            })}
+          </ul>
+        )}
 
         {prescription.note && (
           <div className="rounded-xl bg-slate-50 border border-slate-200/70 p-4">

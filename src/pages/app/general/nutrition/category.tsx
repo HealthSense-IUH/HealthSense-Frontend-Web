@@ -277,7 +277,7 @@ export default function CategoryExplorerPage() {
         {!selectedFoodName && (
           <PageSection
             title={`Tất cả thực phẩm trong nhóm (${(currentCategory.foodCount ?? 0).toLocaleString("vi-VN")})`}
-            description="Số liệu trên 100 g phần ăn được từ Bảng thành phần thực phẩm Việt Nam và USDA FNDDS. Màu của từng món theo các quy tắc cho người rung nhĩ."
+            description="Số liệu trên 100 g phần ăn được từ Bảng thành phần thực phẩm Việt Nam và USDA FNDDS. Màu của từng món theo đơn ăn uống bác sĩ kê (nếu có)."
             className={cn(foodNames.length > 0 && "border-t border-border pt-6")}
           >
             <ReferenceFoodBrowser fixedGroup={currentCategory.id} layout="cards" />
