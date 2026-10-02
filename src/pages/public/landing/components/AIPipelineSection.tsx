@@ -130,7 +130,7 @@ export function AIPipelineSection() {
               <button
                 key={item.id}
                 onClick={() => setActiveStage(stageKey)}
-                className={`relative text-left p-5 sm:p-6 rounded-3xl transition-all duration-300 cursor-pointer border flex flex-col justify-between overflow-hidden ${
+                className={`relative text-left p-5 sm:p-6 rounded-2xl transition-all duration-300 cursor-pointer border flex flex-col justify-between overflow-hidden ${
                   isActive 
                     ? "bg-white/[0.12] border-primary-400/80 shadow-2xl shadow-primary-950/60 backdrop-blur-xl scale-[1.02] ring-2 ring-primary-400/30" 
                     : "bg-white/[0.04] border-white/10 hover:bg-white/[0.07] text-slate-300"
@@ -173,7 +173,7 @@ export function AIPipelineSection() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
           
           {/* Left Column (5 Cols): Stage Explanation Card */}
-          <div className="lg:col-span-5 flex flex-col justify-between p-6 sm:p-8 rounded-3xl bg-white/[0.05] border border-white/15 backdrop-blur-xl shadow-xl">
+          <div className="lg:col-span-5 flex flex-col justify-between p-6 sm:p-6 rounded-2xl bg-white/[0.05] border border-white/15 backdrop-blur-xl shadow-xl">
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-500/10 border border-primary-400/30 text-primary-300 text-xs font-bold mb-4 font-heading">
                 <span>Bước 0{current.stepNum}</span>
@@ -216,7 +216,7 @@ export function AIPipelineSection() {
           </div>
 
           {/* Right Column (7 Cols): Smart Health Monitor Visual Card */}
-          <div className="lg:col-span-7 flex flex-col rounded-3xl bg-slate-950/90 border border-white/15 shadow-2xl overflow-hidden backdrop-blur-xl">
+          <div className="lg:col-span-7 flex flex-col rounded-2xl bg-slate-950/90 border border-white/15 shadow-2xl overflow-hidden backdrop-blur-xl">
             
             {/* Monitor Header */}
             <div className="p-4 sm:p-5 bg-white/[0.04] border-b border-white/10 flex flex-wrap items-center justify-between gap-3">

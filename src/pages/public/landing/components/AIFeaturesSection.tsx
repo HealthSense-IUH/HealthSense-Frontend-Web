@@ -346,7 +346,7 @@ export function AIFeaturesSection() {
                       </DialogTrigger>
 
                       {selectedDomain && (
-                        <DialogContent className="max-w-2xl bg-white p-6 sm:p-8 rounded-3xl">
+                        <DialogContent className="max-w-2xl bg-white p-6 sm:p-6 rounded-2xl">
                           <DialogHeader className="mb-4">
                             <DialogTitle className="text-2xl font-black font-heading text-slate-900 uppercase">
                               {selectedDomain.title} — {selectedDomain.subtitle}

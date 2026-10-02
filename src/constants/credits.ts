@@ -326,3 +326,112 @@ export const CONSULTATION_CONFIRM_ERROR_MESSAGES: Record<number, string> = {
   4004: "Bạn đã có phiên tư vấn khác đang hoạt động.",
 }
 
+export const VN_TIMEZONE_OFFSET_HOURS = 7
+export const VN_TIMEZONE_OFFSET_MS = VN_TIMEZONE_OFFSET_HOURS * 60 * 60 * 1000
+
+/**
+ * Trả về { year, month, day } tính theo múi giờ Việt Nam (UTC+7)
+ */
+export function getVnDateParts(date: Date = new Date()): { year: number; month: number; day: number } {
+  const vnTime = new Date(date.getTime() + VN_TIMEZONE_OFFSET_MS)
+  return {
+    year: vnTime.getUTCFullYear(),
+    month: vnTime.getUTCMonth() + 1,
+    day: vnTime.getUTCDate(),
+  }
+}
+
+/**
+ * Tạo ISO Instant string (UTC) từ ngày giờ tại Việt Nam
+ */
+export function createVnInstantISO(
+  year: number,
+  month: number,
+  day: number,
+  hour = 0,
+  minute = 0,
+  second = 0
+): string {
+  return new Date(Date.UTC(year, month - 1, day, hour - VN_TIMEZONE_OFFSET_HOURS, minute, second)).toISOString()
+}
+
+/**
+ * Chuyển YYYY-MM-DD từ input date thành đầu ngày Việt Nam dạng ISO instant
+ */
+export function parseVnDateInputToStartOfDayISO(dateStr?: string | null): string | undefined {
+  if (!dateStr) return undefined
+  const [y, m, d] = dateStr.split("-").map(Number)
+  if (!y || !m || !d) return undefined
+  return createVnInstantISO(y, m, d, 0, 0, 0)
+}
+
+/**
+ * Chuyển YYYY-MM-DD từ input date thành đầu ngày hôm sau tại Việt Nam (exclusive upper bound) dạng ISO instant
+ */
+export function parseVnDateInputToEndOfDayExclusiveISO(dateStr?: string | null): string | undefined {
+  if (!dateStr) return undefined
+  const [y, m, d] = dateStr.split("-").map(Number)
+  if (!y || !m || !d) return undefined
+  const nextDay = new Date(Date.UTC(y, m - 1, d + 1))
+  return createVnInstantISO(nextDay.getUTCFullYear(), nextDay.getUTCMonth() + 1, nextDay.getUTCDate(), 0, 0, 0)
+}
+
+export function getStartOfDayISO(date: Date): string {
+  const d = new Date(date)
+  d.setHours(0, 0, 0, 0)
+  return d.toISOString()
+}
+
+export function getStartOfNextDayISO(date: Date): string {
+  const d = new Date(date)
+  d.setDate(d.getDate() + 1)
+  d.setHours(0, 0, 0, 0)
+  return d.toISOString()
+}
+
+export type PaymentDatePreset = "today" | "last7days" | "thisMonth" | "all" | "custom"
+
+export function getPaymentDateRangePreset(preset: PaymentDatePreset): { from?: string; to?: string } {
+  const { year, month, day } = getVnDateParts(new Date())
+
+  if (preset === "today") {
+    return {
+      from: createVnInstantISO(year, month, day, 0, 0, 0),
+      to: createVnInstantISO(year, month, day + 1, 0, 0, 0),
+    }
+  }
+
+  if (preset === "last7days") {
+    const past = new Date(Date.UTC(year, month - 1, day - 6))
+    return {
+      from: createVnInstantISO(past.getUTCFullYear(), past.getUTCMonth() + 1, past.getUTCDate(), 0, 0, 0),
+      to: createVnInstantISO(year, month, day + 1, 0, 0, 0),
+    }
+  }
+
+  if (preset === "thisMonth") {
+    return {
+      from: createVnInstantISO(year, month, 1, 0, 0, 0),
+      to: createVnInstantISO(year, month, day + 1, 0, 0, 0),
+    }
+  }
+
+  return { from: undefined, to: undefined }
+}
+
+export function formatDateTime(isoString?: string | null): string {
+  if (!isoString) return "—"
+  try {
+    return new Intl.DateTimeFormat("vi-VN", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    }).format(new Date(isoString))
+  } catch {
+    return isoString
+  }
+}
+

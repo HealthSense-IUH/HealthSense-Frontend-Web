@@ -83,14 +83,14 @@ export function ReferenceFoodBrowser({ fixedGroup }: ReferenceFoodBrowserProps =
   // Số món theo nguồn: của nhóm đang cố định, hoặc cộng mọi nhóm
   const countedGroups = fixedGroup ? groups.filter((g) => g.id === fixedGroup || g.slug === fixedGroup) : groups
   const countBySource = (s?: ReferenceFoodSource) =>
-    countedGroups.reduce((sum, g) => sum + (s ? (g.sourceCounts[s] ?? 0) : g.foodCount), 0)
+    countedGroups.reduce((sum, g) => sum + (s ? (g.sourceCounts?.[s] ?? 0) : (g.foodCount ?? 0)), 0)
   const sourceOptions: { value?: ReferenceFoodSource; label: string; count: number }[] = [
     { label: "Tất cả", count: countBySource() },
     ...SOURCE_ORDER.map((s) => ({ value: s, label: REFERENCE_SOURCES[s].short, count: countBySource(s) })),
   ]
   // Nhóm không có món nào ở nguồn đang chọn thì ẩn, trừ nhóm đang chọn
   const groupOptions = groups
-    .map((g) => ({ ...g, count: source ? (g.sourceCounts[source] ?? 0) : g.foodCount }))
+    .map((g) => ({ ...g, count: source ? (g.sourceCounts?.[source] ?? 0) : (g.foodCount ?? 0) }))
     .filter((g) => g.count > 0 || g.id === group)
 
   return (

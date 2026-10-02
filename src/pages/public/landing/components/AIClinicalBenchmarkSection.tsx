@@ -77,7 +77,7 @@ export function AIClinicalBenchmarkSection() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="p-6 sm:p-7 rounded-3xl bg-white border border-slate-200/90 shadow-sm relative overflow-hidden group hover:border-primary-300 transition-all"
+            className="p-6 sm:p-7 rounded-2xl bg-white border border-slate-200/90 shadow-sm relative overflow-hidden group hover:border-primary-300 transition-all"
           >
             <div className="w-11 h-11 rounded-2xl bg-primary-50 text-primary-600 flex items-center justify-center mb-4">
               <Target className="w-6 h-6" />
@@ -99,7 +99,7 @@ export function AIClinicalBenchmarkSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="p-6 sm:p-7 rounded-3xl bg-white border border-slate-200/90 shadow-sm relative overflow-hidden group hover:border-success-300 transition-all"
+            className="p-6 sm:p-7 rounded-2xl bg-white border border-slate-200/90 shadow-sm relative overflow-hidden group hover:border-success-300 transition-all"
           >
             <div className="w-11 h-11 rounded-2xl bg-success-50 text-success-600 flex items-center justify-center mb-4">
               <ShieldCheck className="w-6 h-6" />
@@ -121,7 +121,7 @@ export function AIClinicalBenchmarkSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="p-6 sm:p-7 rounded-3xl bg-white border border-slate-200/90 shadow-sm relative overflow-hidden group hover:border-primary-300 transition-all"
+            className="p-6 sm:p-7 rounded-2xl bg-white border border-slate-200/90 shadow-sm relative overflow-hidden group hover:border-primary-300 transition-all"
           >
             <div className="w-11 h-11 rounded-2xl bg-primary-50 text-primary-600 flex items-center justify-center mb-4">
               <Zap className="w-6 h-6" />
@@ -143,7 +143,7 @@ export function AIClinicalBenchmarkSection() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-16">
           
           {/* Left: Visual Infographic of Top 3 Signs */}
-          <div className="col-span-1 lg:col-span-6 bg-white p-7 sm:p-8 rounded-3xl border border-slate-200/90 shadow-sm flex flex-col justify-between h-full">
+          <div className="col-span-1 lg:col-span-6 bg-white p-7 sm:p-6 rounded-2xl border border-slate-200/90 shadow-sm flex flex-col justify-between h-full">
             <div>
               <h3 className="text-lg sm:text-xl font-black font-heading text-slate-900 mb-2">
                 Vì Sao AI Biết Tim Bạn Bất Thường?
@@ -192,7 +192,7 @@ export function AIClinicalBenchmarkSection() {
           </div>
 
           {/* Right: Feature Importance Bar Chart */}
-          <div className="col-span-1 lg:col-span-6 bg-white p-7 sm:p-8 rounded-3xl border border-slate-200/90 shadow-sm flex flex-col h-full">
+          <div className="col-span-1 lg:col-span-6 bg-white p-7 sm:p-6 rounded-2xl border border-slate-200/90 shadow-sm flex flex-col h-full">
             <h4 className="text-xs font-bold font-heading text-slate-800 uppercase tracking-wider mb-2">
               Mức độ đóng góp của từng chỉ số vào kết luận AI
             </h4>

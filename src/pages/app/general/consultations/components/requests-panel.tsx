@@ -127,130 +127,132 @@ export function RequestsPanel({
           </div>
         )}
 
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Yêu cầu</TableHead>
-              <TableHead>Hội viên</TableHead>
-              <TableHead>Hồ sơ đo</TableHead>
-              <TableHead>Trạng thái</TableHead>
-              <TableHead>Bác sĩ</TableHead>
-              <TableHead>Ngày tạo</TableHead>
-              <TableHead className="text-right">Thao tác</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {requests.length === 0 && <EmptyRow colSpan={7} text={loading ? "Đang tải danh sách..." : "Không có yêu cầu nào."} />}
-            {requests.map((request) => (
-              <TableRow key={request.id}>
-                <TableCell>
-                  <div className="flex flex-col gap-1">
-                    <div className="flex items-center gap-1.5 flex-wrap">
-                      <span className="font-medium">#{request.id}</span>
-                      {request.flowType === "QUEUE_DISPATCH_V1" && (
-                        <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-primary/10 text-primary font-bold">
-                          Hàng đợi {request.queueNumber ? `#${String(request.queueNumber).padStart(3, "0")}` : ""}
-                        </span>
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow className="bg-muted/30">
+                <TableHead className="min-w-[260px] text-xs font-semibold">Yêu cầu</TableHead>
+                <TableHead className="whitespace-nowrap min-w-[150px] text-xs font-semibold">Hội viên</TableHead>
+                <TableHead className="whitespace-nowrap min-w-[140px] text-xs font-semibold">Hồ sơ đo</TableHead>
+                <TableHead className="whitespace-nowrap min-w-[130px] text-xs font-semibold">Trạng thái</TableHead>
+                <TableHead className="whitespace-nowrap min-w-[150px] text-xs font-semibold">Bác sĩ</TableHead>
+                <TableHead className="whitespace-nowrap min-w-[150px] text-xs font-semibold">Ngày tạo</TableHead>
+                <TableHead className="text-right whitespace-nowrap min-w-[170px] text-xs font-semibold">Thao tác</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {requests.length === 0 && <EmptyRow colSpan={7} text={loading ? "Đang tải danh sách..." : "Không có yêu cầu nào."} />}
+              {requests.map((request) => (
+                <TableRow key={request.id} className="hover:bg-muted/20">
+                  <TableCell className="min-w-[260px]">
+                    <div className="flex flex-col gap-1">
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span className="font-mono font-semibold text-xs text-primary">#{request.id}</span>
+                        {request.flowType === "QUEUE_DISPATCH_V1" && (
+                          <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-primary/10 text-primary font-bold">
+                            Hàng đợi {request.queueNumber ? `#${String(request.queueNumber).padStart(3, "0")}` : ""}
+                          </span>
+                        )}
+                      </div>
+                      <span className="text-xs text-slate-600 whitespace-pre-wrap leading-relaxed">
+                        {request.reasonForCare || request.reason || "Yêu cầu tư vấn"}
+                      </span>
+                      
+                      {request.flowType !== "QUEUE_DISPATCH_V1" && request.status === "WAITING_ACCEPTANCE" && (
+                        <div className="mt-1 text-xs text-warning-800 bg-warning-50 p-2 rounded-md border border-warning-200">
+                          Bác sĩ đã được giữ chỗ. Vui lòng xem và xác nhận Thỏa thuận dịch vụ để tiến hành thanh toán.
+                          {request.paymentDeadline && (
+                            <div className="mt-1 font-semibold">
+                              Hạn xác nhận: {formatDate(request.paymentDeadline)}
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {request.flowType !== "QUEUE_DISPATCH_V1" && request.status === "WAITING_PAYMENT" && (
+                        <div className="mt-1 text-xs text-primary-700 bg-primary-50 p-2 rounded-md border border-primary-200">
+                          Đã xác nhận thỏa thuận. Đang chờ thanh toán.
+                          {request.paymentDeadline && (
+                            <div className="mt-1 font-semibold">
+                              Hạn thanh toán: {formatDate(request.paymentDeadline)}
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {request.status === "NEED_MORE_INFO" && request.moreInfoReason && (
+                        <div className="mt-1 text-xs text-warning-700 bg-warning-50 p-2 rounded-md border border-warning-200">
+                          <strong>Lý do cần bổ sung:</strong> {request.moreInfoReason}
+                        </div>
+                      )}
+
+                      {request.memberAdditionalNote && (
+                        <div className="mt-1 text-xs text-slate-600 bg-slate-50 p-2 rounded-md">
+                          <strong>Thông tin đã bổ sung:</strong> {request.memberAdditionalNote}
+                        </div>
                       )}
                     </div>
-                    <span className="max-w-64 text-xs text-slate-500 whitespace-pre-wrap">
-                      {request.reasonForCare || request.reason || "Yêu cầu tư vấn"}
-                    </span>
-                    
-                    {request.flowType !== "QUEUE_DISPATCH_V1" && request.status === "WAITING_ACCEPTANCE" && (
-                      <div className="mt-1 text-xs text-warning-800 bg-warning-50 p-2 rounded-md border border-warning-200">
-                        Bác sĩ đã được giữ chỗ. Vui lòng xem và xác nhận Thỏa thuận dịch vụ để tiến hành thanh toán.
-                        {request.paymentDeadline && (
-                          <div className="mt-1 font-semibold">
-                            Hạn xác nhận: {formatDate(request.paymentDeadline)}
-                          </div>
-                        )}
-                      </div>
-                    )}
+                  </TableCell>
+                  <TableCell className="whitespace-nowrap font-mono text-xs text-muted-foreground">#{request.memberId}</TableCell>
+                  <TableCell className="whitespace-nowrap font-mono text-xs text-muted-foreground">{request.healthRecordId ? `#${request.healthRecordId}` : "—"}</TableCell>
+                  <TableCell className="whitespace-nowrap">{statusBadge(request.queueStatus || request.status)}</TableCell>
+                  <TableCell className="whitespace-nowrap font-mono text-xs">{request.assignedDoctorId ? `#${request.assignedDoctorId}` : (request.preferredDoctorId ? `#${request.preferredDoctorId}` : "—")}</TableCell>
+                  <TableCell className="whitespace-nowrap font-mono text-xs text-muted-foreground">{formatDate(request.createdAt)}</TableCell>
+                  <TableCell className="text-right whitespace-nowrap">
+                    <div className="flex justify-end gap-2 items-center flex-nowrap">
+                      {!isAdmin && request.flowType !== "QUEUE_DISPATCH_V1" && request.status === "WAITING_ACCEPTANCE" && onReviewAgreement && (
+                        <Button
+                          size="sm"
+                          onClick={() => onReviewAgreement(request)}
+                          disabled={loading}
+                          className="bg-warning-600 hover:bg-warning-700 text-white gap-1.5 shadow-xs whitespace-nowrap"
+                        >
+                          <Shield className="h-4 w-4" />
+                          Xem & Chấp nhận thỏa thuận
+                        </Button>
+                      )}
 
-                    {request.flowType !== "QUEUE_DISPATCH_V1" && request.status === "WAITING_PAYMENT" && (
-                      <div className="mt-1 text-xs text-primary-700 bg-primary-50 p-2 rounded-md border border-primary-200">
-                        Đã xác nhận thỏa thuận. Đang chờ thanh toán.
-                        {request.paymentDeadline && (
-                          <div className="mt-1 font-semibold">
-                            Hạn thanh toán: {formatDate(request.paymentDeadline)}
-                          </div>
-                        )}
-                      </div>
-                    )}
+                      {!isAdmin && request.flowType !== "QUEUE_DISPATCH_V1" && request.status === "WAITING_PAYMENT" && onInitiatePayment && (
+                        <Button size="sm" onClick={() => onInitiatePayment(request.id)} disabled={loading} className="gap-1.5 whitespace-nowrap">
+                          <CreditCard className="h-4 w-4" />
+                          Thanh toán
+                        </Button>
+                      )}
 
-                    {request.status === "NEED_MORE_INFO" && request.moreInfoReason && (
-                      <div className="mt-1 text-xs text-warning-700 bg-warning-50 p-2 rounded-md border border-warning-200">
-                        <strong>Lý do cần bổ sung:</strong> {request.moreInfoReason}
-                      </div>
-                    )}
+                      {!isAdmin && request.flowType !== "QUEUE_DISPATCH_V1" && request.status === "NEED_MORE_INFO" && onSubmitMoreInfo && (
+                        <Button size="sm" onClick={() => onSubmitMoreInfo(request)} disabled={loading} className="whitespace-nowrap">
+                          Bổ sung thông tin
+                        </Button>
+                      )}
 
-                    {request.memberAdditionalNote && (
-                      <div className="mt-1 text-xs text-slate-600 bg-slate-50 p-2 rounded-md">
-                        <strong>Thông tin đã bổ sung:</strong> {request.memberAdditionalNote}
-                      </div>
-                    )}
-                  </div>
-                </TableCell>
-                <TableCell>#{request.memberId}</TableCell>
-                <TableCell>{request.healthRecordId ? `#${request.healthRecordId}` : "-"}</TableCell>
-                <TableCell>{statusBadge(request.queueStatus || request.status)}</TableCell>
-                <TableCell>{request.assignedDoctorId ? `#${request.assignedDoctorId}` : (request.preferredDoctorId ? `#${request.preferredDoctorId}` : "-")}</TableCell>
-                <TableCell>{formatDate(request.createdAt)}</TableCell>
-                <TableCell className="text-right">
-                  <div className="flex justify-end gap-2 flex-wrap">
-                    {!isAdmin && request.flowType !== "QUEUE_DISPATCH_V1" && request.status === "WAITING_ACCEPTANCE" && onReviewAgreement && (
-                      <Button
-                        size="sm"
-                        onClick={() => onReviewAgreement(request)}
-                        disabled={loading}
-                        className="bg-warning-600 hover:bg-warning-700 text-white gap-1.5 shadow-xs"
-                      >
-                        <Shield className="h-4 w-4" />
-                        Xem & Chấp nhận thỏa thuận
-                      </Button>
-                    )}
+                      {isAdmin && (
+                        <Button size="sm" onClick={() => onApprove(request)} disabled={loading} className="whitespace-nowrap">
+                          Xem chi tiết
+                        </Button>
+                      )}
 
-                    {!isAdmin && request.flowType !== "QUEUE_DISPATCH_V1" && request.status === "WAITING_PAYMENT" && onInitiatePayment && (
-                      <Button size="sm" onClick={() => onInitiatePayment(request.id)} disabled={loading} className="gap-1.5">
-                        <CreditCard className="h-4 w-4" />
-                        Thanh toán
-                      </Button>
-                    )}
-
-                    {!isAdmin && request.flowType !== "QUEUE_DISPATCH_V1" && request.status === "NEED_MORE_INFO" && onSubmitMoreInfo && (
-                      <Button size="sm" onClick={() => onSubmitMoreInfo(request)} disabled={loading}>
-                        Bổ sung thông tin
-                      </Button>
-                    )}
-
-                    {isAdmin && (
-                      <Button size="sm" onClick={() => onApprove(request)} disabled={loading}>
-                        Xem chi tiết & Điều phối
-                      </Button>
-                    )}
-
-                    {!isAdmin && (request.flowType === "QUEUE_DISPATCH_V1" ? request.status === "QUEUED" : ["PENDING", "PENDING_REVIEW", "NEED_MORE_INFO", "WAITING_ACCEPTANCE", "WAITING_PAYMENT"].includes(request.status)) && (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => {
-                          if (window.confirm("Bạn có chắc chắn muốn hủy yêu cầu tư vấn này?")) {
-                            onCancel(request.id)
-                          }
-                        }}
-                        disabled={loading}
-                        className="text-slate-600 hover:text-danger-600 hover:border-danger-200"
-                      >
-                        Hủy yêu cầu
-                      </Button>
-                    )}
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+                      {!isAdmin && (request.flowType === "QUEUE_DISPATCH_V1" ? request.status === "QUEUED" : ["PENDING", "PENDING_REVIEW", "NEED_MORE_INFO", "WAITING_ACCEPTANCE", "WAITING_PAYMENT"].includes(request.status)) && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            if (window.confirm("Bạn có chắc chắn muốn hủy yêu cầu tư vấn này?")) {
+                              onCancel(request.id)
+                            }
+                          }}
+                          disabled={loading}
+                          className="text-slate-600 hover:text-danger-600 hover:border-danger-200 whitespace-nowrap"
+                        >
+                          Hủy yêu cầu
+                        </Button>
+                      )}
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       </CardContent>
     </Card>
   )

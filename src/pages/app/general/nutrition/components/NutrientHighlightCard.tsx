@@ -29,7 +29,6 @@ export function NutrientHighlightCard({
     protein: "Đạm (Protein)",
     carbohydrate: "Carbs",
     fiber: "Chất xơ",
-    fiber_crude: "Xơ thô",
     sugars: "Đường",
     fat_total: "Tổng chất béo",
     fat_saturated: "Béo bão hòa",

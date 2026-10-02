@@ -1,11 +1,18 @@
-import { useState, useCallback } from "react"
+import { useState, useCallback, useMemo } from "react"
 import { useNavigate } from "react-router-dom"
-import { Clock, RefreshCw, FileText, MessagesSquare } from "lucide-react"
+import { RefreshCw, FileText, MessagesSquare, ChevronLeft, ChevronRight } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { useAppShell } from "@/components/layout/app-shell-context"
 import { USER_ROLES } from "@/constants"
 
@@ -14,7 +21,6 @@ import { EmptyRow, formatDate, statusBadge, canEditFinalSummaryDraft } from "./s
 import { MemberFinalSummaryDialog } from "./member-final-summary-dialog"
 import { DoctorSessionDetailDialog } from "./doctor-session-detail-dialog"
 import { RenewalDialog } from "./renewal-dialog"
-import { AdminRenewalsDialog } from "./admin-renewals-dialog"
 
 export function SessionsPanel({
   isAdmin,
@@ -22,8 +28,6 @@ export function SessionsPanel({
   loading,
   selectedSessionId,
   onClose,
-  onExpireOverdue,
-  onActivateScheduled,
   onSessionRefreshed,
 }: {
   isAdmin: boolean
@@ -31,8 +35,6 @@ export function SessionsPanel({
   loading: boolean
   selectedSessionId?: string | number | null
   onClose: (session: ConsultationSessionItem) => void
-  onExpireOverdue: () => void
-  onActivateScheduled?: () => void
   onSessionRefreshed?: () => void
 }) {
   const navigate = useNavigate()
@@ -41,22 +43,33 @@ export function SessionsPanel({
   const [summarySessionId, setSummarySessionId] = useState<string | number | null>(null)
   const [doctorSessionId, setDoctorSessionId] = useState<string | number | null>(null)
   const [renewalSession, setRenewalSession] = useState<ConsultationSessionItem | null>(null)
-  const [adminRenewalSession, setAdminRenewalSession] = useState<ConsultationSessionItem | null>(null)
+
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1)
+  const [pageSize, setPageSize] = useState(10)
 
   const handleDoctorDetailOpenChange = useCallback((open: boolean) => {
     if (!open) setDoctorSessionId(null)
   }, [])
 
-  const sortedSessions = [...sessions].sort((a, b) => {
-    const aActive = a.status === "ACTIVE" ? 1 : 0
-    const bActive = b.status === "ACTIVE" ? 1 : 0
-    if (aActive !== bActive) return bActive - aActive
+  const sortedSessions = useMemo(() => {
+    return [...sessions].sort((a, b) => {
+      const aActive = a.status === "ACTIVE" ? 1 : 0
+      const bActive = b.status === "ACTIVE" ? 1 : 0
+      if (aActive !== bActive) return bActive - aActive
 
-    const timeA = a.createdAt ? new Date(a.createdAt).getTime() : 0
-    const timeB = b.createdAt ? new Date(b.createdAt).getTime() : 0
-    if (timeA !== timeB) return timeB - timeA
-    return String(b.id).localeCompare(String(a.id), undefined, { numeric: true })
-  })
+      const timeA = a.createdAt ? new Date(a.createdAt).getTime() : 0
+      const timeB = b.createdAt ? new Date(b.createdAt).getTime() : 0
+      if (timeA !== timeB) return timeB - timeA
+      return String(b.id).localeCompare(String(a.id), undefined, { numeric: true })
+    })
+  }, [sessions])
+
+  const totalElements = sortedSessions.length
+  const totalPages = Math.max(1, Math.ceil(totalElements / pageSize))
+  const validCurrentPage = Math.min(currentPage, totalPages)
+  const startIndex = (validCurrentPage - 1) * pageSize
+  const paginatedSessions = sortedSessions.slice(startIndex, startIndex + pageSize)
 
   const activeSession = sortedSessions.find((s) => s.status === "ACTIVE")
 
@@ -71,28 +84,6 @@ export function SessionsPanel({
               : "Chỉ các phiên đang hoạt động (ACTIVE) mới có thể gửi tin nhắn."}
           </CardDescription>
         </div>
-        {isAdmin && (
-          <div className="flex flex-wrap gap-2 justify-end">
-            {onActivateScheduled && (
-              <Button 
-                variant="outline" 
-                size="sm" 
-                onClick={() => {
-                  if (window.confirm("Kích hoạt các phiên đã đến giờ?")) {
-                    onActivateScheduled()
-                  }
-                }}
-                disabled={loading}
-              >
-                Kích hoạt phiên đã đến giờ
-              </Button>
-            )}
-            <Button variant="outline" size="sm" onClick={onExpireOverdue} disabled={loading}>
-              <Clock data-icon="inline-start" />
-              Đóng phiên quá hạn
-            </Button>
-          </div>
-        )}
       </CardHeader>
       <CardContent className="space-y-4">
         {!isAdmin && !isDoctor && activeSession && (
@@ -129,47 +120,48 @@ export function SessionsPanel({
             </Button>
           </div>
         )}
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Mã phiên</TableHead>
-              <TableHead>Hội viên</TableHead>
-              <TableHead>Bác sĩ</TableHead>
-              <TableHead>Trạng thái</TableHead>
-              <TableHead>Ngày tạo</TableHead>
-              <TableHead>Hạn kết thúc</TableHead>
-              <TableHead>Tin nhắn gần nhất</TableHead>
-              <TableHead className="text-right">Thao tác</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {sortedSessions.length === 0 && <EmptyRow colSpan={8} text={loading ? "Đang tải danh sách..." : "Không có phiên tư vấn nào."} />}
-            {sortedSessions.map((session) => (
-              <TableRow 
-                key={session.id} 
-                data-state={String(selectedSessionId) === String(session.id) ? "selected" : undefined}
-                className={session.status === "ACTIVE" ? "bg-success-50/40 hover:bg-success-50/60 font-medium" : undefined}
-              >
-                <TableCell className="font-medium">#{session.id}</TableCell>
-                <TableCell>{session.memberDisplayName || `#${session.memberId}`}</TableCell>
-                <TableCell>{session.doctorDisplayName || `#${session.doctorId}`}</TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-1.5 flex-wrap">
-                    {statusBadge(session.status)}
-                    {isDoctor && session.status === "COMPLETED" && session.summaryClosureStatus === "SUMMARY_PENDING" && (
-                      <Badge className="bg-warning-500 hover:bg-warning-600 text-white text-[10px]">
-                        Cần tổng kết
-                      </Badge>
-                    )}
-                  </div>
-                </TableCell>
-                <TableCell>{formatDate(session.createdAt)}</TableCell>
-                <TableCell>{formatDate(session.endsAt)}</TableCell>
-                <TableCell>
-                  <span className="block max-w-48 truncate text-slate-500">{session.lastMessagePreview ?? "Chưa có tin nhắn"}</span>
-                </TableCell>
-                <TableCell className="text-right">
-                  <div className="flex justify-end gap-2 flex-wrap">
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow className="bg-muted/30">
+                <TableHead className="whitespace-nowrap min-w-[130px] text-xs font-semibold">Mã phiên</TableHead>
+                <TableHead className="whitespace-nowrap min-w-[160px] text-xs font-semibold">Hội viên</TableHead>
+                <TableHead className="whitespace-nowrap min-w-[160px] text-xs font-semibold">Bác sĩ</TableHead>
+                <TableHead className="whitespace-nowrap min-w-[130px] text-xs font-semibold">Trạng thái</TableHead>
+                <TableHead className="whitespace-nowrap min-w-[150px] text-xs font-semibold">Ngày tạo</TableHead>
+                <TableHead className="whitespace-nowrap min-w-[150px] text-xs font-semibold">Hạn kết thúc</TableHead>
+                <TableHead className="min-w-[180px] text-xs font-semibold">Tin nhắn gần nhất</TableHead>
+                <TableHead className="text-right whitespace-nowrap min-w-[180px] text-xs font-semibold">Thao tác</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {paginatedSessions.length === 0 && <EmptyRow colSpan={8} text={loading ? "Đang tải danh sách..." : "Không có phiên tư vấn nào."} />}
+              {paginatedSessions.map((session) => (
+                <TableRow 
+                  key={session.id} 
+                  data-state={String(selectedSessionId) === String(session.id) ? "selected" : undefined}
+                  className={session.status === "ACTIVE" ? "bg-success-50/40 hover:bg-success-50/60 font-medium" : undefined}
+                >
+                  <TableCell className="font-mono text-xs font-semibold text-primary whitespace-nowrap">#{session.id}</TableCell>
+                  <TableCell className="whitespace-nowrap text-xs">{session.memberDisplayName || `#${session.memberId}`}</TableCell>
+                  <TableCell className="whitespace-nowrap text-xs">{session.doctorDisplayName || `#${session.doctorId}`}</TableCell>
+                  <TableCell className="whitespace-nowrap">
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      {statusBadge(session.status)}
+                      {isDoctor && session.status === "COMPLETED" && session.summaryClosureStatus === "SUMMARY_PENDING" && (
+                        <Badge className="bg-warning-500 hover:bg-warning-600 text-white text-[10px]">
+                          Cần tổng kết
+                        </Badge>
+                      )}
+                    </div>
+                  </TableCell>
+                  <TableCell className="whitespace-nowrap font-mono text-xs text-muted-foreground">{formatDate(session.createdAt)}</TableCell>
+                  <TableCell className="whitespace-nowrap font-mono text-xs text-muted-foreground">{formatDate(session.endsAt)}</TableCell>
+                  <TableCell>
+                    <span className="block max-w-xs truncate text-xs text-slate-500">{session.lastMessagePreview ?? "Chưa có tin nhắn"}</span>
+                  </TableCell>
+                  <TableCell className="text-right whitespace-nowrap">
+                    <div className="flex justify-end gap-2 items-center flex-nowrap">
                     {!isAdmin && !isDoctor && (
                       session.status === "ACTIVE" ? (
                         <Button
@@ -236,17 +228,6 @@ export function SessionsPanel({
                         Gia hạn
                       </Button>
                     )}
-                    {isAdmin && (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setAdminRenewalSession(session)}
-                        className="gap-1"
-                      >
-                        <RefreshCw className="w-3.5 h-3.5" />
-                        Quản lý gia hạn
-                      </Button>
-                    )}
                     {isAdmin && session.status === "ACTIVE" && (
                       <Button variant="destructive" size="sm" onClick={() => onClose(session)} disabled={loading}>
                         Đóng phiên
@@ -268,6 +249,80 @@ export function SessionsPanel({
             ))}
           </TableBody>
         </Table>
+        </div>
+
+        {/* Pagination Controls */}
+        {totalElements > 0 && (
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-3 text-xs text-muted-foreground border-t border-border/60">
+            <div className="flex items-center gap-2">
+              <span>Hiển thị</span>
+              <Select
+                value={String(pageSize)}
+                onValueChange={(val) => {
+                  setPageSize(Number(val))
+                  setCurrentPage(1)
+                }}
+              >
+                <SelectTrigger className="h-8 w-32 text-xs">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="5" className="text-xs">5 phiên / trang</SelectItem>
+                  <SelectItem value="10" className="text-xs">10 phiên / trang</SelectItem>
+                  <SelectItem value="20" className="text-xs">20 phiên / trang</SelectItem>
+                </SelectContent>
+              </Select>
+              <span>
+                • Trang <strong className="text-foreground font-semibold">{validCurrentPage}</strong> / {totalPages} (Tổng {totalElements} phiên)
+              </span>
+            </div>
+
+            {totalPages > 1 && (
+              <div className="flex items-center gap-1.5">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                  disabled={validCurrentPage <= 1}
+                  className="h-8 px-2.5 gap-1 text-xs"
+                >
+                  <ChevronLeft className="h-3.5 w-3.5" /> Trước
+                </Button>
+
+                <div className="flex items-center gap-1">
+                  {Array.from({ length: totalPages }, (_, i) => i + 1)
+                    .filter((p) => p === 1 || p === totalPages || Math.abs(p - validCurrentPage) <= 1)
+                    .map((p, idx, arr) => {
+                      const prev = arr[idx - 1]
+                      return (
+                        <div key={p} className="flex items-center gap-1">
+                          {prev && p - prev > 1 && <span className="px-1 text-muted-foreground">...</span>}
+                          <Button
+                            variant={validCurrentPage === p ? "default" : "outline"}
+                            size="sm"
+                            onClick={() => setCurrentPage(p)}
+                            className="h-8 w-8 p-0 text-xs font-semibold"
+                          >
+                            {p}
+                          </Button>
+                        </div>
+                      )
+                    })}
+                </div>
+
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                  disabled={validCurrentPage >= totalPages}
+                  className="h-8 px-2.5 gap-1 text-xs"
+                >
+                  Sau <ChevronRight className="h-3.5 w-3.5" />
+                </Button>
+              </div>
+            )}
+          </div>
+        )}
       </CardContent>
 
       {doctorSessionId && (
@@ -294,17 +349,6 @@ export function SessionsPanel({
           open={!!renewalSession}
           onOpenChange={(open) => {
             if (!open) setRenewalSession(null)
-          }}
-          onSessionRefreshed={onSessionRefreshed}
-        />
-      )}
-
-      {adminRenewalSession && (
-        <AdminRenewalsDialog
-          session={adminRenewalSession}
-          open={!!adminRenewalSession}
-          onOpenChange={(open) => {
-            if (!open) setAdminRenewalSession(null)
           }}
           onSessionRefreshed={onSessionRefreshed}
         />

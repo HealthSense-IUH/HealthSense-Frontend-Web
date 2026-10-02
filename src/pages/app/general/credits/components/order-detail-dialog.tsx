@@ -8,6 +8,7 @@ import {
   Sparkles,
   ExternalLink,
   Ban,
+  Clock,
 } from "lucide-react"
 import { useAuthStore } from "@/stores/auth-store"
 import { useToast } from "@/hooks/use-toast"
@@ -117,7 +118,7 @@ export function OrderDetailDialog({
       })
     }
 
-    window.location.assign(detail.payment.checkoutUrl)
+    window.open(detail.payment.checkoutUrl, "_blank", "noopener,noreferrer")
   }
 
   useEffect(() => {
@@ -173,6 +174,17 @@ export function OrderDetailDialog({
     ? getCreditPaymentProviderConfig(detail.payment.provider)
     : null
 
+  const isExpired = detail?.payment?.expiresAt
+    ? new Date(detail.payment.expiresAt).getTime() <= Date.now()
+    : false
+
+  const canResumePayment =
+    detail?.order?.status === "PENDING_PAYMENT" &&
+    detail?.payment?.provider === "PAYOS" &&
+    detail?.payment?.status === "PENDING" &&
+    Boolean(detail?.payment?.checkoutUrl && detail.payment.checkoutUrl.startsWith("https://")) &&
+    !isExpired
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-lg p-6">
@@ -190,9 +202,9 @@ export function OrderDetailDialog({
 
         {loading && (
           <div className="space-y-4 py-4">
-            <Skeleton className="h-20 w-full" />
-            <Skeleton className="h-24 w-full" />
-            <Skeleton className="h-16 w-full" />
+            <Skeleton className="h-20 w-full rounded-xl" />
+            <Skeleton className="h-24 w-full rounded-xl" />
+            <Skeleton className="h-16 w-full rounded-xl" />
           </div>
         )}
 
@@ -305,6 +317,14 @@ export function OrderDetailDialog({
                   #{detail.payment.attemptId}
                 </span>
               </div>
+
+              {/* Expired note for PENDING_PAYMENT */}
+              {detail.order.status === "PENDING_PAYMENT" && isExpired && (
+                <div className="flex items-center gap-2 p-2.5 rounded-lg bg-warning-500/10 text-warning-800 text-xs border border-warning-500/20 mt-2">
+                  <Clock className="h-4 w-4 shrink-0 text-warning-600" />
+                  <span>Liên kết thanh toán đã hết hạn</span>
+                </div>
+              )}
             </div>
 
             {/* 3. Snapshot số dư ví hiện tại */}
@@ -317,7 +337,7 @@ export function OrderDetailDialog({
                       Số dư ví hiện tại
                     </div>
                     <div className="text-[11px] text-success-700/80">
-                      Tổng số lượt: {detail.wallet.balance}
+                      Tổng số dư: {detail.wallet.balance} • Đang giữ: {detail.wallet.reserved}
                     </div>
                   </div>
                 </div>
@@ -332,16 +352,14 @@ export function OrderDetailDialog({
         <DialogFooter className="flex flex-col sm:flex-row gap-2 pt-2">
           {detail?.order.status === "PENDING_PAYMENT" && (
             <>
-              {detail.payment.provider === "PAYOS" &&
-                detail.payment.status === "PENDING" &&
-                detail.payment.checkoutUrl && (
-                  <Button
-                    onClick={handleResume}
-                    className="gap-1.5 font-semibold w-full sm:w-auto"
-                  >
-                    <ExternalLink className="h-4 w-4" /> Tiếp tục thanh toán
-                  </Button>
-                )}
+              {canResumePayment && (
+                <Button
+                  onClick={handleResume}
+                  className="gap-1.5 font-semibold w-full sm:w-auto"
+                >
+                  <ExternalLink className="h-4 w-4" /> Tiếp tục thanh toán
+                </Button>
+              )}
               <Button
                 variant="destructive"
                 onClick={handleCancel}

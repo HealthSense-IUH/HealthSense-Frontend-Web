@@ -237,6 +237,21 @@ export type PendingCreditPurchaseIntent = CreditPurchaseIntent
 
 export type MemberAccountStatus = "ACTIVE" | "INACTIVE" | "PENDING_VERIFY"
 
+export interface AdminCreditPaymentOverview {
+  totalPaidVnd: number
+  totalPurchasedCredits: number
+  successfulOrderCount: number
+  payingMemberCount: number
+  firstPaidAt: string | null
+  lastPaidAt: string | null
+}
+
+export interface AdminCreditPaymentOverviewParams {
+  memberId?: string
+  from?: string
+  to?: string
+}
+
 export interface AdminMemberCreditSummary {
   memberId: string
   displayName: string
@@ -249,11 +264,36 @@ export interface AdminMemberCreditSummary {
   reserved: number
   available: number
   walletUpdatedAt: string | null
+  totalPaidVnd: number
+  totalPurchasedCredits: number
+  successfulOrderCount: number
 }
 
 export interface AdminMemberCreditsFilterParams {
   keyword?: string
   status?: MemberAccountStatus
+  page?: number
+  size?: number
+}
+
+export interface MemberCreditPaymentOverview {
+  totalPaidVnd: number
+  totalPurchasedCredits: number
+  successfulOrderCount: number
+  firstPaidAt: string | null
+  lastPaidAt: string | null
+  wallet: CreditWallet
+}
+
+export interface MemberCreditPaymentOverviewParams {
+  from?: string
+  to?: string
+}
+
+export interface MemberCreditOrdersFilterParams {
+  status?: CreditOrderStatus
+  from?: string
+  to?: string
   page?: number
   size?: number
 }

@@ -177,6 +177,10 @@ export const router = createBrowserRouter([
             path: "packages/*",
             element: <Navigate to="/app/general/consultations?tab=credits" replace />,
           },
+          {
+            path: "token-payments",
+            element: <Navigate to="/app/general/consultations?tab=credits&creditTab=orders" replace />,
+          },
           { path: "profile", element: wrap(<ProfilePage />) },
           {
             path: "consultations",
@@ -269,6 +273,14 @@ export const router = createBrowserRouter([
                 {wrap(<AdminCreditOperationsPage />)}
               </ProtectedRoute>
             ),
+          },
+          {
+            path: "token-payments",
+            element: <Navigate to="/app/management/credit-operations?tab=payments" replace />,
+          },
+          {
+            path: "credit-payments",
+            element: <Navigate to="/app/management/credit-operations?tab=payments" replace />,
           },
           {
             path: "nutrition-rules",

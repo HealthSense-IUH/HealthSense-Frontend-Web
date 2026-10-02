@@ -19,6 +19,8 @@ import { PurchaseDialog } from "@/pages/app/general/credits/components/purchase-
 import { OrdersHistoryTable } from "@/pages/app/general/credits/components/orders-history-table"
 import { OrderDetailDialog } from "@/pages/app/general/credits/components/order-detail-dialog"
 import { CreditLedgerTable } from "@/pages/app/general/credits/components/credit-ledger-table"
+import { MemberPaymentKpiCards } from "@/pages/app/general/credits/components/member-payment-kpi-cards"
+import { MemberPaymentFilterBar } from "@/pages/app/general/credits/components/member-payment-filter-bar"
 import type { CreditPackage } from "@/types/credits"
 
 export function MemberCreditsPanel() {
@@ -48,11 +50,28 @@ export function MemberCreditsPanel() {
     isFeatureDisabled,
     loadPackages,
 
+    overview,
+    loadingOverview,
+    overviewError,
+    loadOverview,
+
     orders,
     ordersPage,
+    ordersSize,
     loadingOrders,
     ordersError,
     loadOrders,
+    handlePageChange,
+    handlePageSizeChange,
+
+    datePreset,
+    dateFrom,
+    dateTo,
+    orderStatus,
+    handleDatePresetChange,
+    handleStatusChange,
+    resetFilters,
+    refreshOrdersTab,
 
     ledger,
     ledgerPage,
@@ -67,14 +86,15 @@ export function MemberCreditsPanel() {
   const purchaseState = useCreditPurchase((detail) => {
     toast({
       title: "Thành công",
-      description: "Mua lượt tư vấn giả lập thành công!",
+      description: "Mua lượt tư vấn thành công!",
     })
 
     if (detail.wallet) {
       updateWalletDirectly(detail.wallet)
     }
 
-    void loadOrders(1)
+    void loadOverview({ from: dateFrom, to: dateTo })
+    void loadOrders({ page: 1, size: ordersSize, status: orderStatus, from: dateFrom, to: dateTo })
     void loadLedger(1)
     void loadPackages()
   })
@@ -141,12 +161,12 @@ export function MemberCreditsPanel() {
           variant="outline"
           size="sm"
           onClick={() => void refreshAll()}
-          disabled={loadingWallet || loadingPackages || loadingOrders || loadingLedger}
+          disabled={loadingWallet || loadingPackages || loadingOrders || loadingLedger || loadingOverview}
           className="gap-2 shadow-xs shrink-0"
         >
           <RefreshCw
             className={`h-4 w-4 ${
-              loadingWallet || loadingPackages || loadingOrders || loadingLedger
+              loadingWallet || loadingPackages || loadingOrders || loadingLedger || loadingOverview
                 ? "animate-spin"
                 : ""
             }`}
@@ -205,25 +225,49 @@ export function MemberCreditsPanel() {
           />
         </TabsContent>
 
-        {/* Tab 2: Lịch sử đơn mua */}
-        <TabsContent value="orders" className="space-y-4 focus-visible:outline-hidden">
+        {/* Tab 2: Lịch sử đơn mua & Tổng kết */}
+        <TabsContent value="orders" className="space-y-6 focus-visible:outline-hidden">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-base font-bold text-foreground">Lịch sử đơn mua</h3>
+              <h3 className="text-base font-bold text-foreground">Tổng kết & Lịch sử đơn mua</h3>
               <p className="text-xs text-muted-foreground">
-                Xem lại danh sách tất cả các đơn mua gói lượt tư vấn của bạn.
+                Theo dõi tổng quan tài chính token đã mua và chi tiết các đơn nạp lượt tư vấn.
               </p>
             </div>
           </div>
 
+          {/* KPI Cards */}
+          <MemberPaymentKpiCards
+            overview={overview}
+            loading={loadingOverview}
+            error={overviewError}
+            onRetry={() => void loadOverview({ from: dateFrom, to: dateTo })}
+          />
+
+          {/* Filter Bar */}
+          <MemberPaymentFilterBar
+            preset={datePreset}
+            onPresetChange={handleDatePresetChange}
+            status={orderStatus}
+            onStatusChange={handleStatusChange}
+            pageSize={ordersSize}
+            onPageSizeChange={handlePageSizeChange}
+            onRefresh={() => void refreshOrdersTab()}
+            onReset={resetFilters}
+            loading={loadingOverview || loadingOrders}
+          />
+
+          {/* Table */}
           <OrdersHistoryTable
             ordersData={orders}
             loading={loadingOrders}
             error={ordersError}
             page={ordersPage}
-            onPageChange={loadOrders}
+            onPageChange={handlePageChange}
             onViewDetail={handleOpenOrderDetail}
-            onRetry={() => void loadOrders(ordersPage)}
+            onRetry={() => void loadOrders()}
+            isFiltered={datePreset !== "all" || Boolean(orderStatus)}
+            onResetFilters={resetFilters}
           />
         </TabsContent>
 

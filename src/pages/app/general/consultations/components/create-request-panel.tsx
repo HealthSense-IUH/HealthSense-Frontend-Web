@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from "react"
 import { useNavigate } from "react-router-dom"
-import { Send, Activity, AlertCircle, Coins, Stethoscope, ChevronRight, CheckCircle2, Clock, Users } from "lucide-react"
+import { Send, Activity, AlertCircle, Coins, Stethoscope, ChevronRight, CheckCircle2, Clock, Users, ArrowLeft } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -45,6 +45,7 @@ export function CreateRequestPanel({
   onChange,
   onSubmit,
   onPendingConflict,
+  onCancel,
 }: {
   form: RequestFormData
   healthRecords: HealthRecordItem[]
@@ -57,6 +58,7 @@ export function CreateRequestPanel({
   onChange: (form: RequestFormData) => void
   onSubmit: (event: FormEvent<HTMLFormElement>) => void
   onPendingConflict?: () => void
+  onCancel?: () => void
 }) {
   const navigate = useNavigate()
   const [isConfirmOpen, setIsConfirmOpen] = useState(false)
@@ -96,9 +98,9 @@ export function CreateRequestPanel({
   return (
     <>
       <Card className="shadow-sm border rounded-2xl max-w-2xl mx-auto">
-        <CardHeader className="border-b bg-muted/10 pb-4">
+        <CardHeader className="border-b bg-muted/10 pb-4 flex flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-primary/10 text-primary">
+            <div className="p-2.5 rounded-xl bg-primary/10 text-primary shrink-0">
               <Stethoscope className="w-5 h-5" />
             </div>
             <div>
@@ -108,6 +110,17 @@ export function CreateRequestPanel({
               </CardDescription>
             </div>
           </div>
+          {onCancel && (
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={onCancel}
+              className="gap-1.5 text-xs rounded-xl shrink-0 cursor-pointer"
+            >
+              <ArrowLeft className="w-3.5 h-3.5" /> Quay lại
+            </Button>
+          )}
         </CardHeader>
         <CardContent className="p-6">
           <form className="flex flex-col gap-6" onSubmit={handleOpenConfirm}>
