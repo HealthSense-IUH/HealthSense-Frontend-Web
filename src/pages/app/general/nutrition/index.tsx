@@ -31,7 +31,6 @@ export default function NutritionHomePage() {
     <Page>
       <PageHeader
         icon={<Heart className="w-5 h-5" />}
-        eyebrow={t("home.eyebrow")}
         title={t("home.title")}
         description={t("home.description")}
       />

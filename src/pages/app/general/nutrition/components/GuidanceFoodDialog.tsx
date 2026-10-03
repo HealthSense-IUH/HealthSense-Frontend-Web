@@ -14,7 +14,7 @@ import { useTranslation } from "react-i18next"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { DetailDialog, DetailDialogPlaceholder } from "./DetailDialog"
+import { DetailDialog, DetailDialogSkeleton } from "./DetailDialog"
 import { GuidanceBadge } from "./GuidanceBadge"
 import { useNutritionFood } from "../hooks/use-nutrition"
 import { useNutritionNav, useRetainedId } from "../nutrition-nav"
@@ -47,13 +47,15 @@ export function GuidanceFoodDialog() {
 
   if (isLoading || !food) {
     return (
-      <DetailDialogPlaceholder
+      // Luôn là cùng một DetailDialog (đang tải / không tìm thấy / có dữ liệu) để popup không mở lại lần nữa khi tải xong
+      <DetailDialog
         open={open}
         onClose={nav.closeDetail}
-        loading={isLoading}
         title={isLoading ? t("detail.loading") : t("foodDetail.notFoundTitle")}
         description={isLoading ? undefined : t("foodDetail.notFoundDescription")}
-      />
+      >
+        {isLoading && <DetailDialogSkeleton />}
+      </DetailDialog>
     )
   }
 
@@ -114,13 +116,6 @@ export function GuidanceFoodDialog() {
       }
       footer={t("foodDetail.footer")}
     >
-      {/* Ảnh món (chỉ khi có ảnh) */}
-      {food.imageUrl && (
-        <div className="relative aspect-[21/9] w-full overflow-hidden rounded-2xl bg-slate-100 border border-slate-200/80 shadow-xs">
-          <img src={food.imageUrl} alt={food.foodNameSpecific} className="w-full h-full object-cover" />
-        </div>
-      )}
-
       {/* Basic Info Card: mô tả + tóm tắt khuyến nghị */}
       {(food.description || food.guidanceTitle || food.guidanceReason) && (
       <div className="rounded-2xl border border-slate-200/80 bg-white p-6 sm:p-6 shadow-xs space-y-4">

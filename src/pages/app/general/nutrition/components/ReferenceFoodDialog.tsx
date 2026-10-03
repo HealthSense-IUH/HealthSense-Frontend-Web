@@ -8,7 +8,7 @@ import { formatNutrientAmount } from "../format"
 import { useReferenceFood } from "../hooks/use-nutrition"
 import { useNutritionNav, useRetainedId } from "../nutrition-nav"
 import { REFERENCE_SOURCES } from "../sources"
-import { DetailDialog, DetailDialogPlaceholder } from "./DetailDialog"
+import { DetailDialog, DetailDialogSkeleton } from "./DetailDialog"
 import { DietAdviceNote } from "./DietAdvice"
 import type { ReferenceFoodPortion } from "@/types/nutrition"
 
@@ -33,13 +33,15 @@ export function ReferenceFoodDialog() {
 
   if (isLoading || !food) {
     return (
-      <DetailDialogPlaceholder
+      // Luôn là cùng một DetailDialog (đang tải / không tìm thấy / có dữ liệu) để popup không mở lại lần nữa khi tải xong
+      <DetailDialog
         open={open}
         onClose={nav.closeDetail}
-        loading={isLoading}
         title={isLoading ? t("detail.loading") : t("databaseFood.notFoundTitle")}
         description={isLoading ? undefined : t("databaseFood.notFoundDescription")}
-      />
+      >
+        {isLoading && <DetailDialogSkeleton />}
+      </DetailDialog>
     )
   }
 

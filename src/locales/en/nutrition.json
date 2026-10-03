@@ -47,9 +47,8 @@
     }
   },
   "home": {
-    "eyebrow": "Diet & Heart health",
     "title": "Diet & Nutrition",
-    "description": "Food choice suggestions that support heart health and people with atrial fibrillation (AF) symptoms. This information is meant to guide healthy habits and does not replace medical advice.",
+    "description": "Food suggestions for heart health and atrial fibrillation.",
     "tabs": {
       "foods": "Food lookup",
       "diet": "Diet prescription",
@@ -101,7 +100,6 @@
     "legendNote": "If anything is red, the food is red; if nothing is red but something is yellow, it is yellow. Open each food to see why. The rating only compares the per-100 g figures against the thresholds and does not replace direct advice from your doctor."
   },
   "foodCard": {
-    "noImage": "No image yet",
     "highlights": "Key nutrients (per 100g):",
     "per100g": "Per 100g",
     "viewDetail": "View details"
@@ -125,7 +123,7 @@
     "explore": "Explore types",
     "groupsLoadError": "Could not load the food groups.",
     "sectionTitle": "Explore by food group",
-    "sectionDescription": "Pick a group to see its food types, variants and heart-health recommendations."
+    "sectionDescription": "Pick a group to see recommendations."
   },
   "guidance": {
     "PRIORITIZE": "Recommended",
@@ -176,10 +174,9 @@
     "notFound": "Food group not found.",
     "backToGroups": "All food groups",
     "allGroups": "Food groups",
-    "eyebrow": "Food group",
     "variantsDescription": "Variants of {{food}} in the {{group}} group, classified by recommendation level for heart health and atrial fibrillation.",
     "recommendedTitle": "With heart-health recommendations ({{count}})",
-    "recommendedDescription": "Pick a type to see its variants and nutrition recommendations.",
+    "recommendedDescription": "Pick a type to see details.",
     "itemCount": "{{count}} items",
     "itemCount_one": "{{count}} item",
     "includes": "Includes: {{items}}",
@@ -189,7 +186,7 @@
     "otherTypes": "See other {{group}} types",
     "noVariants": "No items in this recommendation group.",
     "allFoodsTitle": "All foods in this group ({{value}})",
-    "allFoodsDescription": "Figures per 100 g of edible portion from the Vietnamese Food Composition Table and USDA FNDDS. Each item's color follows the diet prescription from your doctor (if any).",
+    "allFoodsDescription": "Per 100 g, from the Vietnamese and USDA food composition tables.",
     "otherGroups": "Explore other food groups"
   },
   "databaseFood": {

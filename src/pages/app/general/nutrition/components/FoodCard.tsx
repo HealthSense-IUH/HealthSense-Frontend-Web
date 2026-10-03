@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom"
-import { ArrowRight, Sparkles, Image as ImageIcon } from "lucide-react"
+import { ArrowRight, Sparkles } from "lucide-react"
 import { useTranslation } from "react-i18next"
 import type { Food } from "@/types/nutrition"
 import { GuidanceBadge } from "./GuidanceBadge"
@@ -34,39 +34,14 @@ export function FoodCard({
       )}
     >
       <div>
-        {/* Image / Image Placeholder Container */}
-        <div className="relative aspect-[16/10] w-full overflow-hidden rounded-xl bg-slate-100 mb-3.5 border border-slate-200/60">
-          {food.imageUrl ? (
-            <img
-              src={food.imageUrl}
-              alt={title}
-              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-              loading="lazy"
-            />
-          ) : (
-            <div className="w-full h-full flex flex-col items-center justify-center text-slate-400 gap-1.5 p-4 text-center select-none bg-gradient-to-b from-slate-50 to-slate-100/80 group-hover:from-primary/5 group-hover:to-primary/10 transition-colors">
-              <div className="p-2.5 rounded-xl bg-white shadow-2xs text-slate-400 group-hover:text-primary transition-colors border border-slate-200/50">
-                <ImageIcon className="w-5 h-5 stroke-[1.5]" />
-              </div>
-              <span className="text-[11px] font-medium text-slate-400 tracking-tight">
-                {t("foodCard.noImage")}
-              </span>
-            </div>
-          )}
-
-          {/* Floating Guidance Badge on top-right of image */}
-          {guidanceType && (
-            <div className="absolute top-2.5 right-2.5 shadow-xs">
-              <GuidanceBadge type={guidanceType} size="sm" />
-            </div>
-          )}
-        </div>
-
         {/* Title & Subtitle */}
         <div className="space-y-1 mb-2">
-          <h4 className="font-semibold text-slate-900 group-hover:text-primary transition-colors text-sm sm:text-base leading-snug line-clamp-1">
-            {title}
-          </h4>
+          <div className="flex items-start justify-between gap-2">
+            <h4 className="font-semibold text-slate-900 group-hover:text-primary transition-colors text-sm sm:text-base leading-snug line-clamp-2">
+              {title}
+            </h4>
+            {guidanceType && <GuidanceBadge type={guidanceType} size="sm" className="shrink-0" />}
+          </div>
           {subtitle && (
             <span className="text-[11px] font-medium text-primary/80 bg-primary/5 px-2 py-0.5 rounded-md inline-block">
               {subtitle}

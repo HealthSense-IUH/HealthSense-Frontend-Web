@@ -5,6 +5,7 @@ import {
   CheckCircle2,
   AlertTriangle,
   Ban,
+  HeartPulse,
   LayoutGrid,
 } from "lucide-react"
 import { Link } from "react-router-dom"
@@ -106,7 +107,6 @@ export function CategoryView({ categoryId }: { categoryId: string }) {
               <FoodGroupIcon icon={currentCategory.icon} />
             </div>
             <div className="min-w-0 space-y-1">
-              <div className="text-xs font-semibold text-primary">{t("category.eyebrow")}</div>
               <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 break-words">
                 {selectedFoodName ?? currentCategory.name}
               </h2>
@@ -124,53 +124,73 @@ export function CategoryView({ categoryId }: { categoryId: string }) {
         </div>
       </header>
 
-      {/* VIEW 1: Khi chưa chọn món cụ thể -> SHOW DANH SÁCH CÁC LOẠI CÓ KHUYẾN NGHỊ (Cá hồi, Cá thu, Cá ngừ...) */}
-      {!selectedFoodName && (isFoodsLoading || foodNames.length > 0) && (
+      {/* VIEW 1: Chưa chọn loại -> một phần "Tất cả thực phẩm trong nhóm": khối xanh các loại có khuyến nghị tim mạch ở đầu,
+          bên dưới là toàn bộ thực phẩm tham chiếu (Việt Nam + USDA) của nhóm */}
+      {!selectedFoodName && (
         <PageSection
-          title={t("category.recommendedTitle", { count: foodNames.length })}
-          description={t("category.recommendedDescription")}
+          title={t("category.allFoodsTitle", {
+            value: (currentCategory.foodCount ?? 0).toLocaleString(currentIntlLocale()),
+          })}
+          description={t("category.allFoodsDescription")}
         >
+          {(isFoodsLoading || foodNames.length > 0) && (
+            <div className="rounded-2xl border border-success-200 bg-success-50/60 p-4 sm:p-5 space-y-4">
+              <div className="flex items-start gap-3">
+                <div className="p-2 rounded-xl bg-success-100 text-success-700 shrink-0">
+                  <HeartPulse className="w-5 h-5" />
+                </div>
+                <div className="min-w-0">
+                  <h3 className="text-base font-semibold text-success-900">
+                    {t("category.recommendedTitle", { count: foodNames.length })}
+                  </h3>
+                  <p className="text-sm text-success-800/80">{t("category.recommendedDescription")}</p>
+                </div>
+              </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {isFoodsLoading &&
-              Array.from({ length: 4 }, (_, i) => <Skeleton key={i} className="h-36 rounded-2xl" />)}
-            {foodNames.map((fn) => {
-              const variants = foods.filter((f) => f.foodName === fn)
-              const count = variants.length
-              const sampleVariants = variants.map((v) => v.foodNameSpecific).slice(0, 3).join(", ")
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                {isFoodsLoading &&
+                  Array.from({ length: 4 }, (_, i) => <Skeleton key={i} className="h-36 rounded-2xl" />)}
+                {foodNames.map((fn) => {
+                  const variants = foods.filter((f) => f.foodName === fn)
+                  const count = variants.length
+                  const sampleVariants = variants.map((v) => v.foodNameSpecific).slice(0, 3).join(", ")
 
-              return (
-                <button
-                  key={fn}
-                  type="button"
-                  onClick={() => selectType(fn)}
-                  className="group flex flex-col justify-between rounded-2xl border border-border bg-card p-5 text-left shadow-xs transition-all hover:border-primary-300 hover:shadow-md cursor-pointer"
-                >
-                  <div className="w-full space-y-1">
-                    <div className="flex items-start justify-between gap-2">
-                      <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors text-base">
-                        {fn}
-                      </h3>
-                      <span className="shrink-0 text-[11px] font-medium text-muted-foreground bg-slate-50 px-2 py-0.5 rounded-full border border-slate-100">
-                        {t("category.itemCount", { count })}
-                      </span>
-                    </div>
-                    {sampleVariants && (
-                      <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
-                        {t("category.includes", { items: sampleVariants })}
-                        {count > 3 ? "..." : ""}
-                      </p>
-                    )}
-                  </div>
+                  return (
+                    <button
+                      key={fn}
+                      type="button"
+                      onClick={() => selectType(fn)}
+                      className="group flex flex-col justify-between rounded-2xl border border-success-200 bg-white p-5 text-left shadow-xs transition-all hover:border-success-400 hover:shadow-md cursor-pointer"
+                    >
+                      <div className="w-full space-y-1">
+                        <div className="flex items-start justify-between gap-2">
+                          <h4 className="font-semibold text-foreground group-hover:text-success-700 transition-colors text-base">
+                            {fn}
+                          </h4>
+                          <span className="shrink-0 text-[11px] font-medium text-success-700 bg-success-50 px-2 py-0.5 rounded-full border border-success-200">
+                            {t("category.itemCount", { count })}
+                          </span>
+                        </div>
+                        {sampleVariants && (
+                          <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
+                            {t("category.includes", { items: sampleVariants })}
+                            {count > 3 ? "..." : ""}
+                          </p>
+                        )}
+                      </div>
 
-                  <div className="pt-3 mt-4 w-full border-t border-slate-100 flex items-center justify-between text-xs text-primary font-medium">
-                    <span>{t("category.viewOptions")}</span>
-                    <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-                  </div>
-                </button>
-              )
-            })}
-          </div>
+                      <div className="pt-3 mt-4 w-full border-t border-success-100 flex items-center justify-between text-xs text-success-700 font-medium">
+                        <span>{t("category.viewOptions")}</span>
+                        <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                      </div>
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+          )}
+
+          <ReferenceFoodBrowser fixedGroup={currentCategory.id} layout="cards" />
         </PageSection>
       )}
 
@@ -279,19 +299,6 @@ export function CategoryView({ categoryId }: { categoryId: string }) {
             </div>
           )}
         </div>
-      )}
-
-      {/* VIEW 1b: Mọi thực phẩm của nhóm trong cơ sở dữ liệu tham chiếu (Việt Nam + USDA), chỉ có số liệu */}
-      {!selectedFoodName && (
-        <PageSection
-          title={t("category.allFoodsTitle", {
-            value: (currentCategory.foodCount ?? 0).toLocaleString(currentIntlLocale()),
-          })}
-          description={t("category.allFoodsDescription")}
-          className={cn(foodNames.length > 0 && "border-t border-border pt-6")}
-        >
-          <ReferenceFoodBrowser fixedGroup={currentCategory.id} layout="cards" />
-        </PageSection>
       )}
 
       {/* Chuyển nhanh sang nhóm khác */}

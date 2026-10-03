@@ -42,34 +42,13 @@ export function DetailDialog({ open, onClose, title, description, meta, footer, 
   )
 }
 
-/** Popup khi đang tải (tiêu đề "Đang tải...") hoặc không tìm thấy thực phẩm. */
-export function DetailDialogPlaceholder({
-  open,
-  onClose,
-  loading,
-  title,
-  description,
-}: {
-  open: boolean
-  onClose: () => void
-  loading: boolean
-  title: string
-  description?: string
-}) {
+/** Nội dung khung chờ trong lúc tải chi tiết món (cùng một popup, chỉ thay phần thân). */
+export function DetailDialogSkeleton() {
   return (
-    <DetailDialog
-      open={open}
-      onClose={onClose}
-      title={title}
-      description={description}
-    >
-      {loading ? (
-        <div className="space-y-4">
-          <Skeleton className="h-10 w-full rounded-xl" />
-          <Skeleton className="h-48 rounded-2xl" />
-          <Skeleton className="h-32 rounded-2xl" />
-        </div>
-      ) : null}
-    </DetailDialog>
+    <div className="space-y-4">
+      <Skeleton className="h-10 w-full rounded-xl" />
+      <Skeleton className="h-48 rounded-2xl" />
+      <Skeleton className="h-32 rounded-2xl" />
+    </div>
   )
 }

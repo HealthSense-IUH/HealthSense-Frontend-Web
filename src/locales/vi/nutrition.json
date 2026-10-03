@@ -47,9 +47,8 @@
     }
   },
   "home": {
-    "eyebrow": "Chế độ ăn & Tim mạch",
     "title": "Ăn uống & Dinh dưỡng",
-    "description": "Gợi ý lựa chọn thực phẩm hỗ trợ sức khỏe tim mạch và người có triệu chứng rung nhĩ (AF). Thông tin mang tính định hướng thói quen lành mạnh, không thay thế chỉ định y khoa.",
+    "description": "Gợi ý thực phẩm tốt cho tim mạch và người có rung nhĩ.",
     "tabs": {
       "foods": "Tra cứu thực phẩm",
       "diet": "Đơn ăn uống",
@@ -101,7 +100,6 @@
     "legendNote": "Có điểm đỏ thì món là đỏ, không có đỏ mà có vàng thì là vàng. Mở từng món để xem lý do. Đánh giá chỉ so số liệu trên 100 g với các ngưỡng, không thay thế lời khuyên trực tiếp của bác sĩ."
   },
   "foodCard": {
-    "noImage": "Chưa có hình ảnh",
     "highlights": "Thành phần dinh dưỡng nổi bật (trên 100g):",
     "per100g": "Chuẩn 100g",
     "viewDetail": "Xem chi tiết"
@@ -125,7 +123,7 @@
     "explore": "Khám phá các loại",
     "groupsLoadError": "Không tải được danh sách nhóm thực phẩm.",
     "sectionTitle": "Khám phá theo nhóm thực phẩm",
-    "sectionDescription": "Chọn một nhóm để xem các loại thực phẩm, biến thể và khuyến nghị cho tim mạch."
+    "sectionDescription": "Chọn một nhóm để xem khuyến nghị."
   },
   "guidance": {
     "PRIORITIZE": "Nên ưu tiên",
@@ -176,10 +174,9 @@
     "notFound": "Không tìm thấy nhóm thực phẩm.",
     "backToGroups": "Tất cả nhóm thực phẩm",
     "allGroups": "Nhóm thực phẩm",
-    "eyebrow": "Nhóm thực phẩm",
     "variantsDescription": "Các biến thể của {{food}} trong nhóm {{group}}, phân loại theo mức độ khuyến nghị cho tim mạch và rung nhĩ.",
     "recommendedTitle": "Có khuyến nghị cho tim mạch ({{count}})",
-    "recommendedDescription": "Chọn một loại để xem các biến thể và khuyến nghị dinh dưỡng.",
+    "recommendedDescription": "Chọn một loại để xem chi tiết.",
     "itemCount": "{{count}} món",
     "itemCount_one": "{{count}} món",
     "includes": "Gồm có: {{items}}",
@@ -189,7 +186,7 @@
     "otherTypes": "Xem các loại {{group}} khác",
     "noVariants": "Không có món nào thuộc nhóm khuyến nghị này.",
     "allFoodsTitle": "Tất cả thực phẩm trong nhóm ({{value}})",
-    "allFoodsDescription": "Số liệu trên 100 g phần ăn được từ Bảng thành phần thực phẩm Việt Nam và USDA FNDDS. Màu của từng món theo đơn ăn uống bác sĩ kê (nếu có).",
+    "allFoodsDescription": "Số liệu trên 100 g, từ bảng thành phần thực phẩm Việt Nam và USDA.",
     "otherGroups": "Khám phá nhóm thực phẩm khác"
   },
   "databaseFood": {
