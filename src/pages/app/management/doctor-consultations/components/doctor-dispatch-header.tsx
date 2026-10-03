@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
 import { Clock, PauseCircle, PlayCircle, Power, Sparkles, AlertCircle, RefreshCw, Calendar } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
@@ -30,6 +31,7 @@ export function DoctorDispatchHeader({
   onRetryProfile,
   onOpenScheduleDialog,
 }: DoctorDispatchHeaderProps) {
+  const { t } = useTranslation("management")
   const [prefLoading, setPrefLoading] = useState(false)
 
   const isBusy = dispatchStatus?.dispatchStatus === "BUSY"
@@ -62,7 +64,7 @@ export function DoctorDispatchHeader({
             <div className="flex items-start sm:items-center gap-2.5">
               <AlertCircle className="w-5 h-5 shrink-0 text-warning-600 mt-0.5 sm:mt-0" />
               <span>
-                <strong>Tài khoản chưa được thiết lập hồ sơ trực:</strong> Vui lòng liên hệ Người quản lý hoặc Điều phối viên để thiết lập hồ sơ chuyên khoa và kích hoạt nhận bệnh trước khi bật chế độ trực.
+                <strong>{t("doctorConsultations.dispatchHeader.missingProfile.title")}</strong> {t("doctorConsultations.dispatchHeader.missingProfile.description")}
               </span>
             </div>
             {onRetryProfile && (
@@ -74,7 +76,7 @@ export function DoctorDispatchHeader({
                 className="h-7 text-xs border-warning-300 hover:bg-warning-100 text-warning-900 shrink-0 font-medium cursor-pointer"
               >
                 <RefreshCw className={`w-3.5 h-3.5 mr-1 ${profileLoading ? "animate-spin" : ""}`} />
-                <span>Thử lại</span>
+                <span>{t("doctorConsultations.dispatchHeader.missingProfile.retry")}</span>
               </Button>
             )}
           </div>
@@ -104,41 +106,41 @@ export function DoctorDispatchHeader({
             <div className="space-y-1">
               <div className="flex flex-wrap items-center gap-2">
                 <h2 className="text-lg font-semibold tracking-tight text-foreground">
-                  Trạng thái Trực điều phối
+                  {t("doctorConsultations.dispatchHeader.title")}
                 </h2>
                 {isBusy && (
                   <Badge className="bg-warning-500 hover:bg-warning-600 text-white font-medium border-none shadow-sm">
-                    Đang bận phiên khám
+                    {t("doctorConsultations.dispatchHeader.badges.busy")}
                   </Badge>
                 )}
                 {isAvailable && effectivelyDispatchable && (
                   <Badge className="bg-success-600 hover:bg-success-700 text-white font-medium border-none shadow-sm flex items-center gap-1">
                     <Sparkles className="w-3 h-3" />
-                    Sẵn sàng nhận bệnh
+                    {t("doctorConsultations.dispatchHeader.badges.available")}
                   </Badge>
                 )}
                 {isAvailable && !effectivelyDispatchable && (
                   <Badge variant="outline" className="border-warning-300 bg-warning-50 text-warning-800 font-medium">
-                    Đang phân phối lượt chờ
+                    {t("doctorConsultations.dispatchHeader.badges.distributing")}
                   </Badge>
                 )}
                 {isUnavailable && (
                   <Badge variant="secondary" className="bg-muted text-muted-foreground font-medium">
-                    Nghỉ trực (Tạm dừng)
+                    {t("doctorConsultations.dispatchHeader.badges.unavailable")}
                   </Badge>
                 )}
               </div>
 
               <p className="text-xs sm:text-sm text-muted-foreground">
                 {!hasProfile
-                  ? "Bạn cần có hồ sơ tư vấn hợp lệ trước khi có thể tham gia hàng đợi phân phối."
+                  ? t("doctorConsultations.dispatchHeader.hints.noProfile")
                   : isBusy
-                  ? "Bác sĩ đang trong phiên khám tư vấn trực tuyến (BUSY). Trạng thái sẽ tự động cập nhật khi phiên kết thúc."
+                  ? t("doctorConsultations.dispatchHeader.hints.busy")
                   : isAvailable && effectivelyDispatchable
-                  ? "Hệ thống sẽ tự động gán ca khám mới từ hàng đợi tới bạn ngay khi có bệnh nhân phù hợp."
+                  ? t("doctorConsultations.dispatchHeader.hints.available")
                   : isAvailable && !effectivelyDispatchable
-                  ? "Bạn đang có lời mời tư vấn hoặc bệnh nhân đang xác nhận. Tạm thời không nhận ca mới."
-                  : "Bạn đang ở chế độ nghỉ. Bật sẵn sàng để bắt đầu tiếp nhận bệnh nhân từ hàng đợi chung."}
+                  ? t("doctorConsultations.dispatchHeader.hints.pendingOffer")
+                  : t("doctorConsultations.dispatchHeader.hints.unavailable")}
               </p>
             </div>
           </div>
@@ -154,7 +156,7 @@ export function DoctorDispatchHeader({
                 className="text-xs font-medium shadow-xs border-border hover:bg-muted cursor-pointer"
               >
                 <Calendar className="mr-1.5 h-3.5 w-3.5 text-primary-600" />
-                <span>Lịch làm việc</span>
+                <span>{t("doctorConsultations.dispatchHeader.workSchedule")}</span>
               </Button>
             )}
 
@@ -167,7 +169,7 @@ export function DoctorDispatchHeader({
                 disabled={!hasProfile || prefLoading || actionLoading || loading}
               />
               <label htmlFor="stop-after" className="cursor-pointer text-muted-foreground font-medium select-none">
-                Nghỉ sau phiên này
+                {t("doctorConsultations.dispatchHeader.stopAfterSession")}
               </label>
             </div>
 
@@ -182,7 +184,11 @@ export function DoctorDispatchHeader({
               }`}
             >
               <Power className="mr-1.5 h-4 w-4" />
-              {isBusy ? "Đang trong phiên" : isAvailable ? "Tạm nghỉ trực" : "Bắt đầu trực"}
+              {isBusy
+                ? t("doctorConsultations.dispatchHeader.actions.inSession")
+                : isAvailable
+                  ? t("doctorConsultations.dispatchHeader.actions.pause")
+                  : t("doctorConsultations.dispatchHeader.actions.start")}
             </Button>
           </div>
         </div>

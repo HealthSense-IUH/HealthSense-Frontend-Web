@@ -1,17 +1,40 @@
+import i18n from "@/lib/i18n"
 import type { BusinessDomainType } from "@/types/business-audit"
 
 export const CARE_SERVICE_CODE_LABELS: Record<string, string> = {
-  REMOTE_ONE_ON_ONE_CARE: "Chăm sóc 1-1 từ xa",
-  SECURE_MESSAGING: "Nhắn tin bảo mật",
-  HEALTH_RECORD_REVIEW: "Đánh giá hồ sơ sức khỏe",
-  AI_SCREENING_REVIEW: "Đánh giá kết quả tầm soát AI",
-  CARE_MONITORING: "Theo dõi chỉ số sức khỏe định kỳ",
-  FINAL_CARE_SUMMARY: "Tổng kết y khoa cuối kỳ",
-  VIDEO_CONSULTATION: "Tư vấn qua video call",
-  EMERGENCY_CARE: "Cấp cứu khẩn cấp",
-  TWENTY_FOUR_SEVEN_SUPPORT: "Hỗ trợ y tế 24/7",
-  FORMAL_DIAGNOSIS: "Chẩn đoán bệnh chính thức",
-  PRESCRIPTION: "Kê đơn thuốc",
+  get REMOTE_ONE_ON_ONE_CARE() {
+    return i18n.t("consultation:careServices.remoteOneOnOneCare")
+  },
+  get SECURE_MESSAGING() {
+    return i18n.t("consultation:careServices.secureMessaging")
+  },
+  get HEALTH_RECORD_REVIEW() {
+    return i18n.t("consultation:careServices.healthRecordReview")
+  },
+  get AI_SCREENING_REVIEW() {
+    return i18n.t("consultation:careServices.aiScreeningReview")
+  },
+  get CARE_MONITORING() {
+    return i18n.t("consultation:careServices.careMonitoring")
+  },
+  get FINAL_CARE_SUMMARY() {
+    return i18n.t("consultation:careServices.finalCareSummary")
+  },
+  get VIDEO_CONSULTATION() {
+    return i18n.t("consultation:careServices.videoConsultation")
+  },
+  get EMERGENCY_CARE() {
+    return i18n.t("consultation:careServices.emergencyCare")
+  },
+  get TWENTY_FOUR_SEVEN_SUPPORT() {
+    return i18n.t("consultation:careServices.twentyFourSevenSupport")
+  },
+  get FORMAL_DIAGNOSIS() {
+    return i18n.t("consultation:careServices.formalDiagnosis")
+  },
+  get PRESCRIPTION() {
+    return i18n.t("consultation:careServices.prescription")
+  },
 }
 
 

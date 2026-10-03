@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { User, Phone, Video, MoreHorizontal, FileText, RefreshCw } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 import { Button } from "@/components/ui/button"
 import type { ConsultationSessionItem } from "@/types/consultation"
@@ -16,6 +17,7 @@ interface ChatHeaderProps {
 }
 
 export function ChatHeader({ session, isDoctor, isMember, onSessionRefreshed }: ChatHeaderProps) {
+  const { t } = useTranslation("consultation")
   const [isSummaryOpen, setIsSummaryOpen] = useState(false)
   const [isDoctorDetailOpen, setIsDoctorDetailOpen] = useState(false)
   const [isRenewalOpen, setIsRenewalOpen] = useState(false)
@@ -25,14 +27,14 @@ export function ChatHeader({ session, isDoctor, isMember, onSessionRefreshed }: 
     (session as any).memberName ||
     (session as any).member?.displayName ||
     (session as any).member_display_name ||
-    `Hội viên #${session.memberId}`
+    t("chat.names.member", { id: session.memberId })
 
   const doctorName =
     session.doctorDisplayName ||
     (session as any).doctorName ||
     (session as any).doctor?.displayName ||
     (session as any).doctor_display_name ||
-    `Bác sĩ #${session.doctorId}`
+    t("chat.names.doctor", { id: session.doctorId })
 
   const headerTitle = isDoctor
     ? memberName
@@ -52,7 +54,7 @@ export function ChatHeader({ session, isDoctor, isMember, onSessionRefreshed }: 
           </h3>
           <div className="flex items-center gap-1.5 mt-0.5">
             <span className="text-muted-foreground text-[11px]">
-              Vừa mới truy cập
+              {t("chat.header.lastSeen")}
             </span>
             <span className="text-muted-foreground text-[10px]">•</span>
             {statusBadge(session.status)}
@@ -68,7 +70,7 @@ export function ChatHeader({ session, isDoctor, isMember, onSessionRefreshed }: 
             onClick={() => setIsRenewalOpen(true)}
           >
             <RefreshCw className="h-4 w-4" />
-            <span className="hidden sm:inline">Gia hạn chăm sóc</span>
+            <span className="hidden sm:inline">{t("chat.header.renewCare")}</span>
           </Button>
         )}
         {isDoctor && (
@@ -79,7 +81,7 @@ export function ChatHeader({ session, isDoctor, isMember, onSessionRefreshed }: 
             onClick={() => setIsDoctorDetailOpen(true)}
           >
             <FileText className="h-4 w-4" />
-            <span>Hồ sơ & Tổng kết</span>
+            <span>{t("chat.header.recordAndSummary")}</span>
           </Button>
         )}
         {isMember && session.status !== "SCHEDULED" && (
@@ -90,7 +92,7 @@ export function ChatHeader({ session, isDoctor, isMember, onSessionRefreshed }: 
             onClick={() => setIsSummaryOpen(true)}
           >
             <FileText className="mr-2 h-4 w-4" />
-            Tổng kết từ bác sĩ
+            {t("chat.header.doctorSummary")}
           </Button>
         )}
         <Button variant="ghost" size="icon" className="h-9 w-9 text-muted-foreground hover:text-foreground">

@@ -1,5 +1,6 @@
 import { memo } from "react"
 import { MessageSquare, ArrowDown } from "lucide-react"
+import { useTranslation } from "react-i18next"
 import { Button } from "@/components/ui/button"
 import type { ConsultationMessageItem } from "@/types/consultation"
 import { useMessageGroups } from "../../hooks/use-message-groups"
@@ -27,6 +28,7 @@ export const ChatMessageList = memo(function ChatMessageList({
   isMember,
   onLoadMore,
 }: ChatMessageListProps) {
+  const { t } = useTranslation("consultation")
   const groups = useMessageGroups(messages)
   const { scrollRef, bottomRef, showScrollButton, handleScroll, scrollToBottom } = useChatScroll(
     messages,
@@ -47,8 +49,8 @@ export const ChatMessageList = memo(function ChatMessageList({
               <div className="flex h-16 w-16 items-center justify-center rounded-full bg-muted mb-4">
                 <MessageSquare className="h-8 w-8 text-muted-foreground" />
               </div>
-              <p className="text-sm font-medium text-foreground">Chưa có tin nhắn nào.</p>
-              <p className="mt-1 text-xs text-muted-foreground">Gửi tin nhắn để bắt đầu cuộc trò chuyện.</p>
+              <p className="text-sm font-medium text-foreground">{t("chat.messageList.empty")}</p>
+              <p className="mt-1 text-xs text-muted-foreground">{t("chat.messageList.emptyHint")}</p>
             </div>
           )}
           
@@ -61,7 +63,7 @@ export const ChatMessageList = memo(function ChatMessageList({
                 disabled={loadingMoreMessages} 
                 className="rounded-full bg-background shadow-sm text-xs px-6 h-8"
               >
-                {loadingMoreMessages ? "Đang tải lịch sử..." : "Tải tin nhắn cũ hơn"}
+                {loadingMoreMessages ? t("chat.messageList.loadingHistory") : t("chat.messageList.loadOlder")}
               </Button>
             </div>
           )}
@@ -94,7 +96,7 @@ export const ChatMessageList = memo(function ChatMessageList({
           className={cn(
             "absolute bottom-4 right-6 flex h-8 w-8 items-center justify-center rounded-full bg-background border border-border shadow-md text-foreground transition-all hover:bg-muted z-10 animate-in fade-in slide-in-from-bottom-2 duration-200"
           )}
-          aria-label="Cuộn xuống dưới cùng"
+          aria-label={t("chat.messageList.scrollToBottom")}
         >
           <ArrowDown className="h-4 w-4" />
         </button>

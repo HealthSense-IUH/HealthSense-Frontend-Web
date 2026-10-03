@@ -1,7 +1,9 @@
 import { useMemo } from "react"
+import { useTranslation } from "react-i18next"
 import { useAuthStore } from "@/stores/auth-store"
 
 export function MemberGreetingBanner() {
+  const { t } = useTranslation("health")
   const userSession = useAuthStore((state) => state.userSession)
 
   const displayName = useMemo(() => {
@@ -11,28 +13,28 @@ export function MemberGreetingBanner() {
     if (userSession?.email) {
       return userSession.email.split("@")[0]
     }
-    return "Bạn"
-  }, [userSession])
+    return t("greeting.fallbackName")
+  }, [userSession, t])
 
   const greetingInfo = useMemo(() => {
     const hour = new Date().getHours()
     if (hour >= 5 && hour < 12) {
       return {
-        text: "Chào buổi sáng",
-        subtext: "Chúc bạn một ngày mới dồi dào năng lượng và luôn có một trái tim khỏe mạnh.",
+        text: t("greeting.morning.text"),
+        subtext: t("greeting.morning.subtext"),
       }
     }
     if (hour >= 12 && hour < 18) {
       return {
-        text: "Chào buổi chiều",
-        subtext: "Hãy duy trì năng lượng tích cực và lắng nghe nhịp tim sinh hiệu của bạn nhé.",
+        text: t("greeting.afternoon.text"),
+        subtext: t("greeting.afternoon.subtext"),
       }
     }
     return {
-      text: "Chào buổi tối",
-      subtext: "Thư giãn tinh thần, chăm sóc giấc ngủ và kiểm tra sự ổn định của nhịp tim.",
+      text: t("greeting.evening.text"),
+      subtext: t("greeting.evening.subtext"),
     }
-  }, [])
+  }, [t])
 
   return (
     <div className="relative overflow-hidden rounded-2xl border border-primary-500/20 bg-gradient-to-r from-primary-500/10 via-success-500/5 to-primary-500/10 p-6 sm:p-7 shadow-xs">

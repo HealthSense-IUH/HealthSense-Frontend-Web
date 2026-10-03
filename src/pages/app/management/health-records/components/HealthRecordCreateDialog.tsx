@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react"
+import { useTranslation } from "react-i18next"
 import {
   Dialog,
   DialogContent,
@@ -38,6 +39,7 @@ const DEFAULT_HRV_JSON = `{
 }`
 
 export function HealthRecordCreateDialog({ open, onOpenChange, onSuccess }: HealthRecordCreateDialogProps) {
+  const { t } = useTranslation("management")
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -65,7 +67,7 @@ export function HealthRecordCreateDialog({ open, onOpenChange, onSuccess }: Heal
     setError(null)
 
     if (!memberId) {
-      setError("Member ID is required")
+      setError(t("healthRecords.create.errors.memberIdRequired"))
       return
     }
 
@@ -73,7 +75,7 @@ export function HealthRecordCreateDialog({ open, onOpenChange, onSuccess }: Heal
       try {
         JSON.parse(hrvFeaturesJson)
       } catch (e) {
-        setError("HRV features must be valid JSON")
+        setError(t("healthRecords.create.errors.invalidJson"))
         return
       }
     }
@@ -94,7 +96,7 @@ export function HealthRecordCreateDialog({ open, onOpenChange, onSuccess }: Heal
       onOpenChange(false)
     } catch (err: any) {
       console.error(err)
-      setError(err.response?.data?.message || "Failed to create health record")
+      setError(err.response?.data?.message || t("healthRecords.create.errors.createFailed"))
     } finally {
       setIsSubmitting(false)
     }
@@ -104,9 +106,9 @@ export function HealthRecordCreateDialog({ open, onOpenChange, onSuccess }: Heal
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Create Health Record</DialogTitle>
+          <DialogTitle>{t("healthRecords.create.title")}</DialogTitle>
           <DialogDescription>
-            Create a mock health record for a member.
+            {t("healthRecords.create.description")}
           </DialogDescription>
         </DialogHeader>
 
@@ -115,10 +117,10 @@ export function HealthRecordCreateDialog({ open, onOpenChange, onSuccess }: Heal
           
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="memberId">Member ID *</Label>
+              <Label htmlFor="memberId">{t("healthRecords.create.memberIdLabel")}</Label>
               <Input 
                 id="memberId" 
-                placeholder="e.g. 208019534288613376" 
+                placeholder={t("healthRecords.create.memberIdPlaceholder")} 
                 value={memberId} 
                 onChange={(e) => setMemberId(e.target.value)} 
                 required
@@ -126,7 +128,7 @@ export function HealthRecordCreateDialog({ open, onOpenChange, onSuccess }: Heal
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="fileName">File Name</Label>
+              <Label htmlFor="fileName">{t("healthRecords.create.fileNameLabel")}</Label>
               <Input 
                 id="fileName" 
                 placeholder="sample-hrv.csv" 
@@ -136,10 +138,10 @@ export function HealthRecordCreateDialog({ open, onOpenChange, onSuccess }: Heal
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="status">Status</Label>
+              <Label htmlFor="status">{t("healthRecords.create.statusLabel")}</Label>
               <Select value={status} onValueChange={(v: HealthRecordStatus) => setStatus(v)}>
                 <SelectTrigger id="status">
-                  <SelectValue placeholder="Select status" />
+                  <SelectValue placeholder={t("healthRecords.create.statusPlaceholder")} />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="PENDING_UPLOAD">PENDING_UPLOAD</SelectItem>
@@ -151,10 +153,10 @@ export function HealthRecordCreateDialog({ open, onOpenChange, onSuccess }: Heal
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="predictionLabel">Prediction</Label>
+              <Label htmlFor="predictionLabel">{t("healthRecords.create.predictionLabel")}</Label>
               <Select value={predictionLabel} onValueChange={(v: PredictionLabel) => setPredictionLabel(v)}>
                 <SelectTrigger id="predictionLabel">
-                  <SelectValue placeholder="Select prediction" />
+                  <SelectValue placeholder={t("healthRecords.create.predictionPlaceholder")} />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="NORMAL">NORMAL</SelectItem>
@@ -165,7 +167,7 @@ export function HealthRecordCreateDialog({ open, onOpenChange, onSuccess }: Heal
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="confidence">Confidence (0-1)</Label>
+              <Label htmlFor="confidence">{t("healthRecords.create.confidenceLabel")}</Label>
               <Input 
                 id="confidence" 
                 type="number" 
@@ -180,7 +182,7 @@ export function HealthRecordCreateDialog({ open, onOpenChange, onSuccess }: Heal
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="hrvFeaturesJson">HRV Features (JSON)</Label>
+            <Label htmlFor="hrvFeaturesJson">{t("healthRecords.create.hrvFeaturesLabel")}</Label>
             <Textarea 
               id="hrvFeaturesJson" 
               className="font-mono text-xs" 
@@ -191,9 +193,9 @@ export function HealthRecordCreateDialog({ open, onOpenChange, onSuccess }: Heal
           </div>
 
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>{t("healthRecords.create.cancel")}</Button>
             <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? "Creating..." : "Create Record"}
+              {isSubmitting ? t("healthRecords.create.submitting") : t("healthRecords.create.submit")}
             </Button>
           </DialogFooter>
         </form>

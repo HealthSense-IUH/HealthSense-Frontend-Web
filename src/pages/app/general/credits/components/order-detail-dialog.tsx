@@ -38,6 +38,8 @@ import {
   getCreditPaymentProviderConfig,
 } from "@/constants/credits"
 import type { CreditOrderDetail } from "@/types/credits"
+import { useTranslation } from "react-i18next"
+import i18n, { currentIntlLocale } from "@/lib/i18n"
 
 interface OrderDetailDialogProps {
   orderId: string | null
@@ -52,6 +54,7 @@ export function OrderDetailDialog({
   onOpenChange,
   onWalletUpdated,
 }: OrderDetailDialogProps) {
+  const { t } = useTranslation("credits")
   const { toast } = useToast()
   const userSession = useAuthStore((state) => state.userSession)
   const userId = userSession?.userId ? String(userSession.userId) : ""
@@ -70,15 +73,15 @@ export function OrderDetailDialog({
       setDetail(updated)
       if (updated.order.status === "PAID") {
         toast({
-          title: "Thanh toán đã hoàn tất",
-          description: "Giao dịch đã được ghi nhận trước đó. Lượt đã được cộng vào ví.",
+          title: t("orderDetail.toast.paidTitle"),
+          description: t("ordersTable.toast.alreadyPaidDescription"),
         })
         if (userId) clearStoredPendingPayment(userId)
         window.dispatchEvent(new CustomEvent("credits:refresh"))
       } else if (updated.order.status === "CANCELLED") {
         toast({
-          title: "Đã hủy đơn hàng",
-          description: "Đơn mua lượt tư vấn đã được hủy thành công.",
+          title: t("orderDetail.toast.cancelledTitle"),
+          description: t("orderDetail.toast.cancelledDescription"),
         })
         if (userId) clearStoredPendingPayment(userId)
         window.dispatchEvent(new CustomEvent("credits:refresh"))
@@ -86,8 +89,8 @@ export function OrderDetailDialog({
     } catch (err) {
       const parsed = parseApiError(err)
       toast({
-        title: "Không thể hủy đơn",
-        description: parsed.userMessage || "Vui lòng thử lại sau.",
+        title: t("orderDetail.toast.cancelFailedTitle"),
+        description: parsed.userMessage || t("orderDetail.toast.tryLater"),
         variant: "destructive",
       })
     } finally {
@@ -98,8 +101,8 @@ export function OrderDetailDialog({
   const handleResume = () => {
     if (!detail?.payment?.checkoutUrl || !detail.payment.checkoutUrl.startsWith("https://")) {
       toast({
-        title: "Không thể mở cổng thanh toán",
-        description: "Liên kết thanh toán không khả dụng hoặc không an toàn.",
+        title: t("orderDetail.toast.cannotOpenGatewayTitle"),
+        description: t("orderDetail.toast.cannotOpenGatewayDescription"),
         variant: "destructive",
       })
       return
@@ -146,8 +149,8 @@ export function OrderDetailDialog({
           const parsed = parseApiError(err)
           setError(
             parsed.statusCode === 404
-              ? "Không tìm thấy thông tin đơn mua lượt hoặc đơn không thuộc về bạn."
-              : parsed.userMessage || "Không thể tải chi tiết đơn hàng."
+              ? i18n.t("credits:purchase.errors.orderNotFound")
+              : parsed.userMessage || i18n.t("credits:orderDetail.loadError")
           )
         }
       } finally {
@@ -190,13 +193,13 @@ export function OrderDetailDialog({
       <DialogContent className="sm:max-w-lg p-6">
         <DialogHeader>
           <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold w-fit mb-1">
-            <FileText className="h-3.5 w-3.5" /> Chi tiết đơn mua lượt
+            <FileText className="h-3.5 w-3.5" /> {t("orderDetail.badge")}
           </div>
           <DialogTitle className="text-lg font-bold text-foreground">
-            {orderId ? `Đơn hàng #${orderId}` : "Chi tiết đơn hàng"}
+            {orderId ? t("orderDetail.titleWithId", { id: orderId }) : t("orderDetail.title")}
           </DialogTitle>
           <DialogDescription className="text-xs text-muted-foreground">
-            Thông tin snapshot tại thời điểm mua và trạng thái thanh toán hiện tại.
+            {t("orderDetail.description")}
           </DialogDescription>
         </DialogHeader>
 
@@ -228,7 +231,7 @@ export function OrderDetailDialog({
               }}
               className="gap-1.5"
             >
-              <RefreshCw className="h-3.5 w-3.5" /> Thử lại
+              <RefreshCw className="h-3.5 w-3.5" /> {t("shared.retry")}
             </Button>
           </div>
         )}
@@ -239,41 +242,41 @@ export function OrderDetailDialog({
             <div className="rounded-xl border border-border bg-card p-4 space-y-2.5">
               <div className="flex items-center justify-between text-xs pb-2 border-b border-border/60">
                 <span className="font-semibold text-foreground flex items-center gap-1.5">
-                  <CreditCard className="h-4 w-4 text-primary" /> Thông tin đơn
+                  <CreditCard className="h-4 w-4 text-primary" /> {t("orderDetail.orderInfo")}
                 </span>
                 <Badge className={`text-[11px] font-semibold ${orderStatusCfg?.className}`}>
                   {orderStatusCfg?.label}
                 </Badge>
               </div>
               <div className="flex items-center justify-between text-xs">
-                <span className="text-muted-foreground">Tên gói:</span>
+                <span className="text-muted-foreground">{t("orderDetail.packageName")}</span>
                 <span className="font-semibold text-foreground">{detail.order.packageName}</span>
               </div>
               {detail.order.packageCode && (
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-muted-foreground">Mã gói:</span>
+                  <span className="text-muted-foreground">{t("orderDetail.packageCode")}</span>
                   <span className="font-mono text-muted-foreground">{detail.order.packageCode}</span>
                 </div>
               )}
               <div className="flex items-center justify-between text-xs">
-                <span className="text-muted-foreground">Số lượt cấp:</span>
+                <span className="text-muted-foreground">{t("orderDetail.creditsGranted")}</span>
                 <span className="font-bold text-success-600">
                   +{formatCreditQuantity(detail.order.creditQuantity)}
                 </span>
               </div>
               <div className="flex items-center justify-between text-xs">
-                <span className="text-muted-foreground">Tổng tiền thanh toán:</span>
+                <span className="text-muted-foreground">{t("orderDetail.totalAmount")}</span>
                 <span className="font-extrabold text-foreground">
                   {formatVnd(detail.order.amountVnd)}
                 </span>
               </div>
               <div className="flex items-center justify-between text-xs">
-                <span className="text-muted-foreground">Thời gian tạo đơn:</span>
+                <span className="text-muted-foreground">{t("orderDetail.createdAt")}</span>
                 <span className="text-foreground">{formatRecordDate(detail.order.createdAt)}</span>
               </div>
               {detail.order.paidAt && (
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-muted-foreground">Thời gian ghi nhận thanh toán:</span>
+                  <span className="text-muted-foreground">{t("orderDetail.paidAt")}</span>
                   <span className="text-foreground">{formatRecordDate(detail.order.paidAt)}</span>
                 </div>
               )}
@@ -283,21 +286,21 @@ export function OrderDetailDialog({
             <div className="rounded-xl border border-border bg-muted/20 p-4 space-y-2.5">
               <div className="flex items-center justify-between text-xs pb-2 border-b border-border/60">
                 <span className="font-semibold text-foreground flex items-center gap-1.5">
-                  <Sparkles className="h-4 w-4 text-primary-600" /> Thanh toán
+                  <Sparkles className="h-4 w-4 text-primary-600" /> {t("orderDetail.payment")}
                 </span>
                 <Badge variant="outline" className={`text-[11px] font-medium ${paymentStatusCfg?.className}`}>
                   {paymentStatusCfg?.label}
                 </Badge>
               </div>
               <div className="flex items-center justify-between text-xs">
-                <span className="text-muted-foreground">Cổng / Phương thức:</span>
+                <span className="text-muted-foreground">{t("orderDetail.gateway")}</span>
                 <span className="font-medium text-foreground">
                   {providerCfg?.label || detail.payment.provider}
                 </span>
               </div>
               {detail.payment.orderCode && (
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-muted-foreground">Mã giao dịch PayOS:</span>
+                  <span className="text-muted-foreground">{t("orderDetail.payosOrderCode")}</span>
                   <span className="font-mono text-foreground font-semibold">
                     #{detail.payment.orderCode}
                   </span>
@@ -305,14 +308,14 @@ export function OrderDetailDialog({
               )}
               {detail.payment.expiresAt && (
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-muted-foreground">Hạn thanh toán:</span>
+                  <span className="text-muted-foreground">{t("orderDetail.expiresAt")}</span>
                   <span className="text-foreground">
                     {formatRecordDate(detail.payment.expiresAt)}
                   </span>
                 </div>
               )}
               <div className="flex items-center justify-between text-xs">
-                <span className="text-muted-foreground">Mã lần thanh toán (Attempt ID):</span>
+                <span className="text-muted-foreground">{t("orderDetail.attemptId")}</span>
                 <span className="font-mono text-muted-foreground text-[11px]">
                   #{detail.payment.attemptId}
                 </span>
@@ -322,7 +325,7 @@ export function OrderDetailDialog({
               {detail.order.status === "PENDING_PAYMENT" && isExpired && (
                 <div className="flex items-center gap-2 p-2.5 rounded-lg bg-warning-500/10 text-warning-800 text-xs border border-warning-500/20 mt-2">
                   <Clock className="h-4 w-4 shrink-0 text-warning-600" />
-                  <span>Liên kết thanh toán đã hết hạn</span>
+                  <span>{t("orderDetail.linkExpired")}</span>
                 </div>
               )}
             </div>
@@ -334,15 +337,15 @@ export function OrderDetailDialog({
                   <Coins className="h-5 w-5 text-success-600" />
                   <div>
                     <div className="text-xs font-semibold text-success-950">
-                      Số dư ví hiện tại
+                      {t("orderDetail.currentBalance")}
                     </div>
                     <div className="text-[11px] text-success-700/80">
-                      Tổng số dư: {detail.wallet.balance} • Đang giữ: {detail.wallet.reserved}
+                      {t("orderDetail.walletBreakdown", { balance: detail.wallet.balance, reserved: detail.wallet.reserved })}
                     </div>
                   </div>
                 </div>
                 <div className="text-base font-extrabold text-success-700">
-                  {detail.wallet.available.toLocaleString("vi-VN")} lượt
+                  {t("quantity.credits", { count: detail.wallet.available, value: detail.wallet.available.toLocaleString(currentIntlLocale()) })}
                 </div>
               </div>
             )}
@@ -357,7 +360,7 @@ export function OrderDetailDialog({
                   onClick={handleResume}
                   className="gap-1.5 font-semibold w-full sm:w-auto"
                 >
-                  <ExternalLink className="h-4 w-4" /> Tiếp tục thanh toán
+                  <ExternalLink className="h-4 w-4" /> {t("ordersTable.resumePayment")}
                 </Button>
               )}
               <Button
@@ -367,12 +370,12 @@ export function OrderDetailDialog({
                 className="gap-1.5 w-full sm:w-auto"
               >
                 <Ban className="h-4 w-4" />
-                {isCancelling ? "Đang hủy..." : "Hủy đơn hàng"}
+                {isCancelling ? t("orderDetail.cancelling") : t("orderDetail.cancelOrder")}
               </Button>
             </>
           )}
           <Button variant="outline" onClick={() => onOpenChange(false)} className="w-full sm:w-auto">
-            Đóng
+            {t("shared.close")}
           </Button>
         </DialogFooter>
       </DialogContent>

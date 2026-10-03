@@ -27,6 +27,7 @@ import {
   X,
   FileCheck
 } from "lucide-react"
+import { Trans, useTranslation } from "react-i18next"
 import { AvatarPlaceholder } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -37,6 +38,7 @@ import { useAuthStore } from "@/stores/auth-store"
 import { profileApi } from "@/services"
 import type { UserResponse, ProfileUpdateRequest, ProfileAccountStatus } from "@/types/profile"
 import { formatShortDate } from "@/lib/formatters"
+import i18n from "@/lib/i18n"
 
 interface UnifiedProfileCardProps {
   user: UserResponse
@@ -46,20 +48,21 @@ interface UnifiedProfileCardProps {
 }
 
 function StatusBadge({ status }: { status?: ProfileAccountStatus }) {
+  const { t } = useTranslation("profile")
   const getBadgeStyle = () => {
     switch (status) {
       case "ACTIVE":
-        return { bg: "bg-success-50 text-success-700 border-success-200", dot: "bg-success-500", label: "Đang hoạt động" }
+        return { bg: "bg-success-50 text-success-700 border-success-200", dot: "bg-success-500", label: t("status.ACTIVE") }
       case "PENDING_VERIFY":
-        return { bg: "bg-warning-50 text-warning-700 border-warning-200", dot: "bg-warning-500", label: "Chờ xác thực" }
+        return { bg: "bg-warning-50 text-warning-700 border-warning-200", dot: "bg-warning-500", label: t("status.PENDING_VERIFY") }
       case "INACTIVE":
-        return { bg: "bg-slate-100 text-slate-600 border-slate-200", dot: "bg-slate-400", label: "Không hoạt động" }
+        return { bg: "bg-slate-100 text-slate-600 border-slate-200", dot: "bg-slate-400", label: t("status.INACTIVE") }
       case "LOCKED":
-        return { bg: "bg-danger-50 text-danger-700 border-danger-200", dot: "bg-danger-500", label: "Đã khóa" }
+        return { bg: "bg-danger-50 text-danger-700 border-danger-200", dot: "bg-danger-500", label: t("status.LOCKED") }
       case "BANNED":
-        return { bg: "bg-primary-50 text-primary-700 border-primary-200", dot: "bg-primary-600", label: "Bị cấm" }
+        return { bg: "bg-primary-50 text-primary-700 border-primary-200", dot: "bg-primary-600", label: t("status.BANNED") }
       default:
-        return { bg: "bg-slate-100 text-slate-700 border-slate-200", dot: "bg-slate-500", label: status === "ACTIVE" ? "Đang hoạt động" : (status || "Đang hoạt động") }
+        return { bg: "bg-slate-100 text-slate-700 border-slate-200", dot: "bg-slate-500", label: status === "ACTIVE" ? t("status.ACTIVE") : (status || t("status.ACTIVE")) }
     }
   }
 
@@ -74,7 +77,7 @@ function StatusBadge({ status }: { status?: ProfileAccountStatus }) {
 }
 
 function maskSensitiveText(val?: string): string {
-  if (!val) return "Chưa cung cấp"
+  if (!val) return i18n.t("profile:card.notProvided")
   if (val.length <= 4) return "****"
   const visibleLength = Math.min(4, Math.floor(val.length / 3))
   const prefix = val.substring(0, visibleLength)
@@ -83,6 +86,7 @@ function maskSensitiveText(val?: string): string {
 }
 
 function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = false }: UnifiedProfileCardProps) {
+  const { t } = useTranslation("profile")
   const { toast } = useToast()
   const [uploadingAvatar, setUploadingAvatar] = useState(false)
   const avatarInputRef = useRef<HTMLInputElement>(null)
@@ -123,9 +127,9 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
   const [successMsg, setSuccessMsg] = useState<string | null>(null)
 
-  const currentDisplayName = user.displayName || user.fullName || user.email || "Người dùng"
+  const currentDisplayName = user.displayName || user.fullName || user.email || t("card.defaultUser")
 
-  const formatDate = (val?: string | number) => formatShortDate(val, "Chưa cập nhật")
+  const formatDate = (val?: string | number) => formatShortDate(val, t("card.notUpdated"))
 
   // Handle Avatar Upload via S3 Presigned URL
   const handleAvatarChange = async (e: ChangeEvent<HTMLInputElement>) => {
@@ -138,8 +142,8 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
     if (file.size > 5 * 1024 * 1024) {
       toast({
         variant: "destructive",
-        title: "Tệp quá lớn",
-        description: "Kích thước ảnh đại diện không được vượt quá 5MB.",
+        title: t("toast.fileTooLarge"),
+        description: t("toast.avatarTooLarge"),
       })
       return
     }
@@ -152,7 +156,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
       })
       const { uploadUrl, publicUrl } = presignRes.data || {}
       if (!uploadUrl || !publicUrl) {
-        throw new Error("Không thể lấy liên kết tải lên từ máy chủ.")
+        throw new Error(t("toast.avatarPresignError"))
       }
 
       await profileApi.uploadFileToS3(uploadUrl, file, contentType)
@@ -167,16 +171,16 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
       }
 
       toast({
-        title: "Cập nhật ảnh đại diện thành công!",
-        description: "Ảnh đại diện mới của bạn đã được lưu.",
+        title: t("toast.avatarSuccessTitle"),
+        description: t("toast.avatarSuccessDescription"),
       })
     } catch (err: unknown) {
       const anyErr = err as { message?: string; response?: { data?: { message?: string } } }
       console.error("Failed to upload avatar:", anyErr)
       toast({
         variant: "destructive",
-        title: "Tải lên thất bại",
-        description: anyErr?.response?.data?.message || anyErr?.message || "Không thể cập nhật ảnh đại diện.",
+        title: t("toast.uploadFailed"),
+        description: anyErr?.response?.data?.message || anyErr?.message || t("toast.avatarUploadError"),
       })
     } finally {
       setUploadingAvatar(false)
@@ -192,8 +196,8 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
     if (file.size > 10 * 1024 * 1024) {
       toast({
         variant: "destructive",
-        title: "Tệp quá lớn",
-        description: "Tệp căn cước công dân không được vượt quá 10MB.",
+        title: t("toast.fileTooLarge"),
+        description: t("toast.cccdTooLarge"),
       })
       return
     }
@@ -211,7 +215,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
 
       const { uploadUrl, publicUrl } = presignRes.data || {}
       if (!uploadUrl || !publicUrl) {
-        throw new Error("Không thể lấy liên kết tải ảnh CCCD từ máy chủ.")
+        throw new Error(t("toast.cccdPresignError"))
       }
 
       await profileApi.uploadFileToS3(uploadUrl, file, contentType)
@@ -225,16 +229,16 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
       }
 
       toast({
-        title: `CCCD ${isFront ? "Mặt trước" : "Mặt sau"} tải lên thành công!`,
-        description: "Bấm 'Lưu thay đổi' bên dưới để lưu cập nhật vào hồ sơ.",
+        title: isFront ? t("toast.cccdFrontSuccess") : t("toast.cccdBackSuccess"),
+        description: t("toast.cccdSuccessDescription"),
       })
     } catch (err: unknown) {
       const anyErr = err as { message?: string; response?: { data?: { message?: string } } }
       console.error("Failed to upload CCCD:", anyErr)
       toast({
         variant: "destructive",
-        title: "Tải lên thất bại",
-        description: anyErr?.response?.data?.message || anyErr?.message || "Không thể tải lên ảnh CCCD.",
+        title: t("toast.uploadFailed"),
+        description: anyErr?.response?.data?.message || anyErr?.message || t("toast.cccdUploadError"),
       })
     } finally {
       setUploading(false)
@@ -263,23 +267,23 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
     setSuccessMsg(null)
 
     if (!displayName.trim()) {
-      setErrorMsg("Vui lòng nhập tên hiển thị.")
+      setErrorMsg(t("validation.displayNameRequired"))
       return false
     }
     if (displayName.length > 120) {
-      setErrorMsg("Tên hiển thị không được vượt quá 120 ký tự.")
+      setErrorMsg(t("validation.displayNameTooLong"))
       return false
     }
     if (phone && phone.length > 30) {
-      setErrorMsg("Số điện thoại không được vượt quá 30 ký tự.")
+      setErrorMsg(t("validation.phoneTooLong"))
       return false
     }
     if (dateOfBirth && !/^\d{4}-\d{2}-\d{2}$/.test(dateOfBirth)) {
-      setErrorMsg("Ngày sinh phải có định dạng YYYY-MM-DD.")
+      setErrorMsg(t("validation.dateOfBirthFormat"))
       return false
     }
     if (citizenId && citizenId.length > 20) {
-      setErrorMsg("Số CCCD không được vượt quá 20 ký tự.")
+      setErrorMsg(t("validation.citizenIdTooLong"))
       return false
     }
     return true
@@ -305,15 +309,15 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
         identityCardBackRotate: identityCardBackRotate,
       }
       await onSave(payload)
-      setSuccessMsg("Cập nhật thông tin hồ sơ và định danh thành công.")
+      setSuccessMsg(t("toast.saveSuccessMessage"))
       setIsEditing(false)
       toast({
-        title: "Cập nhật hồ sơ thành công",
-        description: "Thông tin cá nhân và CCCD của bạn đã được lưu.",
+        title: t("toast.saveSuccessTitle"),
+        description: t("toast.saveSuccessDescription"),
       })
     } catch (err: unknown) {
       const anyErr = err as { message?: string; response?: { data?: { message?: string } } }
-      setErrorMsg(anyErr?.response?.data?.message || anyErr?.message || "Cập nhật hồ sơ thất bại.")
+      setErrorMsg(anyErr?.response?.data?.message || anyErr?.message || t("toast.saveFailed"))
     }
   }
 
@@ -355,14 +359,14 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                 disabled={uploadingAvatar}
                 onClick={() => avatarInputRef.current?.click()}
                 className="absolute inset-0 flex flex-col items-center justify-center rounded-full bg-black/50 text-white opacity-0 group-hover:opacity-100 transition-all cursor-pointer disabled:opacity-100 disabled:cursor-wait"
-                title="Đổi ảnh đại diện"
+                title={t("card.changeAvatar")}
               >
                 {uploadingAvatar ? (
                   <Loader2 className="w-6 h-6 animate-spin text-white" />
                 ) : (
                   <>
                     <Camera className="w-6 h-6 text-white mb-0.5" />
-                    <span className="text-[10px] font-extrabold uppercase tracking-wider">Đổi ảnh</span>
+                    <span className="text-[10px] font-extrabold uppercase tracking-wider">{t("card.changePhoto")}</span>
                   </>
                 )}
               </button>
@@ -380,7 +384,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
             <div className="space-y-1.5 min-w-0">
               <div className="flex items-center gap-2 flex-wrap">
                 <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-[11px] font-extrabold bg-primary-600 text-white uppercase tracking-wider shadow-xs shadow-primary-500/20">
-                  {user.role === "SUPER_ADMIN" ? "Quản trị cấp cao" : user.role === "ADMIN" ? "Quản trị viên" : user.role === "DOCTOR" ? "Bác sĩ" : "Hội viên"}
+                  {user.role === "SUPER_ADMIN" ? t("role.SUPER_ADMIN") : user.role === "ADMIN" ? t("role.ADMIN") : user.role === "DOCTOR" ? t("role.DOCTOR") : t("role.MEMBER")}
                 </span>
                 <StatusBadge status={user.status} />
               </div>
@@ -389,7 +393,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
               </h2>
               <p className="text-sm font-mono font-medium text-slate-500 flex items-center gap-1.5">
                 <Mail className="w-4 h-4 text-slate-400 shrink-0" />
-                <span className="truncate">{user.email || "Chưa liên kết email"}</span>
+                <span className="truncate">{user.email || t("card.noEmail")}</span>
               </p>
             </div>
           </div>
@@ -403,12 +407,12 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                 className="h-10 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-xs px-5 shadow-sm flex items-center gap-2 cursor-pointer transition-transform active:scale-95"
               >
                 <Edit2 className="w-4 h-4" />
-                <span>Chỉnh sửa hồ sơ & Định danh</span>
+                <span>{t("card.edit")}</span>
               </Button>
             ) : (
               <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-primary-50 text-primary-700 text-xs font-bold border border-primary-200">
                 <Edit2 className="w-3.5 h-3.5 animate-pulse" />
-                <span>Đang chỉnh sửa</span>
+                <span>{t("card.editing")}</span>
               </span>
             )}
           </div>
@@ -438,46 +442,46 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
             <div>
               <h3 className="text-sm font-extrabold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
                 <UserIcon className="w-4 h-4 text-slate-400" />
-                <span>Thông tin cá nhân & Liên hệ</span>
+                <span>{t("view.personalTitle")}</span>
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="p-4 rounded-2xl bg-slate-50/70 border border-slate-100/80 flex flex-col gap-1">
                   <span className="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
                     <Phone className="w-3.5 h-3.5 text-slate-400" />
-                    <span>Số điện thoại</span>
+                    <span>{t("fields.phone")}</span>
                   </span>
                   <span className="text-sm font-bold font-mono text-slate-800 pl-5">
-                    {user.phone || <span className="text-slate-400 font-sans font-normal italic">Chưa cập nhật</span>}
+                    {user.phone || <span className="text-slate-400 font-sans font-normal italic">{t("card.notUpdated")}</span>}
                   </span>
                 </div>
 
                 <div className="p-4 rounded-2xl bg-slate-50/70 border border-slate-100/80 flex flex-col gap-1">
                   <span className="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
                     <Calendar className="w-3.5 h-3.5 text-slate-400" />
-                    <span>Ngày sinh</span>
+                    <span>{t("fields.dateOfBirth")}</span>
                   </span>
                   <span className="text-sm font-bold font-mono text-slate-800 pl-5">
-                    {user.dateOfBirth || <span className="text-slate-400 font-sans font-normal italic">Chưa cập nhật</span>}
+                    {user.dateOfBirth || <span className="text-slate-400 font-sans font-normal italic">{t("card.notUpdated")}</span>}
                   </span>
                 </div>
 
                 <div className="p-4 rounded-2xl bg-slate-50/70 border border-slate-100/80 flex flex-col gap-1">
                   <span className="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
                     <UserIcon className="w-3.5 h-3.5 text-slate-400" />
-                    <span>Giới tính</span>
+                    <span>{t("fields.gender")}</span>
                   </span>
                   <span className="text-sm font-bold text-slate-800 pl-5">
-                    {user.gender ? (user.gender === "MALE" ? "Nam" : user.gender === "FEMALE" ? "Nữ" : "Khác") : <span className="text-slate-400 font-normal italic">Chưa xác định</span>}
+                    {user.gender ? (user.gender === "MALE" ? t("gender.MALE") : user.gender === "FEMALE" ? t("gender.FEMALE") : t("gender.OTHER")) : <span className="text-slate-400 font-normal italic">{t("card.notSpecified")}</span>}
                   </span>
                 </div>
 
                 <div className="p-4 rounded-2xl bg-slate-50/70 border border-slate-100/80 flex flex-col gap-1">
                   <span className="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
                     <MapPin className="w-3.5 h-3.5 text-slate-400" />
-                    <span>Địa chỉ liên hệ</span>
+                    <span>{t("fields.address")}</span>
                   </span>
                   <span className="text-sm font-semibold text-slate-800 pl-5 leading-relaxed">
-                    {user.address || <span className="text-slate-400 font-normal italic">Chưa thiết lập địa chỉ</span>}
+                    {user.address || <span className="text-slate-400 font-normal italic">{t("card.noAddress")}</span>}
                   </span>
                 </div>
               </div>
@@ -488,7 +492,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-sm font-extrabold text-slate-400 uppercase tracking-wider flex items-center gap-2">
                   <CreditCard className="w-4 h-4 text-primary-500" />
-                  <span>Thông tin định danh (CCCD / CMND)</span>
+                  <span>{t("view.identityTitle")}</span>
                 </h3>
                 <button
                   type="button"
@@ -498,12 +502,12 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                   {showSensitive ? (
                     <>
                       <EyeOff className="w-3.5 h-3.5" />
-                      <span>Ẩn thông tin bảo mật</span>
+                      <span>{t("view.hideSensitive")}</span>
                     </>
                   ) : (
                     <>
                       <Eye className="w-3.5 h-3.5" />
-                      <span>Hiện thông tin bảo mật</span>
+                      <span>{t("view.showSensitive")}</span>
                     </>
                   )}
                 </button>
@@ -513,13 +517,13 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                 <div className="p-4 rounded-2xl bg-primary-50/40 border border-primary-100/60 flex flex-col gap-1">
                   <span className="text-[11px] font-extrabold text-primary-500 uppercase tracking-wider flex items-center gap-1.5">
                     <CreditCard className="w-3.5 h-3.5 text-primary-500" />
-                    <span>Số Căn cước công dân (CCCD)</span>
+                    <span>{t("view.citizenId")}</span>
                   </span>
                   <span className="text-sm font-bold font-mono text-slate-800 pl-5">
                     {user.citizenId ? (
                       showSensitive ? user.citizenId : maskSensitiveText(user.citizenId)
                     ) : (
-                      <span className="text-slate-400 font-sans font-normal italic">Chưa cập nhật</span>
+                      <span className="text-slate-400 font-sans font-normal italic">{t("card.notUpdated")}</span>
                     )}
                   </span>
                 </div>
@@ -527,13 +531,13 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                 <div className="p-4 rounded-2xl bg-primary-50/40 border border-primary-100/60 flex flex-col gap-1">
                   <span className="text-[11px] font-extrabold text-primary-500 uppercase tracking-wider flex items-center gap-1.5">
                     <Building2 className="w-3.5 h-3.5 text-primary-500" />
-                    <span>Tài khoản ngân hàng</span>
+                    <span>{t("fields.bankAccount")}</span>
                   </span>
                   <span className="text-sm font-bold font-mono text-slate-800 pl-5">
                     {user.bankAccount ? (
                       showSensitive ? user.bankAccount : maskSensitiveText(user.bankAccount)
                     ) : (
-                      <span className="text-slate-400 font-sans font-normal italic">Chưa cập nhật</span>
+                      <span className="text-slate-400 font-sans font-normal italic">{t("card.notUpdated")}</span>
                     )}
                   </span>
                 </div>
@@ -541,13 +545,13 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                 <div className="p-4 rounded-2xl bg-primary-50/40 border border-primary-100/60 flex flex-col gap-1">
                   <span className="text-[11px] font-extrabold text-primary-500 uppercase tracking-wider flex items-center gap-1.5">
                     <HeartHandshake className="w-3.5 h-3.5 text-primary-500" />
-                    <span>Mã số Thẻ BHYT</span>
+                    <span>{t("fields.healthInsurance")}</span>
                   </span>
                   <span className="text-sm font-bold font-mono text-slate-800 pl-5">
                     {user.healthInsuranceNumber ? (
                       showSensitive ? user.healthInsuranceNumber : maskSensitiveText(user.healthInsuranceNumber)
                     ) : (
-                      <span className="text-slate-400 font-sans font-normal italic">Chưa cập nhật</span>
+                      <span className="text-slate-400 font-sans font-normal italic">{t("card.notUpdated")}</span>
                     )}
                   </span>
                 </div>
@@ -560,7 +564,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                   <div className="w-full flex items-center justify-between mb-3">
                     <span className="text-xs font-extrabold text-slate-700 flex items-center gap-1.5">
                       <FileCheck className="w-4 h-4 text-success-600" />
-                      <span>CCCD Mặt Trước</span>
+                      <span>{t("cccd.front")}</span>
                     </span>
                     {user.identityCardFrontUrl && (
                       <button
@@ -568,14 +572,14 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                         onClick={() =>
                           setPreviewImage({
                             url: user.identityCardFrontUrl!,
-                            title: "CCCD Mặt Trước",
+                            title: t("cccd.front"),
                             rotate: user.identityCardFrontRotate ?? 0,
                           })
                         }
                         className="inline-flex items-center gap-1 text-[11px] font-bold text-primary-600 hover:text-primary-700 cursor-pointer"
                       >
                         <Maximize2 className="w-3.5 h-3.5" />
-                        <span>Xem chi tiết</span>
+                        <span>{t("cccd.viewDetail")}</span>
                       </button>
                     )}
                   </div>
@@ -583,7 +587,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                     <div className="w-full h-44 rounded-xl overflow-hidden bg-slate-900/5 flex items-center justify-center p-2 border border-slate-200">
                       <img
                         src={user.identityCardFrontUrl}
-                        alt="CCCD Mặt Trước"
+                        alt={t("cccd.front")}
                         className="max-h-full max-w-full object-contain rounded-lg shadow-sm"
                         style={{
                           transform: `rotate(${(user.identityCardFrontRotate ?? 0) * 90}deg)`,
@@ -594,7 +598,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                   ) : (
                     <div className="w-full h-44 rounded-xl border-2 border-dashed border-slate-200 bg-white flex flex-col items-center justify-center text-slate-400 gap-2">
                       <CreditCard className="w-8 h-8 text-slate-300" />
-                      <span className="text-xs font-semibold">Chưa tải ảnh mặt trước</span>
+                      <span className="text-xs font-semibold">{t("cccd.frontNotUploaded")}</span>
                     </div>
                   )}
                 </div>
@@ -604,7 +608,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                   <div className="w-full flex items-center justify-between mb-3">
                     <span className="text-xs font-extrabold text-slate-700 flex items-center gap-1.5">
                       <FileCheck className="w-4 h-4 text-success-600" />
-                      <span>CCCD Mặt Sau</span>
+                      <span>{t("cccd.back")}</span>
                     </span>
                     {user.identityCardBackUrl && (
                       <button
@@ -612,14 +616,14 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                         onClick={() =>
                           setPreviewImage({
                             url: user.identityCardBackUrl!,
-                            title: "CCCD Mặt Sau",
+                            title: t("cccd.back"),
                             rotate: user.identityCardBackRotate ?? 0,
                           })
                         }
                         className="inline-flex items-center gap-1 text-[11px] font-bold text-primary-600 hover:text-primary-700 cursor-pointer"
                       >
                         <Maximize2 className="w-3.5 h-3.5" />
-                        <span>Xem chi tiết</span>
+                        <span>{t("cccd.viewDetail")}</span>
                       </button>
                     )}
                   </div>
@@ -627,7 +631,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                     <div className="w-full h-44 rounded-xl overflow-hidden bg-slate-900/5 flex items-center justify-center p-2 border border-slate-200">
                       <img
                         src={user.identityCardBackUrl}
-                        alt="CCCD Mặt Sau"
+                        alt={t("cccd.back")}
                         className="max-h-full max-w-full object-contain rounded-lg shadow-sm"
                         style={{
                           transform: `rotate(${(user.identityCardBackRotate ?? 0) * 90}deg)`,
@@ -638,7 +642,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                   ) : (
                     <div className="w-full h-44 rounded-xl border-2 border-dashed border-slate-200 bg-white flex flex-col items-center justify-center text-slate-400 gap-2">
                       <CreditCard className="w-8 h-8 text-slate-300" />
-                      <span className="text-xs font-semibold">Chưa tải ảnh mặt sau</span>
+                      <span className="text-xs font-semibold">{t("cccd.backNotUploaded")}</span>
                     </div>
                   )}
                 </div>
@@ -649,13 +653,13 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
             <div className="pt-6 border-t border-slate-100">
               <h3 className="text-sm font-extrabold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
                 <ShieldCheck className="w-4 h-4 text-primary-500" />
-                <span>Bảo mật & Thời gian hệ thống</span>
+                <span>{t("view.securityTitle")}</span>
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="flex items-center justify-between p-4 rounded-2xl bg-slate-50/50 border border-slate-100 text-xs">
                   <span className="font-bold text-slate-500 flex items-center gap-2">
                     <CalendarDays className="w-4 h-4 text-slate-400" />
-                    <span>Ngày tham gia</span>
+                    <span>{t("view.joinedAt")}</span>
                   </span>
                   <span className="font-mono font-bold text-slate-800">{formatDate(user.createdAt)}</span>
                 </div>
@@ -663,7 +667,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                 <div className="flex items-center justify-between p-4 rounded-2xl bg-slate-50/50 border border-slate-100 text-xs">
                   <span className="font-bold text-slate-500 flex items-center gap-2">
                     <RefreshCw className="w-4 h-4 text-slate-400" />
-                    <span>Cập nhật lần cuối</span>
+                    <span>{t("view.lastUpdated")}</span>
                   </span>
                   <span className="font-mono font-bold text-slate-800">{formatDate(user.updatedAt || user.createdAt)}</span>
                 </div>
@@ -675,29 +679,29 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
           <form onSubmit={handleSubmit} className="space-y-8">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <h3 className="text-base font-bold text-foreground">
-                Cập nhật hồ sơ & Định danh cá nhân
+                {t("form.title")}
               </h3>
               <span className="text-xs text-slate-500">
-                Các trường đánh dấu <span className="text-danger-500 font-bold">*</span> là bắt buộc.
+                <Trans t={t} i18nKey="form.requiredNote" components={{ mark: <span className="text-danger-500 font-bold" /> }} />
               </span>
             </div>
 
             {/* Section 1: Basic Info */}
             <div className="space-y-4">
               <h4 className="text-sm font-semibold text-foreground">
-                1. Thông tin cá nhân cơ bản
+                {t("form.section1")}
               </h4>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
                   <Label htmlFor="display-name-input">
-                    Tên hiển thị <span className="text-danger-500">*</span>
+                    {t("fields.displayName")} <span className="text-danger-500">*</span>
                   </Label>
                   <Input
                     id="display-name-input"
                     disabled={loading}
                     value={displayName}
                     onChange={(e) => setDisplayName(e.target.value)}
-                    placeholder="Nhập họ và tên hiển thị"
+                    placeholder={t("form.displayNamePlaceholder")}
                     maxLength={120}
                     required
                   />
@@ -705,14 +709,14 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
 
                 <div className="space-y-1.5">
                   <Label htmlFor="phone-input">
-                    Số điện thoại
+                    {t("fields.phone")}
                   </Label>
                   <Input
                     id="phone-input"
                     disabled={loading}
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    placeholder="VD: 0909 123 456"
+                    placeholder={t("form.phonePlaceholder")}
                     maxLength={30}
                   />
                 </div>
@@ -721,7 +725,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
                   <Label htmlFor="dob-input">
-                    Ngày sinh
+                    {t("fields.dateOfBirth")}
                   </Label>
                   <Input
                     id="dob-input"
@@ -734,16 +738,16 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
 
                 <div className="space-y-1.5">
                   <Label htmlFor="gender-select">
-                    Giới tính
+                    {t("fields.gender")}
                   </Label>
                   <Select value={gender} onValueChange={setGender} disabled={loading}>
-                    <SelectTrigger id="gender-select" aria-label="Giới tính">
+                    <SelectTrigger id="gender-select" aria-label={t("fields.gender")}>
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="MALE">Nam</SelectItem>
-                      <SelectItem value="FEMALE">Nữ</SelectItem>
-                      <SelectItem value="OTHER">Khác</SelectItem>
+                      <SelectItem value="MALE">{t("gender.MALE")}</SelectItem>
+                      <SelectItem value="FEMALE">{t("gender.FEMALE")}</SelectItem>
+                      <SelectItem value="OTHER">{t("gender.OTHER")}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -751,14 +755,14 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
 
               <div className="space-y-1.5">
                 <Label htmlFor="address-input">
-                  Địa chỉ liên hệ
+                  {t("fields.address")}
                 </Label>
                 <Input
                   id="address-input"
                   disabled={loading}
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
-                  placeholder="Nhập địa chỉ, số nhà, phường/xã, quận/huyện, tỉnh/thành phố"
+                  placeholder={t("form.addressPlaceholder")}
                   maxLength={500}
                 />
               </div>
@@ -768,48 +772,48 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
             <div className="space-y-4 pt-6 border-t border-slate-100">
               <h4 className="text-sm font-semibold text-foreground flex items-center gap-2">
                 <CreditCard className="w-4 h-4 text-primary-500" />
-                <span>2. Thông tin định danh & Bảo mật</span>
+                <span>{t("form.section2")}</span>
               </h4>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="space-y-1.5">
                   <Label htmlFor="citizen-id-input">
-                    Số CCCD / CMND
+                    {t("fields.citizenId")}
                   </Label>
                   <Input
                     id="citizen-id-input"
                     disabled={loading}
                     value={citizenId}
                     onChange={(e) => setCitizenId(e.target.value)}
-                    placeholder="VD: 079204001234"
+                    placeholder={t("form.citizenIdPlaceholder")}
                     maxLength={20}
                   />
                 </div>
 
                 <div className="space-y-1.5">
                   <Label htmlFor="bank-account-input">
-                    Tài khoản ngân hàng
+                    {t("fields.bankAccount")}
                   </Label>
                   <Input
                     id="bank-account-input"
                     disabled={loading}
                     value={bankAccount}
                     onChange={(e) => setBankAccount(e.target.value)}
-                    placeholder="VD: 1029384756 - Vietcombank"
+                    placeholder={t("form.bankAccountPlaceholder")}
                     maxLength={100}
                   />
                 </div>
 
                 <div className="space-y-1.5">
                   <Label htmlFor="health-ins-input">
-                    Mã số Thẻ BHYT
+                    {t("fields.healthInsurance")}
                   </Label>
                   <Input
                     id="health-ins-input"
                     disabled={loading}
                     value={healthInsuranceNumber}
                     onChange={(e) => setHealthInsuranceNumber(e.target.value)}
-                    placeholder="VD: DN4790123456789"
+                    placeholder={t("form.healthInsurancePlaceholder")}
                     maxLength={50}
                   />
                 </div>
@@ -821,10 +825,10 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
               <div className="flex items-center justify-between">
                 <h4 className="text-sm font-semibold text-foreground flex items-center gap-2">
                   <UploadCloud className="w-4 h-4 text-primary-500" />
-                  <span>3. Tải lên ảnh Căn cước công dân (CCCD 2 mặt)</span>
+                  <span>{t("form.section3")}</span>
                 </h4>
                 <span className="text-[11px] text-slate-400 italic">
-                  Hỗ trợ xoay ảnh và xem phóng to chi tiết
+                  {t("form.section3Hint")}
                 </span>
               </div>
 
@@ -834,11 +838,11 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-extrabold text-slate-800 flex items-center gap-1.5">
                       <CreditCard className="w-4 h-4 text-primary-600" />
-                      <span>CCCD Mặt Trước</span>
+                      <span>{t("cccd.front")}</span>
                     </span>
                     {identityCardFrontUrl && (
                       <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-success-50 text-success-700 border border-success-200">
-                        Xoay: {identityCardFrontRotate * 90}°
+                        {t("cccd.rotation", { deg: identityCardFrontRotate * 90 })}
                       </span>
                     )}
                   </div>
@@ -848,12 +852,12 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                     {uploadingFrontCccd ? (
                       <div className="flex flex-col items-center gap-2 text-slate-500">
                         <Loader2 className="w-8 h-8 animate-spin text-primary-600" />
-                        <span className="text-xs font-bold">Đang tải lên S3...</span>
+                        <span className="text-xs font-bold">{t("cccd.uploading")}</span>
                       </div>
                     ) : identityCardFrontUrl ? (
                       <img
                         src={identityCardFrontUrl}
-                        alt="CCCD Mặt Trước"
+                        alt={t("cccd.front")}
                         className="max-h-full max-w-full object-contain rounded-lg shadow-sm"
                         style={{
                           transform: `rotate(${identityCardFrontRotate * 90}deg)`,
@@ -863,8 +867,8 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                     ) : (
                       <div className="flex flex-col items-center justify-center text-slate-400 gap-2 p-4 text-center">
                         <UploadCloud className="w-8 h-8 text-slate-300" />
-                        <span className="text-xs font-bold text-slate-600">Chưa có ảnh mặt trước</span>
-                        <span className="text-[10px] text-slate-400">Chọn file ảnh JPG, PNG, WEBP, HEIC</span>
+                        <span className="text-xs font-bold text-slate-600">{t("cccd.frontEmpty")}</span>
+                        <span className="text-[10px] text-slate-400">{t("cccd.fileHint")}</span>
                       </div>
                     )}
                   </div>
@@ -892,7 +896,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                       className="h-9 rounded-xl text-xs font-bold border-slate-200 hover:bg-white cursor-pointer"
                     >
                       <UploadCloud className="w-3.5 h-3.5 mr-1.5 text-primary-600" />
-                      <span>{identityCardFrontUrl ? "Đổi ảnh" : "Tải ảnh lên"}</span>
+                      <span>{identityCardFrontUrl ? t("card.changePhoto") : t("cccd.upload")}</span>
                     </Button>
 
                     {identityCardFrontUrl && (
@@ -902,7 +906,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                           variant="outline"
                           size="sm"
                           onClick={rotateFrontCounterClockwise}
-                          title="Xoay trái 90°"
+                          title={t("cccd.rotateLeft90")}
                           className="h-9 w-9 p-0 rounded-xl border-slate-200 hover:bg-white text-slate-700 cursor-pointer"
                         >
                           <RotateCcw className="w-4 h-4" />
@@ -912,7 +916,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                           variant="outline"
                           size="sm"
                           onClick={rotateFrontClockwise}
-                          title="Xoay phải 90°"
+                          title={t("cccd.rotateRight90")}
                           className="h-9 w-9 p-0 rounded-xl border-slate-200 hover:bg-white text-slate-700 cursor-pointer"
                         >
                           <RotateCw className="w-4 h-4" />
@@ -925,7 +929,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                             setIdentityCardFrontUrl("")
                             setIdentityCardFrontRotate(0)
                           }}
-                          title="Xóa ảnh này"
+                          title={t("cccd.remove")}
                           className="h-9 w-9 p-0 rounded-xl text-danger-500 hover:bg-danger-50 hover:text-danger-600 cursor-pointer"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -940,11 +944,11 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-extrabold text-slate-800 flex items-center gap-1.5">
                       <CreditCard className="w-4 h-4 text-primary-600" />
-                      <span>CCCD Mặt Sau</span>
+                      <span>{t("cccd.back")}</span>
                     </span>
                     {identityCardBackUrl && (
                       <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-success-50 text-success-700 border border-success-200">
-                        Xoay: {identityCardBackRotate * 90}°
+                        {t("cccd.rotation", { deg: identityCardBackRotate * 90 })}
                       </span>
                     )}
                   </div>
@@ -954,12 +958,12 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                     {uploadingBackCccd ? (
                       <div className="flex flex-col items-center gap-2 text-slate-500">
                         <Loader2 className="w-8 h-8 animate-spin text-primary-600" />
-                        <span className="text-xs font-bold">Đang tải lên S3...</span>
+                        <span className="text-xs font-bold">{t("cccd.uploading")}</span>
                       </div>
                     ) : identityCardBackUrl ? (
                       <img
                         src={identityCardBackUrl}
-                        alt="CCCD Mặt Sau"
+                        alt={t("cccd.back")}
                         className="max-h-full max-w-full object-contain rounded-lg shadow-sm"
                         style={{
                           transform: `rotate(${identityCardBackRotate * 90}deg)`,
@@ -969,8 +973,8 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                     ) : (
                       <div className="flex flex-col items-center justify-center text-slate-400 gap-2 p-4 text-center">
                         <UploadCloud className="w-8 h-8 text-slate-300" />
-                        <span className="text-xs font-bold text-slate-600">Chưa có ảnh mặt sau</span>
-                        <span className="text-[10px] text-slate-400">Chọn file ảnh JPG, PNG, WEBP, HEIC</span>
+                        <span className="text-xs font-bold text-slate-600">{t("cccd.backEmpty")}</span>
+                        <span className="text-[10px] text-slate-400">{t("cccd.fileHint")}</span>
                       </div>
                     )}
                   </div>
@@ -998,7 +1002,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                       className="h-9 rounded-xl text-xs font-bold border-slate-200 hover:bg-white cursor-pointer"
                     >
                       <UploadCloud className="w-3.5 h-3.5 mr-1.5 text-primary-600" />
-                      <span>{identityCardBackUrl ? "Đổi ảnh" : "Tải ảnh lên"}</span>
+                      <span>{identityCardBackUrl ? t("card.changePhoto") : t("cccd.upload")}</span>
                     </Button>
 
                     {identityCardBackUrl && (
@@ -1008,7 +1012,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                           variant="outline"
                           size="sm"
                           onClick={rotateBackCounterClockwise}
-                          title="Xoay trái 90°"
+                          title={t("cccd.rotateLeft90")}
                           className="h-9 w-9 p-0 rounded-xl border-slate-200 hover:bg-white text-slate-700 cursor-pointer"
                         >
                           <RotateCcw className="w-4 h-4" />
@@ -1018,7 +1022,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                           variant="outline"
                           size="sm"
                           onClick={rotateBackClockwise}
-                          title="Xoay phải 90°"
+                          title={t("cccd.rotateRight90")}
                           className="h-9 w-9 p-0 rounded-xl border-slate-200 hover:bg-white text-slate-700 cursor-pointer"
                         >
                           <RotateCw className="w-4 h-4" />
@@ -1031,7 +1035,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                             setIdentityCardBackUrl("")
                             setIdentityCardBackRotate(0)
                           }}
-                          title="Xóa ảnh này"
+                          title={t("cccd.remove")}
                           className="h-9 w-9 p-0 rounded-xl text-danger-500 hover:bg-danger-50 hover:text-danger-600 cursor-pointer"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -1053,7 +1057,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                 className="h-11 rounded-xl border-slate-200 font-bold text-slate-600 text-xs px-5 hover:bg-slate-50 cursor-pointer"
               >
                 <RotateCcw className="w-4 h-4 mr-2" />
-                <span>Hủy bỏ</span>
+                <span>{t("form.cancel")}</span>
               </Button>
               <Button
                 type="submit"
@@ -1061,7 +1065,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                 className="h-11 rounded-xl bg-primary-600 hover:bg-primary-700 font-extrabold text-white text-xs px-6 shadow-md shadow-primary-500/25 flex items-center gap-2 cursor-pointer transition-transform active:scale-95"
               >
                 {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-                <span>Lưu thay đổi</span>
+                <span>{t("form.save")}</span>
               </Button>
             </div>
           </form>
@@ -1111,7 +1115,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                 className="rounded-xl border-slate-700 bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs"
               >
                 <RotateCcw className="w-3.5 h-3.5 mr-1.5" />
-                <span>Xoay trái</span>
+                <span>{t("cccd.rotateLeft")}</span>
               </Button>
               <Button
                 type="button"
@@ -1125,7 +1129,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                 className="rounded-xl border-slate-700 bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs"
               >
                 <RotateCw className="w-3.5 h-3.5 mr-1.5" />
-                <span>Xoay phải</span>
+                <span>{t("cccd.rotateRight")}</span>
               </Button>
               <Button
                 type="button"
@@ -1133,7 +1137,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                 onClick={() => setPreviewImage(null)}
                 className="rounded-xl bg-primary-600 hover:bg-primary-500 font-extrabold text-xs px-5 text-white"
               >
-                Đóng
+                {t("cccd.close")}
               </Button>
             </div>
           </div>

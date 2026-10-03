@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useTranslation, Trans } from "react-i18next"
 import { useToast } from "@/hooks/use-toast"
 import {
   Dialog,
@@ -15,6 +16,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Info } from "lucide-react"
 import { refundApi } from "@/services"
+import { currentIntlLocale } from "@/lib/i18n"
 import type { ConsultationRefundResponse } from "@/types/refund"
 
 interface ReconcileRefundDialogProps {
@@ -30,6 +32,7 @@ export function ReconcileRefundDialog({
   onOpenChange,
   onSuccess,
 }: ReconcileRefundDialogProps) {
+  const { t } = useTranslation("management")
   const { toast } = useToast()
   const [loading, setLoading] = useState(false)
   const [succeeded, setSucceeded] = useState<boolean>(true)
@@ -43,8 +46,8 @@ export function ReconcileRefundDialog({
     if (!providerResult.trim()) {
       toast({
         variant: "destructive",
-        title: "Thiếu thông tin",
-        description: "Vui lòng nhập ghi chú / kết quả đối soát hoàn tiền.",
+        title: t("needsActions.reconcile.toast.missingInfoTitle"),
+        description: t("needsActions.reconcile.toast.missingResult"),
       })
       return
     }
@@ -58,10 +61,11 @@ export function ReconcileRefundDialog({
       })
 
       toast({
-        title: "Đối soát thành công",
-        description: `Đã cập nhật trạng thái hoàn tiền #${refund.id} sang ${
-          succeeded ? "SUCCEEDED" : "FAILED"
-        }.`,
+        title: t("needsActions.reconcile.toast.successTitle"),
+        description: t("needsActions.reconcile.toast.successDescription", {
+          id: refund.id,
+          status: succeeded ? "SUCCEEDED" : "FAILED",
+        }),
       })
       onSuccess?.()
       onOpenChange(false)
@@ -69,8 +73,8 @@ export function ReconcileRefundDialog({
       const anyErr = err as { response?: { data?: { message?: string } } }
       toast({
         variant: "destructive",
-        title: "Lỗi đối soát",
-        description: anyErr.response?.data?.message || "Không thể thực hiện đối soát hoàn tiền.",
+        title: t("needsActions.reconcile.toast.errorTitle"),
+        description: anyErr.response?.data?.message || t("needsActions.reconcile.toast.failed"),
       })
     } finally {
       setLoading(false)
@@ -84,9 +88,9 @@ export function ReconcileRefundDialog({
       <DialogContent className="sm:max-w-[560px]">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
-            <DialogTitle>Đối soát Hoàn tiền Ngoại tuyến (Reconciliation)</DialogTitle>
+            <DialogTitle>{t("needsActions.reconcile.title")}</DialogTitle>
             <DialogDescription>
-              Ghi nhận kết quả chuyển tiền hoàn trả thực tế cho giao dịch hoàn #{refund.id}.
+              {t("needsActions.reconcile.description", { id: refund.id })}
             </DialogDescription>
           </DialogHeader>
 
@@ -95,29 +99,29 @@ export function ReconcileRefundDialog({
             <Alert className="bg-warning-50/70 border-warning-200 text-warning-900">
               <Info className="h-4 w-4 text-warning-600 shrink-0" />
               <div className="space-y-1">
-                <AlertTitle className="text-xs font-bold">Lưu ý Vận hành & Cổng Thanh toán</AlertTitle>
+                <AlertTitle className="text-xs font-bold">{t("needsActions.reconcile.noticeTitle")}</AlertTitle>
                 <AlertDescription className="text-[11px] leading-relaxed text-warning-800">
-                  Cổng PayOS hiện chưa hỗ trợ lệnh hoàn tiền trực tiếp qua API (lệnh <code>/execute</code> sẽ trả về trạng thái thất bại kỹ thuật). Quản trị viên cần thực hiện chuyển khoản hoàn tiền thủ công qua ngân hàng, sau đó đối soát và lưu mã giao dịch tại đây.
+                  <Trans t={t} i18nKey="needsActions.reconcile.noticeBody" components={{ code: <code /> }} />
                 </AlertDescription>
               </div>
             </Alert>
 
             <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-100 space-y-1.5">
               <div className="flex items-center justify-between">
-                <span className="text-slate-500 font-medium">Số tiền phê duyệt hoàn:</span>
+                <span className="text-slate-500 font-medium">{t("needsActions.reconcile.approvedAmount")}</span>
                 <span className="font-mono font-bold text-slate-900 text-sm">
-                  {refund.approvedAmount?.toLocaleString("vi-VN") || refund.originalAmount?.toLocaleString("vi-VN")} {refund.currency || "VND"}
+                  {refund.approvedAmount?.toLocaleString(currentIntlLocale()) || refund.originalAmount?.toLocaleString(currentIntlLocale())} {refund.currency || "VND"}
                 </span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-slate-500 font-medium">Trạng thái hiện tại:</span>
+                <span className="text-slate-500 font-medium">{t("needsActions.reconcile.currentStatus")}</span>
                 <span className="font-bold text-primary-600">{refund.status}</span>
               </div>
             </div>
 
             {/* Outcome Selection */}
             <div className="space-y-1.5">
-              <Label className="text-xs font-bold text-slate-700">Kết quả đối soát thực tế</Label>
+              <Label className="text-xs font-bold text-slate-700">{t("needsActions.reconcile.outcomeLabel")}</Label>
               <div className="grid grid-cols-2 gap-3">
                 <button
                   type="button"
@@ -127,7 +131,7 @@ export function ReconcileRefundDialog({
                   }`}
                   disabled={loading}
                 >
-                  Hoàn tiền Thành công (SUCCEEDED)
+                  {t("needsActions.reconcile.outcomeSucceeded")}
                 </button>
                 <button
                   type="button"
@@ -137,18 +141,18 @@ export function ReconcileRefundDialog({
                   }`}
                   disabled={loading}
                 >
-                  Đối soát Thất bại (FAILED)
+                  {t("needsActions.reconcile.outcomeFailed")}
                 </button>
               </div>
             </div>
 
             <div className="space-y-1.5">
               <Label htmlFor="providerRefundId" className="text-xs font-bold text-slate-700">
-                Mã tham chiếu giao dịch / Mã hoàn tiền (Tùy chọn)
+                {t("needsActions.reconcile.providerRefundIdLabel")}
               </Label>
               <Input
                 id="providerRefundId"
-                placeholder="VD: FT240829123456 hoặc REF-99120"
+                placeholder={t("needsActions.reconcile.providerRefundIdPlaceholder")}
                 value={providerRefundId}
                 onChange={(e) => setProviderRefundId(e.target.value)}
                 disabled={loading}
@@ -157,12 +161,12 @@ export function ReconcileRefundDialog({
 
             <div className="space-y-1.5">
               <Label htmlFor="providerResult" className="text-xs font-bold text-slate-700">
-                Bằng chứng & Ghi chú đối soát <span className="text-danger-500">*</span>
+                {t("needsActions.reconcile.providerResultLabel")} <span className="text-danger-500">*</span>
               </Label>
               <Textarea
                 id="providerResult"
                 rows={3}
-                placeholder="VD: Đã chuyển khoản qua Vietcombank số TK 0123456789 (Hội viên Nguyễn Văn A) ngày 29/08/2026. Giao dịch thành công."
+                placeholder={t("needsActions.reconcile.providerResultPlaceholder")}
                 value={providerResult}
                 onChange={(e) => setProviderResult(e.target.value)}
                 disabled={loading}
@@ -177,14 +181,14 @@ export function ReconcileRefundDialog({
               onClick={() => onOpenChange(false)}
               disabled={loading}
             >
-              Hủy
+              {t("needsActions.reconcile.cancel")}
             </Button>
             <Button
               type="submit"
               disabled={loading}
               className="bg-primary-600 hover:bg-primary-700 text-white"
             >
-              {loading ? "Đang ghi nhận..." : "Xác nhận đối soát hoàn tất"}
+              {loading ? t("needsActions.reconcile.submitting") : t("needsActions.reconcile.submit")}
             </Button>
           </DialogFooter>
         </form>

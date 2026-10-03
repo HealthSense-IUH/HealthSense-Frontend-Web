@@ -17,6 +17,7 @@ import {
   getStartOfNextDayISO,
   type PaymentDatePreset,
 } from "@/constants/credits"
+import { useTranslation } from "react-i18next"
 
 interface PaymentFilterBarProps {
   preset: PaymentDatePreset
@@ -56,6 +57,7 @@ export function PaymentFilterBar({
   onRefresh,
   loading,
 }: PaymentFilterBarProps) {
+  const { t } = useTranslation("credits")
   const [showCustomInputs, setShowCustomInputs] = useState(preset === "custom")
   const [customFromInput, setCustomFromInput] = useState(isoToLocalDateString(from))
   const [customToInput, setCustomToInput] = useState(() => {
@@ -86,7 +88,7 @@ export function PaymentFilterBar({
 
   const handleApplyCustomDates = () => {
     if (!customFromInput || !customToInput) {
-      setDateError("Vui lòng chọn đủ từ ngày và đến ngày.")
+      setDateError(t("admin.filter.errors.missingDates"))
       return
     }
 
@@ -94,12 +96,12 @@ export function PaymentFilterBar({
     const toDate = new Date(`${customToInput}T00:00:00`)
 
     if (isNaN(fromDate.getTime()) || isNaN(toDate.getTime())) {
-      setDateError("Định dạng ngày không hợp lệ.")
+      setDateError(t("admin.filter.errors.invalidDate"))
       return
     }
 
     if (fromDate > toDate) {
-      setDateError("Ngày bắt đầu không được lớn hơn ngày kết thúc.")
+      setDateError(t("admin.filter.errors.fromAfterTo"))
       return
     }
 
@@ -116,7 +118,7 @@ export function PaymentFilterBar({
         <div className="flex flex-wrap items-center gap-1.5">
           <span className="text-xs font-semibold text-muted-foreground mr-1 flex items-center gap-1">
             <CalendarIcon className="w-3.5 h-3.5 text-primary" />
-            Thời gian:
+            {t("admin.filter.time")}
           </span>
 
           <Button
@@ -126,7 +128,7 @@ export function PaymentFilterBar({
             onClick={() => handleSelectPreset("all")}
             className="rounded-xl h-8 text-xs px-3 shadow-3xs"
           >
-            Toàn thời gian
+            {t("filters.allTime")}
           </Button>
 
           <Button
@@ -136,7 +138,7 @@ export function PaymentFilterBar({
             onClick={() => handleSelectPreset("today")}
             className="rounded-xl h-8 text-xs px-3 shadow-3xs"
           >
-            Hôm nay
+            {t("filters.today")}
           </Button>
 
           <Button
@@ -146,7 +148,7 @@ export function PaymentFilterBar({
             onClick={() => handleSelectPreset("last7days")}
             className="rounded-xl h-8 text-xs px-3 shadow-3xs"
           >
-            7 ngày qua
+            {t("filters.last7days")}
           </Button>
 
           <Button
@@ -156,7 +158,7 @@ export function PaymentFilterBar({
             onClick={() => handleSelectPreset("thisMonth")}
             className="rounded-xl h-8 text-xs px-3 shadow-3xs"
           >
-            Tháng này
+            {t("filters.thisMonth")}
           </Button>
 
           <Button
@@ -167,7 +169,7 @@ export function PaymentFilterBar({
             className="rounded-xl h-8 text-xs px-3 shadow-3xs gap-1"
           >
             <Filter className="w-3 h-3" />
-            Tùy chỉnh
+            {t("filters.custom")}
           </Button>
         </div>
 
@@ -182,7 +184,7 @@ export function PaymentFilterBar({
             className="rounded-xl h-8 text-xs gap-1.5 px-3"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} />
-            Làm mới
+            {t("shared.refresh")}
           </Button>
         </div>
       </div>
@@ -191,7 +193,7 @@ export function PaymentFilterBar({
       {showCustomInputs && (
         <div className="p-3 rounded-xl bg-muted/30 border space-y-2">
           <div className="flex flex-wrap items-center gap-2 text-xs">
-            <span className="text-muted-foreground font-medium">Từ ngày:</span>
+            <span className="text-muted-foreground font-medium">{t("filters.fromDate")}</span>
             <Input
               type="date"
               value={customFromInput}
@@ -199,7 +201,7 @@ export function PaymentFilterBar({
               className="h-8 w-36 rounded-xl text-xs bg-background"
             />
 
-            <span className="text-muted-foreground font-medium">Đến ngày:</span>
+            <span className="text-muted-foreground font-medium">{t("filters.toDate")}</span>
             <Input
               type="date"
               value={customToInput}
@@ -214,7 +216,7 @@ export function PaymentFilterBar({
               className="h-8 rounded-xl text-xs px-3 gap-1"
             >
               <Check className="w-3.5 h-3.5" />
-              Áp dụng
+              {t("admin.filter.apply")}
             </Button>
           </div>
 
@@ -229,12 +231,12 @@ export function PaymentFilterBar({
         <div className="flex items-center justify-between px-3 py-1.5 rounded-xl bg-primary/10 border border-primary/20 text-xs">
           <div className="flex items-center gap-2">
             <User className="w-3.5 h-3.5 text-primary" />
-            <span className="text-muted-foreground">Đang lọc theo thành viên:</span>
+            <span className="text-muted-foreground">{t("admin.filter.filteringByMember")}</span>
             <Badge variant="outline" className="font-mono font-bold bg-background text-primary">
               #{memberId}
             </Badge>
             <span className="text-[11px] text-muted-foreground hidden sm:inline">
-              (Số liệu KPI và Bảng giao dịch được giới hạn riêng cho hội viên này)
+              {t("admin.filter.memberScopeNote")}
             </span>
           </div>
 
@@ -246,7 +248,7 @@ export function PaymentFilterBar({
             className="h-6 px-2 text-xs gap-1 text-muted-foreground hover:text-foreground rounded-lg"
           >
             <X className="w-3.5 h-3.5" />
-            Bỏ lọc thành viên
+            {t("admin.filter.clearMember")}
           </Button>
         </div>
       )}

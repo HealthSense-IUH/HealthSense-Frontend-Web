@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from "react"
+import { useTranslation } from "react-i18next"
 import { Search, Star, AlertTriangle, UserCog, Loader2 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -29,6 +30,7 @@ export function DoctorCandidatesDialog({
   isReserving?: boolean
   reservingDoctorId?: number | string | null
 }) {
+  const { t } = useTranslation("consultation")
   const { toast } = useToast()
   const [loading, setLoading] = useState(false)
   const [candidates, setCandidates] = useState<DoctorCandidateResponse[]>([])
@@ -48,9 +50,9 @@ export function DoctorCandidatesDialog({
       size: 10, // Avoid too large size in case backend throws 500
     })
       .then(res => setCandidates(res.data?.content || []))
-      .catch(() => toast({ variant: "destructive", description: "Không thể tải danh sách bác sĩ." }))
+      .catch(() => toast({ variant: "destructive", description: t("doctorCandidatesDialog.loadError") }))
       .finally(() => setLoading(false))
-  }, [requestId, open, keyword, specialty, eligibleOnly, toast])
+  }, [requestId, open, keyword, specialty, eligibleOnly, toast, t])
 
   useEffect(() => {
     fetchCandidates()
@@ -67,9 +69,9 @@ export function DoctorCandidatesDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-3xl max-h-[90vh] overflow-hidden flex flex-col">
         <DialogHeader>
-          <DialogTitle>Chọn bác sĩ cho yêu cầu #{requestId}</DialogTitle>
+          <DialogTitle>{t("doctorCandidatesDialog.title", { requestId })}</DialogTitle>
           <DialogDescription>
-            Tìm kiếm và phân công bác sĩ đủ điều kiện cho buổi tư vấn này.
+            {t("doctorCandidatesDialog.description")}
           </DialogDescription>
         </DialogHeader>
 
@@ -77,7 +79,7 @@ export function DoctorCandidatesDialog({
           <div className="relative flex-1">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input 
-              placeholder="Tìm theo tên hoặc email..." 
+              placeholder={t("doctorCandidatesDialog.searchPlaceholder")} 
               className="pl-8" 
               value={keyword}
               onChange={(e) => setKeyword(e.target.value)}
@@ -86,14 +88,14 @@ export function DoctorCandidatesDialog({
           </div>
           <Select value={specialty} onValueChange={setSpecialty}>
             <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Chuyên khoa" />
+              <SelectValue placeholder={t("doctorCandidatesDialog.specialtyPlaceholder")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="ALL">Tất cả chuyên khoa</SelectItem>
-              <SelectItem value="GENERAL_PRACTICE">Đa khoa</SelectItem>
-              <SelectItem value="CARDIOLOGY">Tim mạch</SelectItem>
-              <SelectItem value="INTERNAL_MEDICINE">Nội khoa</SelectItem>
-              <SelectItem value="OTHER">Khác</SelectItem>
+              <SelectItem value="ALL">{t("doctorCandidatesDialog.specialties.all")}</SelectItem>
+              <SelectItem value="GENERAL_PRACTICE">{t("doctorCandidatesDialog.specialties.generalPractice")}</SelectItem>
+              <SelectItem value="CARDIOLOGY">{t("doctorCandidatesDialog.specialties.cardiology")}</SelectItem>
+              <SelectItem value="INTERNAL_MEDICINE">{t("doctorCandidatesDialog.specialties.internalMedicine")}</SelectItem>
+              <SelectItem value="OTHER">{t("doctorCandidatesDialog.specialties.other")}</SelectItem>
             </SelectContent>
           </Select>
           <div className="flex items-center space-x-2">
@@ -103,19 +105,19 @@ export function DoctorCandidatesDialog({
               onCheckedChange={(c) => setEligibleOnly(!!c)} 
             />
             <label htmlFor="eligibleOnly" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-              Chỉ BS đủ điều kiện
+              {t("doctorCandidatesDialog.eligibleOnly")}
             </label>
           </div>
           <Button variant="secondary" size="sm" onClick={fetchCandidates} disabled={loading}>
-            Tìm kiếm
+            {t("doctorCandidatesDialog.search")}
           </Button>
         </div>
 
         <div className="flex-1 overflow-y-auto py-4 pr-2 space-y-3">
           {loading ? (
-            <div className="text-center text-sm text-muted-foreground py-8">Đang tải danh sách bác sĩ...</div>
+            <div className="text-center text-sm text-muted-foreground py-8">{t("doctorCandidatesDialog.loading")}</div>
           ) : candidates.length === 0 ? (
-            <div className="text-center text-sm text-muted-foreground py-8">Không tìm thấy bác sĩ phù hợp.</div>
+            <div className="text-center text-sm text-muted-foreground py-8">{t("doctorCandidatesDialog.empty")}</div>
           ) : (
             candidates.map((doctor) => (
               <div key={doctor.doctorId} className={`flex flex-col sm:flex-row gap-4 p-4 border rounded-lg ${doctor.preferredByMember ? 'border-primary/50 bg-primary/5' : ''} ${!doctor.eligible ? 'opacity-80' : ''}`}>
@@ -124,19 +126,19 @@ export function DoctorCandidatesDialog({
                     <span className="font-semibold text-lg">{doctor.displayName}</span>
                     {doctor.preferredByMember && (
                       <Badge variant="default" className="bg-primary/20 text-primary hover:bg-primary/30">
-                        <Star className="w-3 h-3 mr-1" /> Ưu tiên
+                        <Star className="w-3 h-3 mr-1" /> {t("doctorCandidatesDialog.preferred")}
                       </Badge>
                     )}
                     {!doctor.eligible && (
                       <Badge variant="destructive" className="bg-danger-100 text-danger-800 hover:bg-danger-200 border-danger-200">
-                        Không đủ điều kiện
+                        {t("doctorCandidatesDialog.ineligible")}
                       </Badge>
                     )}
                   </div>
                   <div className="text-sm text-muted-foreground mt-1 flex flex-col gap-0.5">
-                    <span>{doctor.email} &bull; {doctor.phone || "Chưa có SĐT"}</span>
-                    <span>Chuyên khoa: {doctor.specialty || "Chưa cập nhật"} &bull; Múi giờ: {doctor.timezone || "Chưa đặt"}</span>
-                    <span>Tải công việc: {doctor.effectiveLoad} / {doctor.maxActiveConsultations != null ? doctor.maxActiveConsultations : "Chưa cấu hình"}</span>
+                    <span>{doctor.email} &bull; {doctor.phone || t("doctorCandidatesDialog.noPhone")}</span>
+                    <span>{t("doctorCandidatesDialog.specialtyLabel")} {doctor.specialty || t("doctorCandidatesDialog.notUpdated")} &bull; {t("doctorCandidatesDialog.timezoneLabel")} {doctor.timezone || t("doctorCandidatesDialog.notSet")}</span>
+                    <span>{t("doctorCandidatesDialog.workloadLabel")} {doctor.effectiveLoad} / {doctor.maxActiveConsultations != null ? doctor.maxActiveConsultations : t("doctorCandidatesDialog.notConfigured")}</span>
                   </div>
                   
                   {!doctor.eligible && Array.isArray(doctor.ineligibleReasons) && doctor.ineligibleReasons.length > 0 && (
@@ -152,7 +154,7 @@ export function DoctorCandidatesDialog({
 
                   {doctor.declaredSupportSchedule && doctor.eligible && (
                     <div className="mt-2 text-xs text-muted-foreground bg-muted/30 p-2 rounded font-mono">
-                      Đã có lịch làm việc công bố
+                      {t("doctorCandidatesDialog.hasDeclaredSchedule")}
                     </div>
                   )}
                 </div>
@@ -166,10 +168,10 @@ export function DoctorCandidatesDialog({
                     {isReserving && String(reservingDoctorId) === String(doctor.doctorId) ? (
                       <>
                         <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" />
-                        Đang giữ chỗ...
+                        {t("doctorCandidatesDialog.reserving")}
                       </>
                     ) : (
-                      "Giữ chỗ bác sĩ"
+                      t("doctorCandidatesDialog.reserve")
                     )}
                   </Button>
                   <Button 
@@ -179,7 +181,7 @@ export function DoctorCandidatesDialog({
                     onClick={() => onOpenCareProfile(doctor.doctorId)}
                   >
                     <UserCog className="w-4 h-4 mr-2" />
-                    Hồ sơ chăm sóc
+                    {t("doctorCandidatesDialog.careProfile")}
                   </Button>
                 </div>
               </div>
@@ -188,7 +190,7 @@ export function DoctorCandidatesDialog({
         </div>
 
         <DialogFooter className="border-t pt-4">
-          <Button variant="outline" onClick={() => onOpenChange(false)}>Đóng</Button>
+          <Button variant="outline" onClick={() => onOpenChange(false)}>{t("doctorCandidatesDialog.close")}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

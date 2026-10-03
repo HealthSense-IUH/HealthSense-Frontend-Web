@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from "react"
+import { useTranslation } from "react-i18next"
 import { useAuthStore } from "@/stores/auth-store"
 import { useAppShell } from "@/components/layout/app-shell-context"
 import { USER_ROLES } from "@/constants"
@@ -107,6 +108,7 @@ export function useConsultationsLogic() {
   const isDoctor = effectiveRole === USER_ROLES.DOCTOR
   const isMember = effectiveRole === USER_ROLES.MEMBER
   const { toast } = useToast()
+  const { t } = useTranslation("consultation")
 
   const [alert, setAlert] = useState<AlertState | null>(null)
   const [loading, setLoading] = useState(true)
@@ -427,7 +429,7 @@ export function useConsultationsLogic() {
         void fetchDoctorCareProfile()
       }
     } catch (error) {
-      setAlert({ type: "error", text: readError(error, "Failed to load consultation data.") })
+      setAlert({ type: "error", text: readError(error, t("logic.alerts.loadDataFailed")) })
       setRequests([])
       setSessions([])
     } finally {
@@ -435,7 +437,7 @@ export function useConsultationsLogic() {
         setLoading(false)
       }
     }
-  }, [isAdmin, isMember, isDoctor, adminFilters, fetchDoctorCareProfile])
+  }, [isAdmin, isMember, isDoctor, adminFilters, fetchDoctorCareProfile, t])
 
   // Initial fetch for doctor dispatch when profile becomes active
   useEffect(() => {
@@ -476,15 +478,15 @@ export function useConsultationsLogic() {
         variant: "default",
         description:
           newStatus === "AVAILABLE"
-            ? "Đã kích hoạt chế độ sẵn sàng nhận bệnh."
-            : "Đã tạm dừng nhận bệnh mới.",
+            ? t("logic.toasts.dispatchAvailable")
+            : t("logic.toasts.dispatchPaused"),
       })
     } catch (error) {
-      toast({ variant: "destructive", description: readError(error, "Không thể cập nhật trạng thái trực.") })
+      toast({ variant: "destructive", description: readError(error, t("logic.toasts.dispatchStatusUpdateFailed")) })
     } finally {
       setActionLoading(false)
     }
-  }, [toast])
+  }, [toast, t])
 
   const handleToggleDoctorStopAfterCurrentSession = useCallback(async (stop: boolean) => {
     try {
@@ -493,13 +495,13 @@ export function useConsultationsLogic() {
       toast({
         variant: "default",
         description: stop
-          ? "Đã bật: Sẽ chuyển sang nghỉ trực sau khi kết thúc phiên khám hiện tại."
-          : "Đã tắt: Sẽ tiếp tục nhận ca sau khi kết thúc phiên.",
+          ? t("logic.toasts.stopAfterSessionOn")
+          : t("logic.toasts.stopAfterSessionOff"),
       })
     } catch (error) {
-      toast({ variant: "destructive", description: readError(error, "Không thể cập nhật tùy chọn.") })
+      toast({ variant: "destructive", description: readError(error, t("logic.toasts.preferenceUpdateFailed")) })
     }
-  }, [toast])
+  }, [toast, t])
 
   const handleAcceptDoctorOffer = useCallback(async (offerId: string) => {
     try {
@@ -508,16 +510,16 @@ export function useConsultationsLogic() {
       setDoctorCurrentOffer(res.data)
       toast({
         variant: "default",
-        description: "Đã tiếp nhận ca tư vấn! Đang chờ người bệnh xác nhận để bắt đầu phiên...",
+        description: t("logic.toasts.offerAccepted"),
       })
       await fetchDoctorDispatchAndOffer()
     } catch (error) {
-      toast({ variant: "destructive", description: readError(error, "Không thể tiếp nhận ca khám hoặc lời mời đã hết hạn.") })
+      toast({ variant: "destructive", description: readError(error, t("logic.toasts.offerAcceptFailed")) })
       await fetchDoctorDispatchAndOffer()
     } finally {
       setActionLoading(false)
     }
-  }, [fetchDoctorDispatchAndOffer, toast])
+  }, [fetchDoctorDispatchAndOffer, toast, t])
 
   const handleRejectDoctorOffer = useCallback(async (offerId: string) => {
     try {
@@ -526,16 +528,16 @@ export function useConsultationsLogic() {
       setDoctorCurrentOffer(null)
       toast({
         variant: "default",
-        description: "Đã từ chối ca tư vấn. Ca khám sẽ được chuyển tiếp cho bác sĩ khác trong hàng đợi.",
+        description: t("logic.toasts.offerRejected"),
       })
       await fetchDoctorDispatchAndOffer()
     } catch (error) {
-      toast({ variant: "destructive", description: readError(error, "Không thể từ chối ca khám.") })
+      toast({ variant: "destructive", description: readError(error, t("logic.toasts.offerRejectFailed")) })
       await fetchDoctorDispatchAndOffer()
     } finally {
       setActionLoading(false)
     }
-  }, [fetchDoctorDispatchAndOffer, toast])
+  }, [fetchDoctorDispatchAndOffer, toast, t])
 
   // Clear stale state when the authenticated user or role changes
   const previousUserIdRef = useRef<string | number | undefined>(userSession?.userId)
@@ -602,7 +604,7 @@ export function useConsultationsLogic() {
     }
 
     if (selectedSession.status !== "ACTIVE" && selectedSession.status !== "COMPLETED") {
-      setAlert({ type: "error", text: "Phiên tư vấn chưa mở hoặc không còn hoạt động." })
+      setAlert({ type: "error", text: t("logic.alerts.sessionInactive") })
       setSelectedSession(null)
       setMessages([])
       return
@@ -620,10 +622,10 @@ export function useConsultationsLogic() {
       .catch((error) => {
         if (mounted) {
           if (error?.response?.status === 409 || error?.response?.data?.code === 4003) {
-            setAlert({ type: "error", text: "Phiên tư vấn đã bị hủy hoặc không còn hoạt động." })
+            setAlert({ type: "error", text: t("logic.alerts.sessionCancelledOrInactive") })
             setSelectedSession(null)
           } else {
-            setAlert({ type: "error", text: readError(error, "Failed to load message history.") })
+            setAlert({ type: "error", text: readError(error, t("logic.alerts.loadMessagesFailed")) })
           }
           setMessages([])
         }
@@ -632,7 +634,7 @@ export function useConsultationsLogic() {
     return () => {
       mounted = false
     }
-  }, [selectedSession?.id, selectedSession?.status, isAdmin, userSession?.userId, isMember, isDoctor])
+  }, [selectedSession?.id, selectedSession?.status, isAdmin, userSession?.userId, isMember, isDoctor, t])
 
   const lastMarkedMessageIdRef = useRef<string | number | null>(null)
   useEffect(() => {
@@ -668,11 +670,11 @@ export function useConsultationsLogic() {
       }
       setHasMoreMessages(response.data.content.length === DEFAULT_CHAT_SIZE)
     } catch (error) {
-      setAlert({ type: "error", text: readError(error, "Failed to load older messages.") })
+      setAlert({ type: "error", text: readError(error, t("logic.alerts.loadOlderMessagesFailed")) })
     } finally {
       setLoadingMoreMessages(false)
     }
-  }, [selectedSession, loadingMoreMessages, hasMoreMessages, messages.length, sortedMessages])
+  }, [selectedSession, loadingMoreMessages, hasMoreMessages, messages.length, sortedMessages, t])
   async function handleCreateRequest(event: FormEvent<HTMLFormElement>, onSuccess?: () => void) {
     event.preventDefault()
     setActionLoading(true)
@@ -680,24 +682,24 @@ export function useConsultationsLogic() {
     setInsufficientCredits(false)
     try {
       if (!requestForm.reasonForCare.trim()) {
-        setAlert({ type: "error", text: "Vui lòng nhập lý do đăng ký chăm sóc." })
+        setAlert({ type: "error", text: t("logic.alerts.reasonForCareRequired") })
         setActionLoading(false)
         return
       }
       if (!requestForm.currentConcern.trim()) {
-        setAlert({ type: "error", text: "Vui lòng nhập triệu chứng & vấn đề lo ngại hiện tại." })
+        setAlert({ type: "error", text: t("logic.alerts.currentConcernRequired") })
         setActionLoading(false)
         return
       }
 
       if (healthRecords.length === 0) {
-        setAlert({ type: "error", text: "Bạn cần thực hiện đo điện tim trước khi gửi yêu cầu tư vấn." })
+        setAlert({ type: "error", text: t("logic.alerts.ecgRequired") })
         setActionLoading(false)
         return
       }
       if (wallet && wallet.available <= 0) {
         setInsufficientCredits(true)
-        setAlert({ type: "error", text: "Bạn không có đủ lượt tư vấn khả dụng để vào hàng đợi." })
+        setAlert({ type: "error", text: t("logic.alerts.noCreditsForQueue") })
         setActionLoading(false)
         return
       }
@@ -750,7 +752,7 @@ export function useConsultationsLogic() {
       const queueNumberStr = queueNumber ? ` #${String(queueNumber).padStart(3, "0")}` : ""
       setAlert({
         type: "success",
-        text: `Đã vào hàng đợi tư vấn thành công. Số thứ tự của bạn:${queueNumberStr}.`,
+        text: t("logic.alerts.queueJoined", { queueNumber: queueNumberStr }),
       })
       window.dispatchEvent(new CustomEvent("credits:refresh"))
       await fetchCurrentQueueState()
@@ -783,17 +785,18 @@ export function useConsultationsLogic() {
         status === 409 &&
         (Number(errorCode) === 4100 ||
           String(errorCode) === "4100" ||
-          String(errorMsg).toLowerCase().includes("lượt") ||
+          // So khớp thông báo từ backend chứa chữ "lượt" (viết bằng mã unicode)
+          String(errorMsg).toLowerCase().includes("l\u01b0\u1ee3t") ||
           String(errorMsg).toLowerCase().includes("credit"))
 
       if (isInsufficient) {
         setInsufficientCredits(true)
         setAlert({
           type: "error",
-          text: "Bạn chưa đủ lượt để xếp hàng tư vấn. Vui lòng nạp thêm lượt.",
+          text: t("logic.alerts.insufficientCreditsForQueue"),
         })
       } else {
-        setAlert({ type: "error", text: readError(error, "Không thể gửi yêu cầu tư vấn.") })
+        setAlert({ type: "error", text: readError(error, t("logic.alerts.createRequestFailed")) })
       }
     } finally {
       setActionLoading(false)
@@ -808,10 +811,10 @@ export function useConsultationsLogic() {
     try {
       const res = await consultationApi.confirmQueueRequest(currentQueueState.requestId, { offerId })
       const session = res.data
-      setAlert({ type: "success", text: "Đã xác nhận thành công. Phiên tư vấn đã được kích hoạt!" })
+      setAlert({ type: "success", text: t("logic.alerts.queueConfirmed") })
       toast({
-        title: "Kích hoạt phiên thành công",
-        description: "Đã sử dụng 1 lượt tư vấn. Phiên tư vấn đã bắt đầu.",
+        title: t("logic.toasts.sessionActivatedTitle"),
+        description: t("logic.toasts.sessionActivatedDescription"),
       })
       window.dispatchEvent(new CustomEvent("credits:refresh"))
       await fetchCurrentQueueState()
@@ -823,17 +826,18 @@ export function useConsultationsLogic() {
       const code = Number(rawCode)
       const errorMsg = error?.response?.data?.message || ""
 
-      if (code === 4100 || (status === 409 && String(errorMsg).toLowerCase().includes("lượt"))) {
+      // So khớp thông báo từ backend chứa chữ "lượt" (viết bằng mã unicode)
+      if (code === 4100 || (status === 409 && String(errorMsg).toLowerCase().includes("l\u01b0\u1ee3t"))) {
         setInsufficientCredits(true)
         window.dispatchEvent(new CustomEvent("credits:refresh"))
         setAlert({
           type: "error",
-          text: CONSULTATION_CONFIRM_ERROR_MESSAGES[4100] || "Không còn đủ lượt tại thời điểm bắt đầu phiên. Vui lòng nạp thêm lượt.",
+          text: CONSULTATION_CONFIRM_ERROR_MESSAGES[4100] || t("logic.alerts.insufficientCreditsAtStart"),
         })
         toast({
           variant: "destructive",
-          title: "Không đủ lượt tư vấn",
-          description: "Số dư lượt tư vấn không đủ để bắt đầu phiên. Vui lòng nạp thêm lượt.",
+          title: t("logic.toasts.insufficientCreditsTitle"),
+          description: t("logic.toasts.insufficientCreditsDescription"),
         })
         await fetchCurrentQueueState()
       } else if (code === 4004) {
@@ -850,7 +854,7 @@ export function useConsultationsLogic() {
         })
         await fetchCurrentQueueState()
       } else {
-        setAlert({ type: "error", text: readError(error, "Không thể xác nhận lượt tư vấn.") })
+        setAlert({ type: "error", text: readError(error, t("logic.alerts.confirmQueueFailed")) })
         await fetchCurrentQueueState()
       }
     } finally {
@@ -864,12 +868,12 @@ export function useConsultationsLogic() {
     setAlert(null)
     try {
       await consultationApi.cancelQueueRequest(requestId)
-      setAlert({ type: "success", text: "Đã rời khỏi hàng đợi tư vấn." })
+      setAlert({ type: "success", text: t("logic.alerts.leftQueue") })
       setCurrentQueueState(null)
       window.dispatchEvent(new CustomEvent("credits:refresh"))
       await loadData()
     } catch (error) {
-      setAlert({ type: "error", text: readError(error, "Không thể hủy lượt chờ tư vấn.") })
+      setAlert({ type: "error", text: readError(error, t("logic.alerts.cancelQueueFailed")) })
       await fetchCurrentQueueState()
     } finally {
       setActionLoading(false)
@@ -881,12 +885,12 @@ export function useConsultationsLogic() {
     setAlert(null)
     try {
       await consultationApi.cancelRequest(requestId)
-      setAlert({ type: "success", text: "Đã hủy yêu cầu tư vấn." })
+      setAlert({ type: "success", text: t("logic.alerts.requestCancelled") })
       window.dispatchEvent(new CustomEvent("credits:refresh"))
       await fetchCurrentQueueState()
       await loadData()
     } catch (error) {
-      setAlert({ type: "error", text: readError(error, "Không thể hủy yêu cầu tư vấn.") })
+      setAlert({ type: "error", text: readError(error, t("logic.alerts.cancelRequestFailed")) })
     } finally {
       setActionLoading(false)
     }
@@ -933,11 +937,11 @@ export function useConsultationsLogic() {
         selectedHealthRecordIds: moreInfoSelectedRecordIds.length > 0 ? moreInfoSelectedRecordIds : undefined,
         healthRecordId: moreInfoSelectedRecordIds[0] ? moreInfoSelectedRecordIds[0] : undefined,
       })
-      setAlert({ type: "success", text: `Đã gửi bổ sung thông tin cho yêu cầu #${targetRequest.id}.` })
+      setAlert({ type: "success", text: t("logic.alerts.moreInfoSubmitted", { id: targetRequest.id }) })
       setIsMoreInfoDialogOpen(false)
       await loadData()
     } catch (error) {
-      setAlert({ type: "error", text: readError(error, "Không thể gửi bổ sung thông tin.") })
+      setAlert({ type: "error", text: readError(error, t("logic.alerts.submitMoreInfoFailed")) })
     } finally {
       setActionLoading(false)
     }
@@ -969,20 +973,20 @@ export function useConsultationsLogic() {
     setAlert(null)
     try {
       await consultationApi.approveRequest(targetRequest.id, { doctorId })
-      setAlert({ type: "success", text: "Đã giữ bác sĩ. Yêu cầu chuyển sang chờ hội viên xác nhận thỏa thuận (WAITING_ACCEPTANCE)." })
+      setAlert({ type: "success", text: t("logic.alerts.doctorReserved") })
       toast({
-        title: "Đã phân công bác sĩ",
-        description: "Yêu cầu đã được chuyển sang trạng thái chờ hội viên xem & xác nhận thỏa thuận dịch vụ.",
+        title: t("logic.toasts.doctorAssignedTitle"),
+        description: t("logic.toasts.doctorAssignedDescription"),
       })
       setIsDoctorCandidatesOpen(false)
       setIsAdminRequestDetailOpen(false)
       await loadData()
     } catch (error) {
-      const errorMsg = readError(error, "Không thể phân công bác sĩ.")
+      const errorMsg = readError(error, t("logic.alerts.assignDoctorFailed"))
       setAlert({ type: "error", text: errorMsg })
       toast({
         variant: "destructive",
-        title: "Không thể phân công bác sĩ",
+        title: t("logic.toasts.doctorAssignFailedTitle"),
         description: errorMsg,
       })
     } finally {
@@ -1003,12 +1007,12 @@ export function useConsultationsLogic() {
     setAlert(null)
     try {
       await consultationApi.requestMoreInfo(targetRequest.id, { reason: adminMoreInfoReason.trim() })
-      setAlert({ type: "success", text: `Đã yêu cầu bổ sung thông tin cho yêu cầu #${targetRequest.id}.` })
+      setAlert({ type: "success", text: t("logic.alerts.moreInfoRequested", { id: targetRequest.id }) })
       setIsAdminMoreInfoDialogOpen(false)
       setIsAdminRequestDetailOpen(false)
       await loadData()
     } catch (error) {
-      setAlert({ type: "error", text: readError(error, "Failed to request more info.") })
+      setAlert({ type: "error", text: readError(error, t("logic.alerts.requestMoreInfoFailed")) })
     } finally {
       setActionLoading(false)
     }
@@ -1030,19 +1034,19 @@ export function useConsultationsLogic() {
     try {
       if (adminDialogMode === "approve" && targetRequest) {
         if (!doctorId || !doctorId.trim()) {
-          setAlert({ type: "error", text: "Vui lòng chọn hoặc nhập mã bác sĩ hợp lệ." })
+          setAlert({ type: "error", text: t("logic.alerts.doctorIdRequired") })
           setActionLoading(false)
           return
         }
         await consultationApi.approveRequest(targetRequest.id, {
           doctorId: doctorId.trim(),
         })
-        setAlert({ type: "success", text: `Đã điều phối bác sĩ cho yêu cầu #${targetRequest.id}. Trạng thái chuyển sang CHỜ THANH TOÁN.` })
+        setAlert({ type: "success", text: t("logic.alerts.requestApproved", { id: targetRequest.id }) })
       }
 
       if (adminDialogMode === "reject" && targetRequest) {
         await consultationApi.rejectRequest(targetRequest.id, { rejectionReason: reason.trim() })
-        setAlert({ type: "success", text: `Đã từ chối yêu cầu #${targetRequest.id}.` })
+        setAlert({ type: "success", text: t("logic.alerts.requestRejected", { id: targetRequest.id }) })
       }
 
       if (adminDialogMode === "close" && targetSession) {
@@ -1051,13 +1055,13 @@ export function useConsultationsLogic() {
           terminationReason: terminationReason,
           meaningfulCareOccurred: meaningfulCareOccurred,
         })
-        setAlert({ type: "success", text: `Đã đóng phiên tư vấn #${targetSession.id}.` })
+        setAlert({ type: "success", text: t("logic.alerts.sessionClosed", { id: targetSession.id }) })
       }
 
       setAdminDialogMode(null)
       await loadData()
     } catch (error) {
-      setAlert({ type: "error", text: readError(error, "Admin action failed.") })
+      setAlert({ type: "error", text: readError(error, t("logic.alerts.adminActionFailed")) })
     } finally {
       setActionLoading(false)
     }
@@ -1068,10 +1072,10 @@ export function useConsultationsLogic() {
     setAlert(null)
     try {
       await consultationApi.expireOverdueSessions()
-      setAlert({ type: "success", text: "Requested backend to expire overdue sessions." })
+      setAlert({ type: "success", text: t("logic.alerts.expireOverdueRequested") })
       await loadData()
     } catch (error) {
-      setAlert({ type: "error", text: readError(error, "Failed to expire overdue sessions.") })
+      setAlert({ type: "error", text: readError(error, t("logic.alerts.expireOverdueFailed")) })
     } finally {
       setActionLoading(false)
     }
@@ -1082,10 +1086,10 @@ export function useConsultationsLogic() {
     setAlert(null)
     try {
       await consultationApi.expireWaitingPaymentRequests()
-      setAlert({ type: "success", text: "Requested backend to expire waiting payment requests." })
+      setAlert({ type: "success", text: t("logic.alerts.expireWaitingPaymentRequested") })
       await loadData()
     } catch (error) {
-      setAlert({ type: "error", text: readError(error, "Failed to expire waiting payment requests.") })
+      setAlert({ type: "error", text: readError(error, t("logic.alerts.expireWaitingPaymentFailed")) })
     } finally {
       setActionLoading(false)
     }
@@ -1096,10 +1100,10 @@ export function useConsultationsLogic() {
     setAlert(null)
     try {
       await consultationApi.activateScheduledSessions()
-      setAlert({ type: "success", text: "Requested backend to activate scheduled sessions." })
+      setAlert({ type: "success", text: t("logic.alerts.activateScheduledRequested") })
       await loadData()
     } catch (error) {
-      setAlert({ type: "error", text: readError(error, "Failed to activate scheduled sessions.") })
+      setAlert({ type: "error", text: readError(error, t("logic.alerts.activateScheduledFailed")) })
     } finally {
       setActionLoading(false)
     }
@@ -1145,13 +1149,13 @@ export function useConsultationsLogic() {
     } catch (error: any) {
       const errStr = String(error?.response?.data?.message || error.message || "")
       if (error?.response?.status === 409 || error?.response?.data?.code === 4003) {
-        setAlert({ type: "error", text: "Phiên tư vấn chưa mở hoặc không còn hoạt động." })
+        setAlert({ type: "error", text: t("logic.alerts.sessionInactive") })
         setSelectedSession(null)
       } else if (errStr.toLowerCase().includes("support hours") || errStr.toLowerCase().includes("support_hours")) {
-        setAlert({ type: "error", text: "Bạn chỉ có thể gửi tin nhắn trong khung giờ hỗ trợ của phiên tư vấn." })
+        setAlert({ type: "error", text: t("logic.alerts.outsideSupportHoursSend") })
         // Do not clear message draft so they don't lose their text
       } else {
-        setAlert({ type: "error", text: readError(error, "Failed to send message.") })
+        setAlert({ type: "error", text: readError(error, t("logic.alerts.sendMessageFailed")) })
       }
     } finally {
       setActionLoading(false)
@@ -1169,26 +1173,26 @@ export function useConsultationsLogic() {
         window.location.href = data.checkoutUrl
       } else if (data.status === "PAID") {
         toast({
-          title: "Thanh toán thành công",
-          description: "Yêu cầu tư vấn đã được kích hoạt.",
+          title: t("logic.toasts.paymentSuccessTitle"),
+          description: t("logic.toasts.paymentSuccessDescription"),
         })
         await loadData()
       } else {
         toast({
-          title: "Thông báo thanh toán",
-          description: `Trạng thái hiện tại: ${data.status}`,
+          title: t("logic.toasts.paymentNoticeTitle"),
+          description: t("logic.toasts.paymentCurrentStatus", { status: data.status }),
         })
       }
     } catch (error) {
       toast({
         variant: "destructive",
-        title: "Lỗi khởi tạo thanh toán",
-        description: readError(error, "Không thể tạo giao dịch thanh toán lúc này. Vui lòng thử lại sau."),
+        title: t("logic.toasts.paymentInitFailedTitle"),
+        description: readError(error, t("logic.toasts.paymentInitFailedDescription")),
       })
     } finally {
       setActionLoading(false)
     }
-  }, [loadData, toast])
+  }, [loadData, toast, t])
 
   return {
     isAdmin,

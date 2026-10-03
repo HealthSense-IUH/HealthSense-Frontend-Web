@@ -27,6 +27,8 @@ import {
   getCreditOrderStatusConfig,
   getCreditPaymentProviderConfig,
 } from "@/constants/credits"
+import { useTranslation } from "react-i18next"
+import { currentIntlLocale } from "@/lib/i18n"
 import type { UseCreditPurchaseReturn } from "../hooks/use-credit-purchase"
 
 interface PurchaseDialogProps {
@@ -42,6 +44,7 @@ export function PurchaseDialog({
   purchaseState,
   onViewOrderDetail,
 }: PurchaseDialogProps) {
+  const { t } = useTranslation("credits")
   const {
     selectedPackage,
     idempotencyKey,
@@ -58,7 +61,8 @@ export function PurchaseDialog({
   if (!selectedPackage) return null
 
   const handleClose = () => {
-    if (isSubmitting) return // Không cho đóng khi đang gửi request
+    // Không cho đóng khi đang gửi request
+    if (isSubmitting) return
     resetPurchaseState()
     onOpenChange(false)
   }
@@ -85,48 +89,48 @@ export function PurchaseDialog({
                 <CheckCircle2 className="h-8 w-8" />
               </div>
               <DialogTitle className="text-center text-xl font-bold text-foreground">
-                Mua lượt tư vấn thành công!
+                {t("purchaseDialog.successTitle")}
               </DialogTitle>
               <DialogDescription className="text-center text-xs text-muted-foreground">
-                Giao dịch giả lập đã hoàn tất tức thì. Lượt tư vấn đã được cộng vào ví của bạn.
+                {t("purchaseDialog.successDescription")}
               </DialogDescription>
             </DialogHeader>
 
             <div className="rounded-xl border border-border bg-muted/30 p-4 space-y-3">
               <div className="flex items-center justify-between text-xs pb-2 border-b border-border/60">
-                <span className="text-muted-foreground">Mã đơn hàng:</span>
+                <span className="text-muted-foreground">{t("purchaseDialog.orderId")}</span>
                 <span className="font-mono font-medium text-foreground">
                   #{successResult.order.id}
                 </span>
               </div>
               <div className="flex items-center justify-between text-xs">
-                <span className="text-muted-foreground">Gói đã mua:</span>
+                <span className="text-muted-foreground">{t("purchaseDialog.packagePurchased")}</span>
                 <span className="font-semibold text-foreground">
                   {successResult.order.packageName}
                 </span>
               </div>
               <div className="flex items-center justify-between text-xs">
-                <span className="text-muted-foreground">Số lượt nhận:</span>
+                <span className="text-muted-foreground">{t("purchaseDialog.creditsReceived")}</span>
                 <span className="font-bold text-success-600 text-sm">
                   +{formatCreditQuantity(successResult.order.creditQuantity)}
                 </span>
               </div>
               <div className="flex items-center justify-between text-xs">
-                <span className="text-muted-foreground">Tổng thanh toán:</span>
+                <span className="text-muted-foreground">{t("purchaseDialog.totalPaid")}</span>
                 <span className="font-bold text-foreground">
                   {formatVnd(successResult.order.amountVnd)}
                 </span>
               </div>
               <div className="flex items-center justify-between text-xs">
-                <span className="text-muted-foreground">Phương thức:</span>
+                <span className="text-muted-foreground">{t("purchaseDialog.method")}</span>
                 <Badge variant="outline" className="text-[11px] font-medium">
-                  {providerConfig?.label || "Thanh toán giả lập MOCK"}
+                  {providerConfig?.label || t("purchaseDialog.mockFallback")}
                 </Badge>
               </div>
               <div className="flex items-center justify-between text-xs pt-1">
-                <span className="text-muted-foreground">Trạng thái:</span>
+                <span className="text-muted-foreground">{t("purchaseDialog.status")}</span>
                 <Badge className={`text-[11px] font-semibold ${orderStatusConfig?.className}`}>
-                  {orderStatusConfig?.label || "Đã thanh toán"}
+                  {orderStatusConfig?.label || t("orderStatus.paid")}
                 </Badge>
               </div>
             </div>
@@ -137,15 +141,15 @@ export function PurchaseDialog({
                 <Coins className="h-5 w-5 text-success-600" />
                 <div>
                   <div className="text-xs font-medium text-success-900">
-                    Số dư khả dụng hiện tại
+                    {t("purchaseDialog.currentAvailable")}
                   </div>
                   <div className="text-[11px] text-success-700/80">
-                    Tổng: {successResult.wallet.balance} | Tạm giữ: {successResult.wallet.reserved}
+                    {t("purchaseDialog.walletBreakdown", { balance: successResult.wallet.balance, reserved: successResult.wallet.reserved })}
                   </div>
                 </div>
               </div>
               <div className="text-lg font-black text-success-700">
-                {successResult.wallet.available.toLocaleString("vi-VN")} lượt
+                {t("quantity.credits", { count: successResult.wallet.available, value: successResult.wallet.available.toLocaleString(currentIntlLocale()) })}
               </div>
             </div>
 
@@ -159,11 +163,11 @@ export function PurchaseDialog({
                   }}
                   className="gap-1.5 w-full sm:w-auto"
                 >
-                  <ExternalLink className="h-4 w-4" /> Xem chi tiết đơn
+                  <ExternalLink className="h-4 w-4" /> {t("purchaseDialog.viewOrder")}
                 </Button>
               )}
               <Button onClick={handleClose} className="w-full sm:w-auto font-semibold">
-                Hoàn tất
+                {t("purchaseDialog.done")}
               </Button>
             </DialogFooter>
           </div>
@@ -172,13 +176,13 @@ export function PurchaseDialog({
           <div className="space-y-5">
             <DialogHeader>
               <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold w-fit mb-1">
-                <CreditCard className="h-3.5 w-3.5" /> Xác nhận mua lượt tư vấn
+                <CreditCard className="h-3.5 w-3.5" /> {t("purchaseDialog.confirmBadge")}
               </div>
               <DialogTitle className="text-lg font-bold text-foreground">
                 {selectedPackage.name}
               </DialogTitle>
               <DialogDescription className="text-xs text-muted-foreground">
-                Vui lòng kiểm tra lại thông tin gói trước khi tiến hành thanh toán thử nghiệm.
+                {t("purchaseDialog.confirmDescription")}
               </DialogDescription>
             </DialogHeader>
 
@@ -186,29 +190,29 @@ export function PurchaseDialog({
             <Alert className="border-primary-200 bg-primary-50/50 text-xs py-3">
               <ShieldCheck className="h-4 w-4 text-primary-600" />
               <AlertTitle className="text-xs font-semibold text-primary-900 mb-0.5">
-                Giao dịch được bảo vệ
+                {t("purchaseDialog.protectedTitle")}
               </AlertTitle>
               <AlertDescription className="text-[11px] text-primary-700 leading-relaxed">
-                Hệ thống tự động bảo toàn mã giao dịch duy nhất (Idempotency-Key) nhằm đảm bảo an toàn tuyệt đối, không phát sinh trùng lặp.
+                {t("purchaseDialog.protectedDescription")}
               </AlertDescription>
             </Alert>
 
             {/* Chi tiết đơn */}
             <div className="rounded-xl border border-border bg-card p-4 space-y-3">
               <div className="flex items-center justify-between text-xs">
-                <span className="text-muted-foreground">Mã gói tham chiếu:</span>
+                <span className="text-muted-foreground">{t("purchaseDialog.packageRef")}</span>
                 <span className="font-mono font-medium text-foreground">
                   {selectedPackage.code || `#${selectedPackage.id}`}
                 </span>
               </div>
               <div className="flex items-center justify-between text-xs">
-                <span className="text-muted-foreground">Số lượt tư vấn nhận:</span>
+                <span className="text-muted-foreground">{t("purchaseDialog.consultationCreditsReceived")}</span>
                 <span className="font-bold text-success-600 text-sm">
                   +{formatCreditQuantity(selectedPackage.creditQuantity)}
                 </span>
               </div>
               <div className="flex items-center justify-between text-xs pt-1 border-t border-border/60">
-                <span className="text-muted-foreground font-medium">Giá gói (VND):</span>
+                <span className="text-muted-foreground font-medium">{t("purchaseDialog.packagePrice")}</span>
                 <span className="text-lg font-black text-foreground">
                   {formatVnd(selectedPackage.priceVnd)}
                 </span>
@@ -220,10 +224,10 @@ export function PurchaseDialog({
               <Alert className="border-warning-200 bg-warning-50/60 text-xs py-3">
                 <RotateCcw className="h-4 w-4 text-warning-600" />
                 <AlertTitle className="text-xs font-semibold text-warning-900">
-                  Tiếp tục yêu cầu trước đó
+                  {t("purchaseDialog.pendingRetryTitle")}
                 </AlertTitle>
                 <AlertDescription className="text-[11px] text-warning-800 leading-relaxed">
-                  Lần kết nối trước bị gián đoạn mạng hoặc chưa nhận được kết quả. Hệ thống sẽ tiếp tục kiểm tra lại với cùng mã giao dịch an toàn.
+                  {t("purchaseDialog.pendingRetryDescription")}
                 </AlertDescription>
               </Alert>
             )}
@@ -233,7 +237,7 @@ export function PurchaseDialog({
               <Alert className="border-primary-200 bg-primary-50/60 text-xs py-3">
                 <Clock className="h-4 w-4 text-primary-600" />
                 <AlertTitle className="text-xs font-semibold text-primary-900">
-                  Đang khởi tạo liên kết
+                  {t("purchaseDialog.creatingTitle")}
                 </AlertTitle>
                 <AlertDescription className="text-[11px] text-primary-800 leading-relaxed">
                   {purchaseState.creatingNotice}
@@ -246,7 +250,7 @@ export function PurchaseDialog({
               <Alert className="border-danger-200 bg-danger-50/60 text-xs py-3">
                 <AlertCircle className="h-4 w-4 text-danger-600" />
                 <AlertTitle className="text-xs font-semibold text-danger-900">
-                  {errorCode === 4108 ? "Chức năng chưa mở" : "Không thể hoàn tất giao dịch"}
+                  {errorCode === 4108 ? t("purchaseDialog.featureNotOpen") : t("purchaseDialog.cannotComplete")}
                 </AlertTitle>
                 <AlertDescription className="text-[11px] text-danger-800 leading-relaxed">
                   {lastError}
@@ -269,7 +273,7 @@ export function PurchaseDialog({
                 disabled={isSubmitting}
                 className="w-full sm:w-auto"
               >
-                Đóng
+                {t("shared.close")}
               </Button>
               <Button
                 onClick={handleExecute}
@@ -279,17 +283,17 @@ export function PurchaseDialog({
                 {isSubmitting ? (
                   <>
                     <Loader2 className="h-4 w-4 animate-spin" />
-                    Đang xử lý mua...
+                    {t("purchaseDialog.processing")}
                   </>
                 ) : hasPendingRetry ? (
                   <>
                     <RefreshCw className="h-4 w-4" />
-                    Thử lại giao dịch
+                    {t("purchaseDialog.retryTransaction")}
                   </>
                 ) : (
                   <>
                     <ShieldCheck className="h-4 w-4" />
-                    Xác nhận mua lượt
+                    {t("purchaseDialog.confirmPurchase")}
                   </>
                 )}
               </Button>

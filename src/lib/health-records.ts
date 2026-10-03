@@ -2,6 +2,7 @@ import React from "react"
 import { Activity, AlertCircle, Info } from "lucide-react"
 
 import { PREDICTION_LABEL_CONFIG } from "@/constants/health-records"
+import i18n from "@/lib/i18n"
 import type {
   PredictionLabel,
   PredictionLabelMeta,
@@ -18,18 +19,18 @@ export function getPredictionMeta(
   if (status === "PROCESSING" || status === "PENDING_ANALYSIS") {
     return {
       key: "PROCESSING",
-      label: "Đang phân tích",
-      shortLabel: "Đang xử lý",
-      badgeText: "Đang phân tích",
+      label: i18n.t("health:predictionLabel.processing.label"),
+      shortLabel: i18n.t("health:predictionLabel.processing.short"),
+      badgeText: i18n.t("health:predictionLabel.processing.label"),
       badgeClass:
         "bg-primary-50 text-primary-900 border-primary-300",
       dotClass: "bg-primary-500 animate-pulse",
       topBarClass: "bg-primary-500",
       statusTextClass: "text-primary-700 font-semibold",
       advice:
-        "Dữ liệu đang được phân tích qua mô hình AI. Vui lòng đợi trong giây lát...",
+        i18n.t("health:predictionLabel.processing.advice"),
       isRisk: false,
-      probabilityRangeText: "Đang xử lý",
+      probabilityRangeText: i18n.t("health:predictionLabel.processing.short"),
       icon: React.createElement(Activity, {
         className: "w-5 h-5 text-primary-600 animate-spin",
       }),
@@ -39,16 +40,16 @@ export function getPredictionMeta(
   if (status === "FAILED") {
     return {
       key: "FAILED",
-      label: "Lỗi phân tích",
-      shortLabel: "Lỗi",
-      badgeText: "Lỗi",
+      label: i18n.t("health:predictionLabel.failed.label"),
+      shortLabel: i18n.t("health:predictionLabel.failed.short"),
+      badgeText: i18n.t("health:predictionLabel.failed.short"),
       badgeClass:
         "bg-slate-100 text-slate-900 border-slate-300",
       dotClass: "bg-slate-400",
       topBarClass: "bg-slate-400",
       statusTextClass: "text-slate-700 font-semibold",
       advice:
-        "Tín hiệu đo quá ngắn hoặc chứa nhiều nhiễu động. Khuyến nghị thực hiện đo lại trong trạng thái nghỉ ngơi.",
+        i18n.t("health:predictionLabel.failed.advice"),
       isRisk: false,
       probabilityRangeText: "N/A",
       icon: React.createElement(AlertCircle, {
@@ -63,15 +64,15 @@ export function getPredictionMeta(
 
   return {
     key: "UNKNOWN",
-    label: label || "Chưa có kết luận",
-    shortLabel: label || "Chưa rõ",
-    badgeText: label || "Chưa rõ",
+    label: label || i18n.t("health:predictionLabel.unknown.label"),
+    shortLabel: label || i18n.t("health:predictionLabel.unknown.short"),
+    badgeText: label || i18n.t("health:predictionLabel.unknown.short"),
     badgeClass:
       "bg-slate-100 text-slate-900 border-slate-300",
     dotClass: "bg-slate-400",
     topBarClass: "bg-slate-400",
     statusTextClass: "text-slate-700 font-semibold",
-    advice: "Bản ghi đang chờ đồng bộ hóa dữ liệu.",
+    advice: i18n.t("health:predictionLabel.unknown.advice"),
     isRisk: false,
     probabilityRangeText: "N/A",
     icon: React.createElement(Info, {

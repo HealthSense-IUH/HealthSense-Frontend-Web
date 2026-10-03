@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from "react"
+import { useTranslation } from "react-i18next"
 import {
   Calendar,
   Clock,
@@ -11,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { useToast } from "@/hooks/use-toast"
+import i18n from "@/lib/i18n"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
@@ -27,13 +29,13 @@ function readError(error: unknown, fallback: string) {
 }
 
 const DAYS_OF_WEEK_MAP: Record<string, string> = {
-  MONDAY: "Thứ Hai",
-  TUESDAY: "Thứ Ba",
-  WEDNESDAY: "Thứ Tư",
-  THURSDAY: "Thứ Năm",
-  FRIDAY: "Thứ Sáu",
-  SATURDAY: "Thứ Bảy",
-  SUNDAY: "Chủ Nhật"
+  get MONDAY() { return i18n.t("consultation:days.monday") },
+  get TUESDAY() { return i18n.t("consultation:days.tuesday") },
+  get WEDNESDAY() { return i18n.t("consultation:days.wednesday") },
+  get THURSDAY() { return i18n.t("consultation:days.thursday") },
+  get FRIDAY() { return i18n.t("consultation:days.friday") },
+  get SATURDAY() { return i18n.t("consultation:days.saturday") },
+  get SUNDAY() { return i18n.t("consultation:days.sunday") },
 }
 
 interface DoctorSessionDetailDialogProps {
@@ -46,6 +48,7 @@ interface DoctorSessionDetailDialogProps {
 export function DoctorSessionDetailDialog({ sessionId, open, onOpenChange, onSessionRefreshed }: DoctorSessionDetailDialogProps) {
   const [detail, setDetail] = useState<DoctorConsultationDetailResponse | null>(null)
   const [activeTab, setActiveTab] = useState("info")
+  const { t } = useTranslation("consultation")
   const { toast } = useToast()
   const onOpenChangeRef = useRef(onOpenChange)
 
@@ -75,7 +78,7 @@ export function DoctorSessionDetailDialog({ sessionId, open, onOpenChange, onSes
       })
       .catch((error) => {
         if (isSubscribed) {
-          toast({ variant: "destructive", description: readError(error, "Không thể tải chi tiết phiên chăm sóc.") })
+          toast({ variant: "destructive", description: readError(error, t("sessionDetailDialog.loadError")) })
           onOpenChangeRef.current(false)
         }
       })
@@ -83,16 +86,16 @@ export function DoctorSessionDetailDialog({ sessionId, open, onOpenChange, onSes
     return () => {
       isSubscribed = false
     }
-  }, [sessionId, open, toast])
+  }, [sessionId, open, toast, t])
 
   const renderSupportSchedule = () => {
     const jsonStr = detail?.session.supportScheduleSnapshotJson
-    if (!jsonStr) return <p className="text-sm text-slate-500 italic">Chưa cấu hình lịch hỗ trợ</p>
+    if (!jsonStr) return <p className="text-sm text-slate-500 italic">{t("sessionDetailDialog.noSupportSchedule")}</p>
     
     try {
       const schedule = JSON.parse(jsonStr)
       if (!schedule.weekly || !Array.isArray(schedule.weekly) || schedule.weekly.length === 0) {
-        return <p className="text-sm text-slate-500 italic">Chưa cấu hình lịch hỗ trợ</p>
+        return <p className="text-sm text-slate-500 italic">{t("sessionDetailDialog.noSupportSchedule")}</p>
       }
 
       return (
@@ -109,13 +112,13 @@ export function DoctorSessionDetailDialog({ sessionId, open, onOpenChange, onSes
           ))}
           {detail.session.supportTimezoneSnapshot && (
             <div className="text-xs text-slate-400 text-right mt-1">
-              Múi giờ: {detail.session.supportTimezoneSnapshot}
+              {t("sessionDetailDialog.timezone", { timezone: detail.session.supportTimezoneSnapshot })}
             </div>
           )}
         </div>
       )
     } catch (e) {
-      return <p className="text-sm text-slate-500 italic">Chưa cấu hình lịch hỗ trợ</p>
+      return <p className="text-sm text-slate-500 italic">{t("sessionDetailDialog.noSupportSchedule")}</p>
     }
   }
 
@@ -124,7 +127,7 @@ export function DoctorSessionDetailDialog({ sessionId, open, onOpenChange, onSes
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent className="sm:max-w-4xl">
           <DialogHeader>
-            <DialogTitle>Chi tiết phiên chăm sóc</DialogTitle>
+            <DialogTitle>{t("sessionDetailDialog.title")}</DialogTitle>
           </DialogHeader>
           <div className="py-12 flex justify-center">
             <div className="animate-pulse flex space-x-2">
@@ -143,7 +146,7 @@ export function DoctorSessionDetailDialog({ sessionId, open, onOpenChange, onSes
   const memberDisplayName =
     (typeof detail.member?.displayName === "string" && detail.member.displayName) ||
     session.memberDisplayName ||
-    `Bệnh nhân #${session.memberId}`
+    t("sessionDetailDialog.patientFallback", { id: session.memberId })
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -155,12 +158,12 @@ export function DoctorSessionDetailDialog({ sessionId, open, onOpenChange, onSes
                 {memberDisplayName}
               </DialogTitle>
               <DialogDescription className="mt-1">
-                ID Phiên: {session.id}
+                {t("sessionDetailDialog.sessionId", { id: session.id })}
               </DialogDescription>
             </div>
             {session.status === "CANCELLED" && session.meaningfulCareOccurred ? (
               <Badge variant="outline" className="bg-warning-50 text-warning-800 border-warning-300">
-                Đã hủy (Có chăm sóc)
+                {t("sessionDetailDialog.cancelledWithCare")}
               </Badge>
             ) : (
               <Badge variant={session.status === "ACTIVE" ? "default" : "outline"} className={
@@ -174,10 +177,10 @@ export function DoctorSessionDetailDialog({ sessionId, open, onOpenChange, onSes
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-4">
           <TabsList className="grid w-full grid-cols-4 text-xs">
-            <TabsTrigger value="info">Thông tin</TabsTrigger>
-            <TabsTrigger value="records">Hồ sơ đo</TabsTrigger>
-            <TabsTrigger value="continuity">Chăm sóc trước</TabsTrigger>
-            <TabsTrigger value="summary">Tổng kết</TabsTrigger>
+            <TabsTrigger value="info">{t("sessionDetailDialog.tabs.info")}</TabsTrigger>
+            <TabsTrigger value="records">{t("sessionDetailDialog.tabs.records")}</TabsTrigger>
+            <TabsTrigger value="continuity">{t("sessionDetailDialog.tabs.continuity")}</TabsTrigger>
+            <TabsTrigger value="summary">{t("sessionDetailDialog.tabs.summary")}</TabsTrigger>
           </TabsList>
           
           <TabsContent value="info" className="grid gap-6 py-4 outline-none">
@@ -185,8 +188,8 @@ export function DoctorSessionDetailDialog({ sessionId, open, onOpenChange, onSes
               <div className="bg-warning-50 border border-warning-100 rounded-lg p-4 flex gap-3">
                 <AlertTriangle className="h-5 w-5 text-warning-500 shrink-0 mt-0.5" />
                 <div>
-                  <h4 className="font-medium text-warning-900">Có {session.unresolvedAttentionCount} hồ sơ/chỉ số cần xem</h4>
-                  <p className="text-sm text-warning-700 mt-1">Hệ thống ghi nhận có dữ liệu mới từ bệnh nhân. Vui lòng chuyển sang tab "Hồ sơ đo" để xem.</p>
+                  <h4 className="font-medium text-warning-900">{t("sessionDetailDialog.attentionTitle", { count: session.unresolvedAttentionCount })}</h4>
+                  <p className="text-sm text-warning-700 mt-1">{t("sessionDetailDialog.attentionDescription")}</p>
                 </div>
               </div>
             )}
@@ -194,13 +197,13 @@ export function DoctorSessionDetailDialog({ sessionId, open, onOpenChange, onSes
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1">
               <div className="flex items-center gap-2 text-sm text-slate-500 mb-1">
-                <Calendar className="h-4 w-4" /> Bắt đầu
+                <Calendar className="h-4 w-4" /> {t("sessionDetailDialog.startedAt")}
               </div>
               <p className="font-medium text-slate-900">{formatDate(session.startedAt) || '---'}</p>
             </div>
             <div className="space-y-1">
               <div className="flex items-center gap-2 text-sm text-slate-500 mb-1">
-                <Clock className="h-4 w-4" /> Kết thúc dự kiến
+                <Clock className="h-4 w-4" /> {t("sessionDetailDialog.expectedEnd")}
               </div>
               <p className="font-medium text-slate-900">{formatDate(session.endsAt) || '---'}</p>
             </div>
@@ -209,29 +212,29 @@ export function DoctorSessionDetailDialog({ sessionId, open, onOpenChange, onSes
           <div className="bg-slate-50 rounded-lg p-4 border border-slate-100">
             <div className="flex gap-2 items-center mb-3">
               <User className="h-5 w-5 text-primary" />
-              <h3 className="font-semibold text-slate-900">Thông tin bệnh nhân</h3>
+              <h3 className="font-semibold text-slate-900">{t("sessionDetailDialog.patientInfo")}</h3>
             </div>
             <div className="text-sm text-slate-600 space-y-2">
-              <p><span className="font-medium text-slate-800">Tên bệnh nhân:</span> {memberDisplayName}</p>
-              <p><span className="font-medium text-slate-800">Mã bệnh nhân:</span> #{session.memberId}</p>
-              <p className="italic text-slate-400">Các thông tin cơ bản khác sẽ hiển thị nếu được chia sẻ.</p>
+              <p><span className="font-medium text-slate-800">{t("sessionDetailDialog.patientName")}</span> {memberDisplayName}</p>
+              <p><span className="font-medium text-slate-800">{t("sessionDetailDialog.patientCode")}</span> #{session.memberId}</p>
+              <p className="italic text-slate-400">{t("sessionDetailDialog.otherInfoNote")}</p>
             </div>
           </div>
 
           <div className="bg-slate-50 rounded-lg p-4 border border-slate-100">
             <div className="flex gap-2 items-center mb-3">
               <BriefcaseMedical className="h-5 w-5 text-primary" />
-              <h3 className="font-semibold text-slate-900">Hồ sơ ban đầu</h3>
+              <h3 className="font-semibold text-slate-900">{t("sessionDetailDialog.initialRecord")}</h3>
             </div>
             {initialHealthRecord ? (
               <div className="flex items-center gap-3 p-3 bg-white border rounded-md">
                 <FileText className="h-8 w-8 text-slate-400" />
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-slate-900 truncate">
-                    {initialHealthRecord.originalFileName || `Hồ sơ #${initialHealthRecord.id}`}
+                    {initialHealthRecord.originalFileName || t("sessionDetailDialog.recordFallback", { id: initialHealthRecord.id })}
                   </p>
                   <p className="text-xs text-slate-500">
-                    Cập nhật: {formatDate(initialHealthRecord.updatedAt || initialHealthRecord.createdAt)}
+                    {t("sessionDetailDialog.updatedAt", { date: formatDate(initialHealthRecord.updatedAt || initialHealthRecord.createdAt) })}
                   </p>
                 </div>
                 <Badge variant="secondary" className="text-xs">
@@ -239,14 +242,14 @@ export function DoctorSessionDetailDialog({ sessionId, open, onOpenChange, onSes
                 </Badge>
               </div>
             ) : (
-              <p className="text-sm text-slate-500 italic">Không có hồ sơ đính kèm khi bắt đầu.</p>
+              <p className="text-sm text-slate-500 italic">{t("sessionDetailDialog.noInitialRecord")}</p>
             )}
           </div>
 
           <div className="bg-primary-50/50 rounded-lg p-4 border border-primary-100">
             <div className="flex gap-2 items-center mb-3">
               <Clock className="h-5 w-5 text-primary-600" />
-              <h3 className="font-semibold text-primary-900">Khung giờ hỗ trợ đã cam kết</h3>
+              <h3 className="font-semibold text-primary-900">{t("sessionDetailDialog.committedSupportHours")}</h3>
             </div>
             {renderSupportSchedule()}
           </div>
@@ -278,7 +281,7 @@ export function DoctorSessionDetailDialog({ sessionId, open, onOpenChange, onSes
 
         <DialogFooter className="border-t pt-4">
           <Button variant="outline" onClick={() => onOpenChange(false)}>
-            Đóng
+            {t("sessionDetailDialog.close")}
           </Button>
         </DialogFooter>
       </DialogContent>

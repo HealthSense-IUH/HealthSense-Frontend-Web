@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react"
+import { useTranslation } from "react-i18next"
 import { Plus } from "lucide-react"
 
 import { Page, PageBody, PageFooter, PageHeader } from "@/components/layout/page"
@@ -18,6 +19,7 @@ interface RecordFilters {
 }
 
 export default function AdminHealthRecordsPage() {
+  const { t } = useTranslation("management")
   const [data, setData] = useState<PaginatedResponse<HealthRecord> | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
@@ -61,12 +63,12 @@ export default function AdminHealthRecordsPage() {
   return (
     <Page>
       <PageHeader
-        title="Hồ sơ sức khỏe"
-        description="Quản lý hồ sơ sức khỏe của hội viên và các đặc trưng HRV."
+        title={t("healthRecords.title")}
+        description={t("healthRecords.description")}
         actions={
           <Button onClick={() => setIsCreateOpen(true)}>
             <Plus className="mr-2 h-4 w-4" />
-            Create Mock Record
+            {t("healthRecords.createMock")}
           </Button>
         }
       />
@@ -98,8 +100,8 @@ export default function AdminHealthRecordsPage() {
       <PageFooter>
         <div className="flex flex-wrap items-center justify-between gap-3">
           <p>
-            Showing page {data?.page || 1} of {data?.totalPages || 1}
-            {data?.totalElements !== undefined && ` (${data.totalElements} total records)`}
+            {t("healthRecords.pageInfo", { page: data?.page || 1, totalPages: data?.totalPages || 1 })}
+            {data?.totalElements !== undefined && t("healthRecords.totalRecords", { total: data.totalElements })}
           </p>
           <div className="flex items-center gap-2">
             <Button
@@ -108,7 +110,7 @@ export default function AdminHealthRecordsPage() {
               onClick={() => setPage(p => Math.max(1, p - 1))}
               disabled={page <= 1 || isLoading}
             >
-              Previous
+              {t("healthRecords.previous")}
             </Button>
             <Button
               variant="outline"
@@ -116,7 +118,7 @@ export default function AdminHealthRecordsPage() {
               onClick={() => setPage(p => p + 1)}
               disabled={!data?.hasMore || isLoading}
             >
-              Next
+              {t("healthRecords.next")}
             </Button>
           </div>
         </div>

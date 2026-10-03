@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react"
+import { useTranslation } from "react-i18next"
 import { AlertCircle, AlertTriangle, FileText, CheckCircle2 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
 
+import i18n from "@/lib/i18n"
 import { consultationApi } from "@/services"
 import type { DoctorScopedHealthRecordResponse } from "@/types/consultation"
 import { formatDate } from "./shared"
@@ -16,12 +18,13 @@ interface DoctorScopedRecordsTabProps {
 
 function readError(error: unknown, fallback: string) {
   const err = error as { response?: { status?: number; data?: { message?: string } }; message?: string }
-  if (err.response?.status === 403) return "Bạn không có quyền xem hồ sơ trong phiên này."
-  if (err.response?.status === 404) return "Không tìm thấy phiên chăm sóc."
+  if (err.response?.status === 403) return i18n.t("consultation:scopedRecordsTab.errors.forbidden")
+  if (err.response?.status === 404) return i18n.t("consultation:scopedRecordsTab.errors.notFound")
   return err.response?.data?.message || err.message || fallback
 }
 
 export function DoctorScopedRecordsTab({ sessionId }: DoctorScopedRecordsTabProps) {
+  const { t } = useTranslation("consultation")
   const [records, setRecords] = useState<DoctorScopedHealthRecordResponse[]>([])
   const [loading, setLoading] = useState(true)
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
@@ -38,7 +41,7 @@ export function DoctorScopedRecordsTab({ sessionId }: DoctorScopedRecordsTabProp
         setRecords(res.data.content || [])
       })
       .catch((err) => {
-        setErrorMsg(readError(err, "Không thể tải danh sách hồ sơ."))
+        setErrorMsg(readError(err, t("scopedRecordsTab.errors.loadFailed")))
       })
       .finally(() => {
         setLoading(false)
@@ -76,7 +79,7 @@ export function DoctorScopedRecordsTab({ sessionId }: DoctorScopedRecordsTabProp
         <AlertCircle className="mx-auto h-8 w-8 text-danger-500 mb-2" />
         <p className="text-danger-700 font-medium">{errorMsg}</p>
         <Button variant="outline" className="mt-4" onClick={fetchRecords}>
-          Thử lại
+          {t("scopedRecordsTab.retry")}
         </Button>
       </div>
     )
@@ -87,7 +90,7 @@ export function DoctorScopedRecordsTab({ sessionId }: DoctorScopedRecordsTabProp
       {records.length === 0 ? (
         <div className="py-12 text-center">
           <FileText className="mx-auto h-12 w-12 text-slate-300 mb-3" />
-          <p className="text-slate-500 font-medium">Chưa có hồ sơ sức khỏe nào trong phạm vi tư vấn.</p>
+          <p className="text-slate-500 font-medium">{t("scopedRecordsTab.empty")}</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -111,19 +114,19 @@ export function DoctorScopedRecordsTab({ sessionId }: DoctorScopedRecordsTabProp
                   <div className="flex items-center gap-2">
                     <FileText className="h-4 w-4 text-slate-500" />
                     <span className="font-medium text-slate-900 line-clamp-1" title={item.record.fileName || item.record.originalFileName}>
-                      {item.record.fileName || item.record.originalFileName || `Hồ sơ #${item.record.id}`}
+                      {item.record.fileName || item.record.originalFileName || t("scopedRecordsTab.recordFallback", { id: item.record.id })}
                     </span>
                   </div>
                   {hasAttention && (
                     <Badge variant="outline" className="bg-warning-100 text-warning-700 border-warning-200 gap-1">
                       <AlertTriangle className="h-3 w-3" />
-                      Cần xem
+                      {t("scopedRecordsTab.needsReview")}
                     </Badge>
                   )}
                   {isReviewed && (
                     <Badge variant="outline" className="bg-success-50 text-success-700 border-success-200 gap-1">
                       <CheckCircle2 className="h-3 w-3" />
-                      Đã xem
+                      {t("scopedRecordsTab.reviewed")}
                     </Badge>
                   )}
                 </div>
@@ -131,7 +134,7 @@ export function DoctorScopedRecordsTab({ sessionId }: DoctorScopedRecordsTabProp
                 <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-slate-500">
                   <span>{formatDate(item.record.createdAt) || "-"}</span>
                   <span className="flex items-center gap-1.5">
-                    Trạng thái: <Badge variant="secondary" className="text-[10px] px-1.5 py-0">{item.record.status || "UNKNOWN"}</Badge>
+                    {t("scopedRecordsTab.statusLabel")}{" "}<Badge variant="secondary" className="text-[10px] px-1.5 py-0">{item.record.status || "UNKNOWN"}</Badge>
                   </span>
                   {item.record.predictionLabel && (
                     <span className="flex items-center gap-1.5">
@@ -139,7 +142,7 @@ export function DoctorScopedRecordsTab({ sessionId }: DoctorScopedRecordsTabProp
                     </span>
                   )}
                   {item.record.confidence && (
-                    <span>Tin cậy: {(item.record.confidence * 100).toFixed(1)}%</span>
+                    <span>{t("scopedRecordsTab.confidence", { value: (item.record.confidence * 100).toFixed(1) })}</span>
                   )}
                 </div>
               </div>

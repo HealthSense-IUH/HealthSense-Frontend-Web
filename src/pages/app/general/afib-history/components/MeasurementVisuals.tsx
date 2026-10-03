@@ -1,3 +1,5 @@
+import type { TFunction } from "i18next"
+import { Trans, useTranslation } from "react-i18next"
 import { Activity, Droplets, Gauge, HeartPulse, ShieldAlert, ShieldCheck, Wind } from "lucide-react"
 import {
   Area,
@@ -19,12 +21,13 @@ function asNumberArray(value: unknown): number[] {
 }
 
 function SqiBadge({ features }: { features: HRVFeatures }) {
+  const { t } = useTranslation("health")
   if (typeof features.sqi_ok !== "boolean") return null
 
   const ok = features.sqi_ok
   const ratio =
     typeof features.sqi_valid_ratio === "number"
-      ? ` • ${(features.sqi_valid_ratio * 100).toFixed(0)}% nhịp hợp lệ`
+      ? t("measurementVisuals.sqi.validRatio", { value: (features.sqi_valid_ratio * 100).toFixed(0) })
       : ""
 
   return (
@@ -36,7 +39,7 @@ function SqiBadge({ features }: { features: HRVFeatures }) {
       }`}
     >
       {ok ? <ShieldCheck className="w-3.5 h-3.5" /> : <ShieldAlert className="w-3.5 h-3.5" />}
-      {ok ? `Chất lượng đo: Tốt${ratio}` : "Chất lượng đo: Kém — nên đo lại"}
+      {ok ? t("measurementVisuals.sqi.good", { ratio }) : t("measurementVisuals.sqi.poor")}
     </span>
   )
 }
@@ -50,7 +53,7 @@ interface MetricTile {
   note?: string
 }
 
-function buildExtraTiles(features: HRVFeatures): MetricTile[] {
+function buildExtraTiles(features: HRVFeatures, t: TFunction): MetricTile[] {
   const tiles: MetricTile[] = []
 
   if (typeof features.deviceSpO2 === "number") {
@@ -60,27 +63,27 @@ function buildExtraTiles(features: HRVFeatures): MetricTile[] {
       label: "SpO2",
       value: features.deviceSpO2.toFixed(0),
       unit: "%",
-      note: "Tham khảo (đo tại thiết bị)",
+      note: t("measurementVisuals.tiles.spo2Note"),
     })
   }
   if (typeof features.respiratoryRate === "number") {
     tiles.push({
       key: "resp",
       icon: Wind,
-      label: "Nhịp thở",
+      label: t("measurementVisuals.tiles.respiratoryRate"),
       value: features.respiratoryRate.toFixed(1),
-      unit: "lần/phút",
-      note: "12 - 20 lần/phút",
+      unit: t("measurementVisuals.tiles.breathsPerMin"),
+      note: t("measurementVisuals.tiles.respiratoryRateNote"),
     })
   }
   if (typeof features.hrMin === "number" && typeof features.hrMax === "number") {
     tiles.push({
       key: "hrrange",
       icon: HeartPulse,
-      label: "Nhịp tim min - max",
+      label: t("measurementVisuals.tiles.hrRange"),
       value: `${features.hrMin.toFixed(0)} - ${features.hrMax.toFixed(0)}`,
       unit: "BPM",
-      note: "Trong phiên đo",
+      note: t("measurementVisuals.tiles.hrRangeNote"),
     })
   }
   if (typeof features.perfusionIndex === "number") {
@@ -90,7 +93,7 @@ function buildExtraTiles(features: HRVFeatures): MetricTile[] {
       label: "Perfusion Index",
       value: features.perfusionIndex.toFixed(2),
       unit: "%",
-      note: "Thấp → đeo lỏng / tưới máu yếu",
+      note: t("measurementVisuals.tiles.perfusionNote"),
     })
   }
   // Stress score chỉ hiển thị khi nhịp không quá bất thường —
@@ -100,10 +103,10 @@ function buildExtraTiles(features: HRVFeatures): MetricTile[] {
     tiles.push({
       key: "stress",
       icon: Gauge,
-      label: "Điểm căng thẳng",
+      label: t("measurementVisuals.tiles.stressScore"),
       value: String(features.stressScore),
       unit: "/100",
-      note: "Tham khảo (Baevsky SI)",
+      note: t("measurementVisuals.tiles.stressNote"),
     })
   }
   return tiles
@@ -116,9 +119,10 @@ function buildExtraTiles(features: HRVFeatures): MetricTile[] {
  * - nnIntervals + sqi_*: chỉ có ở các phép đo mới — tự ẩn nếu thiếu
  */
 export function MeasurementVisuals({ features }: { features: HRVFeatures }) {
+  const { t } = useTranslation("health")
   const wave = asNumberArray(features.chartData)
   const nn = asNumberArray(features.nnIntervals)
-  const extraTiles = buildExtraTiles(features)
+  const extraTiles = buildExtraTiles(features, t)
 
   const hasWave = wave.length >= 10
   const hasPoincare = nn.length >= 10
@@ -141,7 +145,7 @@ export function MeasurementVisuals({ features }: { features: HRVFeatures }) {
           <div className="flex items-center justify-between flex-wrap gap-2 mb-1.5">
             <span className="text-xs font-semibold text-foreground uppercase tracking-wider flex items-center gap-1.5">
               <Activity className="w-3.5 h-3.5 text-primary-500" />
-              Sóng mạch (PPG) trong phiên đo
+              {t("measurementVisuals.wave.title")}
             </span>
             <SqiBadge features={features} />
           </div>
@@ -169,8 +173,7 @@ export function MeasurementVisuals({ features }: { features: HRVFeatures }) {
             </ResponsiveContainer>
           </div>
           <p className="text-[11px] text-muted-foreground mt-1">
-            Mỗi đỉnh sóng là một nhịp tim. Sóng đều đặn → nhịp ổn định; sóng lộn xộn, biên độ
-            thất thường → nhịp bất thường.
+            {t("measurementVisuals.wave.hint")}
           </p>
         </div>
       )}
@@ -204,7 +207,7 @@ export function MeasurementVisuals({ features }: { features: HRVFeatures }) {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div className="p-3.5 rounded-2xl bg-slate-50 border border-border">
             <span className="text-xs font-semibold text-foreground uppercase tracking-wider block mb-1.5">
-              Đồ thị Poincaré
+              {t("measurementVisuals.poincare.title")}
             </span>
             <div className="h-52">
               <ResponsiveContainer width="100%" height="100%">
@@ -245,23 +248,21 @@ export function MeasurementVisuals({ features }: { features: HRVFeatures }) {
 
           <div className="p-3.5 rounded-2xl bg-slate-50 border border-border flex flex-col justify-center gap-2">
             <span className="text-xs font-semibold text-foreground uppercase tracking-wider">
-              Cách đọc đồ thị
+              {t("measurementVisuals.poincare.howToRead")}
             </span>
             <p className="text-xs text-muted-foreground leading-relaxed">
-              Mỗi chấm là <b>một cặp nhịp tim liên tiếp</b>: vị trí ngang là khoảng cách nhịp
-              trước, vị trí dọc là khoảng cách nhịp sau.
+              <Trans t={t} i18nKey="measurementVisuals.poincare.dotExplain" components={{ b: <b /> }} />
             </p>
             <ul className="text-xs text-muted-foreground leading-relaxed space-y-1 list-disc pl-4">
               <li>
-                Đám chấm <b>gọn, bám sát đường chéo</b> → nhịp tim đều đặn.
+                <Trans t={t} i18nKey="measurementVisuals.poincare.tight" components={{ b: <b /> }} />
               </li>
               <li>
-                Đám chấm <b>tản rộng như đám mây</b> → nhịp biến thiên bất thường, đặc trưng
-                thường gặp của rung nhĩ.
+                <Trans t={t} i18nKey="measurementVisuals.poincare.scattered" components={{ b: <b /> }} />
               </li>
             </ul>
             <p className="text-[11px] text-muted-foreground">
-              Dựa trên {nn.length} khoảng nhịp ghi nhận trong phiên đo.
+              {t("measurementVisuals.poincare.basedOn", { count: nn.length })}
             </p>
           </div>
         </div>

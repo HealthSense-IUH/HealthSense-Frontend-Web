@@ -1,25 +1,31 @@
+import i18n from "@/lib/i18n"
+
+/**
+ * Thông báo lỗi theo mã HTTP. Dùng getter để dịch lúc tra cứu (theo ngôn ngữ
+ * đang chọn), không dịch lúc nạp module.
+ */
 export const HTTP_STATUS_MESSAGES: Record<number, string> = {
-  400: "Yêu cầu không hợp lệ. Vui lòng kiểm tra lại dữ liệu.",
-  401: "Vui lòng đăng nhập để tiếp tục.",
-  403: "Bạn không có quyền truy cập tài nguyên này.",
-  404: "Không tìm thấy tài nguyên được yêu cầu.",
-  409: "Dữ liệu đã tồn tại hoặc bị trùng lặp.",
-  429: "Quá nhiều yêu cầu. Vui lòng đợi một lát rồi thử lại.",
-  500: "Máy chủ đang gặp sự cố. Vui lòng thử lại sau.",
-  502: "Dịch vụ tạm thời không khả dụng. Vui lòng thử lại sau.",
-  503: "Dịch vụ tạm thời không khả dụng. Vui lòng thử lại sau.",
-  504: "Dịch vụ tạm thời không khả dụng. Vui lòng thử lại sau.",
+  get 400() { return i18n.t("errors:http.400") },
+  get 401() { return i18n.t("errors:http.401") },
+  get 403() { return i18n.t("errors:http.403") },
+  get 404() { return i18n.t("errors:http.404") },
+  get 409() { return i18n.t("errors:http.409") },
+  get 429() { return i18n.t("errors:http.429") },
+  get 500() { return i18n.t("errors:http.500") },
+  get 502() { return i18n.t("errors:http.unavailable") },
+  get 503() { return i18n.t("errors:http.unavailable") },
+  get 504() { return i18n.t("errors:http.unavailable") },
 }
 
 export const AUTH_ERROR_FALLBACK_MESSAGES: Record<number, string> = {
-  1001: "Email hoặc mật khẩu không đúng.",
-  1002: "Email này đã được đăng ký.",
-  1003: "Tài khoản đã bị khóa.",
-  1004: "Phiên đăng nhập đã hết hạn.",
-  1005: "Không tìm thấy phiên đăng nhập.",
-  1006: "Phiên đăng nhập không còn hợp lệ.",
-  1007: "Token không hợp lệ hoặc đã hết hạn.",
-  1200: "Dữ liệu nhập chưa hợp lệ.",
-  403: "Bạn không có quyền truy cập.",
-  429: "Thao tác quá nhanh, vui lòng thử lại sau.",
+  get 1001() { return i18n.t("errors:auth.1001") },
+  get 1002() { return i18n.t("errors:auth.1002") },
+  get 1003() { return i18n.t("errors:auth.1003") },
+  get 1004() { return i18n.t("errors:auth.1004") },
+  get 1005() { return i18n.t("errors:auth.1005") },
+  get 1006() { return i18n.t("errors:auth.1006") },
+  get 1007() { return i18n.t("errors:auth.1007") },
+  get 1200() { return i18n.t("errors:auth.1200") },
+  get 403() { return i18n.t("errors:auth.403") },
+  get 429() { return i18n.t("errors:auth.429") },
 }

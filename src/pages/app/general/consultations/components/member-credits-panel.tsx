@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react"
 import { useSearchParams, useNavigate } from "react-router-dom"
+import { useTranslation } from "react-i18next"
 import {
   Coins,
   History,
@@ -24,6 +25,7 @@ import { MemberPaymentFilterBar } from "@/pages/app/general/credits/components/m
 import type { CreditPackage } from "@/types/credits"
 
 export function MemberCreditsPanel() {
+  const { t } = useTranslation("consultation")
   const navigate = useNavigate()
   const { toast } = useToast()
 
@@ -85,8 +87,8 @@ export function MemberCreditsPanel() {
   // Purchase hook
   const purchaseState = useCreditPurchase((detail) => {
     toast({
-      title: "Thành công",
-      description: "Mua lượt tư vấn thành công!",
+      title: t("creditsPanel.toast.successTitle"),
+      description: t("creditsPanel.toast.purchaseSuccess"),
     })
 
     if (detail.wallet) {
@@ -151,10 +153,10 @@ export function MemberCreditsPanel() {
         <div>
           <h2 className="text-lg font-semibold tracking-tight text-foreground flex items-center gap-2">
             <Coins className="w-5 h-5 text-primary" />
-            Ví lượt tư vấn
+            {t("creditsPanel.title")}
           </h2>
           <p className="text-xs text-muted-foreground mt-0.5">
-            Quản lý số dư lượt tư vấn, mua thêm lượt và theo dõi lịch sử giao dịch minh bạch.
+            {t("creditsPanel.subtitle")}
           </p>
         </div>
         <Button
@@ -171,7 +173,7 @@ export function MemberCreditsPanel() {
                 : ""
             }`}
           />
-          Làm mới ví & gói
+          {t("creditsPanel.refresh")}
         </Button>
       </div>
 
@@ -189,15 +191,15 @@ export function MemberCreditsPanel() {
           <TabsList className="bg-muted/60 p-1">
             <TabsTrigger value="packages" className="gap-2 text-xs font-medium">
               <Package className="h-4 w-4" />
-              Gói lượt tư vấn
+              {t("creditsPanel.tabs.packages")}
             </TabsTrigger>
             <TabsTrigger value="orders" className="gap-2 text-xs font-medium">
               <ShoppingBag className="h-4 w-4" />
-              Lịch sử đơn mua
+              {t("creditsPanel.tabs.orders")}
             </TabsTrigger>
             <TabsTrigger value="ledger" className="gap-2 text-xs font-medium">
               <History className="h-4 w-4" />
-              Biến động lượt
+              {t("creditsPanel.tabs.ledger")}
             </TabsTrigger>
           </TabsList>
         </div>
@@ -207,10 +209,10 @@ export function MemberCreditsPanel() {
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-base font-bold text-foreground">
-                Danh sách gói lượt đang mở bán
+                {t("creditsPanel.packages.title")}
               </h3>
               <p className="text-xs text-muted-foreground">
-                Chọn gói lượt phù hợp để nạp thêm vào ví tư vấn của bạn.
+                {t("creditsPanel.packages.description")}
               </p>
             </div>
           </div>
@@ -229,9 +231,9 @@ export function MemberCreditsPanel() {
         <TabsContent value="orders" className="space-y-6 focus-visible:outline-hidden">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-base font-bold text-foreground">Tổng kết & Lịch sử đơn mua</h3>
+              <h3 className="text-base font-bold text-foreground">{t("creditsPanel.orders.title")}</h3>
               <p className="text-xs text-muted-foreground">
-                Theo dõi tổng quan tài chính token đã mua và chi tiết các đơn nạp lượt tư vấn.
+                {t("creditsPanel.orders.description")}
               </p>
             </div>
           </div>
@@ -276,10 +278,10 @@ export function MemberCreditsPanel() {
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-base font-bold text-foreground">
-                Lịch sử biến động lượt
+                {t("creditsPanel.ledger.title")}
               </h3>
               <p className="text-xs text-muted-foreground">
-                Nhật ký chi tiết các giao dịch mua, giữ lượt và sử dụng lượt tư vấn.
+                {t("creditsPanel.ledger.description")}
               </p>
             </div>
           </div>

@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef, useCallback } from "react"
 import { Clock, AlertCircle, CheckCircle2, RefreshCw, XCircle } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -34,6 +35,7 @@ export function SessionContinuationBanner({
   onSessionRefreshed,
 }: SessionContinuationBannerProps) {
   const { toast } = useToast()
+  const { t } = useTranslation("consultation")
   const isQueueV1 = session.flowType === "QUEUE_DISPATCH_V1"
   const isActive = session.status === "ACTIVE"
 
@@ -137,27 +139,27 @@ export function SessionContinuationBanner({
       onSessionRefreshedRef.current()
       if (decision === "STOP") {
         toast({
-          description: "Bạn đã chọn kết thúc phiên tư vấn.",
+          description: t("chat.continuation.stopChosenToast"),
         })
       } else {
         toast({
-          description: "Bạn đã xác nhận tiếp tục thêm 15 phút. Đang chờ người còn lại xác nhận...",
+          description: t("chat.continuation.continueChosenToast"),
         })
       }
     } catch (error: any) {
       const code = error?.response?.data?.code
       if (code === 4031) {
-        toast({ variant: "destructive", description: "Block 15 phút chưa kết thúc." })
+        toast({ variant: "destructive", description: t("chat.continuation.errors.blockNotEnded") })
       } else if (code === 4032) {
-        toast({ variant: "destructive", description: "Đã hết thời gian 5 phút xác nhận tiếp tục." })
+        toast({ variant: "destructive", description: t("chat.continuation.errors.graceExpired") })
         onSessionRefreshedRef.current()
       } else if (code === 4033) {
-        toast({ variant: "destructive", description: "Lựa chọn đã được ghi nhận và không thể thay đổi." })
+        toast({ variant: "destructive", description: t("chat.continuation.errors.decisionLocked") })
       } else if (code === 4034) {
-        toast({ variant: "destructive", description: "Trạng thái tiếp tục đã thay đổi. Đang tải lại..." })
+        toast({ variant: "destructive", description: t("chat.continuation.errors.stateChanged") })
         onSessionRefreshedRef.current()
       } else {
-        toast({ variant: "destructive", description: readError(error, "Không thể gửi quyết định.") })
+        toast({ variant: "destructive", description: readError(error, t("chat.continuation.errors.submitFailed")) })
       }
       onSessionRefreshedRef.current()
     } finally {
@@ -175,14 +177,14 @@ export function SessionContinuationBanner({
       <div className="flex items-center justify-between px-4 py-2 bg-muted/40 border-b border-border/60 text-xs">
         <div className="flex items-center gap-2 text-muted-foreground">
           <Clock className="w-3.5 h-3.5 text-primary" />
-          <span>Thời gian block tư vấn (Lượt {session.continuationRound || 0}):</span>
+          <span>{t("chat.continuation.blockTime", { round: session.continuationRound || 0 })}</span>
           <span className="font-mono font-semibold text-foreground">
             {formatCountdown(blockRemainingMs)}
           </span>
         </div>
         <div className="flex items-center gap-2">
           <Badge variant="outline" className="text-[10px] bg-primary/5 text-primary border-primary/20">
-            Khung 15 phút
+            {t("chat.continuation.blockBadge")}
           </Badge>
         </div>
       </div>
@@ -201,10 +203,10 @@ export function SessionContinuationBanner({
             <AlertCircle className="w-5 h-5 text-warning-600 shrink-0 mt-0.5" />
             <div>
               <h4 className="font-semibold text-sm">
-                Phiên tư vấn hiện tại đã kết thúc (15 phút).
+                {t("chat.continuation.endedTitle")}
               </h4>
               <p className="text-xs text-warning-800 mt-0.5">
-                Bạn có muốn tiếp tục thêm 15 phút không? Cả hai bên cần đồng ý để tiếp tục phiên.
+                {t("chat.continuation.endedDescription")}
               </p>
             </div>
           </div>
@@ -220,20 +222,20 @@ export function SessionContinuationBanner({
             {myDecision === "CONTINUE" ? (
               <span className="flex items-center gap-1.5 text-success-700 font-medium">
                 <CheckCircle2 className="w-4 h-4" />
-                Bạn đã chọn tiếp tục. Đang chờ người còn lại xác nhận...
+                {t("chat.continuation.waitingOther")}
               </span>
             ) : myDecision === "STOP" ? (
               <span className="flex items-center gap-1.5 text-slate-600 font-medium">
                 <XCircle className="w-4 h-4" />
-                Bạn đã chọn kết thúc phiên. Đang hoàn tất...
+                {t("chat.continuation.stopping")}
               </span>
             ) : isGraceExpired ? (
               <span className="text-destructive font-medium">
-                Đã hết thời gian xác nhận. Đang cập nhật trạng thái phiên...
+                {t("chat.continuation.graceExpiredUpdating")}
               </span>
             ) : (
               <span className="text-muted-foreground text-[11px]">
-                Vui lòng xác nhận trước khi hết thời gian 5 phút gia hạn.
+                {t("chat.continuation.confirmBeforeExpiry")}
               </span>
             )}
           </div>
@@ -247,7 +249,7 @@ export function SessionContinuationBanner({
                 disabled={isButtonsDisabled}
                 onClick={() => void handleDecision("STOP")}
               >
-                Kết thúc
+                {t("chat.continuation.stop")}
               </Button>
               <Button
                 variant="default"
@@ -257,7 +259,7 @@ export function SessionContinuationBanner({
                 onClick={() => void handleDecision("CONTINUE")}
               >
                 {actionLoading ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : null}
-                Tiếp tục
+                {t("chat.continuation.continue")}
               </Button>
             </div>
           )}
@@ -272,7 +274,7 @@ export function SessionContinuationBanner({
       <div className="flex items-center justify-between px-4 py-2.5 bg-warning-50/70 border-b border-warning-200/50 text-xs text-warning-900">
         <div className="flex items-center gap-2">
           <RefreshCw className="w-3.5 h-3.5 animate-spin text-warning-600" />
-          <span>Hết block 15 phút. Đang kiểm tra trạng thái tiếp tục phiên tư vấn...</span>
+          <span>{t("chat.continuation.checking")}</span>
         </div>
         <Button
           variant="ghost"
@@ -283,7 +285,7 @@ export function SessionContinuationBanner({
             onSessionRefreshedRef.current()
           }}
         >
-          Làm mới
+          {t("chat.continuation.refresh")}
         </Button>
       </div>
     )

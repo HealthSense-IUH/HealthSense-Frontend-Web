@@ -49,8 +49,10 @@ export interface ConsultationCreditSnapshot {
 export interface CreditWallet {
   id?: string
   memberId?: string
-  balance: number   // tổng lượt còn lại, gồm lượt đang giữ
-  reserved: number  // lượt đang được giữ
+  // balance: tổng lượt còn lại, gồm lượt đang giữ
+  balance: number
+  // reserved: lượt đang được giữ
+  reserved: number
   available: number // balance - reserved
   version?: number
   updatedAt?: string

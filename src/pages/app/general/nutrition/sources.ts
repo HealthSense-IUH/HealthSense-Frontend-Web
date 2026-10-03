@@ -1,11 +1,18 @@
+import i18n from "@/lib/i18n"
 import type { ReferenceFoodSource } from "@/types/nutrition"
 
-/** Tên hiển thị và trích dẫn của từng nguồn dữ liệu dinh dưỡng tham chiếu. */
+/** Tên hiển thị và trích dẫn của từng nguồn dữ liệu dinh dưỡng tham chiếu (dịch lúc đọc theo ngôn ngữ đang chọn). */
 export const REFERENCE_SOURCES: Record<ReferenceFoodSource, { short: string; label: string; citation: string }> = {
   VN_FCT: {
-    short: "Việt Nam",
-    label: "Bảng thành phần thực phẩm Việt Nam 2007",
-    citation: "Viện Dinh dưỡng - Bộ Y tế (2007). Bảng thành phần thực phẩm Việt Nam. Nhà xuất bản Y học, Hà Nội.",
+    get short() {
+      return i18n.t("nutrition:sources.vnFct.short")
+    },
+    get label() {
+      return i18n.t("nutrition:sources.vnFct.label")
+    },
+    get citation() {
+      return i18n.t("nutrition:sources.vnFct.citation")
+    },
   },
   USDA_FNDDS: {
     short: "USDA",

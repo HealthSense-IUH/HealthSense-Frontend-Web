@@ -1,1 +1,379 @@
-{}
+{
+  "nav": {
+    "about": "Về chúng tôi",
+    "features": "Chỉ số sinh học",
+    "pipeline": "Mô hình AI",
+    "benchmark": "Kiểm chứng lâm sàng",
+    "dashboard": "Dashboard",
+    "login": "Đăng nhập",
+    "tryIt": "Trải nghiệm"
+  },
+  "hero": {
+    "titleLine1": "Giám sát tim 24/7",
+    "titleLine2": "Phát hiện rung nhĩ sớm",
+    "subtitle": "Hệ sinh thái AI phân tích dữ liệu điện tim và SpO2 liên tục từ thiết bị đeo, nhận diện sớm loạn nhịp nguy hiểm và kết nối bác sĩ tim mạch tức thì.",
+    "ctaDashboard": "Xem Dashboard Sức khỏe",
+    "ctaJoin": "Tham gia ngay",
+    "ctaHowItWorks": "Tìm hiểu cách hoạt động",
+    "metrics": {
+      "accuracy": "Độ chính xác (Stacking)",
+      "recall": "Độ nhạy phát hiện (Recall)",
+      "latency": "Độ trễ phân tích tín hiệu"
+    },
+    "scrollExplore": "Kéo xuống khám phá"
+  },
+  "scrollToTop": "Cuộn lên đầu trang",
+  "footer": {
+    "description": "Hệ sinh thái y tế AI tiên phong giám sát nhịp tim và nồng độ SpO2 liên tục 24/7 từ thiết bị đeo, nhận diện sớm Rung nhĩ (AFib) và bảo vệ trái tim của bạn.",
+    "techHeading": "Công Nghệ & AI",
+    "tech": {
+      "hrv": "16 Chỉ số biến thiên nhịp (HRV)",
+      "stacking": "Mô hình Stacking Ensemble",
+      "benchmark": "Kiểm chứng lâm sàng (Benchmark)",
+      "xai": "Trí tuệ nhân tạo minh bạch (XAI)",
+      "mimic": "Cơ sở dữ liệu y tế MIMIC-III"
+    },
+    "aboutHeading": "Về Chúng Tôi",
+    "about": {
+      "story": "Câu chuyện HealthSense",
+      "care": "Giá trị cốt lõi C.A.R.E",
+      "loginPage": "Trang đăng nhập",
+      "terms": "Điều khoản & Miễn trừ y khoa"
+    },
+    "disclaimer": "<strong>Tuyên bố miễn trừ y khoa:</strong> HealthSense là nền tảng thử nghiệm công nghệ AI hỗ trợ theo dõi nhịp tim và tầm soát Rung nhĩ. Kết quả mang tính tham khảo và không thay thế chẩn đoán từ bác sĩ. Xem chi tiết tại <termsLink>Điều khoản sử dụng & Miễn trừ trách nhiệm</termsLink>.",
+    "copyright": "© {{year}} HealthSense. All rights reserved."
+  },
+  "brandStory": {
+    "mission": "HealthSense được phát triển với tinh thần tiên phong và tư duy đột phá của y tế số. Chúng mình tin rằng mỗi người đều xứng đáng sở hữu giải pháp AI cá nhân hóa để theo dõi nhịp tim và bảo vệ sức khỏe tim mạch chủ động mỗi ngày.",
+    "scrollToFeatures": "Cuộn xuống phần chỉ số sinh học",
+    "story": {
+      "p1": "Xuất phát từ thực tế đáng lo ngại khi hàng triệu người bệnh đối mặt với các cơn Rung nhĩ (AFib) và loạn nhịp diễn ra hoàn toàn âm thầm, không có triệu chứng rõ ràng cho đến khi biến chứng đột quỵ xảy ra.",
+      "p2": "Chúng mình đã xây dựng HealthSense với mong muốn xóa bỏ khoảng cách giữa bệnh nhân và chăm sóc tim mạch chuyên sâu, biến chiếc đồng hồ đeo tay thông thường thành một phòng điện tim 24/7 luôn túc trực bên bạn.",
+      "p3": "Được bảo chứng bởi mô hình học máy Stacking Ensemble đạt độ chính xác 98.65% trên cơ sở dữ liệu y khoa chuẩn hóa, HealthSense liên tục phân tích 16 chỉ số biến thiên nhịp tim (HRV) theo thời gian thực.",
+      "p4": "Chúng mình tin rằng sự an tâm của bạn chính là thước đo thành công lớn nhất. HealthSense sẽ luôn là người bạn đồng hành tin cậy, lắng nghe và bảo vệ từng nhịp đập của bạn trên mọi hành trình."
+    },
+    "valuesIntro": "4 tiêu chí cốt lõi định hình nên sứ mệnh bảo vệ và chăm sóc sức khỏe tim mạch của HealthSense.",
+    "values": {
+      "continuous": {
+        "title": "Giám sát 24/7",
+        "desc": "Đồng bộ không dây liên tục dữ liệu nhịp tim và SpO2 từng giây qua smartwatch mà không làm gián đoạn sinh hoạt."
+      },
+      "accuracy": {
+        "title": "Chuẩn xác 98.65%",
+        "desc": "Mô hình học máy Stacking Ensemble phân tích 16 chỉ số biến thiên nhịp tim (HRV) đạt độ tin cậy chuẩn y tế."
+      },
+      "realtime": {
+        "title": "Cảnh báo tức thì",
+        "desc": "Phản xạ nhanh dưới 100ms phát hiện sớm cơn Rung nhĩ (AFib) và nguy cơ đột quỵ trước khi có triệu chứng."
+      },
+      "expertCare": {
+        "title": "Bác sĩ đồng hành",
+        "desc": "Kết nối trực tuyến 1 chạm với đội ngũ bác sĩ chuyên khoa tim mạch và tự động chia sẻ hồ sơ điện tim an toàn."
+      }
+    }
+  },
+  "features": {
+    "title": "16 Đặc Trưng Sinh Học Cốt Lõi",
+    "subtitle": "Quy trình phân rã sóng điện tim thành 3 trụ cột toán học sinh học cốt lõi giúp AI chẩn đoán chính xác nguy cơ tim mạch.",
+    "detailButton": "Xem chi tiết danh sách {{total}} công thức",
+    "formulaLabel": "Công thức:",
+    "units": {
+      "times": "Lần"
+    },
+    "visual": {
+      "ecg": {
+        "label": "Sóng ECG Liên Tục",
+        "rrInterval": "Khoảng RR: 820ms",
+        "status": "✓ Nhịp xoang đều"
+      },
+      "spectrum": {
+        "label": "Phổ Năng Lượng FFT",
+        "band": "Dải: 0.04 - 0.40 Hz",
+        "status": "✓ Cân bằng Giao cảm"
+      },
+      "poincare": {
+        "label": "Đồ thị Poincaré (SD1/SD2)",
+        "legend": "SD1: Ngắn hạn | SD2: Dài hạn",
+        "status": "✓ Phát hiện Rung nhĩ"
+      }
+    },
+    "pillars": {
+      "timeDomain": {
+        "step": "01 / MIỀN THỜI GIAN",
+        "title": "BIẾN THIÊN TỨC THỜI",
+        "subtitle": "Time-Domain Analysis (8 Chỉ số)",
+        "tagline": "Đo đạc chính xác từng khoảng cách sóng R",
+        "desc": "AI quét liên tục từng nhịp đập qua thuật toán lọc đỉnh Pan-Tompkins. Các chỉ số RMSSD và pNN50 phản ánh tức thời phản xạ phó giao cảm và cảnh báo nhịp chậm/nhịp nhanh bất thường.",
+        "stats": {
+          "s1": "RMSSD nhạy > 50ms",
+          "s2": "8 Đặc trưng thời gian thực",
+          "s3": "Khung trượt 30 giây"
+        },
+        "tech": {
+          "hrMean": "Nhịp tim trung bình trong khung cửa sổ quan sát",
+          "meanNn": "Khoảng thời gian trung bình giữa 2 nhịp bình thường",
+          "sdnn": "Độ lệch chuẩn khoảng NN, biểu thị dung lượng thần kinh tim",
+          "rmssd": "Căn bậc hai trung bình bình phương sai số các nhịp kề (Chỉ số Vàng)",
+          "nn50": "Số lượng các cặp nhịp chênh lệch > 50ms",
+          "pnn50": "Tỷ lệ phần trăm các cặp nhịp chênh lệch > 50ms",
+          "cvNn": "Hệ số biến thiên phân tán chuẩn hóa"
+        }
+      },
+      "frequencyDomain": {
+        "step": "02 / MIỀN TẦN SỐ",
+        "title": "CÂN BẰNG THẦN KINH",
+        "subtitle": "Frequency-Domain FFT (6 Chỉ số)",
+        "tagline": "Phân tách phổ sóng năng lượng tim mạch",
+        "desc": "Nội suy chuỗi RR 4Hz và phân tích mật độ phổ Welch PSD. Tỷ lệ LF/HF làm rõ sự cân bằng giữa thần kinh giao cảm (áp lực, co mạch) và phó giao cảm (thư giãn, hồi phục).",
+        "stats": {
+          "s1": "LF: 0.04 - 0.15 Hz",
+          "s2": "HF: 0.15 - 0.40 Hz",
+          "s3": "Tỷ số cân bằng LF/HF"
+        },
+        "tech": {
+          "lf": "Công suất dải tần số thấp (Hoạt động giao cảm & vận mạch)",
+          "hf": "Công suất dải tần số cao (Phó giao cảm & hô hấp RSA)",
+          "lfNorm": "Công suất LF chuẩn hóa theo tổng năng lượng khả dụng",
+          "hfNorm": "Công suất HF chuẩn hóa phản ánh hoạt động dây X",
+          "lfHfRatio": "Tỷ lệ cân bằng giao cảm / phó giao cảm kinh điển",
+          "totalPower": "Tổng năng lượng sinh học toàn dải tần số"
+        }
+      },
+      "nonlinearDomain": {
+        "step": "03 / PHI TUYẾN TÍNH",
+        "title": "ĐỊNH DANH RUNG NHĨ",
+        "subtitle": "Non-Linear Poincaré & SampEn (3 Chỉ số)",
+        "tagline": "Nhận diện tính hỗn loạn và bất định của tim",
+        "desc": "Sử dụng đồ thị phân tán Poincaré (SD1/SD2) và Entropy mẫu (SampEn). Khi xảy ra Rung Nhĩ (AFib), nhịp tim mất tính chu kỳ làm SampEn tăng vọt — đây là chìa khóa phát hiện bệnh sớm.",
+        "stats": {
+          "s1": "Entropy Mẫu (SampEn)",
+          "s2": "Đồ thị Poincaré SD1/SD2",
+          "s3": "Độ chính xác 98.65%"
+        },
+        "tech": {
+          "sd1": "Bán kính trục ngắn Poincaré: Biến thiên tức thời nhịp kề",
+          "sd2": "Bán kính trục dài Poincaré: Biến thiên tổng thể dài hạn",
+          "sampEn": "Entropy Mẫu đo lường tính bất định và hỗn loạn nhịp (Chỉ số Vàng)"
+        }
+      }
+    }
+  },
+  "pipeline": {
+    "badge": "Quy Trình Hoạt Động Thông Minh",
+    "title": "Cách AI Phân Tích Nhịp Tim Của Bạn",
+    "intro": "Hệ thống tự động thực hiện 3 bước liên tục để bảo vệ và theo dõi sức khỏe trái tim bạn suốt 24/7.",
+    "stepLabel": "Bước 0{{num}}",
+    "processDetail": "Chi tiết quy trình",
+    "stages": {
+      "stage1": {
+        "title": "Làm Sạch Tín Hiệu Nhịp Tim",
+        "subtitle": "Lọc bỏ tạp âm & bắt nhịp tim chuẩn",
+        "tagline": "Tự động loại bỏ rung lắc khi cử động tay để giữ lại nhịp đập chính xác nhất",
+        "summary": "Khi bạn đi bộ, chạy bộ hay cử động tay, tín hiệu từ cảm biến đeo có thể bị rung lắc làm mờ nhịp đập. Hệ thống sẽ tự động lọc sạch các tạp âm này, giữ lại từng nhịp tim rõ nét theo thời gian thực.",
+        "bullets": {
+          "b1": "Cảm biến đo liên tục 125 lần mỗi giây",
+          "b2": "Tự động khử rung lắc và tạp âm khi bạn vận động",
+          "b3": "Nhận diện chính xác từng nhịp đập của tim",
+          "b4": "Đo khoảng cách chuẩn xác giữa các nhịp liên tiếp"
+        },
+        "specs": {
+          "samplingRate": {
+            "label": "Tốc độ đo",
+            "value": "125 lần / giây"
+          },
+          "motionDenoise": {
+            "label": "Khử nhiễu rung lắc",
+            "value": "Tự động 100%"
+          },
+          "processingTime": {
+            "label": "Thời gian xử lý",
+            "value": "< 12 mili-giây"
+          },
+          "beatAccuracy": {
+            "label": "Độ chính xác bắt nhịp",
+            "value": "99.98%"
+          }
+        }
+      },
+      "stage2": {
+        "title": "Phân Tích 16 Chỉ Số Sức Khỏe",
+        "subtitle": "Đo lường độ đều đặn & sức khỏe tim",
+        "tagline": "Phân tích khoảng cách giữa các nhịp đập thành 16 chỉ số sức khỏe chuyên sâu",
+        "summary": "Trái tim khỏe mạnh luôn có độ biến thiên linh hoạt. AI phân tích 16 chỉ số biến thiên nhịp tim (HRV) giúp nhận biết sớm tình trạng tim đập không đều, căng thẳng hoặc quá tải trước khi bạn kịp cảm thấy mệt mỏi.",
+        "bullets": {
+          "b1": "Đo độ đều đặn của nhịp tim (nhịp nhanh, chậm hay ngắt quãng)",
+          "b2": "Đánh giá mức độ đồng bộ giữa nhịp tim và hơi thở",
+          "b3": "Phát hiện các cơn rối loạn nhịp tim ngầm khó nhận biết",
+          "b4": "Đồng bộ toàn bộ chỉ số về thang đo chuẩn để phân tích"
+        },
+        "specs": {
+          "metrics": {
+            "label": "Chỉ số phân tích",
+            "value": "16 Chỉ số tim mạch"
+          },
+          "coverage": {
+            "label": "Khả năng bao quát",
+            "value": "Toàn diện nhịp tim"
+          },
+          "dataSync": {
+            "label": "Đồng bộ dữ liệu",
+            "value": "Tự động tức thì"
+          },
+          "computeTime": {
+            "label": "Thời gian tính toán",
+            "value": "< 24 mili-giây"
+          }
+        }
+      },
+      "stage3": {
+        "title": "Đưa Ra Đánh Giá & Cảnh Báo",
+        "subtitle": "Nhận diện và cảnh báo sớm Rung nhĩ (AFib)",
+        "tagline": "Kết hợp 4 mô hình AI cùng phân tích chéo để đưa ra kết luận chính xác và an tâm",
+        "summary": "Thay vì chỉ dựa vào một thuật toán duy nhất, HealthSense kết hợp 4 mô hình trí tuệ nhân tạo cùng đánh giá chéo dữ liệu. Nhờ đó, hệ thống nhận diện chính xác đến 98.65% nguy cơ Rung nhĩ (AFib) và gửi cảnh báo tức thì đến bạn.",
+        "bullets": {
+          "b1": "4 mô hình AI cùng phân tích độc lập để tránh kết luận sai",
+          "b2": "Tự động chọn lọc phương án có độ tin cậy cao nhất",
+          "b3": "Độ nhạy phát hiện bệnh 99.78% (hạn chế tối đa bỏ sót ca bệnh)",
+          "b4": "Đưa ra cảnh báo siêu nhanh dưới 85 mili-giây"
+        },
+        "specs": {
+          "mechanism": {
+            "label": "Cơ chế phân tích",
+            "value": "4 AI phân tích chéo"
+          },
+          "accuracy": {
+            "label": "Độ chính xác",
+            "value": "98.65%"
+          },
+          "sensitivity": {
+            "label": "Độ nhạy bắt bệnh",
+            "value": "99.78%"
+          },
+          "alertSpeed": {
+            "label": "Tốc độ cảnh báo",
+            "value": "< 85 mili-giây"
+          }
+        }
+      }
+    },
+    "monitor": {
+      "title": "Mô phỏng trực quan theo thời gian thực",
+      "subtitle": "Dữ liệu phân tích nhịp tim mẫu",
+      "live": "Hoạt động 24/7"
+    },
+    "stage1Viz": {
+      "label": "Sóng nhịp tim thu nhận từ thiết bị đeo",
+      "noiseOn": "Đang có rung lắc cử động",
+      "noiseOff": "Đã lọc sạch tín hiệu chuẩn",
+      "heartRate": "Nhịp tim: 74 BPM",
+      "latency": "Độ trễ: 12ms",
+      "statusNoisy": "⚠️ Đang lọc bỏ rung lắc cử động",
+      "statusClean": "🟢 Sóng nhịp tim ổn định và chuẩn xác",
+      "beatLocalization": "Định vị từng nhịp"
+    },
+    "stage2Viz": {
+      "label": "16 Chỉ số biến thiên nhịp tim (HRV)",
+      "scale": "Thang đo chuẩn hóa",
+      "bars": {
+        "deviation": "Độ lệch nhịp",
+        "variability": "Độ biến thiên",
+        "pauses": "Nhịp ngắt",
+        "meanHr": "Nhịp TB",
+        "lowFreq": "Tần số thấp",
+        "highFreq": "Tần số cao",
+        "respRatio": "Tỷ số thở",
+        "stability": "Độ ổn định"
+      },
+      "ready": "✓ 16 chỉ số sức khỏe đã sẵn sàng để AI phân tích",
+      "synced": "Đã đồng bộ"
+    },
+    "stage3Viz": {
+      "label": "4 Mô hình AI cùng phân tích chéo",
+      "sampleNormal": "Mẫu: Bình thường",
+      "sampleAfib": "Mẫu: Loạn nhịp (AFib)",
+      "models": {
+        "rhythm": "Kiểm tra độ đều nhịp",
+        "rate": "Kiểm tra tần số tim",
+        "pauses": "Kiểm tra cơn ngắt quãng",
+        "waveform": "Đánh giá dạng sóng"
+      },
+      "stable": "{{pct}} Ổn định",
+      "arrhythmia": "{{pct}} Loạn nhịp",
+      "resultTitle": "KẾT QUẢ ĐÁNH GIÁ TỔNG HỢP (< 85ms)",
+      "resultNormal": "Nhịp tim bình thường, ổn định",
+      "resultAfib": "Cảnh báo: Phát hiện dấu hiệu Rung nhĩ (AFib)",
+      "accuracy": "Độ chính xác: 98.65%"
+    },
+    "viewing": "Đang xem: {{title}}",
+    "validated": "Đã kiểm chứng trên dữ liệu y tế MIMIC-III"
+  },
+  "benchmark": {
+    "badge": "DỮ LIỆU & KIỂM CHỨNG KHOA HỌC DỄ HIỂU",
+    "titleLine1": "Hiệu Suất Thực Nghiệm &",
+    "titleLine2": "Độ Tin Cậy Y Khoa Chuẩn Xác",
+    "intro": "AI của HealthSense không đưa ra dự đoán ngẫu nhiên. Mọi kết luận đều dựa trên 5.25 triệu điểm dữ liệu y tế thực tế và được kiểm chứng minh bạch theo chuẩn lâm sàng.",
+    "pillars": {
+      "accuracy": {
+        "title": "Độ Chính Xác Tổng Thể",
+        "desc": "Trong 100 lần phân tích, AI nhận diện chuẩn xác gần như tuyệt đối giữa người khỏe mạnh và người có nguy cơ Rung nhĩ (AFib)."
+      },
+      "recall": {
+        "title": "Độ Nhạy (Không Bỏ Sót Ca Bệnh)",
+        "desc": "Nguyên tắc an toàn y khoa: Trong 8,165 lần đo thực tế, AI chỉ bỏ sót duy nhất 2 trường hợp cần kiểm tra lại."
+      },
+      "speed": {
+        "title": "Tốc Độ Phản Xạ Thời Gian Thực",
+        "desc": "Xử lý nhanh hơn một cái chớp mắt, đưa ra cảnh báo khẩn cấp ngay trên đồng hồ khi tim có dấu hiệu loạn nhịp đột ngột."
+      }
+    },
+    "xai": {
+      "title": "Vì Sao AI Biết Tim Bạn Bất Thường?",
+      "intro": "AI HealthSense không phải chiếc \"hộp đen\". Hệ thống chỉ ra chính xác 3 dấu hiệu sinh học trọng yếu nhất quyết định kết quả:",
+      "signs": {
+        "rmssd": {
+          "title": "Độ gián cách nhịp không đều (RMSSD)",
+          "desc": "Khoảng cách giữa các nhịp tim nhảy lộn xộn, dấu hiệu kinh điển của Rung nhĩ."
+        },
+        "sampEn": {
+          "title": "Độ xáo trộn tín hiệu (SampEn)",
+          "desc": "Đường điện tim mất tính chu kỳ đều đặn, xuất hiện các xung điện hỗn loạn."
+        },
+        "sd1": {
+          "title": "Biến thiên nhịp tức thì (SD1)",
+          "desc": "Hai nhịp tim kế tiếp thay đổi tốc độ đột biến, không kịp thích ứng."
+        }
+      },
+      "footnote": "Khớp 100% với các triệu chứng lâm sàng được giảng dạy tại các trường y khoa."
+    },
+    "chart": {
+      "title": "Mức độ đóng góp của từng chỉ số vào kết luận AI",
+      "subtitle": "Tỷ lệ phần trăm thể hiện trọng số mà thuật toán ưu tiên khi phân tích:",
+      "items": {
+        "rmssd": {
+          "name": "Độ không đều nhịp tim (RMSSD)",
+          "meaning": "Khoảng cách giữa các nhịp nhảy lộn xộn"
+        },
+        "sampEn": {
+          "name": "Sóng tim mất quy luật (SampEn)",
+          "meaning": "Tín hiệu điện tim xáo trộn bất thường"
+        },
+        "sd1": {
+          "name": "Biến thiên nhịp tức thì (SD1)",
+          "meaning": "Hai nhịp tim kế tiếp thay đổi tốc độ đột biến"
+        },
+        "pnn50": {
+          "name": "Tần suất nhịp lệch > 50ms (pNN50)",
+          "meaning": "Số lần tim đập lệch nhịp vượt ngưỡng an toàn"
+        },
+        "lfHf": {
+          "name": "Mất cân bằng giao cảm (LF/HF)",
+          "meaning": "Hệ thần kinh điều hòa tim bị quá tải"
+        },
+        "cv": {
+          "name": "Hệ số biến thiên nhịp (CV)",
+          "meaning": "Mức độ phân tán của toàn bộ chuỗi nhịp"
+        }
+      }
+    }
+  }
+}

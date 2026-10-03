@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { Search, X, ChevronRight, Loader2 } from "lucide-react"
+import { Trans, useTranslation } from "react-i18next"
 import { Input } from "@/components/ui/input"
 import { useDebounce } from "@/hooks/use-debounce"
 import { GuidanceBadge } from "./GuidanceBadge"
@@ -16,9 +17,10 @@ interface FoodSearchBarProps {
 
 export function FoodSearchBar({
   className,
-  placeholder = "Tìm thực phẩm (ví dụ: cà phê, sữa ít béo, cá hồi, chuối, bia)...",
+  placeholder,
   onSelectFood,
 }: FoodSearchBarProps) {
+  const { t } = useTranslation("nutrition")
   const [query, setQuery] = useState("")
   const [isOpen, setIsOpen] = useState(false)
   const navigate = useNavigate()
@@ -72,7 +74,7 @@ export function FoodSearchBar({
           }}
           onFocus={() => setIsOpen(true)}
           onKeyDown={handleKeyDown}
-          placeholder={placeholder}
+          placeholder={placeholder ?? t("search.placeholder")}
           className="pl-10 pr-9 h-11 rounded-2xl bg-white border-slate-200 shadow-xs focus-visible:ring-primary/20 text-sm"
         />
         {query && (
@@ -83,7 +85,7 @@ export function FoodSearchBar({
               setIsOpen(false)
             }}
             className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-muted-foreground hover:text-foreground rounded-full"
-            aria-label="Xóa từ khóa tìm kiếm"
+            aria-label={t("search.clear")}
           >
             <X className="w-4 h-4" />
           </button>
@@ -96,8 +98,8 @@ export function FoodSearchBar({
           {results.length > 0 ? (
             <div className="p-2 space-y-1">
               <div className="px-3 py-1.5 text-[11px] font-medium text-muted-foreground flex items-center justify-between">
-                <span>Kết quả thực phẩm ({results.length})</span>
-                <span className="text-[10px] text-primary">Bấm Enter để chọn món đầu tiên</span>
+                <span>{t("search.results", { count: results.length })}</span>
+                <span className="text-[10px] text-primary">{t("search.enterHint")}</span>
               </div>
               {results.map((food) => {
                 const guidanceType = food.guidance
@@ -136,16 +138,13 @@ export function FoodSearchBar({
           ) : isSearching ? (
             <div className="p-6 flex items-center justify-center gap-2 text-sm text-muted-foreground">
               <Loader2 className="w-4 h-4 animate-spin" />
-              <span>Đang tìm...</span>
+              <span>{t("search.searching")}</span>
             </div>
           ) : (
             <div className="p-6 text-center text-sm text-muted-foreground">
-              <p>Không tìm thấy món ăn nào phù hợp với &ldquo;{query}&rdquo;.</p>
+              <p>{t("search.noResults", { query })}</p>
               <p className="text-xs mt-1 text-slate-400">
-                Thử tìm theo từ khóa như: <span className="text-primary font-medium">sữa</span>,{" "}
-                <span className="text-primary font-medium">cá hồi</span>,{" "}
-                <span className="text-primary font-medium">cà phê</span>,{" "}
-                <span className="text-primary font-medium">chuối</span>...
+                <Trans t={t} i18nKey="search.suggestions" components={{ kw: <span className="text-primary font-medium" /> }} />
               </p>
             </div>
           )}

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { useTranslation, Trans } from "react-i18next"
 import { RefreshCw, Clock, AlertTriangle, ShieldCheck, CheckCircle2, XCircle, CreditCard, FileText, ArrowRight, History } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -6,6 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useToast } from "@/hooks/use-toast"
+import i18n, { currentIntlLocale } from "@/lib/i18n"
 
 import { consultationApi } from "@/services"
 import type {
@@ -32,23 +34,23 @@ function readError(error: unknown, fallback: string) {
 export function getRenewalStatusBadge(status: ConsultationRenewalStatus) {
   switch (status) {
     case "REQUESTED":
-      return <Badge variant="outline" className="bg-warning-50 text-warning-700 border-warning-200">Chờ tiếp nhận</Badge>
+      return <Badge variant="outline" className="bg-warning-50 text-warning-700 border-warning-200">{i18n.t("consultation:renewalDialog.renewalStatus.requested")}</Badge>
     case "UNDER_REVIEW":
-      return <Badge variant="outline" className="bg-primary-50 text-primary-700 border-primary-200">Đang xem xét</Badge>
+      return <Badge variant="outline" className="bg-primary-50 text-primary-700 border-primary-200">{i18n.t("consultation:renewalDialog.renewalStatus.underReview")}</Badge>
     case "PENDING_ACCEPTANCE":
-      return <Badge className="bg-primary-600 hover:bg-primary-700 text-white">Chờ xác nhận thỏa thuận</Badge>
+      return <Badge className="bg-primary-600 hover:bg-primary-700 text-white">{i18n.t("consultation:renewalDialog.renewalStatus.pendingAcceptance")}</Badge>
     case "WAITING_PAYMENT":
-      return <Badge className="bg-warning-500 hover:bg-warning-600 text-white">Chờ thanh toán</Badge>
+      return <Badge className="bg-warning-500 hover:bg-warning-600 text-white">{i18n.t("consultation:renewalDialog.renewalStatus.waitingPayment")}</Badge>
     case "PAID":
-      return <Badge className="bg-success-600 hover:bg-success-700 text-white">Đã gia hạn thành công</Badge>
+      return <Badge className="bg-success-600 hover:bg-success-700 text-white">{i18n.t("consultation:renewalDialog.renewalStatus.paid")}</Badge>
     case "REJECTED":
-      return <Badge variant="destructive">Bị từ chối</Badge>
+      return <Badge variant="destructive">{i18n.t("consultation:renewalDialog.renewalStatus.rejected")}</Badge>
     case "CANCELLED":
-      return <Badge variant="secondary">Đã hủy</Badge>
+      return <Badge variant="secondary">{i18n.t("consultation:renewalDialog.renewalStatus.cancelled")}</Badge>
     case "EXPIRED":
-      return <Badge variant="secondary">Đã hết hạn</Badge>
+      return <Badge variant="secondary">{i18n.t("consultation:renewalDialog.renewalStatus.expired")}</Badge>
     case "REQUIRES_REVIEW":
-      return <Badge className="bg-warning-500 text-black hover:bg-warning-600">Cần kiểm tra thủ công</Badge>
+      return <Badge className="bg-warning-500 text-black hover:bg-warning-600">{i18n.t("consultation:renewalDialog.renewalStatus.requiresReview")}</Badge>
     default:
       return <Badge variant="outline">{status}</Badge>
   }
@@ -60,6 +62,7 @@ export function RenewalDialog({
   onOpenChange,
   onSessionRefreshed,
 }: RenewalDialogProps) {
+  const { t } = useTranslation("consultation")
   const { toast } = useToast()
   const [renewals, setRenewals] = useState<ConsultationRenewalResponse[]>([])
   const [extensions, setExtensions] = useState<SessionExtensionResponse[]>([])
@@ -91,8 +94,8 @@ export function RenewalDialog({
       .catch((err) => {
         toast({
           variant: "destructive",
-          title: "Lỗi tải dữ liệu",
-          description: readError(err, "Không thể tải thông tin gia hạn của phiên."),
+          title: t("renewalDialog.toast.loadErrorTitle"),
+          description: readError(err, t("renewalDialog.toast.loadErrorDescription")),
         })
       })
       .finally(() => {
@@ -115,8 +118,8 @@ export function RenewalDialog({
     if (!isSessionActive) {
       toast({
         variant: "destructive",
-        title: "Phiên không hợp lệ",
-        description: "Chỉ có thể yêu cầu gia hạn khi phiên tư vấn đang hoạt động (ACTIVE).",
+        title: t("renewalDialog.toast.invalidSessionTitle"),
+        description: t("renewalDialog.toast.invalidSessionDescription"),
       })
       return
     }
@@ -125,16 +128,16 @@ export function RenewalDialog({
     try {
       await consultationApi.requestRenewal(session.id)
       toast({
-        title: "Gửi yêu cầu gia hạn thành công",
-        description: "Yêu cầu gia hạn của bạn đã được gửi đến Điều phối viên chăm sóc.",
+        title: t("renewalDialog.toast.requestSuccessTitle"),
+        description: t("renewalDialog.toast.requestSuccessDescription"),
       })
       fetchData()
       onSessionRefreshed?.()
     } catch (err) {
       toast({
         variant: "destructive",
-        title: "Lỗi yêu cầu gia hạn",
-        description: readError(err, "Không thể gửi yêu cầu gia hạn vào lúc này."),
+        title: t("renewalDialog.toast.requestErrorTitle"),
+        description: readError(err, t("renewalDialog.toast.requestErrorDescription")),
       })
     } finally {
       setRequesting(false)
@@ -146,16 +149,16 @@ export function RenewalDialog({
     try {
       await consultationApi.cancelRenewal(renewalId)
       toast({
-        title: "Hủy yêu cầu gia hạn thành công",
-        description: "Yêu cầu gia hạn đã được hủy. Thời hạn phiên chăm sóc hiện tại giữ nguyên.",
+        title: t("renewalDialog.toast.cancelSuccessTitle"),
+        description: t("renewalDialog.toast.cancelSuccessDescription"),
       })
       fetchData()
       onSessionRefreshed?.()
     } catch (err) {
       toast({
         variant: "destructive",
-        title: "Lỗi hủy gia hạn",
-        description: readError(err, "Không thể hủy yêu cầu gia hạn lúc này."),
+        title: t("renewalDialog.toast.cancelErrorTitle"),
+        description: readError(err, t("renewalDialog.toast.cancelErrorDescription")),
       })
     } finally {
       setCancellingId(null)
@@ -175,15 +178,15 @@ export function RenewalDialog({
       } else {
         toast({
           variant: "destructive",
-          title: "Lỗi thanh toán",
-          description: "Không thể tạo liên kết thanh toán PayOS.",
+          title: t("renewalDialog.toast.paymentErrorTitle"),
+          description: t("renewalDialog.toast.paymentLinkErrorDescription"),
         })
       }
     } catch (err) {
       toast({
         variant: "destructive",
-        title: "Lỗi khởi tạo thanh toán",
-        description: readError(err, "Không thể tạo giao dịch thanh toán gia hạn."),
+        title: t("renewalDialog.toast.paymentInitErrorTitle"),
+        description: readError(err, t("renewalDialog.toast.paymentInitErrorDescription")),
       })
     } finally {
       setPayingId(null)
@@ -201,9 +204,9 @@ export function RenewalDialog({
                   <RefreshCw className="w-5 h-5" />
                 </div>
                 <div>
-                  <DialogTitle className="text-lg font-bold">Gia hạn Phiên Chăm sóc</DialogTitle>
+                  <DialogTitle className="text-lg font-bold">{t("renewalDialog.title")}</DialogTitle>
                   <DialogDescription>
-                    Phiên #{session.id} &bull; {session.doctorDisplayName || `Bác sĩ #${session.doctorId}`}
+                    {t("renewalDialog.sessionNumber", { id: session.id })} &bull; {session.doctorDisplayName || t("renewalDialog.doctorFallback", { id: session.doctorId })}
                   </DialogDescription>
                 </div>
               </div>
@@ -216,8 +219,8 @@ export function RenewalDialog({
           <Tabs defaultValue="manage" className="flex-1 flex flex-col overflow-hidden">
             <div className="px-6 pt-3 border-b bg-muted/5">
               <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="manage">Quản lý Gia hạn</TabsTrigger>
-                <TabsTrigger value="history">Lịch sử Thời hạn ({extensions.length})</TabsTrigger>
+                <TabsTrigger value="manage">{t("renewalDialog.tabs.manage")}</TabsTrigger>
+                <TabsTrigger value="history">{t("renewalDialog.tabs.history", { total: extensions.length })}</TabsTrigger>
               </TabsList>
             </div>
 
@@ -225,13 +228,13 @@ export function RenewalDialog({
               {/* Session Overview Card */}
               <div className="p-4 rounded-xl border bg-card text-xs space-y-2.5">
                 <div className="flex items-center justify-between">
-                  <span className="font-semibold text-foreground">Thông tin thời hạn hiện tại:</span>
-                  <span className="text-muted-foreground font-mono">Bắt đầu: {formatDate(session.startedAt)}</span>
+                  <span className="font-semibold text-foreground">{t("renewalDialog.currentTermLabel")}</span>
+                  <span className="text-muted-foreground font-mono">{t("renewalDialog.startedAt", { date: formatDate(session.startedAt) })}</span>
                 </div>
                 <div className="flex items-center gap-2 p-2.5 rounded-lg bg-muted/30 text-foreground">
                   <Clock className="w-4 h-4 text-primary shrink-0" />
                   <span>
-                    Thời hạn hiệu lực hiện tại: <strong className="text-primary">{formatDate(session.endsAt) || "Không xác định"}</strong>
+                    {t("renewalDialog.currentEndsAtLabel")} <strong className="text-primary">{formatDate(session.endsAt) || t("renewalDialog.unknown")}</strong>
                   </span>
                 </div>
               </div>
@@ -243,7 +246,7 @@ export function RenewalDialog({
                     <div className="flex items-center gap-2">
                       <ShieldCheck className="w-5 h-5 text-warning-600" />
                       <span className="font-semibold text-warning-950 text-sm">
-                        Yêu cầu gia hạn #{unresolvedRenewal.id} đang xử lý
+                        {t("renewalDialog.pendingRequestTitle", { id: unresolvedRenewal.id })}
                       </span>
                     </div>
                     {getRenewalStatusBadge(unresolvedRenewal.status)}
@@ -252,23 +255,23 @@ export function RenewalDialog({
                   <div className="text-xs text-warning-900/90 space-y-1.5 pl-7">
                     {(unresolvedRenewal.proposedNewEndsAt || unresolvedRenewal.proposedEndsAt) && (
                       <p>
-                        Thời hạn sau khi gia hạn: <strong>{formatDate(unresolvedRenewal.proposedNewEndsAt || unresolvedRenewal.proposedEndsAt)}</strong>
+                        {t("renewalDialog.proposedEndsAtLabel")} <strong>{formatDate(unresolvedRenewal.proposedNewEndsAt || unresolvedRenewal.proposedEndsAt)}</strong>
                       </p>
                     )}
                     {(unresolvedRenewal.packageNameSnapshot || unresolvedRenewal.durationDays) && (
                       <p>
-                        Gói dịch vụ gia hạn: <strong>{unresolvedRenewal.packageNameSnapshot || `Gói +${unresolvedRenewal.durationDays} ngày`}</strong>
-                        {(unresolvedRenewal.packagePriceSnapshot || unresolvedRenewal.priceAmount) ? ` (${(unresolvedRenewal.packagePriceSnapshot || unresolvedRenewal.priceAmount)?.toLocaleString("vi-VN")} ${unresolvedRenewal.currency || "VND"})` : ""}
+                        {t("renewalDialog.renewalPackageLabel")} <strong>{unresolvedRenewal.packageNameSnapshot || t("renewalDialog.packageFallback", { count: unresolvedRenewal.durationDays })}</strong>
+                        {(unresolvedRenewal.packagePriceSnapshot || unresolvedRenewal.priceAmount) ? ` (${(unresolvedRenewal.packagePriceSnapshot || unresolvedRenewal.priceAmount)?.toLocaleString(currentIntlLocale())} ${unresolvedRenewal.currency || "VND"})` : ""}
                       </p>
                     )}
                     {unresolvedRenewal.paymentDeadline && (
                       <p className="text-danger-600">
-                        Hạn chót thanh toán: <strong>{formatDate(unresolvedRenewal.paymentDeadline)}</strong>
+                        {t("renewalDialog.paymentDeadlineLabel")} <strong>{formatDate(unresolvedRenewal.paymentDeadline)}</strong>
                       </p>
                     )}
                     {unresolvedRenewal.rejectionReason && (
                       <p className="text-danger-700">
-                        Lý do từ chối: <em>{unresolvedRenewal.rejectionReason}</em>
+                        {t("renewalDialog.rejectionReasonLabel")} <em>{unresolvedRenewal.rejectionReason}</em>
                       </p>
                     )}
                   </div>
@@ -282,7 +285,7 @@ export function RenewalDialog({
                         className="gap-1.5"
                       >
                         <FileText className="w-4 h-4" />
-                        Xem & Chấp nhận thỏa thuận
+                        {t("renewalDialog.actions.viewAgreement")}
                       </Button>
                     )}
 
@@ -294,7 +297,7 @@ export function RenewalDialog({
                         className="bg-success-600 hover:bg-success-700 text-white gap-1.5"
                       >
                         <CreditCard className="w-4 h-4" />
-                        {payingId === unresolvedRenewal.id ? "Đang mở thanh toán..." : "Tiến hành thanh toán"}
+                        {payingId === unresolvedRenewal.id ? t("renewalDialog.actions.openingPayment") : t("renewalDialog.actions.pay")}
                       </Button>
                     )}
 
@@ -307,7 +310,7 @@ export function RenewalDialog({
                         className="text-danger-600 hover:bg-danger-50 border-danger-200"
                       >
                         <XCircle className="w-4 h-4 mr-1" />
-                        {cancellingId === unresolvedRenewal.id ? "Đang hủy..." : "Hủy yêu cầu"}
+                        {cancellingId === unresolvedRenewal.id ? t("renewalDialog.actions.cancelling") : t("renewalDialog.actions.cancelRequest")}
                       </Button>
                     )}
                   </div>
@@ -316,10 +319,15 @@ export function RenewalDialog({
                 <div className="p-4 rounded-xl border border-dashed bg-muted/10 space-y-3">
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="w-5 h-5 text-primary" />
-                    <span className="font-semibold text-sm">Gia hạn thêm thời gian chăm sóc</span>
+                    <span className="font-semibold text-sm">{t("renewalDialog.requestCard.title")}</span>
                   </div>
                   <p className="text-xs text-muted-foreground leading-relaxed">
-                    Gia hạn chăm sóc giúp bạn tiếp tục đồng hành cùng <strong>{session.doctorDisplayName || `Bác sĩ #${session.doctorId}`}</strong> trong cùng phiên tư vấn này mà không bị gián đoạn dữ liệu và lịch sử trò chuyện.
+                    <Trans
+                      t={t}
+                      i18nKey="renewalDialog.requestCard.description"
+                      values={{ doctor: session.doctorDisplayName || t("renewalDialog.doctorFallback", { id: session.doctorId }) }}
+                      components={{ strong: <strong /> }}
+                    />
                   </p>
                   <Button
                     onClick={handleRequestRenewal}
@@ -327,35 +335,35 @@ export function RenewalDialog({
                     className="gap-2"
                   >
                     <RefreshCw className={`w-4 h-4 ${requesting ? "animate-spin" : ""}`} />
-                    {requesting ? "Đang gửi yêu cầu..." : "Gửi yêu cầu Gia hạn Chăm sóc"}
+                    {requesting ? t("renewalDialog.requestCard.submitting") : t("renewalDialog.requestCard.submit")}
                   </Button>
                 </div>
               ) : (
                 <div className="p-4 rounded-xl border bg-muted/20 text-xs text-muted-foreground flex items-center gap-2">
                   <AlertTriangle className="w-4 h-4 shrink-0 text-warning-500" />
-                  <span>Phiên chăm sóc đã kết thúc hoặc không còn hoạt động, không thể yêu cầu gia hạn.</span>
+                  <span>{t("renewalDialog.sessionInactive")}</span>
                 </div>
               )}
 
               {/* Past Renewals List */}
               <div className="space-y-3 pt-3 border-t">
-                <h4 className="text-xs font-semibold text-foreground">Lịch sử các yêu cầu gia hạn</h4>
+                <h4 className="text-xs font-semibold text-foreground">{t("renewalDialog.pastRequestsTitle")}</h4>
                 {loading ? (
-                  <div className="py-6 text-center text-xs text-muted-foreground">Đang tải lịch sử...</div>
+                  <div className="py-6 text-center text-xs text-muted-foreground">{t("renewalDialog.loadingHistory")}</div>
                 ) : renewals.length === 0 ? (
-                  <p className="text-xs text-muted-foreground italic">Chưa có yêu cầu gia hạn nào cho phiên này.</p>
+                  <p className="text-xs text-muted-foreground italic">{t("renewalDialog.noRequests")}</p>
                 ) : (
                   <div className="space-y-2">
                     {renewals.map((r) => (
                       <div key={r.id} className="p-3 rounded-lg border bg-card text-xs flex items-center justify-between">
                         <div className="space-y-0.5">
                           <div className="flex items-center gap-2">
-                            <span className="font-medium">Yêu cầu #{r.id}</span>
+                            <span className="font-medium">{t("renewalDialog.requestNumber", { id: r.id })}</span>
                             <span className="text-muted-foreground font-mono">({formatDate(r.requestedAt || r.createdAt)})</span>
                           </div>
                           {(r.proposedNewEndsAt || r.proposedEndsAt) && (
                             <p className="text-muted-foreground">
-                              Hạn đề xuất: <strong>{formatDate(r.proposedNewEndsAt || r.proposedEndsAt)}</strong>
+                              {t("renewalDialog.proposedDeadlineLabel")} <strong>{formatDate(r.proposedNewEndsAt || r.proposedEndsAt)}</strong>
                             </p>
                           )}
                         </div>
@@ -369,23 +377,23 @@ export function RenewalDialog({
 
             <TabsContent value="history" className="flex-1 overflow-y-auto p-6 space-y-4 m-0 outline-none">
               <div className="text-xs text-muted-foreground">
-                Dưới đây là các mốc gia hạn thời gian chăm sóc đã được áp dụng thành công vào phiên tư vấn này:
+                {t("renewalDialog.historyIntro")}
               </div>
 
               {extensions.length === 0 ? (
                 <div className="py-12 text-center text-muted-foreground border border-dashed rounded-xl p-4">
                   <History className="w-8 h-8 mx-auto mb-2 text-muted-foreground/50" />
-                  <p className="font-medium text-xs">Chưa có mốc gia hạn nào được ghi nhận</p>
-                  <p className="text-[11px] text-muted-foreground mt-0.5">Thời hạn phiên hiện tại là thời hạn ban đầu khi kích hoạt gói dịch vụ.</p>
+                  <p className="font-medium text-xs">{t("renewalDialog.noExtensions")}</p>
+                  <p className="text-[11px] text-muted-foreground mt-0.5">{t("renewalDialog.noExtensionsHint")}</p>
                 </div>
               ) : (
                 <div className="space-y-3">
                   {extensions.map((ext, idx) => (
                     <div key={ext.id ?? `ext-${ext.appliedAt}-${idx}`} className="p-3.5 rounded-xl border bg-card text-xs space-y-2">
                       <div className="flex items-center justify-between">
-                        <span className="font-semibold text-foreground">Gia hạn lần #{idx + 1}</span>
+                        <span className="font-semibold text-foreground">{t("renewalDialog.extensionNumber", { number: idx + 1 })}</span>
                         <Badge variant="outline" className="text-[10px] bg-success-50 text-success-700 border-success-200">
-                          Đã áp dụng: {formatDate(ext.appliedAt)}
+                          {t("renewalDialog.appliedAt", { date: formatDate(ext.appliedAt) })}
                         </Badge>
                       </div>
                       <div className="flex items-center gap-2 text-muted-foreground">
@@ -395,8 +403,8 @@ export function RenewalDialog({
                       </div>
                       {ext.packageNameSnapshot && (
                         <p className="text-muted-foreground text-[11px]">
-                          Gói: <strong>{ext.packageNameSnapshot}</strong>
-                          {ext.packagePriceSnapshot ? ` &bull; ${ext.packagePriceSnapshot.toLocaleString("vi-VN")} VND` : ""}
+                          {t("renewalDialog.packageLabel")} <strong>{ext.packageNameSnapshot}</strong>
+                          {ext.packagePriceSnapshot ? ` &bull; ${ext.packagePriceSnapshot.toLocaleString(currentIntlLocale())} VND` : ""}
                         </p>
                       )}
                     </div>
@@ -408,7 +416,7 @@ export function RenewalDialog({
 
           <DialogFooter className="p-4 border-t bg-muted/10">
             <Button variant="outline" onClick={() => onOpenChange(false)}>
-              Đóng
+              {t("renewalDialog.close")}
             </Button>
           </DialogFooter>
         </DialogContent>

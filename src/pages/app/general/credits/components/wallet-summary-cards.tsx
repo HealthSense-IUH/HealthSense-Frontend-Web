@@ -3,6 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { useTranslation } from "react-i18next"
+import { currentIntlLocale } from "@/lib/i18n"
 import type { CreditWallet } from "@/types/credits"
 
 interface WalletSummaryCardsProps {
@@ -18,6 +20,7 @@ export function WalletSummaryCards({
   error,
   onRetry,
 }: WalletSummaryCardsProps) {
+  const { t } = useTranslation("credits")
   if (loading && !wallet) {
     return (
       <Card className="p-6 space-y-3">
@@ -36,13 +39,13 @@ export function WalletSummaryCards({
             <AlertCircle className="h-6 w-6 text-danger-600 shrink-0" />
             <div>
               <h3 className="text-sm font-semibold text-danger-800">
-                Không thể tải thông tin ví lượt
+                {t("wallet.loadError")}
               </h3>
               <p className="text-xs text-danger-600">{error}</p>
             </div>
           </div>
           <Button variant="outline" size="sm" onClick={onRetry} className="gap-1.5 shrink-0">
-            <RefreshCw className="h-3.5 w-3.5" /> Thử lại
+            <RefreshCw className="h-3.5 w-3.5" /> {t("shared.retry")}
           </Button>
         </div>
       </Card>
@@ -63,7 +66,7 @@ export function WalletSummaryCards({
             <div className="p-1.5 rounded-md bg-success-100 text-success-700">
               <Coins className="h-4 w-4" />
             </div>
-            Lượt tư vấn khả dụng
+            {t("wallet.availableTitle")}
           </CardTitle>
           <TooltipProvider>
             <Tooltip>
@@ -73,7 +76,7 @@ export function WalletSummaryCards({
                 </span>
               </TooltipTrigger>
               <TooltipContent className="max-w-xs text-xs">
-                Số lượt bạn có thể sử dụng ngay để đăng ký phiên tư vấn sức khỏe trực tuyến với bác sĩ.
+                {t("wallet.availableTooltip")}
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
@@ -82,17 +85,17 @@ export function WalletSummaryCards({
       <CardContent className="space-y-2">
         <div className="flex items-baseline gap-2">
           <span className="text-4xl font-extrabold text-success-700 tracking-tight">
-            {available.toLocaleString("vi-VN")}
+            {available.toLocaleString(currentIntlLocale())}
           </span>
           <span className="text-base font-semibold text-success-600/90">
-            lượt
+            {t("wallet.unit", { count: available })}
           </span>
         </div>
         <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-          <span>Sẵn sàng để bắt đầu phiên tư vấn sức khỏe trực tuyến</span>
+          <span>{t("wallet.readyHint")}</span>
           {reserved > 0 && (
             <span className="inline-flex items-center rounded-full bg-warning-100 px-2 py-0.5 text-[11px] font-medium text-warning-800">
-              (Đang tạm giữ {reserved} lượt cho ca hiện tại)
+              {t("wallet.reservedHint", { count: reserved })}
             </span>
           )}
         </div>

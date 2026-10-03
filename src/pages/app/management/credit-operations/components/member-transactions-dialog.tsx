@@ -50,6 +50,8 @@ import type {
   CreditOrderStatus,
 } from "@/types/credits"
 import { PaymentOrderDetailDialog } from "./payment-order-detail-dialog"
+import { Trans, useTranslation } from "react-i18next"
+import i18n from "@/lib/i18n"
 
 interface MemberTransactionsDialogProps {
   open: boolean
@@ -62,6 +64,7 @@ export function MemberTransactionsDialog({
   onOpenChange,
   member,
 }: MemberTransactionsDialogProps) {
+  const { t } = useTranslation("credits")
   const { toast } = useToast()
 
   const [orders, setOrders] = useState<AdminCreditOrderSummary[]>([])
@@ -96,8 +99,8 @@ export function MemberTransactionsDialog({
         const parsed = parseApiError(err)
         toast({
           variant: "destructive",
-          title: "Lỗi tải giao dịch",
-          description: parsed.userMessage || "Không thể tải lịch sử giao dịch của hội viên.",
+          title: i18n.t("credits:admin.memberTransactions.errors.loadTitle"),
+          description: parsed.userMessage || i18n.t("credits:admin.memberTransactions.errors.load"),
         })
       } finally {
         setLoading(false)
@@ -140,7 +143,7 @@ export function MemberTransactionsDialog({
       setSelectedOrderDetail(res.data)
     } catch (err) {
       const parsed = parseApiError(err)
-      setDetailError(parsed.userMessage || "Không thể tải thông tin đơn hàng.")
+      setDetailError(parsed.userMessage || t("admin.memberTransactions.errors.detail"))
     } finally {
       setLoadingDetail(false)
     }
@@ -180,7 +183,7 @@ export function MemberTransactionsDialog({
               </Avatar>
               <div className="min-w-0">
                 <DialogTitle className="text-base font-bold flex items-center gap-2 truncate">
-                  <span>Lịch sử giao dịch hội viên</span>
+                  <span>{t("admin.memberTransactions.title")}</span>
                   <Badge variant="outline" className="font-mono text-[11px] font-normal">
                     #{member?.memberId}
                   </Badge>
@@ -198,15 +201,15 @@ export function MemberTransactionsDialog({
               <SlidersHorizontal className="w-3.5 h-3.5 text-muted-foreground" />
               <Select value={statusFilter} onValueChange={handleStatusFilterChange}>
                 <SelectTrigger className="w-[160px] h-8 rounded-xl text-xs">
-                  <SelectValue placeholder="Trạng thái đơn" />
+                  <SelectValue placeholder={t("admin.ordersTable.statusPlaceholder")} />
                 </SelectTrigger>
                 <SelectContent className="rounded-xl text-xs">
-                  <SelectItem value="ALL">Tất cả trạng thái</SelectItem>
-                  <SelectItem value="PAID">Đã thanh toán (PAID)</SelectItem>
-                  <SelectItem value="PENDING">Chờ thanh toán (PENDING)</SelectItem>
-                  <SelectItem value="CANCELLED">Đã hủy (CANCELLED)</SelectItem>
-                  <SelectItem value="EXPIRED">Hết hạn (EXPIRED)</SelectItem>
-                  <SelectItem value="FAILED">Thất bại (FAILED)</SelectItem>
+                  <SelectItem value="ALL">{t("filters.allStatuses")}</SelectItem>
+                  <SelectItem value="PAID">{t("admin.ordersTable.statusOptions.paid")}</SelectItem>
+                  <SelectItem value="PENDING">{t("admin.memberTransactions.statusOptions.pending")}</SelectItem>
+                  <SelectItem value="CANCELLED">{t("admin.memberTransactions.statusOptions.cancelled")}</SelectItem>
+                  <SelectItem value="EXPIRED">{t("admin.memberTransactions.statusOptions.expired")}</SelectItem>
+                  <SelectItem value="FAILED">{t("admin.memberTransactions.statusOptions.failed")}</SelectItem>
                 </SelectContent>
               </Select>
 
@@ -220,14 +223,20 @@ export function MemberTransactionsDialog({
                 }}
                 disabled={loading}
                 className="h-8 rounded-xl text-xs px-2.5"
-                title="Tải lại giao dịch"
+                title={t("admin.memberTransactions.reloadTitle")}
               >
                 <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} />
               </Button>
             </div>
 
             <div className="text-xs text-muted-foreground">
-              Tìm thấy <strong className="text-foreground font-semibold">{totalElements}</strong> giao dịch
+              <Trans
+                t={t}
+                i18nKey="admin.memberTransactions.found"
+                count={totalElements}
+                values={{ count: totalElements }}
+                components={{ strong: <strong className="text-foreground font-semibold" /> }}
+              />
             </div>
           </div>
 
@@ -236,7 +245,7 @@ export function MemberTransactionsDialog({
             {loading ? (
               <div className="h-64 flex flex-col items-center justify-center gap-2 text-muted-foreground text-xs">
                 <RefreshCw className="w-6 h-6 animate-spin text-primary" />
-                <span>Đang tải danh sách giao dịch...</span>
+                <span>{t("admin.ordersTable.loading")}</span>
               </div>
             ) : orders.length === 0 ? (
               /* Empty State */
@@ -245,12 +254,12 @@ export function MemberTransactionsDialog({
                   <Inbox className="w-6 h-6" />
                 </div>
                 <div className="text-sm font-semibold text-foreground">
-                  Chưa có giao dịch thanh toán
+                  {t("admin.memberTransactions.emptyTitle")}
                 </div>
                 <p className="text-xs text-muted-foreground max-w-sm">
                   {statusFilter !== "ALL"
-                    ? "Không tìm thấy giao dịch nào phù hợp với trạng thái đã chọn."
-                    : "Hội viên này chưa thực hiện đơn mua token nào trên hệ thống."}
+                    ? t("admin.memberTransactions.emptyFiltered")
+                    : t("admin.memberTransactions.emptyAll")}
                 </p>
                 {statusFilter !== "ALL" && (
                   <Button
@@ -259,7 +268,7 @@ export function MemberTransactionsDialog({
                     onClick={() => handleStatusFilterChange("ALL")}
                     className="h-8 rounded-xl text-xs mt-1"
                   >
-                    Xem tất cả trạng thái
+                    {t("admin.memberTransactions.viewAllStatuses")}
                   </Button>
                 )}
               </div>
@@ -269,13 +278,13 @@ export function MemberTransactionsDialog({
                 <Table>
                   <TableHeader>
                     <TableRow className="bg-muted/30">
-                      <TableHead className="text-xs font-semibold whitespace-nowrap min-w-[160px]">Mã đơn</TableHead>
-                      <TableHead className="text-xs font-semibold whitespace-nowrap min-w-[200px]">Gói lượt</TableHead>
-                      <TableHead className="text-xs font-semibold text-center whitespace-nowrap min-w-[110px]">Số lượng</TableHead>
-                      <TableHead className="text-xs font-semibold text-right whitespace-nowrap min-w-[120px]">Số tiền</TableHead>
-                      <TableHead className="text-xs font-semibold text-center whitespace-nowrap min-w-[130px]">Trạng thái</TableHead>
-                      <TableHead className="text-xs font-semibold whitespace-nowrap min-w-[190px]">Thời gian</TableHead>
-                      <TableHead className="text-xs font-semibold text-right whitespace-nowrap min-w-[90px]">Thao tác</TableHead>
+                      <TableHead className="text-xs font-semibold whitespace-nowrap min-w-[160px]">{t("admin.ordersTable.columns.orderId")}</TableHead>
+                      <TableHead className="text-xs font-semibold whitespace-nowrap min-w-[200px]">{t("admin.memberTransactions.columns.package")}</TableHead>
+                      <TableHead className="text-xs font-semibold text-center whitespace-nowrap min-w-[110px]">{t("admin.memberTransactions.columns.quantity")}</TableHead>
+                      <TableHead className="text-xs font-semibold text-right whitespace-nowrap min-w-[120px]">{t("admin.ordersTable.columns.amount")}</TableHead>
+                      <TableHead className="text-xs font-semibold text-center whitespace-nowrap min-w-[130px]">{t("admin.ordersTable.columns.status")}</TableHead>
+                      <TableHead className="text-xs font-semibold whitespace-nowrap min-w-[190px]">{t("admin.memberTransactions.columns.time")}</TableHead>
+                      <TableHead className="text-xs font-semibold text-right whitespace-nowrap min-w-[90px]">{t("admin.ordersTable.columns.actions")}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -322,10 +331,10 @@ export function MemberTransactionsDialog({
                           {/* Time */}
                           <TableCell className="text-[11px] text-muted-foreground font-mono whitespace-nowrap">
                             <div className="flex flex-col gap-0.5">
-                              <div>Tạo: {formatDateTime(ord.createdAt)}</div>
+                              <div>{t("admin.memberTransactions.createdAt", { value: formatDateTime(ord.createdAt) })}</div>
                               {ord.paidAt && (
                                 <div className="text-success-600 font-semibold">
-                                  TT: {formatDateTime(ord.paidAt)}
+                                  {t("admin.memberTransactions.paidAt", { value: formatDateTime(ord.paidAt) })}
                                 </div>
                               )}
                             </div>
@@ -338,10 +347,10 @@ export function MemberTransactionsDialog({
                               size="sm"
                               onClick={() => handleViewOrderDetail(ord.id)}
                               className="h-8 px-2.5 text-xs gap-1 hover:text-primary rounded-lg"
-                              title="Xem chi tiết đơn và lịch sử cổng thanh toán"
+                              title={t("admin.memberTransactions.viewDetailTitle")}
                             >
                               <Eye className="w-3.5 h-3.5" />
-                              <span>Chi tiết</span>
+                              <span>{t("shared.details")}</span>
                             </Button>
                           </TableCell>
                         </TableRow>
@@ -357,7 +366,7 @@ export function MemberTransactionsDialog({
           {totalElements > 0 && (
             <div className="px-6 py-2.5 border-t flex flex-col sm:flex-row items-center justify-between gap-2.5 bg-muted/10 text-xs text-muted-foreground">
               <div className="flex items-center gap-2">
-                <span>Hiển thị</span>
+                <span>{t("admin.pagination.show")}</span>
                 <Select
                   value={String(pageSize)}
                   onValueChange={(v) => handlePageSizeChange(Number(v))}
@@ -366,13 +375,19 @@ export function MemberTransactionsDialog({
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="rounded-xl text-xs">
-                    <SelectItem value="5">5 / trang</SelectItem>
-                    <SelectItem value="10">10 / trang</SelectItem>
-                    <SelectItem value="20">20 / trang</SelectItem>
+                    <SelectItem value="5">{t("admin.pagination.perPage", { count: 5 })}</SelectItem>
+                    <SelectItem value="10">{t("admin.pagination.perPage", { count: 10 })}</SelectItem>
+                    <SelectItem value="20">{t("admin.pagination.perPage", { count: 20 })}</SelectItem>
                   </SelectContent>
                 </Select>
                 <span>
-                  &bull; Trang <strong className="text-foreground">{page}</strong> / {totalPages}
+                  &bull;{" "}
+                  <Trans
+                    t={t}
+                    i18nKey="admin.pagination.pageOf"
+                    values={{ page, totalPages }}
+                    components={{ strong: <strong className="text-foreground" /> }}
+                  />
                 </span>
               </div>
 
@@ -385,7 +400,7 @@ export function MemberTransactionsDialog({
                   className="h-7 px-2 rounded-lg text-xs gap-1"
                 >
                   <ChevronLeft className="w-3.5 h-3.5" />
-                  <span className="hidden sm:inline">Trước</span>
+                  <span className="hidden sm:inline">{t("shared.prev")}</span>
                 </Button>
 
                 <div className="flex items-center gap-1">
@@ -418,7 +433,7 @@ export function MemberTransactionsDialog({
                   disabled={page >= totalPages || loading}
                   className="h-7 px-2 rounded-lg text-xs gap-1"
                 >
-                  <span className="hidden sm:inline">Sau</span>
+                  <span className="hidden sm:inline">{t("shared.next")}</span>
                   <ChevronRight className="w-3.5 h-3.5" />
                 </Button>
               </div>
@@ -434,7 +449,7 @@ export function MemberTransactionsDialog({
               onClick={() => onOpenChange(false)}
               className="h-8 px-4 rounded-xl text-xs"
             >
-              Đóng
+              {t("shared.close")}
             </Button>
           </DialogFooter>
         </DialogContent>

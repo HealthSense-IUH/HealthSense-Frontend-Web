@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from "react"
 import { useSearchParams } from "react-router-dom"
+import { useTranslation, Trans } from "react-i18next"
 import {
   ListTodo,
   RefreshCw,
@@ -26,11 +27,13 @@ import {
 import { Card, CardContent } from "@/components/ui/card"
 import { useToast } from "@/hooks/use-toast"
 import { useAuthStore } from "@/stores/auth-store"
+import i18n, { currentIntlLocale } from "@/lib/i18n"
 import { needsActionApi } from "@/services"
 import type { NeedsActionResponse, NeedsActionStatus, NeedsActionType } from "@/types/needs-action"
 import { NeedsActionDetailDialog } from "@/pages/app/management/needs-actions/components/needs-action-detail-dialog"
 
 export default function NeedsActionsPage() {
+  const { t } = useTranslation("management")
   const { toast } = useToast()
   const [searchParams] = useSearchParams()
   const userSession = useAuthStore((state) => state.userSession)
@@ -65,8 +68,8 @@ export default function NeedsActionsPage() {
       const anyErr = err as { response?: { data?: { message?: string } } }
       toast({
         variant: "destructive",
-        title: "Lỗi",
-        description: anyErr.response?.data?.message || "Không thể tải danh sách công việc cần xử lý.",
+        title: i18n.t("management:needsActions.page.toast.errorTitle"),
+        description: anyErr.response?.data?.message || i18n.t("management:needsActions.page.toast.loadFailed"),
       })
     } finally {
       setLoading(false)
@@ -140,10 +143,15 @@ export default function NeedsActionsPage() {
             </div>
             <div>
               <h1 className="text-2xl font-black tracking-tight text-slate-900">
-                Hàng đợi Xử lý Vận hành (Needs Action)
+                {t("needsActions.page.title")}
               </h1>
               <p className="text-xs text-slate-500 mt-0.5">
-                Các nghiệp vụ cần can thiệp xử lý, điều phối và đối soát ngoại tuyến (Vai trò: <span className="font-bold text-slate-700">{role}</span>)
+                <Trans
+                  t={t}
+                  i18nKey="needsActions.page.subtitle"
+                  values={{ role }}
+                  components={{ role: <span className="font-bold text-slate-700" /> }}
+                />
               </p>
             </div>
           </div>
@@ -157,7 +165,7 @@ export default function NeedsActionsPage() {
           className="h-9 font-semibold text-xs border-slate-200 cursor-pointer"
         >
           <RefreshCw className={`w-3.5 h-3.5 mr-1.5 ${loading ? "animate-spin" : ""}`} />
-          Làm mới
+          {t("needsActions.page.refresh")}
         </Button>
       </div>
 
@@ -165,10 +173,10 @@ export default function NeedsActionsPage() {
       <div className="flex flex-col sm:flex-row items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-slate-200 shadow-xs">
         <Tabs value={statusTab} onValueChange={setStatusTab} className="w-full sm:w-auto">
           <TabsList className="grid grid-cols-4 w-full sm:w-auto bg-slate-100/80">
-            <TabsTrigger value="ALL" className="text-xs font-bold">Tất cả</TabsTrigger>
-            <TabsTrigger value="OPEN" className="text-xs font-bold text-warning-600">Chờ xử lý</TabsTrigger>
-            <TabsTrigger value="CLAIMED" className="text-xs font-bold text-primary-600">Đang xử lý</TabsTrigger>
-            <TabsTrigger value="RESOLVED" className="text-xs font-bold text-success-600">Đã xong</TabsTrigger>
+            <TabsTrigger value="ALL" className="text-xs font-bold">{t("needsActions.page.tabs.all")}</TabsTrigger>
+            <TabsTrigger value="OPEN" className="text-xs font-bold text-warning-600">{t("needsActions.page.tabs.open")}</TabsTrigger>
+            <TabsTrigger value="CLAIMED" className="text-xs font-bold text-primary-600">{t("needsActions.page.tabs.claimed")}</TabsTrigger>
+            <TabsTrigger value="RESOLVED" className="text-xs font-bold text-success-600">{t("needsActions.page.tabs.resolved")}</TabsTrigger>
           </TabsList>
         </Tabs>
 
@@ -176,7 +184,7 @@ export default function NeedsActionsPage() {
           <div className="relative flex-1 sm:w-64">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" />
             <Input
-              placeholder="Tìm kiếm công việc..."
+              placeholder={t("needsActions.page.searchPlaceholder")}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-8 text-xs h-9 rounded-xl border-slate-200"
@@ -185,20 +193,20 @@ export default function NeedsActionsPage() {
 
           <Select value={typeFilter} onValueChange={setTypeFilter}>
             <SelectTrigger className="w-[180px] h-9 text-xs rounded-xl border-slate-200">
-              <SelectValue placeholder="Lọc loại sự kiện" />
+              <SelectValue placeholder={t("needsActions.page.typeFilterPlaceholder")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="ALL">Tất cả loại sự kiện</SelectItem>
-              <SelectItem value="PAYMENT_REQUIRES_REVIEW">Payment Review</SelectItem>
-              <SelectItem value="PROVIDER_CANCELLATION_RECONCILIATION">Provider Cancellation</SelectItem>
-              <SelectItem value="REFUND_REVIEW_REQUIRED">Refund Review</SelectItem>
-              <SelectItem value="REFUND_PROVIDER_FAILURE">Refund Provider Failure</SelectItem>
-              <SelectItem value="DOCTOR_ACTIVE_CARE_INTERRUPTION">Doctor Interruption</SelectItem>
-              <SelectItem value="MEMBER_ACTIVE_CARE_INTERRUPTION">Member Interruption</SelectItem>
-              <SelectItem value="TERMINATION_REVIEW">Termination Review</SelectItem>
-              <SelectItem value="SUMMARY_PENDING">Summary Pending</SelectItem>
-              <SelectItem value="SUMMARY_OVERDUE">Summary Overdue</SelectItem>
-              <SelectItem value="SUMMARY_ESCALATED">Summary Escalated</SelectItem>
+              <SelectItem value="ALL">{t("needsActions.page.allTypes")}</SelectItem>
+              <SelectItem value="PAYMENT_REQUIRES_REVIEW">{t("needsActions.page.eventTypes.PAYMENT_REQUIRES_REVIEW")}</SelectItem>
+              <SelectItem value="PROVIDER_CANCELLATION_RECONCILIATION">{t("needsActions.page.eventTypes.PROVIDER_CANCELLATION_RECONCILIATION")}</SelectItem>
+              <SelectItem value="REFUND_REVIEW_REQUIRED">{t("needsActions.page.eventTypes.REFUND_REVIEW_REQUIRED")}</SelectItem>
+              <SelectItem value="REFUND_PROVIDER_FAILURE">{t("needsActions.page.eventTypes.REFUND_PROVIDER_FAILURE")}</SelectItem>
+              <SelectItem value="DOCTOR_ACTIVE_CARE_INTERRUPTION">{t("needsActions.page.eventTypes.DOCTOR_ACTIVE_CARE_INTERRUPTION")}</SelectItem>
+              <SelectItem value="MEMBER_ACTIVE_CARE_INTERRUPTION">{t("needsActions.page.eventTypes.MEMBER_ACTIVE_CARE_INTERRUPTION")}</SelectItem>
+              <SelectItem value="TERMINATION_REVIEW">{t("needsActions.page.eventTypes.TERMINATION_REVIEW")}</SelectItem>
+              <SelectItem value="SUMMARY_PENDING">{t("needsActions.page.eventTypes.SUMMARY_PENDING")}</SelectItem>
+              <SelectItem value="SUMMARY_OVERDUE">{t("needsActions.page.eventTypes.SUMMARY_OVERDUE")}</SelectItem>
+              <SelectItem value="SUMMARY_ESCALATED">{t("needsActions.page.eventTypes.SUMMARY_ESCALATED")}</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -208,7 +216,7 @@ export default function NeedsActionsPage() {
       {loading ? (
         <div className="flex flex-col items-center justify-center p-16 text-slate-400 space-y-3">
           <RefreshCw className="w-6 h-6 animate-spin text-primary-500" />
-          <span className="text-xs font-medium">Đang tải danh sách hàng đợi công việc...</span>
+          <span className="text-xs font-medium">{t("needsActions.page.loading")}</span>
         </div>
       ) : filteredItems.length === 0 ? (
         <Card className="rounded-2xl border-slate-200 shadow-xs bg-slate-50/50">
@@ -216,9 +224,9 @@ export default function NeedsActionsPage() {
             <div className="w-12 h-12 rounded-full bg-success-100 text-success-600 flex items-center justify-center">
               <CheckCircle2 className="w-6 h-6" />
             </div>
-            <h3 className="text-sm font-black text-slate-800">Hàng đợi trống</h3>
+            <h3 className="text-sm font-black text-slate-800">{t("needsActions.page.emptyTitle")}</h3>
             <p className="text-xs text-slate-500 max-w-sm">
-              Không có công việc vận hành nào cần xử lý trong danh mục được phân công cho vai trò của bạn.
+              {t("needsActions.page.emptyDescription")}
             </p>
           </CardContent>
         </Card>
@@ -257,7 +265,7 @@ export default function NeedsActionsPage() {
                 <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400 font-medium">
                   <span className="flex items-center gap-1">
                     <Clock className="w-3 h-3" />
-                    {new Date(item.createdAt).toLocaleString("vi-VN", {
+                    {new Date(item.createdAt).toLocaleString(currentIntlLocale(), {
                       day: "2-digit",
                       month: "2-digit",
                       hour: "2-digit",
@@ -266,7 +274,7 @@ export default function NeedsActionsPage() {
                   </span>
                   {item.claimedByUserId && (
                     <span className="text-primary-600 font-semibold">
-                      Phụ trách: #{item.claimedByUserId}
+                      {t("needsActions.page.assignee", { id: item.claimedByUserId })}
                     </span>
                   )}
                 </div>

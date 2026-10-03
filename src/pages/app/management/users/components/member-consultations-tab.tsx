@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react"
 import { Eye, ChevronLeft, ChevronRight, Loader2, Inbox, RefreshCw, AlertTriangle, ShieldAlert } from "lucide-react"
+import { Trans, useTranslation } from "react-i18next"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { consultationApi } from "@/services"
@@ -13,6 +14,7 @@ interface MemberConsultationsTabProps {
 }
 
 export function MemberConsultationsTab({ memberId, memberDisplayName }: MemberConsultationsTabProps) {
+  const { t } = useTranslation("management")
   const [sessions, setSessions] = useState<ConsultationSessionResponse[]>([])
   const [loading, setLoading] = useState(true)
   const [page, setPage] = useState(1)
@@ -60,17 +62,17 @@ export function MemberConsultationsTab({ memberId, memberDisplayName }: MemberCo
   const renderStatusBadge = (status: ConsultationSessionResponse["status"]) => {
     switch (status) {
       case "ACTIVE":
-        return <Badge className="bg-success-500 hover:bg-success-600 text-white font-bold">Đang diễn ra</Badge>
+        return <Badge className="bg-success-500 hover:bg-success-600 text-white font-bold">{t("userDetail.sessionStatus.active")}</Badge>
       case "COMPLETED":
-        return <Badge className="bg-primary-600 hover:bg-primary-700 text-white font-bold">Hoàn tất</Badge>
+        return <Badge className="bg-primary-600 hover:bg-primary-700 text-white font-bold">{t("userDetail.sessionStatus.completed")}</Badge>
       case "CLOSED":
-        return <Badge variant="secondary" className="font-bold text-slate-700">Đã đóng</Badge>
+        return <Badge variant="secondary" className="font-bold text-slate-700">{t("userDetail.sessionStatus.closed")}</Badge>
       case "SCHEDULED":
-        return <Badge variant="outline" className="text-warning-600 border-warning-500 bg-warning-50 font-bold">Đã lên lịch</Badge>
+        return <Badge variant="outline" className="text-warning-600 border-warning-500 bg-warning-50 font-bold">{t("userDetail.sessionStatus.scheduled")}</Badge>
       case "EXTENSION_PENDING":
-        return <Badge className="bg-primary-600 hover:bg-primary-700 text-white font-bold">Chờ gia hạn</Badge>
+        return <Badge className="bg-primary-600 hover:bg-primary-700 text-white font-bold">{t("userDetail.sessionStatus.extensionPending")}</Badge>
       case "CANCELLED":
-        return <Badge variant="destructive" className="font-bold">Đã hủy</Badge>
+        return <Badge variant="destructive" className="font-bold">{t("userDetail.sessionStatus.cancelled")}</Badge>
       default:
         return <Badge variant="outline" className="font-bold">{status || "—"}</Badge>
     }
@@ -80,11 +82,11 @@ export function MemberConsultationsTab({ memberId, memberDisplayName }: MemberCo
     if (!status) return <span className="text-slate-400 font-mono">—</span>
     switch (status) {
       case "FINALIZED":
-        return <Badge className="bg-success-50 text-success-700 border-success-300 font-bold">Đã tổng kết</Badge>
+        return <Badge className="bg-success-50 text-success-700 border-success-300 font-bold">{t("userDetail.consultationsTab.summaryStatus.finalized")}</Badge>
       case "ESCALATED":
-        return <Badge className="bg-danger-50 text-danger-700 border-danger-300 font-bold">Leo thang</Badge>
+        return <Badge className="bg-danger-50 text-danger-700 border-danger-300 font-bold">{t("userDetail.consultationsTab.summaryStatus.escalated")}</Badge>
       case "PENDING":
-        return <Badge className="bg-warning-50 text-warning-700 border-warning-300 font-bold">Chờ tổng kết</Badge>
+        return <Badge className="bg-warning-50 text-warning-700 border-warning-300 font-bold">{t("userDetail.consultationsTab.summaryStatus.pending")}</Badge>
       default:
         return <Badge variant="outline">{status}</Badge>
     }
@@ -99,10 +101,10 @@ export function MemberConsultationsTab({ memberId, memberDisplayName }: MemberCo
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs">
         <div>
           <h3 className="text-base font-black text-slate-900 tracking-tight">
-            Lịch sử các lần tư vấn ({totalElements})
+            {t("userDetail.consultationsTab.title", { count: totalElements })}
           </h3>
           <p className="text-xs text-slate-500">
-            Các phiên tư vấn trực tuyến giữa Member với bác sĩ chuyên khoa.
+            {t("userDetail.consultationsTab.description")}
           </p>
         </div>
         <Button
@@ -113,7 +115,7 @@ export function MemberConsultationsTab({ memberId, memberDisplayName }: MemberCo
           className="h-8 px-3 rounded-xl border-slate-200 text-slate-600 font-bold text-xs hover:bg-slate-50 cursor-pointer self-start sm:self-auto"
         >
           <RefreshCw className={`w-3.5 h-3.5 mr-1.5 ${loading ? "animate-spin" : ""}`} />
-          Làm mới
+          {t("userDetail.common.refresh")}
         </Button>
       </div>
 
@@ -123,18 +125,18 @@ export function MemberConsultationsTab({ memberId, memberDisplayName }: MemberCo
           <table className="w-full text-left border-collapse min-w-[980px]">
             <thead>
               <tr className="border-b border-slate-100 bg-slate-50/70 text-[11px] font-extrabold uppercase tracking-wider text-slate-400">
-                <th className="py-3.5 px-4 w-16">Mã phiên</th>
-                <th className="py-3.5 px-4">Member</th>
-                <th className="py-3.5 px-4">Bác sĩ</th>
-                <th className="py-3.5 px-4">Trạng thái</th>
-                <th className="py-3.5 px-4">Loại/Nguồn</th>
-                <th className="py-3.5 px-4">Gói dịch vụ</th>
-                <th className="py-3.5 px-4">Bắt đầu</th>
-                <th className="py-3.5 px-4">Kết thúc</th>
-                <th className="py-3.5 px-4">Tổng kết</th>
-                <th className="py-3.5 px-4 max-w-[140px]">Tin nhắn gần nhất</th>
-                <th className="py-3.5 px-4 text-center">Cờ xử lý</th>
-                <th className="py-3.5 px-4 text-right w-24">Thao tác</th>
+                <th className="py-3.5 px-4 w-16">{t("userDetail.consultationsTab.columns.sessionCode")}</th>
+                <th className="py-3.5 px-4">{t("userDetail.consultationsTab.columns.member")}</th>
+                <th className="py-3.5 px-4">{t("userDetail.consultationsTab.columns.doctor")}</th>
+                <th className="py-3.5 px-4">{t("userDetail.consultationsTab.columns.status")}</th>
+                <th className="py-3.5 px-4">{t("userDetail.consultationsTab.columns.typeSource")}</th>
+                <th className="py-3.5 px-4">{t("userDetail.consultationsTab.columns.package")}</th>
+                <th className="py-3.5 px-4">{t("userDetail.consultationsTab.columns.start")}</th>
+                <th className="py-3.5 px-4">{t("userDetail.consultationsTab.columns.end")}</th>
+                <th className="py-3.5 px-4">{t("userDetail.consultationsTab.columns.summary")}</th>
+                <th className="py-3.5 px-4 max-w-[140px]">{t("userDetail.consultationsTab.columns.lastMessage")}</th>
+                <th className="py-3.5 px-4 text-center">{t("userDetail.consultationsTab.columns.flags")}</th>
+                <th className="py-3.5 px-4 text-right w-24">{t("userDetail.consultationsTab.columns.actions")}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 text-xs font-medium">
@@ -143,7 +145,7 @@ export function MemberConsultationsTab({ memberId, memberDisplayName }: MemberCo
                   <td colSpan={12} className="py-16 text-center text-slate-400">
                     <div className="flex flex-col items-center justify-center gap-3">
                       <Loader2 className="w-7 h-7 text-primary-600 animate-spin" />
-                      <span className="text-sm font-bold text-slate-700">Đang tải lịch sử phiên tư vấn...</span>
+                      <span className="text-sm font-bold text-slate-700">{t("userDetail.consultationsTab.loading")}</span>
                     </div>
                   </td>
                 </tr>
@@ -154,9 +156,9 @@ export function MemberConsultationsTab({ memberId, memberDisplayName }: MemberCo
                       <div className="p-4 rounded-full bg-slate-50 text-slate-400 border border-slate-200">
                         <Inbox className="w-8 h-8" />
                       </div>
-                      <h4 className="text-base font-extrabold text-slate-800">Không có phiên tư vấn nào</h4>
+                      <h4 className="text-base font-extrabold text-slate-800">{t("userDetail.consultationsTab.emptyTitle")}</h4>
                       <p className="text-xs text-slate-500 max-w-sm">
-                        Member này chưa tham gia phiên tư vấn sức khỏe nào với bác sĩ trên hệ thống.
+                        {t("userDetail.consultationsTab.emptyDescription")}
                       </p>
                     </div>
                   </td>
@@ -175,7 +177,7 @@ export function MemberConsultationsTab({ memberId, memberDisplayName }: MemberCo
                     </td>
                     <td className="py-3.5 px-4">
                       <div className="font-bold text-slate-800 truncate max-w-[120px]">
-                        {session.doctorDisplayName || (session.doctorId ? `Doctor #${session.doctorId}` : "Chưa phân công")}
+                        {session.doctorDisplayName || (session.doctorId ? t("userDetail.common.doctorFallback", { id: session.doctorId }) : t("userDetail.common.unassigned"))}
                       </div>
                       {session.doctorId && (
                         <div className="text-[10px] font-mono text-slate-400">#{session.doctorId}</div>
@@ -196,12 +198,12 @@ export function MemberConsultationsTab({ memberId, memberDisplayName }: MemberCo
                           </span>
                           {session.packageDurationDaysSnapshot && (
                             <span className="text-slate-400 text-[10px] block">
-                              {session.packageDurationDaysSnapshot} ngày
+                              {t("userDetail.common.days", { count: session.packageDurationDaysSnapshot })}
                             </span>
                           )}
                         </div>
                       ) : session.packageId ? (
-                        <span className="font-mono text-slate-600">Gói #{session.packageId}</span>
+                        <span className="font-mono text-slate-600">{t("userDetail.consultationsTab.packageFallback", { id: session.packageId })}</span>
                       ) : (
                         <span className="text-slate-400">—</span>
                       )}
@@ -227,12 +229,12 @@ export function MemberConsultationsTab({ memberId, memberDisplayName }: MemberCo
                     <td className="py-3.5 px-4 text-center whitespace-nowrap">
                       <div className="flex items-center justify-center gap-1">
                         {session.operationalReviewRequired && (
-                          <span title="Cần rà soát vận hành" className="text-danger-600 bg-danger-50 p-1 rounded-md">
+                          <span title={t("userDetail.consultationsTab.operationalReviewTooltip")} className="text-danger-600 bg-danger-50 p-1 rounded-md">
                             <ShieldAlert className="w-3.5 h-3.5" />
                           </span>
                         )}
                         {session.exceptionalOverride && (
-                          <span title="Ghi đè ngoại lệ" className="text-warning-600 bg-warning-50 p-1 rounded-md">
+                          <span title={t("userDetail.consultationsTab.exceptionalOverrideTooltip")} className="text-warning-600 bg-warning-50 p-1 rounded-md">
                             <AlertTriangle className="w-3.5 h-3.5" />
                           </span>
                         )}
@@ -247,10 +249,10 @@ export function MemberConsultationsTab({ memberId, memberDisplayName }: MemberCo
                         size="sm"
                         onClick={() => setSelectedSession(session)}
                         className="h-8 px-2.5 rounded-lg text-slate-600 hover:text-primary-600 hover:bg-primary-50 font-bold text-xs cursor-pointer"
-                        title="Xem chi tiết phiên tư vấn"
+                        title={t("userDetail.consultationsTab.viewDetailTooltip")}
                       >
                         <Eye className="w-4 h-4 mr-1" />
-                        <span>Chi tiết</span>
+                        <span>{t("userDetail.common.detail")}</span>
                       </Button>
                     </td>
                   </tr>
@@ -264,15 +266,18 @@ export function MemberConsultationsTab({ memberId, memberDisplayName }: MemberCo
         <div className="px-6 py-4 border-t border-slate-100 bg-slate-50/40 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 text-xs font-bold text-slate-500">
           <div className="flex items-center gap-4">
             <span>
-              Hiển thị <strong className="text-slate-800">{startItem}</strong> -{" "}
-              <strong className="text-slate-800">{endItem}</strong> trong{" "}
-              <strong className="text-slate-800">{totalElements}</strong> phiên
+              <Trans
+                t={t}
+                i18nKey="userDetail.pagination.showingSessions"
+                values={{ start: startItem, end: endItem, total: totalElements }}
+                components={{ strong: <strong className="text-slate-800" /> }}
+              />
             </span>
 
             <div className="flex items-center gap-2 border-l border-slate-200 pl-4">
-              <span>Hàng mỗi trang:</span>
+              <span>{t("userDetail.pagination.rowsPerPage")}</span>
               <select
-                aria-label="Rows per page"
+                aria-label={t("userDetail.pagination.rowsPerPageAria")}
                 value={size}
                 onChange={(e) => {
                   setSize(Number(e.target.value))
@@ -290,8 +295,12 @@ export function MemberConsultationsTab({ memberId, memberDisplayName }: MemberCo
 
           <div className="flex items-center gap-2">
             <span className="text-xs mr-2">
-              Trang <strong className="text-slate-800">{page}</strong> /{" "}
-              <strong className="text-slate-800">{Math.max(1, totalPages)}</strong>
+              <Trans
+                t={t}
+                i18nKey="userDetail.pagination.pageOf"
+                values={{ page, total: Math.max(1, totalPages) }}
+                components={{ strong: <strong className="text-slate-800" /> }}
+              />
             </span>
             <Button
               size="sm"
@@ -301,7 +310,7 @@ export function MemberConsultationsTab({ memberId, memberDisplayName }: MemberCo
               className="h-8 px-2.5 rounded-lg border-slate-200 font-bold hover:bg-white text-xs cursor-pointer disabled:opacity-50"
             >
               <ChevronLeft className="w-4 h-4 mr-1" />
-              <span>Trước</span>
+              <span>{t("userDetail.pagination.previous")}</span>
             </Button>
             <Button
               size="sm"
@@ -310,7 +319,7 @@ export function MemberConsultationsTab({ memberId, memberDisplayName }: MemberCo
               onClick={() => setPage((p) => p + 1)}
               className="h-8 px-2.5 rounded-lg border-slate-200 font-bold hover:bg-white text-xs cursor-pointer disabled:opacity-50"
             >
-              <span>Sau</span>
+              <span>{t("userDetail.pagination.next")}</span>
               <ChevronRight className="w-4 h-4 ml-1" />
             </Button>
           </div>

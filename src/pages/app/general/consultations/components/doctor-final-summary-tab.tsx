@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from "react"
+import { useTranslation } from "react-i18next"
 import { AlertCircle, CheckCircle2, Save, Info, PlusCircle, FileText, Activity, Clock } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -17,6 +18,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 
+import i18n from "@/lib/i18n"
 import { consultationApi } from "@/services"
 import type {
   ConsultationFinalSummaryResponse,
@@ -48,7 +50,7 @@ function formatCountdown(ms: number): string {
 
 function readError(error: unknown, fallback: string) {
   const err = error as { response?: { status?: number; data?: { message?: string } }; message?: string }
-  if (err.response?.status === 403) return "Bạn không có quyền thao tác trên phiên này."
+  if (err.response?.status === 403) return i18n.t("consultation:finalSummaryTab.errors.forbidden")
   return err.response?.data?.message || err.message || fallback
 }
 
@@ -87,6 +89,7 @@ export function DoctorFinalSummaryTab({
   const [addingAddendum, setAddingAddendum] = useState(false)
 
   const { toast } = useToast()
+  const { t } = useTranslation("consultation")
 
   const fetchSummary = () => {
     setLoading(true)
@@ -122,7 +125,7 @@ export function DoctorFinalSummaryTab({
             setFollowUpRecommendation("")
             setSelectedRecordIds([])
           } else {
-            setErrorMsg(readError(err, "Không thể tải tổng kết chăm sóc."))
+            setErrorMsg(readError(err, t("finalSummaryTab.errors.loadFailed")))
           }
         }
       })
@@ -180,7 +183,7 @@ export function DoctorFinalSummaryTab({
 
   const handleSaveDraft = async () => {
     if (!summaryText.trim()) {
-      toast({ variant: "destructive", description: "Vui lòng nhập nội dung Tổng kết." })
+      toast({ variant: "destructive", description: t("finalSummaryTab.toast.summaryRequired") })
       return
     }
 
@@ -196,18 +199,18 @@ export function DoctorFinalSummaryTab({
       }
       const res = await consultationApi.updateDoctorFinalSummary(sessionId, payload)
       setSummary(res.data)
-      toast({ description: "Đã lưu bản nháp tổng kết thành công." })
+      toast({ description: t("finalSummaryTab.toast.draftSaved") })
     } catch (error: any) {
       const errCode = error?.response?.data?.code
       if (errCode === 4002 || errCode === "4002") {
         setSelectedRecordIds([])
         toast({
           variant: "destructive",
-          title: "Hồ sơ đính kèm không khả dụng",
-          description: "Hồ sơ đo đạc đính kèm không thuộc phạm vi được ủy quyền của phiên này. Hệ thống đã tự động bỏ chọn hồ sơ, vui lòng bấm Lưu nháp lại.",
+          title: t("finalSummaryTab.toast.attachedUnavailableTitle"),
+          description: t("finalSummaryTab.toast.attachedUnavailableDraft"),
         })
       } else {
-        toast({ variant: "destructive", description: readError(error, "Lỗi khi lưu bản nháp.") })
+        toast({ variant: "destructive", description: readError(error, t("finalSummaryTab.toast.saveDraftFailed")) })
       }
     } finally {
       setSaving(false)
@@ -218,8 +221,8 @@ export function DoctorFinalSummaryTab({
     if (!summaryText.trim() || !observations.trim() || !recommendations.trim()) {
       toast({
         variant: "destructive",
-        title: "Thiếu thông tin bắt buộc",
-        description: "Để hoàn tất tổng kết, vui lòng nhập đầy đủ: Tổng kết, Nhận xét và Khuyến nghị.",
+        title: t("finalSummaryTab.toast.missingRequiredTitle"),
+        description: t("finalSummaryTab.toast.missingRequiredDescription"),
       })
       return
     }
@@ -246,17 +249,17 @@ export function DoctorFinalSummaryTab({
           setLatestDispatchStatus(dispatchRes.data)
           const status = dispatchRes.data.dispatchStatus
           if (status === "AVAILABLE") {
-            toast({ description: "Đã hoàn tất tổng kết. Trạng thái: Sẵn sàng nhận tư vấn." })
+            toast({ description: t("finalSummaryTab.toast.finalizedAvailable") })
           } else if (status === "UNAVAILABLE") {
-            toast({ description: "Đã hoàn tất tổng kết. Trạng thái: Không nhận tư vấn." })
+            toast({ description: t("finalSummaryTab.toast.finalizedUnavailable") })
           } else {
-            toast({ description: "Đã hoàn tất tổng kết chăm sóc." })
+            toast({ description: t("finalSummaryTab.toast.finalized") })
           }
         } catch {
-          toast({ description: "Đã hoàn tất tổng kết chăm sóc." })
+          toast({ description: t("finalSummaryTab.toast.finalized") })
         }
       } else {
-        toast({ description: "Đã hoàn tất tổng kết chăm sóc." })
+        toast({ description: t("finalSummaryTab.toast.finalized") })
       }
 
       onFinalized?.()
@@ -266,11 +269,11 @@ export function DoctorFinalSummaryTab({
         setSelectedRecordIds([])
         toast({
           variant: "destructive",
-          title: "Hồ sơ đính kèm không khả dụng",
-          description: "Hồ sơ đo đạc đính kèm không thuộc phạm vi được ủy quyền. Đã tự động bỏ chọn, vui lòng thử lại.",
+          title: t("finalSummaryTab.toast.attachedUnavailableTitle"),
+          description: t("finalSummaryTab.toast.attachedUnavailableFinalize"),
         })
       } else {
-        toast({ variant: "destructive", description: readError(error, "Lỗi khi hoàn tất tổng kết.") })
+        toast({ variant: "destructive", description: readError(error, t("finalSummaryTab.toast.finalizeFailed")) })
       }
     } finally {
       setFinalizing(false)
@@ -281,8 +284,8 @@ export function DoctorFinalSummaryTab({
     if (!addendumReason.trim() || !addendumContent.trim()) {
       toast({
         variant: "destructive",
-        title: "Thiếu thông tin",
-        description: "Vui lòng nhập lý do và nội dung đính chính/bổ sung.",
+        title: t("finalSummaryTab.toast.addendumMissingTitle"),
+        description: t("finalSummaryTab.toast.addendumMissingDescription"),
       })
       return
     }
@@ -294,8 +297,8 @@ export function DoctorFinalSummaryTab({
         content: addendumContent.trim(),
       })
       toast({
-        title: "Thêm phụ lục thành công",
-        description: "Nội dung đính chính/bổ sung đã được lưu vào hồ sơ tổng kết.",
+        title: t("finalSummaryTab.toast.addendumAddedTitle"),
+        description: t("finalSummaryTab.toast.addendumAddedDescription"),
       })
       setAddendumReason("")
       setAddendumContent("")
@@ -304,8 +307,8 @@ export function DoctorFinalSummaryTab({
     } catch (error) {
       toast({
         variant: "destructive",
-        title: "Lỗi thêm phụ lục",
-        description: readError(error, "Không thể thêm phụ lục vào lúc này."),
+        title: t("finalSummaryTab.toast.addendumFailedTitle"),
+        description: readError(error, t("finalSummaryTab.toast.addendumFailedDescription")),
       })
     } finally {
       setAddingAddendum(false)
@@ -328,7 +331,7 @@ export function DoctorFinalSummaryTab({
         <AlertCircle className="mx-auto h-8 w-8 text-danger-500 mb-2" />
         <p className="text-danger-700 font-medium">{errorMsg}</p>
         <Button variant="outline" className="mt-4" onClick={fetchSummary}>
-          Thử lại
+          {t("finalSummaryTab.retry")}
         </Button>
       </div>
     )
@@ -347,9 +350,9 @@ export function DoctorFinalSummaryTab({
           <div className="flex items-center gap-3">
             <CheckCircle2 className="h-5 w-5 text-success-600 shrink-0" />
             <div>
-              <p className="font-medium text-success-900">Tổng kết phiên tư vấn (Đã khóa / Bất biến)</p>
+              <p className="font-medium text-success-900">{t("finalSummaryTab.finalizedBanner.title")}</p>
               <p className="text-xs text-success-700">
-                Đã hoàn tất lúc: {formatDate(summary?.finalizedAt) || "-"}
+                {t("finalSummaryTab.finalizedBanner.finalizedAt", { date: formatDate(summary?.finalizedAt) || "-" })}
               </p>
             </div>
           </div>
@@ -362,9 +365,9 @@ export function DoctorFinalSummaryTab({
           <div className="flex items-center gap-3">
             <Clock className="h-5 w-5 text-warning-600 shrink-0" />
             <div>
-              <p className="font-medium text-warning-900 text-sm">Thời hạn hoàn tất tổng kết phiên</p>
+              <p className="font-medium text-warning-900 text-sm">{t("finalSummaryTab.deadline.title")}</p>
               <p className="text-xs text-warning-700 mt-0.5">
-                Vui lòng hoàn tất trong thời hạn 10 phút. Lưu nháp sẽ không giải phóng trạng thái trực và không dừng thời hạn.
+                {t("finalSummaryTab.deadline.description", { count: 10 })}
               </p>
             </div>
           </div>
@@ -380,16 +383,16 @@ export function DoctorFinalSummaryTab({
           <div className="flex items-start gap-3">
             <AlertCircle className="h-5 w-5 text-danger-600 shrink-0 mt-0.5" />
             <div>
-              <p className="font-medium text-danger-900 text-sm">Tổng kết chưa hoàn tất (Đã quá thời hạn 10 phút)</p>
+              <p className="font-medium text-danger-900 text-sm">{t("finalSummaryTab.overdue.title", { count: 10 })}</p>
               <p className="text-xs text-danger-700 mt-1">
                 {latestDispatchStatus?.dispatchStatus === "UNAVAILABLE"
-                  ? "Trạng thái nhận tư vấn: Không nhận tư vấn (hệ thống đã giải phóng tự động)."
+                  ? t("finalSummaryTab.overdue.unavailable")
                   : latestDispatchStatus?.dispatchStatus === "AVAILABLE"
-                    ? "Trạng thái nhận tư vấn: Sẵn sàng nhận tư vấn."
+                    ? t("finalSummaryTab.overdue.available")
                     : latestDispatchStatus?.dispatchStatus === "BUSY"
-                      ? "Trạng thái nhận tư vấn: Đang tư vấn."
-                      : "Hệ thống đã giải phóng trạng thái trực của phiên này."}
-                {" "}Bạn vẫn có thể tiếp tục chỉnh sửa bản nháp và bấm &ldquo;Hoàn tất tổng kết&rdquo; muộn để hoàn tất hồ sơ y khoa.
+                      ? t("finalSummaryTab.overdue.busy")
+                      : t("finalSummaryTab.overdue.released")}
+                {" "}{t("finalSummaryTab.overdue.lateFinalizeHint")}
               </p>
             </div>
           </div>
@@ -400,7 +403,7 @@ export function DoctorFinalSummaryTab({
         <div className="flex items-start gap-2 rounded-md bg-primary-50 p-3 text-xs text-primary-700">
           <Info className="h-4 w-4 shrink-0 mt-0.5" />
           <p>
-            Bạn có thể soạn bản nháp trong khi phiên đang diễn ra. Tổng kết chỉ có thể được hoàn tất sau khi phiên kết thúc (COMPLETED).
+            {t("finalSummaryTab.notices.activeDraft")}
           </p>
         </div>
       )}
@@ -409,7 +412,7 @@ export function DoctorFinalSummaryTab({
         <div className="flex items-start gap-2 rounded-md bg-primary-50 p-3 text-xs text-primary-700">
           <Info className="h-4 w-4 shrink-0 mt-0.5" />
           <p>
-            Phiên tư vấn đã bị hủy nhưng đã phát sinh chăm sóc thực tế (meaningful care). Bạn có thể soạn và hoàn tất bản tổng kết.
+            {t("finalSummaryTab.notices.cancelledWithCare")}
           </p>
         </div>
       )}
@@ -418,7 +421,7 @@ export function DoctorFinalSummaryTab({
         <div className="flex items-start gap-2 rounded-md bg-warning-50 p-3 text-xs text-warning-700">
           <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
           <p>
-            Không thể lập tổng kết cho phiên tư vấn đã bị hủy khi chưa phát sinh chăm sóc thực tế.
+            {t("finalSummaryTab.notices.cancelledNoCare")}
           </p>
         </div>
       )}
@@ -427,7 +430,7 @@ export function DoctorFinalSummaryTab({
         <div className="flex items-start gap-2 rounded-md bg-warning-50 p-3 text-xs text-warning-700">
           <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
           <p>
-            Không thể lập tổng kết cho phiên tư vấn đang ở trạng thái {sessionStatus}.
+            {t("finalSummaryTab.notices.invalidStatus", { status: sessionStatus })}
           </p>
         </div>
       )}
@@ -436,70 +439,70 @@ export function DoctorFinalSummaryTab({
         {/* Main fields */}
         <div className="space-y-1.5">
           <label className="text-xs font-semibold text-slate-700">
-            Tổng kết đánh giá lâm sàng <span className="text-danger-500">*</span>
+            {t("finalSummaryTab.fields.summary.label")} <span className="text-danger-500">*</span>
           </label>
           {isEditable ? (
             <Textarea
-              placeholder="Nhập nội dung tổng kết..."
+              placeholder={t("finalSummaryTab.fields.summary.placeholder")}
               value={summaryText}
               onChange={(e) => setSummaryText(e.target.value)}
               className="min-h-[90px] text-xs"
             />
           ) : (
             <div className="rounded-md border bg-slate-50 p-3 text-xs whitespace-pre-wrap min-h-[70px]">
-              {summaryText || <span className="text-slate-400 italic">Không có dữ liệu</span>}
+              {summaryText || <span className="text-slate-400 italic">{t("finalSummaryTab.fields.noData")}</span>}
             </div>
           )}
         </div>
 
         <div className="space-y-1.5">
           <label className="text-xs font-semibold text-slate-700">
-            Ghi nhận & Triệu chứng {isFinalized ? "" : <span className="text-danger-500">* (khi hoàn tất)</span>}
+            {t("finalSummaryTab.fields.observations.label")} {isFinalized ? "" : <span className="text-danger-500">{t("finalSummaryTab.fields.requiredOnFinalize")}</span>}
           </label>
           {isEditable ? (
             <Textarea
-              placeholder="Nhập nhận xét, quan sát lâm sàng..."
+              placeholder={t("finalSummaryTab.fields.observations.placeholder")}
               value={observations}
               onChange={(e) => setObservations(e.target.value)}
               className="min-h-[70px] text-xs"
             />
           ) : (
             <div className="rounded-md border bg-slate-50 p-3 text-xs whitespace-pre-wrap min-h-[50px]">
-              {observations || <span className="text-slate-400 italic">Không có dữ liệu</span>}
+              {observations || <span className="text-slate-400 italic">{t("finalSummaryTab.fields.noData")}</span>}
             </div>
           )}
         </div>
 
         <div className="space-y-1.5">
           <label className="text-xs font-semibold text-slate-700">
-            Khuyến nghị y tế & Lối sống {isFinalized ? "" : <span className="text-danger-500">* (khi hoàn tất)</span>}
+            {t("finalSummaryTab.fields.recommendations.label")} {isFinalized ? "" : <span className="text-danger-500">{t("finalSummaryTab.fields.requiredOnFinalize")}</span>}
           </label>
           {isEditable ? (
             <Textarea
-              placeholder="Nhập các khuyến nghị điều trị, dinh dưỡng, lối sống..."
+              placeholder={t("finalSummaryTab.fields.recommendations.placeholder")}
               value={recommendations}
               onChange={(e) => setRecommendations(e.target.value)}
               className="min-h-[70px] text-xs"
             />
           ) : (
             <div className="rounded-md border bg-slate-50 p-3 text-xs whitespace-pre-wrap min-h-[50px]">
-              {recommendations || <span className="text-slate-400 italic">Không có dữ liệu</span>}
+              {recommendations || <span className="text-slate-400 italic">{t("finalSummaryTab.fields.noData")}</span>}
             </div>
           )}
         </div>
 
         <div className="space-y-1.5">
-          <label className="text-xs font-semibold text-slate-700">Khuyến nghị theo dõi & Tái khám (Tùy chọn)</label>
+          <label className="text-xs font-semibold text-slate-700">{t("finalSummaryTab.fields.followUp.label")}</label>
           {isEditable ? (
             <Textarea
-              placeholder="Kế hoạch tái khám hoặc theo dõi tiếp theo..."
+              placeholder={t("finalSummaryTab.fields.followUp.placeholder")}
               value={followUpRecommendation}
               onChange={(e) => setFollowUpRecommendation(e.target.value)}
               className="min-h-[60px] text-xs"
             />
           ) : (
             <div className="rounded-md border bg-slate-50 p-3 text-xs whitespace-pre-wrap min-h-[50px]">
-              {followUpRecommendation || <span className="text-slate-400 italic">Không có dữ liệu</span>}
+              {followUpRecommendation || <span className="text-slate-400 italic">{t("finalSummaryTab.fields.noData")}</span>}
             </div>
           )}
         </div>
@@ -507,13 +510,13 @@ export function DoctorFinalSummaryTab({
         {/* Referenced Health Records */}
         <div className="space-y-2 pt-2 border-t">
           <label className="text-xs font-semibold text-slate-700 flex items-center justify-between">
-            <span>Hồ sơ đo đạc tham chiếu ({selectedRecordIds.length})</span>
-            {isEditable && <span className="text-[11px] font-normal text-muted-foreground">Chọn các hồ sơ đo đạc trong phạm vi phiên tư vấn</span>}
+            <span>{t("finalSummaryTab.records.title", { count: selectedRecordIds.length })}</span>
+            {isEditable && <span className="text-[11px] font-normal text-muted-foreground">{t("finalSummaryTab.records.hint")}</span>}
           </label>
 
           {isEditable ? (
             scopedRecords.length === 0 ? (
-              <p className="text-xs text-muted-foreground italic">Không có hồ sơ nào trong phạm vi phiên tư vấn này.</p>
+              <p className="text-xs text-muted-foreground italic">{t("finalSummaryTab.records.emptyScope")}</p>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-40 overflow-y-auto pr-1">
                 {scopedRecords.map((item) => {
@@ -561,12 +564,12 @@ export function DoctorFinalSummaryTab({
           ) : (
             <div className="flex flex-wrap gap-2">
               {selectedRecordIds.length === 0 ? (
-                <span className="text-xs text-slate-400 italic">Không có hồ sơ nào được tham chiếu.</span>
+                <span className="text-xs text-slate-400 italic">{t("finalSummaryTab.records.noneReferenced")}</span>
               ) : (
                 selectedRecordIds.map((recId) => (
                   <Badge key={recId} variant="secondary" className="text-xs py-1 px-2 gap-1">
                     <FileText className="w-3 h-3" />
-                    Hồ sơ #{recId}
+                    {t("finalSummaryTab.records.recordLabel", { id: recId })}
                   </Badge>
                 ))
               )}
@@ -580,7 +583,7 @@ export function DoctorFinalSummaryTab({
             <div className="flex items-center justify-between">
               <h4 className="text-xs font-semibold text-foreground flex items-center gap-1.5">
                 <FileText className="w-3.5 h-3.5 text-warning-600" />
-                Phụ lục & Đính chính sau hoàn tất ({summary?.addenda?.length || 0})
+                {t("finalSummaryTab.addenda.title", { count: summary?.addenda?.length || 0 })}
               </h4>
               <Button
                 variant="outline"
@@ -589,7 +592,7 @@ export function DoctorFinalSummaryTab({
                 onClick={() => setAddendumOpen(true)}
               >
                 <PlusCircle className="w-3.5 h-3.5" />
-                Thêm phụ lục
+                {t("finalSummaryTab.addenda.add")}
               </Button>
             </div>
 
@@ -601,7 +604,7 @@ export function DoctorFinalSummaryTab({
                     className="p-3 rounded-lg bg-warning-50/60 border border-warning-200/60 text-xs"
                   >
                     <div className="flex items-center justify-between font-medium text-warning-950 mb-1">
-                      <span>Lý do: {addendum.reason}</span>
+                      <span>{t("finalSummaryTab.addenda.reason", { reason: addendum.reason })}</span>
                       <span className="text-[10px] text-muted-foreground">{formatDate(addendum.createdAt)}</span>
                     </div>
                     <p className="text-foreground/90 whitespace-pre-wrap">{addendum.content}</p>
@@ -609,7 +612,7 @@ export function DoctorFinalSummaryTab({
                 ))}
               </div>
             ) : (
-              <p className="text-xs text-muted-foreground italic">Chưa có phụ lục đính chính nào.</p>
+              <p className="text-xs text-muted-foreground italic">{t("finalSummaryTab.addenda.empty")}</p>
             )}
           </div>
         )}
@@ -626,7 +629,7 @@ export function DoctorFinalSummaryTab({
               disabled={saving || finalizing}
             >
               <Save className="mr-1.5 h-4 w-4" />
-              {saving ? "Đang lưu..." : "Lưu nháp"}
+              {saving ? t("finalSummaryTab.actions.saving") : t("finalSummaryTab.actions.saveDraft")}
             </Button>
           )}
           {canFinalize && (
@@ -636,7 +639,7 @@ export function DoctorFinalSummaryTab({
               disabled={saving || finalizing}
             >
               <CheckCircle2 className="mr-1.5 h-4 w-4" />
-              Hoàn tất tổng kết
+              {t("finalSummaryTab.actions.finalize")}
             </Button>
           )}
         </div>
@@ -646,17 +649,17 @@ export function DoctorFinalSummaryTab({
       <Dialog open={confirmFinalizeOpen} onOpenChange={setConfirmFinalizeOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Hoàn tất tổng kết chăm sóc?</DialogTitle>
+            <DialogTitle>{t("finalSummaryTab.confirmDialog.title")}</DialogTitle>
             <DialogDescription className="pt-2 text-slate-800 text-sm">
-              Sau khi hoàn tất, bản tổng kết gốc sẽ được khóa bất biến. Mọi đính chính sau này sẽ được ghi nhận dưới dạng Phụ lục (Addendum).
+              {t("finalSummaryTab.confirmDialog.description")}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="mt-4">
             <Button variant="outline" onClick={() => setConfirmFinalizeOpen(false)} disabled={finalizing}>
-              Hủy
+              {t("finalSummaryTab.actions.cancel")}
             </Button>
             <Button onClick={handleFinalize} disabled={finalizing}>
-              {finalizing ? "Đang xử lý..." : "Xác nhận hoàn tất"}
+              {finalizing ? t("finalSummaryTab.actions.processing") : t("finalSummaryTab.actions.confirmFinalize")}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -668,19 +671,19 @@ export function DoctorFinalSummaryTab({
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-base">
               <FileText className="w-4 h-4 text-warning-600" />
-              Thêm Phụ lục / Đính chính Tổng kết
+              {t("finalSummaryTab.addendumDialog.title")}
             </DialogTitle>
             <DialogDescription className="text-xs">
-              Bản tổng kết gốc sẽ được giữ nguyên và phụ lục này sẽ được gắn kèm vào hồ sơ y tế.
+              {t("finalSummaryTab.addendumDialog.description")}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-3 py-2 text-xs">
             <div className="space-y-1">
               <label className="font-medium text-foreground">
-                Lý do đính chính / bổ sung <span className="text-danger-500">*</span>
+                {t("finalSummaryTab.addendumDialog.reasonLabel")} <span className="text-danger-500">*</span>
               </label>
               <Input
-                placeholder="VD: Cập nhật kết quả cận lâm sàng bổ sung, Điều chỉnh liều khuyến nghị..."
+                placeholder={t("finalSummaryTab.addendumDialog.reasonPlaceholder")}
                 value={addendumReason}
                 onChange={(e) => setAddendumReason(e.target.value)}
                 className="text-xs"
@@ -688,10 +691,10 @@ export function DoctorFinalSummaryTab({
             </div>
             <div className="space-y-1">
               <label className="font-medium text-foreground">
-                Nội dung bổ sung <span className="text-danger-500">*</span>
+                {t("finalSummaryTab.addendumDialog.contentLabel")} <span className="text-danger-500">*</span>
               </label>
               <Textarea
-                placeholder="Nhập chi tiết nội dung đính chính hoặc khuyến nghị bổ sung..."
+                placeholder={t("finalSummaryTab.addendumDialog.contentPlaceholder")}
                 value={addendumContent}
                 onChange={(e) => setAddendumContent(e.target.value)}
                 className="min-h-[100px] text-xs"
@@ -700,10 +703,10 @@ export function DoctorFinalSummaryTab({
           </div>
           <DialogFooter className="gap-2 sm:gap-0">
             <Button variant="outline" size="sm" onClick={() => setAddendumOpen(false)} disabled={addingAddendum}>
-              Hủy
+              {t("finalSummaryTab.actions.cancel")}
             </Button>
             <Button size="sm" onClick={handleAddAddendum} disabled={addingAddendum || !addendumReason.trim() || !addendumContent.trim()}>
-              {addingAddendum ? "Đang lưu..." : "Lưu phụ lục"}
+              {addingAddendum ? t("finalSummaryTab.actions.saving") : t("finalSummaryTab.actions.saveAddendum")}
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -1,4 +1,5 @@
 import { FileText } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -16,25 +17,26 @@ export function HealthRecordsPanel({
   loading: boolean
   onSelect: (record: HealthRecordItem) => void
 }) {
+  const { t } = useTranslation("consultation")
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Hồ sơ sức khỏe của tôi</CardTitle>
-        <CardDescription>Chọn một hồ sơ để đính kèm nhanh vào yêu cầu tư vấn của bạn.</CardDescription>
+        <CardTitle>{t("healthRecordsPanel.title")}</CardTitle>
+        <CardDescription>{t("healthRecordsPanel.description")}</CardDescription>
       </CardHeader>
       <CardContent>
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Hồ sơ</TableHead>
-              <TableHead>Trạng thái</TableHead>
-              <TableHead>Dự đoán</TableHead>
-              <TableHead>Ngày tạo</TableHead>
-              <TableHead className="text-right">Thao tác</TableHead>
+              <TableHead>{t("healthRecordsPanel.columns.record")}</TableHead>
+              <TableHead>{t("healthRecordsPanel.columns.status")}</TableHead>
+              <TableHead>{t("healthRecordsPanel.columns.prediction")}</TableHead>
+              <TableHead>{t("healthRecordsPanel.columns.createdAt")}</TableHead>
+              <TableHead className="text-right">{t("healthRecordsPanel.columns.actions")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {records.length === 0 && <EmptyRow colSpan={5} text={loading ? "Đang tải hồ sơ sức khỏe..." : "Không tìm thấy hồ sơ sức khỏe nào."} />}
+            {records.length === 0 && <EmptyRow colSpan={5} text={loading ? t("healthRecordsPanel.loading") : t("healthRecordsPanel.empty")} />}
             {records.map((record) => (
               <TableRow key={record.id}>
                 <TableCell className="font-medium">#{record.id}</TableCell>
@@ -44,7 +46,7 @@ export function HealthRecordsPanel({
                 <TableCell className="text-right">
                   <Button variant="outline" size="sm" onClick={() => onSelect(record)}>
                     <FileText data-icon="inline-start" />
-                    Sử dụng
+                    {t("healthRecordsPanel.use")}
                   </Button>
                 </TableCell>
               </TableRow>

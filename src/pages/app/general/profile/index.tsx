@@ -1,5 +1,7 @@
 import { useState, useEffect, useCallback } from "react"
 import { AlertCircle, Calendar, Loader2, RotateCw, Stethoscope, User as UserIcon } from "lucide-react"
+import { useTranslation } from "react-i18next"
+import i18n from "@/lib/i18n"
 import { useAuthStore } from "@/stores/auth-store"
 import { Page, PageBody, PageHeader } from "@/components/layout/page"
 import { Button } from "@/components/ui/button"
@@ -12,6 +14,7 @@ import { UnifiedProfileCard } from "@/pages/app/general/profile/components/unifi
 import { DoctorScheduleDialog } from "@/pages/app/management/doctor-consultations/components/doctor-schedule-dialog"
 
 export default function ProfilePage() {
+  const { t } = useTranslation("profile")
   const [user, setUser] = useState<UserResponse | null>(null)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
@@ -55,7 +58,7 @@ export default function ProfilePage() {
       setError(
         anyErr?.response?.data?.message ||
           anyErr?.message ||
-          "Không thể tải thông tin hồ sơ tài khoản từ máy chủ."
+          i18n.t("profile:page.loadErrorFallback")
       )
     } finally {
       setLoading(false)
@@ -86,7 +89,7 @@ export default function ProfilePage() {
           setError(
             anyErr?.response?.data?.message ||
               anyErr?.message ||
-              "Không thể tải thông tin hồ sơ tài khoản từ máy chủ."
+              i18n.t("profile:page.loadErrorFallback")
           )
         }
       })
@@ -139,8 +142,8 @@ export default function ProfilePage() {
     <Page>
       <PageHeader
         icon={<UserIcon className="w-5 h-5" />}
-        title="Hồ sơ tài khoản"
-        description="Xem và quản lý thông tin liên hệ cá nhân, thông tin định danh và bảo mật tài khoản."
+        title={t("page.title")}
+        description={t("page.description")}
       />
 
       <PageBody>
@@ -149,7 +152,7 @@ export default function ProfilePage() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 animate-pulse">
             <div className="lg:col-span-4 h-96 rounded-2xl bg-slate-100 border border-slate-200/60 flex flex-col items-center justify-center p-6 text-slate-400">
               <Loader2 className="w-8 h-8 animate-spin mb-3 text-primary-600" />
-              <span className="text-xs font-bold text-slate-600">Đang tải thông tin tài khoản...</span>
+              <span className="text-xs font-bold text-slate-600">{t("page.loading")}</span>
             </div>
             <div className="lg:col-span-8 h-96 rounded-2xl bg-slate-100 border border-slate-200/60" />
           </div>
@@ -159,7 +162,7 @@ export default function ProfilePage() {
         {error && !loading && !user && (
           <div className="p-6 rounded-2xl bg-danger-50/80 border border-danger-200 text-center max-w-lg mx-auto my-8">
             <AlertCircle className="w-10 h-10 text-danger-600 mx-auto mb-3" />
-            <h3 className="text-base font-black text-slate-900">Không thể tải thông tin hồ sơ</h3>
+            <h3 className="text-base font-black text-slate-900">{t("page.loadErrorTitle")}</h3>
             <p className="text-xs font-medium text-slate-600 max-w-sm mx-auto mt-1 mb-5 leading-relaxed">
               {error}
             </p>
@@ -168,7 +171,7 @@ export default function ProfilePage() {
               className="h-9 rounded-xl bg-danger-600 hover:bg-danger-700 text-white text-xs font-extrabold px-5 shadow-sm shadow-danger-500/20 flex items-center gap-2 mx-auto cursor-pointer"
             >
               <RotateCw className="w-4 h-4" />
-              <span>Thử kết nối lại</span>
+              <span>{t("page.retry")}</span>
             </Button>
           </div>
         )}
@@ -185,22 +188,26 @@ export default function ProfilePage() {
                   <div>
                     <div className="flex items-center gap-2">
                       <h3 className="text-sm font-bold text-slate-800">
-                        Hồ sơ Trực & Lịch làm việc Bác sĩ
+                        {t("doctor.title")}
                       </h3>
                       {careProfile ? (
                         <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-success-50 text-success-700 border border-success-200">
-                          Đã kích hoạt
+                          {t("doctor.activated")}
                         </span>
                       ) : (
                         <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-warning-50 text-warning-700 border border-warning-200">
-                          Chưa khởi tạo
+                          {t("doctor.notInitialized")}
                         </span>
                       )}
                     </div>
                     <p className="text-xs text-slate-500 mt-0.5">
                       {careProfile
-                        ? `Chuyên khoa: ${careProfile.specialty} • Lịch trực: ${careProfile.availability?.weekly?.length || 0} khung giờ/tuần • Múi giờ: ${careProfile.timezone || "Asia/Ho_Chi_Minh"}`
-                        : "Tài khoản bác sĩ chưa được quản trị viên cấu hình chuyên khoa. Bạn vẫn có thể mở xem thông tin lịch trực."}
+                        ? t("doctor.summary", {
+                            specialty: careProfile.specialty,
+                            count: careProfile.availability?.weekly?.length || 0,
+                            timezone: careProfile.timezone || "Asia/Ho_Chi_Minh",
+                          })
+                        : t("doctor.notConfigured")}
                     </p>
                   </div>
                 </div>
@@ -212,7 +219,7 @@ export default function ProfilePage() {
                   className="text-xs font-semibold shrink-0 cursor-pointer border-primary-200 text-primary-700 hover:bg-primary-50"
                 >
                   <Calendar className="w-3.5 h-3.5 mr-1.5 text-primary-600" />
-                  <span>Cập nhật Lịch trực & Múi giờ</span>
+                  <span>{t("doctor.updateSchedule")}</span>
                 </Button>
               </div>
             )}

@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
 import { AlertTriangle, LogOut, Loader2 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -20,6 +21,7 @@ import {
 } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
+import i18n from "@/lib/i18n"
 import { consultationApi } from "@/services"
 import type { CareTerminationReason } from "@/types/consultation"
 
@@ -31,15 +33,60 @@ interface TerminationRequestDialogProps {
 }
 
 const TERMINATION_REASONS: { value: CareTerminationReason; label: string }[] = [
-  { value: "MEMBER_REQUESTED", label: "Hội viên yêu cầu kết thúc sớm" },
-  { value: "DOCTOR_UNAVAILABLE", label: "Bác sĩ không thể tiếp tục sắp xếp hỗ trợ" },
-  { value: "MEMBER_UNAVAILABLE", label: "Hội viên bận / không thể tiếp tục theo dõi" },
-  { value: "SAFETY_OR_SCOPE_REASON", label: "Cần can thiệp trực tiếp / Vượt phạm vi tư vấn từ xa" },
-  { value: "ACCOUNT_SUSPENDED", label: "Tài khoản bị tạm khóa / đình chỉ dịch vụ" },
-  { value: "SERVICE_VIOLATION", label: "Vi phạm quy tắc trao đổi / dịch vụ" },
-  { value: "TECHNICAL_FAILURE", label: "Sự cố kỹ thuật / kết nối kéo dài" },
-  { value: "ADMINISTRATIVE_CLOSURE", label: "Yêu cầu đóng hành chính" },
-  { value: "OTHER", label: "Lý do khác" },
+  {
+    value: "MEMBER_REQUESTED",
+    get label() {
+      return i18n.t("consultation:terminationDialog.reasons.memberRequested")
+    },
+  },
+  {
+    value: "DOCTOR_UNAVAILABLE",
+    get label() {
+      return i18n.t("consultation:terminationDialog.reasons.doctorUnavailable")
+    },
+  },
+  {
+    value: "MEMBER_UNAVAILABLE",
+    get label() {
+      return i18n.t("consultation:terminationDialog.reasons.memberUnavailable")
+    },
+  },
+  {
+    value: "SAFETY_OR_SCOPE_REASON",
+    get label() {
+      return i18n.t("consultation:terminationDialog.reasons.safetyOrScopeReason")
+    },
+  },
+  {
+    value: "ACCOUNT_SUSPENDED",
+    get label() {
+      return i18n.t("consultation:terminationDialog.reasons.accountSuspended")
+    },
+  },
+  {
+    value: "SERVICE_VIOLATION",
+    get label() {
+      return i18n.t("consultation:terminationDialog.reasons.serviceViolation")
+    },
+  },
+  {
+    value: "TECHNICAL_FAILURE",
+    get label() {
+      return i18n.t("consultation:terminationDialog.reasons.technicalFailure")
+    },
+  },
+  {
+    value: "ADMINISTRATIVE_CLOSURE",
+    get label() {
+      return i18n.t("consultation:terminationDialog.reasons.administrativeClosure")
+    },
+  },
+  {
+    value: "OTHER",
+    get label() {
+      return i18n.t("consultation:terminationDialog.reasons.other")
+    },
+  },
 ]
 
 function readError(error: unknown, fallback: string) {
@@ -53,6 +100,7 @@ export function TerminationRequestDialog({
   onOpenChange,
   onSuccess,
 }: TerminationRequestDialogProps) {
+  const { t } = useTranslation("consultation")
   const { toast } = useToast()
   const [reason, setReason] = useState<CareTerminationReason>("MEMBER_REQUESTED")
   const [details, setDetails] = useState("")
@@ -63,8 +111,8 @@ export function TerminationRequestDialog({
     if (!reason || !details.trim()) {
       toast({
         variant: "destructive",
-        title: "Thiếu thông tin",
-        description: "Vui lòng chọn lý do và nhập giải trình chi tiết yêu cầu kết thúc.",
+        title: t("terminationDialog.toast.missingInfoTitle"),
+        description: t("terminationDialog.toast.missingInfoDescription"),
       })
       return
     }
@@ -76,9 +124,8 @@ export function TerminationRequestDialog({
         details: details.trim(),
       })
       toast({
-        title: "Đã gửi yêu cầu kết thúc phiên",
-        description:
-          "Yêu cầu của bạn đã được chuyển tới Điều phối viên chăm sóc (Care Coordinator) để rà soát vận hành.",
+        title: t("terminationDialog.toast.successTitle"),
+        description: t("terminationDialog.toast.successDescription"),
       })
       setDetails("")
       onOpenChange(false)
@@ -86,8 +133,8 @@ export function TerminationRequestDialog({
     } catch (error) {
       toast({
         variant: "destructive",
-        title: "Lỗi gửi yêu cầu",
-        description: readError(error, "Không thể gửi yêu cầu kết thúc phiên lúc này."),
+        title: t("terminationDialog.toast.errorTitle"),
+        description: readError(error, t("terminationDialog.toast.errorDescription")),
       })
     } finally {
       setLoading(false)
@@ -104,18 +151,18 @@ export function TerminationRequestDialog({
                 <AlertTriangle className="w-5 h-5" />
               </div>
               <DialogTitle className="text-lg font-bold text-slate-900">
-                Yêu Cầu Kết Thúc Phiên Tư Vấn
+                {t("terminationDialog.title")}
               </DialogTitle>
             </div>
             <DialogDescription className="text-xs text-slate-500 leading-relaxed">
-              Gửi yêu cầu kết thúc phiên chăm sóc đang hoạt động trước thời hạn. Điều phối viên sẽ rà soát nguyên nhân và hỗ trợ các thủ tục liên quan.
+              {t("terminationDialog.description")}
             </DialogDescription>
           </DialogHeader>
 
           <div className="py-4 space-y-4 text-xs">
             <div className="space-y-1.5">
               <Label htmlFor="termination-reason" className="text-xs font-semibold text-slate-700">
-                Lý do kết thúc <span className="text-danger-500">*</span>
+                {t("terminationDialog.reasonLabel")} <span className="text-danger-500">*</span>
               </Label>
               <Select
                 value={reason}
@@ -123,7 +170,7 @@ export function TerminationRequestDialog({
                 disabled={loading}
               >
                 <SelectTrigger id="termination-reason" className="h-9 text-xs">
-                  <SelectValue placeholder="Chọn lý do kết thúc..." />
+                  <SelectValue placeholder={t("terminationDialog.reasonPlaceholder")} />
                 </SelectTrigger>
                 <SelectContent>
                   {TERMINATION_REASONS.map((item) => (
@@ -137,21 +184,21 @@ export function TerminationRequestDialog({
 
             <div className="space-y-1.5">
               <Label htmlFor="termination-details" className="text-xs font-semibold text-slate-700">
-                Giải trình chi tiết <span className="text-danger-500">*</span>
+                {t("terminationDialog.detailsLabel")} <span className="text-danger-500">*</span>
               </Label>
               <Textarea
                 id="termination-details"
                 required
                 maxLength={500}
                 rows={4}
-                placeholder="Nêu rõ lý do, bối cảnh hoặc các vấn đề phát sinh cần kết thúc sớm (tối đa 500 ký tự)..."
+                placeholder={t("terminationDialog.detailsPlaceholder")}
                 value={details}
                 onChange={(e) => setDetails(e.target.value)}
                 disabled={loading}
                 className="resize-none text-xs"
               />
               <div className="text-[11px] text-slate-400 text-right">
-                {details.trim().length}/500 ký tự
+                {t("terminationDialog.charCount", { count: details.trim().length, max: 500 })}
               </div>
             </div>
           </div>
@@ -165,7 +212,7 @@ export function TerminationRequestDialog({
               disabled={loading}
               className="text-xs"
             >
-              Hủy
+              {t("terminationDialog.actions.cancel")}
             </Button>
             <Button
               type="submit"
@@ -176,12 +223,12 @@ export function TerminationRequestDialog({
               {loading ? (
                 <>
                   <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                  Đang gửi...
+                  {t("terminationDialog.actions.submitting")}
                 </>
               ) : (
                 <>
                   <LogOut className="w-3.5 h-3.5" />
-                  Gửi yêu cầu kết thúc
+                  {t("terminationDialog.actions.submit")}
                 </>
               )}
             </Button>

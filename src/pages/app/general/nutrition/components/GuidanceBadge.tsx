@@ -1,4 +1,5 @@
 import { AlertCircle, CheckCircle2, AlertTriangle, HelpCircle } from "lucide-react"
+import { useTranslation } from "react-i18next"
 import type { GuidanceType } from "@/types/nutrition"
 import { cn } from "@/lib/utils"
 
@@ -15,6 +16,7 @@ export function GuidanceBadge({
   showIcon = true,
   size = "md",
 }: GuidanceBadgeProps) {
+  const { t } = useTranslation("nutrition")
   if (!type) return null
 
   const sizeStyles = {
@@ -40,7 +42,7 @@ export function GuidanceBadge({
           )}
         >
           {showIcon && <CheckCircle2 className={cn(iconSizes, "text-success-600")} />}
-          <span>Nên ưu tiên</span>
+          <span>{t("guidance.PRIORITIZE")}</span>
         </span>
       )
     case "LIMIT":
@@ -53,7 +55,7 @@ export function GuidanceBadge({
           )}
         >
           {showIcon && <AlertTriangle className={cn(iconSizes, "text-danger-600")} />}
-          <span>Nên hạn chế</span>
+          <span>{t("guidance.LIMIT")}</span>
         </span>
       )
     case "CAUTION":
@@ -66,7 +68,7 @@ export function GuidanceBadge({
           )}
         >
           {showIcon && <AlertCircle className={cn(iconSizes, "text-warning-600")} />}
-          <span>Cần lưu ý</span>
+          <span>{t("guidance.CAUTION")}</span>
         </span>
       )
     default:
@@ -79,7 +81,7 @@ export function GuidanceBadge({
           )}
         >
           {showIcon && <HelpCircle className={cn(iconSizes, "text-slate-500")} />}
-          <span>Tham khảo</span>
+          <span>{t("guidance.reference")}</span>
         </span>
       )
   }

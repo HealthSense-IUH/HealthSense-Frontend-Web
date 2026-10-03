@@ -1,10 +1,12 @@
 import { useState } from "react"
 import { Link, useNavigate, useParams } from "react-router-dom"
 import { Database, Info, Scale } from "lucide-react"
+import { Trans, useTranslation } from "react-i18next"
 
 import { Page, PageBody, PageFooter, PageHeader } from "@/components/layout/page"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
+import i18n from "@/lib/i18n"
 import { cn } from "@/lib/utils"
 import { formatNutrientAmount } from "./format"
 import { useReferenceFood } from "./hooks/use-nutrition"
@@ -16,11 +18,12 @@ const PER_100_GRAMS = "per-100g"
 
 function portionLabel(portion: ReferenceFoodPortion) {
   // USDA ghi "Quantity not specified" cho khẩu phần dùng khi không rõ số lượng
-  return portion.isDefault ? "Khẩu phần thường dùng" : portion.description
+  return portion.isDefault ? i18n.t("nutrition:databaseFood.defaultPortion") : portion.description
 }
 
 /** Chi tiết một thực phẩm USDA; số liệu được tính lại theo khẩu phần người dùng chọn. */
 export default function NutritionDatabaseFoodPage() {
+  const { t } = useTranslation("nutrition")
   const { foodId } = useParams<{ foodId: string }>()
   const navigate = useNavigate()
   const { data: food, isLoading } = useReferenceFood(foodId)
@@ -39,9 +42,9 @@ export default function NutritionDatabaseFoodPage() {
   if (!food) {
     return (
       <div className="max-w-md mx-auto p-6 text-center space-y-4">
-        <h2 className="text-xl font-bold">Không tìm thấy thực phẩm</h2>
-        <p className="text-muted-foreground text-sm">Thực phẩm này không có trong cơ sở dữ liệu dinh dưỡng.</p>
-        <Button onClick={() => navigate("/app/general/nutrition")}>Quay lại tra cứu</Button>
+        <h2 className="text-xl font-bold">{t("databaseFood.notFoundTitle")}</h2>
+        <p className="text-muted-foreground text-sm">{t("databaseFood.notFoundDescription")}</p>
+        <Button onClick={() => navigate("/app/general/nutrition")}>{t("databaseFood.backToLookup")}</Button>
       </div>
     )
   }
@@ -59,9 +62,9 @@ export default function NutritionDatabaseFoodPage() {
     <Page>
       <PageHeader
         breadcrumbs={[
-          { label: "Dinh dưỡng", to: "/app/general/nutrition" },
+          { label: t("common.breadcrumbNutrition"), to: "/app/general/nutrition" },
           // navigate(-1) giữ nguyên từ khóa, nhóm và trang đang xem ở danh sách
-          { label: "Tra cứu toàn bộ dữ liệu", onClick: () => navigate(-1) },
+          { label: t("database.breadcrumb"), onClick: () => navigate(-1) },
           { label: title },
         ]}
         title={title}
@@ -76,10 +79,12 @@ export default function NutritionDatabaseFoodPage() {
             </Link>
             <span className="inline-flex items-center gap-1 text-xs font-medium text-slate-600 bg-slate-100 px-2.5 py-0.5 rounded-md">
               <Database className="w-3 h-3" />
-              {sourceInfo.label} · mã {food.sourceFoodCode}
+              {t("databaseFood.sourceCode", { source: sourceInfo.label, code: food.sourceFoodCode })}
             </span>
             {food.sourceCategory && (
-              <span className="text-xs text-muted-foreground">Phân loại gốc: {food.sourceCategory}</span>
+              <span className="text-xs text-muted-foreground">
+                {t("databaseFood.sourceCategory", { category: food.sourceCategory })}
+              </span>
             )}
           </>
         }
@@ -89,8 +94,12 @@ export default function NutritionDatabaseFoodPage() {
         <DietAdviceNote advice={food.advice} />
         {food.wastePct != null && food.wastePct > 0 && (
           <p className="text-xs text-slate-600">
-            Tỉ lệ thải bỏ khi sơ chế: <span className="font-semibold">{formatNutrientAmount(food.wastePct)}%</span>. Số
-            liệu bên dưới tính trên phần ăn được.
+            <Trans
+              t={t}
+              i18nKey="databaseFood.wastePct"
+              values={{ value: formatNutrientAmount(food.wastePct) }}
+              components={{ strong: <span className="font-semibold" /> }}
+            />
           </p>
         )}
 
@@ -98,7 +107,7 @@ export default function NutritionDatabaseFoodPage() {
           <div className="bg-slate-50/60 border-b border-slate-100 p-6 space-y-3">
             <div className="flex items-center gap-2">
               <Scale className="w-4 h-4 text-primary" />
-              <h2 className="text-lg font-bold">Thành phần dinh dưỡng</h2>
+              <h2 className="text-lg font-bold">{t("databaseFood.nutritionTitle")}</h2>
             </div>
             <div className="flex flex-wrap gap-2">
               {[{ value: PER_100_GRAMS, label: "100 g" }, ...food.portions.map((p, i) => ({
@@ -121,8 +130,12 @@ export default function NutritionDatabaseFoodPage() {
               ))}
             </div>
             <p className="text-xs text-muted-foreground">
-              Đang tính cho <span className="font-semibold text-foreground">{formatNutrientAmount(grams)} g</span>
-              {portion ? ` (${portionLabel(portion)})` : ""}.
+              <Trans
+                t={t}
+                i18nKey={portion ? "databaseFood.calculatingForPortion" : "databaseFood.calculatingFor"}
+                values={{ grams: formatNutrientAmount(grams), portion: portion ? portionLabel(portion) : "" }}
+                components={{ strong: <span className="font-semibold text-foreground" /> }}
+              />
             </p>
           </div>
 
@@ -164,14 +177,11 @@ export default function NutritionDatabaseFoodPage() {
         <p className="flex items-start gap-2">
           <Info className="w-4 h-4 shrink-0 mt-0.5 text-slate-400" />
           <span>
-            {food.source === "VN_FCT"
-              ? "Số liệu tính trên 100 g phần ăn được. Chất nào sách không có số liệu thì không hiển thị. Chất xơ trong bảng này là xơ thô (celluloza), khác chất xơ tiêu hóa của USDA. "
-              : "Khẩu phần và số liệu theo USDA FNDDS, phản ánh món ăn phổ biến tại Mỹ; khẩu phần thực tế ở Việt Nam có thể khác. "}
-            Đây là số liệu tham khảo; màu đánh giá (nếu có đơn ăn uống) chỉ so số liệu với các quy tắc bác sĩ kê, không thay thế tư
-            vấn của bác sĩ hoặc chuyên gia dinh dưỡng.
+            {food.source === "VN_FCT" ? t("databaseFood.footer.vnFct") : t("databaseFood.footer.usda")}{" "}
+            {t("databaseFood.footer.disclaimer")}
           </span>
         </p>
-        <p className="italic pl-6">Nguồn: {sourceInfo.citation}</p>
+        <p className="italic pl-6">{t("databaseFood.citation", { citation: sourceInfo.citation })}</p>
       </PageFooter>
     </Page>
   )

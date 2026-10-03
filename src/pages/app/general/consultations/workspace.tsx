@@ -1,5 +1,6 @@
 import { type FormEvent, useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { useNavigate, useParams, useSearchParams } from "react-router-dom"
+import { useTranslation } from "react-i18next"
 import {
   Activity,
   ArrowLeft,
@@ -91,6 +92,7 @@ export default function MemberSessionWorkspacePage() {
   const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
   const { toast } = useToast()
+  const { t } = useTranslation("consultation")
   const userSession = useAuthStore((state) => state.userSession)
 
   const activeTab = searchParams.get("tab") || "chat"
@@ -131,7 +133,7 @@ export default function MemberSessionWorkspacePage() {
         if (mounted) {
           toast({
             variant: "destructive",
-            description: readError(error, "Không thể tải thông tin phiên tư vấn."),
+            description: readError(error, t("workspace.toasts.loadSessionFailed")),
           })
         }
       })
@@ -142,7 +144,7 @@ export default function MemberSessionWorkspacePage() {
     return () => {
       mounted = false
     }
-  }, [sessionId, toast])
+  }, [sessionId, toast, t])
 
   // Background refresh session without unmounting child components
   const refreshSession = useCallback(async () => {
@@ -172,7 +174,7 @@ export default function MemberSessionWorkspacePage() {
         if (mounted) {
           toast({
             variant: "destructive",
-            description: readError(error, "Không thể tải lịch sử trao đổi."),
+            description: readError(error, t("workspace.toasts.loadHistoryFailed")),
           })
           setMessages([])
         }
@@ -181,7 +183,7 @@ export default function MemberSessionWorkspacePage() {
     return () => {
       mounted = false
     }
-  }, [sessionId, toast])
+  }, [sessionId, toast, t])
 
   // 3. Chronologically sorted messages
   const sortedMessages = useMemo(() => {
@@ -236,12 +238,12 @@ export default function MemberSessionWorkspacePage() {
     } catch (error) {
       toast({
         variant: "destructive",
-        description: readError(error, "Không thể tải tin nhắn cũ hơn."),
+        description: readError(error, t("workspace.toasts.loadOlderFailed")),
       })
     } finally {
       setLoadingMoreMessages(false)
     }
-  }, [sessionId, loadingMoreMessages, hasMoreMessages, messages.length, sortedMessages, toast])
+  }, [sessionId, loadingMoreMessages, hasMoreMessages, messages.length, sortedMessages, toast, t])
 
   // 7. Send Message
   const handleSendMessage = useCallback(
@@ -276,13 +278,13 @@ export default function MemberSessionWorkspacePage() {
       } catch (error) {
         toast({
           variant: "destructive",
-          description: readError(error, "Không thể gửi tin nhắn."),
+          description: readError(error, t("workspace.toasts.sendFailed")),
         })
       } finally {
         setChatLoading(false)
       }
     },
-    [sessionId, session?.status, messageDraft, attachmentUrl, handleIncomingMessage, toast]
+    [sessionId, session?.status, messageDraft, attachmentUrl, handleIncomingMessage, toast, t]
   )
 
   // 8. Fetch Final Summary on tab view
@@ -321,27 +323,27 @@ export default function MemberSessionWorkspacePage() {
   const doctorDisplayName =
     session?.doctorDisplayName ||
     (session as any)?.doctorName ||
-    (session?.doctorId ? `Bác sĩ #${session.doctorId}` : "Bác sĩ phụ trách")
+    (session?.doctorId ? t("workspace.doctorFallback", { id: session.doctorId }) : t("workspace.doctorInCharge"))
 
   const isCompleted = session?.status === "COMPLETED"
   const isCancelled = session?.status === "CANCELLED"
   const isOutsideSupportHours = checkOutsideSupportHours(session)
   const readOnlyMode = isCompleted || isCancelled || isOutsideSupportHours || session?.status === "SCHEDULED"
   const readOnlyReason = isCompleted
-    ? "Phiên tư vấn đã hoàn tất. Bạn chỉ có thể xem lại lịch sử trao đổi."
+    ? t("workspace.readOnly.completed")
     : isCancelled
-      ? "Phiên tư vấn đã bị hủy."
+      ? t("workspace.readOnly.cancelled")
       : isOutsideSupportHours
-        ? "Hiện ngoài khung giờ làm việc của bác sĩ. Bạn có thể gửi tin nhắn trong khung giờ hỗ trợ tiếp theo."
+        ? t("workspace.readOnly.outsideHours")
         : session?.status === "SCHEDULED"
-          ? "Phiên tư vấn chưa bắt đầu."
+          ? t("workspace.readOnly.notStarted")
           : undefined
 
   const canSend = session?.status === "ACTIVE" && !readOnlyMode
 
   const breadcrumbs = [
-    { label: "Tư vấn & Chăm sóc", to: "/app/general/consultations?tab=sessions" },
-    { label: `Phiên tư vấn #${session?.id ?? sessionId}` },
+    { label: t("workspace.breadcrumbConsultations"), to: "/app/general/consultations?tab=sessions" },
+    { label: t("workspace.sessionTitle", { id: session?.id ?? sessionId ?? "" }) },
   ]
 
   if (initialLoading && !session) {
@@ -352,11 +354,11 @@ export default function MemberSessionWorkspacePage() {
           className="px-4 sm:px-6 py-3 border-b border-border bg-background"
           breadcrumbs={breadcrumbs}
           icon={<Stethoscope className="w-5 h-5" />}
-          title={`Phiên tư vấn #${sessionId}`}
+          title={t("workspace.sessionTitle", { id: sessionId ?? "" })}
         />
         <PageBody className="items-center justify-center text-center gap-3 p-6">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
-          <p className="text-sm text-muted-foreground">Đang tải không gian tư vấn...</p>
+          <p className="text-sm text-muted-foreground">{t("workspace.loading")}</p>
         </PageBody>
       </Page>
     )
@@ -370,17 +372,17 @@ export default function MemberSessionWorkspacePage() {
           className="px-4 sm:px-6 py-3 border-b border-border bg-background"
           breadcrumbs={breadcrumbs}
           icon={<Stethoscope className="w-5 h-5" />}
-          title={`Phiên tư vấn #${sessionId}`}
+          title={t("workspace.sessionTitle", { id: sessionId ?? "" })}
         />
         <PageBody className="items-center justify-center text-center p-6">
           <div className="flex max-w-lg flex-col items-center gap-4">
             <ShieldAlert className="h-10 w-10 text-danger-500" />
-            <h2 className="text-2xl font-bold text-foreground">Không tìm thấy phiên tư vấn</h2>
+            <h2 className="text-2xl font-bold text-foreground">{t("workspace.notFound.title")}</h2>
             <p className="text-sm text-muted-foreground">
-              Phiên khám #{sessionId} không tồn tại hoặc bạn không có quyền truy cập.
+              {t("workspace.notFound.description", { id: sessionId ?? "" })}
             </p>
             <Button onClick={() => navigate("/app/general/consultations?tab=sessions")}>
-              <ArrowLeft className="mr-2 h-4 w-4" /> Quay lại danh sách phiên
+              <ArrowLeft className="mr-2 h-4 w-4" /> {t("workspace.notFound.back")}
             </Button>
           </div>
         </PageBody>
@@ -395,7 +397,7 @@ export default function MemberSessionWorkspacePage() {
         className="px-4 sm:px-6 py-3 border-b border-border bg-background"
         breadcrumbs={breadcrumbs}
         icon={<Stethoscope className="w-5 h-5" />}
-        title={`Phiên tư vấn #${session.id}`}
+        title={t("workspace.sessionTitle", { id: session.id })}
         meta={
           <>
             {statusBadge(session.status)}
@@ -406,7 +408,7 @@ export default function MemberSessionWorkspacePage() {
             {session.endsAt && (
               <span className="hidden sm:inline-flex items-center gap-1 text-xs text-muted-foreground">
                 <Clock className="h-3.5 w-3.5" />
-                Hạn kết thúc: {formatDate(session.endsAt)}
+                {t("workspace.endsAt", { date: formatDate(session.endsAt) })}
               </span>
             )}
           </>
@@ -421,7 +423,7 @@ export default function MemberSessionWorkspacePage() {
                 onClick={() => setIsRenewalOpen(true)}
               >
                 <RefreshCw className="h-3.5 w-3.5" />
-                <span>Gia hạn</span>
+                <span>{t("workspace.actions.renew")}</span>
               </Button>
             )}
 
@@ -433,7 +435,7 @@ export default function MemberSessionWorkspacePage() {
                 onClick={() => setIsShareRecordOpen(true)}
               >
                 <Share2 className="h-3.5 w-3.5" />
-                <span>Chia sẻ hồ sơ</span>
+                <span>{t("workspace.actions.shareRecord")}</span>
               </Button>
             )}
 
@@ -445,7 +447,7 @@ export default function MemberSessionWorkspacePage() {
                 onClick={() => setActiveTab("summary")}
               >
                 <FileCheck className="h-3.5 w-3.5" />
-                <span>Tổng kết y khoa</span>
+                <span>{t("workspace.actions.medicalSummary")}</span>
               </Button>
             )}
           </>
@@ -460,7 +462,7 @@ export default function MemberSessionWorkspacePage() {
               <TabsList className="h-9 bg-muted/60 p-1 rounded-xl">
                 <TabsTrigger value="chat" className="rounded-lg text-xs font-semibold gap-1.5 px-3">
                   <MessagesSquare className="w-3.5 h-3.5" />
-                  <span>Trò chuyện trực tiếp</span>
+                  <span>{t("workspace.tabs.chat")}</span>
                   {messages.length > 0 && (
                     <span className="ml-1 px-1.5 py-0.2 rounded-full text-[10px] bg-primary/15 text-primary font-bold">
                       {messages.length}
@@ -469,16 +471,16 @@ export default function MemberSessionWorkspacePage() {
                 </TabsTrigger>
                 <TabsTrigger value="summary" className="rounded-lg text-xs font-semibold gap-1.5 px-3">
                   <FileText className="w-3.5 h-3.5" />
-                  <span>Tổng kết từ Bác sĩ</span>
+                  <span>{t("workspace.tabs.summary")}</span>
                   {isCompleted && (
                     <span className="ml-1 px-1.5 py-0.2 rounded-full text-[10px] bg-success-500/15 text-success-700 font-bold">
-                      Hoàn tất
+                      {t("workspace.tabs.completedBadge")}
                     </span>
                   )}
                 </TabsTrigger>
                 <TabsTrigger value="records" className="rounded-lg text-xs font-semibold gap-1.5 px-3">
                   <Activity className="w-3.5 h-3.5" />
-                  <span>Hồ sơ sức khỏe</span>
+                  <span>{t("workspace.tabs.records")}</span>
                 </TabsTrigger>
               </TabsList>
             </Tabs>
@@ -498,7 +500,7 @@ export default function MemberSessionWorkspacePage() {
                 <div className="border-b border-warning-200 bg-warning-50 px-4 py-2 text-xs text-warning-900 flex items-center gap-2 shrink-0">
                   <Clock className="h-4 w-4 text-warning-600 shrink-0" />
                   <span>
-                    Hiện ngoài khung giờ hỗ trợ của bác sĩ. Bạn vẫn có thể xem lại lịch sử trao đổi và gửi tin nhắn khi đến giờ trực.
+                    {t("workspace.outsideHoursBanner")}
                   </span>
                 </div>
               )}
@@ -542,10 +544,10 @@ export default function MemberSessionWorkspacePage() {
                   <CardContent className="flex flex-col items-center justify-center py-16 text-center">
                     <Activity className="h-12 w-12 text-muted-foreground/40 mb-3" />
                     <h3 className="text-base font-semibold text-foreground">
-                      Bác sĩ đang hoàn tất tổng kết phiên tư vấn
+                      {t("workspace.summary.pendingTitle")}
                     </h3>
                     <p className="text-sm text-muted-foreground mt-1.5 max-w-md">
-                      Bản tổng kết y khoa chính thức (tóm tắt lâm sàng, nhận xét, lời dặn và kế hoạch theo dõi) sẽ hiển thị tại đây ngay sau khi bác sĩ phụ trách hoàn tất phiên khám.
+                      {t("workspace.summary.pendingDescription")}
                     </p>
                   </CardContent>
                 </Card>
@@ -555,29 +557,29 @@ export default function MemberSessionWorkspacePage() {
                     <div className="flex items-center gap-3">
                       <CheckCircle2 className="h-5 w-5 text-success-600 shrink-0" />
                       <div>
-                        <p className="font-semibold text-success-900">Tổng kết y khoa đã được hoàn tất</p>
+                        <p className="font-semibold text-success-900">{t("workspace.summary.finalizedTitle")}</p>
                         <p className="text-xs text-success-700">
-                          Thời gian chốt: {formatDate(summary.finalizedAt)}
+                          {t("workspace.summary.finalizedAt", { date: formatDate(summary.finalizedAt) })}
                         </p>
                       </div>
                     </div>
-                    <Badge className="bg-success-600 hover:bg-success-700 text-white">Đã hoàn tất</Badge>
+                    <Badge className="bg-success-600 hover:bg-success-700 text-white">{t("workspace.summary.finalizedBadge")}</Badge>
                   </div>
 
                   <Card>
                     <CardHeader className="pb-2">
                       <CardTitle className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
-                        Tóm tắt lâm sàng & Đánh giá của Bác sĩ
+                        {t("workspace.summary.clinicalTitle")}
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
                       <div className="rounded-lg bg-muted/40 p-4 text-sm text-foreground whitespace-pre-wrap leading-relaxed">
-                        {summary.summary || <span className="text-muted-foreground italic">Không có nội dung tóm tắt</span>}
+                        {summary.summary || <span className="text-muted-foreground italic">{t("workspace.summary.noSummary")}</span>}
                       </div>
 
                       {summary.observations && (
                         <div className="space-y-1">
-                          <h4 className="text-xs font-semibold text-muted-foreground">Nhận xét & Quan sát:</h4>
+                          <h4 className="text-xs font-semibold text-muted-foreground">{t("workspace.summary.observations")}</h4>
                           <p className="text-sm text-foreground whitespace-pre-wrap">{summary.observations}</p>
                         </div>
                       )}
@@ -588,7 +590,7 @@ export default function MemberSessionWorkspacePage() {
                     <Card>
                       <CardHeader className="pb-2">
                         <CardTitle className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
-                          Lời dặn & Khuyến nghị chăm sóc
+                          {t("workspace.summary.recommendationsTitle")}
                         </CardTitle>
                       </CardHeader>
                       <CardContent>
@@ -603,7 +605,7 @@ export default function MemberSessionWorkspacePage() {
                     <div className="flex items-center gap-2 p-3.5 rounded-lg border border-warning-200 bg-warning-50 text-warning-900 text-sm">
                       <Calendar className="h-4 w-4 text-warning-600 shrink-0" />
                       <span>
-                        <strong>Tái khám:</strong> {summary.followUpRecommendation}
+                        <strong>{t("workspace.summary.followUp")}</strong> {summary.followUpRecommendation}
                       </span>
                     </div>
                   )}
@@ -617,15 +619,15 @@ export default function MemberSessionWorkspacePage() {
             <div className="flex-1 min-h-0 overflow-y-auto p-3 sm:p-4 w-full space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-base font-semibold text-foreground">Hồ sơ sức khỏe trong phiên khám</h3>
+                  <h3 className="text-base font-semibold text-foreground">{t("workspace.records.title")}</h3>
                   <p className="text-sm text-muted-foreground">
-                    Hồ sơ sức khỏe và dữ liệu sinh hiệu bác sĩ phụ trách được cấp quyền theo dõi.
+                    {t("workspace.records.description")}
                   </p>
                 </div>
                 {session.status === "ACTIVE" && (
                   <Button size="sm" onClick={() => setIsShareRecordOpen(true)} className="gap-1.5 shadow-sm">
                     <Share2 className="h-3.5 w-3.5" />
-                    <span>Chia sẻ thêm hồ sơ</span>
+                    <span>{t("workspace.records.shareMore")}</span>
                   </Button>
                 )}
               </div>
@@ -636,12 +638,12 @@ export default function MemberSessionWorkspacePage() {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <Activity className="h-5 w-5 text-primary" />
-                        <CardTitle className="text-base">Hồ sơ sức khỏe #{session.healthRecordId}</CardTitle>
+                        <CardTitle className="text-base">{t("workspace.records.recordTitle", { id: session.healthRecordId })}</CardTitle>
                       </div>
-                      <Badge className="bg-success-500/10 text-success-700 border-success-200">Đã chia sẻ</Badge>
+                      <Badge className="bg-success-500/10 text-success-700 border-success-200">{t("workspace.records.sharedBadge")}</Badge>
                     </div>
                     <CardDescription>
-                      Hồ sơ được đính kèm khi đăng ký phiên tư vấn hoặc được cấp quyền trong quá trình khám.
+                      {t("workspace.records.recordDescription")}
                     </CardDescription>
                   </CardHeader>
                 </Card>
@@ -649,9 +651,9 @@ export default function MemberSessionWorkspacePage() {
                 <Card className="border-dashed">
                   <CardContent className="flex flex-col items-center justify-center py-12 text-center">
                     <Activity className="h-10 w-10 text-muted-foreground/40 mb-2" />
-                    <p className="text-sm font-medium text-foreground">Chưa có hồ sơ sức khỏe nào được chia sẻ</p>
+                    <p className="text-sm font-medium text-foreground">{t("workspace.records.emptyTitle")}</p>
                     <p className="text-xs text-muted-foreground mt-1 max-w-sm">
-                      Bạn có thể chia sẻ các bản đo huyết áp, đường huyết hoặc điện tâm đồ để bác sĩ nắm rõ tình trạng sức khỏe.
+                      {t("workspace.records.emptyDescription")}
                     </p>
                     {session.status === "ACTIVE" && (
                       <Button
@@ -661,7 +663,7 @@ export default function MemberSessionWorkspacePage() {
                         onClick={() => setIsShareRecordOpen(true)}
                       >
                         <Share2 className="h-3.5 w-3.5" />
-                        Chia sẻ hồ sơ ngay
+                        {t("workspace.records.shareNow")}
                       </Button>
                     )}
                   </CardContent>

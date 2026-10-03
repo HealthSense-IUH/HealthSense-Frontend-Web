@@ -1,4 +1,5 @@
 
+import { useTranslation } from "react-i18next"
 import { Eye } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -14,16 +15,17 @@ interface HealthRecordsTableProps {
 }
 
 export function HealthRecordsTable({ records, isLoading, onView }: HealthRecordsTableProps) {
+  const { t } = useTranslation("management")
   const renderStatusBadge = (status: HealthRecord['status']) => {
     switch (status) {
       case 'COMPLETED':
-        return <Badge className="bg-success-500 hover:bg-success-600">Completed</Badge>
+        return <Badge className="bg-success-500 hover:bg-success-600">{t("healthRecords.status.COMPLETED")}</Badge>
       case 'PROCESSING':
-        return <Badge className="bg-primary-500 hover:bg-primary-600">Processing</Badge>
+        return <Badge className="bg-primary-500 hover:bg-primary-600">{t("healthRecords.status.PROCESSING")}</Badge>
       case 'PENDING_UPLOAD':
-        return <Badge variant="outline" className="text-warning-600 border-warning-600">Pending</Badge>
+        return <Badge variant="outline" className="text-warning-600 border-warning-600">{t("healthRecords.status.PENDING_UPLOAD")}</Badge>
       case 'FAILED':
-        return <Badge variant="destructive">Failed</Badge>
+        return <Badge variant="destructive">{t("healthRecords.status.FAILED")}</Badge>
       default:
         return <Badge variant="outline">{status}</Badge>
     }
@@ -33,22 +35,22 @@ export function HealthRecordsTable({ records, isLoading, onView }: HealthRecords
     if (!prediction) return <span className="text-slate-400">-</span>
     switch (prediction) {
       case 'NORMAL':
-        return <Badge variant="outline" className="text-success-600 border-success-600 bg-success-50">Normal</Badge>
+        return <Badge variant="outline" className="text-success-600 border-success-600 bg-success-50">{t("healthRecords.prediction.NORMAL")}</Badge>
       case 'AFIB':
-        return <Badge variant="outline" className="text-danger-600 border-danger-600 bg-danger-50">AFib</Badge>
+        return <Badge variant="outline" className="text-danger-600 border-danger-600 bg-danger-50">{t("healthRecords.prediction.AFIB")}</Badge>
       case 'UNCERTAIN':
-        return <Badge variant="outline" className="text-warning-500 border-warning-500 bg-warning-50">Uncertain</Badge>
+        return <Badge variant="outline" className="text-warning-500 border-warning-500 bg-warning-50">{t("healthRecords.prediction.UNCERTAIN")}</Badge>
       default:
         return <Badge variant="outline">{prediction}</Badge>
     }
   }
 
   if (isLoading) {
-    return <div className="py-10 text-center text-slate-500">Loading records...</div>
+    return <div className="py-10 text-center text-slate-500">{t("healthRecords.table.loading")}</div>
   }
 
   if (!records?.length) {
-    return <div className="py-10 text-center text-slate-500">No records found.</div>
+    return <div className="py-10 text-center text-slate-500">{t("healthRecords.table.empty")}</div>
   }
 
   return (
@@ -56,13 +58,13 @@ export function HealthRecordsTable({ records, isLoading, onView }: HealthRecords
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>File Name</TableHead>
-            <TableHead>Member ID</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Prediction</TableHead>
-            <TableHead>Confidence</TableHead>
-            <TableHead>Date</TableHead>
-            <TableHead className="text-right">Actions</TableHead>
+            <TableHead>{t("healthRecords.fields.fileName")}</TableHead>
+            <TableHead>{t("healthRecords.fields.memberId")}</TableHead>
+            <TableHead>{t("healthRecords.fields.status")}</TableHead>
+            <TableHead>{t("healthRecords.fields.prediction")}</TableHead>
+            <TableHead>{t("healthRecords.fields.confidence")}</TableHead>
+            <TableHead>{t("healthRecords.fields.date")}</TableHead>
+            <TableHead className="text-right">{t("healthRecords.fields.actions")}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -83,7 +85,7 @@ export function HealthRecordsTable({ records, isLoading, onView }: HealthRecords
                 {record.createdAt ? formatRecordDate(record.createdAt) : '-'}
               </TableCell>
               <TableCell className="text-right space-x-2">
-                <Button variant="ghost" size="icon" onClick={() => onView(record)} title="View Detail">
+                <Button variant="ghost" size="icon" onClick={() => onView(record)} title={t("healthRecords.table.viewDetail")}>
                   <Eye className="h-4 w-4" />
                 </Button>
               </TableCell>

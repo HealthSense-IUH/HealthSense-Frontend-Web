@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from "react"
+import { useTranslation } from "react-i18next"
 import {
   History,
   Calendar,
@@ -14,11 +15,13 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
+import { currentIntlLocale } from "@/lib/i18n"
 import { consultationApi } from "@/services"
 import type { CareHistoryEpisodeResponse } from "@/types/consultation"
 import { CareHistoryDetailDialog } from "@/pages/app/general/care-history/components/care-history-detail-dialog"
 
 export default function CareHistoryPage() {
+  const { t } = useTranslation("health")
   const [episodes, setEpisodes] = useState<CareHistoryEpisodeResponse[]>([])
   const [loading, setLoading] = useState(true)
   const [page, setPage] = useState(1)
@@ -57,22 +60,22 @@ export default function CareHistoryPage() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "ACTIVE":
-        return <Badge className="bg-success-600 hover:bg-success-700 text-white">Đang diễn ra</Badge>
+        return <Badge className="bg-success-600 hover:bg-success-700 text-white">{t("careHistory.status.active")}</Badge>
       case "COMPLETED":
-        return <Badge className="bg-primary-600 hover:bg-primary-700 text-white">Đã hoàn thành</Badge>
+        return <Badge className="bg-primary-600 hover:bg-primary-700 text-white">{t("careHistory.status.completed")}</Badge>
       case "CANCELLED":
-        return <Badge variant="destructive">Đã hủy</Badge>
+        return <Badge variant="destructive">{t("careHistory.status.cancelled")}</Badge>
       case "SCHEDULED":
-        return <Badge variant="secondary">Đã lên lịch</Badge>
+        return <Badge variant="secondary">{t("careHistory.status.scheduled")}</Badge>
       default:
         return <Badge variant="outline">{status}</Badge>
     }
   }
 
   const formatDate = (val?: string | null) => {
-    if (!val) return "Chưa xác định"
+    if (!val) return t("careHistory.undetermined")
     try {
-      return new Date(val).toLocaleDateString("vi-VN", {
+      return new Date(val).toLocaleDateString(currentIntlLocale(), {
         day: "2-digit",
         month: "2-digit",
         year: "numeric",
@@ -86,12 +89,12 @@ export default function CareHistoryPage() {
     <Page>
       <PageHeader
         icon={<History className="w-5 h-5" />}
-        title="Lịch sử chăm sóc"
-        description="Tra cứu các đợt khám tư vấn 1-1, bác sĩ phụ trách và tổng kết y khoa chính thức."
+        title={t("careHistory.title")}
+        description={t("careHistory.description")}
         actions={
           <Button variant="outline" size="sm" onClick={() => void fetchHistory(page)} disabled={loading}>
             <RefreshCw className="mr-2 h-4 w-4" />
-            Làm mới
+            {t("careHistory.refresh")}
           </Button>
         }
       />
@@ -116,9 +119,9 @@ export default function CareHistoryPage() {
               <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center text-muted-foreground">
                 <History className="h-6 w-6" />
               </div>
-              <h3 className="text-lg font-semibold">Chưa có lịch sử chăm sóc</h3>
+              <h3 className="text-lg font-semibold">{t("careHistory.empty.title")}</h3>
               <p className="text-sm text-muted-foreground max-w-sm">
-                Bạn chưa tham gia đợt tư vấn nào. Hãy đăng ký gói dịch vụ chăm sóc để bắt đầu cùng bác sĩ chuyên khoa.
+                {t("careHistory.empty.description")}
               </p>
             </div>
           </Card>
@@ -133,7 +136,7 @@ export default function CareHistoryPage() {
                         #{ep.sessionId}
                       </span>
                       <CardTitle className="text-base font-bold">
-                        {ep.packageNameSnapshot || "Gói tư vấn sức khỏe"}
+                        {ep.packageNameSnapshot || t("careHistory.defaultPackageName")}
                       </CardTitle>
                     </div>
                     {getStatusBadge(ep.status)}
@@ -141,16 +144,16 @@ export default function CareHistoryPage() {
                   <CardDescription className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs pt-1">
                     <span className="flex items-center gap-1">
                       <Stethoscope className="h-3.5 w-3.5 text-primary" />
-                      Bác sĩ: <span className="font-semibold text-foreground">{ep.doctorName || `Bác sĩ #${ep.doctorId}`}</span>
+                      {t("careHistory.doctorLabel")} <span className="font-semibold text-foreground">{ep.doctorName || t("careHistory.doctorFallback", { id: ep.doctorId })}</span>
                     </span>
                     <span className="flex items-center gap-1">
                       <Calendar className="h-3.5 w-3.5 text-muted-foreground" />
-                      Bắt đầu: {formatDate(ep.startedAt)}
+                      {t("careHistory.startedAt", { date: formatDate(ep.startedAt) })}
                     </span>
                     {ep.endsAt && (
                       <span className="flex items-center gap-1">
                         <Clock className="h-3.5 w-3.5 text-muted-foreground" />
-                        Kết thúc: {formatDate(ep.endsAt)}
+                        {t("careHistory.endsAt", { date: formatDate(ep.endsAt) })}
                       </span>
                     )}
                   </CardDescription>
@@ -159,19 +162,19 @@ export default function CareHistoryPage() {
                   <div className="flex items-center gap-3 text-xs text-muted-foreground">
                     {ep.finalSummary ? (
                       <span className="flex items-center gap-1 text-success-600 font-medium">
-                        <FileText className="h-3.5 w-3.5" /> Đã có Tổng kết Y khoa
+                        <FileText className="h-3.5 w-3.5" /> {t("careHistory.hasSummary")}
                       </span>
                     ) : (
                       <span className="flex items-center gap-1 text-muted-foreground">
-                        <Clock className="h-3.5 w-3.5" /> Chưa có tổng kết y khoa
+                        <Clock className="h-3.5 w-3.5" /> {t("careHistory.noSummary")}
                       </span>
                     )}
                     {ep.authorizedHealthRecords && ep.authorizedHealthRecords.length > 0 && (
-                      <span>&bull; {ep.authorizedHealthRecords.length} hồ sơ theo dõi</span>
+                      <span>&bull; {t("careHistory.trackedRecords", { count: ep.authorizedHealthRecords.length })}</span>
                     )}
                   </div>
                   <Button size="sm" variant="outline" onClick={() => handleOpenDetail(ep)}>
-                    Xem chi tiết <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
+                    {t("careHistory.viewDetails")} <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
                   </Button>
                 </CardContent>
               </Card>
@@ -192,7 +195,7 @@ export default function CareHistoryPage() {
         <PageFooter>
           <div className="flex items-center justify-between">
             <p className="text-xs text-muted-foreground">
-              Hiển thị trang {page} / {totalPages} ({totalElements} đợt chăm sóc)
+              {t("careHistory.pagination.summary", { page, totalPages, total: totalElements })}
             </p>
             <div className="flex items-center gap-2">
               <Button
@@ -201,7 +204,7 @@ export default function CareHistoryPage() {
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
                 disabled={page <= 1 || loading}
               >
-                Trước
+                {t("careHistory.pagination.previous")}
               </Button>
               <Button
                 variant="outline"
@@ -209,7 +212,7 @@ export default function CareHistoryPage() {
                 onClick={() => setPage((p) => p + 1)}
                 disabled={!hasMore || loading}
               >
-                Sau
+                {t("careHistory.pagination.next")}
               </Button>
             </div>
           </div>

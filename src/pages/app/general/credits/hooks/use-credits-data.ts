@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react"
 import { creditsApi } from "@/services/credits.service"
 import { parseApiError } from "@/lib/errorHandler"
+import i18n from "@/lib/i18n"
 import type { PageResponse } from "@/types/base"
 import type {
   CreditLedgerEntry,
@@ -56,7 +57,7 @@ export function useCreditsData() {
       setWallet(res.data)
     } catch (err) {
       const parsed = parseApiError(err)
-      setWalletError(parsed.userMessage || "Không thể tải thông tin ví.")
+      setWalletError(parsed.userMessage || i18n.t("credits:data.errors.wallet"))
     } finally {
       setLoadingWallet(false)
     }
@@ -74,9 +75,9 @@ export function useCreditsData() {
       const parsed = parseApiError(err)
       if (parsed.statusCode === 503 || parsed.code === 4108) {
         setIsFeatureDisabled(true)
-        setPackagesError("Chức năng mua lượt tư vấn tạm thời chưa khả dụng.")
+        setPackagesError(i18n.t("credits:purchase.errors.featureDisabled"))
       } else {
-        setPackagesError(parsed.userMessage || "Không thể tải danh sách gói lượt.")
+        setPackagesError(parsed.userMessage || i18n.t("credits:data.errors.packages"))
       }
     } finally {
       setLoadingPackages(false)
@@ -95,7 +96,7 @@ export function useCreditsData() {
       }
     } catch (err) {
       const parsed = parseApiError(err)
-      setOverviewError(parsed.userMessage || "Không thể tải tổng kết thanh toán.")
+      setOverviewError(parsed.userMessage || i18n.t("credits:data.errors.overview"))
     } finally {
       setLoadingOverview(false)
     }
@@ -135,7 +136,7 @@ export function useCreditsData() {
         setOrdersPage(targetPage)
       } catch (err) {
         const parsed = parseApiError(err)
-        setOrdersError(parsed.userMessage || "Không thể tải lịch sử đơn mua.")
+        setOrdersError(parsed.userMessage || i18n.t("credits:data.errors.orders"))
       } finally {
         setLoadingOrders(false)
       }
@@ -153,7 +154,7 @@ export function useCreditsData() {
       setLedgerPage(targetPage)
     } catch (err) {
       const parsed = parseApiError(err)
-      setLedgerError(parsed.userMessage || "Không thể tải lịch sử biến động lượt.")
+      setLedgerError(parsed.userMessage || i18n.t("credits:data.errors.ledger"))
     } finally {
       setLoadingLedger(false)
     }

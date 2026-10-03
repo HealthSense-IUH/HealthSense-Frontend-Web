@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from "react"
 import { Lock, Eye, EyeOff, CheckCircle2, AlertCircle, Loader2, ShieldCheck, LogIn } from "lucide-react"
 import { useNavigate } from "react-router-dom"
+import { useTranslation } from "react-i18next"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -14,6 +15,7 @@ interface ResetPasswordFormProps {
 }
 
 export function ResetPasswordForm({ resetToken, onComplete, isCompleted }: ResetPasswordFormProps) {
+  const { t } = useTranslation("auth")
   const navigate = useNavigate()
   const [newPassword, setNewPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
@@ -33,17 +35,17 @@ export function ResetPasswordForm({ resetToken, onComplete, isCompleted }: Reset
     setErrorMessage("")
 
     if (!resetToken) {
-      setErrorMessage("Your session token is missing or expired. Please request a new verification code.")
+      setErrorMessage(t("forgotPassword.reset.missingToken"))
       return
     }
 
     if (!hasMinLength || !hasLettersAndNumbers) {
-      setErrorMessage("Password must be at least 8 characters long and include both letters and numbers.")
+      setErrorMessage(t("forgotPassword.reset.weakPassword"))
       return
     }
 
     if (!isMatching) {
-      setErrorMessage("New password and confirm password do not match.")
+      setErrorMessage(t("forgotPassword.reset.mismatch"))
       return
     }
 
@@ -54,7 +56,7 @@ export function ResetPasswordForm({ resetToken, onComplete, isCompleted }: Reset
     } catch (error: unknown) {
       const anyErr = error as { response?: { data?: { message?: string } }; message?: string }
       setErrorMessage(
-        anyErr?.response?.data?.message || anyErr?.message || "Failed to reset password. Please try again or request a new code."
+        anyErr?.response?.data?.message || anyErr?.message || t("forgotPassword.reset.resetFailed")
       )
     } finally {
       setIsSubmitting(false)
@@ -70,9 +72,9 @@ export function ResetPasswordForm({ resetToken, onComplete, isCompleted }: Reset
         </div>
 
         <div className="space-y-2">
-          <h2 className="text-2xl font-black text-slate-900 tracking-tight">Password Reset Complete</h2>
+          <h2 className="text-2xl font-black text-slate-900 tracking-tight">{t("forgotPassword.reset.completeTitle")}</h2>
           <p className="text-slate-600 text-xs sm:text-sm font-medium max-w-[320px] mx-auto leading-relaxed">
-            Your password has been securely updated. You can now access your account using your new password.
+            {t("forgotPassword.reset.completeDesc")}
           </p>
         </div>
 
@@ -83,7 +85,7 @@ export function ResetPasswordForm({ resetToken, onComplete, isCompleted }: Reset
             className="w-full rounded-xl h-11 font-bold text-sm bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all duration-200 cursor-pointer flex items-center justify-center gap-2"
           >
             <LogIn className="w-4 h-4" />
-            <span>Back to login</span>
+            <span>{t("forgotPassword.reset.backToLogin")}</span>
           </Button>
         </div>
       </div>
@@ -97,9 +99,9 @@ export function ResetPasswordForm({ resetToken, onComplete, isCompleted }: Reset
         <div className="w-12 h-12 rounded-full bg-success-50 text-success-600 flex items-center justify-center mb-4 shadow-2xs border border-success-200/60">
           <ShieldCheck className="w-6 h-6" />
         </div>
-        <h2 className="text-2xl font-black text-slate-900 tracking-tight">Create New Password</h2>
+        <h2 className="text-2xl font-black text-slate-900 tracking-tight">{t("forgotPassword.reset.title")}</h2>
         <p className="text-slate-500 text-xs sm:text-sm font-medium mt-1">
-          Please enter and confirm your new strong password below.
+          {t("forgotPassword.reset.subtitle")}
         </p>
       </div>
 
@@ -114,7 +116,7 @@ export function ResetPasswordForm({ resetToken, onComplete, isCompleted }: Reset
         {/* New Password Input */}
         <div className="space-y-1.5">
           <Label htmlFor="newPassword" className="text-xs font-bold text-slate-700 ml-1">
-            New Password
+            {t("forgotPassword.reset.newPasswordLabel")}
           </Label>
           <div className="relative">
             <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
@@ -141,7 +143,7 @@ export function ResetPasswordForm({ resetToken, onComplete, isCompleted }: Reset
         {/* Confirm Password Input */}
         <div className="space-y-1.5">
           <Label htmlFor="confirmPassword" className="text-xs font-bold text-slate-700 ml-1">
-            Confirm Password
+            {t("forgotPassword.reset.confirmPasswordLabel")}
           </Label>
           <div className="relative">
             <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
@@ -167,18 +169,18 @@ export function ResetPasswordForm({ resetToken, onComplete, isCompleted }: Reset
 
         {/* Concise Security Rules Checklist */}
         <div className="p-3 rounded-xl bg-slate-50 border border-slate-200/70 text-[11px] font-medium text-slate-600 space-y-1.5">
-          <div className="font-bold text-slate-800 mb-1">Password requirements:</div>
+          <div className="font-bold text-slate-800 mb-1">{t("forgotPassword.reset.requirementsTitle")}</div>
           <div className={`flex items-center gap-2 ${hasMinLength ? "text-success-600 font-semibold" : ""}`}>
             <span className={`w-1.5 h-1.5 rounded-full ${hasMinLength ? "bg-success-500" : "bg-slate-300"}`} />
-            <span>At least 8 characters long</span>
+            <span>{t("forgotPassword.reset.reqMinLength")}</span>
           </div>
           <div className={`flex items-center gap-2 ${hasLettersAndNumbers ? "text-success-600 font-semibold" : ""}`}>
             <span className={`w-1.5 h-1.5 rounded-full ${hasLettersAndNumbers ? "bg-success-500" : "bg-slate-300"}`} />
-            <span>Includes both letters and numbers</span>
+            <span>{t("forgotPassword.reset.reqLettersNumbers")}</span>
           </div>
           <div className={`flex items-center gap-2 ${isMatching ? "text-success-600 font-semibold" : ""}`}>
             <span className={`w-1.5 h-1.5 rounded-full ${isMatching ? "bg-success-500" : "bg-slate-300"}`} />
-            <span>Confirm password matches new password</span>
+            <span>{t("forgotPassword.reset.reqMatch")}</span>
           </div>
         </div>
 
@@ -190,12 +192,12 @@ export function ResetPasswordForm({ resetToken, onComplete, isCompleted }: Reset
           {isSubmitting ? (
             <>
               <Loader2 className="w-4 h-4 animate-spin" />
-              <span>Resetting Password...</span>
+              <span>{t("forgotPassword.reset.submitting")}</span>
             </>
           ) : (
             <>
               <ShieldCheck className="w-4 h-4" />
-              <span>Save & Reset Password</span>
+              <span>{t("forgotPassword.reset.submit")}</span>
             </>
           )}
         </Button>

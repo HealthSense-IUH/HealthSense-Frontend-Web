@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from "react"
 import { KeyRound, ArrowRight, ArrowLeft, RefreshCw, AlertCircle, CheckCircle2, Loader2 } from "lucide-react"
+import { Trans, useTranslation } from "react-i18next"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -13,6 +14,7 @@ interface VerifyOtpFormProps {
 }
 
 export function VerifyOtpForm({ email, onSuccess, onBack }: VerifyOtpFormProps) {
+  const { t } = useTranslation("auth")
   const [otp, setOtp] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isResending, setIsResending] = useState(false)
@@ -26,7 +28,7 @@ export function VerifyOtpForm({ email, onSuccess, onBack }: VerifyOtpFormProps) 
 
     const cleanOtp = otp.trim()
     if (!/^\d{6}$/.test(cleanOtp)) {
-      setErrorMessage("Please enter a valid 6-digit verification code.")
+      setErrorMessage(t("forgotPassword.verify.invalidOtp"))
       return
     }
 
@@ -40,7 +42,7 @@ export function VerifyOtpForm({ email, onSuccess, onBack }: VerifyOtpFormProps) 
         response.data?.passwordResetToken
 
       if (!resetToken) {
-        setErrorMessage("Verification succeeded, but no reset token was received from the server.")
+        setErrorMessage(t("forgotPassword.verify.noResetToken"))
         return
       }
 
@@ -48,7 +50,7 @@ export function VerifyOtpForm({ email, onSuccess, onBack }: VerifyOtpFormProps) 
     } catch (error: unknown) {
       const anyErr = error as { response?: { data?: { message?: string } }; message?: string }
       setErrorMessage(
-        anyErr?.response?.data?.message || anyErr?.message || "Invalid verification code. Please check and try again."
+        anyErr?.response?.data?.message || anyErr?.message || t("forgotPassword.verify.verifyFailed")
       )
     } finally {
       setIsSubmitting(false)
@@ -61,11 +63,11 @@ export function VerifyOtpForm({ email, onSuccess, onBack }: VerifyOtpFormProps) 
     setIsResending(true)
     try {
       await forgotPasswordApi.requestOtp({ email })
-      setSuccessMessage("A new verification code has been sent to your email.")
+      setSuccessMessage(t("forgotPassword.verify.resent"))
     } catch (error: unknown) {
       const anyErr = error as { response?: { data?: { message?: string } }; message?: string }
       setErrorMessage(
-        anyErr?.response?.data?.message || anyErr?.message || "Could not resend code. Please try again later."
+        anyErr?.response?.data?.message || anyErr?.message || t("forgotPassword.verify.resendFailed")
       )
     } finally {
       setIsResending(false)
@@ -78,9 +80,14 @@ export function VerifyOtpForm({ email, onSuccess, onBack }: VerifyOtpFormProps) 
         <div className="w-12 h-12 rounded-full bg-primary-50 text-primary-600 flex items-center justify-center mb-4 shadow-2xs border border-primary-200/60">
           <KeyRound className="w-6 h-6" />
         </div>
-        <h2 className="text-2xl font-black text-slate-900 tracking-tight">Verify Code</h2>
+        <h2 className="text-2xl font-black text-slate-900 tracking-tight">{t("forgotPassword.verify.title")}</h2>
         <p className="text-slate-500 text-xs sm:text-sm font-medium mt-1">
-          We sent a 6-digit code to <span className="text-slate-800 font-bold underline decoration-slate-300">{email || "your email"}</span>
+          <Trans
+            t={t}
+            i18nKey="forgotPassword.verify.sentTo"
+            values={{ email: email || t("forgotPassword.verify.yourEmail") }}
+            components={{ email: <span className="text-slate-800 font-bold underline decoration-slate-300" /> }}
+          />
         </p>
       </div>
 
@@ -102,9 +109,9 @@ export function VerifyOtpForm({ email, onSuccess, onBack }: VerifyOtpFormProps) 
         <div className="space-y-1.5">
           <div className="flex items-center justify-between ml-1 mr-1">
             <Label htmlFor="otp" className="text-xs font-bold text-slate-700">
-              6-Digit OTP Code
+              {t("forgotPassword.verify.otpLabel")}
             </Label>
-            <span className="text-[11px] font-medium text-slate-400">Numbers only</span>
+            <span className="text-[11px] font-medium text-slate-400">{t("forgotPassword.verify.numbersOnly")}</span>
           </div>
           <div className="relative">
             <Input
@@ -130,11 +137,11 @@ export function VerifyOtpForm({ email, onSuccess, onBack }: VerifyOtpFormProps) 
           {isSubmitting ? (
             <>
               <Loader2 className="w-4 h-4 animate-spin" />
-              <span>Verifying...</span>
+              <span>{t("forgotPassword.verify.submitting")}</span>
             </>
           ) : (
             <>
-              <span>Verify & Proceed</span>
+              <span>{t("forgotPassword.verify.submit")}</span>
               <ArrowRight className="w-4 h-4" />
             </>
           )}
@@ -149,7 +156,7 @@ export function VerifyOtpForm({ email, onSuccess, onBack }: VerifyOtpFormProps) 
           className="flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-slate-800 transition-colors py-1.5 px-3 rounded-full hover:bg-slate-50 cursor-pointer disabled:opacity-50"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
-          <span>Back</span>
+          <span>{t("forgotPassword.verify.back")}</span>
         </button>
 
         <button
@@ -159,7 +166,7 @@ export function VerifyOtpForm({ email, onSuccess, onBack }: VerifyOtpFormProps) 
           className="flex items-center gap-1.5 text-xs font-bold text-primary hover:text-primary/80 transition-colors py-1.5 px-3 rounded-full hover:bg-primary/5 cursor-pointer disabled:opacity-50"
         >
           <RefreshCw className={`w-3.5 h-3.5 ${isResending ? "animate-spin text-slate-400" : ""}`} />
-          <span>{isResending ? "Sending..." : "Resend code"}</span>
+          <span>{isResending ? t("forgotPassword.verify.resending") : t("forgotPassword.verify.resend")}</span>
         </button>
       </div>
     </div>

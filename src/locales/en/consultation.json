@@ -1,1 +1,1306 @@
-{}
+{
+  "status": {
+    "pendingReview": "Pending review",
+    "needMoreInfo": "More info needed",
+    "waitingAcceptance": "Awaiting agreement acceptance",
+    "waitingPayment": "Awaiting payment",
+    "queued": "In queue",
+    "waiting": "Waiting for a doctor",
+    "offeringDoctor": "Connecting to a doctor",
+    "waitingMemberConfirmation": "Awaiting your confirmation",
+    "timedOut": "Confirmation timed out",
+    "fulfilled": "Consultation activated",
+    "scheduled": "Scheduled",
+    "completed": "Completed",
+    "rejected": "Rejected",
+    "cancelled": "Cancelled",
+    "expired": "Expired",
+    "active": "Active",
+    "approved": "Approved",
+    "pending": "Pending",
+    "processing": "Processing",
+    "failed": "Failed",
+    "closed": "Closed"
+  },
+  "days": {
+    "monday": "Monday",
+    "tuesday": "Tuesday",
+    "wednesday": "Wednesday",
+    "thursday": "Thursday",
+    "friday": "Friday",
+    "saturday": "Saturday",
+    "sunday": "Sunday"
+  },
+  "careServices": {
+    "remoteOneOnOneCare": "Remote one-on-one care",
+    "secureMessaging": "Secure messaging",
+    "healthRecordReview": "Health record review",
+    "aiScreeningReview": "AI screening result review",
+    "careMonitoring": "Periodic health metric monitoring",
+    "finalCareSummary": "End-of-term medical summary",
+    "videoConsultation": "Video call consultation",
+    "emergencyCare": "Emergency care",
+    "twentyFourSevenSupport": "24/7 medical support",
+    "formalDiagnosis": "Formal medical diagnosis",
+    "prescription": "Medication prescribing"
+  },
+  "finalSummaryTab": {
+    "errors": {
+      "forbidden": "You do not have permission to perform actions on this session.",
+      "loadFailed": "Unable to load the care summary."
+    },
+    "toast": {
+      "summaryRequired": "Please enter the summary.",
+      "draftSaved": "Summary draft saved successfully.",
+      "attachedUnavailableTitle": "Attached records unavailable",
+      "attachedUnavailableDraft": "The attached measurement records are outside the authorized scope of this session. They have been deselected automatically; please click Save draft again.",
+      "saveDraftFailed": "Failed to save the draft.",
+      "missingRequiredTitle": "Missing required information",
+      "missingRequiredDescription": "To finalize the summary, please complete all of: Summary, Observations and Recommendations.",
+      "finalizedAvailable": "Summary finalized. Status: Available for consultations.",
+      "finalizedUnavailable": "Summary finalized. Status: Not accepting consultations.",
+      "finalized": "Care summary finalized.",
+      "attachedUnavailableFinalize": "The attached measurement records are outside the authorized scope. They have been deselected automatically; please try again.",
+      "finalizeFailed": "Failed to finalize the summary.",
+      "addendumMissingTitle": "Missing information",
+      "addendumMissingDescription": "Please enter the reason and content of the correction/addition.",
+      "addendumAddedTitle": "Addendum added successfully",
+      "addendumAddedDescription": "The correction/addition has been saved to the summary record.",
+      "addendumFailedTitle": "Failed to add addendum",
+      "addendumFailedDescription": "Unable to add an addendum right now."
+    },
+    "retry": "Try again",
+    "finalizedBanner": {
+      "title": "Consultation summary (Locked / Immutable)",
+      "finalizedAt": "Finalized at: {{date}}"
+    },
+    "deadline": {
+      "title": "Session summary deadline",
+      "description": "Please finalize within {{count}} minutes. Saving a draft does not release your on-duty status or pause the deadline."
+    },
+    "overdue": {
+      "title": "Summary not finalized (more than {{count}} minutes overdue)",
+      "unavailable": "Consultation status: Not accepting consultations (released automatically by the system).",
+      "available": "Consultation status: Available for consultations.",
+      "busy": "Consultation status: In consultation.",
+      "released": "The system has released the on-duty status for this session.",
+      "lateFinalizeHint": "You can still keep editing the draft and click “Finalize summary” late to complete the medical record."
+    },
+    "notices": {
+      "activeDraft": "You can draft the summary while the session is in progress. The summary can only be finalized after the session ends (COMPLETED).",
+      "cancelledWithCare": "This consultation was cancelled, but meaningful care had already been provided. You can draft and finalize the summary.",
+      "cancelledNoCare": "A summary cannot be created for a cancelled consultation in which no care was provided.",
+      "invalidStatus": "A summary cannot be created for a consultation in status {{status}}."
+    },
+    "fields": {
+      "requiredOnFinalize": "* (to finalize)",
+      "noData": "No data",
+      "summary": {
+        "label": "Clinical assessment summary",
+        "placeholder": "Enter the summary..."
+      },
+      "observations": {
+        "label": "Observations & Symptoms",
+        "placeholder": "Enter clinical remarks and observations..."
+      },
+      "recommendations": {
+        "label": "Medical & Lifestyle recommendations",
+        "placeholder": "Enter treatment, nutrition and lifestyle recommendations..."
+      },
+      "followUp": {
+        "label": "Monitoring & Follow-up recommendations (Optional)",
+        "placeholder": "Follow-up visit or next monitoring plan..."
+      }
+    },
+    "records": {
+      "title": "Referenced measurement records ({{count}})",
+      "hint": "Select measurement records within the consultation scope",
+      "emptyScope": "There are no records within the scope of this consultation.",
+      "noneReferenced": "No records are referenced.",
+      "recordLabel": "Record #{{id}}"
+    },
+    "addenda": {
+      "title": "Post-finalization addenda & corrections ({{count}})",
+      "add": "Add addendum",
+      "reason": "Reason: {{reason}}",
+      "empty": "No addenda or corrections yet."
+    },
+    "actions": {
+      "saving": "Saving...",
+      "saveDraft": "Save draft",
+      "finalize": "Finalize summary",
+      "cancel": "Cancel",
+      "processing": "Processing...",
+      "confirmFinalize": "Confirm finalization",
+      "saveAddendum": "Save addendum"
+    },
+    "confirmDialog": {
+      "title": "Finalize the care summary?",
+      "description": "Once finalized, the original summary will be permanently locked. Any later corrections will be recorded as an Addendum."
+    },
+    "addendumDialog": {
+      "title": "Add Summary Addendum / Correction",
+      "description": "The original summary will remain unchanged and this addendum will be attached to the medical record.",
+      "reasonLabel": "Reason for correction / addition",
+      "reasonPlaceholder": "E.g.: Additional paraclinical results, Adjusted recommended dosage...",
+      "contentLabel": "Additional content",
+      "contentPlaceholder": "Enter the details of the correction or additional recommendations..."
+    }
+  },
+  "dietPrescriptionTab": {
+    "flags": {
+      "avoidAlcohol": {
+        "title": "Avoid alcohol",
+        "detail": "Alcoholic drinks are shown in red."
+      },
+      "limitCaffeine": {
+        "title": "Limit caffeine",
+        "detail": "High-caffeine items are shown in yellow."
+      },
+      "limitSugars": {
+        "title": "Limit sugar",
+        "detail": "High-sugar items are shown in yellow / red (not applied to fruit or milk)."
+      },
+      "watchSodiumPotassium": {
+        "title": "Monitor sodium/potassium ratio",
+        "detail": "Salty items low in potassium are shown in red; items with potassium equal to or higher than sodium count as good."
+      },
+      "limitSodium": {
+        "title": "Limit salt",
+        "detail": "High-sodium items are shown in yellow / red."
+      },
+      "limitSaturatedFat": {
+        "title": "Limit saturated fat",
+        "detail": "Items high in saturated fat are shown in yellow / red."
+      },
+      "encourageMagnesium": {
+        "title": "Encourage magnesium-rich foods",
+        "detail": "Magnesium-rich, low-salt items count as good (green)."
+      },
+      "onWarfarin": {
+        "title": "Taking warfarin",
+        "detail": "High-vitamin K items are shown in yellow, with a reminder to keep daily intake consistent."
+      }
+    },
+    "validation": {
+      "nonNegative": "Thresholds must be non-negative numbers.",
+      "limitBelowCaution": "The red threshold ({{limit}}) must be greater than or equal to the yellow threshold ({{caution}}).",
+      "goodAboveLimit": "The good level ({{good}}) must not be higher than the red threshold ({{limit}})."
+    },
+    "errors": {
+      "forbidden": "You do not have permission to view the diet prescription for this session.",
+      "loadFailed": "Unable to load the diet prescription.",
+      "saveFailed": "Unable to save the diet prescription."
+    },
+    "toast": {
+      "saved": "Diet prescription saved. Foods the patient looks up will be evaluated against this prescription."
+    },
+    "noData": "No data.",
+    "retry": "Try again",
+    "title": "Diet prescription",
+    "description": {
+      "personalized": "Current prescription. Saving will overwrite the previous one.",
+      "personalizedUpdated": "Current prescription, updated {{date}}. Saving will overwrite the previous one.",
+      "notPersonalized": "The patient has no prescription yet, so foods are not color-rated.",
+      "rulesHint": "Only checked rules rate the foods the patient looks up as green / yellow / red. Leave a threshold blank to use the system default."
+    },
+    "readOnlyNotice": "This session has ended, so the prescription is view-only. Create or edit prescriptions in a scheduled or ongoing session.",
+    "threshold": {
+      "defaultPlaceholder": "Default {{value}}",
+      "notUsed": "Not used"
+    },
+    "note": {
+      "label": "Additional advice",
+      "placeholder": "E.g.: eat fish 2 extra meals per week, drink enough water..."
+    },
+    "actions": {
+      "saving": "Saving...",
+      "save": "Save diet prescription"
+    }
+  },
+  "continuityTab": {
+    "errors": {
+      "forbidden": "You do not have permission to view the continuity of care summary for this session.",
+      "loadFailed": "Unable to load the continuity of care summary."
+    },
+    "retry": "Try again",
+    "empty": {
+      "title": "This patient has no previous care history yet.",
+      "description": "Finalized care summaries from previous visits will appear here to support continuity of care."
+    },
+    "header": {
+      "title_one": "Previous care history ({{count}} visit)",
+      "title_other": "Previous care history ({{count}} visits)"
+    },
+    "refresh": "Refresh",
+    "noSummary": "No summary",
+    "item": {
+      "title": "Care episode #{{id}}",
+      "completedBadge": "Finalized",
+      "doctor": "Doctor: {{name}}",
+      "package": "Package: {{name}}",
+      "finalizedAt": "Finalized: {{date}}"
+    },
+    "sections": {
+      "summary": "Medical summary:",
+      "observations": "Observations / Symptoms:",
+      "recommendations": "Treatment & lifestyle recommendations:",
+      "followUp": "Follow-up visit / Next monitoring plan:",
+      "addenda": "Post-finalization addenda & corrections ({{count}}):",
+      "reason": "Reason: {{reason}}"
+    }
+  },
+  "scopedRecordsTab": {
+    "errors": {
+      "forbidden": "You do not have permission to view records in this session.",
+      "notFound": "Care session not found.",
+      "loadFailed": "Unable to load the record list."
+    },
+    "retry": "Try again",
+    "empty": "There are no health records within the consultation scope yet.",
+    "recordFallback": "Record #{{id}}",
+    "needsReview": "Needs review",
+    "reviewed": "Reviewed",
+    "statusLabel": "Status:",
+    "confidence": "Confidence: {{value}}%"
+  },
+  "recordDetailDialog": {
+    "errors": {
+      "forbidden": "You do not have permission to view this record.",
+      "notFound": "Record not found within the consultation scope.",
+      "loadFailed": "Unable to load record details."
+    },
+    "toast": {
+      "reviewed": "Marked as reviewed.",
+      "reviewFailed": "Failed to mark as reviewed.",
+      "downloading": "Downloading the raw data file...",
+      "downloadErrorTitle": "Download error",
+      "downloadLinkMissing": "Download link for the raw data file not found.",
+      "downloadFailed": "Unable to download the raw data file for this record."
+    },
+    "title": "Health record details",
+    "recordId": "Record ID: {{id}}",
+    "afibAlert": {
+      "title": "The AI result needs to be reviewed by a doctor.",
+      "description": "The system detected an abnormality (AFIB) in this record."
+    },
+    "fields": {
+      "fileName": "File name",
+      "createdAt": "Created on",
+      "processingStatus": "Processing status",
+      "fileSize": "File size"
+    },
+    "aiResult": {
+      "title": "AI analysis result",
+      "predictionLabel": "Predicted label",
+      "confidence": "Confidence"
+    },
+    "actions": {
+      "close": "Close",
+      "downloading": "Downloading...",
+      "downloadCsv": "Download raw CSV",
+      "markReviewed": "Mark as reviewed"
+    }
+  },
+  "renewalDialog": {
+    "renewalStatus": {
+      "requested": "Awaiting intake",
+      "underReview": "Under review",
+      "pendingAcceptance": "Awaiting agreement acceptance",
+      "waitingPayment": "Awaiting payment",
+      "paid": "Renewed successfully",
+      "rejected": "Rejected",
+      "cancelled": "Cancelled",
+      "expired": "Expired",
+      "requiresReview": "Requires manual review"
+    },
+    "toast": {
+      "loadErrorTitle": "Failed to load data",
+      "loadErrorDescription": "Unable to load renewal information for this session.",
+      "invalidSessionTitle": "Invalid session",
+      "invalidSessionDescription": "A renewal can only be requested while the consultation session is active (ACTIVE).",
+      "requestSuccessTitle": "Renewal request sent",
+      "requestSuccessDescription": "Your renewal request has been sent to the Care Coordinator.",
+      "requestErrorTitle": "Renewal request failed",
+      "requestErrorDescription": "Unable to send the renewal request at this time.",
+      "cancelSuccessTitle": "Renewal request cancelled",
+      "cancelSuccessDescription": "The renewal request has been cancelled. The current care session end date remains unchanged.",
+      "cancelErrorTitle": "Failed to cancel renewal",
+      "cancelErrorDescription": "Unable to cancel the renewal request at this time.",
+      "paymentErrorTitle": "Payment error",
+      "paymentLinkErrorDescription": "Unable to create the PayOS payment link.",
+      "paymentInitErrorTitle": "Payment initialization failed",
+      "paymentInitErrorDescription": "Unable to create the renewal payment transaction."
+    },
+    "title": "Renew Care Session",
+    "sessionNumber": "Session #{{id}}",
+    "doctorFallback": "Doctor #{{id}}",
+    "tabs": {
+      "manage": "Manage Renewal",
+      "history": "Term History ({{total}})"
+    },
+    "currentTermLabel": "Current term information:",
+    "startedAt": "Started: {{date}}",
+    "currentEndsAtLabel": "Current valid until:",
+    "unknown": "Unknown",
+    "pendingRequestTitle": "Renewal request #{{id}} is in progress",
+    "proposedEndsAtLabel": "End date after renewal:",
+    "renewalPackageLabel": "Renewal package:",
+    "packageFallback_one": "+{{count}}-day package",
+    "packageFallback_other": "+{{count}}-day package",
+    "paymentDeadlineLabel": "Payment deadline:",
+    "rejectionReasonLabel": "Rejection reason:",
+    "actions": {
+      "viewAgreement": "View & Accept Agreement",
+      "openingPayment": "Opening payment...",
+      "pay": "Proceed to payment",
+      "cancelling": "Cancelling...",
+      "cancelRequest": "Cancel request"
+    },
+    "requestCard": {
+      "title": "Extend your care period",
+      "description": "Renewing your care lets you continue with <strong>{{doctor}}</strong> in this same consultation session, without any interruption to your data or chat history.",
+      "submitting": "Sending request...",
+      "submit": "Request Care Renewal"
+    },
+    "sessionInactive": "This care session has ended or is no longer active, so a renewal cannot be requested.",
+    "pastRequestsTitle": "Renewal request history",
+    "loadingHistory": "Loading history...",
+    "noRequests": "There are no renewal requests for this session yet.",
+    "requestNumber": "Request #{{id}}",
+    "proposedDeadlineLabel": "Proposed end date:",
+    "historyIntro": "Below are the care period extensions that have been successfully applied to this consultation session:",
+    "noExtensions": "No extensions have been recorded yet",
+    "noExtensionsHint": "The current session end date is the original term set when the service package was activated.",
+    "extensionNumber": "Extension #{{number}}",
+    "appliedAt": "Applied: {{date}}",
+    "packageLabel": "Package:",
+    "close": "Close"
+  },
+  "renewalAgreementDialog": {
+    "toast": {
+      "loadErrorTitle": "Failed to load renewal agreement",
+      "loadErrorDescription": "Unable to load the service renewal agreement.",
+      "acceptSuccessTitle": "Renewal agreement accepted",
+      "acceptSuccessDescription": "You have accepted the renewal agreement. Please proceed to payment to apply the new end date.",
+      "acceptErrorTitle": "Failed to accept agreement",
+      "acceptErrorDescription": "Unable to accept the renewal agreement at this time."
+    },
+    "packageFallback": "Care renewal package",
+    "doctorFallback": "Assigned doctor",
+    "title": "Care Service Renewal Agreement",
+    "requestNumber": "Renewal request #{{id}}",
+    "awaitingYourConfirmation": "Awaiting your confirmation",
+    "loading": "Loading renewal agreement details...",
+    "validity": {
+      "label": "Acceptance & payment deadline:",
+      "validUntil": "This renewal agreement is valid until",
+      "afterDeadline": ". If payment is not completed by then, the renewal request will expire automatically and the care session end date will remain unchanged."
+    },
+    "doctorCard": {
+      "title": "Your continuing doctor",
+      "specialty": "Specialty:",
+      "supportHours": "Support hours:",
+      "timezone": "Time zone: {{timezone}}"
+    },
+    "packageCard": {
+      "title": "Renewal service package",
+      "code": "Package code: {{code}}",
+      "free": "Free",
+      "duration_one": "/ +{{count}} day of care",
+      "duration_other": "/ +{{count}} days of care"
+    },
+    "terms": {
+      "title": "Renewal Terms & Scope of Care",
+      "termsReference": "Terms & limitations reference:",
+      "emergencyLimitation": "Emergency limitation:",
+      "supportPolicy": "Support policy:",
+      "assignedDoctorSchedule": "Follows the assigned doctor's working schedule",
+      "note": "* Note: Renewal extends the validity of the current consultation session and keeps your entire consultation history. Once payment succeeds, the new end date will be updated automatically."
+    },
+    "empty": "No renewal agreement data available.",
+    "acceptTerms": "I have read, understood, and agree to the renewal terms, the fee, and the commitment to continue care with the assigned doctor in this consultation session.",
+    "close": "Close",
+    "confirming": "Confirming...",
+    "confirmAndPay": "Confirm & Proceed to Payment"
+  },
+  "adminRenewalsDialog": {
+    "toast": {
+      "loadErrorTitle": "Failed to load data",
+      "loadErrorDescription": "Unable to load the renewal list for this session.",
+      "beginReviewSuccessTitle": "Review started",
+      "beginReviewSuccessDescription": "The renewal request has moved to Under review (UNDER_REVIEW).",
+      "beginReviewErrorTitle": "Failed to start review",
+      "beginReviewErrorDescription": "Unable to start reviewing this request.",
+      "approveSuccessTitle": "Renewal approved",
+      "approveSuccessDescription": "The renewal agreement has been created and sent to the member (PENDING_ACCEPTANCE).",
+      "approveErrorTitle": "Failed to approve renewal",
+      "approveErrorDescription": "Unable to approve the renewal request at this time.",
+      "missingReasonTitle": "Rejection reason required",
+      "missingReasonDescription": "Please enter a reason for rejecting the renewal request.",
+      "rejectSuccessTitle": "Renewal request rejected",
+      "rejectSuccessDescription": "The renewal request has moved to Rejected (REJECTED).",
+      "rejectErrorTitle": "Failed to reject renewal",
+      "rejectErrorDescription": "Unable to reject the renewal request at this time."
+    },
+    "title": "Session Renewal Coordination & Management",
+    "sessionNumber": "Session #{{id}}",
+    "memberFallback": "Member #{{id}}",
+    "doctorFallback": "Doctor #{{id}}",
+    "tabs": {
+      "renewals": "Renewal Requests ({{total}})",
+      "extensions": "Extension History ({{total}})"
+    },
+    "currentEndsAtLabel": "Current session end date:",
+    "startedAt": "Started: {{date}}",
+    "loading": "Loading renewals...",
+    "noRequests": "No renewal requests have been created for this session yet",
+    "requestNumber": "Renewal request #{{id}}",
+    "proposedEndsAtLabel": "Proposed end date:",
+    "renewalPackageLabel": "Renewal package:",
+    "packageFallback_one": "+{{count}}-day package",
+    "packageFallback_other": "+{{count}}-day package",
+    "paymentDeadlineLabel": "Payment deadline:",
+    "appliedAtLabel": "Applied at:",
+    "rejectionReasonLabel": "Rejection reason:",
+    "processing": "Processing...",
+    "actions": {
+      "beginReview": "Start review",
+      "approve": "Approve renewal",
+      "reject": "Reject"
+    },
+    "extensionsIntro": "Below are the care session extensions that have been successfully applied:",
+    "noExtensions": "No extensions have been recorded yet",
+    "extensionNumber": "Extension #{{number}}",
+    "appliedAt": "Applied: {{date}}",
+    "packageLabel": "Package:",
+    "close": "Close",
+    "rejectDialog": {
+      "title": "Reject Renewal Request #{{id}}",
+      "description": "Please enter a reason for rejecting the renewal request so the member can be notified.",
+      "reasonLabel": "Rejection reason",
+      "reasonPlaceholder": "Enter a detailed reason...",
+      "cancel": "Cancel",
+      "confirm": "Confirm Rejection"
+    }
+  },
+  "careAgreementDialog": {
+    "toast": {
+      "loadErrorTitle": "Failed to load agreement",
+      "loadErrorDescription": "Unable to load the service agreement.",
+      "acceptSuccessTitle": "Agreement accepted",
+      "acceptSuccessDescription": "You have accepted the agreement. Please proceed to payment to activate your consultation session.",
+      "acceptErrorTitle": "Confirmation failed",
+      "acceptErrorDescription": "Unable to accept the agreement at this time."
+    },
+    "packageFallback": "Health care package",
+    "doctorFallback": "Assigned doctor",
+    "title": "Health Care Service Agreement",
+    "requestNumber": "Request #{{id}}",
+    "awaitingYourConfirmation": "Awaiting your confirmation",
+    "loading": "Loading service agreement details...",
+    "validity": {
+      "label": "Acceptance & reservation deadline:",
+      "validUntil": "This agreement is valid until",
+      "afterDeadline": ". If payment is not completed by then, the doctor will be released to other members."
+    },
+    "doctorCard": {
+      "title": "Assigned care doctor",
+      "specialty": "Specialty:",
+      "supportHours": "Support hours:",
+      "timezone": "Time zone: {{timezone}}"
+    },
+    "packageCard": {
+      "title": "Selected service package",
+      "code": "Package code: {{code}}",
+      "free": "Free",
+      "duration_one": "/ {{count}} day of care",
+      "duration_other": "/ {{count}} days of care"
+    },
+    "terms": {
+      "title": "Service Scope & Terms",
+      "termsReference": "Terms & limitations reference:",
+      "emergencyLimitation": "Emergency limitation:",
+      "supportPolicy": "Support policy:",
+      "assignedDoctorSchedule": "Follows the assigned doctor's working schedule",
+      "note": "* Note: This online consultation and health monitoring service does not replace emergency medical care or inpatient treatment. If you experience critical warning signs such as severe chest pain or acute shortness of breath, contact the nearest medical facility immediately or call 115 (Vietnam emergency number)."
+    },
+    "empty": "No agreement data available.",
+    "acceptTerms": "I have read, understood, and agree to the terms of service, scope of care, the doctor's support hours, and the fees set out in this Agreement.",
+    "close": "Close",
+    "confirming": "Confirming...",
+    "confirmAndPay": "Confirm & Proceed to Payment"
+  },
+  "queuePanel": {
+    "activeSession": {
+      "badge": "Consultation in progress",
+      "title": "Your doctor is waiting for you in the consultation room",
+      "activated": "Consultation session #{{id}} has been activated successfully.",
+      "sessionCode": "Session ID:",
+      "startTime": "Start time:",
+      "blockEndTime": "End of 15-minute block:",
+      "reservationStatus": "Credit status:",
+      "enterRoom": "Enter consultation room now (Open chat)"
+    },
+    "confirmation": {
+      "badge": "Doctor is ready",
+      "title": "A doctor has accepted your consultation!",
+      "subtitle": "Please confirm to start your live consultation.",
+      "timeLeft": "Time remaining",
+      "yourNumber": "Your queue number:",
+      "status": "Status:",
+      "doctorAccepted": "Doctor has accepted the connection",
+      "creditInfo": "Credit details:",
+      "insufficientTitle": "Not enough credits to start the session",
+      "insufficientDescription": "This confirmation screen will stay open. Please top up your consultation credits to continue.",
+      "buyCredits": "Buy more consultation credits",
+      "expired": "The confirmation window has expired. Refreshing queue status...",
+      "hintPerSession": "You have up to 15 minutes to confirm. Once you confirm, 1 consultation credit will be deducted and the session will start immediately.",
+      "hintDefault": "You have up to 15 minutes to confirm. Once you confirm, the consultation session and live chat will open immediately.",
+      "creatingSession": "Creating consultation session...",
+      "join": "Join consultation",
+      "cancelConfirm": "Are you sure you want to cancel this consultation?",
+      "cancel": "Cancel"
+    },
+    "queue": {
+      "title": "Health Consultation Queue",
+      "connecting": "Connecting you with a doctor...",
+      "inQueue": "You are in the live queue (first come, first served)",
+      "refresh": "Refresh",
+      "yourNumber": "Your queue number",
+      "queueDate": "Queue date: {{date}}",
+      "connectingDoctor": "Connecting to a doctor",
+      "waitingTurn": "Waiting for your turn",
+      "peopleAhead_one": "<strong>{{count}}</strong> person ahead of you",
+      "peopleAhead_other": "<strong>{{count}}</strong> people ahead of you",
+      "connectingNotice": "Connecting you with a doctor... Please keep this screen open and wait for the doctor's response.",
+      "noDoctorsTitle": "No doctors are available right now.",
+      "noDoctorsDescription": "Your request has been queued and will be handled as soon as a doctor is on duty. You don't need to resubmit it.",
+      "doctorStats": "Doctor team overview:",
+      "onDuty": "On duty",
+      "available": "Available",
+      "busy": "Busy",
+      "cancelHint": "You can cancel at any time before the session starts.",
+      "leaveConfirm": "Are you sure you want to leave the consultation queue?",
+      "leave": "Leave queue"
+    },
+    "timedOut": {
+      "title": "You missed your consultation turn",
+      "description": "The confirmation window for your previous consultation has expired. If you still want to consult a doctor, please register again to get a new queue number."
+    },
+    "cancelled": {
+      "title": "Consultation request cancelled",
+      "description": "Your previous queue entry has ended. You can create a new consultation request at any time."
+    },
+    "empty": {
+      "title": "You have no active consultation request",
+      "description": "Register to join the queue for a live one-on-one consultation with a specialist.",
+      "register": "Register for a consultation now"
+    },
+    "registerNew": "Register a new consultation"
+  },
+  "creditsPanel": {
+    "toast": {
+      "successTitle": "Success",
+      "purchaseSuccess": "Consultation credits purchased successfully!"
+    },
+    "title": "Consultation credit wallet",
+    "subtitle": "Manage your consultation credit balance, buy more credits, and track your transaction history transparently.",
+    "refresh": "Refresh wallet & packages",
+    "tabs": {
+      "packages": "Credit packages",
+      "orders": "Purchase history",
+      "ledger": "Credit activity"
+    },
+    "packages": {
+      "title": "Available credit packages",
+      "description": "Choose a suitable package to top up your consultation wallet."
+    },
+    "orders": {
+      "title": "Summary & purchase history",
+      "description": "Track a financial overview of purchased tokens and the details of your credit top-up orders."
+    },
+    "ledger": {
+      "title": "Credit activity history",
+      "description": "A detailed log of consultation credit purchases, holds, and usage."
+    }
+  },
+  "memberFinalSummaryDialog": {
+    "errors": {
+      "forbidden": "You don't have permission to view this information.",
+      "loadFailed": "Unable to load the care summary."
+    },
+    "title": "Consultation summary #{{id}}",
+    "pending": {
+      "title": "The doctor is finalizing the consultation summary.",
+      "staffDescription": "The care summary will appear here as soon as the assigned doctor finalizes it.",
+      "memberDescription": "The medical summary will appear here as soon as the doctor completes it."
+    },
+    "finalized": {
+      "title": "The summary has been finalized",
+      "at": "At: {{time}}",
+      "badge": "Finalized"
+    },
+    "sections": {
+      "summary": "Summary",
+      "noContent": "No content",
+      "observations": "Observations",
+      "recommendations": "Recommendations",
+      "followUp": "Follow-up recommendation",
+      "referencedRecords": "Referenced measurement records",
+      "recordLabel": "Record #{{id}}",
+      "addenda": "Post-finalization addenda & corrections ({{count}})",
+      "reason": "Reason: {{reason}}"
+    },
+    "close": "Close"
+  },
+  "createRequestPanel": {
+    "title": "Register for a Health Consultation",
+    "description": "Your request will join the live queue (first come, first served) and be automatically matched with an on-duty doctor.",
+    "back": "Back",
+    "activeQueue": {
+      "title": "You already have a consultation request in the queue",
+      "description": "You already have a pending consultation request. Each member can only have one consultation request at a time.",
+      "viewQueue": "View current queue"
+    },
+    "insufficient": {
+      "title": "You don't have enough consultation credits to join the queue",
+      "description_one": "Current available balance: <strong>{{count}} credit</strong>. Please buy a credit package to continue.",
+      "description_other": "Current available balance: <strong>{{count}} credits</strong>. Please buy a credit package to continue.",
+      "buyCredits": "Buy more consultation credits"
+    },
+    "records": {
+      "label": "Attached cardiac measurement record",
+      "emptyTitle": "No electrocardiogram (ECG) data yet",
+      "emptyDescription": "To give the doctor a basis for assessing your heart health, you need to take at least one ECG measurement with your device before registering for a consultation.",
+      "goToDashboard": "Go to dashboard & connect device",
+      "autoAttached": "Latest record attached automatically",
+      "measuredAt": "Measured at: {{time}}",
+      "shareNotice": "This ECG waveform data will be shared with the doctor"
+    },
+    "form": {
+      "reasonLabel": "Reason for care / consultation",
+      "reasonPlaceholder": "E.g. Irregular heartbeat after exercise, need a cardiology consultation...",
+      "concernLabel": "Current symptoms & concerns",
+      "concernPlaceholder": "Describe your symptoms in detail: when they occur, how often, palpitations, shortness of breath, dizziness..."
+    },
+    "policy": {
+      "perSessionConfirm_one": "A consultation requires {{count}} credit. Credits are only deducted when you confirm the start of the session.",
+      "perSessionConfirm_other": "A consultation requires {{count}} credits. Credits are only deducted when you confirm the start of the session.",
+      "perSession_one": "Each consultation uses {{count}} credit. Credits are held when you join the queue and only deducted when the session starts.",
+      "perSession_other": "Each consultation uses {{count}} credits. Credits are held when you join the queue and only deducted when the session starts.",
+      "free": "This consultation is free; no credits will be deducted.",
+      "default": "Your request will receive a fixed queue number and join the live queue (first come, first served)."
+    },
+    "submitting": "Submitting request...",
+    "submit": "Submit request & join queue",
+    "creditsCount_one": "{{count}} credit",
+    "creditsCount_other": "{{count}} credits",
+    "confirmDialog": {
+      "title": "Confirm joining the consultation queue",
+      "description": "Please review your information before you are placed in the queue to see a doctor.",
+      "reason": "Reason for consultation:",
+      "attachedEcg": "Attached ECG record:",
+      "availableCredits": "Available consultation credits:",
+      "minimumCredits": "To join the queue, you need at least <strong>1 consultation credit</strong>.",
+      "deductionRule": "<label>Credit deduction policy:</label> Your credit is only deducted once a doctor accepts and you click <strong>Confirm consultation start</strong>.",
+      "review": "Review again",
+      "sending": "Sending...",
+      "confirm": "Confirm & join queue"
+    }
+  },
+  "pendingConflictDialog": {
+    "title": "You have an unfinished consultation request",
+    "description": "Each member account can only take part in one consultation at a time.",
+    "body": "Our records show that you <strong>already have a consultation request in the queue</strong> or are waiting for a doctor to accept it.",
+    "bodyWithNumber": "Our records show that you <strong>already have a consultation request in the queue</strong> (Queue number #{{number}}) or are waiting for a doctor to accept it.",
+    "hint": "To ensure continuity and quality of heart-rate monitoring, please follow the progress of your current queue entry or cancel the existing request before creating a new one.",
+    "close": "Close",
+    "viewQueue": "View current queue"
+  },
+  "healthRecordsPanel": {
+    "title": "My health records",
+    "description": "Select a record to quickly attach it to your consultation request.",
+    "columns": {
+      "record": "Record",
+      "status": "Status",
+      "prediction": "Prediction",
+      "createdAt": "Created",
+      "actions": "Actions"
+    },
+    "loading": "Loading health records...",
+    "empty": "No health records found.",
+    "use": "Use"
+  },
+  "shareHealthRecordDialog": {
+    "errors": {
+      "forbidden": "You don't have permission to share records in this session.",
+      "invalid": "The record is invalid or the session has not been activated."
+    },
+    "toast": {
+      "loadErrorTitle": "Failed to load records",
+      "loadErrorDescription": "Unable to load your health records.",
+      "invalidSessionTitle": "Invalid session",
+      "invalidSessionDescription": "Records can only be shared while the consultation session is active (ACTIVE).",
+      "successTitle": "Record shared successfully",
+      "successDescription": "The assigned doctor has been granted access to review record #{{id}}.",
+      "shareErrorTitle": "Failed to share record",
+      "shareErrorDescription": "Unable to share the record right now."
+    },
+    "title": "Share Health Record",
+    "description": "Grant the assigned doctor access to your heart-rate measurements in consultation session #{{id}}",
+    "inactiveNotice": "This care session is currently <strong>{{status}}</strong>. You can only share additional measurement records while the consultation session is active (ACTIVE).",
+    "selectPrompt": "Select one of your measurement records to share:",
+    "availableCount_one": "{{count}} record available",
+    "availableCount_other": "{{count}} records available",
+    "loading": "Loading records...",
+    "emptyTitle": "No measurement records yet",
+    "emptyDescription": "Please upload a new ECG/HRV recording in Record Management first.",
+    "createdAt": "Created: {{date}}",
+    "close": "Close",
+    "sharing": "Sharing...",
+    "share": "Share this record"
+  },
+  "logic": {
+    "toasts": {
+      "dispatchAvailable": "You are now available to receive patients.",
+      "dispatchPaused": "You have paused receiving new patients.",
+      "dispatchStatusUpdateFailed": "Unable to update your on-duty status.",
+      "stopAfterSessionOn": "Enabled: you will go off duty after the current session ends.",
+      "stopAfterSessionOff": "Disabled: you will keep receiving cases after the session ends.",
+      "preferenceUpdateFailed": "Unable to update preferences.",
+      "offerAccepted": "Consultation accepted! Waiting for the patient to confirm and start the session...",
+      "offerAcceptFailed": "Unable to accept the case, or the offer has expired.",
+      "offerRejected": "Consultation declined. The case will be forwarded to another doctor in the queue.",
+      "offerRejectFailed": "Unable to decline the case.",
+      "sessionActivatedTitle": "Session activated",
+      "sessionActivatedDescription": "1 consultation credit has been used. Your consultation session has started.",
+      "insufficientCreditsTitle": "Not enough consultation credits",
+      "insufficientCreditsDescription": "Your consultation credit balance is not enough to start the session. Please top up your credits.",
+      "doctorAssignedTitle": "Doctor assigned",
+      "doctorAssignedDescription": "The request is now waiting for the member to review and accept the service agreement.",
+      "doctorAssignFailedTitle": "Unable to assign doctor",
+      "paymentSuccessTitle": "Payment successful",
+      "paymentSuccessDescription": "Your consultation request has been activated.",
+      "paymentNoticeTitle": "Payment notice",
+      "paymentCurrentStatus": "Current status: {{status}}",
+      "paymentInitFailedTitle": "Payment initialization error",
+      "paymentInitFailedDescription": "Unable to create a payment transaction right now. Please try again later."
+    },
+    "alerts": {
+      "loadDataFailed": "Failed to load consultation data.",
+      "sessionInactive": "The consultation session has not opened yet or is no longer active.",
+      "sessionCancelledOrInactive": "The consultation session has been cancelled or is no longer active.",
+      "loadMessagesFailed": "Failed to load message history.",
+      "loadOlderMessagesFailed": "Failed to load older messages.",
+      "reasonForCareRequired": "Please enter your reason for requesting care.",
+      "currentConcernRequired": "Please enter your current symptoms and concerns.",
+      "ecgRequired": "You need to take an ECG measurement before submitting a consultation request.",
+      "noCreditsForQueue": "You do not have enough available consultation credits to join the queue.",
+      "queueJoined": "You have joined the consultation queue. Your queue number:{{queueNumber}}.",
+      "insufficientCreditsForQueue": "You do not have enough credits to join the consultation queue. Please top up your credits.",
+      "createRequestFailed": "Unable to submit the consultation request.",
+      "queueConfirmed": "Confirmed successfully. Your consultation session has been activated!",
+      "insufficientCreditsAtStart": "You no longer have enough credits at session start. Please top up your credits.",
+      "confirmQueueFailed": "Unable to confirm your consultation turn.",
+      "leftQueue": "You have left the consultation queue.",
+      "cancelQueueFailed": "Unable to cancel your place in the consultation queue.",
+      "requestCancelled": "Consultation request cancelled.",
+      "cancelRequestFailed": "Unable to cancel the consultation request.",
+      "moreInfoSubmitted": "Additional information submitted for request #{{id}}.",
+      "submitMoreInfoFailed": "Unable to submit additional information.",
+      "doctorReserved": "Doctor reserved. The request is now waiting for the member to accept the agreement (WAITING_ACCEPTANCE).",
+      "assignDoctorFailed": "Unable to assign doctor.",
+      "moreInfoRequested": "Additional information requested for request #{{id}}.",
+      "requestMoreInfoFailed": "Failed to request more info.",
+      "doctorIdRequired": "Please select or enter a valid doctor ID.",
+      "requestApproved": "Doctor assigned to request #{{id}}. Status changed to WAITING FOR PAYMENT.",
+      "requestRejected": "Request #{{id}} rejected.",
+      "sessionClosed": "Consultation session #{{id}} closed.",
+      "adminActionFailed": "Admin action failed.",
+      "expireOverdueRequested": "Requested backend to expire overdue sessions.",
+      "expireOverdueFailed": "Failed to expire overdue sessions.",
+      "expireWaitingPaymentRequested": "Requested backend to expire waiting payment requests.",
+      "expireWaitingPaymentFailed": "Failed to expire waiting payment requests.",
+      "activateScheduledRequested": "Requested backend to activate scheduled sessions.",
+      "activateScheduledFailed": "Failed to activate scheduled sessions.",
+      "outsideSupportHoursSend": "You can only send messages during the session's support hours.",
+      "sendMessageFailed": "Failed to send message."
+    }
+  },
+  "workspace": {
+    "toasts": {
+      "loadSessionFailed": "Unable to load consultation session details.",
+      "loadHistoryFailed": "Unable to load conversation history.",
+      "loadOlderFailed": "Unable to load older messages.",
+      "sendFailed": "Unable to send message."
+    },
+    "doctorFallback": "Doctor #{{id}}",
+    "doctorInCharge": "Attending doctor",
+    "readOnly": {
+      "completed": "This consultation session has been completed. You can only review the conversation history.",
+      "cancelled": "This consultation session has been cancelled.",
+      "outsideHours": "It is currently outside the doctor's working hours. You can send messages during the next support window.",
+      "notStarted": "This consultation session has not started yet."
+    },
+    "breadcrumbConsultations": "Consultations & Care",
+    "sessionTitle": "Consultation session #{{id}}",
+    "loading": "Loading consultation workspace...",
+    "notFound": {
+      "title": "Consultation session not found",
+      "description": "Session #{{id}} does not exist or you do not have permission to access it.",
+      "back": "Back to session list"
+    },
+    "endsAt": "Ends: {{date}}",
+    "actions": {
+      "renew": "Renew",
+      "shareRecord": "Share records",
+      "medicalSummary": "Medical summary"
+    },
+    "tabs": {
+      "chat": "Live chat",
+      "summary": "Doctor's summary",
+      "completedBadge": "Completed",
+      "records": "Health records"
+    },
+    "outsideHoursBanner": "It is currently outside the doctor's support hours. You can still review the conversation history and send messages once on-duty hours begin.",
+    "summary": {
+      "pendingTitle": "The doctor is finalizing the consultation summary",
+      "pendingDescription": "The official medical summary (clinical summary, observations, instructions and follow-up plan) will appear here as soon as the attending doctor completes the session.",
+      "finalizedTitle": "Medical summary finalized",
+      "finalizedAt": "Finalized at: {{date}}",
+      "finalizedBadge": "Finalized",
+      "clinicalTitle": "Clinical summary & Doctor's assessment",
+      "noSummary": "No summary provided",
+      "observations": "Observations & Findings:",
+      "recommendationsTitle": "Instructions & Care recommendations",
+      "followUp": "Follow-up visit:"
+    },
+    "records": {
+      "title": "Health records in this session",
+      "description": "Health records and vital-sign data that the attending doctor has been granted access to monitor.",
+      "shareMore": "Share more records",
+      "recordTitle": "Health record #{{id}}",
+      "sharedBadge": "Shared",
+      "recordDescription": "Records attached when registering for the consultation session or shared during the consultation.",
+      "emptyTitle": "No health records have been shared yet",
+      "emptyDescription": "You can share blood pressure, blood glucose or ECG readings so the doctor has a clear picture of your health.",
+      "shareNow": "Share records now"
+    }
+  },
+  "page": {
+    "title": "Consultations & Care",
+    "description": "Manage your 1-on-1 consultations and sessions.",
+    "accessDenied": {
+      "title": "Access denied",
+      "description": "The consultation module is only available to Members, Doctors and Administrators."
+    },
+    "refresh": "Refresh",
+    "dismissAlert": "Dismiss notification",
+    "tabs": {
+      "queue": "Consultation queue",
+      "waitingBadge": "Waiting",
+      "sessions": "Consultation sessions",
+      "credits": "Consultation credits",
+      "adminRequests": "Incoming consultation requests",
+      "allSessions": "All consultation sessions",
+      "doctorSessions": "Assigned consultation sessions"
+    },
+    "moreInfoDialog": {
+      "title": "Additional information for request #{{id}}",
+      "description": "Please provide the additional information requested by the care coordinator.",
+      "noteLabel": "Explanation / Additional information *",
+      "notePlaceholder": "Enter the additional details here...",
+      "attachLabel": "Attach more measurement records (Optional - {{selected}} selected)",
+      "cancel": "Cancel",
+      "submit": "Submit information"
+    },
+    "adminMoreInfoDialog": {
+      "title": "Request additional information",
+      "description": "Send a request for additional information to the member for request #{{id}}.",
+      "placeholder": "Enter the reason additional information is needed...",
+      "cancel": "Cancel",
+      "submit": "Send request"
+    }
+  },
+  "chat": {
+    "names": {
+      "member": "Member #{{id}}",
+      "doctor": "Doctor #{{id}}",
+      "memberShort": "Mbr #{{id}}",
+      "doctorShort": "Dr. #{{id}}"
+    },
+    "composer": {
+      "readOnlyDefault": "You cannot send messages in this session.",
+      "sessionInactive": "The consultation session has not opened yet or is no longer active.",
+      "attachFile": "Attach file",
+      "placeholder": "Type a message...",
+      "send": "Send message"
+    },
+    "header": {
+      "lastSeen": "Active just now",
+      "renewCare": "Renew care",
+      "recordAndSummary": "Records & Summary",
+      "doctorSummary": "Doctor's summary"
+    },
+    "bubble": {
+      "viewAttachment": "View Attachment"
+    },
+    "messageList": {
+      "empty": "No messages yet.",
+      "emptyHint": "Send a message to start the conversation.",
+      "loadingHistory": "Loading history...",
+      "loadOlder": "Load older messages",
+      "scrollToBottom": "Scroll to bottom"
+    },
+    "sidebar": {
+      "searchPlaceholder": "Search...",
+      "empty": "No consultation sessions.",
+      "noMessages": "No messages yet"
+    },
+    "workspace": {
+      "completedReadOnly": "This consultation session has been completed. You can only review the conversation.",
+      "outsideSupportHours": "It is currently outside support hours. You can send messages during the committed support hours.",
+      "noSessionTitle": "No Session Selected",
+      "noSessionDescription": "Select a consultation session from the sidebar to view history or start messaging."
+    },
+    "continuation": {
+      "stopChosenToast": "You chose to end the consultation session.",
+      "continueChosenToast": "You confirmed continuing for 15 more minutes. Waiting for the other party to confirm...",
+      "errors": {
+        "blockNotEnded": "The 15-minute block has not ended yet.",
+        "graceExpired": "The 5-minute window to confirm continuation has expired.",
+        "decisionLocked": "Your choice has been recorded and cannot be changed.",
+        "stateChanged": "The continuation status has changed. Reloading...",
+        "submitFailed": "Unable to submit your decision."
+      },
+      "blockTime": "Consultation block time (Round {{round}}):",
+      "blockBadge": "15-minute block",
+      "endedTitle": "The current consultation block has ended (15 minutes).",
+      "endedDescription": "Would you like to continue for another 15 minutes? Both parties must agree to continue the session.",
+      "waitingOther": "You chose to continue. Waiting for the other party to confirm...",
+      "stopping": "You chose to end the session. Finishing up...",
+      "graceExpiredUpdating": "The confirmation window has expired. Updating session status...",
+      "confirmBeforeExpiry": "Please confirm before the 5-minute grace period runs out.",
+      "stop": "End",
+      "continue": "Continue",
+      "checking": "The 15-minute block has ended. Checking whether the consultation session will continue...",
+      "refresh": "Refresh"
+    }
+  },
+  "requestsPanel": {
+    "titleAdmin": "Consultation Request Management",
+    "titleMember": "My Consultation Requests",
+    "descriptionAdmin": "Review requests, assign doctors and track agreement status.",
+    "descriptionMember": "Track progress from submitting a request, confirming the agreement and paying, through to the opening of your consultation session.",
+    "filters": {
+      "status": "Status",
+      "allStatuses": "All statuses",
+      "statusOptions": {
+        "pendingReview": "Pending review",
+        "needMoreInfo": "More info needed",
+        "waitingAcceptance": "Awaiting agreement confirmation",
+        "waitingPayment": "Awaiting payment",
+        "fulfilled": "Activated",
+        "rejected": "Rejected",
+        "cancelled": "Cancelled",
+        "expired": "Expired"
+      },
+      "memberId": "Member ID",
+      "memberIdPlaceholder": "ID...",
+      "preferredDoctor": "Preferred doctor",
+      "doctorIdPlaceholder": "Doctor ID...",
+      "fromDate": "From date",
+      "toDate": "To date",
+      "apply": "Filter"
+    },
+    "table": {
+      "request": "Request",
+      "member": "Member",
+      "healthRecord": "Measurement record",
+      "status": "Status",
+      "doctor": "Doctor",
+      "createdAt": "Created at",
+      "actions": "Actions"
+    },
+    "loading": "Loading list...",
+    "empty": "No requests found.",
+    "queueLabel": "Queue",
+    "defaultReason": "Consultation request",
+    "waitingAcceptanceNotice": "A doctor has been reserved for you. Please review and confirm the Service Agreement to proceed to payment.",
+    "acceptanceDeadline": "Confirmation deadline: {{date}}",
+    "waitingPaymentNotice": "Agreement confirmed. Awaiting payment.",
+    "paymentDeadline": "Payment deadline: {{date}}",
+    "moreInfoReason": "Reason more info is needed:",
+    "additionalInfo": "Additional information provided:",
+    "actions": {
+      "reviewAgreement": "Review & Accept agreement",
+      "pay": "Pay now",
+      "submitMoreInfo": "Provide more info",
+      "viewDetail": "View details",
+      "cancel": "Cancel request"
+    },
+    "confirmCancel": "Are you sure you want to cancel this consultation request?"
+  },
+  "sessionsPanel": {
+    "titleAdmin": "Consultation Session Management",
+    "titleMember": "My Consultation Sessions",
+    "descriptionAdmin": "All healthcare consultation sessions in the system (sorted by newest first).",
+    "descriptionMember": "Only active (ACTIVE) sessions can send messages.",
+    "activeBanner": {
+      "title": "You have a live consultation session in progress!",
+      "badge": "Active",
+      "doctor": "Doctor:",
+      "sessionId": "Session ID: #{{id}}",
+      "latestMessage": "Latest message: “{{message}}”",
+      "enterNow": "Join consultation room now"
+    },
+    "table": {
+      "sessionId": "Session ID",
+      "member": "Member",
+      "doctor": "Doctor",
+      "status": "Status",
+      "createdAt": "Created at",
+      "endsAt": "Ends at",
+      "lastMessage": "Latest message",
+      "actions": "Actions"
+    },
+    "loading": "Loading list...",
+    "empty": "No consultation sessions found.",
+    "needsSummary": "Summary needed",
+    "noMessages": "No messages yet",
+    "actions": {
+      "enterRoom": "Join consultation room",
+      "viewMessages": "View messages",
+      "enterVisit": "Start visit",
+      "viewVisit": "View visit",
+      "summaryDetail": "Summary / Details",
+      "renew": "Renew",
+      "closeSession": "Close session",
+      "viewSummary": "View summary"
+    },
+    "pagination": {
+      "show": "Show",
+      "perPage": "{{count}} sessions / page",
+      "pageInfo": "• Page <strong>{{page}}</strong> / {{totalPages}} ({{total}} sessions total)",
+      "previous": "Previous",
+      "next": "Next"
+    }
+  },
+  "adminRequestDetailDialog": {
+    "title": "Request details #{{id}}",
+    "description": "Review the consultation request and assign a doctor.",
+    "loadError": "Unable to load request details.",
+    "loading": "Loading details...",
+    "statusLabel": "Status:",
+    "createdAt": "Created at: {{date}}",
+    "package": "Service package",
+    "free": "Free",
+    "durationDays": "{{count}} days",
+    "durationDays_one": "{{count}} day",
+    "memberInfo": "Member information",
+    "memberCode": "ID: #{{id}}",
+    "noPhone": "No phone number",
+    "intakeTitle": "Initial intake form",
+    "reasonForCare": "Reason for registration:",
+    "currentConcern": "Current symptoms & concerns:",
+    "careGoal": "Care goal:",
+    "selfReportedContext": "Medical history & self-reported information:",
+    "memberNote": "Member's note:",
+    "noReason": "No reason provided.",
+    "attachedRecord": "Attached measurement record",
+    "defaultRecordTitle": "Health record",
+    "assignedDoctor": "Assigned doctor",
+    "preferredDoctor": "Preferred doctor",
+    "defaultDoctorName": "Doctor",
+    "waitingAcceptanceTitle": "Doctor assigned - Awaiting member's agreement confirmation",
+    "doctorReservedAt": "Doctor reserved at: {{date}}",
+    "completionDeadline": "Completion deadline: {{date}}",
+    "waitingPaymentTitle": "Member confirmed the agreement - Awaiting payment",
+    "paymentDeadline": "Payment deadline: {{date}}",
+    "needMoreInfoTitle": "Waiting for the member to provide more information",
+    "reason": "Reason: {{reason}}",
+    "memberAddedInfo": "Member has provided additional information:",
+    "actions": {
+      "reject": "Reject request",
+      "close": "Close",
+      "requestMoreInfo": "Request more info",
+      "selectDoctor": "Select doctor"
+    }
+  },
+  "adminActionDialog": {
+    "terminationReasons": {
+      "administrativeClosure": "Administrative closure / Ended by coordinator",
+      "memberRequested": "Member requested early termination",
+      "doctorUnavailable": "Doctor is unable to continue providing support",
+      "memberUnavailable": "Member is busy / unable to continue follow-up",
+      "safetyOrScopeReason": "In-person intervention needed / Beyond the scope of remote consultation",
+      "serviceViolation": "Violation of communication / service rules",
+      "technicalFailure": "Prolonged technical / connection issues",
+      "other": "Other reason"
+    },
+    "approve": {
+      "title": "Assign a doctor to request #{{id}}",
+      "description": "Specify the ID of the doctor responsible for this consultation session."
+    },
+    "reject": {
+      "title": "Reject request #{{id}}",
+      "description": "Enter the reason for rejecting the consultation request."
+    },
+    "close": {
+      "title": "Close consultation session #{{id}}",
+      "description": "Confirm closing the consultation session and set whether care was provided."
+    },
+    "doctorIdLabel": "Doctor ID",
+    "doctorIdPlaceholder": "Enter doctor ID...",
+    "meaningfulCareLabel": "Actual care/consultation was provided",
+    "meaningfulCareHintActive": "ON by default for active sessions. Allows the doctor to continue drafting and finalize the medical summary after the session is closed.",
+    "meaningfulCareHintScheduled": "OFF by default for sessions that have not started (SCHEDULED).",
+    "terminationReasonLabel": "Termination reason category",
+    "terminationReasonPlaceholder": "Select a termination reason...",
+    "closeReasonLabel": "Reason for closing the session",
+    "rejectReasonLabel": "Reason for rejection",
+    "closeReasonPlaceholder": "Enter the reason for closing the consultation session...",
+    "rejectReasonPlaceholder": "Enter the reason for rejection...",
+    "cancel": "Cancel",
+    "processing": "Processing...",
+    "confirm": "Confirm"
+  },
+  "terminationDialog": {
+    "reasons": {
+      "memberRequested": "Member requested early termination",
+      "doctorUnavailable": "Doctor can no longer provide support",
+      "memberUnavailable": "Member is busy / unable to continue follow-up",
+      "safetyOrScopeReason": "In-person care required / Beyond the scope of remote consultation",
+      "accountSuspended": "Account locked / service suspended",
+      "serviceViolation": "Violation of communication / service rules",
+      "technicalFailure": "Prolonged technical / connection issues",
+      "administrativeClosure": "Administrative closure request",
+      "other": "Other reason"
+    },
+    "toast": {
+      "missingInfoTitle": "Missing information",
+      "missingInfoDescription": "Please select a reason and provide a detailed explanation for the termination request.",
+      "successTitle": "Session termination request sent",
+      "successDescription": "Your request has been forwarded to the Care Coordinator for operational review.",
+      "errorTitle": "Failed to send request",
+      "errorDescription": "Unable to send the session termination request right now."
+    },
+    "title": "Request Consultation Session Termination",
+    "description": "Submit a request to end an active care session early. The coordinator will review the reason and assist with any related procedures.",
+    "reasonLabel": "Termination reason",
+    "reasonPlaceholder": "Select a termination reason...",
+    "detailsLabel": "Detailed explanation",
+    "detailsPlaceholder": "Describe the reason, context, or issues that require ending the session early (max 500 characters)...",
+    "charCount": "{{count}}/{{max}} characters",
+    "actions": {
+      "cancel": "Cancel",
+      "submitting": "Sending...",
+      "submit": "Send termination request"
+    }
+  },
+  "doctorCandidatesDialog": {
+    "loadError": "Unable to load the doctor list.",
+    "title": "Select a doctor for request #{{requestId}}",
+    "description": "Search for and assign an eligible doctor to this consultation.",
+    "searchPlaceholder": "Search by name or email...",
+    "specialtyPlaceholder": "Specialty",
+    "specialties": {
+      "all": "All specialties",
+      "generalPractice": "General practice",
+      "cardiology": "Cardiology",
+      "internalMedicine": "Internal medicine",
+      "other": "Other"
+    },
+    "eligibleOnly": "Eligible doctors only",
+    "search": "Search",
+    "loading": "Loading doctor list...",
+    "empty": "No matching doctors found.",
+    "preferred": "Preferred",
+    "ineligible": "Not eligible",
+    "noPhone": "No phone number",
+    "specialtyLabel": "Specialty:",
+    "notUpdated": "Not updated",
+    "timezoneLabel": "Time zone:",
+    "notSet": "Not set",
+    "workloadLabel": "Workload:",
+    "notConfigured": "Not configured",
+    "hasDeclaredSchedule": "Published working schedule available",
+    "reserving": "Reserving...",
+    "reserve": "Reserve doctor",
+    "careProfile": "Care profile",
+    "close": "Close"
+  },
+  "careProfileDialog": {
+    "toast": {
+      "invalidAccountTitle": "Invalid account",
+      "invalidAccountDescription": "The doctor account does not exist or has been deactivated.",
+      "errorTitle": "Error",
+      "loadError": "Unable to load the doctor's care profile.",
+      "successTitle": "Success",
+      "successDescription": "Doctor care profile updated.",
+      "updateError": "Unable to update the care profile"
+    },
+    "validation": {
+      "specialtyRequired": "Please select a specialty when accepting 1-on-1 consultations.",
+      "slotRequired": "At least one working time slot is required.",
+      "maxConsultationsPositive": "The maximum number of consultations must be greater than 0.",
+      "timezoneRequired": "Time zone cannot be empty.",
+      "slotRequiredWhenAccepting": "Please add at least one working time slot when accepting 1-on-1 consultations is enabled.",
+      "rowMissingFields": "Row {{row}} is missing required information.",
+      "rowStartBeforeEnd": "Row {{row}}: Start time must be before end time.",
+      "overlap": "Overlapping time slots detected on {{day}}."
+    },
+    "title": "Doctor Care Profile",
+    "description": "Manage acceptance settings and the weekly working schedule for 1-on-1 consultations.",
+    "loading": "Loading profile...",
+    "acceptsOneOnOneCare": "Accept 1-on-1 consultations",
+    "acceptsOneOnOneCareHint": "Enable to allow coordinators to assign consultation requests",
+    "specialtyLabel": "Specialty",
+    "specialties": {
+      "generalPractice": "General practice",
+      "cardiology": "Cardiology",
+      "internalMedicine": "Internal medicine",
+      "other": "Other"
+    },
+    "maxConsultationsLabel": "Maximum active cases",
+    "timezoneLabel": "Time zone",
+    "timezonePlaceholder": "e.g. Asia/Ho_Chi_Minh",
+    "weeklyScheduleLabel": "Weekly working schedule",
+    "addSlot": "Add time slot",
+    "noSlots": "No working time slots configured.",
+    "notFound": "Profile not found.",
+    "cancel": "Cancel",
+    "save": "Save changes"
+  },
+  "sessionDetailDialog": {
+    "loadError": "Unable to load care session details.",
+    "noSupportSchedule": "No support schedule configured",
+    "timezone": "Time zone: {{timezone}}",
+    "title": "Care session details",
+    "patientFallback": "Patient #{{id}}",
+    "sessionId": "Session ID: {{id}}",
+    "cancelledWithCare": "Cancelled (care provided)",
+    "tabs": {
+      "info": "Information",
+      "records": "Measurements",
+      "continuity": "Previous care",
+      "summary": "Summary"
+    },
+    "attentionTitle_one": "{{count}} record/metric needs review",
+    "attentionTitle_other": "{{count}} records/metrics need review",
+    "attentionDescription": "New data from the patient has been recorded. Please switch to the \"Measurements\" tab to review.",
+    "startedAt": "Start",
+    "expectedEnd": "Expected end",
+    "patientInfo": "Patient information",
+    "patientName": "Patient name:",
+    "patientCode": "Patient ID:",
+    "otherInfoNote": "Other basic information will be shown if shared.",
+    "initialRecord": "Initial record",
+    "recordFallback": "Record #{{id}}",
+    "updatedAt": "Updated: {{date}}",
+    "noInitialRecord": "No record was attached at the start.",
+    "committedSupportHours": "Committed support hours",
+    "close": "Close"
+  }
+}

@@ -1,87 +1,89 @@
 import { Badge } from "@/components/ui/badge"
 import { TableCell, TableRow } from "@/components/ui/table"
+import i18n, { currentIntlLocale } from "@/lib/i18n"
 
 export function formatDate(value?: string | null) {
   if (!value) {
     return "-"
   }
 
-  return new Intl.DateTimeFormat("vi-VN", {
+  return new Intl.DateTimeFormat(currentIntlLocale(), {
     dateStyle: "medium",
     timeStyle: "short",
   }).format(new Date(value))
 }
 
 export function statusBadge(status: string) {
+  const statusText = (key: string) => i18n.t(`consultation:status.${key}`)
   let label = status
   let variant: "default" | "secondary" | "destructive" | "outline" = "outline"
   let className = ""
 
   switch (status) {
     case "PENDING_REVIEW":
-      label = "Chờ xem xét"
+      label = statusText("pendingReview")
       variant = "secondary"
       break
     case "NEED_MORE_INFO":
-      label = "Cần bổ sung TT"
+      label = statusText("needMoreInfo")
       variant = "outline"
       className = "text-warning-500 border-warning-500 bg-warning-50"
       break
     case "WAITING_ACCEPTANCE":
-      return <Badge variant="outline" className="bg-warning-50 text-warning-800 border-warning-300">Chờ xác nhận thỏa thuận</Badge>
+      return <Badge variant="outline" className="bg-warning-50 text-warning-800 border-warning-300">{statusText("waitingAcceptance")}</Badge>
     case "WAITING_PAYMENT":
-      return <Badge variant="outline" className="bg-primary-50 text-primary-700 border-primary-200">Chờ thanh toán</Badge>
+      return <Badge variant="outline" className="bg-primary-50 text-primary-700 border-primary-200">{statusText("waitingPayment")}</Badge>
     case "QUEUED":
-      return <Badge variant="outline" className="bg-primary-50 text-primary-700 border-primary-200">Đang trong hàng đợi</Badge>
+      return <Badge variant="outline" className="bg-primary-50 text-primary-700 border-primary-200">{statusText("queued")}</Badge>
     case "WAITING":
-      return <Badge variant="outline" className="bg-primary-50 text-primary-700 border-primary-200">Đang chờ bác sĩ</Badge>
+      return <Badge variant="outline" className="bg-primary-50 text-primary-700 border-primary-200">{statusText("waiting")}</Badge>
     case "OFFERING_DOCTOR":
-      return <Badge variant="outline" className="bg-warning-50 text-warning-700 border-warning-300">Đang kết nối bác sĩ</Badge>
+      return <Badge variant="outline" className="bg-warning-50 text-warning-700 border-warning-300">{statusText("offeringDoctor")}</Badge>
     case "WAITING_MEMBER_CONFIRMATION":
-      return <Badge variant="outline" className="bg-success-50 text-success-700 border-success-300">Chờ bạn xác nhận</Badge>
+      return <Badge variant="outline" className="bg-success-50 text-success-700 border-success-300">{statusText("waitingMemberConfirmation")}</Badge>
     case "TIMED_OUT":
-      return <Badge variant="destructive" className="bg-slate-100 text-slate-600 border-slate-300">Hết thời gian xác nhận</Badge>
+      return <Badge variant="destructive" className="bg-slate-100 text-slate-600 border-slate-300">{statusText("timedOut")}</Badge>
     case "FULFILLED":
-      return <Badge variant="outline" className="bg-success-50 text-success-700 border-success-200">Đã kích hoạt tư vấn</Badge>
+      return <Badge variant="outline" className="bg-success-50 text-success-700 border-success-200">{statusText("fulfilled")}</Badge>
     case "SCHEDULED":
-      return <Badge variant="outline" className="bg-primary-50 text-primary-700 border-primary-200">Đã lên lịch</Badge>
+      return <Badge variant="outline" className="bg-primary-50 text-primary-700 border-primary-200">{statusText("scheduled")}</Badge>
     case "COMPLETED":
-      return <Badge variant="outline" className="bg-slate-100 text-slate-700 border-slate-300">Đã hoàn thành</Badge>
+      return <Badge variant="outline" className="bg-slate-100 text-slate-700 border-slate-300">{statusText("completed")}</Badge>
     case "REJECTED":
-      label = "Đã từ chối"
+      label = statusText("rejected")
       variant = "destructive"
       break
     case "CANCELLED":
-      label = "Đã hủy"
+      label = statusText("cancelled")
       variant = "destructive"
       break
     case "EXPIRED":
-      label = "Đã hết hạn"
+      label = statusText("expired")
       variant = "destructive"
       break
     case "ACTIVE":
-      label = "Đang hoạt động"
+      label = statusText("active")
       variant = "default"
       break
     case "APPROVED":
-      label = "Đã duyệt"
+      label = statusText("approved")
       variant = "default"
       break
     case "PENDING":
-      label = "Đang chờ"
+      label = statusText("pending")
       variant = "secondary"
       break
     case "PROCESSING":
     case "IN_PROGRESS":
-      label = "Đang xử lý"
+      label = statusText("processing")
       variant = "secondary"
       break
     case "FAILED":
-      label = "Thất bại"
+      label = statusText("failed")
       variant = "destructive"
       break
     case "CLOSED":
-      label = "Đã đóng"
+      label = statusText("closed")
       variant = "destructive"
       break
   }
@@ -100,13 +102,27 @@ export function EmptyRow({ colSpan, text }: { colSpan: number; text: string }) {
 }
 
 export const DAYS_OF_WEEK_VN: Record<string, string> = {
-  MONDAY: "Thứ Hai",
-  TUESDAY: "Thứ Ba",
-  WEDNESDAY: "Thứ Tư",
-  THURSDAY: "Thứ Năm",
-  FRIDAY: "Thứ Sáu",
-  SATURDAY: "Thứ Bảy",
-  SUNDAY: "Chủ Nhật",
+  get MONDAY() {
+    return i18n.t("consultation:days.monday")
+  },
+  get TUESDAY() {
+    return i18n.t("consultation:days.tuesday")
+  },
+  get WEDNESDAY() {
+    return i18n.t("consultation:days.wednesday")
+  },
+  get THURSDAY() {
+    return i18n.t("consultation:days.thursday")
+  },
+  get FRIDAY() {
+    return i18n.t("consultation:days.friday")
+  },
+  get SATURDAY() {
+    return i18n.t("consultation:days.saturday")
+  },
+  get SUNDAY() {
+    return i18n.t("consultation:days.sunday")
+  },
 }
 
 export interface ScheduleDayGroup {

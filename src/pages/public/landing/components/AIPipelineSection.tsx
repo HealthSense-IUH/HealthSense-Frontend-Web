@@ -10,89 +10,59 @@ import {
   Zap,
   Sliders
 } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 type StageId = "stage-1" | "stage-2" | "stage-3"
 
+/**
+ * Cấu trúc từng bước; chữ hiển thị lấy từ landing:pipeline.stages.<key>.* lúc render
+ * (bullets.<bulletKey>, specs.<specKey>.label / .value).
+ */
 interface PipelineStageData {
   id: StageId
+  key: "stage1" | "stage2" | "stage3"
   stepNum: string
-  title: string
-  subtitle: string
-  tagline: string
-  summary: string
-  bulletPoints: string[]
-  specs: { label: string; value: string }[]
+  bulletKeys: string[]
+  specKeys: string[]
 }
 
 const stagesData: Record<StageId, PipelineStageData> = {
   "stage-1": {
     id: "stage-1",
+    key: "stage1",
     stepNum: "1",
-    title: "Làm Sạch Tín Hiệu Nhịp Tim",
-    subtitle: "Lọc bỏ tạp âm & bắt nhịp tim chuẩn",
-    tagline: "Tự động loại bỏ rung lắc khi cử động tay để giữ lại nhịp đập chính xác nhất",
-    summary: "Khi bạn đi bộ, chạy bộ hay cử động tay, tín hiệu từ cảm biến đeo có thể bị rung lắc làm mờ nhịp đập. Hệ thống sẽ tự động lọc sạch các tạp âm này, giữ lại từng nhịp tim rõ nét theo thời gian thực.",
-    bulletPoints: [
-      "Cảm biến đo liên tục 125 lần mỗi giây",
-      "Tự động khử rung lắc và tạp âm khi bạn vận động",
-      "Nhận diện chính xác từng nhịp đập của tim",
-      "Đo khoảng cách chuẩn xác giữa các nhịp liên tiếp"
-    ],
-    specs: [
-      { label: "Tốc độ đo", value: "125 lần / giây" },
-      { label: "Khử nhiễu rung lắc", value: "Tự động 100%" },
-      { label: "Thời gian xử lý", value: "< 12 mili-giây" },
-      { label: "Độ chính xác bắt nhịp", value: "99.98%" }
-    ]
+    bulletKeys: ["b1", "b2", "b3", "b4"],
+    specKeys: ["samplingRate", "motionDenoise", "processingTime", "beatAccuracy"]
   },
   "stage-2": {
     id: "stage-2",
+    key: "stage2",
     stepNum: "2",
-    title: "Phân Tích 16 Chỉ Số Sức Khỏe",
-    subtitle: "Đo lường độ đều đặn & sức khỏe tim",
-    tagline: "Phân tích khoảng cách giữa các nhịp đập thành 16 chỉ số sức khỏe chuyên sâu",
-    summary: "Trái tim khỏe mạnh luôn có độ biến thiên linh hoạt. AI phân tích 16 chỉ số biến thiên nhịp tim (HRV) giúp nhận biết sớm tình trạng tim đập không đều, căng thẳng hoặc quá tải trước khi bạn kịp cảm thấy mệt mỏi.",
-    bulletPoints: [
-      "Đo độ đều đặn của nhịp tim (nhịp nhanh, chậm hay ngắt quãng)",
-      "Đánh giá mức độ đồng bộ giữa nhịp tim và hơi thở",
-      "Phát hiện các cơn rối loạn nhịp tim ngầm khó nhận biết",
-      "Đồng bộ toàn bộ chỉ số về thang đo chuẩn để phân tích"
-    ],
-    specs: [
-      { label: "Chỉ số phân tích", value: "16 Chỉ số tim mạch" },
-      { label: "Khả năng bao quát", value: "Toàn diện nhịp tim" },
-      { label: "Đồng bộ dữ liệu", value: "Tự động tức thì" },
-      { label: "Thời gian tính toán", value: "< 24 mili-giây" }
-    ]
+    bulletKeys: ["b1", "b2", "b3", "b4"],
+    specKeys: ["metrics", "coverage", "dataSync", "computeTime"]
   },
   "stage-3": {
     id: "stage-3",
+    key: "stage3",
     stepNum: "3",
-    title: "Đưa Ra Đánh Giá & Cảnh Báo",
-    subtitle: "Nhận diện và cảnh báo sớm Rung nhĩ (AFib)",
-    tagline: "Kết hợp 4 mô hình AI cùng phân tích chéo để đưa ra kết luận chính xác và an tâm",
-    summary: "Thay vì chỉ dựa vào một thuật toán duy nhất, HealthSense kết hợp 4 mô hình trí tuệ nhân tạo cùng đánh giá chéo dữ liệu. Nhờ đó, hệ thống nhận diện chính xác đến 98.65% nguy cơ Rung nhĩ (AFib) và gửi cảnh báo tức thì đến bạn.",
-    bulletPoints: [
-      "4 mô hình AI cùng phân tích độc lập để tránh kết luận sai",
-      "Tự động chọn lọc phương án có độ tin cậy cao nhất",
-      "Độ nhạy phát hiện bệnh 99.78% (hạn chế tối đa bỏ sót ca bệnh)",
-      "Đưa ra cảnh báo siêu nhanh dưới 85 mili-giây"
-    ],
-    specs: [
-      { label: "Cơ chế phân tích", value: "4 AI phân tích chéo" },
-      { label: "Độ chính xác", value: "98.65%" },
-      { label: "Độ nhạy bắt bệnh", value: "99.78%" },
-      { label: "Tốc độ cảnh báo", value: "< 85 mili-giây" }
-    ]
+    bulletKeys: ["b1", "b2", "b3", "b4"],
+    specKeys: ["mechanism", "accuracy", "sensitivity", "alertSpeed"]
   }
 }
 
 export function AIPipelineSection() {
+  const { t } = useTranslation("landing")
   const [activeStage, setActiveStage] = useState<StageId>("stage-1")
   const [isNoiseSimulated, setIsNoiseSimulated] = useState(false)
   const [simulatedSample, setSimulatedSample] = useState<"normal" | "afib">("normal")
 
   const current = stagesData[activeStage]
+  const stageText = (stage: PipelineStageData, field: "title" | "subtitle" | "tagline" | "summary") =>
+    t(`pipeline.stages.${stage.key}.${field}`)
+  const sampleConf = (normalPct: string, afibPct: string) =>
+    simulatedSample === "normal"
+      ? t("pipeline.stage3Viz.stable", { pct: normalPct })
+      : t("pipeline.stage3Viz.arrhythmia", { pct: afibPct })
 
   return (
     <section className="w-full py-24 sm:py-32 relative bg-slate-950 text-white overflow-hidden border-t border-white/10">
@@ -108,15 +78,15 @@ export function AIPipelineSection() {
         <div className="text-center mb-14 sm:mb-16 max-w-3xl mx-auto">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primary-500/10 border border-primary-400/30 text-primary-300 text-xs font-bold font-heading mb-4 shadow-xs">
             <Sparkles className="w-3.5 h-3.5 text-primary-400" />
-            <span>Quy Trình Hoạt Động Thông Minh</span>
+            <span>{t("pipeline.badge")}</span>
           </div>
 
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black mb-4 text-white font-heading tracking-tight uppercase">
-            Cách AI Phân Tích Nhịp Tim Của Bạn
+            {t("pipeline.title")}
           </h2>
 
           <p className="text-slate-300 text-base sm:text-lg leading-relaxed font-sans">
-            Hệ thống tự động thực hiện 3 bước liên tục để bảo vệ và theo dõi sức khỏe trái tim bạn suốt 24/7.
+            {t("pipeline.intro")}
           </p>
         </div>
 
@@ -148,7 +118,7 @@ export function AIPipelineSection() {
                   <span className={`text-xs font-bold px-3 py-1 rounded-full ${
                     isActive ? "bg-primary-500/20 text-primary-300 border border-primary-500/40" : "bg-white/10 text-slate-400"
                   }`}>
-                    Bước 0{item.stepNum}
+                    {t("pipeline.stepLabel", { num: item.stepNum })}
                   </span>
                   
                   <div className={`w-3 h-3 rounded-full ${isActive ? "bg-primary-400 ring-4 ring-primary-500/20 animate-pulse" : "bg-white/20"}`} />
@@ -158,10 +128,10 @@ export function AIPipelineSection() {
                   <h3 className={`text-base sm:text-lg font-black font-heading leading-snug mb-1.5 ${
                     isActive ? "text-white" : "text-slate-200"
                   }`}>
-                    {item.title}
+                    {stageText(item, "title")}
                   </h3>
                   <span className="text-xs text-slate-400 font-sans line-clamp-2 leading-relaxed">
-                    {item.subtitle}
+                    {stageText(item, "subtitle")}
                   </span>
                 </div>
               </button>
@@ -176,29 +146,29 @@ export function AIPipelineSection() {
           <div className="lg:col-span-5 flex flex-col justify-between p-6 sm:p-6 rounded-2xl bg-white/[0.05] border border-white/15 backdrop-blur-xl shadow-xl">
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-500/10 border border-primary-400/30 text-primary-300 text-xs font-bold mb-4 font-heading">
-                <span>Bước 0{current.stepNum}</span>
+                <span>{t("pipeline.stepLabel", { num: current.stepNum })}</span>
                 <span>•</span>
-                <span>Chi tiết quy trình</span>
+                <span>{t("pipeline.processDetail")}</span>
               </div>
 
               <h3 className="text-2xl sm:text-3xl font-black font-heading text-white mb-2">
-                {current.title}
+                {stageText(current, "title")}
               </h3>
-              
+
               <p className="text-xs sm:text-sm font-bold text-primary-400 mb-4 font-heading">
-                {current.tagline}
+                {stageText(current, "tagline")}
               </p>
 
               <p className="text-sm text-slate-300 leading-relaxed font-sans mb-6">
-                {current.summary}
+                {stageText(current, "summary")}
               </p>
 
               {/* Bullet Points */}
               <div className="space-y-3 mb-8">
-                {current.bulletPoints.map((bullet) => (
-                  <div key={bullet} className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-200 font-medium">
+                {current.bulletKeys.map((bulletKey) => (
+                  <div key={bulletKey} className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-200 font-medium">
                     <CheckCircle2 className="w-4 h-4 text-primary-400 shrink-0 mt-0.5" />
-                    <span>{bullet}</span>
+                    <span>{t(`pipeline.stages.${current.key}.bullets.${bulletKey}`)}</span>
                   </div>
                 ))}
               </div>
@@ -206,10 +176,10 @@ export function AIPipelineSection() {
 
             {/* Spec Mini Cards */}
             <div className="grid grid-cols-2 gap-3 pt-5 border-t border-white/10">
-              {current.specs.map((spec) => (
-                <div key={spec.label} className="p-3.5 rounded-2xl bg-black/40 border border-white/10">
-                  <span className="text-[11px] text-slate-400 block mb-0.5 font-medium">{spec.label}</span>
-                  <span className="text-xs sm:text-sm font-black font-heading text-white">{spec.value}</span>
+              {current.specKeys.map((specKey) => (
+                <div key={specKey} className="p-3.5 rounded-2xl bg-black/40 border border-white/10">
+                  <span className="text-[11px] text-slate-400 block mb-0.5 font-medium">{t(`pipeline.stages.${current.key}.specs.${specKey}.label`)}</span>
+                  <span className="text-xs sm:text-sm font-black font-heading text-white">{t(`pipeline.stages.${current.key}.specs.${specKey}.value`)}</span>
                 </div>
               ))}
             </div>
@@ -226,10 +196,10 @@ export function AIPipelineSection() {
                 </div>
                 <div>
                   <h4 className="text-xs sm:text-sm font-black font-heading text-white">
-                    Mô phỏng trực quan theo thời gian thực
+                    {t("pipeline.monitor.title")}
                   </h4>
                   <p className="text-[11px] text-slate-400 font-medium font-sans">
-                    Dữ liệu phân tích nhịp tim mẫu
+                    {t("pipeline.monitor.subtitle")}
                   </p>
                 </div>
               </div>
@@ -237,7 +207,7 @@ export function AIPipelineSection() {
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-success-500/10 border border-success-500/30 text-success-300 text-xs font-bold">
                 <span className="w-2 h-2 rounded-full bg-success-400 animate-ping" />
                 <span className="w-2 h-2 -ml-3.5 rounded-full bg-success-400" />
-                <span>Hoạt động 24/7</span>
+                <span>{t("pipeline.monitor.live")}</span>
               </div>
             </div>
 
@@ -253,7 +223,7 @@ export function AIPipelineSection() {
                       <div className="flex items-center gap-2">
                         <Activity className="w-4 h-4 text-primary-400" />
                         <span className="text-xs sm:text-sm font-bold font-heading text-white">
-                          Sóng nhịp tim thu nhận từ thiết bị đeo
+                          {t("pipeline.stage1Viz.label")}
                         </span>
                       </div>
 
@@ -267,7 +237,7 @@ export function AIPipelineSection() {
                         }`}
                       >
                         <Zap className="w-3.5 h-3.5" />
-                        <span>{isNoiseSimulated ? "Đang có rung lắc cử động" : "Đã lọc sạch tín hiệu chuẩn"}</span>
+                        <span>{isNoiseSimulated ? t("pipeline.stage1Viz.noiseOn") : t("pipeline.stage1Viz.noiseOff")}</span>
                       </button>
                     </div>
 
@@ -276,9 +246,9 @@ export function AIPipelineSection() {
                       <div className="flex items-center justify-between text-xs font-bold text-success-400 mb-2">
                         <span className="flex items-center gap-1.5">
                           <HeartPulse className="w-3.5 h-3.5 animate-pulse" />
-                          Nhịp tim: 74 BPM
+                          {t("pipeline.stage1Viz.heartRate")}
                         </span>
-                        <span className="text-[11px] text-slate-400 font-normal font-sans">Độ trễ: 12ms</span>
+                        <span className="text-[11px] text-slate-400 font-normal font-sans">{t("pipeline.stage1Viz.latency")}</span>
                       </div>
 
                       {/* SVG Wave */}
@@ -313,8 +283,8 @@ export function AIPipelineSection() {
                       </svg>
 
                       <div className="flex items-center justify-between text-xs text-slate-300 mt-2 pt-2 border-t border-white/10 font-sans">
-                        <span>{isNoiseSimulated ? "⚠️ Đang lọc bỏ rung lắc cử động" : "🟢 Sóng nhịp tim ổn định và chuẩn xác"}</span>
-                        <span className="text-slate-400">Định vị từng nhịp</span>
+                        <span>{isNoiseSimulated ? t("pipeline.stage1Viz.statusNoisy") : t("pipeline.stage1Viz.statusClean")}</span>
+                        <span className="text-slate-400">{t("pipeline.stage1Viz.beatLocalization")}</span>
                       </div>
                     </div>
                   </div>
@@ -327,42 +297,42 @@ export function AIPipelineSection() {
                       <div className="flex items-center gap-2">
                         <Sliders className="w-4 h-4 text-primary-400" />
                         <span className="text-xs sm:text-sm font-bold font-heading text-white">
-                          16 Chỉ số biến thiên nhịp tim (HRV)
+                          {t("pipeline.stage2Viz.label")}
                         </span>
                       </div>
                       <span className="text-xs font-bold text-primary-300 bg-primary-950/80 px-3 py-1 rounded-full border border-primary-800">
-                        Thang đo chuẩn hóa
+                        {t("pipeline.stage2Viz.scale")}
                       </span>
                     </div>
 
                     {/* 8 Featured Metric Bars */}
                     <div className="grid grid-cols-4 sm:grid-cols-8 gap-2.5 p-4 sm:p-5 rounded-2xl bg-black/50 border border-white/10">
                       {[
-                        { name: "Độ lệch nhịp", val: "+0.84", h: "84%", col: "bg-primary-400" },
-                        { name: "Độ biến thiên", val: "+0.62", h: "62%", col: "bg-primary-400" },
-                        { name: "Nhịp ngắt", val: "-0.45", h: "45%", col: "bg-primary-400" },
-                        { name: "Nhịp TB", val: "+0.78", h: "78%", col: "bg-primary-400" },
-                        { name: "Tần số thấp", val: "+0.91", h: "91%", col: "bg-primary-400" },
-                        { name: "Tần số cao", val: "+0.53", h: "53%", col: "bg-primary-400" },
-                        { name: "Tỷ số thở", val: "+0.68", h: "68%", col: "bg-primary-400" },
-                        { name: "Độ ổn định", val: "+0.88", h: "88%", col: "bg-success-400" },
+                        { key: "deviation", val: "+0.84", h: "84%", col: "bg-primary-400" },
+                        { key: "variability", val: "+0.62", h: "62%", col: "bg-primary-400" },
+                        { key: "pauses", val: "-0.45", h: "45%", col: "bg-primary-400" },
+                        { key: "meanHr", val: "+0.78", h: "78%", col: "bg-primary-400" },
+                        { key: "lowFreq", val: "+0.91", h: "91%", col: "bg-primary-400" },
+                        { key: "highFreq", val: "+0.53", h: "53%", col: "bg-primary-400" },
+                        { key: "respRatio", val: "+0.68", h: "68%", col: "bg-primary-400" },
+                        { key: "stability", val: "+0.88", h: "88%", col: "bg-success-400" },
                       ].map((feat) => (
-                        <div key={feat.name} className="flex flex-col items-center gap-1.5">
+                        <div key={feat.key} className="flex flex-col items-center gap-1.5">
                           <div className="w-full h-24 bg-slate-900 rounded-xl flex items-end p-1 overflow-hidden border border-white/5">
                             <div 
                               className={`w-full ${feat.col} rounded-lg transition-all duration-500 shadow-xs`} 
                               style={{ height: feat.h }} 
                             />
                           </div>
-                          <span className="text-[10px] font-bold text-white truncate text-center w-full">{feat.name}</span>
+                          <span className="text-[10px] font-bold text-white truncate text-center w-full">{t(`pipeline.stage2Viz.bars.${feat.key}`)}</span>
                           <span className="text-[9px] text-slate-400 font-sans">{feat.val}</span>
                         </div>
                       ))}
                     </div>
 
                     <div className="p-3.5 rounded-2xl bg-primary-950/40 border border-primary-800/50 text-xs text-primary-200 font-sans flex items-center justify-between">
-                      <span>✓ 16 chỉ số sức khỏe đã sẵn sàng để AI phân tích</span>
-                      <span className="font-bold text-primary-300">Đã đồng bộ</span>
+                      <span>{t("pipeline.stage2Viz.ready")}</span>
+                      <span className="font-bold text-primary-300">{t("pipeline.stage2Viz.synced")}</span>
                     </div>
                   </div>
                 )}
@@ -372,7 +342,7 @@ export function AIPipelineSection() {
                   <div className="space-y-5">
                     <div className="flex flex-wrap items-center justify-between gap-2">
                       <span className="text-xs sm:text-sm font-bold font-heading text-white">
-                        4 Mô hình AI cùng phân tích chéo
+                        {t("pipeline.stage3Viz.label")}
                       </span>
 
                       {/* Sample Selector Buttons */}
@@ -385,7 +355,7 @@ export function AIPipelineSection() {
                               : "text-slate-400 hover:text-white"
                           }`}
                         >
-                          Mẫu: Bình thường
+                          {t("pipeline.stage3Viz.sampleNormal")}
                         </button>
                         <button
                           onClick={() => setSimulatedSample("afib")}
@@ -395,7 +365,7 @@ export function AIPipelineSection() {
                               : "text-slate-400 hover:text-white"
                           }`}
                         >
-                          Mẫu: Loạn nhịp (AFib)
+                          {t("pipeline.stage3Viz.sampleAfib")}
                         </button>
                       </div>
                     </div>
@@ -403,10 +373,10 @@ export function AIPipelineSection() {
                     {/* 4 AI Model Mini Cards */}
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
                       {[
-                        { name: "Kiểm tra độ đều nhịp", conf: simulatedSample === "normal" ? "98.9% Ổn định" : "99.4% Loạn nhịp", border: "border-primary-500/40" },
-                        { name: "Kiểm tra tần số tim", conf: simulatedSample === "normal" ? "97.8% Ổn định" : "98.7% Loạn nhịp", border: "border-primary-500/40" },
-                        { name: "Kiểm tra cơn ngắt quãng", conf: simulatedSample === "normal" ? "99.1% Ổn định" : "99.2% Loạn nhịp", border: "border-primary-500/40" },
-                        { name: "Đánh giá dạng sóng", conf: simulatedSample === "normal" ? "98.5% Ổn định" : "98.9% Loạn nhịp", border: "border-primary-500/40" },
+                        { name: t("pipeline.stage3Viz.models.rhythm"), conf: sampleConf("98.9%", "99.4%"), border: "border-primary-500/40" },
+                        { name: t("pipeline.stage3Viz.models.rate"), conf: sampleConf("97.8%", "98.7%"), border: "border-primary-500/40" },
+                        { name: t("pipeline.stage3Viz.models.pauses"), conf: sampleConf("99.1%", "99.2%"), border: "border-primary-500/40" },
+                        { name: t("pipeline.stage3Viz.models.waveform"), conf: sampleConf("98.5%", "98.9%"), border: "border-primary-500/40" },
                       ].map((model) => (
                         <div key={model.name} className={`p-3 rounded-2xl bg-black/50 border ${model.border} text-center`}>
                           <span className="text-[11px] text-slate-400 font-sans block truncate">{model.name}</span>
@@ -428,15 +398,15 @@ export function AIPipelineSection() {
                           {simulatedSample === "normal" ? <CheckCircle2 className="w-6 h-6" /> : <AlertTriangle className="w-6 h-6" />}
                         </div>
                         <div>
-                          <span className="text-xs font-bold text-slate-400 block font-heading">KẾT QUẢ ĐÁNH GIÁ TỔNG HỢP (&lt; 85ms)</span>
+                          <span className="text-xs font-bold text-slate-400 block font-heading">{t("pipeline.stage3Viz.resultTitle")}</span>
                           <span className="text-sm sm:text-base font-black font-heading block mt-0.5 text-white">
-                            {simulatedSample === "normal" ? "Nhịp tim bình thường, ổn định" : "Cảnh báo: Phát hiện dấu hiệu Rung nhĩ (AFib)"}
+                            {simulatedSample === "normal" ? t("pipeline.stage3Viz.resultNormal") : t("pipeline.stage3Viz.resultAfib")}
                           </span>
                         </div>
                       </div>
 
                       <span className="text-xs font-bold px-3 py-1.5 rounded-full bg-white/10 text-white border border-white/15 whitespace-nowrap font-heading">
-                        Độ chính xác: 98.65%
+                        {t("pipeline.stage3Viz.accuracy")}
                       </span>
                     </div>
                   </div>
@@ -444,10 +414,10 @@ export function AIPipelineSection() {
 
                 {/* Card Bottom Note */}
                 <div className="flex items-center justify-between pt-5 mt-4 border-t border-white/10 text-xs text-slate-400 font-sans">
-                  <span>Đang xem: {current.title}</span>
+                  <span>{t("pipeline.viewing", { title: stageText(current, "title") })}</span>
                   <span className="inline-flex items-center gap-1 text-success-400 font-bold">
                     <ShieldCheck className="w-3.5 h-3.5" />
-                    Đã kiểm chứng trên dữ liệu y tế MIMIC-III
+                    {t("pipeline.validated")}
                   </span>
                 </div>
 

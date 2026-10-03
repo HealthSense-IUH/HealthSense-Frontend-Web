@@ -1,5 +1,6 @@
 import { useCallback, type FormEvent, type KeyboardEvent, useEffect, useRef, useState, memo } from "react"
 import { Send, Paperclip } from "lucide-react"
+import { useTranslation } from "react-i18next"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
@@ -24,6 +25,7 @@ export const ChatComposer = memo(function ChatComposer({
   onMessageChange,
   onSubmit,
 }: ChatComposerProps) {
+  const { t } = useTranslation("consultation")
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const [localDraft, setLocalDraft] = useState(messageDraft)
 
@@ -86,7 +88,7 @@ export const ChatComposer = memo(function ChatComposer({
     return (
       <div className="flex w-full items-center justify-center border-t border-border bg-muted/30 px-4 py-4">
         <p className="text-sm font-medium text-muted-foreground text-center">
-          {readOnlyReason || "Bạn không thể gửi tin nhắn trong phiên này."}
+          {readOnlyReason || t("chat.composer.readOnlyDefault")}
         </p>
       </div>
     )
@@ -96,7 +98,7 @@ export const ChatComposer = memo(function ChatComposer({
     return (
       <div className="flex w-full items-center justify-center border-t border-border bg-muted/30 px-4 py-4">
         <p className="text-sm font-medium text-muted-foreground text-center">
-          Phiên tư vấn chưa mở hoặc không còn hoạt động.
+          {t("chat.composer.sessionInactive")}
         </p>
       </div>
     )
@@ -112,7 +114,7 @@ export const ChatComposer = memo(function ChatComposer({
             variant="ghost" 
             size="icon"
             className="flex-shrink-0 h-10 w-10 text-muted-foreground hover:bg-muted rounded-full"
-            aria-label="Đính kèm tệp"
+            aria-label={t("chat.composer.attachFile")}
           >
             <Paperclip className="h-5 w-5" />
           </Button>
@@ -121,7 +123,7 @@ export const ChatComposer = memo(function ChatComposer({
             <textarea
               ref={textareaRef}
               className="max-h-[160px] min-h-[24px] w-full resize-none bg-transparent py-2 text-[14px] text-foreground outline-none placeholder:text-muted-foreground"
-              placeholder="Nhập tin nhắn..."
+              placeholder={t("chat.composer.placeholder")}
               value={localDraft}
               onChange={(e) => setLocalDraft(e.target.value)}
               disabled={loading}
@@ -141,7 +143,7 @@ export const ChatComposer = memo(function ChatComposer({
                 : "text-muted-foreground hover:bg-muted"
             )}
             disabled={loading || !hasContent} 
-            aria-label="Gửi tin nhắn"
+            aria-label={t("chat.composer.send")}
           >
             <Send className="h-5 w-5" />
           </Button>

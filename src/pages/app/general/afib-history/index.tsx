@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react"
+import { useTranslation } from "react-i18next"
 import {
   HeartPulse,
   Search,
@@ -27,6 +28,7 @@ import {
 import type { MemberHealthRecord } from "@/types/health-record"
 
 export default function AfibHistoryPage() {
+  const { t } = useTranslation("health")
   const [records, setRecords] = useState<MemberHealthRecord[]>([])
   const [loading, setLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
@@ -103,8 +105,8 @@ export default function AfibHistoryPage() {
   return (
     <Page>
       <PageHeader
-        title="Lịch sử đo"
-        description="Lịch sử các lần đo chủ động và cảnh báo tầm soát từ AI"
+        title={t("afibHistory.title")}
+        description={t("afibHistory.description")}
         actions={
           <>
             <Button
@@ -115,7 +117,7 @@ export default function AfibHistoryPage() {
               className="h-10 rounded-xl bg-white border-0 shadow-xs text-xs font-semibold gap-1.5 cursor-pointer"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? "animate-spin text-primary" : ""}`} />
-              <span>Làm mới</span>
+              <span>{t("afibHistory.refresh")}</span>
             </Button>
 
             <Button
@@ -123,7 +125,7 @@ export default function AfibHistoryPage() {
               className="h-10 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-xs px-4 shadow-xs flex items-center gap-1.5 cursor-pointer"
             >
               <Plus className="w-4 h-4" />
-              <span>Tải lên bản ghi mới</span>
+              <span>{t("afibHistory.uploadNew")}</span>
             </Button>
           </>
         }
@@ -140,19 +142,19 @@ export default function AfibHistoryPage() {
                   type="search"
                   value={searchKeyword}
                   onChange={(e) => setSearchKeyword(e.target.value)}
-                  placeholder="Tìm kiếm theo ngày / tên file..."
+                  placeholder={t("afibHistory.searchPlaceholder")}
                   className="w-full pl-9 bg-white border-0 rounded-xl shadow-xs h-10 text-xs font-medium"
                 />
               </div>
               <Select value={statusFilter} onValueChange={setStatusFilter}>
                 <SelectTrigger className="w-[200px] bg-white border-0 rounded-xl shadow-xs h-10 text-xs font-medium">
-                  <SelectValue placeholder="Trạng thái" />
+                  <SelectValue placeholder={t("afibHistory.filter.placeholder")} />
                 </SelectTrigger>
                 <SelectContent className="rounded-xl text-xs">
-                  <SelectItem value="all">Tất cả trạng thái</SelectItem>
-                  <SelectItem value="normal">Bình thường (An toàn)</SelectItem>
-                  <SelectItem value="warning">Cảnh báo (Rung nhĩ)</SelectItem>
-                  <SelectItem value="processing">Đang phân tích</SelectItem>
+                  <SelectItem value="all">{t("afibHistory.filter.all")}</SelectItem>
+                  <SelectItem value="normal">{t("afibHistory.filter.normal")}</SelectItem>
+                  <SelectItem value="warning">{t("afibHistory.filter.warning")}</SelectItem>
+                  <SelectItem value="processing">{t("afibHistory.filter.processing")}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -162,7 +164,7 @@ export default function AfibHistoryPage() {
               <button
                 type="button"
                 onClick={() => setViewMode("table")}
-                title="Dạng bảng (Table view)"
+                title={t("afibHistory.view.tableTitle")}
                 className={`p-1.5 rounded-lg transition-all cursor-pointer flex items-center gap-1.5 text-xs font-semibold px-3 ${
                   viewMode === "table"
                     ? "bg-slate-100 text-primary shadow-2xs font-bold"
@@ -170,12 +172,12 @@ export default function AfibHistoryPage() {
                 }`}
               >
                 <LayoutList className="w-4 h-4" />
-                <span>Bảng</span>
+                <span>{t("afibHistory.view.table")}</span>
               </button>
               <button
                 type="button"
                 onClick={() => setViewMode("card")}
-                title="Dạng thẻ (Card view)"
+                title={t("afibHistory.view.cardTitle")}
                 className={`p-1.5 rounded-lg transition-all cursor-pointer flex items-center gap-1.5 text-xs font-semibold px-3 ${
                   viewMode === "card"
                     ? "bg-slate-100 text-primary shadow-2xs font-bold"
@@ -183,14 +185,14 @@ export default function AfibHistoryPage() {
                 }`}
               >
                 <LayoutGrid className="w-4 h-4" />
-                <span>Thẻ</span>
+                <span>{t("afibHistory.view.card")}</span>
               </button>
             </div>
           </div>
 
           {/* Badge Legend */}
           <div className="flex flex-wrap items-center gap-2.5 p-3 px-4 rounded-2xl bg-white border border-border shadow-xs text-xs text-muted-foreground">
-            <span className="font-semibold text-foreground shrink-0 mr-1">Chú thích AI:</span>
+            <span className="font-semibold text-foreground shrink-0 mr-1">{t("afibHistory.legend")}</span>
 
             <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border shadow-2xs ${PREDICTION_LABEL_CONFIG.NORMAL.badgeClass}`}>
               <span>{PREDICTION_LABEL_CONFIG.NORMAL.label}</span>
@@ -238,16 +240,16 @@ export default function AfibHistoryPage() {
                 <HeartPulse className="w-8 h-8" />
               </div>
               <h3 className="text-base font-bold text-foreground">
-                Chưa có bản ghi đo nào
+                {t("afibHistory.empty.title")}
               </h3>
               <p className="text-xs text-muted-foreground max-w-sm">
-                Không tìm thấy bản ghi đo phù hợp với bộ lọc. Hãy tải lên file dữ liệu mới để bắt đầu tầm soát.
+                {t("afibHistory.empty.description")}
               </p>
               <Button
                 onClick={() => setIsUploadOpen(true)}
                 className="mt-2 h-9 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-xs px-4 cursor-pointer"
               >
-                Tải lên bản ghi đầu tiên
+                {t("afibHistory.empty.uploadFirst")}
               </Button>
             </div>
           ) : viewMode === "table" ? (
@@ -258,12 +260,12 @@ export default function AfibHistoryPage() {
                   <table className="w-full text-left text-xs border-collapse">
                     <thead>
                       <tr className="border-b border-border text-muted-foreground font-semibold bg-slate-50/50">
-                        <th className="py-3.5 px-5">Thời gian đo & File</th>
-                        <th className="py-3.5 px-4 text-center">Nhịp tim TB</th>
-                        <th className="py-3.5 px-4">Biến thiên HRV</th>
-                        <th className="py-3.5 px-4 text-center">Kết luận AI</th>
-                        <th className="py-3.5 px-4 text-center">Khả năng AFib</th>
-                        <th className="py-3.5 px-5 text-right">Thao tác</th>
+                        <th className="py-3.5 px-5">{t("afibHistory.table.timeAndFile")}</th>
+                        <th className="py-3.5 px-4 text-center">{t("afibHistory.table.avgHeartRate")}</th>
+                        <th className="py-3.5 px-4">{t("afibHistory.table.hrv")}</th>
+                        <th className="py-3.5 px-4 text-center">{t("afibHistory.table.aiConclusion")}</th>
+                        <th className="py-3.5 px-4 text-center">{t("afibHistory.table.afibProbability")}</th>
+                        <th className="py-3.5 px-5 text-right">{t("afibHistory.table.actions")}</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-border font-medium">
@@ -338,7 +340,7 @@ export default function AfibHistoryPage() {
                                 className="h-8 px-3 rounded-xl bg-white border border-border text-foreground hover:bg-slate-50 text-xs font-semibold gap-1.5 cursor-pointer shadow-2xs"
                               >
                                 <Eye className="w-3.5 h-3.5 text-muted-foreground" />
-                                <span>Xem chi tiết</span>
+                                <span>{t("afibHistory.viewDetails")}</span>
                               </Button>
                             </td>
                           </tr>
@@ -379,7 +381,7 @@ export default function AfibHistoryPage() {
                       </div>
                       <CardDescription className="flex items-center gap-1.5 mt-1 text-xs text-muted-foreground">
                         <HeartPulse className="h-4 w-4 text-danger-500 shrink-0" />
-                        <span>Nhịp tim: {hrMean ? `${hrMean} BPM` : "-- BPM"}</span>
+                        <span>{t("afibHistory.card.heartRate", { value: hrMean ? `${hrMean} BPM` : "-- BPM" })}</span>
                         <span>•</span>
                         <span className="truncate max-w-[120px]">{record.fileName}</span>
                       </CardDescription>
@@ -391,7 +393,7 @@ export default function AfibHistoryPage() {
                             {meta.label}
                           </p>
                           <p className="text-xs text-muted-foreground">
-                            {confidencePct !== null ? `Khả năng bị rung nhĩ: ${confidencePct}%` : `File: ${record.fileName}`}
+                            {confidencePct !== null ? t("afibHistory.card.afibProbability", { value: confidencePct }) : t("afibHistory.card.file", { name: record.fileName })}
                           </p>
                         </div>
                         <Button

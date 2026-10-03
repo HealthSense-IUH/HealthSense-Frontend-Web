@@ -134,11 +134,11 @@ export const systemServicesData: SystemServiceStatus[] = [
 ]
 
 export const recentActivitiesData: ActivityLogItem[] = [
-  { id: "act-1", user: "Dr. Nguyễn Minh", action: "Updated patient cardiology record #4912", role: "Doctor", time: "5 min ago", status: "Success" },
-  { id: "act-2", user: "Admin Trần Anh", action: "Created verified doctor account", role: "Admin", time: "12 min ago", status: "Success" },
+  { id: "act-1", user: "Dr. Nguyễn Minh", action: "Updated patient cardiology record #4912", role: "Doctor", time: "5 min ago", status: "Success" }, // i18n-ignore: dữ liệu mẫu
+  { id: "act-2", user: "Admin Trần Anh", action: "Created verified doctor account", role: "Admin", time: "12 min ago", status: "Success" }, // i18n-ignore: dữ liệu mẫu
   { id: "act-3", user: "System Telemetry", action: "Failed wearable synchronization buffer", role: "System", time: "18 min ago", status: "Warning" },
-  { id: "act-4", user: "Dr. Lê Phương", action: "Triggered emergency AFib protocol alert", role: "Doctor", time: "34 min ago", status: "Critical" },
-  { id: "act-5", user: "Member Hưng Vũ", action: "Successfully linked Apple Watch Ultra 2", role: "Member", time: "1 hour ago", status: "Success" },
+  { id: "act-4", user: "Dr. Lê Phương", action: "Triggered emergency AFib protocol alert", role: "Doctor", time: "34 min ago", status: "Critical" }, // i18n-ignore: dữ liệu mẫu
+  { id: "act-5", user: "Member Hưng Vũ", action: "Successfully linked Apple Watch Ultra 2", role: "Member", time: "1 hour ago", status: "Success" }, // i18n-ignore: dữ liệu mẫu
 ]
 
 export const pendingActionsData: PendingActionItem[] = [

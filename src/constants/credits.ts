@@ -8,6 +8,7 @@ import type {
   CreditSourceType,
   ConsultationCreditPolicy,
 } from "@/types/credits"
+import i18n, { currentIntlLocale } from "@/lib/i18n"
 
 export interface StatusConfig {
   label: string
@@ -15,78 +16,80 @@ export interface StatusConfig {
   badgeVariant?: "default" | "secondary" | "destructive" | "outline"
 }
 
+// Nhãn hiển thị đọc từ i18n lúc truy cập (getter), không lúc nạp module,
+// để đổi ngôn ngữ là nhãn đổi theo.
 export const CREDIT_ORDER_STATUS_CONFIG: Record<CreditOrderStatus, StatusConfig> = {
   PAID: {
-    label: "Đã thanh toán",
+    get label() { return i18n.t("credits:orderStatus.paid") },
     className: "bg-success-50 text-success-700 border-success-200",
   },
   PENDING_PAYMENT: {
-    label: "Chờ thanh toán",
+    get label() { return i18n.t("credits:orderStatus.pendingPayment") },
     className: "bg-warning-50 text-warning-700 border-warning-200",
   },
   CANCELLED: {
-    label: "Đã hủy",
+    get label() { return i18n.t("credits:orderStatus.cancelled") },
     className: "bg-slate-100 text-slate-600 border-slate-200",
   },
   EXPIRED: {
-    label: "Hết hạn",
+    get label() { return i18n.t("credits:orderStatus.expired") },
     className: "bg-danger-50 text-danger-700 border-danger-200",
   },
   REQUIRES_REVIEW: {
-    label: "Đang kiểm tra",
+    get label() { return i18n.t("credits:orderStatus.requiresReview") },
     className: "bg-warning-50 text-warning-700 border-warning-200",
   },
 }
 
 export const CREDIT_PACKAGE_STATUS_CONFIG: Record<CreditPackageStatus, StatusConfig> = {
   ACTIVE: {
-    label: "Đang mở bán",
+    get label() { return i18n.t("credits:packageStatus.active") },
     className: "bg-success-50 text-success-700 border-success-200",
   },
   INACTIVE: {
-    label: "Tạm dừng bán",
+    get label() { return i18n.t("credits:packageStatus.inactive") },
     className: "bg-slate-100 text-slate-600 border-slate-200",
   },
 }
 
 export const CREDIT_RESERVATION_STATUS_CONFIG: Record<CreditReservationStatus, StatusConfig> = {
   HELD: {
-    label: "Lượt đang được tạm giữ",
+    get label() { return i18n.t("credits:reservationStatus.held") },
     className: "bg-primary-50 text-primary-700 border-primary-200",
   },
   CAPTURED: {
-    label: "Lượt đã được sử dụng",
+    get label() { return i18n.t("credits:reservationStatus.captured") },
     className: "bg-danger-50 text-danger-700 border-danger-200",
   },
   RELEASED: {
-    label: "Lượt đã được trả lại",
+    get label() { return i18n.t("credits:reservationStatus.released") },
     className: "bg-primary-50 text-primary-700 border-primary-200",
   },
 }
 
 export const CREDIT_PAYMENT_STATUS_CONFIG: Record<CreditPaymentStatus, StatusConfig> = {
   CREATING: {
-    label: "Đang khởi tạo",
+    get label() { return i18n.t("credits:paymentStatus.creating") },
     className: "bg-primary-50 text-primary-700 border-primary-200",
   },
   PENDING: {
-    label: "Chờ thanh toán",
+    get label() { return i18n.t("credits:paymentStatus.pending") },
     className: "bg-warning-50 text-warning-700 border-warning-200",
   },
   PAID: {
-    label: "Đã thanh toán",
+    get label() { return i18n.t("credits:paymentStatus.paid") },
     className: "bg-success-50 text-success-700 border-success-200",
   },
   CANCELLED: {
-    label: "Đã hủy",
+    get label() { return i18n.t("credits:paymentStatus.cancelled") },
     className: "bg-slate-100 text-slate-600 border-slate-200",
   },
   EXPIRED: {
-    label: "Đã hết hạn",
+    get label() { return i18n.t("credits:paymentStatus.expired") },
     className: "bg-danger-50 text-danger-700 border-danger-200",
   },
   REQUIRES_REVIEW: {
-    label: "Đang kiểm tra",
+    get label() { return i18n.t("credits:paymentStatus.requiresReview") },
     className: "bg-warning-50 text-warning-700 border-warning-200",
   },
 }
@@ -96,12 +99,12 @@ export const CREDIT_PAYMENT_PROVIDER_CONFIG: Record<
   { label: string; description: string }
 > = {
   MOCK: {
-    label: "Thanh toán giả lập",
-    description: "Thử nghiệm hệ thống, không trừ tiền thật",
+    get label() { return i18n.t("credits:paymentProvider.mock.label") },
+    get description() { return i18n.t("credits:paymentProvider.mock.description") },
   },
   PAYOS: {
-    label: "Cổng thanh toán PayOS",
-    description: "Cổng thanh toán trực tuyến PayOS",
+    get label() { return i18n.t("credits:paymentProvider.payos.label") },
+    get description() { return i18n.t("credits:paymentProvider.payos.description") },
   },
 }
 
@@ -110,38 +113,38 @@ export const CREDIT_OPERATION_CONFIG: Record<
   { label: string; description: string; className: string }
 > = {
   PURCHASE: {
-    label: "Mua lượt",
-    description: "Cộng lượt khi thanh toán đơn mua",
+    get label() { return i18n.t("credits:operation.purchase.label") },
+    get description() { return i18n.t("credits:operation.purchase.description") },
     className: "bg-primary-50 text-primary-700 border-primary-200",
   },
   RESERVE: {
-    label: "Giữ lượt tư vấn",
-    description: "Tạm giữ lượt khi tham gia phiên tư vấn",
+    get label() { return i18n.t("credits:operation.reserve.label") },
+    get description() { return i18n.t("credits:operation.reserve.description") },
     className: "bg-primary-50 text-primary-700 border-primary-200",
   },
   CAPTURE: {
-    label: "Sử dụng lượt",
-    description: "Tiêu thụ lượt tư vấn đã giữ",
+    get label() { return i18n.t("credits:operation.capture.label") },
+    get description() { return i18n.t("credits:operation.capture.description") },
     className: "bg-danger-50 text-danger-700 border-danger-200",
   },
   RELEASE: {
-    label: "Trả lượt giữ",
-    description: "Hoàn trả lượt đang giữ về lại khả dụng",
+    get label() { return i18n.t("credits:operation.release.label") },
+    get description() { return i18n.t("credits:operation.release.description") },
     className: "bg-primary-50 text-primary-700 border-primary-200",
   },
   SESSION_CHARGE: {
-    label: "Đã dùng lượt khi bắt đầu phiên",
-    description: "Tiêu thụ lượt tư vấn khi member xác nhận bắt đầu phiên",
+    get label() { return i18n.t("credits:operation.sessionCharge.label") },
+    get description() { return i18n.t("credits:operation.sessionCharge.description") },
     className: "bg-danger-50 text-danger-700 border-danger-200",
   },
   ADJUSTMENT: {
-    label: "Điều chỉnh",
-    description: "Quản trị viên điều chỉnh lượt",
+    get label() { return i18n.t("credits:operation.adjustment.label") },
+    get description() { return i18n.t("credits:operation.adjustment.description") },
     className: "bg-warning-50 text-warning-700 border-warning-200",
   },
   SESSION_REFUND: {
-    label: "Bồi hoàn lượt",
-    description: "Bồi hoàn lượt tư vấn của phiên",
+    get label() { return i18n.t("credits:operation.sessionRefund.label") },
+    get description() { return i18n.t("credits:operation.sessionRefund.description") },
     className: "bg-success-50 text-success-700 border-success-200",
   },
 }
@@ -151,39 +154,39 @@ export const CREDIT_SOURCE_TYPE_CONFIG: Record<
   { label: string; isOrder: boolean }
 > = {
   PURCHASE_ORDER: {
-    label: "Đơn mua",
+    get label() { return i18n.t("credits:sourceType.purchaseOrder") },
     isOrder: true,
   },
   CONSULTATION_REQUEST: {
-    label: "Yêu cầu tư vấn",
+    get label() { return i18n.t("credits:sourceType.consultationRequest") },
     isOrder: false,
   },
   CONSULTATION_SESSION: {
-    label: "Phiên tư vấn",
+    get label() { return i18n.t("credits:sourceType.consultationSession") },
     isOrder: false,
   },
   ADMIN_ADJUSTMENT: {
-    label: "Điều chỉnh quản trị",
+    get label() { return i18n.t("credits:sourceType.adminAdjustment") },
     isOrder: false,
   },
 }
 
 export const CREDIT_ERROR_CODE_MESSAGES: Record<number, string> = {
-  1003: "Tài khoản của bạn hiện không hoạt động. Vui lòng liên hệ quản trị viên.",
-  1201: "Thông tin yêu cầu không hợp lệ.",
-  1203: "Dữ liệu gửi lên máy chủ không đúng định dạng.",
-  3001: "Ràng buộc dữ liệu bị vi phạm.",
-  4008: "Không tìm thấy thông tin hội viên.",
-  4100: "Số dư lượt tư vấn không đủ để thực hiện thao tác này.",
-  4103: "Xung đột mã yêu cầu (Idempotency Key). Vui lòng thử lại với yêu cầu mới.",
-  4104: "Số dư ví lượt đã đạt giới hạn tối đa cho phép. Vui lòng liên hệ hỗ trợ.",
-  4105: "Gói lượt tư vấn hiện không khả dụng hoặc đã ngừng bán.",
-  4106: "Không tìm thấy thông tin đơn mua lượt hoặc đơn không thuộc về bạn.",
-  4108: "Chức năng mua lượt tư vấn tạm thời chưa khả dụng trong hệ thống.",
-  4109: "Không tìm thấy thông tin gói lượt quản trị.",
-  4110: "Dữ liệu gói đã bị thay đổi bởi quản trị viên khác. Vui lòng tải lại dữ liệu mới nhất.",
-  4111: "Phiên tư vấn không đủ điều kiện để bồi hoàn lượt tư vấn.",
-  9999: "Hệ thống đang bảo trì hoặc gặp sự cố xử lý. Vui lòng thử lại sau.",
+  get 1003() { return i18n.t("credits:errorCode.c1003") },
+  get 1201() { return i18n.t("credits:errorCode.c1201") },
+  get 1203() { return i18n.t("credits:errorCode.c1203") },
+  get 3001() { return i18n.t("credits:errorCode.c3001") },
+  get 4008() { return i18n.t("credits:errorCode.c4008") },
+  get 4100() { return i18n.t("credits:errorCode.c4100") },
+  get 4103() { return i18n.t("credits:errorCode.c4103") },
+  get 4104() { return i18n.t("credits:errorCode.c4104") },
+  get 4105() { return i18n.t("credits:errorCode.c4105") },
+  get 4106() { return i18n.t("credits:errorCode.c4106") },
+  get 4108() { return i18n.t("credits:errorCode.c4108") },
+  get 4109() { return i18n.t("credits:errorCode.c4109") },
+  get 4110() { return i18n.t("credits:errorCode.c4110") },
+  get 4111() { return i18n.t("credits:errorCode.c4111") },
+  get 9999() { return i18n.t("credits:errorCode.c9999") },
 }
 
 /**
@@ -191,7 +194,7 @@ export const CREDIT_ERROR_CODE_MESSAGES: Record<number, string> = {
  */
 export function formatVnd(amount: number): string {
   if (typeof amount !== "number" || isNaN(amount)) return "0 ₫"
-  return new Intl.NumberFormat("vi-VN", {
+  return new Intl.NumberFormat(currentIntlLocale(), {
     style: "currency",
     currency: "VND",
     maximumFractionDigits: 0,
@@ -213,8 +216,8 @@ export function generateCreditIdempotencyKey(prefix = "hs-credit"): string {
  * Format số lượt hiển thị
  */
 export function formatCreditQuantity(qty: number): string {
-  if (typeof qty !== "number" || isNaN(qty)) return "0 lượt"
-  return `${qty.toLocaleString("vi-VN")} lượt`
+  if (typeof qty !== "number" || isNaN(qty)) return i18n.t("credits:quantity.credits", { count: 0, value: 0 })
+  return i18n.t("credits:quantity.credits", { count: qty, value: qty.toLocaleString(currentIntlLocale()) })
 }
 
 /**
@@ -225,7 +228,7 @@ export function getCreditPackageStatusConfig(status?: string | null): StatusConf
     return CREDIT_PACKAGE_STATUS_CONFIG[status as CreditPackageStatus]
   }
   return {
-    label: status || "Không xác định",
+    label: status || i18n.t("credits:display.unknown"),
     className: "bg-muted text-muted-foreground border-border",
   }
 }
@@ -235,7 +238,7 @@ export function getCreditReservationStatusConfig(status?: string | null): Status
     return CREDIT_RESERVATION_STATUS_CONFIG[status as CreditReservationStatus]
   }
   return {
-    label: status || "Không có tạm giữ",
+    label: status || i18n.t("credits:reservationStatus.none"),
     className: "bg-muted text-muted-foreground border-border",
   }
 }
@@ -245,7 +248,7 @@ export function getCreditOrderStatusConfig(status?: string | null): StatusConfig
     return CREDIT_ORDER_STATUS_CONFIG[status as CreditOrderStatus]
   }
   return {
-    label: status || "Không xác định",
+    label: status || i18n.t("credits:display.unknown"),
     className: "bg-muted text-muted-foreground border-border",
   }
 }
@@ -255,7 +258,7 @@ export function getCreditPaymentStatusConfig(status?: string | null): StatusConf
     return CREDIT_PAYMENT_STATUS_CONFIG[status as CreditPaymentStatus]
   }
   return {
-    label: status || "Không xác định",
+    label: status || i18n.t("credits:display.unknown"),
     className: "bg-muted text-muted-foreground border-border",
   }
 }
@@ -265,8 +268,8 @@ export function getCreditPaymentProviderConfig(provider?: string | null): { labe
     return CREDIT_PAYMENT_PROVIDER_CONFIG[provider as CreditPaymentProvider]
   }
   return {
-    label: provider || "Thanh toán giả lập",
-    description: "Phương thức thanh toán",
+    label: provider || i18n.t("credits:paymentProvider.mock.label"),
+    description: i18n.t("credits:paymentProvider.fallbackDescription"),
   }
 }
 
@@ -275,8 +278,8 @@ export function getCreditOperationConfig(op?: string | null) {
     return CREDIT_OPERATION_CONFIG[op as CreditOperation]
   }
   return {
-    label: op || "Khác",
-    description: "Biến động lượt",
+    label: op || i18n.t("credits:operation.fallbackLabel"),
+    description: i18n.t("credits:operation.fallbackDescription"),
     className: "bg-muted text-muted-foreground border-border",
   }
 }
@@ -286,7 +289,7 @@ export function getCreditSourceTypeConfig(sourceType?: string | null) {
     return CREDIT_SOURCE_TYPE_CONFIG[sourceType as CreditSourceType]
   }
   return {
-    label: sourceType || "Nguồn khác",
+    label: sourceType || i18n.t("credits:sourceType.fallback"),
     isOrder: false,
   }
 }
@@ -301,13 +304,13 @@ export function getCreditDisplay(snapshot?: {
   if (!snapshot?.creditPolicy) return null
   if (snapshot.creditPolicy === "PER_SESSION_CONFIRM_V2") {
     return snapshot.creditReservationStatus === "CAPTURED"
-      ? "Đã sử dụng lượt tư vấn"
-      : "Lượt sẽ được trừ khi bạn xác nhận bắt đầu phiên"
+      ? i18n.t("credits:display.creditUsed")
+      : i18n.t("credits:display.chargedOnConfirm")
   }
   if (snapshot.creditPolicy === "PER_SESSION_V1") {
-    if (snapshot.creditReservationStatus === "HELD") return "Lượt đang được tạm giữ"
-    if (snapshot.creditReservationStatus === "CAPTURED") return "Đã sử dụng lượt tư vấn"
-    if (snapshot.creditReservationStatus === "RELEASED") return "Lượt đã được trả lại"
+    if (snapshot.creditReservationStatus === "HELD") return i18n.t("credits:display.held")
+    if (snapshot.creditReservationStatus === "CAPTURED") return i18n.t("credits:display.creditUsed")
+    if (snapshot.creditReservationStatus === "RELEASED") return i18n.t("credits:display.released")
   }
   return null
 }
@@ -316,15 +319,16 @@ export function getCreditDisplay(snapshot?: {
  * Mã lỗi nghiệp vụ khi xác nhận phiên tư vấn (V20 Section 9)
  */
 export const CONSULTATION_CONFIRM_ERROR_MESSAGES: Record<number, string> = {
-  4100: "Không còn đủ lượt tại thời điểm bắt đầu phiên. Vui lòng nạp thêm lượt.",
-  4026: "Không tìm thấy lời mời tư vấn hoặc đã bị thu hồi.",
-  4027: "Lời mời tư vấn cũ hoặc không còn hiệu lực.",
-  4028: "Lời mời tư vấn đã hết thời gian xác nhận.",
-  4009: "Yêu cầu tư vấn không còn ở trạng thái cho phép xác nhận.",
-  4014: "Bác sĩ không còn đủ điều kiện nhận phiên. Đang điều phối lại...",
-  4002: "Yêu cầu tư vấn không thuộc về tài khoản của bạn.",
-  4004: "Bạn đã có phiên tư vấn khác đang hoạt động.",
+  get 4100() { return i18n.t("credits:confirmError.c4100") },
+  get 4026() { return i18n.t("credits:confirmError.c4026") },
+  get 4027() { return i18n.t("credits:confirmError.c4027") },
+  get 4028() { return i18n.t("credits:confirmError.c4028") },
+  get 4009() { return i18n.t("credits:confirmError.c4009") },
+  get 4014() { return i18n.t("credits:confirmError.c4014") },
+  get 4002() { return i18n.t("credits:confirmError.c4002") },
+  get 4004() { return i18n.t("credits:confirmError.c4004") },
 }
+
 
 export const VN_TIMEZONE_OFFSET_HOURS = 7
 export const VN_TIMEZONE_OFFSET_MS = VN_TIMEZONE_OFFSET_HOURS * 60 * 60 * 1000
@@ -422,7 +426,7 @@ export function getPaymentDateRangePreset(preset: PaymentDatePreset): { from?: s
 export function formatDateTime(isoString?: string | null): string {
   if (!isoString) return "—"
   try {
-    return new Intl.DateTimeFormat("vi-VN", {
+    return new Intl.DateTimeFormat(currentIntlLocale(), {
       year: "numeric",
       month: "2-digit",
       day: "2-digit",

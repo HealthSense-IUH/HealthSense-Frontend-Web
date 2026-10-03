@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { useTranslation } from "react-i18next"
 import { Plus, Trash2 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -30,6 +31,7 @@ export function DoctorCareProfileDialog({
   onOpenChange: (open: boolean) => void
   onSuccess?: () => void
 }) {
+  const { t } = useTranslation("consultation")
   const { toast } = useToast()
   const [loading, setLoading] = useState(false)
   const [profile, setProfile] = useState<DoctorCareProfilePayload | null>(null)
@@ -74,15 +76,15 @@ export function DoctorCareProfileDialog({
           } else if (code === 4007) {
             toast({
               variant: "destructive",
-              title: "Tài khoản không hợp lệ",
-              description: err?.response?.data?.message || "Tài khoản bác sĩ không tồn tại hoặc đã ngừng hoạt động.",
+              title: t("careProfileDialog.toast.invalidAccountTitle"),
+              description: err?.response?.data?.message || t("careProfileDialog.toast.invalidAccountDescription"),
             })
             onOpenChange(false)
           } else {
             toast({
               variant: "destructive",
-              title: "Lỗi",
-              description: err?.response?.data?.message || "Không thể tải hồ sơ chăm sóc của bác sĩ.",
+              title: t("careProfileDialog.toast.errorTitle"),
+              description: err?.response?.data?.message || t("careProfileDialog.toast.loadError"),
             })
             onOpenChange(false)
           }
@@ -91,7 +93,7 @@ export function DoctorCareProfileDialog({
     } else {
       setProfile(null)
     }
-  }, [open, doctorId, onOpenChange, toast])
+  }, [open, doctorId, onOpenChange, toast, t])
 
   const addRow = () => {
     if (!profile) return
@@ -133,22 +135,22 @@ export function DoctorCareProfileDialog({
     // Validation
     if (profile.acceptsOneOnOneCare) {
       if (!profile.specialty) {
-        toast({ variant: "destructive", description: "Vui lòng chọn chuyên khoa khi tiếp nhận tư vấn 1-1." })
+        toast({ variant: "destructive", description: t("careProfileDialog.validation.specialtyRequired") })
         return
       }
       if (profile.availability.weekly.length === 0) {
-        toast({ variant: "destructive", description: "Cần có ít nhất một khung giờ làm việc." })
+        toast({ variant: "destructive", description: t("careProfileDialog.validation.slotRequired") })
         return
       }
     }
 
     if (profile.maxActiveConsultations <= 0) {
-      toast({ variant: "destructive", description: "Số ca tư vấn tối đa phải lớn hơn 0." })
+      toast({ variant: "destructive", description: t("careProfileDialog.validation.maxConsultationsPositive") })
       return
     }
 
     if (!profile.timezone?.trim()) {
-      toast({ variant: "destructive", description: "Múi giờ không được để trống." })
+      toast({ variant: "destructive", description: t("careProfileDialog.validation.timezoneRequired") })
       return
     }
 
@@ -156,7 +158,7 @@ export function DoctorCareProfileDialog({
     if (profile.acceptsOneOnOneCare && profile.availability.weekly.length === 0) {
       toast({
         variant: "destructive",
-        description: "Vui lòng thêm ít nhất một khung giờ làm việc khi bật tiếp nhận tư vấn 1-1.",
+        description: t("careProfileDialog.validation.slotRequiredWhenAccepting"),
       })
       return
     }
@@ -165,23 +167,23 @@ export function DoctorCareProfileDialog({
     for (let i = 0; i < profile.availability.weekly.length; i++) {
       const row = profile.availability.weekly[i]
       if (!row.dayOfWeek || !row.start || !row.end) {
-        toast({ variant: "destructive", description: `Dòng ${i + 1} thiếu thông tin bắt buộc.` })
+        toast({ variant: "destructive", description: t("careProfileDialog.validation.rowMissingFields", { row: i + 1 }) })
         return
       }
       if (row.start >= row.end) {
-        toast({ variant: "destructive", description: `Dòng ${i + 1}: Giờ bắt đầu phải trước giờ kết thúc.` })
+        toast({ variant: "destructive", description: t("careProfileDialog.validation.rowStartBeforeEnd", { row: i + 1 }) })
         return
       }
     }
 
     const DAY_NAMES_VN: Record<string, string> = {
-      MONDAY: "Thứ Hai",
-      TUESDAY: "Thứ Ba",
-      WEDNESDAY: "Thứ Tư",
-      THURSDAY: "Thứ Năm",
-      FRIDAY: "Thứ Sáu",
-      SATURDAY: "Thứ Bảy",
-      SUNDAY: "Chủ Nhật",
+      MONDAY: t("days.monday"),
+      TUESDAY: t("days.tuesday"),
+      WEDNESDAY: t("days.wednesday"),
+      THURSDAY: t("days.thursday"),
+      FRIDAY: t("days.friday"),
+      SATURDAY: t("days.saturday"),
+      SUNDAY: t("days.sunday"),
     }
 
     // Overlap validation
@@ -191,7 +193,7 @@ export function DoctorCareProfileDialog({
       daySlots.sort((a, b) => a.start.localeCompare(b.start))
       for (let i = 0; i < daySlots.length - 1; i++) {
         if (daySlots[i].end > daySlots[i + 1].start) {
-          toast({ variant: "destructive", description: `Phát hiện khung giờ bị trùng lặp vào ${DAY_NAMES_VN[day] || day}.` })
+          toast({ variant: "destructive", description: t("careProfileDialog.validation.overlap", { day: DAY_NAMES_VN[day] || day }) })
           return
         }
       }
@@ -201,16 +203,16 @@ export function DoctorCareProfileDialog({
       setLoading(true)
       await consultationApi.updateDoctorCareProfile(doctorId, profile)
       toast({
-        title: "Thành công",
-        description: "Đã cập nhật hồ sơ chăm sóc bác sĩ.",
+        title: t("careProfileDialog.toast.successTitle"),
+        description: t("careProfileDialog.toast.successDescription"),
       })
       onSuccess?.()
       onOpenChange(false)
     } catch (error: any) {
       toast({
         variant: "destructive",
-        title: "Lỗi",
-        description: error.response?.data?.message || "Không thể cập nhật hồ sơ chăm sóc",
+        title: t("careProfileDialog.toast.errorTitle"),
+        description: error.response?.data?.message || t("careProfileDialog.toast.updateError"),
       })
     } finally {
       setLoading(false)
@@ -221,21 +223,21 @@ export function DoctorCareProfileDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-xl">
         <DialogHeader>
-          <DialogTitle>Hồ sơ chăm sóc của Bác sĩ</DialogTitle>
+          <DialogTitle>{t("careProfileDialog.title")}</DialogTitle>
           <DialogDescription>
-            Quản lý điều kiện tiếp nhận và lịch làm việc hàng tuần cho tư vấn 1-1.
+            {t("careProfileDialog.description")}
           </DialogDescription>
         </DialogHeader>
         
         {loading && !profile ? (
-          <div className="p-4 text-center text-sm text-muted-foreground">Đang tải hồ sơ...</div>
+          <div className="p-4 text-center text-sm text-muted-foreground">{t("careProfileDialog.loading")}</div>
         ) : profile ? (
           <ScrollArea className="max-h-[60vh]">
             <div className="flex flex-col gap-6 py-4 pr-4">
               <div className="flex items-center justify-between p-3 border rounded-lg bg-muted/20">
                 <Label className="flex flex-col gap-1 cursor-pointer">
-                  <span className="font-semibold text-base">Tiếp nhận tư vấn 1-1</span>
-                  <span className="font-normal text-xs text-muted-foreground">Bật để cho phép điều phối viên chỉ định yêu cầu tư vấn</span>
+                  <span className="font-semibold text-base">{t("careProfileDialog.acceptsOneOnOneCare")}</span>
+                  <span className="font-normal text-xs text-muted-foreground">{t("careProfileDialog.acceptsOneOnOneCareHint")}</span>
                 </Label>
                 <Switch
                   checked={profile.acceptsOneOnOneCare}
@@ -245,22 +247,22 @@ export function DoctorCareProfileDialog({
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex flex-col gap-2">
-                  <Label>Chuyên khoa</Label>
+                  <Label>{t("careProfileDialog.specialtyLabel")}</Label>
                   <Select value={profile.specialty} onValueChange={(v: DoctorSpecialty) => setProfile(p => p ? ({ ...p, specialty: v }) : null)}>
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="GENERAL_PRACTICE">Đa khoa</SelectItem>
-                      <SelectItem value="CARDIOLOGY">Tim mạch</SelectItem>
-                      <SelectItem value="INTERNAL_MEDICINE">Nội khoa</SelectItem>
-                      <SelectItem value="OTHER">Khác</SelectItem>
+                      <SelectItem value="GENERAL_PRACTICE">{t("careProfileDialog.specialties.generalPractice")}</SelectItem>
+                      <SelectItem value="CARDIOLOGY">{t("careProfileDialog.specialties.cardiology")}</SelectItem>
+                      <SelectItem value="INTERNAL_MEDICINE">{t("careProfileDialog.specialties.internalMedicine")}</SelectItem>
+                      <SelectItem value="OTHER">{t("careProfileDialog.specialties.other")}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
                 <div className="flex flex-col gap-2">
-                  <Label>Số ca phụ trách tối đa</Label>
+                  <Label>{t("careProfileDialog.maxConsultationsLabel")}</Label>
                   <Input 
                     type="number" 
                     min={1} 
@@ -271,25 +273,25 @@ export function DoctorCareProfileDialog({
               </div>
 
               <div className="flex flex-col gap-2">
-                <Label>Múi giờ</Label>
+                <Label>{t("careProfileDialog.timezoneLabel")}</Label>
                 <Input 
                   value={profile.timezone} 
                   onChange={(e) => setProfile(p => p ? ({ ...p, timezone: e.target.value }) : null)}
-                  placeholder="VD: Asia/Ho_Chi_Minh"
+                  placeholder={t("careProfileDialog.timezonePlaceholder")}
                 />
               </div>
 
               <div className="flex flex-col gap-3">
                 <div className="flex items-center justify-between">
-                  <Label>Lịch làm việc trong tuần</Label>
+                  <Label>{t("careProfileDialog.weeklyScheduleLabel")}</Label>
                   <Button variant="outline" size="sm" onClick={addRow} className="h-7 text-xs">
-                    <Plus className="w-3 h-3 mr-1" /> Thêm khung giờ
+                    <Plus className="w-3 h-3 mr-1" /> {t("careProfileDialog.addSlot")}
                   </Button>
                 </div>
                 
                 {profile.availability.weekly.length === 0 ? (
                   <div className="text-center p-6 border rounded-lg border-dashed text-sm text-muted-foreground">
-                    Chưa cấu hình khung giờ làm việc.
+                    {t("careProfileDialog.noSlots")}
                   </div>
                 ) : (
                   <div className="flex flex-col gap-2">
@@ -300,13 +302,13 @@ export function DoctorCareProfileDialog({
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="MONDAY">Thứ Hai</SelectItem>
-                            <SelectItem value="TUESDAY">Thứ Ba</SelectItem>
-                            <SelectItem value="WEDNESDAY">Thứ Tư</SelectItem>
-                            <SelectItem value="THURSDAY">Thứ Năm</SelectItem>
-                            <SelectItem value="FRIDAY">Thứ Sáu</SelectItem>
-                            <SelectItem value="SATURDAY">Thứ Bảy</SelectItem>
-                            <SelectItem value="SUNDAY">Chủ Nhật</SelectItem>
+                            <SelectItem value="MONDAY">{t("days.monday")}</SelectItem>
+                            <SelectItem value="TUESDAY">{t("days.tuesday")}</SelectItem>
+                            <SelectItem value="WEDNESDAY">{t("days.wednesday")}</SelectItem>
+                            <SelectItem value="THURSDAY">{t("days.thursday")}</SelectItem>
+                            <SelectItem value="FRIDAY">{t("days.friday")}</SelectItem>
+                            <SelectItem value="SATURDAY">{t("days.saturday")}</SelectItem>
+                            <SelectItem value="SUNDAY">{t("days.sunday")}</SelectItem>
                           </SelectContent>
                         </Select>
                         
@@ -335,12 +337,12 @@ export function DoctorCareProfileDialog({
             </div>
           </ScrollArea>
         ) : (
-          <div className="p-4 text-center text-sm text-muted-foreground">Không tìm thấy hồ sơ.</div>
+          <div className="p-4 text-center text-sm text-muted-foreground">{t("careProfileDialog.notFound")}</div>
         )}
         
         <DialogFooter className="mt-4">
-          <Button variant="outline" onClick={() => onOpenChange(false)}>Hủy</Button>
-          <Button onClick={handleSubmit} disabled={loading || !profile}>Lưu thay đổi</Button>
+          <Button variant="outline" onClick={() => onOpenChange(false)}>{t("careProfileDialog.cancel")}</Button>
+          <Button onClick={handleSubmit} disabled={loading || !profile}>{t("careProfileDialog.save")}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

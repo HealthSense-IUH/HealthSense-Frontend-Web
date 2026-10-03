@@ -8,6 +8,7 @@ import {
   Ban,
   LayoutGrid,
 } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 import { Page, PageBody, PageFooter, PageHeader, PageSection } from "@/components/layout/page"
 import { Button } from "@/components/ui/button"
@@ -17,9 +18,11 @@ import { ReferenceFoodBrowser } from "./components/ReferenceFoodBrowser"
 import { FoodGroupIcon } from "./group-icons"
 import { useNutritionGroup, useNutritionGroupFoods, useNutritionGroups } from "./hooks/use-nutrition"
 import type { GuidanceType } from "@/types/nutrition"
+import { currentIntlLocale } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
 
 export default function CategoryExplorerPage() {
+  const { t } = useTranslation("nutrition")
   const { categoryId } = useParams<{ categoryId: string }>()
   const [searchParams, setSearchParams] = useSearchParams()
   const navigate = useNavigate()
@@ -74,8 +77,8 @@ export default function CategoryExplorerPage() {
   if (!currentCategory) {
     return (
       <div className="max-w-md mx-auto p-6 text-center space-y-4">
-        <p className="text-muted-foreground">Không tìm thấy nhóm thực phẩm.</p>
-        <Button onClick={() => navigate("/app/general/nutrition")}>Quay lại trang dinh dưỡng</Button>
+        <p className="text-muted-foreground">{t("category.notFound")}</p>
+        <Button onClick={() => navigate("/app/general/nutrition")}>{t("category.backToNutrition")}</Button>
       </div>
     )
   }
@@ -86,7 +89,7 @@ export default function CategoryExplorerPage() {
     <Page>
       <PageHeader
         breadcrumbs={[
-          { label: "Dinh dưỡng", to: "/app/general/nutrition" },
+          { label: t("common.breadcrumbNutrition"), to: "/app/general/nutrition" },
           selectedFoodName
             ? {
                 label: currentCategory.name,
@@ -99,11 +102,11 @@ export default function CategoryExplorerPage() {
           ...(selectedFoodName ? [{ label: selectedFoodName }] : []),
         ]}
         icon={defaultIcon}
-        eyebrow="Nhóm thực phẩm"
+        eyebrow={t("category.eyebrow")}
         title={selectedFoodName ?? currentCategory.name}
         description={
           selectedFoodName
-            ? `Các biến thể của ${selectedFoodName} trong nhóm ${currentCategory.name.toLowerCase()}, phân loại theo mức độ khuyến nghị cho tim mạch và rung nhĩ.`
+            ? t("category.variantsDescription", { food: selectedFoodName, group: currentCategory.name.toLowerCase() })
             : currentCategory.description
         }
       />
@@ -113,8 +116,8 @@ export default function CategoryExplorerPage() {
         {/* VIEW 1: Khi chưa chọn món cụ thể -> SHOW DANH SÁCH CÁC LOẠI CÓ KHUYẾN NGHỊ (Cá hồi, Cá thu, Cá ngừ...) */}
         {!selectedFoodName && (isFoodsLoading || foodNames.length > 0) && (
           <PageSection
-            title={`Có khuyến nghị cho tim mạch (${foodNames.length})`}
-            description="Chọn một loại để xem các biến thể và khuyến nghị dinh dưỡng."
+            title={t("category.recommendedTitle", { count: foodNames.length })}
+            description={t("category.recommendedDescription")}
           >
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
@@ -141,19 +144,19 @@ export default function CategoryExplorerPage() {
                           {fn}
                         </h3>
                         <span className="shrink-0 text-[11px] font-medium text-muted-foreground bg-slate-50 px-2 py-0.5 rounded-full border border-slate-100">
-                          {count} món
+                          {t("category.itemCount", { count })}
                         </span>
                       </div>
                       {sampleVariants && (
                         <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
-                          Gồm có: {sampleVariants}
+                          {t("category.includes", { items: sampleVariants })}
                           {count > 3 ? "..." : ""}
                         </p>
                       )}
                     </div>
 
                     <div className="pt-3 mt-4 w-full border-t border-slate-100 flex items-center justify-between text-xs text-primary font-medium">
-                      <span>Xem các lựa chọn</span>
+                      <span>{t("category.viewOptions")}</span>
                       <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                     </div>
                   </button>
@@ -167,8 +170,8 @@ export default function CategoryExplorerPage() {
         {selectedFoodName && (
           <div className="space-y-6">
             <PageSection
-              title={`Các lựa chọn của ${selectedFoodName}`}
-              description="Mỗi biến thể kèm khuyến nghị cụ thể cho tim mạch."
+              title={t("category.optionsTitle", { food: selectedFoodName })}
+              description={t("category.optionsDescription")}
               actions={
                 <Button
                   variant="outline"
@@ -180,7 +183,7 @@ export default function CategoryExplorerPage() {
                   className="text-xs gap-1.5"
                 >
                   <ArrowLeft className="w-3.5 h-3.5" />
-                  <span>Xem các loại {currentCategory.name.toLowerCase()} khác</span>
+                  <span>{t("category.otherTypes", { group: currentCategory.name.toLowerCase() })}</span>
                 </Button>
               }
             />
@@ -198,7 +201,7 @@ export default function CategoryExplorerPage() {
                 )}
               >
                 <LayoutGrid className="w-3.5 h-3.5" />
-                <span>Tất cả</span>
+                <span>{t("common.all")}</span>
                 <span className="text-[11px] opacity-80">({counts.all})</span>
               </button>
 
@@ -214,7 +217,7 @@ export default function CategoryExplorerPage() {
                   )}
                 >
                   <CheckCircle2 className="w-3.5 h-3.5" />
-                  <span>Nên ưu tiên</span>
+                  <span>{t("guidance.PRIORITIZE")}</span>
                   <span className="text-[11px] opacity-80">({counts.prioritize})</span>
                 </button>
               )}
@@ -231,7 +234,7 @@ export default function CategoryExplorerPage() {
                   )}
                 >
                   <AlertTriangle className="w-3.5 h-3.5" />
-                  <span>Cần lưu ý</span>
+                  <span>{t("guidance.CAUTION")}</span>
                   <span className="text-[11px] opacity-80">({counts.caution})</span>
                 </button>
               )}
@@ -248,7 +251,7 @@ export default function CategoryExplorerPage() {
                   )}
                 >
                   <Ban className="w-3.5 h-3.5" />
-                  <span>Nên hạn chế</span>
+                  <span>{t("guidance.LIMIT")}</span>
                   <span className="text-[11px] opacity-80">({counts.limit})</span>
                 </button>
               )}
@@ -267,7 +270,7 @@ export default function CategoryExplorerPage() {
               </div>
             ) : (
               <div className="rounded-2xl border border-dashed border-slate-200 p-6 text-center text-muted-foreground text-sm">
-                Không có món nào thuộc nhóm khuyến nghị này.
+                {t("category.noVariants")}
               </div>
             )}
           </div>
@@ -276,8 +279,10 @@ export default function CategoryExplorerPage() {
         {/* VIEW 1b: Mọi thực phẩm của nhóm trong cơ sở dữ liệu tham chiếu (Việt Nam + USDA), chỉ có số liệu */}
         {!selectedFoodName && (
           <PageSection
-            title={`Tất cả thực phẩm trong nhóm (${(currentCategory.foodCount ?? 0).toLocaleString("vi-VN")})`}
-            description="Số liệu trên 100 g phần ăn được từ Bảng thành phần thực phẩm Việt Nam và USDA FNDDS. Màu của từng món theo đơn ăn uống bác sĩ kê (nếu có)."
+            title={t("category.allFoodsTitle", {
+              value: (currentCategory.foodCount ?? 0).toLocaleString(currentIntlLocale()),
+            })}
+            description={t("category.allFoodsDescription")}
             className={cn(foodNames.length > 0 && "border-t border-border pt-6")}
           >
             <ReferenceFoodBrowser fixedGroup={currentCategory.id} layout="cards" />
@@ -289,7 +294,7 @@ export default function CategoryExplorerPage() {
       {/* Switch Group Quick Links */}
       <PageFooter>
         <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-          Khám phá nhóm thực phẩm khác
+          {t("category.otherGroups")}
         </h2>
         <div className="flex flex-wrap gap-2">
           {categories

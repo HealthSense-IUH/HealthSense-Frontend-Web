@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from "react"
 import { useNavigate } from "react-router-dom"
+import { Trans, useTranslation } from "react-i18next"
 import { Send, Activity, AlertCircle, Coins, Stethoscope, ChevronRight, CheckCircle2, Clock, Users, ArrowLeft } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -60,6 +61,7 @@ export function CreateRequestPanel({
   onPendingConflict?: () => void
   onCancel?: () => void
 }) {
+  const { t } = useTranslation("consultation")
   const navigate = useNavigate()
   const [isConfirmOpen, setIsConfirmOpen] = useState(false)
 
@@ -104,9 +106,9 @@ export function CreateRequestPanel({
               <Stethoscope className="w-5 h-5" />
             </div>
             <div>
-              <CardTitle className="text-xl font-bold">Đăng ký Tư vấn Sức khỏe</CardTitle>
+              <CardTitle className="text-xl font-bold">{t("createRequestPanel.title")}</CardTitle>
               <CardDescription>
-                Yêu cầu của bạn sẽ được xếp vào hàng đợi trực tiếp (FIFO) và ghép nối tự động với bác sĩ đang trực.
+                {t("createRequestPanel.description")}
               </CardDescription>
             </div>
           </div>
@@ -118,7 +120,7 @@ export function CreateRequestPanel({
               onClick={onCancel}
               className="gap-1.5 text-xs rounded-xl shrink-0 cursor-pointer"
             >
-              <ArrowLeft className="w-3.5 h-3.5" /> Quay lại
+              <ArrowLeft className="w-3.5 h-3.5" /> {t("createRequestPanel.back")}
             </Button>
           )}
         </CardHeader>
@@ -129,9 +131,9 @@ export function CreateRequestPanel({
                 <div className="flex items-start sm:items-center gap-2.5">
                   <Clock className="w-5 h-5 text-warning-600 shrink-0 mt-0.5 sm:mt-0" />
                   <div>
-                    <p className="font-semibold text-sm text-foreground">Bạn đang có yêu cầu tư vấn trong hàng đợi</p>
+                    <p className="font-semibold text-sm text-foreground">{t("createRequestPanel.activeQueue.title")}</p>
                     <p className="text-xs text-muted-foreground mt-0.5">
-                      Hệ thống ghi nhận bạn đã có yêu cầu tư vấn đang chờ xử lý. Mỗi hội viên chỉ có thể tham gia 1 yêu cầu tư vấn tại một thời điểm.
+                      {t("createRequestPanel.activeQueue.description")}
                     </p>
                   </div>
                 </div>
@@ -142,7 +144,7 @@ export function CreateRequestPanel({
                   onClick={() => navigate("/app/general/consultations?tab=queue")}
                 >
                   <Users className="w-3.5 h-3.5" />
-                  Xem hàng đợi hiện tại
+                  {t("createRequestPanel.activeQueue.viewQueue")}
                 </Button>
               </div>
             )}
@@ -152,9 +154,14 @@ export function CreateRequestPanel({
                 <div className="flex items-start sm:items-center gap-2.5">
                   <AlertCircle className="w-5 h-5 text-warning-600 shrink-0 mt-0.5 sm:mt-0" />
                   <div>
-                    <p className="font-semibold text-sm text-foreground">Bạn không đủ lượt tư vấn để vào hàng đợi</p>
+                    <p className="font-semibold text-sm text-foreground">{t("createRequestPanel.insufficient.title")}</p>
                     <p className="text-xs text-muted-foreground mt-0.5">
-                      Số dư khả dụng hiện tại: <span className="font-bold text-foreground">{availableCredits ?? 0} lượt</span>. Vui lòng mua thêm gói lượt để tiếp tục.
+                      <Trans
+                        t={t}
+                        i18nKey="createRequestPanel.insufficient.description"
+                        count={availableCredits ?? 0}
+                        components={{ strong: <span className="font-bold text-foreground" /> }}
+                      />
                     </p>
                   </div>
                 </div>
@@ -165,7 +172,7 @@ export function CreateRequestPanel({
                   onClick={() => navigate("/app/general/consultations?tab=credits")}
                 >
                   <Coins className="w-3.5 h-3.5" />
-                  Mua thêm lượt tư vấn
+                  {t("createRequestPanel.insufficient.buyCredits")}
                 </Button>
               </div>
             )}
@@ -175,7 +182,7 @@ export function CreateRequestPanel({
               <div className="flex items-center justify-between">
                 <Label className="text-sm font-semibold flex items-center gap-1.5">
                   <Activity className="w-4 h-4 text-primary" />
-                  Hồ sơ đo đạc tim mạch đính kèm
+                  {t("createRequestPanel.records.label")}
                 </Label>
               </div>
 
@@ -184,9 +191,9 @@ export function CreateRequestPanel({
                   <div className="flex items-start gap-2.5">
                     <AlertCircle className="w-5 h-5 text-danger-600 shrink-0 mt-0.5" />
                     <div>
-                      <p className="font-semibold text-sm text-foreground">Chưa có dữ liệu đo điện tim (ECG)</p>
+                      <p className="font-semibold text-sm text-foreground">{t("createRequestPanel.records.emptyTitle")}</p>
                       <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
-                        Để bác sĩ có cơ sở chẩn đoán tình trạng tim mạch của bạn, bạn cần thực hiện ít nhất một lần đo điện tim bằng thiết bị trước khi đăng ký tư vấn.
+                        {t("createRequestPanel.records.emptyDescription")}
                       </p>
                     </div>
                   </div>
@@ -197,7 +204,7 @@ export function CreateRequestPanel({
                     className="w-full sm:w-auto h-9 text-xs font-medium border-danger-300 hover:bg-danger-100 gap-1.5 cursor-pointer"
                     onClick={() => navigate("/app/general/dashboard")}
                   >
-                    <span>Đi đến bảng điều khiển & kết nối thiết bị</span>
+                    <span>{t("createRequestPanel.records.goToDashboard")}</span>
                     <ChevronRight className="w-3.5 h-3.5" />
                   </Button>
                 </div>
@@ -219,12 +226,12 @@ export function CreateRequestPanel({
                     </div>
                     <Badge className="bg-success-600/15 text-success-700 border-0 text-[11px] font-semibold flex items-center gap-1 shrink-0">
                       <CheckCircle2 className="w-3 h-3" />
-                      Tự động đính kèm mới nhất
+                      {t("createRequestPanel.records.autoAttached")}
                     </Badge>
                   </div>
                   <div className="flex items-center justify-between text-xs text-muted-foreground pt-1 border-t border-primary/10">
-                    <span>Thời gian đo: {formatDate(latestRecord?.createdAt)}</span>
-                    <span className="italic">Dữ liệu dạng sóng ECG này sẽ được chia sẻ cho bác sĩ</span>
+                    <span>{t("createRequestPanel.records.measuredAt", { time: formatDate(latestRecord?.createdAt) })}</span>
+                    <span className="italic">{t("createRequestPanel.records.shareNotice")}</span>
                   </div>
                 </div>
               )}
@@ -235,12 +242,12 @@ export function CreateRequestPanel({
               <div className="grid grid-cols-1 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="reasonForCare" className="text-sm font-semibold">
-                    Lý do đăng ký chăm sóc / tư vấn <span className="text-danger-500">*</span>
+                    {t("createRequestPanel.form.reasonLabel")} <span className="text-danger-500">*</span>
                   </Label>
                   <Input
                     id="reasonForCare"
                     required
-                    placeholder="VD: Nhịp tim không đều sau khi tập thể dục, cần tư vấn chuyên khoa tim mạch..."
+                    placeholder={t("createRequestPanel.form.reasonPlaceholder")}
                     value={form.reasonForCare}
                     onChange={(e) => onChange({ ...form, reasonForCare: e.target.value, reason: e.target.value })}
                     className="rounded-xl h-11"
@@ -250,13 +257,13 @@ export function CreateRequestPanel({
 
                 <div className="space-y-2">
                   <Label htmlFor="currentConcern" className="text-sm font-semibold">
-                    Triệu chứng & Vấn đề lo ngại hiện tại <span className="text-danger-500">*</span>
+                    {t("createRequestPanel.form.concernLabel")} <span className="text-danger-500">*</span>
                   </Label>
                   <Textarea
                     id="currentConcern"
                     required
                     rows={3}
-                    placeholder="Mô tả cụ thể triệu chứng: thời điểm xuất hiện, tần suất, cảm giác hồi hộp, khó thở, chóng mặt..."
+                    placeholder={t("createRequestPanel.form.concernPlaceholder")}
                     value={form.currentConcern}
                     onChange={(e) => onChange({ ...form, currentConcern: e.target.value })}
                     className="rounded-xl resize-none"
@@ -270,12 +277,12 @@ export function CreateRequestPanel({
               <AlertCircle className="w-4 h-4 text-primary shrink-0 mt-0.5 sm:mt-0" />
               <span>
                 {queueStatistics?.creditPolicy === "PER_SESSION_CONFIRM_V2"
-                  ? `Phiên tư vấn cần ${queueStatistics.creditCost ?? 1} lượt. Lượt chỉ được trừ khi bạn xác nhận bắt đầu phiên.`
+                  ? t("createRequestPanel.policy.perSessionConfirm", { count: queueStatistics.creditCost ?? 1 })
                   : queueStatistics?.creditPolicy === "PER_SESSION_V1"
-                  ? `Mỗi phiên tư vấn sử dụng ${queueStatistics.creditCost ?? 1} lượt. Lượt sẽ được tạm giữ khi vào hàng đợi và chỉ trừ khi bắt đầu phiên khám.`
+                  ? t("createRequestPanel.policy.perSession", { count: queueStatistics.creditCost ?? 1 })
                   : queueStatistics?.creditPolicy === "FREE_EXISTING" || queueStatistics?.creditPolicy === "FREE_DISABLED"
-                  ? "Phiên tư vấn miễn phí, không trừ lượt."
-                  : "Yêu cầu của bạn sẽ nhận số thứ tự cố định và được xếp vào hàng đợi trực tiếp (FIFO)."}
+                  ? t("createRequestPanel.policy.free")
+                  : t("createRequestPanel.policy.default")}
               </span>
             </div>
 
@@ -285,7 +292,7 @@ export function CreateRequestPanel({
               className="w-full h-11 rounded-xl text-base font-semibold gap-2 shadow-xs cursor-pointer"
             >
               <Send className="w-4 h-4" />
-              {loading ? "Đang gửi yêu cầu..." : "Gửi yêu cầu & Vào hàng đợi"}
+              {loading ? t("createRequestPanel.submitting") : t("createRequestPanel.submit")}
             </Button>
           </form>
         </CardContent>
@@ -297,31 +304,31 @@ export function CreateRequestPanel({
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-lg">
               <Stethoscope className="w-5 h-5 text-primary" />
-              Xác nhận vào hàng đợi tư vấn
+              {t("createRequestPanel.confirmDialog.title")}
             </DialogTitle>
             <DialogDescription>
-              Vui lòng kiểm tra lại thông tin trước khi hệ thống xếp bạn vào hàng đợi gặp bác sĩ.
+              {t("createRequestPanel.confirmDialog.description")}
             </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-3.5 py-2">
             <div className="rounded-xl border border-border bg-muted/20 p-3.5 space-y-2 text-xs">
               <div className="flex items-start justify-between gap-2">
-                <span className="text-muted-foreground shrink-0">Lý do tư vấn:</span>
+                <span className="text-muted-foreground shrink-0">{t("createRequestPanel.confirmDialog.reason")}</span>
                 <span className="font-semibold text-foreground text-right line-clamp-2">{form.reasonForCare}</span>
               </div>
               {latestRecord && (
                 <div className="flex items-center justify-between gap-2 pt-1 border-t border-border/50">
-                  <span className="text-muted-foreground shrink-0">Bản ghi ECG đính kèm:</span>
+                  <span className="text-muted-foreground shrink-0">{t("createRequestPanel.confirmDialog.attachedEcg")}</span>
                   <span className="font-medium text-foreground">
                     #{latestRecord.id} {latestRecord.predictionLabel ? `[${latestRecord.predictionLabel}]` : ""}
                   </span>
                 </div>
               )}
               <div className="flex items-center justify-between pt-1 border-t border-border/50">
-                <span className="text-muted-foreground">Lượt tư vấn khả dụng:</span>
+                <span className="text-muted-foreground">{t("createRequestPanel.confirmDialog.availableCredits")}</span>
                 <span className="font-bold text-success-600">
-                  {availableCredits !== undefined ? `${availableCredits} lượt` : "1 lượt"}
+                  {t("createRequestPanel.creditsCount", { count: availableCredits !== undefined ? availableCredits : 1 })}
                 </span>
               </div>
             </div>
@@ -329,9 +336,13 @@ export function CreateRequestPanel({
             <div className="flex items-start gap-2.5 p-3.5 bg-primary-500/10 border border-primary-500/20 rounded-xl text-xs text-primary-950">
               <AlertCircle className="w-4 h-4 text-primary-600 shrink-0 mt-0.5" />
               <div className="leading-relaxed">
-                Để tham gia hàng đợi, bạn cần có tối thiểu <strong>1 lượt tư vấn</strong>.
+                <Trans t={t} i18nKey="createRequestPanel.confirmDialog.minimumCredits" components={{ strong: <strong /> }} />
                 <br />
-                <span className="font-medium text-foreground">Quy định trừ lượt:</span> Lượt của bạn chỉ được trừ khi bác sĩ tiếp nhận và bạn bấm <strong>Xác nhận bắt đầu phiên tư vấn</strong>.
+                <Trans
+                  t={t}
+                  i18nKey="createRequestPanel.confirmDialog.deductionRule"
+                  components={{ label: <span className="font-medium text-foreground" />, strong: <strong /> }}
+                />
               </div>
             </div>
           </div>
@@ -344,7 +355,7 @@ export function CreateRequestPanel({
               disabled={loading}
               className="cursor-pointer"
             >
-              Kiểm tra lại
+              {t("createRequestPanel.confirmDialog.review")}
             </Button>
             <Button
               type="button"
@@ -353,7 +364,7 @@ export function CreateRequestPanel({
               onClick={handleConfirmSubmit}
             >
               <Send className="w-4 h-4" />
-              {loading ? "Đang gửi..." : "Xác nhận & Vào hàng đợi"}
+              {loading ? t("createRequestPanel.confirmDialog.sending") : t("createRequestPanel.confirmDialog.confirm")}
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
+import { useTranslation } from "react-i18next"
 
 import { RequestOtpForm } from "@/pages/public/forgot-password/components/request-otp-form"
 import { VerifyOtpForm } from "@/pages/public/forgot-password/components/verify-otp-form"
@@ -9,6 +10,7 @@ import { BrandSlogan } from "@/components/custom/BrandSlogan"
 type Step = "request" | "verify" | "reset" | "success"
 
 export default function ForgotPasswordPage() {
+  const { t } = useTranslation("auth")
   const location = useLocation()
   const navigate = useNavigate()
 
@@ -94,7 +96,7 @@ export default function ForgotPasswordPage() {
               onClick={() => navigate("/login")}
               className="bg-white text-primary hover:bg-slate-50 transition-colors px-6 py-2.5 rounded-full shadow-sm font-bold flex items-center gap-2 cursor-pointer"
             >
-              Sign In
+              {t("forgotPassword.signIn")}
             </button>
           </div>
         </nav>
@@ -127,13 +129,13 @@ export default function ForgotPasswordPage() {
           )}
 
           {/* Reserved area for general loading or state display if needed */}
-          {loading && <div className="text-center text-xs text-slate-400 mt-2">Processing request...</div>}
+          {loading && <div className="text-center text-xs text-slate-400 mt-2">{t("forgotPassword.processing")}</div>}
           {error && <div className="text-center text-xs text-danger-500 mt-2">{error}</div>}
         </div>
 
         {/* Debug / Info notice */}
         <div className="text-center mt-6 text-slate-400 text-xs max-w-sm">
-          Protected by HealthSense enterprise security. Need further assistance? Contact support.
+          {t("forgotPassword.securityNotice")}
         </div>
       </main>
     </div>

@@ -1,4 +1,5 @@
 import { Eye, Edit3, Trash2, ChevronLeft, ChevronRight, Inbox, Loader2, FilePlus, Stethoscope, FolderHeart } from "lucide-react"
+import { Trans, useTranslation } from "react-i18next"
 import { Button } from "@/components/ui/button"
 import { UserStatusBadge } from "./user-status-badge"
 import { USER_ROLES } from "@/constants"
@@ -38,6 +39,7 @@ export function UserTable({
   onManageCareProfile,
   onMemberDetail,
 }: UserTableProps) {
+  const { t } = useTranslation("management")
   const startItem = totalElements === 0 ? 0 : (page - 1) * size + 1
   const endItem = Math.min(page * size, totalElements)
 
@@ -52,13 +54,13 @@ export function UserTable({
         <table className="w-full text-left border-collapse min-w-[800px]">
           <thead>
             <tr className="border-b border-slate-100 bg-slate-50/70 text-[11px] font-extrabold uppercase tracking-wider text-slate-400">
-              <th className="py-3.5 px-5 w-16">ID</th>
-              <th className="py-3.5 px-5">Thành viên / Người dùng</th>
-              <th className="py-3.5 px-4">Vai trò</th>
-              <th className="py-3.5 px-4">Trạng thái</th>
-              <th className="py-3.5 px-4">Số điện thoại</th>
-              <th className="py-3.5 px-4">Ngày tạo</th>
-              <th className="py-3.5 px-5 text-right w-36">Thao tác</th>
+              <th className="py-3.5 px-5 w-16">{t("users.table.columns.id")}</th>
+              <th className="py-3.5 px-5">{t("users.table.columns.user")}</th>
+              <th className="py-3.5 px-4">{t("users.table.columns.role")}</th>
+              <th className="py-3.5 px-4">{t("users.table.columns.status")}</th>
+              <th className="py-3.5 px-4">{t("users.table.columns.phone")}</th>
+              <th className="py-3.5 px-4">{t("users.table.columns.createdAt")}</th>
+              <th className="py-3.5 px-5 text-right w-36">{t("users.table.columns.actions")}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100 text-xs font-medium">
@@ -68,7 +70,7 @@ export function UserTable({
                 <td colSpan={7} className="py-16 text-center text-slate-400">
                   <div className="flex flex-col items-center justify-center gap-3">
                     <Loader2 className="w-7 h-7 text-primary-600 animate-spin" />
-                    <span className="text-sm font-bold text-slate-700">Đang tải danh sách tài khoản người dùng...</span>
+                    <span className="text-sm font-bold text-slate-700">{t("users.table.loading")}</span>
                   </div>
                 </td>
               </tr>
@@ -80,9 +82,9 @@ export function UserTable({
                     <div className="p-4 rounded-full bg-slate-50 text-slate-400 border border-slate-200">
                       <Inbox className="w-8 h-8" />
                     </div>
-                    <h4 className="text-base font-extrabold text-slate-800">Không tìm thấy tài khoản phù hợp</h4>
+                    <h4 className="text-base font-extrabold text-slate-800">{t("users.table.emptyTitle")}</h4>
                     <p className="text-xs text-slate-500 max-w-sm">
-                      Hiện chưa có tài khoản nào khớp với tìm kiếm hoặc danh mục vai trò đã chọn.
+                      {t("users.table.emptyDescription")}
                     </p>
                   </div>
                 </td>
@@ -127,7 +129,7 @@ export function UserTable({
                       <button
                         type="button"
                         onClick={() => onView(item)}
-                        title="Xem chi tiết tài khoản"
+                        title={t("users.table.actions.view")}
                         className="p-2 rounded-lg text-slate-500 hover:text-primary-600 hover:bg-primary-50/80 transition-colors cursor-pointer"
                       >
                         <Eye className="w-4 h-4" />
@@ -136,7 +138,7 @@ export function UserTable({
                         <button
                           type="button"
                           onClick={() => onMemberDetail(item)}
-                          title="Xem chi tiết hồ sơ Member (Thông tin, Bản đo & Tư vấn)"
+                          title={t("users.table.actions.memberDetail")}
                           className="p-2 rounded-lg text-slate-500 hover:text-primary-600 hover:bg-primary-50/80 transition-colors cursor-pointer"
                         >
                           <FolderHeart className="w-4 h-4" />
@@ -146,7 +148,7 @@ export function UserTable({
                         <button
                           type="button"
                           onClick={() => onFakeRecord(item)}
-                          title="Tạo hồ sơ sức khỏe mẫu (giả lập)"
+                          title={t("users.table.actions.fakeRecord")}
                           className="p-2 rounded-lg text-slate-500 hover:text-success-600 hover:bg-success-50/80 transition-colors cursor-pointer"
                         >
                           <FilePlus className="w-4 h-4" />
@@ -156,7 +158,7 @@ export function UserTable({
                         <button
                           type="button"
                           onClick={() => onManageCareProfile(item)}
-                          title="Quản lý hồ sơ tư vấn & lịch nhận lịch"
+                          title={t("users.table.actions.careProfile")}
                           className="p-2 rounded-lg text-slate-500 hover:text-primary-600 hover:bg-primary-50/80 transition-colors cursor-pointer"
                         >
                           <Stethoscope className="w-4 h-4" />
@@ -165,7 +167,7 @@ export function UserTable({
                       <button
                         type="button"
                         onClick={() => onEdit(item)}
-                        title="Chỉnh sửa thông tin tài khoản"
+                        title={t("users.table.actions.edit")}
                         className="p-2 rounded-lg text-slate-500 hover:text-warning-600 hover:bg-warning-50/80 transition-colors cursor-pointer"
                       >
                         <Edit3 className="w-4 h-4" />
@@ -173,7 +175,7 @@ export function UserTable({
                       <button
                         type="button"
                         onClick={() => onDelete(item)}
-                        title="Xóa tài khoản"
+                        title={t("users.table.actions.delete")}
                         className="p-2 rounded-lg text-slate-500 hover:text-danger-600 hover:bg-danger-50/80 transition-colors cursor-pointer"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -191,15 +193,18 @@ export function UserTable({
       <div className="px-6 py-4 border-t border-slate-100 bg-slate-50/40 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 text-xs font-bold text-slate-500">
         <div className="flex items-center gap-4">
           <span>
-            Hiển thị <strong className="text-slate-800">{startItem}</strong> -{" "}
-            <strong className="text-slate-800">{endItem}</strong> trên tổng số{" "}
-            <strong className="text-slate-800">{totalElements}</strong> tài khoản
+            <Trans
+              t={t}
+              i18nKey="users.table.pagination.showing"
+              values={{ start: startItem, end: endItem, total: totalElements }}
+              components={{ b: <strong className="text-slate-800" /> }}
+            />
           </span>
 
           <div className="flex items-center gap-2 border-l border-slate-200 pl-4">
-            <span>Số dòng mỗi trang:</span>
+            <span>{t("users.table.pagination.rowsPerPage")}</span>
             <select
-              aria-label="Rows per page selector"
+              aria-label={t("users.table.pagination.rowsPerPageAria")}
               value={size}
               onChange={(e) => onSizeChange(Number(e.target.value))}
               disabled={loading}
@@ -214,8 +219,12 @@ export function UserTable({
 
         <div className="flex items-center gap-2">
           <span className="text-xs mr-2">
-            Trang <strong className="text-slate-800">{page}</strong> /{" "}
-            <strong className="text-slate-800">{Math.max(1, totalPages)}</strong>
+            <Trans
+              t={t}
+              i18nKey="users.table.pagination.page"
+              values={{ page, totalPages: Math.max(1, totalPages) }}
+              components={{ b: <strong className="text-slate-800" /> }}
+            />
           </span>
           <Button
             size="sm"
@@ -225,7 +234,7 @@ export function UserTable({
             className="h-8 px-2.5 rounded-lg border-slate-200 font-bold hover:bg-white text-xs cursor-pointer disabled:opacity-50"
           >
             <ChevronLeft className="w-4 h-4 mr-1" />
-            <span>Trước</span>
+            <span>{t("users.table.pagination.prev")}</span>
           </Button>
           <Button
             size="sm"
@@ -234,7 +243,7 @@ export function UserTable({
             onClick={() => onPageChange(page + 1)}
             className="h-8 px-2.5 rounded-lg border-slate-200 font-bold hover:bg-white text-xs cursor-pointer disabled:opacity-50"
           >
-            <span>Sau</span>
+            <span>{t("users.table.pagination.next")}</span>
             <ChevronRight className="w-4 h-4 ml-1" />
           </Button>
         </div>

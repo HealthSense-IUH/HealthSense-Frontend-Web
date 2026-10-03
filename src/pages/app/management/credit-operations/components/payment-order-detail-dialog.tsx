@@ -27,6 +27,7 @@ import {
 } from "@/constants/credits"
 import type { AdminCreditOrderDetail } from "@/types/credits"
 import { useToast } from "@/hooks/use-toast"
+import { Trans, useTranslation } from "react-i18next"
 
 interface PaymentOrderDetailDialogProps {
   open: boolean
@@ -43,6 +44,7 @@ export function PaymentOrderDetailDialog({
   loading,
   error,
 }: PaymentOrderDetailDialogProps) {
+  const { t } = useTranslation("credits")
   const { toast } = useToast()
   const [copiedUrl, setCopiedUrl] = useState(false)
 
@@ -51,15 +53,15 @@ export function PaymentOrderDetailDialog({
       await navigator.clipboard.writeText(url)
       setCopiedUrl(true)
       toast({
-        title: "Đã sao chép link thanh toán",
-        description: "Link checkout đã được lưu vào bộ nhớ tạm.",
+        title: t("admin.orderDetail.toast.copiedTitle"),
+        description: t("admin.orderDetail.toast.copiedDescription"),
       })
       setTimeout(() => setCopiedUrl(false), 2000)
     } catch {
       toast({
         variant: "destructive",
-        title: "Lỗi sao chép",
-        description: "Không thể tự động sao chép link.",
+        title: t("admin.orderDetail.toast.copyFailedTitle"),
+        description: t("admin.orderDetail.toast.copyFailedDescription"),
       })
     }
   }
@@ -75,18 +77,24 @@ export function PaymentOrderDetailDialog({
           <div className="flex items-center gap-2 text-primary">
             <Receipt className="w-5 h-5" />
             <DialogTitle className="text-lg font-bold text-foreground">
-              Chi tiết đơn mua token
+              {t("admin.orderDetail.title")}
             </DialogTitle>
           </div>
           <DialogDescription className="text-xs text-muted-foreground mt-0.5">
             {order ? (
               <>
-                Mã đơn: <span className="font-mono font-semibold text-primary">#{order.id}</span>
-                {" • "}
-                Thành viên: <span className="font-mono font-semibold text-foreground">#{orderDetail.memberId}</span>
+                <Trans
+                  t={t}
+                  i18nKey="admin.orderDetail.headerSummary"
+                  values={{ orderId: order.id, memberId: orderDetail.memberId }}
+                  components={{
+                    order: <span className="font-mono font-semibold text-primary" />,
+                    member: <span className="font-mono font-semibold text-foreground" />,
+                  }}
+                />
               </>
             ) : (
-              "Tra cứu thông tin gói và các lần thử thanh toán"
+              t("admin.orderDetail.descriptionEmpty")
             )}
           </DialogDescription>
         </DialogHeader>
@@ -95,13 +103,13 @@ export function PaymentOrderDetailDialog({
           {loading ? (
             <div className="py-14 text-center text-xs text-muted-foreground">
               <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2 text-primary" />
-              Đang tải chi tiết đơn hàng và payment attempts...
+              {t("admin.orderDetail.loading")}
             </div>
           ) : error ? (
             <div className="py-10 text-center space-y-2">
               <p className="text-sm font-semibold text-destructive">{error}</p>
               <p className="text-xs text-muted-foreground">
-                Đơn hàng có thể không còn tồn tại hoặc thông tin truy vấn chưa chính xác.
+                {t("admin.orderDetail.errorHint")}
               </p>
             </div>
           ) : order ? (
@@ -111,7 +119,7 @@ export function PaymentOrderDetailDialog({
                 <div className="flex items-center justify-between pb-2 border-b">
                   <span className="font-bold text-sm text-foreground flex items-center gap-1.5">
                     <CreditCard className="w-4 h-4 text-primary" />
-                    Thông tin đơn hàng
+                    {t("admin.orderDetail.orderInfo")}
                   </span>
                   {orderStatusConfig && (
                     <Badge variant="outline" className={`text-xs font-semibold ${orderStatusConfig.className}`}>
@@ -122,7 +130,7 @@ export function PaymentOrderDetailDialog({
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
                   <div>
-                    <span className="text-muted-foreground block text-[11px]">Gói lượt tư vấn:</span>
+                    <span className="text-muted-foreground block text-[11px]">{t("admin.orderDetail.package")}</span>
                     <span className="font-semibold text-foreground">
                       {order.packageName}
                     </span>
@@ -132,22 +140,22 @@ export function PaymentOrderDetailDialog({
                   </div>
 
                   <div>
-                    <span className="text-muted-foreground block text-[11px]">Số lượng token:</span>
+                    <span className="text-muted-foreground block text-[11px]">{t("admin.orderDetail.tokens")}</span>
                     <span className="font-mono font-bold text-primary text-sm flex items-center gap-1">
                       <Coins className="w-3.5 h-3.5" />
-                      +{order.creditQuantity} lượt
+                      +{t("quantity.credits", { count: order.creditQuantity, value: order.creditQuantity })}
                     </span>
                   </div>
 
                   <div>
-                    <span className="text-muted-foreground block text-[11px]">Số tiền thanh toán:</span>
+                    <span className="text-muted-foreground block text-[11px]">{t("admin.orderDetail.amount")}</span>
                     <span className="font-mono font-bold text-success-600 text-sm">
                       {formatVndPrice(order.amountVnd)}
                     </span>
                   </div>
 
                   <div>
-                    <span className="text-muted-foreground block text-[11px]">Thời gian tạo:</span>
+                    <span className="text-muted-foreground block text-[11px]">{t("admin.orderDetail.createdAt")}</span>
                     <span className="font-mono text-muted-foreground">
                       {formatDateTime(order.createdAt)}
                     </span>
@@ -155,7 +163,7 @@ export function PaymentOrderDetailDialog({
 
                   {order.paidAt && (
                     <div className="sm:col-span-2 pt-1 border-t">
-                      <span className="text-muted-foreground text-[11px] mr-2">Thời điểm thanh toán (paidAt):</span>
+                      <span className="text-muted-foreground text-[11px] mr-2">{t("admin.orderDetail.paidAt")}</span>
                       <span className="font-mono font-semibold text-success-600">
                         {formatDateTime(order.paidAt)}
                       </span>
@@ -168,16 +176,16 @@ export function PaymentOrderDetailDialog({
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <h4 className="text-xs font-bold text-foreground uppercase tracking-wider">
-                    Lịch sử cổng thanh toán ({attempts.length} lần thử)
+                    {t("admin.orderDetail.attemptsTitle", { count: attempts.length })}
                   </h4>
                   <span className="text-[11px] text-muted-foreground italic">
-                    Xếp theo thứ tự lần thử
+                    {t("admin.orderDetail.attemptsOrder")}
                   </span>
                 </div>
 
                 {attempts.length === 0 ? (
                   <div className="p-4 text-center rounded-xl border border-dashed text-xs text-muted-foreground">
-                    Đơn chưa có lần thanh toán nào được ghi nhận.
+                    {t("admin.orderDetail.attemptsEmpty")}
                   </div>
                 ) : (
                   <div className="space-y-2.5">
@@ -193,7 +201,7 @@ export function PaymentOrderDetailDialog({
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
                               <Badge variant="secondary" className="font-bold text-[11px]">
-                                Lần {index + 1}
+                                {t("admin.orderDetail.attemptNumber", { n: index + 1 })}
                               </Badge>
                               <span className="font-mono font-semibold text-foreground">
                                 #{attempt.attemptId}
@@ -209,7 +217,7 @@ export function PaymentOrderDetailDialog({
 
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] text-muted-foreground pt-1">
                             <div>
-                              <span>Cổng thanh toán: </span>
+                              <span>{t("admin.orderDetail.gateway")} </span>
                               <span className="font-medium text-foreground">
                                 {providerConfig.label}
                               </span>
@@ -217,7 +225,7 @@ export function PaymentOrderDetailDialog({
 
                             {attempt.orderCode && (
                               <div>
-                                <span>Mã OrderCode: </span>
+                                <span>{t("admin.orderDetail.orderCode")} </span>
                                 <span className="font-mono text-foreground font-semibold">
                                   {attempt.orderCode}
                                 </span>
@@ -235,7 +243,7 @@ export function PaymentOrderDetailDialog({
 
                             {attempt.expiresAt && (
                               <div className="sm:col-span-2">
-                                <span>Hết hạn: </span>
+                                <span>{t("admin.orderDetail.expiresAt")} </span>
                                 <span className="font-mono text-muted-foreground">
                                   {formatDateTime(attempt.expiresAt)}
                                 </span>
@@ -248,7 +256,7 @@ export function PaymentOrderDetailDialog({
                             <div className="mt-2 pt-2 border-t flex items-center justify-between gap-2 bg-muted/40 p-2 rounded-lg">
                               <div className="min-w-0 flex-1">
                                 <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider block">
-                                  Link thanh toán (Tra cứu / Hỗ trợ):
+                                  {t("admin.orderDetail.checkoutLink")}
                                 </span>
                                 <span className="font-mono text-[11px] text-foreground truncate block">
                                   {attempt.checkoutUrl}
@@ -265,12 +273,12 @@ export function PaymentOrderDetailDialog({
                                 {copiedUrl ? (
                                   <>
                                     <Check className="w-3 h-3 text-success-600" />
-                                    Đã chép
+                                    {t("admin.orderDetail.copied")}
                                   </>
                                 ) : (
                                   <>
                                     <Copy className="w-3 h-3" />
-                                    Sao chép
+                                    {t("admin.orderDetail.copy")}
                                   </>
                                 )}
                               </Button>
@@ -293,7 +301,7 @@ export function PaymentOrderDetailDialog({
             onClick={() => onOpenChange(false)}
             className="rounded-xl h-9 text-xs"
           >
-            Đóng
+            {t("shared.close")}
           </Button>
         </DialogFooter>
       </DialogContent>

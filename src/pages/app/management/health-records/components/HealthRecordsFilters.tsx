@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
 import { Search } from "lucide-react"
 
 import { Input } from "@/components/ui/input"
@@ -13,6 +14,7 @@ export interface HealthRecordsFiltersProps {
 }
 
 export function HealthRecordsFilters({ onFilterChange }: HealthRecordsFiltersProps) {
+  const { t } = useTranslation("management")
   const [keyword, setKeyword] = useState("")
   const [status, setStatus] = useState<string>("ALL")
   const [predictionLabel, setPredictionLabel] = useState<string>("ALL")
@@ -58,7 +60,7 @@ export function HealthRecordsFilters({ onFilterChange }: HealthRecordsFiltersPro
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-slate-500" />
           <Input
             type="search"
-            placeholder="Search records..."
+            placeholder={t("healthRecords.filters.searchPlaceholder")}
             className="w-full pl-8"
             value={keyword}
             onChange={handleKeywordChange}
@@ -70,26 +72,26 @@ export function HealthRecordsFilters({ onFilterChange }: HealthRecordsFiltersPro
       <div className="flex items-center space-x-2">
         <Select value={status} onValueChange={handleStatusChange}>
           <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Status" />
+            <SelectValue placeholder={t("healthRecords.filters.statusPlaceholder")} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="ALL">All Statuses</SelectItem>
-            <SelectItem value="PENDING_UPLOAD">Pending</SelectItem>
-            <SelectItem value="PROCESSING">Processing</SelectItem>
-            <SelectItem value="COMPLETED">Completed</SelectItem>
-            <SelectItem value="FAILED">Failed</SelectItem>
+            <SelectItem value="ALL">{t("healthRecords.filters.allStatuses")}</SelectItem>
+            <SelectItem value="PENDING_UPLOAD">{t("healthRecords.status.PENDING_UPLOAD")}</SelectItem>
+            <SelectItem value="PROCESSING">{t("healthRecords.status.PROCESSING")}</SelectItem>
+            <SelectItem value="COMPLETED">{t("healthRecords.status.COMPLETED")}</SelectItem>
+            <SelectItem value="FAILED">{t("healthRecords.status.FAILED")}</SelectItem>
           </SelectContent>
         </Select>
 
         <Select value={predictionLabel} onValueChange={handlePredictionChange}>
           <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Prediction" />
+            <SelectValue placeholder={t("healthRecords.filters.predictionPlaceholder")} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="ALL">All Predictions</SelectItem>
-            <SelectItem value="NORMAL">Normal</SelectItem>
-            <SelectItem value="AFIB">AFib</SelectItem>
-            <SelectItem value="UNCERTAIN">Uncertain</SelectItem>
+            <SelectItem value="ALL">{t("healthRecords.filters.allPredictions")}</SelectItem>
+            <SelectItem value="NORMAL">{t("healthRecords.prediction.NORMAL")}</SelectItem>
+            <SelectItem value="AFIB">{t("healthRecords.prediction.AFIB")}</SelectItem>
+            <SelectItem value="UNCERTAIN">{t("healthRecords.prediction.UNCERTAIN")}</SelectItem>
           </SelectContent>
         </Select>
       </div>

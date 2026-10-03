@@ -31,6 +31,8 @@ import { formatVnd, formatCreditQuantity, getCreditOrderStatusConfig } from "@/c
 import { saveStoredPendingPayment } from "../hooks/use-credit-purchase"
 import type { PageResponse } from "@/types/base"
 import type { CreditOrderSummary } from "@/types/credits"
+import { Trans, useTranslation } from "react-i18next"
+import { currentIntlLocale } from "@/lib/i18n"
 
 interface OrdersHistoryTableProps {
   ordersData: PageResponse<CreditOrderSummary> | null
@@ -55,6 +57,7 @@ export function OrdersHistoryTable({
   isFiltered = false,
   onResetFilters,
 }: OrdersHistoryTableProps) {
+  const { t } = useTranslation("credits")
   const { toast } = useToast()
   const userSession = useAuthStore((state) => state.userSession)
   const userId = userSession?.userId ? String(userSession.userId) : ""
@@ -73,8 +76,8 @@ export function OrdersHistoryTable({
       if (data.order.status === "PAID") {
         window.dispatchEvent(new CustomEvent("credits:refresh"))
         toast({
-          title: "Đơn hàng đã thanh toán",
-          description: "Giao dịch đã được ghi nhận trước đó. Lượt đã được cộng vào ví.",
+          title: t("ordersTable.toast.alreadyPaidTitle"),
+          description: t("ordersTable.toast.alreadyPaidDescription"),
         })
         return
       }
@@ -82,8 +85,8 @@ export function OrdersHistoryTable({
       // 3. Kiểm tra nếu order không còn PENDING_PAYMENT
       if (data.order.status !== "PENDING_PAYMENT") {
         toast({
-          title: "Đơn hàng không thể thanh toán",
-          description: `Đơn hàng đang ở trạng thái: ${data.order.status}.`,
+          title: t("ordersTable.toast.notPayableTitle"),
+          description: t("ordersTable.toast.notPayableDescription", { status: data.order.status }),
         })
         return
       }
@@ -96,8 +99,8 @@ export function OrdersHistoryTable({
 
       if (isExpired) {
         toast({
-          title: "Liên kết thanh toán đã hết hạn",
-          description: "Liên kết thanh toán PayOS đã hết hạn. Vui lòng tạo đơn mua mới.",
+          title: t("ordersTable.toast.linkExpiredTitle"),
+          description: t("ordersTable.toast.linkExpiredDescription"),
           variant: "destructive",
         })
         return
@@ -106,8 +109,8 @@ export function OrdersHistoryTable({
       // 5. Kiểm tra nếu payment đang CREATING
       if (payment?.status === "CREATING") {
         toast({
-          title: "Đang khởi tạo liên kết",
-          description: "Liên kết thanh toán đang được khởi tạo bởi PayOS. Vui lòng thử lại sau vài giây.",
+          title: t("ordersTable.toast.creatingTitle"),
+          description: t("ordersTable.toast.creatingDescription"),
         })
         return
       }
@@ -137,15 +140,15 @@ export function OrdersHistoryTable({
       }
 
       toast({
-        title: "Không thể lấy link thanh toán",
-        description: "Vui lòng mở xem chi tiết đơn hàng để kiểm tra.",
+        title: t("ordersTable.toast.noLinkTitle"),
+        description: t("ordersTable.toast.noLinkDescription"),
         variant: "destructive",
       })
     } catch (err) {
       const parsed = parseApiError(err)
       toast({
-        title: "Lỗi kết nối",
-        description: parsed.userMessage || "Không thể kiểm tra đơn hàng. Vui lòng thử lại.",
+        title: t("ordersTable.toast.connectionErrorTitle"),
+        description: parsed.userMessage || t("ordersTable.toast.connectionErrorDescription"),
         variant: "destructive",
       })
     } finally {
@@ -170,11 +173,11 @@ export function OrdersHistoryTable({
         <div className="max-w-md mx-auto space-y-3">
           <AlertCircle className="h-8 w-8 text-danger-600 mx-auto" />
           <h3 className="text-sm font-semibold text-danger-800">
-            Không thể tải lịch sử đơn mua
+            {t("ordersTable.loadError")}
           </h3>
           <p className="text-xs text-danger-600">{error}</p>
           <Button variant="outline" size="sm" onClick={onRetry} className="gap-1.5 mt-2">
-            <RefreshCw className="h-3.5 w-3.5" /> Thử lại
+            <RefreshCw className="h-3.5 w-3.5" /> {t("shared.retry")}
           </Button>
         </div>
       </Card>
@@ -192,10 +195,10 @@ export function OrdersHistoryTable({
           <div className="max-w-md mx-auto space-y-3">
             <FilterX className="h-10 w-10 text-muted-foreground/40 mx-auto" />
             <h3 className="text-base font-semibold text-foreground">
-              Không tìm thấy đơn mua phù hợp
+              {t("ordersTable.filteredEmptyTitle")}
             </h3>
             <p className="text-xs text-muted-foreground">
-              Không có đơn mua nào thỏa mãn bộ lọc ngày hoặc trạng thái đang chọn.
+              {t("ordersTable.filteredEmptyDescription")}
             </p>
             {onResetFilters && (
               <Button
@@ -204,7 +207,7 @@ export function OrdersHistoryTable({
                 onClick={onResetFilters}
                 className="gap-1.5 mt-2 text-xs"
               >
-                Xóa bộ lọc
+                {t("shared.clearFilters")}
               </Button>
             )}
           </div>
@@ -217,10 +220,10 @@ export function OrdersHistoryTable({
         <div className="max-w-md mx-auto space-y-3">
           <ShoppingBag className="h-12 w-12 text-muted-foreground/40 mx-auto" />
           <h3 className="text-base font-semibold text-foreground">
-            Chưa có đơn mua lượt nào
+            {t("ordersTable.emptyTitle")}
           </h3>
           <p className="text-xs text-muted-foreground">
-            Khi bạn mua các gói lượt tư vấn, thông tin các đơn hàng sẽ được lưu vết đầy đủ tại đây.
+            {t("ordersTable.emptyDescription")}
           </p>
         </div>
       </Card>
@@ -233,13 +236,13 @@ export function OrdersHistoryTable({
         <Table>
           <TableHeader>
             <TableRow className="bg-muted/50 hover:bg-muted/50">
-              <TableHead className="w-[180px] text-xs font-semibold">Mã đơn hàng</TableHead>
-              <TableHead className="text-xs font-semibold">Gói lượt đã mua</TableHead>
-              <TableHead className="text-xs font-semibold">Số lượt</TableHead>
-              <TableHead className="text-xs font-semibold">Tổng tiền</TableHead>
-              <TableHead className="text-xs font-semibold">Thời gian tạo</TableHead>
-              <TableHead className="text-xs font-semibold">Trạng thái</TableHead>
-              <TableHead className="text-right text-xs font-semibold">Thao tác</TableHead>
+              <TableHead className="w-[180px] text-xs font-semibold">{t("ordersTable.columns.orderId")}</TableHead>
+              <TableHead className="text-xs font-semibold">{t("ordersTable.columns.package")}</TableHead>
+              <TableHead className="text-xs font-semibold">{t("ordersTable.columns.credits")}</TableHead>
+              <TableHead className="text-xs font-semibold">{t("ordersTable.columns.amount")}</TableHead>
+              <TableHead className="text-xs font-semibold">{t("ordersTable.columns.createdAt")}</TableHead>
+              <TableHead className="text-xs font-semibold">{t("ordersTable.columns.status")}</TableHead>
+              <TableHead className="text-right text-xs font-semibold">{t("ordersTable.columns.actions")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -291,7 +294,7 @@ export function OrdersHistoryTable({
                           ) : (
                             <ExternalLink className="h-3.5 w-3.5" />
                           )}
-                          Tiếp tục thanh toán
+                          {t("ordersTable.resumePayment")}
                         </Button>
                       )}
                       <Button
@@ -300,7 +303,7 @@ export function OrdersHistoryTable({
                         onClick={() => onViewDetail(order.id)}
                         className="h-8 text-xs gap-1.5 hover:bg-primary/10 hover:text-primary"
                       >
-                        <Eye className="h-3.5 w-3.5" /> Chi tiết
+                        <Eye className="h-3.5 w-3.5" /> {t("shared.details")}
                       </Button>
                     </div>
                   </TableCell>
@@ -315,7 +318,12 @@ export function OrdersHistoryTable({
       {totalPages > 0 && (
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-2 pt-1 text-xs text-muted-foreground">
           <div>
-            Trang <span className="font-semibold text-foreground">{page}</span> / {Math.max(1, totalPages)} (Tổng {totalElements.toLocaleString("vi-VN")} đơn)
+            <Trans
+              t={t}
+              i18nKey="ordersTable.pagination"
+              values={{ page, totalPages: Math.max(1, totalPages), total: totalElements.toLocaleString(currentIntlLocale()) }}
+              components={{ strong: <span className="font-semibold text-foreground" /> }}
+            />
           </div>
           {totalPages > 1 && (
             <div className="flex items-center gap-1.5">
@@ -326,7 +334,7 @@ export function OrdersHistoryTable({
                 disabled={page <= 1 || loading}
                 className="h-8 px-2.5 gap-1 text-xs"
               >
-                <ChevronLeft className="h-3.5 w-3.5" /> Trước
+                <ChevronLeft className="h-3.5 w-3.5" /> {t("shared.prev")}
               </Button>
               <Button
                 variant="outline"
@@ -335,7 +343,7 @@ export function OrdersHistoryTable({
                 disabled={page >= totalPages || loading}
                 className="h-8 px-2.5 gap-1 text-xs"
               >
-                Sau <ChevronRight className="h-3.5 w-3.5" />
+                {t("shared.next")} <ChevronRight className="h-3.5 w-3.5" />
               </Button>
             </div>
           )}

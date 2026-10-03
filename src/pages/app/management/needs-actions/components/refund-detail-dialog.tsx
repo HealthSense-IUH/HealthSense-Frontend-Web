@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { useTranslation } from "react-i18next"
 import { useToast } from "@/hooks/use-toast"
 import {
   Dialog,
@@ -15,6 +16,7 @@ import {
 } from "lucide-react"
 
 import { useAuthStore } from "@/stores/auth-store"
+import { currentIntlLocale } from "@/lib/i18n"
 import { refundApi, businessAuditApi } from "@/services"
 import type { ConsultationRefundResponse } from "@/types/refund"
 import type { BusinessAuditEventResponse } from "@/types/business-audit"
@@ -34,6 +36,7 @@ export function RefundDetailDialog({
   onOpenChange,
   onSuccess,
 }: RefundDetailDialogProps) {
+  const { t } = useTranslation("management")
   const { toast } = useToast()
   const userSession = useAuthStore((state) => state.userSession)
   const role = userSession?.role || "MEMBER"
@@ -58,8 +61,8 @@ export function RefundDetailDialog({
       const anyErr = err as { response?: { data?: { message?: string } } }
       toast({
         variant: "destructive",
-        title: "Lỗi",
-        description: anyErr.response?.data?.message || "Không thể tải chi tiết hoàn tiền.",
+        title: t("needsActions.refundDetail.toast.errorTitle"),
+        description: anyErr.response?.data?.message || t("needsActions.refundDetail.toast.loadFailed"),
       })
     } finally {
       setLoading(false)
@@ -98,8 +101,8 @@ export function RefundDetailDialog({
       setExecuting(true)
       await refundApi.executeRefund(refund.id)
       toast({
-        title: "Đã kích hoạt lệnh",
-        description: "Lệnh hoàn tiền đã được gửi tới cổng thanh toán.",
+        title: t("needsActions.refundDetail.toast.executedTitle"),
+        description: t("needsActions.refundDetail.toast.executedDescription"),
       })
       void fetchDetail(refund.id)
       void fetchAuditEvents(refund.id)
@@ -108,8 +111,8 @@ export function RefundDetailDialog({
       const anyErr = err as { response?: { data?: { message?: string } } }
       toast({
         variant: "destructive",
-        title: "Lỗi thực thi",
-        description: anyErr.response?.data?.message || "Không thể kích hoạt hoàn tiền tự động.",
+        title: t("needsActions.refundDetail.toast.executeErrorTitle"),
+        description: anyErr.response?.data?.message || t("needsActions.refundDetail.toast.executeFailed"),
       })
     } finally {
       setExecuting(false)
@@ -119,19 +122,19 @@ export function RefundDetailDialog({
   const getStatusBadge = (status?: string) => {
     switch (status) {
       case "SUCCEEDED":
-        return <Badge className="bg-success-500 hover:bg-success-600 font-bold">Thành công (SUCCEEDED)</Badge>
+        return <Badge className="bg-success-500 hover:bg-success-600 font-bold">{t("needsActions.refundDetail.status.succeeded")}</Badge>
       case "APPROVED":
-        return <Badge className="bg-primary-500 hover:bg-primary-600 font-bold">Đã duyệt (APPROVED)</Badge>
+        return <Badge className="bg-primary-500 hover:bg-primary-600 font-bold">{t("needsActions.refundDetail.status.approved")}</Badge>
       case "RECOMMENDED":
-        return <Badge className="bg-warning-500 hover:bg-warning-600 font-bold">Đã đề xuất (RECOMMENDED)</Badge>
+        return <Badge className="bg-warning-500 hover:bg-warning-600 font-bold">{t("needsActions.refundDetail.status.recommended")}</Badge>
       case "REVIEW_REQUIRED":
-        return <Badge className="bg-primary-500 hover:bg-primary-600 font-bold">Cần đánh giá (REVIEW_REQUIRED)</Badge>
+        return <Badge className="bg-primary-500 hover:bg-primary-600 font-bold">{t("needsActions.refundDetail.status.reviewRequired")}</Badge>
       case "REJECTED":
-        return <Badge className="bg-danger-500 hover:bg-danger-600 font-bold">Bác bỏ (REJECTED)</Badge>
+        return <Badge className="bg-danger-500 hover:bg-danger-600 font-bold">{t("needsActions.refundDetail.status.rejected")}</Badge>
       case "FAILED":
-        return <Badge className="bg-danger-600 hover:bg-danger-700 font-bold">Thất bại (FAILED)</Badge>
+        return <Badge className="bg-danger-600 hover:bg-danger-700 font-bold">{t("needsActions.refundDetail.status.failed")}</Badge>
       case "PROCESSING":
-        return <Badge className="bg-primary-500 hover:bg-primary-600 font-bold">Đang xử lý (PROCESSING)</Badge>
+        return <Badge className="bg-primary-500 hover:bg-primary-600 font-bold">{t("needsActions.refundDetail.status.processing")}</Badge>
       default:
         return <Badge variant="outline">{status || "UNKNOWN"}</Badge>
     }
@@ -147,10 +150,10 @@ export function RefundDetailDialog({
             <div className="flex items-center justify-between">
               <div>
                 <DialogTitle className="text-lg font-black text-slate-900">
-                  Chi tiết Hoàn tiền #{refundId}
+                  {t("needsActions.refundDetail.title", { id: refundId })}
                 </DialogTitle>
                 <p className="text-xs text-slate-500 mt-0.5">
-                  Quản lý vòng đời hoàn trả tiền dịch vụ tư vấn
+                  {t("needsActions.refundDetail.subtitle")}
                 </p>
               </div>
               {refund && getStatusBadge(refund.status)}
@@ -161,32 +164,32 @@ export function RefundDetailDialog({
             {loading ? (
               <div className="flex items-center justify-center p-12 text-slate-400 space-x-2">
                 <RefreshCw className="w-5 h-5 animate-spin" />
-                <span>Đang tải thông tin hoàn tiền...</span>
+                <span>{t("needsActions.refundDetail.loading")}</span>
               </div>
             ) : !refund ? (
-              <div className="text-center p-12 text-slate-400">Không tìm thấy thông tin hoàn tiền.</div>
+              <div className="text-center p-12 text-slate-400">{t("needsActions.refundDetail.notFound")}</div>
             ) : (
               <div className="space-y-5">
                 {/* Notice on Payment immutability */}
                 <div className="p-3 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between">
-                  <span className="text-slate-600 font-medium">Trạng thái thanh toán gốc (Payment #{refund.paymentId}):</span>
+                  <span className="text-slate-600 font-medium">{t("needsActions.refundDetail.originalPaymentStatus", { id: refund.paymentId })}</span>
                   <Badge variant="outline" className="font-bold bg-white text-success-700 border-success-300">
-                    Lịch sử: PAID (Bảo lưu)
+                    {t("needsActions.refundDetail.paymentHistoryBadge")}
                   </Badge>
                 </div>
 
                 {/* Amount Overview Cards */}
                 <div className="grid grid-cols-2 gap-3">
                   <div className="p-4 rounded-2xl border border-slate-100 bg-slate-50/50">
-                    <span className="text-[11px] text-slate-400 font-bold block mb-1">Số tiền gốc</span>
+                    <span className="text-[11px] text-slate-400 font-bold block mb-1">{t("needsActions.refundDetail.originalAmount")}</span>
                     <span className="text-base font-black text-slate-900 font-mono">
-                      {(refund.originalPaidAmount ?? refund.originalAmount)?.toLocaleString("vi-VN")} {refund.currency || "VND"}
+                      {(refund.originalPaidAmount ?? refund.originalAmount)?.toLocaleString(currentIntlLocale())} {refund.currency || "VND"}
                     </span>
                   </div>
                   <div className="p-4 rounded-2xl border border-primary-100 bg-primary-50/40">
-                    <span className="text-[11px] text-primary-600 font-bold block mb-1">Số tiền phê duyệt</span>
+                    <span className="text-[11px] text-primary-600 font-bold block mb-1">{t("needsActions.refundDetail.approvedAmount")}</span>
                     <span className="text-base font-black text-primary-900 font-mono">
-                      {refund.approvedAmount ? `${refund.approvedAmount.toLocaleString("vi-VN")} ${refund.currency || "VND"}` : "—"}
+                      {refund.approvedAmount ? `${refund.approvedAmount.toLocaleString(currentIntlLocale())} ${refund.currency || "VND"}` : "—"}
                     </span>
                   </div>
                 </div>
@@ -194,30 +197,30 @@ export function RefundDetailDialog({
                 {/* Recommendation & Decision summary */}
                 <div className="rounded-2xl border border-slate-100 divide-y divide-slate-100 overflow-hidden">
                   <div className="p-3.5 flex items-center justify-between">
-                    <span className="text-slate-500 font-medium">Đề xuất Điều phối:</span>
+                    <span className="text-slate-500 font-medium">{t("needsActions.refundDetail.coordinatorRecommendation")}</span>
                     <span className="font-bold text-slate-800">
-                      {refund.recommendation || "Chưa có"}
-                      {refund.recommendedAmount ? ` (${refund.recommendedAmount.toLocaleString("vi-VN")} VND)` : ""}
+                      {refund.recommendation || t("needsActions.refundDetail.noRecommendation")}
+                      {refund.recommendedAmount ? ` (${refund.recommendedAmount.toLocaleString(currentIntlLocale())} VND)` : ""}
                     </span>
                   </div>
                   {(refund.reviewReason || refund.recommendationReason) && (
                     <div className="p-3.5 bg-slate-50/40">
-                      <span className="text-slate-400 text-[10px] uppercase font-bold block mb-1">Lý do đề xuất:</span>
+                      <span className="text-slate-400 text-[10px] uppercase font-bold block mb-1">{t("needsActions.refundDetail.recommendationReason")}</span>
                       <p className="text-slate-700 font-medium">{refund.reviewReason || refund.recommendationReason}</p>
                     </div>
                   )}
                   {refund.decisionReason && (
                     <div className="p-3.5 bg-slate-50/40">
-                      <span className="text-slate-400 text-[10px] uppercase font-bold block mb-1">Lý do quyết định (Admin):</span>
+                      <span className="text-slate-400 text-[10px] uppercase font-bold block mb-1">{t("needsActions.refundDetail.decisionReason")}</span>
                       <p className="text-slate-700 font-medium">{refund.decisionReason}</p>
                     </div>
                   )}
                   {refund.providerResult && (
                     <div className="p-3.5 bg-slate-50/40">
-                      <span className="text-slate-400 text-[10px] uppercase font-bold block mb-1">Kết quả đối soát ngoại tuyến:</span>
+                      <span className="text-slate-400 text-[10px] uppercase font-bold block mb-1">{t("needsActions.refundDetail.reconciliationResult")}</span>
                       <p className="text-slate-700 font-medium">{refund.providerResult}</p>
                       {refund.providerRefundId && (
-                        <p className="text-slate-500 font-mono text-[11px] mt-1">Mã tham chiếu: #{refund.providerRefundId}</p>
+                        <p className="text-slate-500 font-mono text-[11px] mt-1">{t("needsActions.refundDetail.providerReference", { id: refund.providerRefundId })}</p>
                       )}
                     </div>
                   )}
@@ -227,13 +230,13 @@ export function RefundDetailDialog({
                 <div className="space-y-2 pt-2">
                   <h4 className="font-bold text-slate-700 flex items-center gap-1.5 text-xs">
                     <FileSearch className="w-3.5 h-3.5 text-primary-600" />
-                    <span>Nhật ký Kiểm toán (Business Audit Trail)</span>
+                    <span>{t("needsActions.refundDetail.auditTitle")}</span>
                   </h4>
                   {loadingAudit ? (
-                    <div className="p-4 text-center text-slate-400">Đang tải nhật ký kiểm toán...</div>
+                    <div className="p-4 text-center text-slate-400">{t("needsActions.refundDetail.auditLoading")}</div>
                   ) : auditEvents.length === 0 ? (
                     <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-400 text-center">
-                      Chưa có sự kiện kiểm toán được ghi nhận.
+                      {t("needsActions.refundDetail.auditEmpty")}
                     </div>
                   ) : (
                     <div className="rounded-xl border border-slate-100 divide-y divide-slate-100 overflow-hidden">
@@ -242,11 +245,11 @@ export function RefundDetailDialog({
                           <div className="flex items-center justify-between">
                             <span className="font-mono font-bold text-primary-700">{ev.eventType}</span>
                             <span className="text-slate-400 text-[10px]">
-                              {new Date(ev.occurredAt).toLocaleString("vi-VN")}
+                              {new Date(ev.occurredAt).toLocaleString(currentIntlLocale())}
                             </span>
                           </div>
                           <p className="text-slate-600">
-                            {ev.actorType === "USER" ? `Tài khoản #${ev.actorId} (${ev.actorRole})` : "Hệ thống"} - {ev.reason || "Cập nhật trạng thái"}
+                            {ev.actorType === "USER" ? t("needsActions.refundDetail.auditActorUser", { id: ev.actorId, role: ev.actorRole }) : t("needsActions.refundDetail.auditActorSystem")} - {ev.reason || t("needsActions.refundDetail.auditDefaultReason")}
                           </p>
                           {ev.previousState && ev.newState && (
                             <p className="font-mono text-[10px] text-slate-500">
@@ -271,7 +274,7 @@ export function RefundDetailDialog({
                   onClick={() => setDecideOpen(true)}
                   className="bg-primary-600 hover:bg-primary-700 text-white text-xs font-bold"
                 >
-                  Phê duyệt / Từ chối
+                  {t("needsActions.refundDetail.actions.decide")}
                 </Button>
               )}
               {(refund.status === "APPROVED" || refund.status === "FAILED") && (
@@ -282,7 +285,7 @@ export function RefundDetailDialog({
                   disabled={executing}
                   className="text-xs font-bold"
                 >
-                  {executing ? "Đang thử lại..." : "Thử lại gửi cổng"}
+                  {executing ? t("needsActions.refundDetail.actions.retrying") : t("needsActions.refundDetail.actions.retryGateway")}
                 </Button>
               )}
               {refund.status !== "REJECTED" && refund.status !== "SUCCEEDED" && (
@@ -291,7 +294,7 @@ export function RefundDetailDialog({
                   onClick={() => setReconcileOpen(true)}
                   className="bg-success-600 hover:bg-success-700 text-white text-xs font-bold"
                 >
-                  Đối soát hoàn tiền
+                  {t("needsActions.refundDetail.actions.reconcile")}
                 </Button>
               )}
             </div>

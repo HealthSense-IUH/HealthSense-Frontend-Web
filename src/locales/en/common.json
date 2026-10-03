@@ -82,5 +82,29 @@
   "toast": {
     "error": "Error",
     "success": "Success"
+  },
+  "actions": {
+    "close": "Close",
+    "cancel": "Cancel"
+  },
+  "pagination": {
+    "summary": "Showing <strong>{{start}}-{{end}}</strong> of <strong>{{total}}</strong> records",
+    "show": "Show:",
+    "perPage": "/ page",
+    "first": "First page",
+    "previous": "Previous page",
+    "next": "Next page",
+    "last": "Last page"
+  },
+  "errorBoundary": {
+    "updatedTitle": "App Updated",
+    "updatedDescription": "A new HealthSense version is available. Reload to continue.",
+    "title": "Something went wrong",
+    "description": "Please reload the page and try again.",
+    "reload": "Reload",
+    "goBack": "Go Back"
+  },
+  "appLoader": {
+    "loading": "Loading HealthSense..."
   }
 }

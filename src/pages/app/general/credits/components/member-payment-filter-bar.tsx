@@ -17,6 +17,7 @@ import {
 } from "@/constants/credits"
 import type { PaymentDatePreset } from "@/constants/credits"
 import type { CreditOrderStatus } from "@/types/credits"
+import { useTranslation } from "react-i18next"
 
 interface MemberPaymentFilterBarProps {
   preset: PaymentDatePreset
@@ -41,6 +42,7 @@ export function MemberPaymentFilterBar({
   onReset,
   loading,
 }: MemberPaymentFilterBarProps) {
+  const { t } = useTranslation("credits")
   const [customFromDate, setCustomFromDate] = useState<string>("")
   const [customToDate, setCustomToDate] = useState<string>("")
 
@@ -76,7 +78,7 @@ export function MemberPaymentFilterBar({
             onClick={() => handlePresetClick("all")}
             className="h-7 px-3 text-xs font-medium rounded-lg"
           >
-            Toàn thời gian
+            {t("filters.allTime")}
           </Button>
           <Button
             type="button"
@@ -85,7 +87,7 @@ export function MemberPaymentFilterBar({
             onClick={() => handlePresetClick("today")}
             className="h-7 px-3 text-xs font-medium rounded-lg"
           >
-            Hôm nay
+            {t("filters.today")}
           </Button>
           <Button
             type="button"
@@ -94,7 +96,7 @@ export function MemberPaymentFilterBar({
             onClick={() => handlePresetClick("last7days")}
             className="h-7 px-3 text-xs font-medium rounded-lg"
           >
-            7 ngày qua
+            {t("filters.last7days")}
           </Button>
           <Button
             type="button"
@@ -103,7 +105,7 @@ export function MemberPaymentFilterBar({
             onClick={() => handlePresetClick("thisMonth")}
             className="h-7 px-3 text-xs font-medium rounded-lg"
           >
-            Tháng này
+            {t("filters.thisMonth")}
           </Button>
           <Button
             type="button"
@@ -112,7 +114,7 @@ export function MemberPaymentFilterBar({
             onClick={() => handlePresetClick("custom")}
             className="h-7 px-3 text-xs font-medium rounded-lg gap-1"
           >
-            <Calendar className="h-3 w-3" /> Tùy chỉnh
+            <Calendar className="h-3 w-3" /> {t("filters.custom")}
           </Button>
         </div>
 
@@ -128,11 +130,11 @@ export function MemberPaymentFilterBar({
             >
               <SelectTrigger className="h-8 text-xs">
                 <Filter className="h-3.5 w-3.5 text-muted-foreground mr-1" />
-                <SelectValue placeholder="Tất cả trạng thái" />
+                <SelectValue placeholder={t("filters.allStatuses")} />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="ALL" className="text-xs">
-                  Tất cả trạng thái
+                  {t("filters.allStatuses")}
                 </SelectItem>
                 {(
                   Object.keys(CREDIT_ORDER_STATUS_CONFIG) as CreditOrderStatus[]
@@ -152,14 +154,14 @@ export function MemberPaymentFilterBar({
               onValueChange={(val) => onPageSizeChange(Number(val))}
             >
               <SelectTrigger className="h-8 text-xs">
-                <SelectValue placeholder="Số dòng" />
+                <SelectValue placeholder={t("filters.rows")} />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="10" className="text-xs">
-                  10 dòng/trang
+                  {t("filters.rowsPerPage", { count: 10 })}
                 </SelectItem>
                 <SelectItem value="20" className="text-xs">
-                  20 dòng/trang
+                  {t("filters.rowsPerPage", { count: 20 })}
                 </SelectItem>
               </SelectContent>
             </Select>
@@ -177,7 +179,7 @@ export function MemberPaymentFilterBar({
               }}
               className="h-8 px-2.5 text-xs text-muted-foreground hover:text-foreground gap-1"
             >
-              <RotateCcw className="h-3.5 w-3.5" /> Xóa bộ lọc
+              <RotateCcw className="h-3.5 w-3.5" /> {t("shared.clearFilters")}
             </Button>
           )}
 
@@ -190,7 +192,7 @@ export function MemberPaymentFilterBar({
             className="h-8 px-2.5 text-xs gap-1.5 shrink-0"
           >
             <RefreshCw className={`h-3.5 w-3.5 ${loading ? "animate-spin" : ""}`} />
-            Làm mới
+            {t("shared.refresh")}
           </Button>
         </div>
       </div>
@@ -199,7 +201,7 @@ export function MemberPaymentFilterBar({
       {preset === "custom" && (
         <div className="pt-2 border-t border-border/50 flex flex-wrap items-center gap-3">
           <div className="flex items-center gap-2">
-            <span className="text-xs text-muted-foreground">Từ ngày:</span>
+            <span className="text-xs text-muted-foreground">{t("filters.fromDate")}</span>
             <Input
               type="date"
               value={customFromDate}
@@ -211,7 +213,7 @@ export function MemberPaymentFilterBar({
             />
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-xs text-muted-foreground">Đến ngày:</span>
+            <span className="text-xs text-muted-foreground">{t("filters.toDate")}</span>
             <Input
               type="date"
               value={customToDate}
@@ -223,7 +225,7 @@ export function MemberPaymentFilterBar({
             />
           </div>
           <span className="text-[11px] text-muted-foreground/80 italic">
-            * Thời gian tính theo múi giờ Việt Nam (UTC+7)
+            {t("filters.timezoneNote")}
           </span>
         </div>
       )}

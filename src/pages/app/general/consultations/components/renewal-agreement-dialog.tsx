@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { useTranslation } from "react-i18next"
 import { FileText, Stethoscope, Clock, AlertCircle, CheckCircle2, RefreshCw } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -7,6 +8,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { useToast } from "@/hooks/use-toast"
+import { currentIntlLocale } from "@/lib/i18n"
 
 import { consultationApi } from "@/services"
 import type { CareServiceAgreementResponse } from "@/types/consultation"
@@ -30,6 +32,7 @@ export function RenewalAgreementDialog({
   onOpenChange,
   onAgreementAccepted,
 }: RenewalAgreementDialogProps) {
+  const { t } = useTranslation("consultation")
   const { toast } = useToast()
   const [loading, setLoading] = useState(false)
   const [submitting, setSubmitting] = useState(false)
@@ -48,8 +51,8 @@ export function RenewalAgreementDialog({
         .catch((err) => {
           toast({
             variant: "destructive",
-            title: "Lỗi tải thỏa thuận gia hạn",
-            description: readError(err, "Không thể tải thỏa thuận gia hạn dịch vụ."),
+            title: t("renewalAgreementDialog.toast.loadErrorTitle"),
+            description: readError(err, t("renewalAgreementDialog.toast.loadErrorDescription")),
           })
           onOpenChange(false)
         })
@@ -60,7 +63,7 @@ export function RenewalAgreementDialog({
       setAgreement(null)
       setAcceptedTerms(false)
     }
-  }, [open, renewalId, toast, onOpenChange])
+  }, [open, renewalId, toast, onOpenChange, t])
 
   const handleAccept = async () => {
     if (!renewalId || !agreement || !acceptedTerms) return
@@ -75,23 +78,23 @@ export function RenewalAgreementDialog({
         accepted: true,
       })
       toast({
-        title: "Xác nhận thỏa thuận gia hạn thành công",
-        description: "Bạn đã chấp nhận thỏa thuận gia hạn. Vui lòng tiến hành thanh toán để áp dụng thời hạn mới.",
+        title: t("renewalAgreementDialog.toast.acceptSuccessTitle"),
+        description: t("renewalAgreementDialog.toast.acceptSuccessDescription"),
       })
       onOpenChange(false)
       onAgreementAccepted()
     } catch (err) {
       toast({
         variant: "destructive",
-        title: "Lỗi xác nhận thỏa thuận",
-        description: readError(err, "Không thể xác nhận thỏa thuận gia hạn lúc này."),
+        title: t("renewalAgreementDialog.toast.acceptErrorTitle"),
+        description: readError(err, t("renewalAgreementDialog.toast.acceptErrorDescription")),
       })
     } finally {
       setSubmitting(false)
     }
   }
 
-  const pkgName = agreement?.packageName || agreement?.packageSnapshot?.name || "Gói gia hạn chăm sóc"
+  const pkgName = agreement?.packageName || agreement?.packageSnapshot?.name || t("renewalAgreementDialog.packageFallback")
   const pkgCode = agreement?.packageCode || agreement?.packageSnapshot?.code || ""
   const priceAmount = agreement?.priceAmount ?? agreement?.packageSnapshot?.priceAmount ?? 0
   const currency = agreement?.currency || agreement?.packageSnapshot?.currency || "VND"
@@ -101,7 +104,7 @@ export function RenewalAgreementDialog({
   const supportPolicy = agreement?.supportPolicy || agreement?.packageSnapshot?.supportPolicy || "ASSIGNED_DOCTOR_SUPPORT_SCHEDULE"
   const supportSchedule = agreement?.supportScheduleSnapshotJson || agreement?.doctorSnapshot?.declaredSupportSchedule
   const supportTimezone = agreement?.supportTimezoneSnapshot || agreement?.doctorSnapshot?.timezone || "Asia/Ho_Chi_Minh"
-  const doctorName = agreement?.doctorSnapshot?.displayName || "Bác sĩ phụ trách"
+  const doctorName = agreement?.doctorSnapshot?.displayName || t("renewalAgreementDialog.doctorFallback")
   const doctorEmail = agreement?.doctorSnapshot?.email
   const doctorSpecialty = agreement?.doctorSnapshot?.specialty
 
@@ -115,15 +118,15 @@ export function RenewalAgreementDialog({
                 <RefreshCw className="w-5 h-5" />
               </div>
               <div>
-                <DialogTitle className="text-xl font-bold">Thỏa thuận Gia hạn Dịch vụ Chăm sóc</DialogTitle>
+                <DialogTitle className="text-xl font-bold">{t("renewalAgreementDialog.title")}</DialogTitle>
                 <DialogDescription>
-                  Renewal Care Service Agreement &bull; Yêu cầu gia hạn #{renewalId}
+                  Renewal Care Service Agreement &bull; {t("renewalAgreementDialog.requestNumber", { id: renewalId })}
                 </DialogDescription>
               </div>
             </div>
             {agreement?.status && (
               <Badge variant="outline" className="bg-warning-50 text-warning-800 border-warning-300 font-medium">
-                {agreement.status === "PENDING_ACCEPTANCE" ? "Chờ bạn xác nhận" : agreement.status}
+                {agreement.status === "PENDING_ACCEPTANCE" ? t("renewalAgreementDialog.awaitingYourConfirmation") : agreement.status}
               </Badge>
             )}
           </div>
@@ -133,7 +136,7 @@ export function RenewalAgreementDialog({
           {loading ? (
             <div className="py-16 text-center text-muted-foreground flex flex-col items-center justify-center gap-3">
               <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-              <span>Đang tải thông tin thỏa thuận gia hạn...</span>
+              <span>{t("renewalAgreementDialog.loading")}</span>
             </div>
           ) : agreement ? (
             <div className="space-y-6">
@@ -142,8 +145,8 @@ export function RenewalAgreementDialog({
                 <div className="flex items-start gap-2.5 p-3.5 bg-warning-50 border border-warning-200 rounded-xl text-xs text-warning-900">
                   <Clock className="w-4 h-4 text-warning-600 shrink-0 mt-0.5" />
                   <div>
-                    <strong>Thời hạn chấp nhận & thanh toán:</strong> Thỏa thuận gia hạn này có hiệu lực đến{" "}
-                    <span className="font-semibold">{formatDate(agreement.validUntil)}</span>. Sau thời gian này nếu chưa hoàn tất thanh toán, yêu cầu gia hạn sẽ tự động hết hạn và thời hạn phiên chăm sóc không thay đổi.
+                    <strong>{t("renewalAgreementDialog.validity.label")}</strong> {t("renewalAgreementDialog.validity.validUntil")}{" "}
+                    <span className="font-semibold">{formatDate(agreement.validUntil)}</span>{t("renewalAgreementDialog.validity.afterDeadline")}
                   </div>
                 </div>
               )}
@@ -154,14 +157,14 @@ export function RenewalAgreementDialog({
                 <div className="p-4 border rounded-xl bg-card space-y-3 shadow-xs">
                   <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
                     <Stethoscope className="w-4 h-4 text-primary" />
-                    Bác sĩ tiếp tục đồng hành
+                    {t("renewalAgreementDialog.doctorCard.title")}
                   </div>
                   <div className="space-y-1 text-sm">
                     <div className="font-medium text-base text-foreground">{doctorName}</div>
                     {doctorEmail && <div className="text-xs text-muted-foreground">{doctorEmail}</div>}
                     {doctorSpecialty && (
                       <div className="text-xs pt-1">
-                        <span className="text-muted-foreground">Chuyên khoa:</span>{" "}
+                        <span className="text-muted-foreground">{t("renewalAgreementDialog.doctorCard.specialty")}</span>{" "}
                         <span className="font-medium text-foreground">{doctorSpecialty}</span>
                       </div>
                     )}
@@ -172,7 +175,7 @@ export function RenewalAgreementDialog({
                           <div className="space-y-1.5 pt-2">
                             <div className="text-xs font-semibold text-foreground flex items-center gap-1.5">
                               <Clock className="w-3.5 h-3.5 text-primary" />
-                              <span>Khung giờ hỗ trợ:</span>
+                              <span>{t("renewalAgreementDialog.doctorCard.supportHours")}</span>
                             </div>
                             <div className="space-y-1 bg-muted/40 p-2.5 rounded-lg border border-border/50 text-xs">
                               {scheduleList.map((item) => (
@@ -183,7 +186,7 @@ export function RenewalAgreementDialog({
                               ))}
                               {supportTimezone && (
                                 <div className="text-[10px] text-muted-foreground text-right pt-1 mt-0.5">
-                                  Múi giờ: {supportTimezone}
+                                  {t("renewalAgreementDialog.doctorCard.timezone", { timezone: supportTimezone })}
                                 </div>
                               )}
                             </div>
@@ -193,7 +196,7 @@ export function RenewalAgreementDialog({
                       if (supportSchedule) {
                         return (
                           <div className="text-xs pt-1 bg-muted/30 p-2 rounded-md text-muted-foreground font-mono">
-                            Khung giờ hỗ trợ: {supportSchedule} {supportTimezone ? `(${supportTimezone})` : ""}
+                            {t("renewalAgreementDialog.doctorCard.supportHours")} {supportSchedule} {supportTimezone ? `(${supportTimezone})` : ""}
                           </div>
                         )
                       }
@@ -206,14 +209,14 @@ export function RenewalAgreementDialog({
                 <div className="p-4 border rounded-xl bg-card space-y-3 shadow-xs">
                   <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
                     <FileText className="w-4 h-4 text-primary" />
-                    Gói dịch vụ gia hạn
+                    {t("renewalAgreementDialog.packageCard.title")}
                   </div>
                   <div className="space-y-1 text-sm">
                     <div className="font-medium text-base text-foreground">{pkgName}</div>
-                    {pkgCode && <div className="text-xs text-muted-foreground">Mã gói: {pkgCode}</div>}
+                    {pkgCode && <div className="text-xs text-muted-foreground">{t("renewalAgreementDialog.packageCard.code", { code: pkgCode })}</div>}
                     <div className="pt-1 text-base font-bold text-primary">
-                      {priceAmount > 0 ? priceAmount.toLocaleString("vi-VN", { style: "currency", currency }) : "Miễn phí"}{" "}
-                      <span className="text-xs font-normal text-muted-foreground">/ +{durationDays} ngày đồng hành</span>
+                      {priceAmount > 0 ? priceAmount.toLocaleString(currentIntlLocale(), { style: "currency", currency }) : t("renewalAgreementDialog.packageCard.free")}{" "}
+                      <span className="text-xs font-normal text-muted-foreground">{t("renewalAgreementDialog.packageCard.duration", { count: durationDays })}</span>
                     </div>
                     {description && (
                       <p className="text-xs text-muted-foreground pt-1 line-clamp-2">{description}</p>
@@ -226,34 +229,34 @@ export function RenewalAgreementDialog({
               <div className="p-4 border rounded-xl bg-muted/20 space-y-3 text-xs text-muted-foreground">
                 <div className="font-semibold text-sm text-foreground flex items-center gap-2">
                   <AlertCircle className="w-4 h-4 text-primary" />
-                  Điều khoản gia hạn & Phạm vi chăm sóc
+                  {t("renewalAgreementDialog.terms.title")}
                 </div>
                 
                 {termsPolicy && (
                   <div>
-                    <strong className="text-foreground">Tham chiếu điều khoản & giới hạn:</strong> {termsPolicy}
+                    <strong className="text-foreground">{t("renewalAgreementDialog.terms.termsReference")}</strong> {termsPolicy}
                   </div>
                 )}
 
                 {agreement?.emergencyLimitation && (
                   <div>
-                    <strong className="text-foreground">Giới hạn cấp cứu:</strong> {agreement.emergencyLimitation}
+                    <strong className="text-foreground">{t("renewalAgreementDialog.terms.emergencyLimitation")}</strong> {agreement.emergencyLimitation}
                   </div>
                 )}
 
                 {supportPolicy && (
                   <div>
-                    <strong className="text-foreground">Chính sách hỗ trợ:</strong> {supportPolicy === "ASSIGNED_DOCTOR_SUPPORT_SCHEDULE" ? "Theo lịch làm việc của bác sĩ phụ trách" : supportPolicy}
+                    <strong className="text-foreground">{t("renewalAgreementDialog.terms.supportPolicy")}</strong> {supportPolicy === "ASSIGNED_DOCTOR_SUPPORT_SCHEDULE" ? t("renewalAgreementDialog.terms.assignedDoctorSchedule") : supportPolicy}
                   </div>
                 )}
 
                 <div className="pt-2 border-t text-slate-500 leading-relaxed">
-                  * Lưu ý: Việc gia hạn sẽ nối dài thời hạn hiệu lực của phiên tư vấn hiện tại và giữ nguyên toàn bộ lịch sử tư vấn. Sau khi thanh toán thành công, thời hạn mới sẽ được cập nhật tự động.
+                  {t("renewalAgreementDialog.terms.note")}
                 </div>
               </div>
             </div>
           ) : (
-            <div className="py-12 text-center text-muted-foreground">Không có dữ liệu thỏa thuận gia hạn.</div>
+            <div className="py-12 text-center text-muted-foreground">{t("renewalAgreementDialog.empty")}</div>
           )}
         </ScrollArea>
 
@@ -272,7 +275,7 @@ export function RenewalAgreementDialog({
                 htmlFor="accept-renewal-terms"
                 className="text-xs sm:text-sm font-medium leading-tight sm:leading-relaxed text-foreground cursor-pointer select-none"
               >
-                Tôi đã đọc, hiểu rõ và đồng ý với các điều khoản gia hạn, mức phí và cam kết tiếp tục đồng hành chăm sóc cùng bác sĩ phụ trách trong phiên tư vấn này.
+                {t("renewalAgreementDialog.acceptTerms")}
               </label>
             </div>
           </div>
@@ -285,7 +288,7 @@ export function RenewalAgreementDialog({
             onClick={() => onOpenChange(false)}
             disabled={submitting}
           >
-            Đóng
+            {t("renewalAgreementDialog.close")}
           </Button>
           <Button
             type="button"
@@ -294,7 +297,7 @@ export function RenewalAgreementDialog({
             className="gap-1.5"
           >
             <CheckCircle2 className="w-4 h-4" />
-            {submitting ? "Đang xác nhận..." : "Xác nhận & Tiến hành thanh toán"}
+            {submitting ? t("renewalAgreementDialog.confirming") : t("renewalAgreementDialog.confirmAndPay")}
           </Button>
         </DialogFooter>
       </DialogContent>

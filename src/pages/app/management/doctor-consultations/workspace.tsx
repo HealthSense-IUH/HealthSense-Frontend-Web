@@ -1,5 +1,7 @@
 import { type FormEvent, useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { useNavigate, useParams, useSearchParams } from "react-router-dom"
+import { useTranslation } from "react-i18next"
+import i18n from "@/lib/i18n"
 import {
   Clock,
   FileText,
@@ -54,6 +56,7 @@ function readError(error: unknown, fallback: string) {
 export default function DoctorSessionWorkspacePage() {
   const { sessionId } = useParams<{ sessionId: string }>()
   const navigate = useNavigate()
+  const { t } = useTranslation("management")
   const [searchParams, setSearchParams] = useSearchParams()
   const { toast } = useToast()
   const userSession = useAuthStore((state) => state.userSession)
@@ -89,7 +92,7 @@ export default function DoctorSessionWorkspacePage() {
         if (mounted) {
           toast({
             variant: "destructive",
-            description: readError(error, "Không thể tải thông tin phiên tư vấn."),
+            description: readError(error, i18n.t("management:doctorConsultations.workspace.toast.loadDetailError")),
           })
         }
       })
@@ -130,7 +133,7 @@ export default function DoctorSessionWorkspacePage() {
         if (mounted) {
           toast({
             variant: "destructive",
-            description: readError(error, "Không thể tải lịch sử trao đổi."),
+            description: readError(error, i18n.t("management:doctorConsultations.workspace.toast.loadMessagesError")),
           })
           setMessages([])
         }
@@ -194,7 +197,7 @@ export default function DoctorSessionWorkspacePage() {
     } catch (error) {
       toast({
         variant: "destructive",
-        description: readError(error, "Không thể tải tin nhắn cũ hơn."),
+        description: readError(error, i18n.t("management:doctorConsultations.workspace.toast.loadOlderMessagesError")),
       })
     } finally {
       setLoadingMoreMessages(false)
@@ -234,13 +237,13 @@ export default function DoctorSessionWorkspacePage() {
       } catch (error) {
         toast({
           variant: "destructive",
-          description: readError(error, "Không thể gửi tin nhắn."),
+          description: readError(error, t("doctorConsultations.workspace.toast.sendMessageError")),
         })
       } finally {
         setChatLoading(false)
       }
     },
-    [sessionId, detail?.session.status, messageDraft, attachmentUrl, handleIncomingMessage, toast]
+    [sessionId, detail?.session.status, messageDraft, attachmentUrl, handleIncomingMessage, toast, t]
   )
 
   const session = detail?.session
@@ -248,18 +251,20 @@ export default function DoctorSessionWorkspacePage() {
   const memberDisplayName =
     member?.displayName ||
     session?.memberDisplayName ||
-    (member?.userId || session?.memberId ? `Bệnh nhân #${member?.userId || session?.memberId}` : `Bệnh nhân #${session?.id}`)
+    (member?.userId || session?.memberId
+      ? t("doctorConsultations.workspace.patientFallback", { id: member?.userId || session?.memberId })
+      : t("doctorConsultations.workspace.patientFallback", { id: session?.id }))
   const memberId = member?.userId || session?.memberId
 
   const isCompleted = session?.status === "COMPLETED"
   const isCancelled = session?.status === "CANCELLED"
   const readOnlyMode = isCompleted || isCancelled || session?.status === "SCHEDULED"
   const readOnlyReason = isCompleted
-    ? "Phiên tư vấn đã hoàn tất. Bạn chỉ có thể xem lại lịch sử trao đổi."
+    ? t("doctorConsultations.workspace.readOnly.completed")
     : isCancelled
-      ? "Phiên tư vấn đã bị hủy. Không thể tiếp tục gửi tin nhắn."
+      ? t("doctorConsultations.workspace.readOnly.cancelled")
       : session?.status === "SCHEDULED"
-        ? "Phiên tư vấn chưa bắt đầu."
+        ? t("doctorConsultations.workspace.readOnly.scheduled")
         : undefined
   const canSend = session?.status === "ACTIVE" && !readOnlyMode
 
@@ -268,7 +273,7 @@ export default function DoctorSessionWorkspacePage() {
       <Page fill bleed>
         <PageBody className="items-center justify-center text-center gap-3 p-6">
           <Loader2 className="h-8 w-8 animate-spin text-primary-600" />
-          <p className="text-sm font-semibold text-slate-600">Đang tải không gian khám chuyên khoa...</p>
+          <p className="text-sm font-semibold text-slate-600">{t("doctorConsultations.workspace.loading")}</p>
         </PageBody>
       </Page>
     )
@@ -279,12 +284,12 @@ export default function DoctorSessionWorkspacePage() {
       <Page fill bleed>
         <PageBody className="items-center justify-center text-center gap-4 p-6">
           <ShieldAlert className="h-12 w-12 text-danger-500" />
-          <h2 className="text-lg font-bold text-slate-800">Không tìm thấy phiên khám</h2>
+          <h2 className="text-lg font-bold text-slate-800">{t("doctorConsultations.workspace.notFound.title")}</h2>
           <p className="text-xs text-slate-500 max-w-md">
-            Phiên tư vấn này không tồn tại hoặc bạn không được phân công phụ trách.
+            {t("doctorConsultations.workspace.notFound.description")}
           </p>
           <Button onClick={() => navigate("/app/management/doctor/consultations")} className="rounded-xl">
-            Quay lại danh sách
+            {t("doctorConsultations.workspace.notFound.backToList")}
           </Button>
         </PageBody>
       </Page>
@@ -298,7 +303,7 @@ export default function DoctorSessionWorkspacePage() {
         compact
         className="px-4 sm:px-6 py-3 border-b border-border bg-background"
         breadcrumbs={[
-          { label: "Quản lý phiên khám", to: "/app/management/doctor/consultations" },
+          { label: t("doctorConsultations.workspace.breadcrumb"), to: "/app/management/doctor/consultations" },
           { label: memberDisplayName },
         ]}
         icon={
@@ -329,12 +334,12 @@ export default function DoctorSessionWorkspacePage() {
           <>
             {memberId && (
               <Badge variant="outline" className="font-mono text-[11px] px-1.5 py-0 border-slate-200 text-slate-500">
-                ID: #{memberId}
+                {t("doctorConsultations.workspace.memberIdBadge", { id: memberId })}
               </Badge>
             )}
             {getSessionStatusBadge(session.status, session.meaningfulCareOccurred)}
             <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-primary-600 bg-primary-50 px-2 py-0.5 rounded-md">
-              {session.packageNameSnapshot || "Tư vấn chuyên khoa"}
+              {session.packageNameSnapshot || t("doctorConsultations.workspace.defaultPackage")}
             </span>
           </>
         }
@@ -344,7 +349,7 @@ export default function DoctorSessionWorkspacePage() {
             {session.status === "ACTIVE" && session.endsAt && (
               <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-success-50 border border-success-200 text-success-800 text-xs font-bold shadow-2xs">
                 <Clock className="w-3.5 h-3.5 text-success-600 animate-pulse" />
-                <span>Hạn kết thúc: {formatDate(session.endsAt)}</span>
+                <span>{t("doctorConsultations.workspace.endsAt", { date: formatDate(session.endsAt) })}</span>
               </div>
             )}
 
@@ -356,7 +361,7 @@ export default function DoctorSessionWorkspacePage() {
                 className="h-9 px-3 rounded-xl bg-warning-500 hover:bg-warning-600 text-white font-extrabold text-xs shadow-xs cursor-pointer animate-pulse"
               >
                 <FileText className="w-4 h-4 mr-1.5" />
-                Lập tổng kết y khoa
+                {t("doctorConsultations.workspace.createSummary")}
               </Button>
             )}
 
@@ -368,7 +373,7 @@ export default function DoctorSessionWorkspacePage() {
               className="h-9 px-3 rounded-xl border-slate-200 text-slate-700 font-bold text-xs hover:bg-slate-50 flex items-center gap-1.5 cursor-pointer"
             >
               <Info className="w-4 h-4 text-slate-500" />
-              <span>Lịch & Chi tiết</span>
+              <span>{t("doctorConsultations.workspace.scheduleAndDetails")}</span>
             </Button>
           </>
         }
@@ -385,7 +390,7 @@ export default function DoctorSessionWorkspacePage() {
                 className="text-xs font-bold rounded-lg px-3 data-[state=active]:bg-white data-[state=active]:text-primary-700 data-[state=active]:shadow-xs flex items-center gap-1.5"
               >
                 <MessageSquare className="w-3.5 h-3.5" />
-                <span>Trò chuyện trực tiếp</span>
+                <span>{t("doctorConsultations.workspace.tabs.chat")}</span>
                 {session.status === "ACTIVE" && (
                   <span className="w-2 h-2 rounded-full bg-success-500 animate-ping" />
                 )}
@@ -396,7 +401,7 @@ export default function DoctorSessionWorkspacePage() {
                 className="text-xs font-bold rounded-lg px-3 data-[state=active]:bg-white data-[state=active]:text-primary-700 data-[state=active]:shadow-xs flex items-center gap-1.5"
               >
                 <FileText className="w-3.5 h-3.5" />
-                <span>Hồ sơ sức khỏe & Bản đo</span>
+                <span>{t("doctorConsultations.workspace.tabs.records")}</span>
                 {session.unresolvedAttentionCount > 0 && (
                   <Badge className="h-4 px-1.5 rounded-full bg-danger-500 text-white font-black text-[10px]">
                     {session.unresolvedAttentionCount}
@@ -409,10 +414,10 @@ export default function DoctorSessionWorkspacePage() {
                 className="text-xs font-bold rounded-lg px-3 data-[state=active]:bg-white data-[state=active]:text-primary-700 data-[state=active]:shadow-xs flex items-center gap-1.5"
               >
                 <FileText className="w-3.5 h-3.5" />
-                <span>Tổng kết y khoa</span>
+                <span>{t("doctorConsultations.workspace.tabs.summary")}</span>
                 {session.summaryClosureStatus === "SUMMARY_PENDING" && (
                   <Badge className="h-4 px-1.5 rounded-full bg-warning-500 text-white font-black text-[10px]">
-                    Cần lập
+                    {t("doctorConsultations.workspace.tabs.summaryNeeded")}
                   </Badge>
                 )}
               </TabsTrigger>
@@ -422,7 +427,7 @@ export default function DoctorSessionWorkspacePage() {
                 className="text-xs font-bold rounded-lg px-3 data-[state=active]:bg-white data-[state=active]:text-primary-700 data-[state=active]:shadow-xs flex items-center gap-1.5"
               >
                 <History className="w-3.5 h-3.5" />
-                <span>Tiền sử chăm sóc</span>
+                <span>{t("doctorConsultations.workspace.tabs.continuity")}</span>
               </TabsTrigger>
 
               <TabsTrigger
@@ -430,7 +435,7 @@ export default function DoctorSessionWorkspacePage() {
                 className="text-xs font-bold rounded-lg px-3 data-[state=active]:bg-white data-[state=active]:text-primary-700 data-[state=active]:shadow-xs flex items-center gap-1.5"
               >
                 <Salad className="w-3.5 h-3.5" />
-                <span>Dinh dưỡng</span>
+                <span>{t("doctorConsultations.workspace.tabs.nutrition")}</span>
               </TabsTrigger>
             </TabsList>
           </Tabs>

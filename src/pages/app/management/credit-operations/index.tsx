@@ -1,4 +1,5 @@
 import { useSearchParams } from "react-router-dom"
+import { useTranslation } from "react-i18next"
 import {
   Coins,
   ReceiptText,
@@ -13,6 +14,7 @@ import { Page, PageBody, PageHeader } from "@/components/layout/page"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 export default function AdminCreditOperationsPage() {
+  const { t } = useTranslation("credits")
   const [searchParams, setSearchParams] = useSearchParams()
   const tabParam = searchParams.get("tab")
   const activeTab =
@@ -26,8 +28,8 @@ export default function AdminCreditOperationsPage() {
     <Page>
       <PageHeader
         icon={<Coins className="w-5 h-5" />}
-        title="Quản lý lượt tư vấn"
-        description="Quản lý gói lượt, tra cứu ví thành viên, điều chỉnh delta và tổng kết thanh toán token toàn hệ thống."
+        title={t("admin.page.title")}
+        description={t("admin.page.description")}
       />
 
       <PageBody>
@@ -43,21 +45,21 @@ export default function AdminCreditOperationsPage() {
               className="rounded-xl py-2.5 text-xs font-semibold data-[state=active]:bg-background data-[state=active]:shadow-xs gap-1.5"
             >
               <Coins className="w-4 h-4" />
-              Gói lượt tư vấn
+              {t("admin.page.tabs.packages")}
             </TabsTrigger>
             <TabsTrigger
               value="wallet"
               className="rounded-xl py-2.5 text-xs font-semibold data-[state=active]:bg-background data-[state=active]:shadow-xs gap-1.5"
             >
               <User className="w-4 h-4" />
-              Ví & Điều chỉnh
+              {t("admin.page.tabs.wallet")}
             </TabsTrigger>
             <TabsTrigger
               value="payments"
               className="rounded-xl py-2.5 text-xs font-semibold data-[state=active]:bg-background data-[state=active]:shadow-xs gap-1.5"
             >
               <ReceiptText className="w-4 h-4" />
-              Tổng kết thanh toán
+              {t("admin.page.tabs.payments")}
             </TabsTrigger>
           </TabsList>
 

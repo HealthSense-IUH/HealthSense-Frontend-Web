@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { useTranslation } from "react-i18next"
 import {
   Clock,
   FileText,
@@ -24,6 +25,7 @@ interface HealthRecordDetailModalProps {
 }
 
 export function HealthRecordDetailModal({ record, isOpen, onClose }: HealthRecordDetailModalProps) {
+  const { t } = useTranslation("health")
   const { toast } = useToast()
   const [downloading, setDownloading] = useState(false)
   useEffect(() => {
@@ -58,13 +60,13 @@ export function HealthRecordDetailModal({ record, isOpen, onClose }: HealthRecor
         <div className="flex items-start justify-between border-b border-border pb-4">
           <div className="space-y-1">
             <h3 className="text-xl font-bold tracking-tight text-foreground">
-              Chi tiết Kết quả Tầm soát Nhịp tim
+              {t("recordDetail.title")}
             </h3>
             <p className="text-xs text-muted-foreground flex items-center gap-1.5">
               <Clock className="w-3.5 h-3.5" />
-              <span>Thời gian đo: {formatRecordDate(record.createdAt)}</span>
+              <span>{t("recordDetail.measuredAt", { date: formatRecordDate(record.createdAt) })}</span>
               <span>•</span>
-              <span>File: {record.fileName}</span>
+              <span>{t("recordDetail.file", { name: record.fileName })}</span>
             </p>
           </div>
 
@@ -81,7 +83,7 @@ export function HealthRecordDetailModal({ record, isOpen, onClose }: HealthRecor
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-2xl bg-slate-50 border border-border">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <span className="text-xs text-muted-foreground font-medium">Kết luận AI:</span>
+              <span className="text-xs text-muted-foreground font-medium">{t("recordDetail.aiConclusion")}</span>
               <span className={`inline-flex items-center justify-center w-32 py-1 rounded-full text-xs font-bold border shadow-xs ${meta.badgeClass}`}>
                 {meta.label}
               </span>
@@ -93,7 +95,7 @@ export function HealthRecordDetailModal({ record, isOpen, onClose }: HealthRecor
 
           {record.confidence !== undefined && record.confidence !== null && (
             <div className="shrink-0 sm:text-right pt-2 sm:pt-0 border-t sm:border-t-0 border-border">
-              <span className="text-xs text-muted-foreground block">Khả năng bị rung nhĩ</span>
+              <span className="text-xs text-muted-foreground block">{t("recordDetail.afibProbability")}</span>
               <span className="text-lg font-bold text-foreground">{(record.confidence * 100).toFixed(1)}%</span>
             </div>
           )}
@@ -105,7 +107,7 @@ export function HealthRecordDetailModal({ record, isOpen, onClose }: HealthRecor
         {/* 4 Core Physiological Metrics */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           <div className="p-3.5 rounded-2xl bg-slate-50 border border-border">
-            <span className="text-xs text-muted-foreground font-medium block">Nhịp tim TB</span>
+            <span className="text-xs text-muted-foreground font-medium block">{t("recordDetail.avgHeartRate")}</span>
             <div className="text-xl font-bold text-foreground mt-1">
               {features.HR_mean ? formatHrvNumber(features.HR_mean, 0) : "--"}{" "}
               <span className="text-xs font-normal text-muted-foreground">BPM</span>
@@ -132,7 +134,7 @@ export function HealthRecordDetailModal({ record, isOpen, onClose }: HealthRecor
           </div>
 
           <div className="p-3.5 rounded-2xl bg-slate-50 border border-border">
-            <span className="text-xs text-muted-foreground font-medium block">Tỷ lệ LF/HF</span>
+            <span className="text-xs text-muted-foreground font-medium block">{t("recordDetail.lfHfRatio")}</span>
             <div className="text-xl font-bold text-foreground mt-1">
               {features.LF_HF_Ratio ? formatHrvNumber(features.LF_HF_Ratio, 2) : "--"}
             </div>
@@ -143,17 +145,17 @@ export function HealthRecordDetailModal({ record, isOpen, onClose }: HealthRecor
         {/* Detailed HRV Features Table */}
         <div className="space-y-2.5">
           <h4 className="text-xs font-semibold text-foreground uppercase tracking-wider">
-            Các chỉ số Biến thiên Nhịp tim (HRV)
+            {t("recordDetail.hrvTitle")}
           </h4>
 
           <div className="rounded-2xl border border-border overflow-hidden text-xs">
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="bg-slate-50 border-b border-border font-semibold text-muted-foreground">
-                  <th className="py-2.5 px-4">Chỉ số</th>
-                  <th className="py-2.5 px-4 text-right sm:text-left">Giá trị đo</th>
-                  <th className="py-2.5 px-4 hidden md:table-cell">Dải tham chiếu</th>
-                  <th className="py-2.5 px-4 hidden sm:table-cell">Ý nghĩa y khoa</th>
+                  <th className="py-2.5 px-4">{t("recordDetail.table.metric")}</th>
+                  <th className="py-2.5 px-4 text-right sm:text-left">{t("recordDetail.table.value")}</th>
+                  <th className="py-2.5 px-4 hidden md:table-cell">{t("recordDetail.table.referenceRange")}</th>
+                  <th className="py-2.5 px-4 hidden sm:table-cell">{t("recordDetail.table.meaning")}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border font-normal text-foreground">
@@ -164,7 +166,7 @@ export function HealthRecordDetailModal({ record, isOpen, onClose }: HealthRecor
                   </td>
                   <td className="py-2 px-4 text-muted-foreground hidden md:table-cell">600 - 1200 ms</td>
                   <td className="py-2 px-4 text-muted-foreground hidden sm:table-cell">
-                    Khoảng thời gian trung bình giữa 2 nhịp liên tiếp
+                    {t("recordDetail.meaning.meanNn")}
                   </td>
                 </tr>
                 <tr className="hover:bg-slate-50/50 transition-colors">
@@ -174,7 +176,7 @@ export function HealthRecordDetailModal({ record, isOpen, onClose }: HealthRecor
                   </td>
                   <td className="py-2 px-4 text-muted-foreground hidden md:table-cell">30 - 100 ms</td>
                   <td className="py-2 px-4 text-muted-foreground hidden sm:table-cell">
-                    Độ biến thiên tổng thể của hệ thần kinh tự chủ
+                    {t("recordDetail.meaning.sdnn")}
                   </td>
                 </tr>
                 <tr className="hover:bg-slate-50/50 transition-colors">
@@ -184,7 +186,7 @@ export function HealthRecordDetailModal({ record, isOpen, onClose }: HealthRecor
                   </td>
                   <td className="py-2 px-4 text-muted-foreground hidden md:table-cell">20 - 50 ms</td>
                   <td className="py-2 px-4 text-muted-foreground hidden sm:table-cell">
-                    Mức độ hoạt động thần kinh phó giao cảm (Vagal tone)
+                    {t("recordDetail.meaning.rmssd")}
                   </td>
                 </tr>
                 <tr className="hover:bg-slate-50/50 transition-colors">
@@ -194,7 +196,7 @@ export function HealthRecordDetailModal({ record, isOpen, onClose }: HealthRecor
                   </td>
                   <td className="py-2 px-4 text-muted-foreground hidden md:table-cell">3% - 30%</td>
                   <td className="py-2 px-4 text-muted-foreground hidden sm:table-cell">
-                    Tỷ lệ các cặp nhịp tim liên tiếp chênh lệch &gt; 50ms
+                    {t("recordDetail.meaning.pnn50")}
                   </td>
                 </tr>
                 <tr className="hover:bg-slate-50/50 transition-colors">
@@ -204,7 +206,7 @@ export function HealthRecordDetailModal({ record, isOpen, onClose }: HealthRecor
                   </td>
                   <td className="py-2 px-4 text-muted-foreground hidden md:table-cell">0.05 - 0.15</td>
                   <td className="py-2 px-4 text-muted-foreground hidden sm:table-cell">
-                    Hệ số biến thiên tương đối của nhịp tim
+                    {t("recordDetail.meaning.cv")}
                   </td>
                 </tr>
                 <tr className="hover:bg-slate-50/50 transition-colors">
@@ -214,7 +216,7 @@ export function HealthRecordDetailModal({ record, isOpen, onClose }: HealthRecor
                   </td>
                   <td className="py-2 px-4 text-muted-foreground hidden md:table-cell">0.04 - 0.15 Hz</td>
                   <td className="py-2 px-4 text-muted-foreground hidden sm:table-cell">
-                    Năng lượng dải tần thấp (giao cảm và huyết áp)
+                    {t("recordDetail.meaning.lf")}
                   </td>
                 </tr>
                 <tr className="hover:bg-slate-50/50 transition-colors">
@@ -224,17 +226,17 @@ export function HealthRecordDetailModal({ record, isOpen, onClose }: HealthRecor
                   </td>
                   <td className="py-2 px-4 text-muted-foreground hidden md:table-cell">0.15 - 0.40 Hz</td>
                   <td className="py-2 px-4 text-muted-foreground hidden sm:table-cell">
-                    Năng lượng dải tần cao (hô hấp và phó giao cảm)
+                    {t("recordDetail.meaning.hf")}
                   </td>
                 </tr>
                 <tr className="hover:bg-slate-50/50 transition-colors">
-                  <td className="py-2 px-4 font-semibold">Tỷ lệ LF/HF</td>
+                  <td className="py-2 px-4 font-semibold">{t("recordDetail.lfHfRatio")}</td>
                   <td className="py-2 px-4 text-right sm:text-left font-medium">
                     {formatHrvNumber(features.LF_HF_Ratio, 2)}
                   </td>
                   <td className="py-2 px-4 text-muted-foreground hidden md:table-cell">0.5 - 2.0</td>
                   <td className="py-2 px-4 text-muted-foreground hidden sm:table-cell">
-                    Tỷ lệ cân bằng thần kinh giao cảm / phó giao cảm
+                    {t("recordDetail.meaning.lfHf")}
                   </td>
                 </tr>
               </tbody>
@@ -246,7 +248,7 @@ export function HealthRecordDetailModal({ record, isOpen, onClose }: HealthRecor
         <div className="flex items-center justify-between pt-3 border-t border-border text-xs text-muted-foreground">
           <span className="flex items-center gap-1.5">
             <FileText className="w-3.5 h-3.5" />
-            <span>Kích thước: {formatHrvNumber(record.fileSize ? record.fileSize / 1024 : 0, 1)} KB</span>
+            <span>{t("recordDetail.fileSize", { size: formatHrvNumber(record.fileSize ? record.fileSize / 1024 : 0, 1) })}</span>
           </span>
           <div className="flex items-center gap-2">
             <Button
@@ -260,7 +262,7 @@ export function HealthRecordDetailModal({ record, isOpen, onClose }: HealthRecor
                   const res = await healthRecordApi.getDownloadUrl(record.id)
                   const downloadUrl = res.data?.uploadUrl
                   if (!downloadUrl) {
-                    toast({ variant: "destructive", title: "Lỗi", description: "Không tìm thấy đường dẫn tải file." })
+                    toast({ variant: "destructive", title: t("common:toast.error"), description: t("recordDetail.downloadUrlNotFound") })
                     return
                   }
                   const link = document.createElement("a")
@@ -272,7 +274,7 @@ export function HealthRecordDetailModal({ record, isOpen, onClose }: HealthRecor
                   link.click()
                   document.body.removeChild(link)
                 } catch {
-                  toast({ variant: "destructive", title: "Lỗi", description: "Không thể lấy đường dẫn tải tệp." })
+                  toast({ variant: "destructive", title: t("common:toast.error"), description: t("recordDetail.downloadUrlFailed") })
                 } finally {
                   setDownloading(false)
                 }
@@ -281,11 +283,11 @@ export function HealthRecordDetailModal({ record, isOpen, onClose }: HealthRecor
             >
               {downloading ? (
                 <>
-                  <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" /> Đang tải...
+                  <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" /> {t("recordDetail.downloading")}
                 </>
               ) : (
                 <>
-                  <Download className="w-3.5 h-3.5 mr-1.5" /> Tải CSV gốc
+                  <Download className="w-3.5 h-3.5 mr-1.5" /> {t("recordDetail.downloadCsv")}
                 </>
               )}
             </Button>
@@ -294,7 +296,7 @@ export function HealthRecordDetailModal({ record, isOpen, onClose }: HealthRecor
               onClick={onClose}
               className="h-9 px-5 rounded-xl bg-primary text-primary-foreground font-semibold text-xs cursor-pointer shadow-xs"
             >
-              Đóng
+              {t("common:actions.close")}
             </Button>
           </div>
         </div>

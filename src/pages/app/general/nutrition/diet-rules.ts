@@ -1,35 +1,37 @@
 import { Beef, Candy, Coffee, Droplets, Leaf, Pill, Scale, Wine, type LucideIcon } from "lucide-react"
 
+import i18n, { currentIntlLocale } from "@/lib/i18n"
 import type { DietRuleCode } from "@/types/nutrition"
 
-/** Mức ưu tiên của bộ quy tắc cho người rung nhĩ (V28) */
-export const PRIORITY_LABEL: Record<number, string> = {
-  1: "Ưu tiên 1 · Lọc cứng",
-  2: "Ưu tiên 2 · Điện giải",
-  3: "Ưu tiên 3 · Tim mạch chung",
-  4: "Ưu tiên 4 · Vi chất bảo vệ",
-  5: "Theo đơn",
+/** Mức ưu tiên của bộ quy tắc cho người rung nhĩ (V28); nhãn dịch lúc đọc theo ngôn ngữ đang chọn. */
+export const PRIORITY_LABEL: Record<number, string> = Object.defineProperties({} as Record<number, string>, {
+  1: { enumerable: true, get: () => i18n.t("nutrition:dietRules.priority.1") },
+  2: { enumerable: true, get: () => i18n.t("nutrition:dietRules.priority.2") },
+  3: { enumerable: true, get: () => i18n.t("nutrition:dietRules.priority.3") },
+  4: { enumerable: true, get: () => i18n.t("nutrition:dietRules.priority.4") },
+  5: { enumerable: true, get: () => i18n.t("nutrition:dietRules.priority.5") },
+})
+
+/** Icon và giải thích ngắn (dịch lúc đọc) của một quy tắc */
+function ruleMeta(icon: LucideIcon, code: DietRuleCode): { icon: LucideIcon; summary: string } {
+  return {
+    icon,
+    get summary() {
+      return i18n.t(`nutrition:dietRules.summary.${code}`)
+    },
+  }
 }
 
 /** Icon và giải thích ngắn của từng quy tắc; ngưỡng thật lấy từ API (admin sửa trong cơ sở dữ liệu). */
 export const DIET_RULE_META: Record<DietRuleCode, { icon: LucideIcon; summary: string }> = {
-  ALCOHOL: { icon: Wine, summary: "Cồn là yếu tố kích phát cơn rung nhĩ rõ nhất: món có cồn là đỏ." },
-  CAFFEINE: { icon: Coffee, summary: "Caffeine liều cao làm tim đập nhanh: vượt ngưỡng là vàng." },
-  SUGARS: {
-    icon: Candy,
-    summary: "Tính trên đường tổng (chưa có số liệu đường bổ sung); không áp cho trái cây và sữa.",
-  },
-  NA_K_RATIO: {
-    icon: Scale,
-    summary: "Kali bằng hoặc hơn natri giúp ổn định nhịp tim; natri gấp nhiều lần kali mà món lại mặn là đỏ.",
-  },
-  SODIUM: { icon: Droplets, summary: "Muối nhiều gây giữ nước, tăng áp lực lên tim." },
-  SATURATED_FAT: { icon: Beef, summary: "Chất béo bão hòa nhiều làm tăng nguy cơ tim mạch." },
-  MAGNESIUM: { icon: Leaf, summary: "Giàu magie mà ít muối (hạt, đậu, ngũ cốc nguyên cám) là điểm tốt cho tim." },
-  VITAMIN_K: {
-    icon: Pill,
-    summary: "Đang dùng warfarin: không cần kiêng, nhưng nên ăn lượng vitamin K đều mỗi ngày.",
-  },
+  ALCOHOL: ruleMeta(Wine, "ALCOHOL"),
+  CAFFEINE: ruleMeta(Coffee, "CAFFEINE"),
+  SUGARS: ruleMeta(Candy, "SUGARS"),
+  NA_K_RATIO: ruleMeta(Scale, "NA_K_RATIO"),
+  SODIUM: ruleMeta(Droplets, "SODIUM"),
+  SATURATED_FAT: ruleMeta(Beef, "SATURATED_FAT"),
+  MAGNESIUM: ruleMeta(Leaf, "MAGNESIUM"),
+  VITAMIN_K: ruleMeta(Pill, "VITAMIN_K"),
 }
 
 export type DietThresholdField = "limit" | "caution" | "good"
@@ -43,11 +45,12 @@ export function thresholdFieldsOf(code: DietRuleCode): DietThresholdField[] {
 
 /** Nhãn và màu chấm của từng loại ngưỡng */
 export const THRESHOLD_FIELD_STYLE: Record<DietThresholdField, { dot: string; label: (code: DietRuleCode) => string }> = {
-  limit: { dot: "bg-danger-500", label: () => "Đỏ khi trên" },
-  caution: { dot: "bg-warning-500", label: () => "Vàng khi trên" },
+  limit: { dot: "bg-danger-500", label: () => i18n.t("nutrition:dietRules.field.limit") },
+  caution: { dot: "bg-warning-500", label: () => i18n.t("nutrition:dietRules.field.caution") },
   good: {
     dot: "bg-success-500",
-    label: (code) => (code === "NA_K_RATIO" ? "Tốt khi từ mức này trở xuống" : "Tốt khi từ mức này trở lên"),
+    label: (code) =>
+      code === "NA_K_RATIO" ? i18n.t("nutrition:dietRules.field.goodAtMost") : i18n.t("nutrition:dietRules.field.goodAtLeast"),
   },
 }
 
@@ -57,7 +60,7 @@ export function thresholdUnit(code: DietRuleCode, unit: string) {
 }
 
 function amount(value: number) {
-  return value.toLocaleString("vi-VN")
+  return value.toLocaleString(currentIntlLocale())
 }
 
 /**
@@ -72,23 +75,34 @@ export function describeRuleThresholds(
   if (code === "NA_K_RATIO") {
     const parts = [
       rule.limit != null
-        ? `đỏ khi Na/K trên ${amount(rule.limit)}${sodium?.limit != null ? ` và natri trên ${amount(sodium.limit)} mg` : ""}`
+        ? sodium?.limit != null
+          ? i18n.t("nutrition:dietRules.describe.naKLimitWithSodium", {
+              value: amount(rule.limit),
+              sodium: amount(sodium.limit),
+            })
+          : i18n.t("nutrition:dietRules.describe.naKLimit", { value: amount(rule.limit) })
         : null,
-      rule.good != null ? `tốt khi Na/K từ ${amount(rule.good)} trở xuống` : null,
+      rule.good != null ? i18n.t("nutrition:dietRules.describe.naKGood", { value: amount(rule.good) }) : null,
     ].filter(Boolean)
     return capitalize(parts.join("; "))
   }
   if (code === "MAGNESIUM") {
     if (rule.good == null) return ""
-    return `Tốt khi từ ${amount(rule.good)} ${rule.unit} trên 100 g${
-      sodium?.caution != null ? ` và natri không quá ${amount(sodium.caution)} mg` : ""
-    }`
+    return sodium?.caution != null
+      ? i18n.t("nutrition:dietRules.describe.magnesiumGoodWithSodium", {
+          value: amount(rule.good),
+          unit: rule.unit,
+          sodium: amount(sodium.caution),
+        })
+      : i18n.t("nutrition:dietRules.describe.magnesiumGood", { value: amount(rule.good), unit: rule.unit })
   }
   const parts = [
-    rule.limit != null ? `đỏ khi trên ${amount(rule.limit)} ${rule.unit}` : null,
-    rule.caution != null ? `vàng khi trên ${amount(rule.caution)} ${rule.unit}` : null,
+    rule.limit != null ? i18n.t("nutrition:dietRules.describe.limit", { value: amount(rule.limit), unit: rule.unit }) : null,
+    rule.caution != null
+      ? i18n.t("nutrition:dietRules.describe.caution", { value: amount(rule.caution), unit: rule.unit })
+      : null,
   ].filter(Boolean)
-  return parts.length ? `${capitalize(parts.join(", "))} (trên 100 g)` : ""
+  return parts.length ? i18n.t("nutrition:dietRules.describe.per100g", { text: capitalize(parts.join(", ")) }) : ""
 }
 
 function capitalize(text: string) {

@@ -1,5 +1,7 @@
 import { useState, useEffect, useCallback } from "react"
 import { useParams, useSearchParams } from "react-router-dom"
+import { Trans, useTranslation } from "react-i18next"
+import i18n from "@/lib/i18n"
 import {
   User,
   Activity,
@@ -21,6 +23,7 @@ import { MemberConsultationsTab } from "./components/member-consultations-tab"
 import { UserFormModal } from "./components/user-form-modal"
 
 export default function MemberDetailPage() {
+  const { t } = useTranslation("management")
   const { id } = useParams<{ id: string }>()
   const [searchParams, setSearchParams] = useSearchParams()
   const { effectiveRole } = useAppShell()
@@ -58,7 +61,7 @@ export default function MemberDetailPage() {
         console.error("Failed to load user details:", err)
         setStatusAlert({
           type: "error",
-          text: "Không thể lấy thông tin chi tiết của người dùng từ hệ thống.",
+          text: i18n.t("management:userDetail.page.loadError"),
         })
       }
     } finally {
@@ -82,7 +85,7 @@ export default function MemberDetailPage() {
       await userManagementApi.updateUser(user.id, payload)
       setStatusAlert({
         type: "success",
-        text: `Tài khoản #${user.id} đã được cập nhật thành công.`,
+        text: t("userDetail.page.updateSuccess", { id: user.id }),
       })
       setIsEditOpen(false)
       await fetchMemberInfo()
@@ -90,7 +93,7 @@ export default function MemberDetailPage() {
       const err = error as { message?: string; response?: { data?: { message?: string } } }
       setStatusAlert({
         type: "error",
-        text: err?.response?.data?.message || "Cập nhật thông tin thất bại.",
+        text: err?.response?.data?.message || t("userDetail.page.updateFailed"),
       })
     } finally {
       setActionLoading(false)
@@ -105,14 +108,14 @@ export default function MemberDetailPage() {
       await userManagementApi.createFakeHealthRecord({ memberId: user.id })
       setStatusAlert({
         type: "success",
-        text: `Đã sinh dữ liệu bản đo mẫu cho ${user.displayName || user.email}.`,
+        text: t("userDetail.page.fakeRecordSuccess", { name: user.displayName || user.email }),
       })
       await fetchMemberInfo()
     } catch (error: unknown) {
       const err = error as { message?: string; response?: { data?: { message?: string } } }
       setStatusAlert({
         type: "error",
-        text: err?.response?.data?.message || "Tạo bản đo mẫu thất bại.",
+        text: err?.response?.data?.message || t("userDetail.page.fakeRecordFailed"),
       })
     } finally {
       setActionLoading(false)
@@ -127,9 +130,17 @@ export default function MemberDetailPage() {
             <div className="p-5 rounded-2xl bg-danger-50 text-danger-600 border border-danger-200/80 shadow-xs mb-5">
               <ShieldAlert className="w-12 h-12 stroke-[2.2]" />
             </div>
-            <h2 className="text-2xl font-black text-slate-900 tracking-tight">Access Denied: Protected Route</h2>
+            <h2 className="text-2xl font-black text-slate-900 tracking-tight">{t("userDetail.page.accessDeniedTitle")}</h2>
             <p className="text-sm font-medium text-slate-500 mt-2 leading-relaxed">
-              The <strong className="text-slate-800">User Detail</strong> view is restricted solely to tenant <strong className="text-primary-600">ADMIN</strong> and <strong className="text-warning-600">SUPER_ADMIN</strong> authorities.
+              <Trans
+                t={t}
+                i18nKey="userDetail.page.accessDeniedDescription"
+                components={{
+                  strong: <strong className="text-slate-800" />,
+                  primary: <strong className="text-primary-600" />,
+                  warning: <strong className="text-warning-600" />,
+                }}
+              />
             </p>
           </div>
         </PageBody>
@@ -143,7 +154,7 @@ export default function MemberDetailPage() {
         <PageBody className="items-center justify-center text-center">
           <div className="flex flex-col items-center">
             <Loader2 className="w-8 h-8 text-primary-600 animate-spin mb-3" />
-            <span className="text-sm font-bold text-slate-700">Đang tải thông tin hồ sơ Member #{id}...</span>
+            <span className="text-sm font-bold text-slate-700">{t("userDetail.page.loading", { id })}</span>
           </div>
         </PageBody>
       </Page>
@@ -154,11 +165,11 @@ export default function MemberDetailPage() {
     <Page>
       <PageHeader
         breadcrumbs={[
-          { label: "Quản lý tài khoản", to: "/app/management/users" },
-          { label: "Chi tiết hội viên" },
+          { label: t("userDetail.page.breadcrumbUsers"), to: "/app/management/users" },
+          { label: t("userDetail.page.breadcrumbDetail") },
         ]}
-        title={user?.displayName || `Hội viên #${id}`}
-        description="Thông tin cá nhân, lịch sử các bản đo và lịch sử các lần tư vấn của hội viên."
+        title={user?.displayName || t("userDetail.page.fallbackTitle", { id })}
+        description={t("userDetail.page.description")}
       />
 
       <PageBody>
@@ -197,7 +208,7 @@ export default function MemberDetailPage() {
               className="rounded-xl px-4 py-2.5 font-extrabold text-xs flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:text-primary-700 data-[state=active]:shadow-xs transition-all cursor-pointer"
             >
               <User className="w-4 h-4" />
-              <span>1. Thông tin cá nhân</span>
+              <span>{t("userDetail.page.tabs.personal")}</span>
             </TabsTrigger>
 
             <TabsTrigger
@@ -205,7 +216,7 @@ export default function MemberDetailPage() {
               className="rounded-xl px-4 py-2.5 font-extrabold text-xs flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:text-primary-700 data-[state=active]:shadow-xs transition-all cursor-pointer"
             >
               <Activity className="w-4 h-4" />
-              <span>2. Lịch sử các bản đo</span>
+              <span>{t("userDetail.page.tabs.records")}</span>
               {memberDetail?.totalHealthRecords != null && (
                 <span className="ml-1 px-2 py-0.5 rounded-full text-[10px] font-black bg-primary-100 text-primary-800">
                   {memberDetail.totalHealthRecords}
@@ -218,7 +229,7 @@ export default function MemberDetailPage() {
               className="rounded-xl px-4 py-2.5 font-extrabold text-xs flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:text-primary-700 data-[state=active]:shadow-xs transition-all cursor-pointer"
             >
               <MessagesSquare className="w-4 h-4" />
-              <span>3. Lịch sử các lần tư vấn</span>
+              <span>{t("userDetail.page.tabs.consultations")}</span>
             </TabsTrigger>
           </TabsList>
 

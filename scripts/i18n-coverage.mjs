@@ -35,6 +35,7 @@ function countHardcoded(file) {
     if (!VI_CHARS.test(line)) continue
     if (line.startsWith("//") || line.startsWith("*") || line.startsWith("/*") || line.startsWith("{/*")) continue
     if (/\bt\(["'`]/.test(line)) continue
+    if (line.includes("i18n-ignore")) continue // dữ liệu mẫu / tên riêng, ghi rõ lý do sau dấu ":"
     n++
   }
   return n
@@ -104,9 +105,11 @@ for (const f of files) {
   }
 }
 
+// Khoá số nhiều: t("x", { count }) dùng x_one / x_other (tiếng Việt chỉ có x_other)
 const has = (lang, nsKey) => {
   const [ns, key] = nsKey.split(":", 2)
-  return lang.get(ns)?.has(key) ?? false
+  const keys = lang.get(ns)
+  return Boolean(keys && (keys.has(key) || keys.has(`${key}_other`)))
 }
 const missVi = [...used.keys()].filter((k) => !has(vi, k))
 const missEn = [...used.keys()].filter((k) => !has(en, k))

@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from "react"
+import { Trans, useTranslation } from "react-i18next"
 import {
   ShieldCheck,
   RefreshCw,
@@ -29,8 +30,10 @@ import type {
   BusinessAuditTargetDomain as BusinessDomainType,
 } from "@/types/business-audit"
 import { AuditEventDetailDrawer } from "@/pages/app/management/audit/components/audit-event-detail-drawer"
+import i18n, { currentIntlLocale } from "@/lib/i18n"
 
 export default function BusinessAuditPage() {
+  const { t } = useTranslation("management")
   const { toast } = useToast()
   const userSession = useAuthStore((state) => state.userSession)
   const role = userSession?.role || "CARE_COORDINATOR"
@@ -68,8 +71,8 @@ export default function BusinessAuditPage() {
       const anyErr = err as { response?: { data?: { message?: string } } }
       toast({
         variant: "destructive",
-        title: "Lỗi",
-        description: anyErr.response?.data?.message || "Không thể tải nhật ký kiểm toán doanh nghiệp.",
+        title: i18n.t("management:audit.loadErrorTitle"),
+        description: anyErr.response?.data?.message || i18n.t("management:audit.loadErrorDescription"),
       })
     } finally {
       setLoading(false)
@@ -91,10 +94,15 @@ export default function BusinessAuditPage() {
             </div>
             <div>
               <h1 className="text-2xl font-black tracking-tight text-slate-900">
-                Nhật ký Kiểm toán Doanh nghiệp (Business Audit)
+                {t("audit.title")}
               </h1>
               <p className="text-xs text-slate-500 mt-0.5">
-                Nhật ký bất biến (append-only) theo dõi toàn bộ vòng đời đối tượng nghiệp vụ (Vai trò: <span className="font-bold text-slate-700">{role}</span>)
+                <Trans
+                  t={t}
+                  i18nKey="audit.subtitle"
+                  values={{ role }}
+                  components={{ strong: <span className="font-bold text-slate-700" /> }}
+                />
               </p>
             </div>
           </div>
@@ -108,7 +116,7 @@ export default function BusinessAuditPage() {
           className="h-9 font-semibold text-xs border-slate-200 cursor-pointer"
         >
           <RefreshCw className={`w-3.5 h-3.5 mr-1.5 ${loading ? "animate-spin" : ""}`} />
-          Làm mới
+          {t("audit.refresh")}
         </Button>
       </div>
 
@@ -117,13 +125,13 @@ export default function BusinessAuditPage() {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           {/* Domain Type selector strictly scoped */}
           <div className="space-y-1">
-            <span className="text-[10px] font-bold text-slate-500 uppercase">Phạm vi đối tượng (Domain)</span>
+            <span className="text-[10px] font-bold text-slate-500 uppercase">{t("audit.filters.domain")}</span>
             <Select value={selectedDomain} onValueChange={setSelectedDomain}>
               <SelectTrigger className="h-9 text-xs rounded-xl border-slate-200">
-                <SelectValue placeholder="Chọn Domain" />
+                <SelectValue placeholder={t("audit.filters.domainPlaceholder")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="ALL">Tất cả Domain cho phép</SelectItem>
+                <SelectItem value="ALL">{t("audit.filters.allDomains")}</SelectItem>
                 {availableDomains.map((dom) => (
                   <SelectItem key={dom} value={dom}>
                     {dom}
@@ -135,11 +143,11 @@ export default function BusinessAuditPage() {
 
           {/* Domain ID search */}
           <div className="space-y-1">
-            <span className="text-[10px] font-bold text-slate-500 uppercase">Mã đối tượng (Domain ID)</span>
+            <span className="text-[10px] font-bold text-slate-500 uppercase">{t("audit.filters.domainId")}</span>
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" />
               <Input
-                placeholder="VD: 101, REQ_001..."
+                placeholder={t("audit.filters.domainIdPlaceholder")}
                 value={domainIdInput}
                 onChange={(e) => setDomainIdInput(e.target.value)}
                 className="pl-8 text-xs h-9 rounded-xl border-slate-200"
@@ -149,11 +157,11 @@ export default function BusinessAuditPage() {
 
           {/* Event Type search */}
           <div className="space-y-1">
-            <span className="text-[10px] font-bold text-slate-500 uppercase">Loại sự kiện (Event Type)</span>
+            <span className="text-[10px] font-bold text-slate-500 uppercase">{t("audit.filters.eventType")}</span>
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" />
               <Input
-                placeholder="VD: CREATED, STATUS_CHANGED..."
+                placeholder={t("audit.filters.eventTypePlaceholder")}
                 value={eventTypeInput}
                 onChange={(e) => setEventTypeInput(e.target.value)}
                 className="pl-8 text-xs h-9 rounded-xl border-slate-200"
@@ -167,7 +175,7 @@ export default function BusinessAuditPage() {
       {loading ? (
         <div className="flex flex-col items-center justify-center p-16 text-slate-400 space-y-3">
           <RefreshCw className="w-6 h-6 animate-spin text-primary-500" />
-          <span className="text-xs font-medium">Đang tải nhật ký kiểm toán...</span>
+          <span className="text-xs font-medium">{t("audit.loading")}</span>
         </div>
       ) : events.length === 0 ? (
         <Card className="rounded-2xl border-slate-200 shadow-xs bg-slate-50/50">
@@ -175,9 +183,9 @@ export default function BusinessAuditPage() {
             <div className="w-12 h-12 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center">
               <FileSearch className="w-6 h-6" />
             </div>
-            <h3 className="text-sm font-black text-slate-800">Không có sự kiện kiểm toán nào</h3>
+            <h3 className="text-sm font-black text-slate-800">{t("audit.emptyTitle")}</h3>
             <p className="text-xs text-slate-500 max-w-sm">
-              Không tìm thấy nhật ký kiểm toán phù hợp với bộ lọc trong phạm vi quyền hạn của bạn.
+              {t("audit.emptyDescription")}
             </p>
           </CardContent>
         </Card>
@@ -187,12 +195,12 @@ export default function BusinessAuditPage() {
             <table className="w-full text-left text-xs">
               <thead className="bg-slate-50/80 border-b border-slate-200 text-slate-500 font-bold uppercase text-[10px]">
                 <tr>
-                  <th className="py-3 px-4">Thời gian</th>
-                  <th className="py-3 px-4">Domain</th>
-                  <th className="py-3 px-4">Loại sự kiện (Event)</th>
-                  <th className="py-3 px-4">Tác nhân (Actor)</th>
-                  <th className="py-3 px-4">Chuyển trạng thái</th>
-                  <th className="py-3 px-4 text-right">Chi tiết</th>
+                  <th className="py-3 px-4">{t("audit.table.time")}</th>
+                  <th className="py-3 px-4">{t("audit.table.domain")}</th>
+                  <th className="py-3 px-4">{t("audit.table.eventType")}</th>
+                  <th className="py-3 px-4">{t("audit.table.actor")}</th>
+                  <th className="py-3 px-4">{t("audit.table.stateTransition")}</th>
+                  <th className="py-3 px-4 text-right">{t("audit.table.detail")}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
@@ -206,7 +214,7 @@ export default function BusinessAuditPage() {
                     className="hover:bg-slate-50/80 transition-colors cursor-pointer"
                   >
                     <td className="py-3.5 px-4 font-mono text-slate-500 text-[11px] whitespace-nowrap">
-                      {new Date(ev.occurredAt).toLocaleString("vi-VN")}
+                      {new Date(ev.occurredAt).toLocaleString(currentIntlLocale())}
                     </td>
                     <td className="py-3.5 px-4 whitespace-nowrap">
                       <Badge variant="outline" className="font-bold text-[10px] bg-slate-50">
@@ -239,7 +247,7 @@ export default function BusinessAuditPage() {
                     </td>
                     <td className="py-3.5 px-4 text-right">
                       <Button variant="ghost" size="sm" className="h-7 px-2.5 text-xs text-primary-600 font-bold">
-                        Xem
+                        {t("audit.table.view")}
                       </Button>
                     </td>
                   </tr>

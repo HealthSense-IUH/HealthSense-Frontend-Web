@@ -8,6 +8,8 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useToast } from "@/hooks/use-toast"
 import { parseApiError } from "@/lib/errorHandler"
+import { useTranslation } from "react-i18next"
+import i18n from "@/lib/i18n"
 import { creditsApi } from "@/services/credits.service"
 import {
   getPaymentDateRangePreset,
@@ -28,6 +30,7 @@ import { PaymentOrderDetailDialog } from "./payment-order-detail-dialog"
 import { MemberCreditSummaryTable } from "./member-credit-summary-table"
 
 export function TokenPaymentsTab() {
+  const { t } = useTranslation("credits")
   const { toast } = useToast()
   const [searchParams, setSearchParams] = useSearchParams()
 
@@ -144,7 +147,7 @@ export function TokenPaymentsTab() {
         setOverview(res.data)
       } catch (err) {
         const parsed = parseApiError(err)
-        setOverviewError(parsed.userMessage || "Không thể tải số liệu KPI tổng quan.")
+        setOverviewError(parsed.userMessage || i18n.t("credits:admin.tokenTab.errors.overview"))
       } finally {
         setLoadingOverview(false)
       }
@@ -182,8 +185,8 @@ export function TokenPaymentsTab() {
         const parsed = parseApiError(err)
         toast({
           variant: "destructive",
-          title: "Lỗi tải danh sách đơn hàng",
-          description: parsed.userMessage || "Không thể tải danh sách đơn mua token.",
+          title: i18n.t("credits:admin.tokenTab.errors.ordersTitle"),
+          description: parsed.userMessage || i18n.t("credits:admin.tokenTab.errors.orders"),
         })
       } finally {
         setLoadingOrders(false)
@@ -202,7 +205,7 @@ export function TokenPaymentsTab() {
       setOrderDetail(res.data)
     } catch (err) {
       const parsed = parseApiError(err)
-      setOrderDetailError(parsed.userMessage || "Không thể tải chi tiết đơn hàng.")
+      setOrderDetailError(parsed.userMessage || t("orderDetail.loadError"))
     } finally {
       setLoadingOrderDetail(false)
     }
@@ -360,14 +363,14 @@ export function TokenPaymentsTab() {
             className="rounded-xl py-2.5 text-xs font-semibold data-[state=active]:bg-background data-[state=active]:shadow-xs gap-1.5"
           >
             <CreditCard className="w-4 h-4" />
-            Danh sách giao dịch
+            {t("admin.tokenTab.subtabs.orders")}
           </TabsTrigger>
           <TabsTrigger
             value="members"
             className="rounded-xl py-2.5 text-xs font-semibold data-[state=active]:bg-background data-[state=active]:shadow-xs gap-1.5"
           >
             <Users className="w-4 h-4" />
-            Thống kê theo thành viên
+            {t("admin.tokenTab.subtabs.members")}
           </TabsTrigger>
         </TabsList>
 

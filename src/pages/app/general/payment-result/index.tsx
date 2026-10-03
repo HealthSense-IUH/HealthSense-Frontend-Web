@@ -4,6 +4,8 @@ import { ShieldAlert, CheckCircle2, Clock, XCircle, AlertTriangle, RefreshCw, Ar
 
 import { Page, PageBody, PageHeader } from "@/components/layout/page"
 import { Button } from "@/components/ui/button"
+import { useTranslation } from "react-i18next"
+import i18n, { currentIntlLocale } from "@/lib/i18n"
 import { consultationApi } from "@/services"
 import type { ConsultationPaymentResponse, ConsultationPaymentAttemptItem, ConsultationRenewalResponse } from "@/types/consultation"
 
@@ -13,6 +15,7 @@ function readError(error: unknown, fallback: string) {
 }
 
 export default function PaymentResultPage() {
+  const { t } = useTranslation("credits")
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const [loading, setLoading] = useState(true)
@@ -61,7 +64,7 @@ export default function PaymentResultPage() {
         setIsNotFound(true)
         clearStorage()
       } else {
-        setErrorText(readError(error, "Lỗi kiểm tra trạng thái thanh toán."))
+        setErrorText(readError(error, i18n.t("credits:consultationPaymentResult.errors.checkStatus")))
       }
     } finally {
       setLoading(false)
@@ -101,7 +104,7 @@ export default function PaymentResultPage() {
         setIsNotFound(true)
         clearStorage()
       } else {
-        setErrorText(readError(error, "Lỗi kiểm tra trạng thái thanh toán gia hạn."))
+        setErrorText(readError(error, i18n.t("credits:consultationPaymentResult.errors.checkRenewalStatus")))
       }
     } finally {
       setLoading(false)
@@ -145,10 +148,10 @@ export default function PaymentResultPage() {
   const pageHeader = (
     <PageHeader
       breadcrumbs={[
-        { label: "Tư vấn & Chăm sóc", to: "/app/general/consultations" },
-        { label: "Kết quả thanh toán" },
+        { label: t("paymentResult.breadcrumbs.consultations"), to: "/app/general/consultations" },
+        { label: t("paymentResult.title") },
       ]}
-      title="Kết quả thanh toán"
+      title={t("paymentResult.title")}
     />
   )
 
@@ -159,7 +162,7 @@ export default function PaymentResultPage() {
         <PageBody className="items-center justify-center text-center">
           <div className="flex flex-col items-center w-full max-w-md">
             <RefreshCw className="h-8 w-8 text-slate-400 animate-spin mb-4" />
-            <p className="text-slate-500 font-medium">Đang kiểm tra giao dịch thanh toán...</p>
+            <p className="text-slate-500 font-medium">{t("consultationPaymentResult.loading")}</p>
           </div>
         </PageBody>
       </Page>
@@ -173,10 +176,10 @@ export default function PaymentResultPage() {
         <PageBody className="items-center justify-center text-center">
           <div className="flex flex-col items-center w-full max-w-md">
             <ShieldAlert className="h-12 w-12 text-slate-400 mb-4" />
-            <h2 className="text-xl font-bold text-slate-900 mb-2">Không tìm thấy yêu cầu</h2>
-            <p className="text-slate-500 mb-6">Không tìm thấy mã giao dịch hoặc yêu cầu thanh toán hợp lệ trong phiên của bạn.</p>
+            <h2 className="text-xl font-bold text-slate-900 mb-2">{t("consultationPaymentResult.missingTitle")}</h2>
+            <p className="text-slate-500 mb-6">{t("consultationPaymentResult.missingDescription")}</p>
             <Button onClick={() => navigate("/app/general/consultations")}>
-              <ArrowLeft className="mr-2 h-4 w-4" /> Về trang Quản lý Tư vấn
+              <ArrowLeft className="mr-2 h-4 w-4" /> {t("consultationPaymentResult.backToConsultations")}
             </Button>
           </div>
         </PageBody>
@@ -191,10 +194,10 @@ export default function PaymentResultPage() {
         <PageBody className="items-center justify-center text-center">
           <div className="flex flex-col items-center w-full max-w-md">
             <AlertTriangle className="h-12 w-12 text-warning-500 mb-4" />
-            <h2 className="text-xl font-bold text-slate-900 mb-2">Không có giao dịch</h2>
-            <p className="text-slate-500 mb-6">Chưa có giao dịch thanh toán nào được ghi nhận cho yêu cầu này.</p>
+            <h2 className="text-xl font-bold text-slate-900 mb-2">{t("consultationPaymentResult.notFoundTitle")}</h2>
+            <p className="text-slate-500 mb-6">{t("consultationPaymentResult.notFoundDescription")}</p>
             <Button onClick={() => navigate("/app/general/consultations")}>
-              <ArrowLeft className="mr-2 h-4 w-4" /> Về trang Quản lý Tư vấn
+              <ArrowLeft className="mr-2 h-4 w-4" /> {t("consultationPaymentResult.backToConsultations")}
             </Button>
           </div>
         </PageBody>
@@ -209,14 +212,14 @@ export default function PaymentResultPage() {
         <PageBody className="items-center justify-center text-center">
           <div className="flex flex-col items-center w-full max-w-md">
             <XCircle className="h-12 w-12 text-danger-500 mb-4" />
-            <h2 className="text-xl font-bold text-danger-900 mb-2">Đã xảy ra lỗi</h2>
+            <h2 className="text-xl font-bold text-danger-900 mb-2">{t("paymentResult.errorTitle")}</h2>
             <p className="text-slate-600 mb-6">{errorText}</p>
             <div className="flex gap-3">
               <Button variant="outline" onClick={handleRefresh}>
-                <RefreshCw className="mr-2 h-4 w-4" /> Thử lại
+                <RefreshCw className="mr-2 h-4 w-4" /> {t("shared.retry")}
               </Button>
               <Button onClick={() => navigate("/app/general/consultations")}>
-                <ArrowLeft className="mr-2 h-4 w-4" /> Về trang Quản lý Tư vấn
+                <ArrowLeft className="mr-2 h-4 w-4" /> {t("consultationPaymentResult.backToConsultations")}
               </Button>
             </div>
           </div>
@@ -242,17 +245,17 @@ export default function PaymentResultPage() {
             {status === "PAID" && (
               <>
                 <CheckCircle2 className="h-16 w-16 text-success-500 mb-4" />
-                <h2 className="text-2xl font-bold text-success-900 mb-2">Gia hạn thành công!</h2>
+                <h2 className="text-2xl font-bold text-success-900 mb-2">{t("consultationPaymentResult.renewal.paidTitle")}</h2>
                 {renewalAttempt && (
                   <p className="text-success-700/80 mb-2">
-                    Mã giao dịch #{renewalAttempt.orderCode} &bull; Số tiền: {renewalAttempt.amount?.toLocaleString("vi-VN")} {renewalAttempt.currency || "VND"}
+                    {t("consultationPaymentResult.txSummary", { code: renewalAttempt.orderCode, amount: renewalAttempt.amount?.toLocaleString(currentIntlLocale()), currency: renewalAttempt.currency || "VND" })}
                   </p>
                 )}
                 <p className="text-muted-foreground text-xs mb-8">
-                  Thời hạn chăm sóc của bạn đã được nối dài thành công cùng bác sĩ phụ trách. Toàn bộ dữ liệu trao đổi và hồ sơ theo dõi được giữ nguyên vẹn.
+                  {t("consultationPaymentResult.renewal.paidDescription")}
                 </p>
                 <Button onClick={handleBackToConsultations} className="w-full bg-success-600 hover:bg-success-700">
-                  Quay lại phiên tư vấn
+                  {t("consultationPaymentResult.renewal.backToSession")}
                 </Button>
               </>
             )}
@@ -260,13 +263,13 @@ export default function PaymentResultPage() {
             {status === "PENDING" && (
               <>
                 <Clock className="h-16 w-16 text-primary-500 mb-4" />
-                <h2 className="text-2xl font-bold text-primary-900 mb-2">Đang xác nhận thanh toán gia hạn</h2>
-                <p className="text-primary-700/80 mb-8">Vui lòng chờ trong giây lát. Hệ thống đang đồng bộ giao dịch từ PayOS.</p>
+                <h2 className="text-2xl font-bold text-primary-900 mb-2">{t("consultationPaymentResult.renewal.pendingTitle")}</h2>
+                <p className="text-primary-700/80 mb-8">{t("consultationPaymentResult.renewal.pendingDescription")}</p>
                 <Button onClick={handleRefresh} variant="outline" className="w-full mb-3 text-primary-600 border-primary-200 bg-primary-50 hover:bg-primary-100">
-                  <RefreshCw className="mr-2 h-4 w-4" /> Làm mới trạng thái
+                  <RefreshCw className="mr-2 h-4 w-4" /> {t("consultationPaymentResult.refreshStatus")}
                 </Button>
                 <Button variant="ghost" onClick={() => navigate("/app/general/consultations")} className="w-full">
-                  <ArrowLeft className="mr-2 h-4 w-4" /> Quay lại sau
+                  <ArrowLeft className="mr-2 h-4 w-4" /> {t("consultationPaymentResult.comeBackLater")}
                 </Button>
               </>
             )}
@@ -274,10 +277,10 @@ export default function PaymentResultPage() {
             {status === "EXPIRED" && (
               <>
                 <Clock className="h-16 w-16 text-warning-500 mb-4" />
-                <h2 className="text-2xl font-bold text-warning-900 mb-2">Thanh toán gia hạn đã hết hạn</h2>
-                <p className="text-warning-700/80 mb-8">Thời hạn thanh toán cho yêu cầu gia hạn đã kết thúc. Bạn có thể gửi lại yêu cầu gia hạn mới nếu phiên vẫn còn hoạt động.</p>
+                <h2 className="text-2xl font-bold text-warning-900 mb-2">{t("consultationPaymentResult.renewal.expiredTitle")}</h2>
+                <p className="text-warning-700/80 mb-8">{t("consultationPaymentResult.renewal.expiredDescription")}</p>
                 <Button onClick={handleBackToConsultations} variant="outline" className="w-full">
-                  <ArrowLeft className="mr-2 h-4 w-4" /> Về phiên tư vấn
+                  <ArrowLeft className="mr-2 h-4 w-4" /> {t("consultationPaymentResult.renewal.toSession")}
                 </Button>
               </>
             )}
@@ -285,10 +288,10 @@ export default function PaymentResultPage() {
             {status === "CANCELLED" && (
               <>
                 <XCircle className="h-16 w-16 text-slate-500 mb-4" />
-                <h2 className="text-2xl font-bold text-slate-900 mb-2">Gia hạn đã bị hủy</h2>
-                <p className="text-slate-600 mb-8">Yêu cầu gia hạn hoặc giao dịch thanh toán đã bị hủy. Thời hạn phiên chăm sóc hiện tại không đổi.</p>
+                <h2 className="text-2xl font-bold text-slate-900 mb-2">{t("consultationPaymentResult.renewal.cancelledTitle")}</h2>
+                <p className="text-slate-600 mb-8">{t("consultationPaymentResult.renewal.cancelledDescription")}</p>
                 <Button onClick={handleBackToConsultations} variant="outline" className="w-full">
-                  <ArrowLeft className="mr-2 h-4 w-4" /> Về phiên tư vấn
+                  <ArrowLeft className="mr-2 h-4 w-4" /> {t("consultationPaymentResult.renewal.toSession")}
                 </Button>
               </>
             )}
@@ -296,10 +299,10 @@ export default function PaymentResultPage() {
             {status === "FAILED" && (
               <>
                 <XCircle className="h-16 w-16 text-danger-500 mb-4" />
-                <h2 className="text-2xl font-bold text-danger-900 mb-2">Thanh toán gia hạn thất bại</h2>
-                <p className="text-danger-700/80 mb-8">Đã xảy ra lỗi trong quá trình xử lý giao dịch. Vui lòng thử lại sau.</p>
+                <h2 className="text-2xl font-bold text-danger-900 mb-2">{t("consultationPaymentResult.renewal.failedTitle")}</h2>
+                <p className="text-danger-700/80 mb-8">{t("consultationPaymentResult.renewal.failedDescription")}</p>
                 <Button onClick={handleBackToConsultations} variant="outline" className="w-full">
-                  <ArrowLeft className="mr-2 h-4 w-4" /> Về phiên tư vấn
+                  <ArrowLeft className="mr-2 h-4 w-4" /> {t("consultationPaymentResult.renewal.toSession")}
                 </Button>
               </>
             )}
@@ -307,12 +310,12 @@ export default function PaymentResultPage() {
             {status === "REQUIRES_REVIEW" && (
               <>
                 <AlertTriangle className="h-16 w-16 text-warning-500 mb-4" />
-                <h2 className="text-2xl font-bold text-warning-900 mb-2">Thanh toán cần được kiểm tra</h2>
+                <h2 className="text-2xl font-bold text-warning-900 mb-2">{t("consultationPaymentResult.reviewTitle")}</h2>
                 <p className="text-warning-700/80 mb-8">
-                  Giao dịch thanh toán gia hạn đã được ghi nhận nhưng cần điều phối viên kiểm tra thủ công. Thời hạn phiên sẽ được cập nhật sau khi hoàn tất xác thực.
+                  {t("consultationPaymentResult.renewal.reviewDescription")}
                 </p>
                 <Button onClick={handleBackToConsultations} variant="outline" className="w-full">
-                  <ArrowLeft className="mr-2 h-4 w-4" /> Về phiên tư vấn
+                  <ArrowLeft className="mr-2 h-4 w-4" /> {t("consultationPaymentResult.renewal.toSession")}
                 </Button>
               </>
             )}
@@ -333,15 +336,15 @@ export default function PaymentResultPage() {
           {initialPayment.status === "PAID" && (
             <>
               <CheckCircle2 className="h-16 w-16 text-success-500 mb-4" />
-              <h2 className="text-2xl font-bold text-success-900 mb-2">Thanh toán thành công!</h2>
+              <h2 className="text-2xl font-bold text-success-900 mb-2">{t("consultationPaymentResult.initial.paidTitle")}</h2>
               <p className="text-success-700/80 mb-2">
-                Mã giao dịch #{initialPayment.orderCode} &bull; Số tiền: {initialPayment.amount?.toLocaleString("vi-VN")} {initialPayment.currency || "VND"}
+                {t("consultationPaymentResult.txSummary", { code: initialPayment.orderCode, amount: initialPayment.amount?.toLocaleString(currentIntlLocale()), currency: initialPayment.currency || "VND" })}
               </p>
               <p className="text-muted-foreground text-xs mb-8">
-                Phiên tư vấn đã được kích hoạt thành công. Bác sĩ đã được phân công và sẵn sàng hỗ trợ bạn.
+                {t("consultationPaymentResult.initial.paidDescription")}
               </p>
               <Button onClick={handleBackToConsultations} className="w-full bg-success-600 hover:bg-success-700">
-                Xem phiên tư vấn của tôi
+                {t("consultationPaymentResult.initial.viewMySessions")}
               </Button>
             </>
           )}
@@ -349,13 +352,13 @@ export default function PaymentResultPage() {
           {initialPayment.status === "PENDING" && (
             <>
               <Clock className="h-16 w-16 text-primary-500 mb-4" />
-              <h2 className="text-2xl font-bold text-primary-900 mb-2">Đang xác nhận thanh toán</h2>
-              <p className="text-primary-700/80 mb-8">Vui lòng chờ trong giây lát. Hệ thống đang đồng bộ giao dịch từ cổng thanh toán.</p>
+              <h2 className="text-2xl font-bold text-primary-900 mb-2">{t("consultationPaymentResult.initial.pendingTitle")}</h2>
+              <p className="text-primary-700/80 mb-8">{t("consultationPaymentResult.initial.pendingDescription")}</p>
               <Button onClick={handleRefresh} variant="outline" className="w-full mb-3 text-primary-600 border-primary-200 bg-primary-50 hover:bg-primary-100">
-                <RefreshCw className="mr-2 h-4 w-4" /> Làm mới trạng thái
+                <RefreshCw className="mr-2 h-4 w-4" /> {t("consultationPaymentResult.refreshStatus")}
               </Button>
               <Button variant="ghost" onClick={() => navigate("/app/general/consultations")} className="w-full">
-                <ArrowLeft className="mr-2 h-4 w-4" /> Quay lại sau
+                <ArrowLeft className="mr-2 h-4 w-4" /> {t("consultationPaymentResult.comeBackLater")}
               </Button>
             </>
           )}
@@ -363,10 +366,10 @@ export default function PaymentResultPage() {
           {initialPayment.status === "EXPIRED" && (
             <>
               <Clock className="h-16 w-16 text-warning-500 mb-4" />
-              <h2 className="text-2xl font-bold text-warning-900 mb-2">Thanh toán đã hết hạn</h2>
-              <p className="text-warning-700/80 mb-8">Thời hạn thanh toán cho yêu cầu này đã kết thúc. Vui lòng tạo lại yêu cầu nếu cần.</p>
+              <h2 className="text-2xl font-bold text-warning-900 mb-2">{t("consultationPaymentResult.initial.expiredTitle")}</h2>
+              <p className="text-warning-700/80 mb-8">{t("consultationPaymentResult.initial.expiredDescription")}</p>
               <Button onClick={() => navigate("/app/general/consultations")} variant="outline" className="w-full">
-                <ArrowLeft className="mr-2 h-4 w-4" /> Về trang Quản lý Tư vấn
+                <ArrowLeft className="mr-2 h-4 w-4" /> {t("consultationPaymentResult.backToConsultations")}
               </Button>
             </>
           )}
@@ -374,10 +377,10 @@ export default function PaymentResultPage() {
           {initialPayment.status === "CANCELLED" && (
             <>
               <XCircle className="h-16 w-16 text-slate-500 mb-4" />
-              <h2 className="text-2xl font-bold text-slate-900 mb-2">Thanh toán đã bị hủy</h2>
-              <p className="text-slate-600 mb-8">Giao dịch đã bị hủy bởi người dùng hoặc hệ thống thanh toán.</p>
+              <h2 className="text-2xl font-bold text-slate-900 mb-2">{t("consultationPaymentResult.initial.cancelledTitle")}</h2>
+              <p className="text-slate-600 mb-8">{t("consultationPaymentResult.initial.cancelledDescription")}</p>
               <Button onClick={() => navigate("/app/general/consultations")} variant="outline" className="w-full">
-                <ArrowLeft className="mr-2 h-4 w-4" /> Về trang Quản lý Tư vấn
+                <ArrowLeft className="mr-2 h-4 w-4" /> {t("consultationPaymentResult.backToConsultations")}
               </Button>
             </>
           )}
@@ -385,10 +388,10 @@ export default function PaymentResultPage() {
           {initialPayment.status === "FAILED" && (
             <>
               <XCircle className="h-16 w-16 text-danger-500 mb-4" />
-              <h2 className="text-2xl font-bold text-danger-900 mb-2">Thanh toán thất bại</h2>
-              <p className="text-danger-700/80 mb-8">Đã có lỗi xảy ra trong quá trình xử lý thanh toán. Vui lòng thử lại sau.</p>
+              <h2 className="text-2xl font-bold text-danger-900 mb-2">{t("consultationPaymentResult.initial.failedTitle")}</h2>
+              <p className="text-danger-700/80 mb-8">{t("consultationPaymentResult.initial.failedDescription")}</p>
               <Button onClick={() => navigate("/app/general/consultations")} variant="outline" className="w-full">
-                <ArrowLeft className="mr-2 h-4 w-4" /> Về trang Quản lý Tư vấn
+                <ArrowLeft className="mr-2 h-4 w-4" /> {t("consultationPaymentResult.backToConsultations")}
               </Button>
             </>
           )}
@@ -396,10 +399,10 @@ export default function PaymentResultPage() {
           {initialPayment.status === "REQUIRES_REVIEW" && (
             <>
               <AlertTriangle className="h-16 w-16 text-warning-500 mb-4" />
-              <h2 className="text-2xl font-bold text-warning-900 mb-2">Thanh toán cần được kiểm tra</h2>
-              <p className="text-warning-700/80 mb-8">Giao dịch đang cần kiểm tra thủ công. Vui lòng liên hệ bộ phận hỗ trợ.</p>
+              <h2 className="text-2xl font-bold text-warning-900 mb-2">{t("consultationPaymentResult.reviewTitle")}</h2>
+              <p className="text-warning-700/80 mb-8">{t("consultationPaymentResult.initial.reviewDescription")}</p>
               <Button onClick={() => navigate("/app/general/consultations")} variant="outline" className="w-full">
-                <ArrowLeft className="mr-2 h-4 w-4" /> Về trang Quản lý Tư vấn
+                <ArrowLeft className="mr-2 h-4 w-4" /> {t("consultationPaymentResult.backToConsultations")}
               </Button>
             </>
           )}

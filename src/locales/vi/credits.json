@@ -1,1 +1,801 @@
-{}
+{
+  "orderStatus": {
+    "paid": "Đã thanh toán",
+    "pendingPayment": "Chờ thanh toán",
+    "cancelled": "Đã hủy",
+    "expired": "Hết hạn",
+    "requiresReview": "Đang kiểm tra"
+  },
+  "packageStatus": {
+    "active": "Đang mở bán",
+    "inactive": "Tạm dừng bán"
+  },
+  "reservationStatus": {
+    "held": "Lượt đang được tạm giữ",
+    "captured": "Lượt đã được sử dụng",
+    "released": "Lượt đã được trả lại",
+    "none": "Không có tạm giữ"
+  },
+  "paymentStatus": {
+    "creating": "Đang khởi tạo",
+    "pending": "Chờ thanh toán",
+    "paid": "Đã thanh toán",
+    "cancelled": "Đã hủy",
+    "expired": "Đã hết hạn",
+    "requiresReview": "Đang kiểm tra"
+  },
+  "paymentProvider": {
+    "mock": {
+      "label": "Thanh toán giả lập",
+      "description": "Thử nghiệm hệ thống, không trừ tiền thật"
+    },
+    "payos": {
+      "label": "Cổng thanh toán PayOS",
+      "description": "Cổng thanh toán trực tuyến PayOS"
+    },
+    "fallbackDescription": "Phương thức thanh toán"
+  },
+  "operation": {
+    "purchase": {
+      "label": "Mua lượt",
+      "description": "Cộng lượt khi thanh toán đơn mua"
+    },
+    "reserve": {
+      "label": "Giữ lượt tư vấn",
+      "description": "Tạm giữ lượt khi tham gia phiên tư vấn"
+    },
+    "capture": {
+      "label": "Sử dụng lượt",
+      "description": "Tiêu thụ lượt tư vấn đã giữ"
+    },
+    "release": {
+      "label": "Trả lượt giữ",
+      "description": "Hoàn trả lượt đang giữ về lại khả dụng"
+    },
+    "sessionCharge": {
+      "label": "Đã dùng lượt khi bắt đầu phiên",
+      "description": "Tiêu thụ lượt tư vấn khi member xác nhận bắt đầu phiên"
+    },
+    "adjustment": {
+      "label": "Điều chỉnh",
+      "description": "Quản trị viên điều chỉnh lượt"
+    },
+    "sessionRefund": {
+      "label": "Bồi hoàn lượt",
+      "description": "Bồi hoàn lượt tư vấn của phiên"
+    },
+    "fallbackLabel": "Khác",
+    "fallbackDescription": "Biến động lượt"
+  },
+  "sourceType": {
+    "purchaseOrder": "Đơn mua",
+    "consultationRequest": "Yêu cầu tư vấn",
+    "consultationSession": "Phiên tư vấn",
+    "adminAdjustment": "Điều chỉnh quản trị",
+    "fallback": "Nguồn khác"
+  },
+  "errorCode": {
+    "c1003": "Tài khoản của bạn hiện không hoạt động. Vui lòng liên hệ quản trị viên.",
+    "c1201": "Thông tin yêu cầu không hợp lệ.",
+    "c1203": "Dữ liệu gửi lên máy chủ không đúng định dạng.",
+    "c3001": "Ràng buộc dữ liệu bị vi phạm.",
+    "c4008": "Không tìm thấy thông tin hội viên.",
+    "c4100": "Số dư lượt tư vấn không đủ để thực hiện thao tác này.",
+    "c4103": "Xung đột mã yêu cầu (Idempotency Key). Vui lòng thử lại với yêu cầu mới.",
+    "c4104": "Số dư ví lượt đã đạt giới hạn tối đa cho phép. Vui lòng liên hệ hỗ trợ.",
+    "c4105": "Gói lượt tư vấn hiện không khả dụng hoặc đã ngừng bán.",
+    "c4106": "Không tìm thấy thông tin đơn mua lượt hoặc đơn không thuộc về bạn.",
+    "c4108": "Chức năng mua lượt tư vấn tạm thời chưa khả dụng trong hệ thống.",
+    "c4109": "Không tìm thấy thông tin gói lượt quản trị.",
+    "c4110": "Dữ liệu gói đã bị thay đổi bởi quản trị viên khác. Vui lòng tải lại dữ liệu mới nhất.",
+    "c4111": "Phiên tư vấn không đủ điều kiện để bồi hoàn lượt tư vấn.",
+    "c9999": "Hệ thống đang bảo trì hoặc gặp sự cố xử lý. Vui lòng thử lại sau."
+  },
+  "confirmError": {
+    "c4100": "Không còn đủ lượt tại thời điểm bắt đầu phiên. Vui lòng nạp thêm lượt.",
+    "c4026": "Không tìm thấy lời mời tư vấn hoặc đã bị thu hồi.",
+    "c4027": "Lời mời tư vấn cũ hoặc không còn hiệu lực.",
+    "c4028": "Lời mời tư vấn đã hết thời gian xác nhận.",
+    "c4009": "Yêu cầu tư vấn không còn ở trạng thái cho phép xác nhận.",
+    "c4014": "Bác sĩ không còn đủ điều kiện nhận phiên. Đang điều phối lại...",
+    "c4002": "Yêu cầu tư vấn không thuộc về tài khoản của bạn.",
+    "c4004": "Bạn đã có phiên tư vấn khác đang hoạt động."
+  },
+  "display": {
+    "unknown": "Không xác định",
+    "creditUsed": "Đã sử dụng lượt tư vấn",
+    "chargedOnConfirm": "Lượt sẽ được trừ khi bạn xác nhận bắt đầu phiên",
+    "held": "Lượt đang được tạm giữ",
+    "released": "Lượt đã được trả lại"
+  },
+  "quantity": {
+    "credits": "{{value}} lượt",
+    "credits_one": "{{value}} lượt",
+    "credits_other": "{{value}} lượt"
+  },
+  "shared": {
+    "retry": "Thử lại",
+    "close": "Đóng",
+    "clearFilters": "Xóa bộ lọc",
+    "details": "Chi tiết",
+    "prev": "Trước",
+    "next": "Sau",
+    "refresh": "Làm mới",
+    "none": "Chưa có"
+  },
+  "page": {
+    "purchaseSuccessTitle": "Thành công",
+    "purchaseSuccessDescription": "Mua lượt tư vấn thành công!",
+    "accessDenied": "Truy cập bị từ chối",
+    "accessDeniedDescription": "Trang mua và quản lý ví lượt tư vấn chỉ dành cho Hội viên (Member).",
+    "title": "Ví lượt tư vấn",
+    "description": "Quản lý số dư lượt tư vấn, mua thêm lượt và theo dõi lịch sử giao dịch minh bạch.",
+    "refresh": "Làm mới ví & gói",
+    "tabs": {
+      "packages": "Gói lượt tư vấn",
+      "orders": "Lịch sử đơn mua",
+      "ledger": "Biến động lượt"
+    },
+    "packagesTitle": "Danh sách gói lượt đang mở bán",
+    "packagesDescription": "Chọn gói lượt phù hợp để nạp thêm vào ví tư vấn của bạn.",
+    "ordersTitle": "Tổng kết & Lịch sử đơn mua",
+    "ordersDescription": "Theo dõi tổng quan tài chính token đã mua và chi tiết các đơn nạp lượt tư vấn.",
+    "ledgerTitle": "Lịch sử biến động lượt",
+    "ledgerDescription": "Nhật ký chi tiết các giao dịch mua, giữ lượt và sử dụng lượt tư vấn."
+  },
+  "wallet": {
+    "loadError": "Không thể tải thông tin ví lượt",
+    "availableTitle": "Lượt tư vấn khả dụng",
+    "availableTooltip": "Số lượt bạn có thể sử dụng ngay để đăng ký phiên tư vấn sức khỏe trực tuyến với bác sĩ.",
+    "unit": "lượt",
+    "unit_one": "lượt",
+    "unit_other": "lượt",
+    "readyHint": "Sẵn sàng để bắt đầu phiên tư vấn sức khỏe trực tuyến",
+    "reservedHint": "(Đang tạm giữ {{count}} lượt cho ca hiện tại)",
+    "reservedHint_one": "(Đang tạm giữ {{count}} lượt cho ca hiện tại)",
+    "reservedHint_other": "(Đang tạm giữ {{count}} lượt cho ca hiện tại)"
+  },
+  "purchase": {
+    "packageFallbackName": "Gói #{{id}}",
+    "errors": {
+      "missingInfo": "Thiếu thông tin gói hoặc phiên đăng nhập.",
+      "creatingNotice": "Giao dịch đang được khởi tạo. Vui lòng kiểm tra lại sau.",
+      "insecureCheckoutUrl": "Liên kết thanh toán từ cổng thanh toán không an toàn (yêu cầu HTTPS).",
+      "requiresReview": "Giao dịch đã được ghi nhận và đang được hệ thống kiểm tra.",
+      "featureDisabled": "Chức năng mua lượt tư vấn tạm thời chưa khả dụng.",
+      "idempotencyConflict": "Xung đột khóa giao dịch (Idempotency). Vui lòng thử lại với cùng gói hoặc kiểm tra lại lịch sử đơn.",
+      "packageUnavailable": "Gói lượt tư vấn đã ngừng mở bán. Vui lòng tải lại danh sách gói.",
+      "orderNotFound": "Không tìm thấy thông tin đơn mua lượt hoặc đơn không thuộc về bạn.",
+      "invalidPaymentEvidence": "Bằng chứng hoặc trạng thái thanh toán không hợp lệ.",
+      "payosNotConfigured": "Cổng thanh toán PayOS chưa được cấu hình trên hệ thống.",
+      "payosUnavailable": "Cổng thanh toán PayOS không phản hồi hoặc từ chối thao tác. Vui lòng thử lại sau.",
+      "network": "Không thể kết nối tới máy chủ. Trạng thái giao dịch chưa được xác nhận; vui lòng bấm Thử lại để kiểm tra với cùng mã yêu cầu.",
+      "generic": "Giao dịch mua không thành công. Vui lòng thử lại."
+    }
+  },
+  "data": {
+    "errors": {
+      "wallet": "Không thể tải thông tin ví.",
+      "packages": "Không thể tải danh sách gói lượt.",
+      "overview": "Không thể tải tổng kết thanh toán.",
+      "orders": "Không thể tải lịch sử đơn mua.",
+      "ledger": "Không thể tải lịch sử biến động lượt."
+    }
+  },
+  "packagesGrid": {
+    "disabledTitle": "Chức năng mua lượt tạm chưa khả dụng",
+    "disabledDescription": "Hệ thống mua lượt tư vấn hiện đang tạm tắt trong môi trường này. Quý hội viên vui lòng quay lại sau.",
+    "checkAgain": "Kiểm tra lại",
+    "loadError": "Không thể tải danh sách gói lượt",
+    "emptyTitle": "Chưa có gói lượt tư vấn",
+    "emptyDescription": "Hiện tại chưa có gói lượt tư vấn nào đang mở bán. Vui lòng quay lại sau hoặc liên hệ hỗ trợ viên.",
+    "refreshList": "Làm mới danh sách",
+    "defaultCode": "GÓI TƯ VẤN",
+    "defaultDescription": "Gói lượt tư vấn chuyên sâu cùng bác sĩ chuyên khoa",
+    "creditsReceived": "Số lượt nhận:",
+    "price": "Đơn giá:",
+    "buy": "Mua lượt"
+  },
+  "purchaseDialog": {
+    "successTitle": "Mua lượt tư vấn thành công!",
+    "successDescription": "Giao dịch giả lập đã hoàn tất tức thì. Lượt tư vấn đã được cộng vào ví của bạn.",
+    "orderId": "Mã đơn hàng:",
+    "packagePurchased": "Gói đã mua:",
+    "creditsReceived": "Số lượt nhận:",
+    "totalPaid": "Tổng thanh toán:",
+    "method": "Phương thức:",
+    "mockFallback": "Thanh toán giả lập MOCK",
+    "status": "Trạng thái:",
+    "currentAvailable": "Số dư khả dụng hiện tại",
+    "walletBreakdown": "Tổng: {{balance}} | Tạm giữ: {{reserved}}",
+    "viewOrder": "Xem chi tiết đơn",
+    "done": "Hoàn tất",
+    "confirmBadge": "Xác nhận mua lượt tư vấn",
+    "confirmDescription": "Vui lòng kiểm tra lại thông tin gói trước khi tiến hành thanh toán thử nghiệm.",
+    "protectedTitle": "Giao dịch được bảo vệ",
+    "protectedDescription": "Hệ thống tự động bảo toàn mã giao dịch duy nhất (Idempotency-Key) nhằm đảm bảo an toàn tuyệt đối, không phát sinh trùng lặp.",
+    "packageRef": "Mã gói tham chiếu:",
+    "consultationCreditsReceived": "Số lượt tư vấn nhận:",
+    "packagePrice": "Giá gói (VND):",
+    "pendingRetryTitle": "Tiếp tục yêu cầu trước đó",
+    "pendingRetryDescription": "Lần kết nối trước bị gián đoạn mạng hoặc chưa nhận được kết quả. Hệ thống sẽ tiếp tục kiểm tra lại với cùng mã giao dịch an toàn.",
+    "creatingTitle": "Đang khởi tạo liên kết",
+    "featureNotOpen": "Chức năng chưa mở",
+    "cannotComplete": "Không thể hoàn tất giao dịch",
+    "processing": "Đang xử lý mua...",
+    "retryTransaction": "Thử lại giao dịch",
+    "confirmPurchase": "Xác nhận mua lượt"
+  },
+  "ordersTable": {
+    "toast": {
+      "alreadyPaidTitle": "Đơn hàng đã thanh toán",
+      "alreadyPaidDescription": "Giao dịch đã được ghi nhận trước đó. Lượt đã được cộng vào ví.",
+      "notPayableTitle": "Đơn hàng không thể thanh toán",
+      "notPayableDescription": "Đơn hàng đang ở trạng thái: {{status}}.",
+      "linkExpiredTitle": "Liên kết thanh toán đã hết hạn",
+      "linkExpiredDescription": "Liên kết thanh toán PayOS đã hết hạn. Vui lòng tạo đơn mua mới.",
+      "creatingTitle": "Đang khởi tạo liên kết",
+      "creatingDescription": "Liên kết thanh toán đang được khởi tạo bởi PayOS. Vui lòng thử lại sau vài giây.",
+      "noLinkTitle": "Không thể lấy link thanh toán",
+      "noLinkDescription": "Vui lòng mở xem chi tiết đơn hàng để kiểm tra.",
+      "connectionErrorTitle": "Lỗi kết nối",
+      "connectionErrorDescription": "Không thể kiểm tra đơn hàng. Vui lòng thử lại."
+    },
+    "loadError": "Không thể tải lịch sử đơn mua",
+    "filteredEmptyTitle": "Không tìm thấy đơn mua phù hợp",
+    "filteredEmptyDescription": "Không có đơn mua nào thỏa mãn bộ lọc ngày hoặc trạng thái đang chọn.",
+    "emptyTitle": "Chưa có đơn mua lượt nào",
+    "emptyDescription": "Khi bạn mua các gói lượt tư vấn, thông tin các đơn hàng sẽ được lưu vết đầy đủ tại đây.",
+    "columns": {
+      "orderId": "Mã đơn hàng",
+      "package": "Gói lượt đã mua",
+      "credits": "Số lượt",
+      "amount": "Tổng tiền",
+      "createdAt": "Thời gian tạo",
+      "status": "Trạng thái",
+      "actions": "Thao tác"
+    },
+    "resumePayment": "Tiếp tục thanh toán",
+    "pagination": "Trang <strong>{{page}}</strong> / {{totalPages}} (Tổng {{total}} đơn)"
+  },
+  "orderDetail": {
+    "toast": {
+      "paidTitle": "Thanh toán đã hoàn tất",
+      "cancelledTitle": "Đã hủy đơn hàng",
+      "cancelledDescription": "Đơn mua lượt tư vấn đã được hủy thành công.",
+      "cancelFailedTitle": "Không thể hủy đơn",
+      "tryLater": "Vui lòng thử lại sau.",
+      "cannotOpenGatewayTitle": "Không thể mở cổng thanh toán",
+      "cannotOpenGatewayDescription": "Liên kết thanh toán không khả dụng hoặc không an toàn."
+    },
+    "loadError": "Không thể tải chi tiết đơn hàng.",
+    "badge": "Chi tiết đơn mua lượt",
+    "titleWithId": "Đơn hàng #{{id}}",
+    "title": "Chi tiết đơn hàng",
+    "description": "Thông tin snapshot tại thời điểm mua và trạng thái thanh toán hiện tại.",
+    "orderInfo": "Thông tin đơn",
+    "packageName": "Tên gói:",
+    "packageCode": "Mã gói:",
+    "creditsGranted": "Số lượt cấp:",
+    "totalAmount": "Tổng tiền thanh toán:",
+    "createdAt": "Thời gian tạo đơn:",
+    "paidAt": "Thời gian ghi nhận thanh toán:",
+    "payment": "Thanh toán",
+    "gateway": "Cổng / Phương thức:",
+    "payosOrderCode": "Mã giao dịch PayOS:",
+    "expiresAt": "Hạn thanh toán:",
+    "attemptId": "Mã lần thanh toán (Attempt ID):",
+    "linkExpired": "Liên kết thanh toán đã hết hạn",
+    "currentBalance": "Số dư ví hiện tại",
+    "walletBreakdown": "Tổng số dư: {{balance}} • Đang giữ: {{reserved}}",
+    "cancelling": "Đang hủy...",
+    "cancelOrder": "Hủy đơn hàng"
+  },
+  "ledgerTable": {
+    "loadError": "Không thể tải lịch sử biến động lượt",
+    "emptyTitle": "Chưa có biến động lượt tư vấn nào",
+    "emptyDescription": "Mọi thao tác mua lượt, giữ lượt hoặc bồi hoàn sẽ được ghi chép minh bạch tại đây.",
+    "columns": {
+      "time": "Thời gian",
+      "operation": "Loại biến động",
+      "available": "Lượt khả dụng",
+      "total": "Tổng lượt",
+      "balanceAfter": "Số dư sau",
+      "source": "Nguồn gốc"
+    },
+    "deltaCredits": "{{value}} lượt",
+    "deltaCredits_one": "{{value}} lượt",
+    "deltaCredits_other": "{{value}} lượt",
+    "availableAfter": "{{value}} khả dụng",
+    "viewOrderTitle": "Xem chi tiết đơn mua này",
+    "pagination": "Trang <strong>{{page}}</strong> / {{totalPages}} (Tổng {{total}} biến động)"
+  },
+  "filters": {
+    "allTime": "Toàn thời gian",
+    "today": "Hôm nay",
+    "last7days": "7 ngày qua",
+    "thisMonth": "Tháng này",
+    "custom": "Tùy chỉnh",
+    "allStatuses": "Tất cả trạng thái",
+    "rows": "Số dòng",
+    "rowsPerPage": "{{count}} dòng/trang",
+    "fromDate": "Từ ngày:",
+    "toDate": "Đến ngày:",
+    "timezoneNote": "* Thời gian tính theo múi giờ Việt Nam (UTC+7)"
+  },
+  "memberKpi": {
+    "loadError": "Không thể tải tổng kết thanh toán: {{error}}",
+    "totalPaid": "Tổng tiền đã thanh toán",
+    "totalPaidHint": "Chỉ tính giao dịch đã hoàn tất",
+    "totalPurchased": "Tổng token đã mua",
+    "totalPurchasedHint": "Từ các gói đã mua thành công",
+    "successfulOrders": "Lần mua thành công",
+    "orderUnit": "đơn",
+    "orderUnit_one": "đơn",
+    "orderUnit_other": "đơn",
+    "successfulOrdersHint": "Giao dịch nạp được xác nhận",
+    "availableNow": "Token khả dụng hiện tại",
+    "balance": "Số dư: {{value}}",
+    "reserved": "Đang giữ: {{value}}",
+    "firstPaidAt": "Lần thanh toán đầu:",
+    "lastPaidAt": "Lần thanh toán gần nhất:",
+    "footnote": "* Số dư ví hiển thị theo thời gian thực; các chỉ số thanh toán tính theo bộ lọc thời gian."
+  },
+  "paymentResult": {
+    "title": "Kết quả thanh toán",
+    "breadcrumbs": {
+      "consultations": "Tư vấn & Chăm sóc",
+      "credits": "Lượt tư vấn"
+    },
+    "toast": {
+      "paidTitle": "Thanh toán thành công!",
+      "paidDescription": "Bạn đã được cộng {{count}} lượt tư vấn vào ví.",
+      "paidDescription_one": "Bạn đã được cộng {{count}} lượt tư vấn vào ví.",
+      "paidDescription_other": "Bạn đã được cộng {{count}} lượt tư vấn vào ví.",
+      "notFoundTitle": "Không tìm thấy giao dịch",
+      "notFoundDescription": "Vui lòng kiểm tra lại trạng thái trong lịch sử đơn mua.",
+      "paidBeforeCancelDescription": "Giao dịch thanh toán đã được ghi nhận trước khi hủy. Lượt đã được cộng vào ví.",
+      "cancelledDescription": "Giao dịch thanh toán đã được hủy an toàn.",
+      "orderStatusTitle": "Trạng thái đơn hàng",
+      "orderStatusDescription": "Đơn hàng hiện ở trạng thái: {{status}}",
+      "cancelFailedTitle": "Không thể hủy đơn hàng"
+    },
+    "loadError": "Không thể tải thông tin giao dịch.",
+    "loadingTitle": "Đang kiểm tra kết quả giao dịch...",
+    "loadingDescription": "Hệ thống đang kết nối máy chủ để xác thực trạng thái đơn hàng của bạn.",
+    "errorTitle": "Đã xảy ra lỗi",
+    "backToOrders": "Về lịch sử đơn",
+    "paid": {
+      "title": "Thanh toán thành công!",
+      "description": "Giao dịch nạp lượt đã hoàn tất. Lượt tư vấn đã sẵn sàng trong ví của bạn."
+    },
+    "pending": {
+      "creatingTitle": "Đang khởi tạo liên kết thanh toán...",
+      "title": "Đang chờ thanh toán",
+      "creatingDescription": "Hệ thống đang kết nối cổng PayOS để chuẩn bị giao dịch. Vui lòng chờ trong giây lát.",
+      "description": "Hệ thống đang tự động đồng bộ khi nhận được giao dịch từ PayOS. Bạn không cần thực hiện thêm thao tác nào.",
+      "polling": "Đang tự động kiểm tra giao dịch...",
+      "pollingStopped": "Đã tạm dừng tự động kiểm tra"
+    },
+    "cancelled": {
+      "title": "Giao dịch đã hủy",
+      "description": "Đơn mua lượt này đã bị hủy. Bạn có thể chọn lại gói để mua lượt mới bất kỳ lúc nào."
+    },
+    "expired": {
+      "title": "Giao dịch đã hết hạn",
+      "description": "Thời gian thanh toán cho đơn hàng đã kết thúc. Vui lòng tạo đơn mua mới nếu bạn vẫn muốn nạp lượt."
+    },
+    "review": {
+      "title": "Giao dịch đang được kiểm tra",
+      "description": "Giao dịch đã được ghi nhận nhưng cần nhân viên đối soát thủ công. Lượt tư vấn sẽ được cộng ngay sau khi xác thực hoàn tất."
+    },
+    "packageName": "Tên gói lượt:",
+    "orderStatus": "Trạng thái đơn:",
+    "paymentStatus": "Trạng thái thanh toán:",
+    "openPayos": "Mở trang thanh toán PayOS",
+    "cancelPayment": "Hủy thanh toán",
+    "backToWallet": "Về ví lượt tư vấn",
+    "viewOrderHistory": "Xem lịch sử đơn mua"
+  },
+  "consultationPaymentResult": {
+    "errors": {
+      "checkStatus": "Lỗi kiểm tra trạng thái thanh toán.",
+      "checkRenewalStatus": "Lỗi kiểm tra trạng thái thanh toán gia hạn."
+    },
+    "loading": "Đang kiểm tra giao dịch thanh toán...",
+    "missingTitle": "Không tìm thấy yêu cầu",
+    "missingDescription": "Không tìm thấy mã giao dịch hoặc yêu cầu thanh toán hợp lệ trong phiên của bạn.",
+    "backToConsultations": "Về trang Quản lý Tư vấn",
+    "notFoundTitle": "Không có giao dịch",
+    "notFoundDescription": "Chưa có giao dịch thanh toán nào được ghi nhận cho yêu cầu này.",
+    "txSummary": "Mã giao dịch #{{code}} • Số tiền: {{amount}} {{currency}}",
+    "refreshStatus": "Làm mới trạng thái",
+    "comeBackLater": "Quay lại sau",
+    "reviewTitle": "Thanh toán cần được kiểm tra",
+    "renewal": {
+      "paidTitle": "Gia hạn thành công!",
+      "paidDescription": "Thời hạn chăm sóc của bạn đã được nối dài thành công cùng bác sĩ phụ trách. Toàn bộ dữ liệu trao đổi và hồ sơ theo dõi được giữ nguyên vẹn.",
+      "backToSession": "Quay lại phiên tư vấn",
+      "pendingTitle": "Đang xác nhận thanh toán gia hạn",
+      "pendingDescription": "Vui lòng chờ trong giây lát. Hệ thống đang đồng bộ giao dịch từ PayOS.",
+      "expiredTitle": "Thanh toán gia hạn đã hết hạn",
+      "expiredDescription": "Thời hạn thanh toán cho yêu cầu gia hạn đã kết thúc. Bạn có thể gửi lại yêu cầu gia hạn mới nếu phiên vẫn còn hoạt động.",
+      "toSession": "Về phiên tư vấn",
+      "cancelledTitle": "Gia hạn đã bị hủy",
+      "cancelledDescription": "Yêu cầu gia hạn hoặc giao dịch thanh toán đã bị hủy. Thời hạn phiên chăm sóc hiện tại không đổi.",
+      "failedTitle": "Thanh toán gia hạn thất bại",
+      "failedDescription": "Đã xảy ra lỗi trong quá trình xử lý giao dịch. Vui lòng thử lại sau.",
+      "reviewDescription": "Giao dịch thanh toán gia hạn đã được ghi nhận nhưng cần điều phối viên kiểm tra thủ công. Thời hạn phiên sẽ được cập nhật sau khi hoàn tất xác thực."
+    },
+    "initial": {
+      "paidTitle": "Thanh toán thành công!",
+      "paidDescription": "Phiên tư vấn đã được kích hoạt thành công. Bác sĩ đã được phân công và sẵn sàng hỗ trợ bạn.",
+      "viewMySessions": "Xem phiên tư vấn của tôi",
+      "pendingTitle": "Đang xác nhận thanh toán",
+      "pendingDescription": "Vui lòng chờ trong giây lát. Hệ thống đang đồng bộ giao dịch từ cổng thanh toán.",
+      "expiredTitle": "Thanh toán đã hết hạn",
+      "expiredDescription": "Thời hạn thanh toán cho yêu cầu này đã kết thúc. Vui lòng tạo lại yêu cầu nếu cần.",
+      "cancelledTitle": "Thanh toán đã bị hủy",
+      "cancelledDescription": "Giao dịch đã bị hủy bởi người dùng hoặc hệ thống thanh toán.",
+      "failedTitle": "Thanh toán thất bại",
+      "failedDescription": "Đã có lỗi xảy ra trong quá trình xử lý thanh toán. Vui lòng thử lại sau.",
+      "reviewDescription": "Giao dịch đang cần kiểm tra thủ công. Vui lòng liên hệ bộ phận hỗ trợ."
+    }
+  },
+  "admin": {
+    "page": {
+      "title": "Quản lý lượt tư vấn",
+      "description": "Quản lý gói lượt, tra cứu ví thành viên, điều chỉnh delta và tổng kết thanh toán token toàn hệ thống.",
+      "tabs": {
+        "packages": "Gói lượt tư vấn",
+        "wallet": "Ví & Điều chỉnh",
+        "payments": "Tổng kết thanh toán"
+      }
+    },
+    "filter": {
+      "errors": {
+        "missingDates": "Vui lòng chọn đủ từ ngày và đến ngày.",
+        "invalidDate": "Định dạng ngày không hợp lệ.",
+        "fromAfterTo": "Ngày bắt đầu không được lớn hơn ngày kết thúc."
+      },
+      "time": "Thời gian:",
+      "apply": "Áp dụng",
+      "filteringByMember": "Đang lọc theo thành viên:",
+      "memberScopeNote": "(Số liệu KPI và Bảng giao dịch được giới hạn riêng cho hội viên này)",
+      "clearMember": "Bỏ lọc thành viên"
+    },
+    "kpi": {
+      "loadError": "Không thể tải số liệu KPI tổng quan",
+      "totalCollected": "Tổng tiền đã thu",
+      "totalCollectedHint": "Tổng snapshot từ các đơn trạng thái PAID",
+      "totalSold": "Tổng token đã bán",
+      "totalSoldHint": "Token ghi nhận qua đơn thanh toán thành công",
+      "successfulOrders": "Đơn thành công",
+      "successfulOrdersHint": "Đơn hàng mua token có status = PAID",
+      "payingMember": "Thành viên thanh toán",
+      "payingMembers": "Số member thanh toán",
+      "hasPurchased": "Đã từng mua",
+      "noOrders": "Chưa có đơn",
+      "payingMemberHint": "Thành viên đang lọc có đơn PAID trong kỳ",
+      "payingMembersHint": "Số hội viên riêng biệt có đơn thanh toán PAID",
+      "firstPaidAt": "Thanh toán đầu:",
+      "lastPaidAt": "Thanh toán gần nhất:",
+      "rulesLabel": "Quy tắc ghi nhận KPI",
+      "rulesTitle": "Cách tính KPI và Bảng giao dịch:",
+      "rulesKpi": "• <strong>KPI:</strong> Tính trên các đơn đã thanh toán thành công (<code>PAID</code>) và lọc theo thời điểm thanh toán thực tế (<code>paidAt</code>).",
+      "rulesTable": "• <strong>Bảng đơn hàng:</strong> Lọc theo thời điểm tạo đơn (<code>createdAt</code>).",
+      "rulesNote": "Do đó, nếu một đơn được tạo vào cuối ngày hôm trước và hoàn tất thanh toán vào ngày hôm sau, số liệu KPI và số dòng đơn hàng trong cùng bộ lọc ngày có thể chênh lệch.",
+      "zeroState": "Chưa có thanh toán thành công (PAID) nào trong khoảng thời gian đã chọn."
+    },
+    "ordersTable": {
+      "title": "Danh sách giao dịch / Đơn mua token",
+      "count": "{{count}} đơn",
+      "count_one": "{{count}} đơn",
+      "count_other": "{{count}} đơn",
+      "description": "Tra cứu đơn mua lượt theo thời điểm tạo đơn (createdAt), trạng thái đơn và cổng thanh toán",
+      "statusPlaceholder": "Trạng thái đơn",
+      "statusOptions": {
+        "paid": "Đã thanh toán (PAID)",
+        "pendingPayment": "Chờ thanh toán",
+        "cancelled": "Đã hủy",
+        "expired": "Đã hết hạn",
+        "requiresReview": "Cần xem xét"
+      },
+      "providerPlaceholder": "Cổng TT",
+      "allProviders": "Tất cả cổng",
+      "columns": {
+        "orderId": "Mã đơn",
+        "member": "Hội viên",
+        "package": "Gói token",
+        "tokens": "Số token",
+        "amount": "Số tiền",
+        "status": "Trạng thái",
+        "createdAt": "Thời gian tạo",
+        "paidAt": "Thời gian trả",
+        "actions": "Thao tác"
+      },
+      "loading": "Đang tải danh sách giao dịch...",
+      "empty": "Không có giao dịch phù hợp bộ lọc.",
+      "filterByMemberTitle": "Bấm để lọc toàn bộ giao dịch theo hội viên này"
+    },
+    "tokenTab": {
+      "errors": {
+        "overview": "Không thể tải số liệu KPI tổng quan.",
+        "ordersTitle": "Lỗi tải danh sách đơn hàng",
+        "orders": "Không thể tải danh sách đơn mua token."
+      },
+      "subtabs": {
+        "orders": "Danh sách giao dịch",
+        "members": "Thống kê theo thành viên"
+      }
+    },
+    "orderDetail": {
+      "toast": {
+        "copiedTitle": "Đã sao chép link thanh toán",
+        "copiedDescription": "Link checkout đã được lưu vào bộ nhớ tạm.",
+        "copyFailedTitle": "Lỗi sao chép",
+        "copyFailedDescription": "Không thể tự động sao chép link."
+      },
+      "title": "Chi tiết đơn mua token",
+      "headerSummary": "Mã đơn: <order>#{{orderId}}</order> • Thành viên: <member>#{{memberId}}</member>",
+      "descriptionEmpty": "Tra cứu thông tin gói và các lần thử thanh toán",
+      "loading": "Đang tải chi tiết đơn hàng và payment attempts...",
+      "errorHint": "Đơn hàng có thể không còn tồn tại hoặc thông tin truy vấn chưa chính xác.",
+      "orderInfo": "Thông tin đơn hàng",
+      "package": "Gói lượt tư vấn:",
+      "tokens": "Số lượng token:",
+      "amount": "Số tiền thanh toán:",
+      "createdAt": "Thời gian tạo:",
+      "paidAt": "Thời điểm thanh toán (paidAt):",
+      "attemptsTitle": "Lịch sử cổng thanh toán ({{count}} lần thử)",
+      "attemptsTitle_one": "Lịch sử cổng thanh toán ({{count}} lần thử)",
+      "attemptsTitle_other": "Lịch sử cổng thanh toán ({{count}} lần thử)",
+      "attemptsOrder": "Xếp theo thứ tự lần thử",
+      "attemptsEmpty": "Đơn chưa có lần thanh toán nào được ghi nhận.",
+      "attemptNumber": "Lần {{n}}",
+      "gateway": "Cổng thanh toán:",
+      "orderCode": "Mã OrderCode:",
+      "expiresAt": "Hết hạn:",
+      "checkoutLink": "Link thanh toán (Tra cứu / Hỗ trợ):",
+      "copied": "Đã chép",
+      "copy": "Sao chép"
+    },
+    "accountStatus": {
+      "active": "Hoạt động",
+      "pendingVerify": "Chờ xác thực",
+      "inactive": "Tạm khóa"
+    },
+    "pagination": {
+      "show": "Hiển thị",
+      "perPage": "{{count}} / trang",
+      "pageOf": "Trang <strong>{{page}}</strong> / {{totalPages}}"
+    },
+    "memberSummary": {
+      "errors": {
+        "loadTitle": "Lỗi tải danh sách thành viên",
+        "load": "Không thể tải danh sách thành viên."
+      },
+      "title": "Thống kê nạp token theo thành viên",
+      "count": "{{count}} thành viên",
+      "count_one": "{{count}} thành viên",
+      "count_other": "{{count}} thành viên",
+      "description": "Tra cứu số dư ví hiện tại và tổng kết lịch sử nạp token.",
+      "lifetimeBadge": "Số liệu tổng kết là Toàn thời gian (Lifetime)",
+      "searchPlaceholder": "Tìm theo Tên, Email, SĐT, ID...",
+      "statusPlaceholder": "Trạng thái",
+      "columns": {
+        "member": "Hội viên",
+        "contact": "Liên hệ",
+        "status": "Trạng thái",
+        "available": "Token khả dụng",
+        "totalPaid": "Tổng tiền đã nạp",
+        "totalPurchased": "Tổng token đã mua",
+        "successfulOrders": "Đơn thành công",
+        "lifetime": "(Toàn thời gian)",
+        "actions": "Thao tác"
+      },
+      "loading": "Đang tải danh sách thành viên...",
+      "empty": "Không tìm thấy thành viên.",
+      "viewTransactionsTitle": "Xem lịch sử giao dịch thanh toán của hội viên này",
+      "viewTransactions": "Lịch sử giao dịch",
+      "range": "(Đang xem {{from}} - {{to}} trong tổng {{total}} thành viên)"
+    },
+    "memberTransactions": {
+      "errors": {
+        "loadTitle": "Lỗi tải giao dịch",
+        "load": "Không thể tải lịch sử giao dịch của hội viên.",
+        "detail": "Không thể tải thông tin đơn hàng."
+      },
+      "title": "Lịch sử giao dịch hội viên",
+      "statusOptions": {
+        "pending": "Chờ thanh toán (PENDING)",
+        "cancelled": "Đã hủy (CANCELLED)",
+        "expired": "Hết hạn (EXPIRED)",
+        "failed": "Thất bại (FAILED)"
+      },
+      "reloadTitle": "Tải lại giao dịch",
+      "found": "Tìm thấy <strong>{{count}}</strong> giao dịch",
+      "found_one": "Tìm thấy <strong>{{count}}</strong> giao dịch",
+      "found_other": "Tìm thấy <strong>{{count}}</strong> giao dịch",
+      "emptyTitle": "Chưa có giao dịch thanh toán",
+      "emptyFiltered": "Không tìm thấy giao dịch nào phù hợp với trạng thái đã chọn.",
+      "emptyAll": "Hội viên này chưa thực hiện đơn mua token nào trên hệ thống.",
+      "viewAllStatuses": "Xem tất cả trạng thái",
+      "columns": {
+        "package": "Gói lượt",
+        "quantity": "Số lượng",
+        "time": "Thời gian"
+      },
+      "createdAt": "Tạo: {{value}}",
+      "paidAt": "TT: {{value}}",
+      "viewDetailTitle": "Xem chi tiết đơn và lịch sử cổng thanh toán"
+    },
+    "packages": {
+      "toast": {
+        "loadErrorTitle": "Lỗi tải danh sách",
+        "createdTitle": "Tạo gói thành công",
+        "createdDescription": "Gói \"{{name}}\" đã được tạo ở trạng thái Chờ kích hoạt (INACTIVE).",
+        "createFailedTitle": "Tạo gói thất bại",
+        "createFailedDescription": "Không thể tạo gói lượt mới.",
+        "updatedTitle": "Cập nhật thành công",
+        "updatedDescription": "Gói \"{{name}}\" đã được cập nhật.",
+        "conflictTitle": "Xung đột phiên bản (Optimistic Locking)",
+        "conflictDescription": "Gói lượt này vừa được chỉnh sửa bởi quản trị viên khác. Hệ thống đã tự động tải lại dữ liệu mới nhất.",
+        "updateFailedTitle": "Cập nhật thất bại",
+        "updateFailedDescription": "Không thể cập nhật gói lượt."
+      },
+      "validation": {
+        "codeTitle": "Mã gói không hợp lệ",
+        "codeDescription": "Mã code chỉ gồm chữ hoa, số, gạch dưới (_) hoặc gạch nối (-), từ 2 đến 80 ký tự.",
+        "nameTitle": "Tên gói không hợp lệ",
+        "nameDescription": "Tên gói không được để trống và tối đa 160 ký tự.",
+        "creditsTitle": "Số lượt không hợp lệ",
+        "creditsDescription": "Số lượt tư vấn trong gói phải lớn hơn 0.",
+        "priceTitle": "Đơn giá không hợp lệ",
+        "priceDescription": "Đơn giá gói phải lớn hơn 0 VND."
+      },
+      "title": "Danh mục gói lượt tư vấn",
+      "summary": "Tổng cộng {{total}} gói ({{active}} đang mở bán toàn hệ thống)",
+      "searchPlaceholder": "Tìm kiếm mã, tên gói...",
+      "hidden": "Tạm ẩn",
+      "create": "Tạo gói mới",
+      "columns": {
+        "code": "Mã gói",
+        "name": "Tên gói",
+        "credits": "Số lượt",
+        "price": "Đơn giá",
+        "status": "Trạng thái",
+        "version": "Phiên bản",
+        "updatedAt": "Cập nhật lúc",
+        "actions": "Thao tác"
+      },
+      "loading": "Đang tải danh sách gói lượt...",
+      "empty": "Không tìm thấy gói lượt nào phù hợp với bộ lọc.",
+      "edit": "Sửa",
+      "cancel": "Hủy",
+      "createDialog": {
+        "title": "Tạo gói lượt tư vấn mới",
+        "description": "Gói mới tạo sẽ mặc định ở trạng thái <strong>Tạm ẩn (INACTIVE)</strong>. Bạn có thể bật bán sau khi kiểm tra thông tin.",
+        "submitting": "Đang tạo...",
+        "submit": "Xác nhận tạo gói"
+      },
+      "editDialog": {
+        "title": "Chỉnh sửa gói lượt tư vấn",
+        "description": "Cập nhật thông tin gói #{{code}}. Quá trình lưu áp dụng cơ chế khóa lạc quan (Optimistic Locking v{{version}}).",
+        "submitting": "Đang lưu...",
+        "submit": "Lưu thay đổi"
+      },
+      "form": {
+        "code": "Mã code gói",
+        "codePlaceholder": "VD: PACK_5_SESSIONS",
+        "codeHint": "Chỉ gồm chữ in hoa, số, dấu gạch dưới (_) hoặc gạch ngang (-). Không được thay đổi sau khi tạo.",
+        "codeLocked": "Mã gói là định danh cố định không thể chỉnh sửa.",
+        "name": "Tên gói hiển thị",
+        "namePlaceholder": "VD: Gói Chăm Sóc Tiêu Chuẩn 5 Lượt",
+        "creditsCreate": "Số lượt cộng vào ví",
+        "creditsEdit": "Số lượt trong gói",
+        "price": "Đơn giá (VND)",
+        "description": "Mô tả chi tiết (Tùy chọn)",
+        "descriptionPlaceholder": "VD: Phù hợp cho nhu cầu tư vấn định kỳ hàng tháng cùng bác sĩ gia đình...",
+        "status": "Trạng thái mở bán",
+        "statusPlaceholder": "Chọn trạng thái",
+        "statusActive": "Mở bán (ACTIVE) - Thành viên có thể mua",
+        "statusInactive": "Tạm ẩn (INACTIVE) - Ẩn khỏi danh mục mua"
+      }
+    },
+    "wallet": {
+      "toast": {
+        "ledgerErrorTitle": "Không thể tải lịch sử biến động",
+        "ledgerErrorDescription": "Lỗi tải sổ cái thành viên #{{memberId}}."
+      },
+      "adjust": {
+        "invalidDeltaTitle": "Số lượt điều chỉnh không hợp lệ",
+        "invalidDeltaDescription": "Số lượt điều chỉnh delta phải khác 0 (dương để cộng, âm để trừ).",
+        "invalidReasonTitle": "Lý do không hợp lệ",
+        "invalidReasonDescription": "Lý do điều chỉnh là bắt buộc và tối đa 500 ký tự.",
+        "confirmOverdraw": "Cảnh báo: Lượt trừ ({{delta}}) vượt quá số lượt khả dụng ({{available}}) của thành viên. Tiếp tục gửi yêu cầu?",
+        "successTitle": "Điều chỉnh lượt thành công",
+        "successAdded": "Đã cộng {{count}} lượt cho thành viên {{name}}.",
+        "successAdded_one": "Đã cộng {{count}} lượt cho thành viên {{name}}.",
+        "successAdded_other": "Đã cộng {{count}} lượt cho thành viên {{name}}.",
+        "successSubtracted": "Đã trừ {{count}} lượt cho thành viên {{name}}.",
+        "successSubtracted_one": "Đã trừ {{count}} lượt cho thành viên {{name}}.",
+        "successSubtracted_other": "Đã trừ {{count}} lượt cho thành viên {{name}}.",
+        "failedTitle": "Điều chỉnh lượt thất bại",
+        "failedDescription": "Không thể thực hiện điều chỉnh số dư ví.",
+        "formTitle": "Điều chỉnh lượt thủ công cho #{{memberId}}",
+        "deltaLabel": "Số lượt thay đổi (Delta)",
+        "deltaHint": "Dương (+) để cấp bù, âm (-) để thu hồi lượt.",
+        "reasonLabel": "Lý do điều chỉnh",
+        "reasonPlaceholder": "VD: Cấp bù lượt theo biên bản hỗ trợ CS-2026-001...",
+        "submitting": "Đang xử lý...",
+        "submit": "Xác nhận điều chỉnh"
+      },
+      "directory": {
+        "title": "Danh sách thành viên & Ví lượt",
+        "description": "Xem nhanh số lượt của thành viên và bấm <strong>\"Xem ví\"</strong> để xem lịch sử sổ cái hoặc điều chỉnh lượt.",
+        "statusActive": "Hoạt động (ACTIVE)",
+        "statusInactive": "Tạm khóa (INACTIVE)",
+        "columns": {
+          "member": "Thành viên",
+          "contact": "Liên hệ",
+          "status": "Trạng thái",
+          "available": "Khả dụng",
+          "reserved": "Tạm giữ",
+          "balance": "Tổng số dư",
+          "walletState": "Tình trạng ví",
+          "actions": "Thao tác"
+        },
+        "empty": "Không tìm thấy thành viên nào phù hợp với bộ lọc tìm kiếm.",
+        "walletNotCreated": "Chưa phát sinh ví",
+        "walletInitialized": "Đã khởi tạo",
+        "viewWallet": "Xem ví",
+        "pagination": "Trang <strong>{{page}}</strong> / {{totalPages}} (Tổng cộng {{total}} thành viên)"
+      },
+      "detail": {
+        "header": "Mã ID: <id>#{{memberId}}</id> • Email: {{email}}",
+        "phone": "• SĐT: {{phone}}",
+        "closeForm": "Đóng biểu mẫu",
+        "adjust": "Điều chỉnh lượt",
+        "availableTitle": "Lượt khả dụng",
+        "availableHint": "Số lượt tư vấn sẵn sàng để thành viên sử dụng cho các phiên khám",
+        "close": "Đóng chi tiết ví"
+      },
+      "ledger": {
+        "title": "Lịch sử biến động",
+        "operationPlaceholder": "Nghiệp vụ",
+        "allOperations": "Tất cả nghiệp vụ",
+        "operations": {
+          "purchase": "Nạp lượt (PURCHASE)",
+          "sessionCharge": "Dùng lượt phiên khám",
+          "reserve": "Tạm giữ (RESERVE)",
+          "capture": "Quyết toán (CAPTURE)",
+          "release": "Hoàn trả (RELEASE)",
+          "sessionRefund": "Bồi hoàn phiên"
+        },
+        "adminAdjustment": "Admin điều chỉnh",
+        "sourcePlaceholder": "Nguồn gốc",
+        "allSources": "Tất cả nguồn",
+        "sources": {
+          "order": "Đơn mua (ORDER)",
+          "session": "Phiên khám (SESSION)"
+        },
+        "filter": "Lọc",
+        "columns": {
+          "time": "Thời gian",
+          "operation": "Nghiệp vụ",
+          "delta": "Biến động",
+          "balanceAfter": "Số dư sau",
+          "source": "Nguồn / Mã",
+          "actor": "Người thực hiện / Lý do"
+        },
+        "loading": "Đang tải biến động sổ cái...",
+        "empty": "Chưa có ghi nhận biến động lượt nào phù hợp.",
+        "by": "Bởi: {{actor}}",
+        "records": "({{count}} bản ghi)",
+        "records_one": "({{count}} bản ghi)",
+        "records_other": "({{count}} bản ghi)"
+      }
+    }
+  }
+}

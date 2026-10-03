@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
 import { formatVnd, formatCreditQuantity } from "@/constants/credits"
+import { useTranslation } from "react-i18next"
 import type { CreditPackage } from "@/types/credits"
 
 interface PackagesGridProps {
@@ -23,6 +24,7 @@ export function PackagesGrid({
   onSelectPackage,
   onRetry,
 }: PackagesGridProps) {
+  const { t } = useTranslation("credits")
   if (loading) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -44,13 +46,13 @@ export function PackagesGrid({
         <div className="max-w-md mx-auto space-y-3">
           <AlertCircle className="h-10 w-10 text-warning-600 mx-auto" />
           <h3 className="text-base font-semibold text-warning-800">
-            Chức năng mua lượt tạm chưa khả dụng
+            {t("packagesGrid.disabledTitle")}
           </h3>
           <p className="text-xs text-warning-700 leading-relaxed">
-            Hệ thống mua lượt tư vấn hiện đang tạm tắt trong môi trường này. Quý hội viên vui lòng quay lại sau.
+            {t("packagesGrid.disabledDescription")}
           </p>
           <Button variant="outline" size="sm" onClick={onRetry} className="gap-1.5 mt-2">
-            <RefreshCw className="h-3.5 w-3.5" /> Kiểm tra lại
+            <RefreshCw className="h-3.5 w-3.5" /> {t("packagesGrid.checkAgain")}
           </Button>
         </div>
       </Card>
@@ -63,11 +65,11 @@ export function PackagesGrid({
         <div className="max-w-md mx-auto space-y-3">
           <AlertCircle className="h-10 w-10 text-danger-600 mx-auto" />
           <h3 className="text-base font-semibold text-danger-800">
-            Không thể tải danh sách gói lượt
+            {t("packagesGrid.loadError")}
           </h3>
           <p className="text-xs text-danger-600">{error}</p>
           <Button variant="outline" size="sm" onClick={onRetry} className="gap-1.5 mt-2">
-            <RefreshCw className="h-3.5 w-3.5" /> Thử lại
+            <RefreshCw className="h-3.5 w-3.5" /> {t("shared.retry")}
           </Button>
         </div>
       </Card>
@@ -80,13 +82,13 @@ export function PackagesGrid({
         <div className="max-w-md mx-auto space-y-3">
           <Package className="h-12 w-12 text-muted-foreground/50 mx-auto" />
           <h3 className="text-base font-semibold text-foreground">
-            Chưa có gói lượt tư vấn
+            {t("packagesGrid.emptyTitle")}
           </h3>
           <p className="text-xs text-muted-foreground">
-            Hiện tại chưa có gói lượt tư vấn nào đang mở bán. Vui lòng quay lại sau hoặc liên hệ hỗ trợ viên.
+            {t("packagesGrid.emptyDescription")}
           </p>
           <Button variant="outline" size="sm" onClick={onRetry} className="gap-1.5 mt-2">
-            <RefreshCw className="h-3.5 w-3.5" /> Làm mới danh sách
+            <RefreshCw className="h-3.5 w-3.5" /> {t("packagesGrid.refreshList")}
           </Button>
         </div>
       </Card>
@@ -103,7 +105,7 @@ export function PackagesGrid({
           <div className="p-6 space-y-4 flex-1">
             <div className="flex items-start justify-between gap-2">
               <Badge variant="outline" className="text-xs font-semibold px-2.5 py-0.5 border-primary/30 text-primary bg-primary/5">
-                {pkg.code || "GÓI TƯ VẤN"}
+                {pkg.code || t("packagesGrid.defaultCode")}
               </Badge>
               <span className="text-[11px] font-mono text-muted-foreground/70">
                 #{pkg.id}
@@ -120,20 +122,20 @@ export function PackagesGrid({
                 </p>
               ) : (
                 <p className="text-xs text-muted-foreground italic">
-                  Gói lượt tư vấn chuyên sâu cùng bác sĩ chuyên khoa
+                  {t("packagesGrid.defaultDescription")}
                 </p>
               )}
             </div>
 
             <div className="pt-2 border-t border-border/60 space-y-2">
               <div className="flex items-baseline justify-between">
-                <span className="text-xs text-muted-foreground">Số lượt nhận:</span>
+                <span className="text-xs text-muted-foreground">{t("packagesGrid.creditsReceived")}</span>
                 <span className="text-base font-extrabold text-success-700">
                   {formatCreditQuantity(pkg.creditQuantity)}
                 </span>
               </div>
               <div className="flex items-baseline justify-between">
-                <span className="text-xs text-muted-foreground">Đơn giá:</span>
+                <span className="text-xs text-muted-foreground">{t("packagesGrid.price")}</span>
                 <span className="text-xl font-black text-foreground">
                   {formatVnd(pkg.priceVnd)}
                 </span>
@@ -147,7 +149,7 @@ export function PackagesGrid({
               onClick={() => onSelectPackage(pkg)}
             >
               <ShoppingCart className="h-4 w-4" />
-              Mua lượt
+              {t("packagesGrid.buy")}
             </Button>
           </CardFooter>
         </Card>

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { useTranslation } from "react-i18next"
 import { AlertCircle, ClipboardList, Lock, RefreshCw, Save } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -8,6 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
+import i18n, { currentIntlLocale } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
 import { nutritionApi } from "@/services/nutrition.service"
 import type { DietPrescription, DietPrescriptionFlags, DietPrescriptionRule, DietRuleCode } from "@/types/nutrition"
@@ -23,33 +25,85 @@ const NOTE_MAX = 1000
 
 /** Mỗi ô ứng với một quy tắc, theo thứ tự ưu tiên. Chỉ quy tắc được tick mới chấm màu món cho bệnh nhân. */
 const FLAGS: { key: keyof DietPrescriptionFlags; code: DietRuleCode; title: string; detail: string }[] = [
-  { key: "avoidAlcohol", code: "ALCOHOL", title: "Tránh rượu bia", detail: "Đồ uống có cồn hiện đỏ." },
-  { key: "limitCaffeine", code: "CAFFEINE", title: "Hạn chế caffeine", detail: "Món nhiều caffeine hiện vàng." },
-  { key: "limitSugars", code: "SUGARS", title: "Hạn chế đường", detail: "Món nhiều đường hiện vàng / đỏ (không áp cho trái cây, sữa)." },
+  {
+    key: "avoidAlcohol",
+    code: "ALCOHOL",
+    get title() {
+      return i18n.t("consultation:dietPrescriptionTab.flags.avoidAlcohol.title")
+    },
+    get detail() {
+      return i18n.t("consultation:dietPrescriptionTab.flags.avoidAlcohol.detail")
+    },
+  },
+  {
+    key: "limitCaffeine",
+    code: "CAFFEINE",
+    get title() {
+      return i18n.t("consultation:dietPrescriptionTab.flags.limitCaffeine.title")
+    },
+    get detail() {
+      return i18n.t("consultation:dietPrescriptionTab.flags.limitCaffeine.detail")
+    },
+  },
+  {
+    key: "limitSugars",
+    code: "SUGARS",
+    get title() {
+      return i18n.t("consultation:dietPrescriptionTab.flags.limitSugars.title")
+    },
+    get detail() {
+      return i18n.t("consultation:dietPrescriptionTab.flags.limitSugars.detail")
+    },
+  },
   {
     key: "watchSodiumPotassium",
     code: "NA_K_RATIO",
-    title: "Theo dõi tỷ lệ natri/kali",
-    detail: "Món mặn mà ít kali hiện đỏ; món kali bằng hoặc hơn natri được tính là tốt.",
+    get title() {
+      return i18n.t("consultation:dietPrescriptionTab.flags.watchSodiumPotassium.title")
+    },
+    get detail() {
+      return i18n.t("consultation:dietPrescriptionTab.flags.watchSodiumPotassium.detail")
+    },
   },
-  { key: "limitSodium", code: "SODIUM", title: "Hạn chế muối", detail: "Món nhiều natri hiện vàng / đỏ." },
+  {
+    key: "limitSodium",
+    code: "SODIUM",
+    get title() {
+      return i18n.t("consultation:dietPrescriptionTab.flags.limitSodium.title")
+    },
+    get detail() {
+      return i18n.t("consultation:dietPrescriptionTab.flags.limitSodium.detail")
+    },
+  },
   {
     key: "limitSaturatedFat",
     code: "SATURATED_FAT",
-    title: "Hạn chế chất béo bão hòa",
-    detail: "Món nhiều chất béo bão hòa hiện vàng / đỏ.",
+    get title() {
+      return i18n.t("consultation:dietPrescriptionTab.flags.limitSaturatedFat.title")
+    },
+    get detail() {
+      return i18n.t("consultation:dietPrescriptionTab.flags.limitSaturatedFat.detail")
+    },
   },
   {
     key: "encourageMagnesium",
     code: "MAGNESIUM",
-    title: "Khuyến khích món giàu magie",
-    detail: "Món giàu magie mà ít muối được tính là tốt (xanh).",
+    get title() {
+      return i18n.t("consultation:dietPrescriptionTab.flags.encourageMagnesium.title")
+    },
+    get detail() {
+      return i18n.t("consultation:dietPrescriptionTab.flags.encourageMagnesium.detail")
+    },
   },
   {
     key: "onWarfarin",
     code: "VITAMIN_K",
-    title: "Đang dùng warfarin",
-    detail: "Món nhiều vitamin K hiện vàng, nhắc giữ lượng ăn đều mỗi ngày.",
+    get title() {
+      return i18n.t("consultation:dietPrescriptionTab.flags.onWarfarin.title")
+    },
+    get detail() {
+      return i18n.t("consultation:dietPrescriptionTab.flags.onWarfarin.detail")
+    },
   },
 ]
 
@@ -85,22 +139,22 @@ const DEFAULT_OF: Record<DietThresholdField, (rule?: DietPrescriptionRule) => nu
 function validate(code: DietRuleCode, rule: DietPrescriptionRule | undefined, values: Values): string | null {
   const fields = thresholdFieldsOf(code)
   const parsed = fields.map((field) => parse(values[field]))
-  if (parsed.some((value) => value !== null && (Number.isNaN(value) || value < 0))) return "Ngưỡng phải là số không âm."
+  if (parsed.some((value) => value !== null && (Number.isNaN(value) || value < 0))) return i18n.t("consultation:dietPrescriptionTab.validation.nonNegative")
   const merged = (field: DietThresholdField) =>
     fields.includes(field) ? (parse(values[field]) ?? DEFAULT_OF[field](rule) ?? null) : null
   const limit = merged("limit")
   const caution = merged("caution")
   const good = merged("good")
   if (limit !== null && caution !== null && limit < caution)
-    return `Ngưỡng đỏ (${limit}) phải lớn hơn hoặc bằng ngưỡng vàng (${caution}).`
+    return i18n.t("consultation:dietPrescriptionTab.validation.limitBelowCaution", { limit, caution })
   if (code === "NA_K_RATIO" && limit !== null && good !== null && good > limit)
-    return `Mức tốt (${good}) không được cao hơn ngưỡng đỏ (${limit}).`
+    return i18n.t("consultation:dietPrescriptionTab.validation.goodAboveLimit", { good, limit })
   return null
 }
 
 function readError(error: unknown, fallback: string) {
   const err = error as { response?: { status?: number; data?: { message?: string } }; message?: string }
-  if (err.response?.status === 403) return "Bạn không có quyền xem đơn ăn uống của phiên này."
+  if (err.response?.status === 403) return i18n.t("consultation:dietPrescriptionTab.errors.forbidden")
   return err.response?.data?.message || err.message || fallback
 }
 
@@ -113,6 +167,7 @@ interface DoctorDietPrescriptionTabProps {
 /** Tab "Dinh dưỡng" trong workspace bác sĩ: kê đơn ăn uống, các món bệnh nhân tra cứu sẽ được chấm màu theo đơn. */
 export function DoctorDietPrescriptionTab({ sessionId, readOnly }: DoctorDietPrescriptionTabProps) {
   const { toast } = useToast()
+  const { t } = useTranslation("consultation")
   const [prescription, setPrescription] = useState<DietPrescription | null>(null)
   const [flags, setFlags] = useState<DietPrescriptionFlags>(NO_FLAGS)
   const [overrides, setOverrides] = useState<Overrides>(EMPTY_OVERRIDES)
@@ -145,7 +200,7 @@ export function DoctorDietPrescriptionTab({ sessionId, readOnly }: DoctorDietPre
     try {
       apply((await nutritionApi.getSessionDietPrescription(sessionId)).data)
     } catch (err) {
-      setErrorMsg(readError(err, "Không thể tải đơn ăn uống."))
+      setErrorMsg(readError(err, t("dietPrescriptionTab.errors.loadFailed")))
     } finally {
       setLoading(false)
     }
@@ -177,9 +232,9 @@ export function DoctorDietPrescriptionTab({ sessionId, readOnly }: DoctorDietPre
         (await nutritionApi.updateSessionDietPrescription(sessionId, { ...flags, note: note.trim() || undefined, thresholds }))
           .data
       )
-      toast({ description: "Đã lưu đơn ăn uống. Các món bệnh nhân tra cứu sẽ được đánh giá theo đơn này." })
+      toast({ description: t("dietPrescriptionTab.toast.saved") })
     } catch (err) {
-      toast({ variant: "destructive", description: readError(err, "Không thể lưu đơn ăn uống.") })
+      toast({ variant: "destructive", description: readError(err, t("dietPrescriptionTab.errors.saveFailed")) })
     } finally {
       setSaving(false)
     }
@@ -192,10 +247,10 @@ export function DoctorDietPrescriptionTab({ sessionId, readOnly }: DoctorDietPre
       <Card className="rounded-2xl border-dashed">
         <CardContent className="p-6 text-center space-y-3">
           <AlertCircle className="w-6 h-6 text-danger-500 mx-auto" />
-          <p className="text-sm text-muted-foreground">{errorMsg ?? "Không có dữ liệu."}</p>
+          <p className="text-sm text-muted-foreground">{errorMsg ?? t("dietPrescriptionTab.noData")}</p>
           <Button variant="outline" size="sm" onClick={() => void load()} className="gap-1.5">
             <RefreshCw className="w-3.5 h-3.5" />
-            Thử lại
+            {t("dietPrescriptionTab.retry")}
           </Button>
         </CardContent>
       </Card>
@@ -209,21 +264,24 @@ export function DoctorDietPrescriptionTab({ sessionId, readOnly }: DoctorDietPre
       <CardHeader className="space-y-1">
         <CardTitle className="flex items-center gap-2 text-base">
           <ClipboardList className="w-4 h-4 text-primary" />
-          Đơn ăn uống
+          {t("dietPrescriptionTab.title")}
         </CardTitle>
         <CardDescription>
           {prescription.personalized
-            ? `Đơn hiện tại${prescription.updatedAt ? `, cập nhật ${new Date(prescription.updatedAt).toLocaleString("vi-VN")}` : ""}. Lưu lại sẽ ghi đè đơn cũ.`
-            : "Bệnh nhân chưa có đơn nên các món chưa được chấm màu."}{" "}
-          Chỉ các quy tắc được tick mới chấm xanh / vàng / đỏ cho món bệnh nhân tra cứu. Ô ngưỡng để trống là dùng mặc
-          định của hệ thống.
+            ? prescription.updatedAt
+              ? t("dietPrescriptionTab.description.personalizedUpdated", {
+                  date: new Date(prescription.updatedAt).toLocaleString(currentIntlLocale()),
+                })
+              : t("dietPrescriptionTab.description.personalized")
+            : t("dietPrescriptionTab.description.notPersonalized")}{" "}
+          {t("dietPrescriptionTab.description.rulesHint")}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         {readOnly && (
           <p className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-600">
             <Lock className="w-3.5 h-3.5 shrink-0" />
-            Phiên đã kết thúc nên đơn chỉ để xem. Kê hoặc sửa đơn trong phiên đã lên lịch hoặc đang diễn ra.
+            {t("dietPrescriptionTab.readOnlyNotice")}
           </p>
         )}
 
@@ -275,7 +333,7 @@ export function DoctorDietPrescriptionTab({ sessionId, readOnly }: DoctorDietPre
                                 [flag.code]: { ...prev[flag.code], [field]: event.target.value },
                               }))
                             }
-                            placeholder={fallback != null ? `Mặc định ${fallback}` : "Không dùng"}
+                            placeholder={fallback != null ? t("dietPrescriptionTab.threshold.defaultPlaceholder", { value: fallback }) : t("dietPrescriptionTab.threshold.notUsed")}
                             disabled={disabled}
                             className="h-8 text-xs"
                           />
@@ -294,14 +352,14 @@ export function DoctorDietPrescriptionTab({ sessionId, readOnly }: DoctorDietPre
 
         <div className="space-y-1.5">
           <label htmlFor="diet-note" className="text-sm font-semibold text-foreground">
-            Dặn thêm
+            {t("dietPrescriptionTab.note.label")}
           </label>
           <Textarea
             id="diet-note"
             value={note}
             maxLength={NOTE_MAX}
             onChange={(event) => setNote(event.target.value)}
-            placeholder="Ví dụ: ăn thêm cá 2 bữa mỗi tuần, uống đủ nước..."
+            placeholder={t("dietPrescriptionTab.note.placeholder")}
             disabled={disabled}
             rows={3}
           />
@@ -314,7 +372,7 @@ export function DoctorDietPrescriptionTab({ sessionId, readOnly }: DoctorDietPre
           <div className="flex justify-end">
             <Button onClick={() => void save()} disabled={saving || hasErrors} className="gap-1.5">
               <Save className="w-4 h-4" />
-              {saving ? "Đang lưu..." : "Lưu đơn ăn uống"}
+              {saving ? t("dietPrescriptionTab.actions.saving") : t("dietPrescriptionTab.actions.save")}
             </Button>
           </div>
         )}

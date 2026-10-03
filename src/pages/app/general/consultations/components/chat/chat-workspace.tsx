@@ -1,5 +1,6 @@
 import { MessageSquare } from "lucide-react"
 import type { FormEvent } from "react"
+import { useTranslation } from "react-i18next"
 
 import type { ConsultationMessageItem, ConsultationSessionItem } from "@/types/consultation"
 import { ChatSidebar } from "./chat-sidebar"
@@ -47,12 +48,13 @@ export function ChatWorkspace({
   isOutsideSupportHours,
   onSessionRefreshed,
 }: ChatWorkspaceProps) {
+  const { t } = useTranslation("consultation")
   const isCompleted = selectedSession?.status === "COMPLETED"
   const readOnlyMode = isCompleted || isOutsideSupportHours
   const readOnlyReason = isCompleted 
-    ? "Phiên tư vấn đã hoàn tất. Bạn chỉ có thể xem lại nội dung trao đổi."
+    ? t("chat.workspace.completedReadOnly")
     : isOutsideSupportHours
-      ? "Hiện ngoài khung giờ hỗ trợ. Bạn có thể gửi tin nhắn trong khung giờ đã cam kết."
+      ? t("chat.workspace.outsideSupportHours")
       : undefined
   const canSend = selectedSession?.status === "ACTIVE" && !readOnlyMode
 
@@ -109,9 +111,9 @@ export function ChatWorkspace({
             <div className="flex h-20 w-20 items-center justify-center rounded-full bg-muted/50 mb-6">
               <MessageSquare className="h-10 w-10 text-muted-foreground/50" />
             </div>
-            <h3 className="text-lg font-semibold tracking-tight text-foreground">No Session Selected</h3>
+            <h3 className="text-lg font-semibold tracking-tight text-foreground">{t("chat.workspace.noSessionTitle")}</h3>
             <p className="mt-2 text-sm text-muted-foreground max-w-sm text-center">
-              Select a consultation session from the sidebar to view history or start messaging.
+              {t("chat.workspace.noSessionDescription")}
             </p>
           </div>
         )}

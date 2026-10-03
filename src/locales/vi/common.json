@@ -82,5 +82,29 @@
   "toast": {
     "error": "Lỗi",
     "success": "Thành công"
+  },
+  "actions": {
+    "close": "Đóng",
+    "cancel": "Hủy"
+  },
+  "pagination": {
+    "summary": "Hiển thị <strong>{{start}}-{{end}}</strong> trong tổng số <strong>{{total}}</strong> bản ghi",
+    "show": "Hiển thị:",
+    "perPage": "/ trang",
+    "first": "Trang đầu tiên",
+    "previous": "Trang trước",
+    "next": "Trang sau",
+    "last": "Trang cuối cùng"
+  },
+  "errorBoundary": {
+    "updatedTitle": "Ứng dụng đã được cập nhật",
+    "updatedDescription": "Đã có phiên bản HealthSense mới. Vui lòng tải lại trang để tiếp tục.",
+    "title": "Đã xảy ra lỗi",
+    "description": "Vui lòng tải lại trang và thử lại.",
+    "reload": "Tải lại",
+    "goBack": "Quay lại"
+  },
+  "appLoader": {
+    "loading": "Đang tải HealthSense..."
   }
 }

@@ -1,6 +1,7 @@
 import { AlertTriangle, Loader2, Trash2 } from "lucide-react"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
+import { Trans, useTranslation } from "react-i18next"
 import type { UserItem } from "@/types/user"
 
 interface UserDeleteDialogProps {
@@ -18,6 +19,7 @@ export function UserDeleteDialog({
   user,
   loading = false,
 }: UserDeleteDialogProps) {
+  const { t } = useTranslation("management")
   if (!user && !isOpen) return null
 
   return (
@@ -28,19 +30,20 @@ export function UserDeleteDialog({
             <AlertTriangle className="w-6 h-6 stroke-[2.5]" />
           </div>
           <DialogTitle className="text-xl font-black text-slate-900 tracking-tight">
-            Xác nhận xóa tài khoản người dùng?
+            {t("users.deleteDialog.title")}
           </DialogTitle>
           <DialogDescription className="text-xs text-slate-500 font-medium leading-relaxed mt-1">
-            Bạn đang thực hiện thao tác xóa vĩnh viễn tài khoản của{" "}
-            <strong className="text-slate-900 font-extrabold underline decoration-danger-300">
-              {user?.displayName || user?.email}
-            </strong>{" "}
-            (Mã ID: #{user?.id}). Hành động này sẽ ngay lập tức hủy phiên đăng nhập, liên kết hồ sơ bệnh án và thu hồi toàn bộ quyền truy cập hệ thống.
+            <Trans
+              t={t}
+              i18nKey="users.deleteDialog.description"
+              values={{ name: user?.displayName || user?.email, id: user?.id }}
+              components={{ name: <strong className="text-slate-900 font-extrabold underline decoration-danger-300" /> }}
+            />
           </DialogDescription>
         </DialogHeader>
 
         <div className="px-6 py-3.5 bg-danger-50/50 border-y border-danger-100 text-danger-900 text-xs font-extrabold flex items-center justify-between">
-          <span>Vai trò tài khoản:</span>
+          <span>{t("users.deleteDialog.roleLabel")}</span>
           <span className="font-mono bg-danger-100 text-danger-800 px-2 py-0.5 rounded-md border border-danger-200/80">
             {user?.role}
           </span>
@@ -54,7 +57,7 @@ export function UserDeleteDialog({
             onClick={onClose}
             className="h-10 rounded-xl border-slate-200 font-bold text-slate-600 text-xs px-4.5 hover:bg-white cursor-pointer"
           >
-            Hủy bỏ
+            {t("users.deleteDialog.cancel")}
           </Button>
           <Button
             type="button"
@@ -63,7 +66,7 @@ export function UserDeleteDialog({
             className="h-10 rounded-xl bg-danger-600 hover:bg-danger-700 font-extrabold text-white text-xs px-5 shadow-sm shadow-danger-500/25 flex items-center gap-2 cursor-pointer transition-transform active:scale-95"
           >
             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
-            <span>Xác nhận xóa</span>
+            <span>{t("users.deleteDialog.confirm")}</span>
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -1,1 +1,346 @@
-{}
+{
+  "predictionLabel": {
+    "normal": {
+      "label": "Bình thường",
+      "short": "Bình thường",
+      "badge": "Bình thường",
+      "advice": "Tín hiệu nhịp tim ổn định và nằm trong dải sinh lý bình thường. Hãy duy trì theo dõi sức khỏe định kỳ."
+    },
+    "uncertain": {
+      "label": "Chưa rõ",
+      "short": "Chưa rõ",
+      "badge": "Chưa rõ",
+      "advice": "Dữ liệu có một số đoạn nhiễu nhẹ. Kết quả mang tính tham khảo, nên đo lại khi ngồi yên tĩnh."
+    },
+    "afibSuspected": {
+      "label": "Nghi ngờ AFib",
+      "short": "Nghi ngờ AFib",
+      "badge": "Nghi ngờ AFib",
+      "advice": "Có dấu hiệu loạn nhịp hoặc biến thiên khoảng cách R-R bất thường nhẹ. Khuyến khích đo lại khi nghỉ ngơi."
+    },
+    "afib": {
+      "label": "Cảnh báo AFib",
+      "short": "Cảnh báo AFib",
+      "badge": "Cảnh báo AFib",
+      "advice": "AI phát hiện biến thiên nhịp tim có tính chất rung nhĩ. Khuyến nghị liên hệ bác sĩ chuyên khoa tim mạch để được chẩn đoán."
+    },
+    "processing": {
+      "label": "Đang phân tích",
+      "short": "Đang xử lý",
+      "advice": "Dữ liệu đang được phân tích qua mô hình AI. Vui lòng đợi trong giây lát..."
+    },
+    "failed": {
+      "label": "Lỗi phân tích",
+      "short": "Lỗi",
+      "advice": "Tín hiệu đo quá ngắn hoặc chứa nhiều nhiễu động. Khuyến nghị thực hiện đo lại trong trạng thái nghỉ ngơi."
+    },
+    "unknown": {
+      "label": "Chưa có kết luận",
+      "short": "Chưa rõ",
+      "advice": "Bản ghi đang chờ đồng bộ hóa dữ liệu."
+    }
+  },
+  "afibHistory": {
+    "title": "Lịch sử đo",
+    "description": "Lịch sử các lần đo chủ động và cảnh báo tầm soát từ AI",
+    "refresh": "Làm mới",
+    "uploadNew": "Tải lên bản ghi mới",
+    "searchPlaceholder": "Tìm kiếm theo ngày / tên file...",
+    "filter": {
+      "placeholder": "Trạng thái",
+      "all": "Tất cả trạng thái",
+      "normal": "Bình thường (An toàn)",
+      "warning": "Cảnh báo (Rung nhĩ)",
+      "processing": "Đang phân tích"
+    },
+    "view": {
+      "tableTitle": "Dạng bảng (Table view)",
+      "table": "Bảng",
+      "cardTitle": "Dạng thẻ (Card view)",
+      "card": "Thẻ"
+    },
+    "legend": "Chú thích AI:",
+    "empty": {
+      "title": "Chưa có bản ghi đo nào",
+      "description": "Không tìm thấy bản ghi đo phù hợp với bộ lọc. Hãy tải lên file dữ liệu mới để bắt đầu tầm soát.",
+      "uploadFirst": "Tải lên bản ghi đầu tiên"
+    },
+    "table": {
+      "timeAndFile": "Thời gian đo & File",
+      "avgHeartRate": "Nhịp tim TB",
+      "hrv": "Biến thiên HRV",
+      "aiConclusion": "Kết luận AI",
+      "afibProbability": "Khả năng AFib",
+      "actions": "Thao tác"
+    },
+    "viewDetails": "Xem chi tiết",
+    "card": {
+      "heartRate": "Nhịp tim: {{value}}",
+      "afibProbability": "Khả năng bị rung nhĩ: {{value}}%",
+      "file": "File: {{name}}"
+    }
+  },
+  "recordDetail": {
+    "title": "Chi tiết Kết quả Tầm soát Nhịp tim",
+    "measuredAt": "Thời gian đo: {{date}}",
+    "file": "File: {{name}}",
+    "aiConclusion": "Kết luận AI:",
+    "afibProbability": "Khả năng bị rung nhĩ",
+    "avgHeartRate": "Nhịp tim TB",
+    "lfHfRatio": "Tỷ lệ LF/HF",
+    "hrvTitle": "Các chỉ số Biến thiên Nhịp tim (HRV)",
+    "table": {
+      "metric": "Chỉ số",
+      "value": "Giá trị đo",
+      "referenceRange": "Dải tham chiếu",
+      "meaning": "Ý nghĩa y khoa"
+    },
+    "meaning": {
+      "meanNn": "Khoảng thời gian trung bình giữa 2 nhịp liên tiếp",
+      "sdnn": "Độ biến thiên tổng thể của hệ thần kinh tự chủ",
+      "rmssd": "Mức độ hoạt động thần kinh phó giao cảm (Vagal tone)",
+      "pnn50": "Tỷ lệ các cặp nhịp tim liên tiếp chênh lệch > 50ms",
+      "cv": "Hệ số biến thiên tương đối của nhịp tim",
+      "lf": "Năng lượng dải tần thấp (giao cảm và huyết áp)",
+      "hf": "Năng lượng dải tần cao (hô hấp và phó giao cảm)",
+      "lfHf": "Tỷ lệ cân bằng thần kinh giao cảm / phó giao cảm"
+    },
+    "fileSize": "Kích thước: {{size}} KB",
+    "downloadUrlNotFound": "Không tìm thấy đường dẫn tải file.",
+    "downloadUrlFailed": "Không thể lấy đường dẫn tải tệp.",
+    "downloading": "Đang tải...",
+    "downloadCsv": "Tải CSV gốc"
+  },
+  "measurementVisuals": {
+    "sqi": {
+      "validRatio": " • {{value}}% nhịp hợp lệ",
+      "good": "Chất lượng đo: Tốt{{ratio}}",
+      "poor": "Chất lượng đo: Kém — nên đo lại"
+    },
+    "tiles": {
+      "spo2Note": "Tham khảo (đo tại thiết bị)",
+      "respiratoryRate": "Nhịp thở",
+      "breathsPerMin": "lần/phút",
+      "respiratoryRateNote": "12 - 20 lần/phút",
+      "hrRange": "Nhịp tim min - max",
+      "hrRangeNote": "Trong phiên đo",
+      "perfusionNote": "Thấp → đeo lỏng / tưới máu yếu",
+      "stressScore": "Điểm căng thẳng",
+      "stressNote": "Tham khảo (Baevsky SI)"
+    },
+    "wave": {
+      "title": "Sóng mạch (PPG) trong phiên đo",
+      "hint": "Mỗi đỉnh sóng là một nhịp tim. Sóng đều đặn → nhịp ổn định; sóng lộn xộn, biên độ thất thường → nhịp bất thường."
+    },
+    "poincare": {
+      "title": "Đồ thị Poincaré",
+      "howToRead": "Cách đọc đồ thị",
+      "dotExplain": "Mỗi chấm là <b>một cặp nhịp tim liên tiếp</b>: vị trí ngang là khoảng cách nhịp trước, vị trí dọc là khoảng cách nhịp sau.",
+      "tight": "Đám chấm <b>gọn, bám sát đường chéo</b> → nhịp tim đều đặn.",
+      "scattered": "Đám chấm <b>tản rộng như đám mây</b> → nhịp biến thiên bất thường, đặc trưng thường gặp của rung nhĩ.",
+      "basedOn": "Dựa trên {{count}} khoảng nhịp ghi nhận trong phiên đo."
+    }
+  },
+  "uploadMeasurement": {
+    "title": "Tải lên Bản ghi Đo Mới",
+    "subtitle": "Hỗ trợ file CSV chứa tín hiệu PPG / Nhịp tim",
+    "selectedHint": "{{size}} KB - Bấm để chọn file khác",
+    "dropzone": "Bấm để chọn file hoặc kéo thả file vào đây",
+    "supportedFormats": "Định dạng hỗ trợ: .CSV (Tối đa 20MB)",
+    "uploading": "Đang tải lên...",
+    "submit": "Bắt đầu Phân tích AI",
+    "errors": {
+      "invalidFormat": "Vui lòng chọn file dữ liệu định dạng CSV (.csv) hoặc TXT.",
+      "tooLarge": "Kích thước file không được vượt quá 20MB.",
+      "noFile": "Vui lòng chọn một file dữ liệu đo.",
+      "uploadFailed": "Không thể tải lên file đo."
+    },
+    "success": {
+      "title": "Tải lên thành công!",
+      "description": "Bản ghi đo đã được gửi lên hệ thống và đang được AI phân tích."
+    }
+  },
+  "dashboard": {
+    "title": "Tổng quan sức khỏe",
+    "description": "Chỉ số tim mạch mới nhất, lịch đo theo ngày và các lần tầm soát rung nhĩ gần đây của bạn."
+  },
+  "adminDashboard": {
+    "selectPeriod": "Chọn khoảng thời gian",
+    "selectOrganization": "Chọn cơ sở y tế hoặc tổ chức"
+  },
+  "greeting": {
+    "fallbackName": "Bạn",
+    "morning": {
+      "text": "Chào buổi sáng",
+      "subtext": "Chúc bạn một ngày mới dồi dào năng lượng và luôn có một trái tim khỏe mạnh."
+    },
+    "afternoon": {
+      "text": "Chào buổi chiều",
+      "subtext": "Hãy duy trì năng lượng tích cực và lắng nghe nhịp tim sinh hiệu của bạn nhé."
+    },
+    "evening": {
+      "text": "Chào buổi tối",
+      "subtext": "Thư giãn tinh thần, chăm sóc giấc ngủ và kiểm tra sự ổn định của nhịp tim."
+    }
+  },
+  "memberDashboard": {
+    "latestMeasurement": "Lần đo gần nhất",
+    "noData": "Chưa có dữ liệu",
+    "afibProbability": "Khả năng bị rung nhĩ",
+    "noAssessment": "Chưa có đánh giá",
+    "hrvRmssd": "Biến thiên nhịp (RMSSD)",
+    "totalScreenings": "Tổng lượt tầm soát",
+    "timesUnit": "lần",
+    "screeningsBreakdown": "{{normal}} bình thường • {{warning}} cảnh báo",
+    "recent": {
+      "title": "Lịch sử Đo Gần Đây",
+      "description": "5 lần đo mới nhất của bạn trên hệ thống",
+      "viewAll": "Xem tất cả",
+      "empty": "Chưa có bản ghi đo nào. Hãy tải lên file đầu tiên!",
+      "measuredAt": "Thời gian đo",
+      "aiConclusion": "Kết luận AI",
+      "afibProbability": "Khả năng AFib",
+      "actions": "Thao tác",
+      "viewDetails": "Xem chi tiết"
+    }
+  },
+  "heatmap": {
+    "title": "Lịch Theo Dõi & Bản Đồ Nhiệt Đo Nhịp Tim",
+    "description": "Tổng quan tần suất tầm soát và phân bố an toàn theo từng ngày trong tháng",
+    "months": {
+      "0": "Tháng 1",
+      "1": "Tháng 2",
+      "2": "Tháng 3",
+      "3": "Tháng 4",
+      "4": "Tháng 5",
+      "5": "Tháng 6",
+      "6": "Tháng 7",
+      "7": "Tháng 8",
+      "8": "Tháng 9",
+      "9": "Tháng 10",
+      "10": "Tháng 11",
+      "11": "Tháng 12"
+    },
+    "weekdays": {
+      "mon": "T2",
+      "tue": "T3",
+      "wed": "T4",
+      "thu": "T5",
+      "fri": "T6",
+      "sat": "T7",
+      "sun": "CN"
+    },
+    "daysMeasured": "Số ngày đã đo",
+    "totalHistoryDays": "Tổng ngày lịch sử",
+    "daysCount": "{{count}} ngày",
+    "legendHasData": "Có bản ghi đo",
+    "legendNoData": "Chưa đo",
+    "dayTooltipSuffix": " (Nhấn để xem các lần đo)",
+    "selected": {
+      "title": "Các lần đo ngày {{date}}",
+      "count": "{{count}} lần đo",
+      "loading": "Đang tải dữ liệu đo của ngày {{date}}...",
+      "empty": "Không tìm thấy bản ghi đo nào trong ngày này.",
+      "file": "File: {{name}}",
+      "heartRate": "Nhịp tim: {{value}}",
+      "afibProbability": "Khả năng AFib: {{value}}%",
+      "details": "Chi tiết",
+      "count_one": "{{count}} lần đo",
+      "count_other": "{{count}} lần đo"
+    },
+    "daysCount_one": "{{count}} ngày",
+    "daysCount_other": "{{count}} ngày"
+  },
+  "careHistory": {
+    "title": "Lịch sử chăm sóc",
+    "description": "Tra cứu các đợt khám tư vấn 1-1, bác sĩ phụ trách và tổng kết y khoa chính thức.",
+    "refresh": "Làm mới",
+    "status": {
+      "active": "Đang diễn ra",
+      "completed": "Đã hoàn thành",
+      "cancelled": "Đã hủy",
+      "scheduled": "Đã lên lịch"
+    },
+    "undetermined": "Chưa xác định",
+    "empty": {
+      "title": "Chưa có lịch sử chăm sóc",
+      "description": "Bạn chưa tham gia đợt tư vấn nào. Hãy đăng ký gói dịch vụ chăm sóc để bắt đầu cùng bác sĩ chuyên khoa."
+    },
+    "defaultPackageName": "Gói tư vấn sức khỏe",
+    "doctorLabel": "Bác sĩ:",
+    "doctorFallback": "Bác sĩ #{{id}}",
+    "startedAt": "Bắt đầu: {{date}}",
+    "endsAt": "Kết thúc: {{date}}",
+    "hasSummary": "Đã có Tổng kết Y khoa",
+    "noSummary": "Chưa có tổng kết y khoa",
+    "trackedRecords": "{{count}} hồ sơ theo dõi",
+    "viewDetails": "Xem chi tiết",
+    "pagination": {
+      "summary": "Hiển thị trang {{page}} / {{totalPages}} ({{total}} đợt chăm sóc)",
+      "previous": "Trước",
+      "next": "Sau"
+    },
+    "detail": {
+      "title": "Chi tiết Đợt Chăm sóc #{{id}}",
+      "attendingDoctor": "Bác sĩ phụ trách:",
+      "tabs": {
+        "overview": "Tổng quan",
+        "summary": "Tổng kết Y khoa",
+        "records": "Hồ sơ đã chia sẻ ({{count}})"
+      },
+      "package": "Gói dịch vụ",
+      "defaultPackageName": "Gói tư vấn cơ bản",
+      "packageCode": "Mã gói:",
+      "carePeriod": "Thời gian chăm sóc",
+      "startedAt": "Bắt đầu:",
+      "endsAt": "Kết thúc:",
+      "completedAt": "Hoàn tất:",
+      "closureStatus": "Trạng thái đóng hồ sơ:",
+      "summary": {
+        "general": "Tóm tắt chung",
+        "observations": "Quan sát & Đánh giá lâm sàng",
+        "recommendations": "Khuyến nghị điều trị & Lối sống",
+        "followUp": "Kế hoạch tái khám / Theo dõi",
+        "addenda": "Phụ lục bổ sung ({{count}})",
+        "reason": "Lý do: {{reason}}",
+        "emptyTitle": "Chưa có tổng kết y khoa chính thức cho đợt chăm sóc này.",
+        "emptyDescription": "Tổng kết sẽ được bác sĩ phụ trách hoàn tất sau khi phiên kết thúc."
+      },
+      "records": {
+        "fallbackName": "Hồ sơ #{{id}}",
+        "measuredAt": "Ngày đo: {{date}}",
+        "saved": "Đã lưu",
+        "empty": "Không có hồ sơ nào được chia sẻ trong đợt này."
+      }
+    }
+  },
+  "reports": {
+    "title": "Báo cáo sức khỏe",
+    "description": "Tổng hợp từ {{count}} phép đo gần nhất của bạn",
+    "refresh": "Làm mới",
+    "loadError": "Không thể tải dữ liệu báo cáo. Vui lòng thử lại.",
+    "avgHeartRate": "Nhịp tim trung bình",
+    "heartRateReference": "Dải tham chiếu: 60 - 100 BPM",
+    "avgSpo2": "SpO2 trung bình",
+    "spo2Reference": "Mức tham khảo (đo tại thiết bị)",
+    "spo2NoData": "Chưa có dữ liệu SpO2 từ thiết bị",
+    "avgHrv": "HRV trung bình (RMSSD)",
+    "hrvHint": "Độ biến thiên nhịp tim — cao hơn thường tốt hơn",
+    "screening": {
+      "normal": "Bình thường",
+      "uncertain": "Chưa chắc chắn",
+      "afibSuspected": "Nghi ngờ rung nhĩ",
+      "afib": "Rung nhĩ",
+      "per30Days": "phép đo / 30 ngày"
+    },
+    "trend": {
+      "title": "Xu hướng Nhịp tim theo ngày",
+      "description": "Trung bình / thấp nhất / cao nhất mỗi ngày, tính từ các phép đo thực tế",
+      "empty": "Chưa có phép đo nào — hãy đo bằng thiết bị HealthSense để xem xu hướng.",
+      "tooltipDate": "Ngày {{date}}",
+      "max": "Cao nhất",
+      "avg": "Trung bình",
+      "min": "Thấp nhất"
+    }
+  }
+}

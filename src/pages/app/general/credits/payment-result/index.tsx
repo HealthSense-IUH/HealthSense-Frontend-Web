@@ -32,11 +32,15 @@ import {
   saveStoredPendingPayment,
 } from "../hooks/use-credit-purchase"
 import type { CreditOrderDetail } from "@/types/credits"
+import { useTranslation } from "react-i18next"
+import i18n from "@/lib/i18n"
 
-const MAX_AUTO_POLL_COUNT = 20 // 20 lần * 3.5s ~ 70 giây
+// 20 lần * 3.5s ~ 70 giây
+const MAX_AUTO_POLL_COUNT = 20
 const POLL_INTERVAL_MS = 3500
 
 export default function CreditPaymentResultPage() {
+  const { t } = useTranslation("credits")
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const { toast } = useToast()
@@ -103,8 +107,8 @@ export default function CreditPaymentResultPage() {
           window.dispatchEvent(new CustomEvent("credits:refresh"))
 
           toast({
-            title: "Thanh toán thành công!",
-            description: `Bạn đã được cộng ${data.order.creditQuantity} lượt tư vấn vào ví.`,
+            title: i18n.t("credits:paymentResult.toast.paidTitle"),
+            description: i18n.t("credits:paymentResult.toast.paidDescription", { count: data.order.creditQuantity }),
           })
         }
 
@@ -118,7 +122,7 @@ export default function CreditPaymentResultPage() {
         const parsed = parseApiError(err)
         // Lỗi khi poll ngầm không làm đè trạng thái hiện tại thành FAILED
         if (!isBackgroundPoll) {
-          setErrorText(parsed.userMessage || "Không thể tải thông tin giao dịch.")
+          setErrorText(parsed.userMessage || i18n.t("credits:paymentResult.loadError"))
         }
       } finally {
         if (!isBackgroundPoll) {
@@ -145,16 +149,16 @@ export default function CreditPaymentResultPage() {
           setActiveOrderId(String(latest.id))
         } else {
           toast({
-            title: "Không tìm thấy giao dịch",
-            description: "Vui lòng kiểm tra lại trạng thái trong lịch sử đơn mua.",
+            title: i18n.t("credits:paymentResult.toast.notFoundTitle"),
+            description: i18n.t("credits:paymentResult.toast.notFoundDescription"),
           })
           navigate("/app/general/consultations?tab=credits&creditTab=orders", { replace: true })
         }
       })
       .catch(() => {
         toast({
-          title: "Không tìm thấy giao dịch",
-          description: "Vui lòng kiểm tra lại trạng thái trong lịch sử đơn mua.",
+          title: i18n.t("credits:paymentResult.toast.notFoundTitle"),
+          description: i18n.t("credits:paymentResult.toast.notFoundDescription"),
         })
         navigate("/app/general/consultations?tab=credits&creditTab=orders", { replace: true })
       })
@@ -228,28 +232,28 @@ export default function CreditPaymentResultPage() {
       if (updated.order.status === "PAID") {
         // Webhook thắng race-condition
         toast({
-          title: "Thanh toán đã hoàn tất",
-          description: "Giao dịch thanh toán đã được ghi nhận trước khi hủy. Lượt đã được cộng vào ví.",
+          title: t("orderDetail.toast.paidTitle"),
+          description: t("paymentResult.toast.paidBeforeCancelDescription"),
         })
         if (userId) clearStoredPendingPayment(userId)
         window.dispatchEvent(new CustomEvent("credits:refresh"))
       } else if (updated.order.status === "CANCELLED") {
         toast({
-          title: "Đã hủy đơn hàng",
-          description: "Giao dịch thanh toán đã được hủy an toàn.",
+          title: t("orderDetail.toast.cancelledTitle"),
+          description: t("paymentResult.toast.cancelledDescription"),
         })
         if (userId) clearStoredPendingPayment(userId)
       } else {
         toast({
-          title: "Trạng thái đơn hàng",
-          description: `Đơn hàng hiện ở trạng thái: ${updated.order.status}`,
+          title: t("paymentResult.toast.orderStatusTitle"),
+          description: t("paymentResult.toast.orderStatusDescription", { status: updated.order.status }),
         })
       }
     } catch (err) {
       const parsed = parseApiError(err)
       toast({
-        title: "Không thể hủy đơn hàng",
-        description: parsed.userMessage || "Vui lòng thử lại sau.",
+        title: t("paymentResult.toast.cancelFailedTitle"),
+        description: parsed.userMessage || t("orderDetail.toast.tryLater"),
         variant: "destructive",
       })
     } finally {
@@ -260,11 +264,11 @@ export default function CreditPaymentResultPage() {
   const pageHeader = (
     <PageHeader
       breadcrumbs={[
-        { label: "Tư vấn & Chăm sóc", to: "/app/general/consultations" },
-        { label: "Lượt tư vấn", to: "/app/general/consultations?tab=credits" },
-        { label: "Kết quả thanh toán" },
+        { label: t("paymentResult.breadcrumbs.consultations"), to: "/app/general/consultations" },
+        { label: t("paymentResult.breadcrumbs.credits"), to: "/app/general/consultations?tab=credits" },
+        { label: t("paymentResult.title") },
       ]}
-      title="Kết quả thanh toán"
+      title={t("paymentResult.title")}
     />
   )
 
@@ -277,10 +281,10 @@ export default function CreditPaymentResultPage() {
           <div className="flex flex-col items-center w-full max-w-md">
             <RefreshCw className="h-10 w-10 text-primary animate-spin mb-4" />
             <h2 className="text-lg font-bold text-foreground mb-1">
-              Đang kiểm tra kết quả giao dịch...
+              {t("paymentResult.loadingTitle")}
             </h2>
             <p className="text-xs text-muted-foreground max-w-sm">
-              Hệ thống đang kết nối máy chủ để xác thực trạng thái đơn hàng của bạn.
+              {t("paymentResult.loadingDescription")}
             </p>
           </div>
         </PageBody>
@@ -296,14 +300,14 @@ export default function CreditPaymentResultPage() {
         <PageBody className="items-center justify-center text-center">
           <div className="flex flex-col items-center w-full max-w-md">
             <XCircle className="h-12 w-12 text-destructive mb-3" />
-            <h2 className="text-lg font-bold text-foreground mb-2">Đã xảy ra lỗi</h2>
+            <h2 className="text-lg font-bold text-foreground mb-2">{t("paymentResult.errorTitle")}</h2>
             <p className="text-xs text-muted-foreground mb-6 leading-relaxed">{errorText}</p>
             <div className="flex gap-3">
               <Button variant="outline" onClick={() => void fetchOrder(false)} className="gap-2">
-                <RefreshCw className="h-4 w-4" /> Thử lại
+                <RefreshCw className="h-4 w-4" /> {t("shared.retry")}
               </Button>
               <Button onClick={() => navigate("/app/general/consultations?tab=credits&creditTab=orders")}>
-                <ShoppingBag className="h-4 w-4 mr-1.5" /> Về lịch sử đơn
+                <ShoppingBag className="h-4 w-4 mr-1.5" /> {t("paymentResult.backToOrders")}
               </Button>
             </div>
           </div>
@@ -335,9 +339,9 @@ export default function CreditPaymentResultPage() {
                 <CheckCircle2 className="h-10 w-10" />
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-foreground">Thanh toán thành công!</h2>
+                <h2 className="text-2xl font-bold text-foreground">{t("paymentResult.paid.title")}</h2>
                 <p className="text-xs text-muted-foreground mt-1">
-                  Giao dịch nạp lượt đã hoàn tất. Lượt tư vấn đã sẵn sàng trong ví của bạn.
+                  {t("paymentResult.paid.description")}
                 </p>
               </div>
             </div>
@@ -352,13 +356,13 @@ export default function CreditPaymentResultPage() {
               <div>
                 <h2 className="text-2xl font-bold text-foreground">
                   {payment?.status === "CREATING"
-                    ? "Đang khởi tạo liên kết thanh toán..."
-                    : "Đang chờ thanh toán"}
+                    ? t("paymentResult.pending.creatingTitle")
+                    : t("paymentResult.pending.title")}
                 </h2>
                 <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
                   {payment?.status === "CREATING"
-                    ? "Hệ thống đang kết nối cổng PayOS để chuẩn bị giao dịch. Vui lòng chờ trong giây lát."
-                    : "Hệ thống đang tự động đồng bộ khi nhận được giao dịch từ PayOS. Bạn không cần thực hiện thêm thao tác nào."}
+                    ? t("paymentResult.pending.creatingDescription")
+                    : t("paymentResult.pending.description")}
                 </p>
               </div>
 
@@ -367,8 +371,8 @@ export default function CreditPaymentResultPage() {
                 <RefreshCw className={`h-3.5 w-3.5 ${!pollStopped ? "animate-spin" : ""}`} />
                 <span>
                   {!pollStopped
-                    ? "Đang tự động kiểm tra giao dịch..."
-                    : "Đã tạm dừng tự động kiểm tra"}
+                    ? t("paymentResult.pending.polling")
+                    : t("paymentResult.pending.pollingStopped")}
                 </span>
                 {pollStopped && (
                   <Button
@@ -381,7 +385,7 @@ export default function CreditPaymentResultPage() {
                     }}
                     className="h-auto p-0 text-xs font-semibold text-primary-700 underline"
                   >
-                    Kiểm tra lại
+                    {t("packagesGrid.checkAgain")}
                   </Button>
                 )}
               </div>
@@ -395,9 +399,9 @@ export default function CreditPaymentResultPage() {
                 <XCircle className="h-10 w-10" />
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-foreground">Giao dịch đã hủy</h2>
+                <h2 className="text-2xl font-bold text-foreground">{t("paymentResult.cancelled.title")}</h2>
                 <p className="text-xs text-muted-foreground mt-1">
-                  Đơn mua lượt này đã bị hủy. Bạn có thể chọn lại gói để mua lượt mới bất kỳ lúc nào.
+                  {t("paymentResult.cancelled.description")}
                 </p>
               </div>
             </div>
@@ -410,9 +414,9 @@ export default function CreditPaymentResultPage() {
                 <Clock className="h-10 w-10" />
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-foreground">Giao dịch đã hết hạn</h2>
+                <h2 className="text-2xl font-bold text-foreground">{t("paymentResult.expired.title")}</h2>
                 <p className="text-xs text-muted-foreground mt-1">
-                  Thời gian thanh toán cho đơn hàng đã kết thúc. Vui lòng tạo đơn mua mới nếu bạn vẫn muốn nạp lượt.
+                  {t("paymentResult.expired.description")}
                 </p>
               </div>
             </div>
@@ -425,9 +429,9 @@ export default function CreditPaymentResultPage() {
                 <AlertTriangle className="h-10 w-10" />
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-foreground">Giao dịch đang được kiểm tra</h2>
+                <h2 className="text-2xl font-bold text-foreground">{t("paymentResult.review.title")}</h2>
                 <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
-                  Giao dịch đã được ghi nhận nhưng cần nhân viên đối soát thủ công. Lượt tư vấn sẽ được cộng ngay sau khi xác thực hoàn tất.
+                  {t("paymentResult.review.description")}
                 </p>
               </div>
             </div>
@@ -436,13 +440,13 @@ export default function CreditPaymentResultPage() {
           {/* THẺ THÔNG TIN ĐƠN HÀNG */}
           <div className="rounded-2xl border border-border bg-card p-5 shadow-xs space-y-3.5">
             <div className="flex items-center justify-between text-xs pb-3 border-b border-border/70">
-              <span className="text-muted-foreground font-medium">Mã đơn hàng:</span>
+              <span className="text-muted-foreground font-medium">{t("purchaseDialog.orderId")}</span>
               <span className="font-mono font-semibold text-foreground">#{order.id}</span>
             </div>
 
             {payment?.orderCode && (
               <div className="flex items-center justify-between text-xs pb-3 border-b border-border/70">
-                <span className="text-muted-foreground font-medium">Mã giao dịch PayOS:</span>
+                <span className="text-muted-foreground font-medium">{t("orderDetail.payosOrderCode")}</span>
                 <span className="font-mono font-semibold text-foreground">
                   #{payment.orderCode}
                 </span>
@@ -450,33 +454,33 @@ export default function CreditPaymentResultPage() {
             )}
 
             <div className="flex items-center justify-between text-xs">
-              <span className="text-muted-foreground">Tên gói lượt:</span>
+              <span className="text-muted-foreground">{t("paymentResult.packageName")}</span>
               <span className="font-semibold text-foreground">{order.packageName}</span>
             </div>
 
             <div className="flex items-center justify-between text-xs">
-              <span className="text-muted-foreground">Số lượt nhận:</span>
+              <span className="text-muted-foreground">{t("purchaseDialog.creditsReceived")}</span>
               <span className="font-bold text-success-600 text-sm">
                 +{formatCreditQuantity(order.creditQuantity)}
               </span>
             </div>
 
             <div className="flex items-center justify-between text-xs">
-              <span className="text-muted-foreground">Tổng thanh toán:</span>
+              <span className="text-muted-foreground">{t("purchaseDialog.totalPaid")}</span>
               <span className="font-extrabold text-foreground text-sm">
                 {formatVnd(order.amountVnd)}
               </span>
             </div>
 
             <div className="flex items-center justify-between text-xs">
-              <span className="text-muted-foreground">Phương thức:</span>
+              <span className="text-muted-foreground">{t("purchaseDialog.method")}</span>
               <span className="font-medium text-foreground">
                 {providerConfig?.label || payment?.provider}
               </span>
             </div>
 
             <div className="flex items-center justify-between text-xs pt-1">
-              <span className="text-muted-foreground">Trạng thái đơn:</span>
+              <span className="text-muted-foreground">{t("paymentResult.orderStatus")}</span>
               <Badge className={`text-xs font-semibold ${orderStatusConfig?.className}`}>
                 {orderStatusConfig?.label || order.status}
               </Badge>
@@ -484,7 +488,7 @@ export default function CreditPaymentResultPage() {
 
             {payment?.status && (
               <div className="flex items-center justify-between text-xs pt-1">
-                <span className="text-muted-foreground">Trạng thái thanh toán:</span>
+                <span className="text-muted-foreground">{t("paymentResult.paymentStatus")}</span>
                 <Badge className={`text-xs font-medium ${paymentStatusConfig?.className}`}>
                   {paymentStatusConfig?.label || payment.status}
                 </Badge>
@@ -504,7 +508,7 @@ export default function CreditPaymentResultPage() {
                       window.location.assign(payment.checkoutUrl!)
                     }}
                   >
-                    <ExternalLink className="h-4 w-4" /> Mở trang thanh toán PayOS
+                    <ExternalLink className="h-4 w-4" /> {t("paymentResult.openPayos")}
                   </Button>
                 )}
 
@@ -514,7 +518,7 @@ export default function CreditPaymentResultPage() {
                     className="flex-1 gap-1.5"
                     onClick={() => void fetchOrder(false)}
                   >
-                    <RefreshCw className="h-4 w-4" /> Kiểm tra lại
+                    <RefreshCw className="h-4 w-4" /> {t("packagesGrid.checkAgain")}
                   </Button>
                   <Button
                     variant="destructive"
@@ -523,7 +527,7 @@ export default function CreditPaymentResultPage() {
                     disabled={isCancelling}
                   >
                     <Ban className="h-4 w-4" />
-                    {isCancelling ? "Đang hủy..." : "Hủy thanh toán"}
+                    {isCancelling ? t("orderDetail.cancelling") : t("paymentResult.cancelPayment")}
                   </Button>
                 </div>
               </>
@@ -536,14 +540,14 @@ export default function CreditPaymentResultPage() {
                   className="flex-1 gap-1.5 font-semibold"
                   onClick={() => navigate("/app/general/consultations?tab=credits")}
                 >
-                  <ArrowLeft className="h-4 w-4" /> Về ví lượt tư vấn
+                  <ArrowLeft className="h-4 w-4" /> {t("paymentResult.backToWallet")}
                 </Button>
                 <Button
                   variant="outline"
                   className="flex-1 gap-1.5"
                   onClick={() => navigate("/app/general/consultations?tab=credits&creditTab=orders")}
                 >
-                  <ShoppingBag className="h-4 w-4" /> Xem lịch sử đơn mua
+                  <ShoppingBag className="h-4 w-4" /> {t("paymentResult.viewOrderHistory")}
                 </Button>
               </div>
             )}

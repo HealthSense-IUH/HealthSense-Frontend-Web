@@ -48,8 +48,11 @@ import type {
   CreditSourceType,
   MemberAccountStatus,
 } from "@/types/credits"
+import { Trans, useTranslation } from "react-i18next"
+import i18n, { currentIntlLocale } from "@/lib/i18n"
 
 export function MemberWalletDirectoryTab() {
+  const { t } = useTranslation("credits")
   const { toast } = useToast()
   const userSession = useAuthStore((state) => state.userSession)
   const actorId = userSession?.userId || "ADMIN"
@@ -102,8 +105,8 @@ export function MemberWalletDirectoryTab() {
         const parsed = parseApiError(err)
         toast({
           variant: "destructive",
-          title: "Lỗi tải danh sách thành viên",
-          description: parsed.userMessage || "Không thể tải danh sách thành viên.",
+          title: i18n.t("credits:admin.memberSummary.errors.loadTitle"),
+          description: parsed.userMessage || i18n.t("credits:admin.memberSummary.errors.load"),
         })
       } finally {
         if (!silent) setLoadingMembers(false)
@@ -180,8 +183,8 @@ export function MemberWalletDirectoryTab() {
         const parsed = parseApiError(err)
         toast({
           variant: "destructive",
-          title: "Không thể tải lịch sử biến động",
-          description: parsed.userMessage || `Lỗi tải sổ cái thành viên #${memberId}.`,
+          title: i18n.t("credits:admin.wallet.toast.ledgerErrorTitle"),
+          description: parsed.userMessage || i18n.t("credits:admin.wallet.toast.ledgerErrorDescription", { memberId }),
         })
       } finally {
         setLoadingLedger(false)
@@ -252,8 +255,8 @@ export function MemberWalletDirectoryTab() {
     if (adjustDelta === 0) {
       toast({
         variant: "destructive",
-        title: "Số lượt điều chỉnh không hợp lệ",
-        description: "Số lượt điều chỉnh delta phải khác 0 (dương để cộng, âm để trừ).",
+        title: t("admin.wallet.adjust.invalidDeltaTitle"),
+        description: t("admin.wallet.adjust.invalidDeltaDescription"),
       })
       return
     }
@@ -261,8 +264,8 @@ export function MemberWalletDirectoryTab() {
     if (!adjustReason.trim() || adjustReason.trim().length > 500) {
       toast({
         variant: "destructive",
-        title: "Lý do không hợp lệ",
-        description: "Lý do điều chỉnh là bắt buộc và tối đa 500 ký tự.",
+        title: t("admin.wallet.adjust.invalidReasonTitle"),
+        description: t("admin.wallet.adjust.invalidReasonDescription"),
       })
       return
     }
@@ -272,7 +275,7 @@ export function MemberWalletDirectoryTab() {
     if (adjustDelta < 0 && Math.abs(adjustDelta) > currentAvailable) {
       if (
         !window.confirm(
-          `Cảnh báo: Lượt trừ (${Math.abs(adjustDelta)}) vượt quá số lượt khả dụng (${currentAvailable}) của thành viên. Tiếp tục gửi yêu cầu?`
+          t("admin.wallet.adjust.confirmOverdraw", { delta: Math.abs(adjustDelta), available: currentAvailable })
         )
       ) {
         return
@@ -293,8 +296,10 @@ export function MemberWalletDirectoryTab() {
       )
 
       toast({
-        title: "Điều chỉnh lượt thành công",
-        description: `Đã ${adjustDelta > 0 ? "cộng" : "trừ"} ${Math.abs(adjustDelta)} lượt cho thành viên ${selectedMember.displayName}.`,
+        title: t("admin.wallet.adjust.successTitle"),
+        description: adjustDelta > 0
+          ? t("admin.wallet.adjust.successAdded", { count: Math.abs(adjustDelta), name: selectedMember.displayName })
+          : t("admin.wallet.adjust.successSubtracted", { count: Math.abs(adjustDelta), name: selectedMember.displayName }),
       })
 
       // Update wallet immediately from mutation response
@@ -338,8 +343,8 @@ export function MemberWalletDirectoryTab() {
       const parsed = parseApiError(err)
       toast({
         variant: "destructive",
-        title: "Điều chỉnh lượt thất bại",
-        description: parsed.userMessage || "Không thể thực hiện điều chỉnh số dư ví.",
+        title: t("admin.wallet.adjust.failedTitle"),
+        description: parsed.userMessage || t("admin.wallet.adjust.failedDescription"),
       })
     } finally {
       adjustSubmittingRef.current = false
@@ -356,7 +361,7 @@ export function MemberWalletDirectoryTab() {
             variant="outline"
             className="text-[11px] font-semibold bg-success-500/10 text-success-600 border-success-500/30"
           >
-            Hoạt động
+            {t("admin.accountStatus.active")}
           </Badge>
         )
       case "PENDING_VERIFY":
@@ -365,7 +370,7 @@ export function MemberWalletDirectoryTab() {
             variant="outline"
             className="text-[11px] font-semibold bg-warning-500/10 text-warning-600 border-warning-500/30"
           >
-            Chờ xác thực
+            {t("admin.accountStatus.pendingVerify")}
           </Badge>
         )
       case "INACTIVE":
@@ -375,7 +380,7 @@ export function MemberWalletDirectoryTab() {
             variant="outline"
             className="text-[11px] font-semibold bg-muted text-muted-foreground border-border"
           >
-            Tạm khóa
+            {t("admin.accountStatus.inactive")}
           </Badge>
         )
     }
@@ -391,13 +396,13 @@ export function MemberWalletDirectoryTab() {
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
               <div className="flex items-center gap-2">
-                <CardTitle className="text-lg font-bold">Danh sách thành viên & Ví lượt</CardTitle>
+                <CardTitle className="text-lg font-bold">{t("admin.wallet.directory.title")}</CardTitle>
                 <Badge variant="secondary" className="text-xs font-mono">
-                  {totalElements} thành viên
+                  {t("admin.memberSummary.count", { count: totalElements })}
                 </Badge>
               </div>
               <CardDescription className="text-xs mt-0.5">
-                Xem nhanh số lượt của thành viên và bấm <strong>"Xem ví"</strong> để xem lịch sử sổ cái hoặc điều chỉnh lượt.
+                <Trans t={t} i18nKey="admin.wallet.directory.description" components={{ strong: <strong /> }} />
               </CardDescription>
             </div>
 
@@ -406,7 +411,7 @@ export function MemberWalletDirectoryTab() {
               <div className="relative w-full sm:w-64">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input
-                  placeholder="Tìm theo Tên, Email, SĐT, ID..."
+                  placeholder={t("admin.memberSummary.searchPlaceholder")}
                   value={keywordInput}
                   onChange={(e) => setKeywordInput(e.target.value)}
                   className="pl-9 h-9 rounded-xl text-xs"
@@ -417,13 +422,13 @@ export function MemberWalletDirectoryTab() {
                 <SlidersHorizontal className="w-4 h-4 text-muted-foreground shrink-0" />
                 <Select value={statusFilter} onValueChange={setStatusFilter}>
                   <SelectTrigger className="w-[145px] h-9 rounded-xl text-xs">
-                    <SelectValue placeholder="Trạng thái" />
+                    <SelectValue placeholder={t("admin.memberSummary.statusPlaceholder")} />
                   </SelectTrigger>
                   <SelectContent className="rounded-xl text-xs">
-                    <SelectItem value="ALL">Tất cả trạng thái</SelectItem>
-                    <SelectItem value="ACTIVE">Hoạt động (ACTIVE)</SelectItem>
-                    <SelectItem value="PENDING_VERIFY">Chờ xác thực</SelectItem>
-                    <SelectItem value="INACTIVE">Tạm khóa (INACTIVE)</SelectItem>
+                    <SelectItem value="ALL">{t("filters.allStatuses")}</SelectItem>
+                    <SelectItem value="ACTIVE">{t("admin.wallet.directory.statusActive")}</SelectItem>
+                    <SelectItem value="PENDING_VERIFY">{t("admin.accountStatus.pendingVerify")}</SelectItem>
+                    <SelectItem value="INACTIVE">{t("admin.wallet.directory.statusInactive")}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -436,7 +441,7 @@ export function MemberWalletDirectoryTab() {
                 className="rounded-xl h-9 text-xs gap-1.5"
               >
                 <RefreshCw className={`w-3.5 h-3.5 ${loadingMembers ? "animate-spin" : ""}`} />
-                Làm mới
+                {t("shared.refresh")}
               </Button>
             </div>
           </div>
@@ -447,14 +452,14 @@ export function MemberWalletDirectoryTab() {
             <Table>
               <TableHeader>
                 <TableRow className="bg-muted/30">
-                  <TableHead className="min-w-[200px] font-semibold text-xs">Thành viên</TableHead>
-                  <TableHead className="min-w-[180px] font-semibold text-xs">Liên hệ</TableHead>
-                  <TableHead className="font-semibold text-xs text-center">Trạng thái</TableHead>
-                  <TableHead className="font-semibold text-xs text-center">Khả dụng</TableHead>
-                  <TableHead className="font-semibold text-xs text-center">Tạm giữ</TableHead>
-                  <TableHead className="font-semibold text-xs text-center">Tổng số dư</TableHead>
-                  <TableHead className="font-semibold text-xs text-center">Tình trạng ví</TableHead>
-                  <TableHead className="w-[110px] text-right font-semibold text-xs">Thao tác</TableHead>
+                  <TableHead className="min-w-[200px] font-semibold text-xs">{t("admin.wallet.directory.columns.member")}</TableHead>
+                  <TableHead className="min-w-[180px] font-semibold text-xs">{t("admin.wallet.directory.columns.contact")}</TableHead>
+                  <TableHead className="font-semibold text-xs text-center">{t("admin.wallet.directory.columns.status")}</TableHead>
+                  <TableHead className="font-semibold text-xs text-center">{t("admin.wallet.directory.columns.available")}</TableHead>
+                  <TableHead className="font-semibold text-xs text-center">{t("admin.wallet.directory.columns.reserved")}</TableHead>
+                  <TableHead className="font-semibold text-xs text-center">{t("admin.wallet.directory.columns.balance")}</TableHead>
+                  <TableHead className="font-semibold text-xs text-center">{t("admin.wallet.directory.columns.walletState")}</TableHead>
+                  <TableHead className="w-[110px] text-right font-semibold text-xs">{t("admin.wallet.directory.columns.actions")}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -462,13 +467,13 @@ export function MemberWalletDirectoryTab() {
                   <TableRow>
                     <TableCell colSpan={8} className="h-36 text-center text-muted-foreground text-xs">
                       <RefreshCw className="w-5 h-5 animate-spin mx-auto mb-2 text-primary" />
-                      Đang tải danh sách thành viên...
+                      {t("admin.memberSummary.loading")}
                     </TableCell>
                   </TableRow>
                 ) : members.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={8} className="h-36 text-center text-muted-foreground text-xs">
-                      Không tìm thấy thành viên nào phù hợp với bộ lọc tìm kiếm.
+                      {t("admin.wallet.directory.empty")}
                     </TableCell>
                   </TableRow>
                 ) : (
@@ -530,7 +535,7 @@ export function MemberWalletDirectoryTab() {
                                 : "text-muted-foreground"
                             }
                           >
-                            {member.available} lượt
+                            {t("quantity.credits", { count: member.available, value: member.available })}
                           </span>
                         </TableCell>
 
@@ -554,11 +559,11 @@ export function MemberWalletDirectoryTab() {
                         <TableCell className="text-center">
                           {!member.walletInitialized ? (
                             <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-muted text-muted-foreground border">
-                              Chưa phát sinh ví
+                              {t("admin.wallet.directory.walletNotCreated")}
                             </span>
                           ) : (
                             <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-success-500/10 text-success-600 border border-success-500/20">
-                              Đã khởi tạo
+                              {t("admin.wallet.directory.walletInitialized")}
                             </span>
                           )}
                         </TableCell>
@@ -572,7 +577,7 @@ export function MemberWalletDirectoryTab() {
                             className="h-8 px-2.5 text-xs gap-1.5 rounded-lg hover:bg-primary hover:text-primary-foreground transition-all shadow-3xs"
                           >
                             <Wallet className="w-3.5 h-3.5" />
-                            Xem ví
+                            {t("admin.wallet.directory.viewWallet")}
                           </Button>
                         </TableCell>
                       </TableRow>
@@ -587,7 +592,12 @@ export function MemberWalletDirectoryTab() {
           {totalPages > 1 && (
             <div className="flex items-center justify-between px-4 py-3 border-t text-xs text-muted-foreground">
               <div>
-                Trang <span className="font-semibold text-foreground">{page}</span> / {totalPages} (Tổng cộng {totalElements} thành viên)
+                <Trans
+                  t={t}
+                  i18nKey="admin.wallet.directory.pagination"
+                  values={{ page, totalPages, total: totalElements }}
+                  components={{ strong: <span className="font-semibold text-foreground" /> }}
+                />
               </div>
               <div className="flex items-center gap-1.5">
                 <Button
@@ -598,7 +608,7 @@ export function MemberWalletDirectoryTab() {
                   className="h-8 px-2.5 rounded-xl text-xs gap-1"
                 >
                   <ChevronLeft className="w-3.5 h-3.5" />
-                  Trước
+                  {t("shared.prev")}
                 </Button>
                 <Button
                   variant="outline"
@@ -607,7 +617,7 @@ export function MemberWalletDirectoryTab() {
                   disabled={page >= totalPages || loadingMembers}
                   className="h-8 px-2.5 rounded-xl text-xs gap-1"
                 >
-                  Sau
+                  {t("shared.next")}
                   <ChevronRight className="w-3.5 h-3.5" />
                 </Button>
               </div>
@@ -643,7 +653,13 @@ export function MemberWalletDirectoryTab() {
                         {renderStatusBadge(selectedMember.accountStatus)}
                       </div>
                       <DialogDescription className="text-xs text-muted-foreground mt-0.5">
-                        Mã ID: <span className="font-mono text-primary font-semibold">#{selectedMember.memberId}</span> • Email: {selectedMember.email} {selectedMember.phone ? `• SĐT: ${selectedMember.phone}` : ""}
+                        <Trans
+                          t={t}
+                          i18nKey="admin.wallet.detail.header"
+                          values={{ memberId: selectedMember.memberId, email: selectedMember.email }}
+                          components={{ id: <span className="font-mono text-primary font-semibold" /> }}
+                        />{" "}
+                        {selectedMember.phone ? t("admin.wallet.detail.phone", { phone: selectedMember.phone }) : ""}
                       </DialogDescription>
                     </div>
                   </div>
@@ -654,7 +670,7 @@ export function MemberWalletDirectoryTab() {
                     className="h-9 rounded-xl gap-1.5 font-semibold shadow-xs shrink-0 mr-2 sm:mr-3"
                   >
                     <PlusCircle className="w-4 h-4" />
-                    {isAdjustInlineOpen ? "Đóng biểu mẫu" : "Điều chỉnh lượt"}
+                    {isAdjustInlineOpen ? t("admin.wallet.detail.closeForm") : t("admin.wallet.detail.adjust")}
                   </Button>
                 </div>
               </DialogHeader>
@@ -670,7 +686,7 @@ export function MemberWalletDirectoryTab() {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2 text-primary font-bold text-sm">
                         <PlusCircle className="w-4 h-4" />
-                        Điều chỉnh lượt thủ công cho #{selectedMember.memberId}
+                        {t("admin.wallet.adjust.formTitle", { memberId: selectedMember.memberId })}
                       </div>
                       <Button
                         type="button"
@@ -686,7 +702,7 @@ export function MemberWalletDirectoryTab() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div className="space-y-1.5">
                         <Label htmlFor="inlineDelta" className="text-xs font-semibold">
-                          Số lượt thay đổi (Delta) <span className="text-destructive">*</span>
+                          {t("admin.wallet.adjust.deltaLabel")} <span className="text-destructive">*</span>
                         </Label>
                         <div className="relative">
                           <Input
@@ -708,17 +724,17 @@ export function MemberWalletDirectoryTab() {
                           </div>
                         </div>
                         <p className="text-[11px] text-muted-foreground">
-                          Dương (+) để cấp bù, âm (-) để thu hồi lượt.
+                          {t("admin.wallet.adjust.deltaHint")}
                         </p>
                       </div>
 
                       <div className="space-y-1.5">
                         <Label htmlFor="inlineReason" className="text-xs font-semibold">
-                          Lý do điều chỉnh <span className="text-destructive">*</span>
+                          {t("admin.wallet.adjust.reasonLabel")} <span className="text-destructive">*</span>
                         </Label>
                         <Textarea
                           id="inlineReason"
-                          placeholder="VD: Cấp bù lượt theo biên bản hỗ trợ CS-2026-001..."
+                          placeholder={t("admin.wallet.adjust.reasonPlaceholder")}
                           value={adjustReason}
                           onChange={(e) => setAdjustReason(e.target.value)}
                           required
@@ -738,7 +754,7 @@ export function MemberWalletDirectoryTab() {
                         disabled={adjustSubmitting}
                         className="rounded-xl h-8 text-xs"
                       >
-                        Hủy
+                        {t("admin.packages.cancel")}
                       </Button>
                       <Button
                         type="submit"
@@ -746,7 +762,7 @@ export function MemberWalletDirectoryTab() {
                         disabled={adjustSubmitting || adjustDelta === 0}
                         className="rounded-xl h-8 text-xs gap-1.5 shadow-xs font-semibold"
                       >
-                        {adjustSubmitting ? "Đang xử lý..." : "Xác nhận điều chỉnh"}
+                        {adjustSubmitting ? t("admin.wallet.adjust.submitting") : t("admin.wallet.adjust.submit")}
                       </Button>
                     </div>
                   </form>
@@ -757,13 +773,16 @@ export function MemberWalletDirectoryTab() {
                   <CardHeader className="pb-1.5 p-4 flex flex-row items-center justify-between">
                     <div>
                       <CardDescription className="text-xs font-semibold text-success-700">
-                        Lượt khả dụng
+                        {t("admin.wallet.detail.availableTitle")}
                       </CardDescription>
                       <CardTitle className="text-3xl font-extrabold text-success-600 font-mono mt-1">
                         {loadingWalletDetail ? (
                           <RefreshCw className="w-6 h-6 animate-spin text-success-600" />
                         ) : (
-                          `${memberWallet ? memberWallet.available : selectedMember.available} lượt`
+                          t("quantity.credits", {
+                            count: memberWallet ? memberWallet.available : selectedMember.available,
+                            value: memberWallet ? memberWallet.available : selectedMember.available,
+                          })
                         )}
                       </CardTitle>
                     </div>
@@ -772,7 +791,7 @@ export function MemberWalletDirectoryTab() {
                     </div>
                   </CardHeader>
                   <CardContent className="pt-0 px-4 pb-3.5 text-xs text-muted-foreground">
-                    Số lượt tư vấn sẵn sàng để thành viên sử dụng cho các phiên khám
+                    {t("admin.wallet.detail.availableHint")}
                   </CardContent>
                 </Card>
 
@@ -781,7 +800,7 @@ export function MemberWalletDirectoryTab() {
                   <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
                     <div className="font-bold text-sm text-foreground flex items-center gap-1.5">
                       <Coins className="w-4 h-4 text-primary" />
-                      Lịch sử biến động
+                      {t("admin.wallet.ledger.title")}
                     </div>
 
                     <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
@@ -790,17 +809,17 @@ export function MemberWalletDirectoryTab() {
                         onValueChange={(val) => setLedgerOperationFilter(val)}
                       >
                         <SelectTrigger className="w-[140px] h-8 rounded-xl text-xs">
-                          <SelectValue placeholder="Nghiệp vụ" />
+                          <SelectValue placeholder={t("admin.wallet.ledger.operationPlaceholder")} />
                         </SelectTrigger>
                         <SelectContent className="rounded-xl text-xs">
-                          <SelectItem value="ALL">Tất cả nghiệp vụ</SelectItem>
-                          <SelectItem value="PURCHASE">Nạp lượt (PURCHASE)</SelectItem>
-                          <SelectItem value="SESSION_CHARGE">Dùng lượt phiên khám</SelectItem>
-                          <SelectItem value="RESERVE">Tạm giữ (RESERVE)</SelectItem>
-                          <SelectItem value="CAPTURE">Quyết toán (CAPTURE)</SelectItem>
-                          <SelectItem value="RELEASE">Hoàn trả (RELEASE)</SelectItem>
-                          <SelectItem value="ADJUSTMENT">Admin điều chỉnh</SelectItem>
-                          <SelectItem value="SESSION_REFUND">Bồi hoàn phiên</SelectItem>
+                          <SelectItem value="ALL">{t("admin.wallet.ledger.allOperations")}</SelectItem>
+                          <SelectItem value="PURCHASE">{t("admin.wallet.ledger.operations.purchase")}</SelectItem>
+                          <SelectItem value="SESSION_CHARGE">{t("admin.wallet.ledger.operations.sessionCharge")}</SelectItem>
+                          <SelectItem value="RESERVE">{t("admin.wallet.ledger.operations.reserve")}</SelectItem>
+                          <SelectItem value="CAPTURE">{t("admin.wallet.ledger.operations.capture")}</SelectItem>
+                          <SelectItem value="RELEASE">{t("admin.wallet.ledger.operations.release")}</SelectItem>
+                          <SelectItem value="ADJUSTMENT">{t("admin.wallet.ledger.adminAdjustment")}</SelectItem>
+                          <SelectItem value="SESSION_REFUND">{t("admin.wallet.ledger.operations.sessionRefund")}</SelectItem>
                         </SelectContent>
                       </Select>
 
@@ -809,13 +828,13 @@ export function MemberWalletDirectoryTab() {
                         onValueChange={(val) => setLedgerSourceTypeFilter(val)}
                       >
                         <SelectTrigger className="w-[130px] h-8 rounded-xl text-xs">
-                          <SelectValue placeholder="Nguồn gốc" />
+                          <SelectValue placeholder={t("admin.wallet.ledger.sourcePlaceholder")} />
                         </SelectTrigger>
                         <SelectContent className="rounded-xl text-xs">
-                          <SelectItem value="ALL">Tất cả nguồn</SelectItem>
-                          <SelectItem value="PURCHASE_ORDER">Đơn mua (ORDER)</SelectItem>
-                          <SelectItem value="CONSULTATION_SESSION">Phiên khám (SESSION)</SelectItem>
-                          <SelectItem value="ADMIN_ADJUSTMENT">Admin điều chỉnh</SelectItem>
+                          <SelectItem value="ALL">{t("admin.wallet.ledger.allSources")}</SelectItem>
+                          <SelectItem value="PURCHASE_ORDER">{t("admin.wallet.ledger.sources.order")}</SelectItem>
+                          <SelectItem value="CONSULTATION_SESSION">{t("admin.wallet.ledger.sources.session")}</SelectItem>
+                          <SelectItem value="ADMIN_ADJUSTMENT">{t("admin.wallet.ledger.adminAdjustment")}</SelectItem>
                         </SelectContent>
                       </Select>
 
@@ -827,7 +846,7 @@ export function MemberWalletDirectoryTab() {
                         className="h-8 rounded-xl text-xs gap-1.5"
                       >
                         <RefreshCw className={`w-3.5 h-3.5 ${loadingLedger ? "animate-spin" : ""}`} />
-                        Lọc
+                        {t("admin.wallet.ledger.filter")}
                       </Button>
                     </div>
                   </div>
@@ -837,12 +856,12 @@ export function MemberWalletDirectoryTab() {
                       <Table>
                         <TableHeader>
                           <TableRow className="bg-muted/30">
-                            <TableHead className="text-xs font-semibold">Thời gian</TableHead>
-                            <TableHead className="text-xs font-semibold">Nghiệp vụ</TableHead>
-                            <TableHead className="text-xs font-semibold text-center">Biến động</TableHead>
-                            <TableHead className="text-xs font-semibold text-center">Số dư sau</TableHead>
-                            <TableHead className="text-xs font-semibold">Nguồn / Mã</TableHead>
-                            <TableHead className="text-xs font-semibold">Người thực hiện / Lý do</TableHead>
+                            <TableHead className="text-xs font-semibold">{t("admin.wallet.ledger.columns.time")}</TableHead>
+                            <TableHead className="text-xs font-semibold">{t("admin.wallet.ledger.columns.operation")}</TableHead>
+                            <TableHead className="text-xs font-semibold text-center">{t("admin.wallet.ledger.columns.delta")}</TableHead>
+                            <TableHead className="text-xs font-semibold text-center">{t("admin.wallet.ledger.columns.balanceAfter")}</TableHead>
+                            <TableHead className="text-xs font-semibold">{t("admin.wallet.ledger.columns.source")}</TableHead>
+                            <TableHead className="text-xs font-semibold">{t("admin.wallet.ledger.columns.actor")}</TableHead>
                           </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -850,13 +869,13 @@ export function MemberWalletDirectoryTab() {
                             <TableRow>
                               <TableCell colSpan={6} className="h-32 text-center text-xs text-muted-foreground">
                                 <RefreshCw className="w-5 h-5 animate-spin mx-auto mb-2 text-primary" />
-                                Đang tải biến động sổ cái...
+                                {t("admin.wallet.ledger.loading")}
                               </TableCell>
                             </TableRow>
                           ) : ledgerEntries.length === 0 ? (
                             <TableRow>
                               <TableCell colSpan={6} className="h-32 text-center text-xs text-muted-foreground">
-                                Chưa có ghi nhận biến động lượt nào phù hợp.
+                                {t("admin.wallet.ledger.empty")}
                               </TableCell>
                             </TableRow>
                           ) : (
@@ -870,7 +889,7 @@ export function MemberWalletDirectoryTab() {
                               return (
                                 <TableRow key={entry.id} className="hover:bg-muted/20">
                                   <TableCell className="text-xs text-muted-foreground whitespace-nowrap">
-                                    {new Date(entry.createdAt).toLocaleDateString("vi-VN", {
+                                    {new Date(entry.createdAt).toLocaleDateString(currentIntlLocale(), {
                                       year: "numeric",
                                       month: "2-digit",
                                       day: "2-digit",
@@ -911,7 +930,7 @@ export function MemberWalletDirectoryTab() {
                                   <TableCell className="text-xs">
                                     {entry.actorId && (
                                       <div className="text-[11px] text-primary font-medium">
-                                        Bởi: {entry.actorId}
+                                        {t("admin.wallet.ledger.by", { actor: entry.actorId })}
                                       </div>
                                     )}
                                     {entry.reason ? (
@@ -934,9 +953,14 @@ export function MemberWalletDirectoryTab() {
                     {ledgerEntries.length > 0 && (
                       <div className="flex items-center justify-between px-3 py-2 border-t text-xs text-muted-foreground">
                         <div>
-                          Trang <span className="font-semibold text-foreground">{ledgerPage}</span> / {Math.max(1, ledgerTotalPages)}
+                          <Trans
+                            t={t}
+                            i18nKey="admin.pagination.pageOf"
+                            values={{ page: ledgerPage, totalPages: Math.max(1, ledgerTotalPages) }}
+                            components={{ strong: <span className="font-semibold text-foreground" /> }}
+                          />
                           {ledgerTotalElements > 0 && (
-                            <span className="ml-1 text-muted-foreground/80">({ledgerTotalElements} bản ghi)</span>
+                            <span className="ml-1 text-muted-foreground/80">{t("admin.wallet.ledger.records", { count: ledgerTotalElements })}</span>
                           )}
                         </div>
                         {ledgerTotalPages > 1 && (
@@ -949,7 +973,7 @@ export function MemberWalletDirectoryTab() {
                               className="h-7 px-2 rounded-lg text-xs gap-1"
                             >
                               <ChevronLeft className="w-3 h-3" />
-                              Trước
+                              {t("shared.prev")}
                             </Button>
                             <Button
                               variant="outline"
@@ -958,7 +982,7 @@ export function MemberWalletDirectoryTab() {
                               disabled={ledgerPage >= ledgerTotalPages || loadingLedger}
                               className="h-7 px-2 rounded-lg text-xs gap-1"
                             >
-                              Sau
+                              {t("shared.next")}
                               <ChevronRight className="w-3 h-3" />
                             </Button>
                           </div>
@@ -976,7 +1000,7 @@ export function MemberWalletDirectoryTab() {
                   onClick={() => handleCloseDetailDialog(false)}
                   className="rounded-xl h-9 text-xs"
                 >
-                  Đóng chi tiết ví
+                  {t("admin.wallet.detail.close")}
                 </Button>
               </DialogFooter>
             </>

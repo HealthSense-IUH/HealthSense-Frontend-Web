@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react"
+import { useTranslation } from "react-i18next"
 import { Activity, Droplets, HeartPulse, Loader2, RefreshCcw } from "lucide-react"
 import {
   CartesianGrid,
@@ -65,14 +66,15 @@ function collectMetric(records: MemberHealthRecord[], key: string): number[] {
 }
 
 export default function ReportsPage() {
+  const { t } = useTranslation("health")
   const [records, setRecords] = useState<MemberHealthRecord[]>([])
   const [stats, setStats] = useState<HealthStatisticsResponse | null>(null)
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [loadFailed, setLoadFailed] = useState(false)
 
   const loadData = useCallback(async () => {
     setLoading(true)
-    setError(null)
+    setLoadFailed(false)
     try {
       const [recordsRes, statsRes] = await Promise.all([
         healthRecordApi.getMyRecords({ page: 1, size: 100 }),
@@ -82,7 +84,7 @@ export default function ReportsPage() {
       setStats(statsRes.data ?? null)
     } catch (err) {
       console.error("Failed to load reports data:", err)
-      setError("Không thể tải dữ liệu báo cáo. Vui lòng thử lại.")
+      setLoadFailed(true)
     } finally {
       setLoading(false)
     }
@@ -117,8 +119,8 @@ export default function ReportsPage() {
   return (
     <Page>
       <PageHeader
-        title="Báo cáo sức khỏe"
-        description={`Tổng hợp từ ${summary.totalMeasurements} phép đo gần nhất của bạn`}
+        title={t("reports.title")}
+        description={t("reports.description", { count: summary.totalMeasurements })}
         actions={
           <Button
             variant="outline"
@@ -131,15 +133,15 @@ export default function ReportsPage() {
             ) : (
               <RefreshCcw className="mr-2 h-4 w-4" />
             )}
-            Làm mới
+            {t("reports.refresh")}
           </Button>
         }
       />
 
       <PageBody>
-        {error && (
+        {loadFailed && (
           <div className="rounded-2xl border border-danger-200 bg-danger-50 p-4 text-sm text-danger-700">
-            {error}
+            {t("reports.loadError")}
           </div>
         )}
 
@@ -147,7 +149,7 @@ export default function ReportsPage() {
           <Card className="rounded-2xl border-0 shadow-sm bg-white">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-1.5">
-                <HeartPulse className="h-4 w-4 text-danger-500" /> Nhịp tim trung bình
+                <HeartPulse className="h-4 w-4 text-danger-500" /> {t("reports.avgHeartRate")}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -157,14 +159,14 @@ export default function ReportsPage() {
                 </span>
                 <span className="text-sm text-muted-foreground">BPM</span>
               </div>
-              <p className="mt-2 text-sm text-muted-foreground">Dải tham chiếu: 60 - 100 BPM</p>
+              <p className="mt-2 text-sm text-muted-foreground">{t("reports.heartRateReference")}</p>
             </CardContent>
           </Card>
 
           <Card className="rounded-2xl border-0 shadow-sm bg-white">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-1.5">
-                <Droplets className="h-4 w-4 text-primary-500" /> SpO2 trung bình
+                <Droplets className="h-4 w-4 text-primary-500" /> {t("reports.avgSpo2")}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -176,8 +178,8 @@ export default function ReportsPage() {
               </div>
               <p className="mt-2 text-sm text-muted-foreground">
                 {summary.avgSpO2 !== null
-                  ? "Mức tham khảo (đo tại thiết bị)"
-                  : "Chưa có dữ liệu SpO2 từ thiết bị"}
+                  ? t("reports.spo2Reference")
+                  : t("reports.spo2NoData")}
               </p>
             </CardContent>
           </Card>
@@ -185,7 +187,7 @@ export default function ReportsPage() {
           <Card className="rounded-2xl border-0 shadow-sm bg-white">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-1.5">
-                <Activity className="h-4 w-4 text-success-500" /> HRV trung bình (RMSSD)
+                <Activity className="h-4 w-4 text-success-500" /> {t("reports.avgHrv")}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -196,7 +198,7 @@ export default function ReportsPage() {
                 <span className="text-sm text-muted-foreground">ms</span>
               </div>
               <p className="mt-2 text-sm text-muted-foreground">
-                Độ biến thiên nhịp tim — cao hơn thường tốt hơn
+                {t("reports.hrvHint")}
               </p>
             </CardContent>
           </Card>
@@ -206,10 +208,10 @@ export default function ReportsPage() {
         {stats && totalScreened > 0 && (
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {[
-              { label: "Bình thường", value: stats.totalNormal, cls: "text-success-600" },
-              { label: "Chưa chắc chắn", value: stats.totalUncertain, cls: "text-warning-600" },
-              { label: "Nghi ngờ rung nhĩ", value: stats.totalAfibSuspected, cls: "text-warning-600" },
-              { label: "Rung nhĩ", value: stats.totalAfibRisk, cls: "text-danger-600" },
+              { label: t("reports.screening.normal"), value: stats.totalNormal, cls: "text-success-600" },
+              { label: t("reports.screening.uncertain"), value: stats.totalUncertain, cls: "text-warning-600" },
+              { label: t("reports.screening.afibSuspected"), value: stats.totalAfibSuspected, cls: "text-warning-600" },
+              { label: t("reports.screening.afib"), value: stats.totalAfibRisk, cls: "text-danger-600" },
             ].map((item) => (
               <div
                 key={item.label}
@@ -217,7 +219,7 @@ export default function ReportsPage() {
               >
                 <span className="text-xs text-muted-foreground font-medium block">{item.label}</span>
                 <span className={`text-2xl font-bold ${item.cls}`}>{item.value}</span>
-                <span className="text-[11px] text-muted-foreground block">phép đo / 30 ngày</span>
+                <span className="text-[11px] text-muted-foreground block">{t("reports.screening.per30Days")}</span>
               </div>
             ))}
           </div>
@@ -226,9 +228,9 @@ export default function ReportsPage() {
         {/* Xu hướng nhịp tim theo ngày */}
         <Card className="rounded-2xl border-0 shadow-sm bg-white">
           <CardHeader>
-            <CardTitle>Xu hướng Nhịp tim theo ngày</CardTitle>
+            <CardTitle>{t("reports.trend.title")}</CardTitle>
             <CardDescription>
-              Trung bình / thấp nhất / cao nhất mỗi ngày, tính từ các phép đo thực tế
+              {t("reports.trend.description")}
             </CardDescription>
           </CardHeader>
           <CardContent className="h-[400px]">
@@ -239,7 +241,7 @@ export default function ReportsPage() {
             ) : trend.length === 0 ? (
               <div className="h-full flex flex-col items-center justify-center text-muted-foreground gap-2">
                 <HeartPulse className="h-10 w-10 opacity-30" />
-                <p className="text-sm">Chưa có phép đo nào — hãy đo bằng thiết bị HealthSense để xem xu hướng.</p>
+                <p className="text-sm">{t("reports.trend.empty")}</p>
               </div>
             ) : (
               <ResponsiveContainer width="100%" height="100%">
@@ -250,12 +252,12 @@ export default function ReportsPage() {
                   <Tooltip
                     contentStyle={{ borderRadius: "12px", border: "none", boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}
                     formatter={(value, name) => [`${String(value ?? "--")} BPM`, name]}
-                    labelFormatter={(label) => `Ngày ${String(label ?? "")}`}
+                    labelFormatter={(label) => t("reports.trend.tooltipDate", { date: String(label ?? "") })}
                   />
                   <Line
                     type="monotone"
                     dataKey="maxHr"
-                    name="Cao nhất"
+                    name={t("reports.trend.max")}
                     stroke="var(--color-danger-500)"
                     strokeWidth={2}
                     dot={{ r: 3 }}
@@ -264,7 +266,7 @@ export default function ReportsPage() {
                   <Line
                     type="monotone"
                     dataKey="avgHr"
-                    name="Trung bình"
+                    name={t("reports.trend.avg")}
                     stroke="var(--color-primary-500)"
                     strokeWidth={3}
                     dot={{ r: 4, strokeWidth: 2 }}
@@ -273,7 +275,7 @@ export default function ReportsPage() {
                   <Line
                     type="monotone"
                     dataKey="minHr"
-                    name="Thấp nhất"
+                    name={t("reports.trend.min")}
                     stroke="var(--color-slate-400)"
                     strokeWidth={2}
                     dot={{ r: 3 }}

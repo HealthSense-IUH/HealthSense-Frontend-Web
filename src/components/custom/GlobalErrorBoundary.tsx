@@ -1,9 +1,11 @@
 import { AlertTriangle, RefreshCcw } from "lucide-react"
+import { useTranslation } from "react-i18next"
 import { useRouteError } from "react-router-dom"
 
 import { Button } from "@/components/ui/button"
 
 export function GlobalErrorBoundary() {
+  const { t } = useTranslation()
   const routeError = useRouteError() as Error | undefined
   const errorText = routeError?.message ?? String(routeError ?? "")
   const isChunkLoadError =
@@ -30,22 +32,22 @@ export function GlobalErrorBoundary() {
         </div>
         <div className="flex flex-col gap-2">
           <h1 className="text-2xl font-semibold">
-            {isChunkLoadError ? "App Updated" : "Something went wrong"}
+            {isChunkLoadError ? t("errorBoundary.updatedTitle") : t("errorBoundary.title")}
           </h1>
           <p className="text-sm text-muted-foreground">
             {isChunkLoadError
-              ? "A new HealthSense version is available. Reload to continue."
-              : routeError?.message || "Please reload the page and try again."}
+              ? t("errorBoundary.updatedDescription")
+              : routeError?.message || t("errorBoundary.description")}
           </p>
         </div>
         <div className="flex gap-3">
           <Button type="button" onClick={() => window.location.reload()}>
             <RefreshCcw data-icon="inline-start" />
-            Reload
+            {t("errorBoundary.reload")}
           </Button>
           {!isChunkLoadError && (
             <Button type="button" variant="outline" onClick={() => window.history.back()}>
-              Go Back
+              {t("errorBoundary.goBack")}
             </Button>
           )}
         </div>

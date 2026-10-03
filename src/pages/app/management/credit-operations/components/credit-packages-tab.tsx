@@ -34,8 +34,11 @@ import type {
   CreditPackageStatus,
   UpdateAdminCreditPackageRequest,
 } from "@/types/credits"
+import { Trans, useTranslation } from "react-i18next"
+import i18n, { currentIntlLocale } from "@/lib/i18n"
 
 export function CreditPackagesTab() {
+  const { t } = useTranslation("credits")
   const { toast } = useToast()
 
   const [packages, setPackages] = useState<AdminCreditPackage[]>([])
@@ -84,8 +87,8 @@ export function CreditPackagesTab() {
       const parsed = parseApiError(err)
       toast({
         variant: "destructive",
-        title: "Lỗi tải danh sách",
-        description: parsed.userMessage || "Không thể tải danh sách gói lượt.",
+        title: i18n.t("credits:admin.packages.toast.loadErrorTitle"),
+        description: parsed.userMessage || i18n.t("credits:data.errors.packages"),
       })
     } finally {
       if (!silent) setLoading(false)
@@ -121,32 +124,32 @@ export function CreditPackagesTab() {
     if (!codePattern.test(createForm.code.trim())) {
       toast({
         variant: "destructive",
-        title: "Mã gói không hợp lệ",
-        description: "Mã code chỉ gồm chữ hoa, số, gạch dưới (_) hoặc gạch nối (-), từ 2 đến 80 ký tự.",
+        title: t("admin.packages.validation.codeTitle"),
+        description: t("admin.packages.validation.codeDescription"),
       })
       return
     }
     if (!createForm.name.trim() || createForm.name.trim().length > 160) {
       toast({
         variant: "destructive",
-        title: "Tên gói không hợp lệ",
-        description: "Tên gói không được để trống và tối đa 160 ký tự.",
+        title: t("admin.packages.validation.nameTitle"),
+        description: t("admin.packages.validation.nameDescription"),
       })
       return
     }
     if (createForm.creditQuantity <= 0) {
       toast({
         variant: "destructive",
-        title: "Số lượt không hợp lệ",
-        description: "Số lượt tư vấn trong gói phải lớn hơn 0.",
+        title: t("admin.packages.validation.creditsTitle"),
+        description: t("admin.packages.validation.creditsDescription"),
       })
       return
     }
     if (createForm.priceVnd <= 0) {
       toast({
         variant: "destructive",
-        title: "Đơn giá không hợp lệ",
-        description: "Đơn giá gói phải lớn hơn 0 VND.",
+        title: t("admin.packages.validation.priceTitle"),
+        description: t("admin.packages.validation.priceDescription"),
       })
       return
     }
@@ -162,8 +165,8 @@ export function CreditPackagesTab() {
         priceVnd: Number(createForm.priceVnd),
       })
       toast({
-        title: "Tạo gói thành công",
-        description: `Gói "${createForm.name}" đã được tạo ở trạng thái Chờ kích hoạt (INACTIVE).`,
+        title: t("admin.packages.toast.createdTitle"),
+        description: t("admin.packages.toast.createdDescription", { name: createForm.name }),
       })
       setIsCreateOpen(false)
       setCreateForm({
@@ -178,8 +181,8 @@ export function CreditPackagesTab() {
       const parsed = parseApiError(err)
       toast({
         variant: "destructive",
-        title: "Tạo gói thất bại",
-        description: parsed.userMessage || "Không thể tạo gói lượt mới.",
+        title: t("admin.packages.toast.createFailedTitle"),
+        description: parsed.userMessage || t("admin.packages.toast.createFailedDescription"),
       })
     } finally {
       createSubmittingRef.current = false
@@ -207,24 +210,24 @@ export function CreditPackagesTab() {
     if (!editForm.name.trim() || editForm.name.trim().length > 160) {
       toast({
         variant: "destructive",
-        title: "Tên gói không hợp lệ",
-        description: "Tên gói không được để trống và tối đa 160 ký tự.",
+        title: t("admin.packages.validation.nameTitle"),
+        description: t("admin.packages.validation.nameDescription"),
       })
       return
     }
     if (editForm.creditQuantity <= 0) {
       toast({
         variant: "destructive",
-        title: "Số lượt không hợp lệ",
-        description: "Số lượt tư vấn trong gói phải lớn hơn 0.",
+        title: t("admin.packages.validation.creditsTitle"),
+        description: t("admin.packages.validation.creditsDescription"),
       })
       return
     }
     if (editForm.priceVnd <= 0) {
       toast({
         variant: "destructive",
-        title: "Đơn giá không hợp lệ",
-        description: "Đơn giá gói phải lớn hơn 0 VND.",
+        title: t("admin.packages.validation.priceTitle"),
+        description: t("admin.packages.validation.priceDescription"),
       })
       return
     }
@@ -243,8 +246,8 @@ export function CreditPackagesTab() {
 
       await creditsApi.adminUpdatePackage(editingPackage.id, payload)
       toast({
-        title: "Cập nhật thành công",
-        description: `Gói "${editForm.name}" đã được cập nhật.`,
+        title: t("admin.packages.toast.updatedTitle"),
+        description: t("admin.packages.toast.updatedDescription", { name: editForm.name }),
       })
       setEditingPackage(null)
       await loadPackages(true)
@@ -256,17 +259,17 @@ export function CreditPackagesTab() {
       if (status === 409 || code === 4110) {
         toast({
           variant: "destructive",
-          title: "Xung đột phiên bản (Optimistic Locking)",
+          title: t("admin.packages.toast.conflictTitle"),
           description:
-            "Gói lượt này vừa được chỉnh sửa bởi quản trị viên khác. Hệ thống đã tự động tải lại dữ liệu mới nhất.",
+            t("admin.packages.toast.conflictDescription"),
         })
         await loadPackages(true)
         setEditingPackage(null)
       } else {
         toast({
           variant: "destructive",
-          title: "Cập nhật thất bại",
-          description: parsed.userMessage || "Không thể cập nhật gói lượt.",
+          title: t("admin.packages.toast.updateFailedTitle"),
+          description: parsed.userMessage || t("admin.packages.toast.updateFailedDescription"),
         })
       }
     } finally {
@@ -282,9 +285,9 @@ export function CreditPackagesTab() {
         <CardHeader className="pb-4 border-b">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
-              <CardTitle className="text-lg font-bold">Danh mục gói lượt tư vấn</CardTitle>
+              <CardTitle className="text-lg font-bold">{t("admin.packages.title")}</CardTitle>
               <CardDescription className="text-xs mt-0.5">
-                Tổng cộng {filteredPackages.length} gói ({packages.filter((p) => p.status === "ACTIVE").length} đang mở bán toàn hệ thống)
+                {t("admin.packages.summary", { total: filteredPackages.length, active: packages.filter((p) => p.status === "ACTIVE").length })}
               </CardDescription>
             </div>
 
@@ -293,7 +296,7 @@ export function CreditPackagesTab() {
               <div className="relative w-full sm:w-60">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input
-                  placeholder="Tìm kiếm mã, tên gói..."
+                  placeholder={t("admin.packages.searchPlaceholder")}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-9 h-9 rounded-xl text-xs"
@@ -304,12 +307,12 @@ export function CreditPackagesTab() {
                 <SlidersHorizontal className="w-4 h-4 text-muted-foreground shrink-0" />
                 <Select value={statusFilter} onValueChange={setStatusFilter}>
                   <SelectTrigger className="w-[145px] h-9 rounded-xl text-xs">
-                    <SelectValue placeholder="Trạng thái" />
+                    <SelectValue placeholder={t("admin.memberSummary.statusPlaceholder")} />
                   </SelectTrigger>
                   <SelectContent className="rounded-xl text-xs">
-                    <SelectItem value="ALL">Tất cả trạng thái</SelectItem>
-                    <SelectItem value="ACTIVE">Đang mở bán</SelectItem>
-                    <SelectItem value="INACTIVE">Tạm ẩn</SelectItem>
+                    <SelectItem value="ALL">{t("filters.allStatuses")}</SelectItem>
+                    <SelectItem value="ACTIVE">{t("packageStatus.active")}</SelectItem>
+                    <SelectItem value="INACTIVE">{t("admin.packages.hidden")}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -322,7 +325,7 @@ export function CreditPackagesTab() {
                 className="rounded-xl h-9 text-xs gap-1.5"
               >
                 <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} />
-                Làm mới
+                {t("shared.refresh")}
               </Button>
 
               <Button
@@ -331,7 +334,7 @@ export function CreditPackagesTab() {
                 className="rounded-xl h-9 text-xs gap-1.5 shadow-xs"
               >
                 <Plus className="w-4 h-4" />
-                Tạo gói mới
+                {t("admin.packages.create")}
               </Button>
             </div>
           </div>
@@ -342,14 +345,14 @@ export function CreditPackagesTab() {
             <Table>
               <TableHeader>
                 <TableRow className="bg-muted/30">
-                  <TableHead className="w-[140px] font-semibold text-xs">Mã gói</TableHead>
-                  <TableHead className="min-w-[180px] font-semibold text-xs">Tên gói</TableHead>
-                  <TableHead className="font-semibold text-xs text-center">Số lượt</TableHead>
-                  <TableHead className="font-semibold text-xs text-right">Đơn giá</TableHead>
-                  <TableHead className="font-semibold text-xs text-center">Trạng thái</TableHead>
-                  <TableHead className="font-semibold text-xs text-center">Phiên bản</TableHead>
-                  <TableHead className="font-semibold text-xs">Cập nhật lúc</TableHead>
-                  <TableHead className="w-[90px] text-right font-semibold text-xs">Thao tác</TableHead>
+                  <TableHead className="w-[140px] font-semibold text-xs">{t("admin.packages.columns.code")}</TableHead>
+                  <TableHead className="min-w-[180px] font-semibold text-xs">{t("admin.packages.columns.name")}</TableHead>
+                  <TableHead className="font-semibold text-xs text-center">{t("admin.packages.columns.credits")}</TableHead>
+                  <TableHead className="font-semibold text-xs text-right">{t("admin.packages.columns.price")}</TableHead>
+                  <TableHead className="font-semibold text-xs text-center">{t("admin.packages.columns.status")}</TableHead>
+                  <TableHead className="font-semibold text-xs text-center">{t("admin.packages.columns.version")}</TableHead>
+                  <TableHead className="font-semibold text-xs">{t("admin.packages.columns.updatedAt")}</TableHead>
+                  <TableHead className="w-[90px] text-right font-semibold text-xs">{t("admin.packages.columns.actions")}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -357,13 +360,13 @@ export function CreditPackagesTab() {
                   <TableRow>
                     <TableCell colSpan={8} className="h-36 text-center text-muted-foreground text-xs">
                       <RefreshCw className="w-5 h-5 animate-spin mx-auto mb-2 text-primary" />
-                      Đang tải danh sách gói lượt...
+                      {t("admin.packages.loading")}
                     </TableCell>
                   </TableRow>
                 ) : filteredPackages.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={8} className="h-36 text-center text-muted-foreground text-xs">
-                      Không tìm thấy gói lượt nào phù hợp với bộ lọc.
+                      {t("admin.packages.empty")}
                     </TableCell>
                   </TableRow>
                 ) : (
@@ -384,7 +387,7 @@ export function CreditPackagesTab() {
                         </TableCell>
                         <TableCell className="text-center">
                           <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-primary/10 text-primary font-bold text-xs">
-                            {pkg.creditQuantity} lượt
+                            {t("quantity.credits", { count: pkg.creditQuantity, value: pkg.creditQuantity })}
                           </span>
                         </TableCell>
                         <TableCell className="text-right font-mono font-semibold text-sm">
@@ -403,7 +406,7 @@ export function CreditPackagesTab() {
                         </TableCell>
                         <TableCell className="text-xs text-muted-foreground">
                           {pkg.updatedAt || pkg.createdAt
-                            ? new Date(pkg.updatedAt || pkg.createdAt!).toLocaleDateString("vi-VN", {
+                            ? new Date(pkg.updatedAt || pkg.createdAt!).toLocaleDateString(currentIntlLocale(), {
                                 year: "numeric",
                                 month: "2-digit",
                                 day: "2-digit",
@@ -420,7 +423,7 @@ export function CreditPackagesTab() {
                             className="h-8 px-2 text-xs gap-1 hover:text-primary rounded-lg"
                           >
                             <Edit2 className="w-3.5 h-3.5" />
-                            Sửa
+                            {t("admin.packages.edit")}
                           </Button>
                         </TableCell>
                       </TableRow>
@@ -440,21 +443,21 @@ export function CreditPackagesTab() {
             <DialogHeader>
               <div className="flex items-center gap-2 text-primary">
                 <Sparkles className="w-5 h-5" />
-                <DialogTitle className="text-lg font-bold">Tạo gói lượt tư vấn mới</DialogTitle>
+                <DialogTitle className="text-lg font-bold">{t("admin.packages.createDialog.title")}</DialogTitle>
               </div>
               <DialogDescription className="text-xs">
-                Gói mới tạo sẽ mặc định ở trạng thái <strong>Tạm ẩn (INACTIVE)</strong>. Bạn có thể bật bán sau khi kiểm tra thông tin.
+                <Trans t={t} i18nKey="admin.packages.createDialog.description" components={{ strong: <strong /> }} />
               </DialogDescription>
             </DialogHeader>
 
             <div className="space-y-4 py-4">
               <div className="space-y-1.5">
                 <Label htmlFor="code" className="text-xs font-semibold">
-                  Mã code gói <span className="text-destructive">*</span>
+                  {t("admin.packages.form.code")} <span className="text-destructive">*</span>
                 </Label>
                 <Input
                   id="code"
-                  placeholder="VD: PACK_5_SESSIONS"
+                  placeholder={t("admin.packages.form.codePlaceholder")}
                   value={createForm.code}
                   onChange={(e) =>
                     setCreateForm({ ...createForm, code: e.target.value.toUpperCase() })
@@ -463,17 +466,17 @@ export function CreditPackagesTab() {
                   className="rounded-xl font-mono uppercase text-xs"
                 />
                 <p className="text-[11px] text-muted-foreground">
-                  Chỉ gồm chữ in hoa, số, dấu gạch dưới (_) hoặc gạch ngang (-). Không được thay đổi sau khi tạo.
+                  {t("admin.packages.form.codeHint")}
                 </p>
               </div>
 
               <div className="space-y-1.5">
                 <Label htmlFor="name" className="text-xs font-semibold">
-                  Tên gói hiển thị <span className="text-destructive">*</span>
+                  {t("admin.packages.form.name")} <span className="text-destructive">*</span>
                 </Label>
                 <Input
                   id="name"
-                  placeholder="VD: Gói Chăm Sóc Tiêu Chuẩn 5 Lượt"
+                  placeholder={t("admin.packages.form.namePlaceholder")}
                   value={createForm.name}
                   onChange={(e) => setCreateForm({ ...createForm, name: e.target.value })}
                   required
@@ -485,7 +488,7 @@ export function CreditPackagesTab() {
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1.5">
                   <Label htmlFor="creditQuantity" className="text-xs font-semibold">
-                    Số lượt cộng vào ví <span className="text-destructive">*</span>
+                    {t("admin.packages.form.creditsCreate")} <span className="text-destructive">*</span>
                   </Label>
                   <Input
                     id="creditQuantity"
@@ -505,7 +508,7 @@ export function CreditPackagesTab() {
 
                 <div className="space-y-1.5">
                   <Label htmlFor="priceVnd" className="text-xs font-semibold">
-                    Đơn giá (VND) <span className="text-destructive">*</span>
+                    {t("admin.packages.form.price")} <span className="text-destructive">*</span>
                   </Label>
                   <Input
                     id="priceVnd"
@@ -527,11 +530,11 @@ export function CreditPackagesTab() {
 
               <div className="space-y-1.5">
                 <Label htmlFor="description" className="text-xs font-semibold">
-                  Mô tả chi tiết (Tùy chọn)
+                  {t("admin.packages.form.description")}
                 </Label>
                 <Textarea
                   id="description"
-                  placeholder="VD: Phù hợp cho nhu cầu tư vấn định kỳ hàng tháng cùng bác sĩ gia đình..."
+                  placeholder={t("admin.packages.form.descriptionPlaceholder")}
                   value={createForm.description}
                   onChange={(e) => setCreateForm({ ...createForm, description: e.target.value })}
                   rows={3}
@@ -549,14 +552,14 @@ export function CreditPackagesTab() {
                 disabled={createSubmitting}
                 className="rounded-xl"
               >
-                Hủy
+                {t("admin.packages.cancel")}
               </Button>
               <Button
                 type="submit"
                 disabled={createSubmitting}
                 className="rounded-xl gap-2 font-semibold shadow-xs"
               >
-                {createSubmitting ? "Đang tạo..." : "Xác nhận tạo gói"}
+                {createSubmitting ? t("admin.packages.createDialog.submitting") : t("admin.packages.createDialog.submit")}
               </Button>
             </DialogFooter>
           </form>
@@ -573,29 +576,29 @@ export function CreditPackagesTab() {
             <DialogHeader>
               <div className="flex items-center gap-2 text-primary">
                 <Edit2 className="w-5 h-5" />
-                <DialogTitle className="text-lg font-bold">Chỉnh sửa gói lượt tư vấn</DialogTitle>
+                <DialogTitle className="text-lg font-bold">{t("admin.packages.editDialog.title")}</DialogTitle>
               </div>
               <DialogDescription className="text-xs">
-                Cập nhật thông tin gói #{editingPackage?.code}. Quá trình lưu áp dụng cơ chế khóa lạc quan (Optimistic Locking v{editingPackage?.version}).
+                {t("admin.packages.editDialog.description", { code: editingPackage?.code, version: editingPackage?.version })}
               </DialogDescription>
             </DialogHeader>
 
             <div className="space-y-4 py-4">
               <div className="space-y-1.5">
-                <Label className="text-xs font-semibold">Mã code gói</Label>
+                <Label className="text-xs font-semibold">{t("admin.packages.form.code")}</Label>
                 <Input
                   value={editingPackage?.code || ""}
                   disabled
                   className="rounded-xl font-mono uppercase bg-muted/50 text-xs"
                 />
                 <p className="text-[11px] text-muted-foreground">
-                  Mã gói là định danh cố định không thể chỉnh sửa.
+                  {t("admin.packages.form.codeLocked")}
                 </p>
               </div>
 
               <div className="space-y-1.5">
                 <Label htmlFor="edit-name" className="text-xs font-semibold">
-                  Tên gói hiển thị <span className="text-destructive">*</span>
+                  {t("admin.packages.form.name")} <span className="text-destructive">*</span>
                 </Label>
                 <Input
                   id="edit-name"
@@ -610,7 +613,7 @@ export function CreditPackagesTab() {
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1.5">
                   <Label htmlFor="edit-creditQuantity" className="text-xs font-semibold">
-                    Số lượt trong gói <span className="text-destructive">*</span>
+                    {t("admin.packages.form.creditsEdit")} <span className="text-destructive">*</span>
                   </Label>
                   <Input
                     id="edit-creditQuantity"
@@ -630,7 +633,7 @@ export function CreditPackagesTab() {
 
                 <div className="space-y-1.5">
                   <Label htmlFor="edit-priceVnd" className="text-xs font-semibold">
-                    Đơn giá (VND) <span className="text-destructive">*</span>
+                    {t("admin.packages.form.price")} <span className="text-destructive">*</span>
                   </Label>
                   <Input
                     id="edit-priceVnd"
@@ -652,7 +655,7 @@ export function CreditPackagesTab() {
 
               <div className="space-y-1.5">
                 <Label htmlFor="edit-status" className="text-xs font-semibold">
-                  Trạng thái mở bán <span className="text-destructive">*</span>
+                  {t("admin.packages.form.status")} <span className="text-destructive">*</span>
                 </Label>
                 <Select
                   value={editForm.status}
@@ -661,18 +664,18 @@ export function CreditPackagesTab() {
                   }
                 >
                   <SelectTrigger id="edit-status" className="rounded-xl text-xs">
-                    <SelectValue placeholder="Chọn trạng thái" />
+                    <SelectValue placeholder={t("admin.packages.form.statusPlaceholder")} />
                   </SelectTrigger>
                   <SelectContent className="rounded-xl text-xs">
-                    <SelectItem value="ACTIVE">Mở bán (ACTIVE) - Thành viên có thể mua</SelectItem>
-                    <SelectItem value="INACTIVE">Tạm ẩn (INACTIVE) - Ẩn khỏi danh mục mua</SelectItem>
+                    <SelectItem value="ACTIVE">{t("admin.packages.form.statusActive")}</SelectItem>
+                    <SelectItem value="INACTIVE">{t("admin.packages.form.statusInactive")}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
               <div className="space-y-1.5">
                 <Label htmlFor="edit-description" className="text-xs font-semibold">
-                  Mô tả chi tiết (Tùy chọn)
+                  {t("admin.packages.form.description")}
                 </Label>
                 <Textarea
                   id="edit-description"
@@ -693,14 +696,14 @@ export function CreditPackagesTab() {
                 disabled={editSubmitting}
                 className="rounded-xl"
               >
-                Hủy
+                {t("admin.packages.cancel")}
               </Button>
               <Button
                 type="submit"
                 disabled={editSubmitting}
                 className="rounded-xl gap-2 font-semibold shadow-xs"
               >
-                {editSubmitting ? "Đang lưu..." : "Lưu thay đổi"}
+                {editSubmitting ? t("admin.packages.editDialog.submitting") : t("admin.packages.editDialog.submit")}
               </Button>
             </DialogFooter>
           </form>

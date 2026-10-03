@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
 import { useToast } from "@/hooks/use-toast"
 import {
   Dialog,
@@ -19,6 +20,7 @@ import {
 } from "lucide-react"
 
 import { useAuthStore } from "@/stores/auth-store"
+import { currentIntlLocale } from "@/lib/i18n"
 import { needsActionApi } from "@/services"
 import type { NeedsActionResponse } from "@/types/needs-action"
 import { RecommendRefundDialog } from "@/pages/app/management/needs-actions/components/recommend-refund-dialog"
@@ -37,6 +39,7 @@ export function NeedsActionDetailDialog({
   onOpenChange,
   onSuccess,
 }: NeedsActionDetailDialogProps) {
+  const { t } = useTranslation("management")
   const { toast } = useToast()
   const userSession = useAuthStore((state) => state.userSession)
   const role = userSession?.role || "MEMBER"
@@ -59,8 +62,8 @@ export function NeedsActionDetailDialog({
       setLoadingAction(true)
       await needsActionApi.claimNeedsAction(item.id)
       toast({
-        title: "Đã tiếp nhận",
-        description: `Bạn đã nhận phụ trách công việc #${item.id}.`,
+        title: t("needsActions.detail.toast.claimedTitle"),
+        description: t("needsActions.detail.toast.claimedDescription", { id: item.id }),
       })
       onSuccess?.()
       onOpenChange(false)
@@ -68,8 +71,8 @@ export function NeedsActionDetailDialog({
       const anyErr = err as { response?: { data?: { message?: string } } }
       toast({
         variant: "destructive",
-        title: "Lỗi tiếp nhận",
-        description: anyErr.response?.data?.message || "Không thể tiếp nhận công việc.",
+        title: t("needsActions.detail.toast.claimErrorTitle"),
+        description: anyErr.response?.data?.message || t("needsActions.detail.toast.claimFailed"),
       })
     } finally {
       setLoadingAction(false)
@@ -80,7 +83,7 @@ export function NeedsActionDetailDialog({
   const handleRetryCancellation = async () => {
     const paymentId = item.referenceId
     if (!paymentId) {
-      toast({ variant: "destructive", title: "Lỗi", description: "Không tìm thấy Payment ID tham chiếu." })
+      toast({ variant: "destructive", title: t("needsActions.detail.toast.errorTitle"), description: t("needsActions.detail.toast.missingPaymentId") })
       return
     }
 
@@ -88,8 +91,8 @@ export function NeedsActionDetailDialog({
       setLoadingAction(true)
       await needsActionApi.retryProviderCancellation(paymentId)
       toast({
-        title: "Đã gửi lệnh hủy",
-        description: `Đã thử lại lệnh hủy liên kết thanh toán cho Payment #${paymentId}.`,
+        title: t("needsActions.detail.toast.cancellationSentTitle"),
+        description: t("needsActions.detail.toast.cancellationSentDescription", { id: paymentId }),
       })
       onSuccess?.()
       onOpenChange(false)
@@ -97,8 +100,8 @@ export function NeedsActionDetailDialog({
       const anyErr = err as { response?: { data?: { message?: string } } }
       toast({
         variant: "destructive",
-        title: "Lỗi thử lại",
-        description: anyErr.response?.data?.message || "Không thể gửi lệnh thử lại hủy thanh toán.",
+        title: t("needsActions.detail.toast.retryErrorTitle"),
+        description: anyErr.response?.data?.message || t("needsActions.detail.toast.retryFailed"),
       })
     } finally {
       setLoadingAction(false)
@@ -111,8 +114,8 @@ export function NeedsActionDetailDialog({
     if (!resolutionText.trim()) {
       toast({
         variant: "destructive",
-        title: "Thiếu thông tin",
-        description: "Vui lòng nhập ghi chú kết quả giải quyết.",
+        title: t("needsActions.detail.toast.missingInfoTitle"),
+        description: t("needsActions.detail.toast.missingResolution"),
       })
       return
     }
@@ -123,8 +126,8 @@ export function NeedsActionDetailDialog({
         resolution: resolutionText.trim(),
       })
       toast({
-        title: "Đã hoàn tất xử lý",
-        description: `Công việc #${item.id} đã được đánh dấu là RESOLVED.`,
+        title: t("needsActions.detail.toast.resolvedTitle"),
+        description: t("needsActions.detail.toast.resolvedDescription", { id: item.id }),
       })
       setResolveDialogOpen(false)
       onSuccess?.()
@@ -133,8 +136,8 @@ export function NeedsActionDetailDialog({
       const anyErr = err as { response?: { data?: { message?: string } } }
       toast({
         variant: "destructive",
-        title: "Lỗi giải quyết",
-        description: anyErr.response?.data?.message || "Không thể ghi nhận giải quyết.",
+        title: t("needsActions.detail.toast.resolveErrorTitle"),
+        description: anyErr.response?.data?.message || t("needsActions.detail.toast.resolveFailed"),
       })
     } finally {
       setLoadingAction(false)
@@ -144,22 +147,22 @@ export function NeedsActionDetailDialog({
   const getPriorityBadge = (priority: string) => {
     switch (priority) {
       case "CRITICAL":
-        return <Badge className="bg-danger-600 hover:bg-danger-700 text-white font-extrabold text-[10px]">KHẨN CẤP (CRITICAL)</Badge>
+        return <Badge className="bg-danger-600 hover:bg-danger-700 text-white font-extrabold text-[10px]">{t("needsActions.detail.priority.critical")}</Badge>
       case "HIGH":
-        return <Badge className="bg-warning-500 hover:bg-warning-600 text-white font-bold text-[10px]">CAO (HIGH)</Badge>
+        return <Badge className="bg-warning-500 hover:bg-warning-600 text-white font-bold text-[10px]">{t("needsActions.detail.priority.high")}</Badge>
       default:
-        return <Badge className="bg-primary-600 hover:bg-primary-700 text-white font-medium text-[10px]">BÌNH THƯỜNG (NORMAL)</Badge>
+        return <Badge className="bg-primary-600 hover:bg-primary-700 text-white font-medium text-[10px]">{t("needsActions.detail.priority.normal")}</Badge>
     }
   }
 
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "RESOLVED":
-        return <Badge className="bg-success-500 hover:bg-success-600 text-white font-bold text-[10px]">ĐÃ XỬ LÝ (RESOLVED)</Badge>
+        return <Badge className="bg-success-500 hover:bg-success-600 text-white font-bold text-[10px]">{t("needsActions.detail.status.resolved")}</Badge>
       case "CLAIMED":
-        return <Badge className="bg-primary-500 hover:bg-primary-600 text-white font-bold text-[10px]">ĐANG XỬ LÝ (CLAIMED)</Badge>
+        return <Badge className="bg-primary-500 hover:bg-primary-600 text-white font-bold text-[10px]">{t("needsActions.detail.status.claimed")}</Badge>
       default:
-        return <Badge className="bg-warning-500 hover:bg-warning-600 text-white font-bold text-[10px]">CHỜ XỬ LÝ (OPEN)</Badge>
+        return <Badge className="bg-warning-500 hover:bg-warning-600 text-white font-bold text-[10px]">{t("needsActions.detail.status.open")}</Badge>
     }
   }
 
@@ -191,11 +194,11 @@ export function NeedsActionDetailDialog({
             {/* Attributes Grid */}
             <div className="grid grid-cols-2 gap-3">
               <div className="p-3.5 rounded-2xl border border-slate-100 bg-slate-50/40">
-                <span className="text-[10px] text-slate-400 font-bold uppercase block mb-1">Loại công việc</span>
+                <span className="text-[10px] text-slate-400 font-bold uppercase block mb-1">{t("needsActions.detail.typeLabel")}</span>
                 <span className="font-mono font-bold text-slate-800 text-xs">{item.type}</span>
               </div>
               <div className="p-3.5 rounded-2xl border border-slate-100 bg-slate-50/40">
-                <span className="text-[10px] text-slate-400 font-bold uppercase block mb-1">Vai trò phân công</span>
+                <span className="text-[10px] text-slate-400 font-bold uppercase block mb-1">{t("needsActions.detail.assignedRole")}</span>
                 <span className="font-bold text-primary-600 text-xs">{item.assignedRole}</span>
               </div>
             </div>
@@ -204,13 +207,13 @@ export function NeedsActionDetailDialog({
             {item.referenceType && item.referenceId && (
               <div className="p-3.5 rounded-2xl border border-slate-100 bg-primary-50/30 flex items-center justify-between">
                 <div>
-                  <span className="text-[10px] text-slate-400 font-bold uppercase block">Đối tượng liên quan</span>
+                  <span className="text-[10px] text-slate-400 font-bold uppercase block">{t("needsActions.detail.relatedObject")}</span>
                   <span className="font-bold text-slate-800 text-xs">
                     {item.referenceType} #{item.referenceId}
                   </span>
                 </div>
                 <span className="text-[10px] font-bold text-primary-600 font-mono">
-                  Tham chiếu gốc
+                  {t("needsActions.detail.originalReference")}
                 </span>
               </div>
             )}
@@ -218,24 +221,24 @@ export function NeedsActionDetailDialog({
             {/* Claimed & Resolved status */}
             <div className="rounded-2xl border border-slate-100 divide-y divide-slate-100 overflow-hidden">
               <div className="p-3 flex items-center justify-between">
-                <span className="text-slate-500 font-medium">Tạo lúc:</span>
+                <span className="text-slate-500 font-medium">{t("needsActions.detail.createdAt")}</span>
                 <span className="font-mono text-slate-700">
-                  {new Date(item.createdAt).toLocaleString("vi-VN")}
+                  {new Date(item.createdAt).toLocaleString(currentIntlLocale())}
                 </span>
               </div>
               {item.claimedAt && (
                 <div className="p-3 flex items-center justify-between">
-                  <span className="text-slate-500 font-medium">Tiếp nhận bởi:</span>
+                  <span className="text-slate-500 font-medium">{t("needsActions.detail.claimedByLabel")}</span>
                   <span className="font-bold text-slate-800">
-                    Tài khoản #{item.claimedByUserId} ({new Date(item.claimedAt).toLocaleString("vi-VN")})
+                    {t("needsActions.detail.claimedBy", { id: item.claimedByUserId, time: new Date(item.claimedAt).toLocaleString(currentIntlLocale()) })}
                   </span>
                 </div>
               )}
               {item.resolvedAt && (
                 <div className="p-3.5 bg-success-50/40 space-y-1">
                   <div className="flex items-center justify-between text-success-800 font-bold">
-                    <span>Đã giải quyết bởi Tài khoản #{item.resolvedByUserId}:</span>
-                    <span className="text-[10px] font-mono">{new Date(item.resolvedAt).toLocaleString("vi-VN")}</span>
+                    <span>{t("needsActions.detail.resolvedBy", { id: item.resolvedByUserId })}</span>
+                    <span className="text-[10px] font-mono">{new Date(item.resolvedAt).toLocaleString(currentIntlLocale())}</span>
                   </div>
                   {item.resolution && (
                     <p className="text-success-900 font-medium text-xs mt-1 italic">
@@ -257,7 +260,7 @@ export function NeedsActionDetailDialog({
               disabled={loadingAction}
               className="text-xs font-semibold"
             >
-              Đóng
+              {t("needsActions.detail.actions.close")}
             </Button>
 
             <div className="flex items-center gap-2">
@@ -271,7 +274,7 @@ export function NeedsActionDetailDialog({
                   className="text-xs font-bold text-primary-600 border-primary-200 hover:bg-primary-50"
                 >
                   <UserCheck className="w-3.5 h-3.5 mr-1" />
-                  Tiếp nhận xử lý
+                  {t("needsActions.detail.actions.claim")}
                 </Button>
               )}
 
@@ -284,7 +287,7 @@ export function NeedsActionDetailDialog({
                   className="bg-warning-600 hover:bg-warning-700 text-white text-xs font-bold"
                 >
                   <RotateCcw className="w-3.5 h-3.5 mr-1" />
-                  Thử lại hủy PayOS
+                  {t("needsActions.detail.actions.retryPayosCancellation")}
                 </Button>
               )}
 
@@ -297,7 +300,7 @@ export function NeedsActionDetailDialog({
                   className="bg-primary-600 hover:bg-primary-700 text-white text-xs font-bold"
                 >
                   <DollarSign className="w-3.5 h-3.5 mr-1" />
-                  Tạo đề xuất hoàn tiền
+                  {t("needsActions.detail.actions.recommendRefund")}
                 </Button>
               )}
 
@@ -310,7 +313,7 @@ export function NeedsActionDetailDialog({
                   className="bg-primary-600 hover:bg-primary-700 text-white text-xs font-bold"
                 >
                   <DollarSign className="w-3.5 h-3.5 mr-1" />
-                  Xử lý hoàn tiền
+                  {t("needsActions.detail.actions.processRefund")}
                 </Button>
               )}
 
@@ -323,7 +326,7 @@ export function NeedsActionDetailDialog({
                   className="bg-success-600 hover:bg-success-700 text-white text-xs font-bold"
                 >
                   <CheckCircle2 className="w-3.5 h-3.5 mr-1" />
-                  Hoàn tất xử lý
+                  {t("needsActions.detail.actions.resolve")}
                 </Button>
               )}
             </div>
@@ -336,16 +339,16 @@ export function NeedsActionDetailDialog({
         <DialogContent className="sm:max-w-[480px]">
           <form onSubmit={handleResolve}>
             <DialogHeader>
-              <DialogTitle>Ghi nhận kết quả xử lý #{item.id}</DialogTitle>
+              <DialogTitle>{t("needsActions.detail.resolveDialog.title", { id: item.id })}</DialogTitle>
             </DialogHeader>
             <div className="py-4 space-y-2">
               <Label htmlFor="resText" className="text-xs font-bold text-slate-700">
-                Ghi chú giải quyết <span className="text-danger-500">*</span>
+                {t("needsActions.detail.resolveDialog.label")} <span className="text-danger-500">*</span>
               </Label>
               <Textarea
                 id="resText"
                 rows={4}
-                placeholder="Nêu rõ phương án xử lý đã thực hiện để đóng công việc này..."
+                placeholder={t("needsActions.detail.resolveDialog.placeholder")}
                 value={resolutionText}
                 onChange={(e) => setResolutionText(e.target.value)}
                 disabled={loadingAction}
@@ -358,14 +361,14 @@ export function NeedsActionDetailDialog({
                 onClick={() => setResolveDialogOpen(false)}
                 disabled={loadingAction}
               >
-                Hủy
+                {t("needsActions.detail.resolveDialog.cancel")}
               </Button>
               <Button
                 type="submit"
                 disabled={loadingAction}
                 className="bg-success-600 hover:bg-success-700 text-white"
               >
-                {loadingAction ? "Đang lưu..." : "Xác nhận đóng công việc"}
+                {loadingAction ? t("needsActions.detail.resolveDialog.saving") : t("needsActions.detail.resolveDialog.confirm")}
               </Button>
             </DialogFooter>
           </form>

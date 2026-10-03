@@ -7,8 +7,8 @@ import type { NavigationGroup, NavigationItem } from "./nav-config"
  *
  * Khoá được suy ra từ id (`nav.item.dashboard`, `nav.group.general-health`…)
  * nên không phải khai báo khoá thủ công cho từng mục trong nav-config.
- * Thiếu bản dịch thì trả về nhãn tiếng Việt gốc đã có sẵn trong config —
- * không bao giờ lộ khoá thô ra giao diện.
+ * Mọi id trong nav-config đều có khoá trong common.json (vi là ngôn ngữ fallback),
+ * nên nhãn luôn lấy từ bản dịch; title/shortTitle trong config chỉ là dự phòng tuỳ chọn.
  */
 export function useNavLabel() {
   const { t } = useTranslation()

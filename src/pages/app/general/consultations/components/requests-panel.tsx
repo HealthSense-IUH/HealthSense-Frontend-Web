@@ -1,4 +1,5 @@
 import { CreditCard, Shield, Search } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -41,15 +42,16 @@ export function RequestsPanel({
   onSearchAdminFilters?: () => void
   onInitiatePayment?: (requestId: string | number) => void
 }) {
+  const { t } = useTranslation("consultation")
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <div>
-          <CardTitle>{isAdmin ? "Quản lý Yêu cầu Tư vấn" : "Yêu cầu Tư vấn của tôi"}</CardTitle>
+          <CardTitle>{isAdmin ? t("requestsPanel.titleAdmin") : t("requestsPanel.titleMember")}</CardTitle>
           <CardDescription>
             {isAdmin
-              ? "Xem xét yêu cầu, điều phối bác sĩ và theo dõi trạng thái thỏa thuận."
-              : "Theo dõi tiến trình từ gửi yêu cầu, xác nhận thỏa thuận, thanh toán đến khi mở phiên tư vấn."}
+              ? t("requestsPanel.descriptionAdmin")
+              : t("requestsPanel.descriptionMember")}
           </CardDescription>
         </div>
       </CardHeader>
@@ -57,30 +59,30 @@ export function RequestsPanel({
         {isAdmin && adminFilters && onAdminFilterChange && onSearchAdminFilters && (
           <div className="flex flex-wrap gap-3 mb-4 p-4 border rounded-md bg-muted/20">
             <div className="flex flex-col gap-1.5 w-[160px]">
-              <span className="text-xs font-medium">Trạng thái</span>
+              <span className="text-xs font-medium">{t("requestsPanel.filters.status")}</span>
               <Select value={adminFilters.status} onValueChange={(v) => onAdminFilterChange({ ...adminFilters, status: v === "ALL" ? "" : v })}>
                 <SelectTrigger className="h-8 text-xs">
-                  <SelectValue placeholder="Tất cả trạng thái" />
+                  <SelectValue placeholder={t("requestsPanel.filters.allStatuses")} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="ALL">Tất cả trạng thái</SelectItem>
-                  <SelectItem value="PENDING_REVIEW">Chờ xem xét</SelectItem>
-                  <SelectItem value="NEED_MORE_INFO">Cần bổ sung TT</SelectItem>
-                  <SelectItem value="WAITING_ACCEPTANCE">Chờ xác nhận thỏa thuận</SelectItem>
-                  <SelectItem value="WAITING_PAYMENT">Chờ thanh toán</SelectItem>
-                  <SelectItem value="FULFILLED">Đã kích hoạt</SelectItem>
-                  <SelectItem value="REJECTED">Đã từ chối</SelectItem>
-                  <SelectItem value="CANCELLED">Đã hủy</SelectItem>
-                  <SelectItem value="EXPIRED">Đã hết hạn</SelectItem>
+                  <SelectItem value="ALL">{t("requestsPanel.filters.allStatuses")}</SelectItem>
+                  <SelectItem value="PENDING_REVIEW">{t("requestsPanel.filters.statusOptions.pendingReview")}</SelectItem>
+                  <SelectItem value="NEED_MORE_INFO">{t("requestsPanel.filters.statusOptions.needMoreInfo")}</SelectItem>
+                  <SelectItem value="WAITING_ACCEPTANCE">{t("requestsPanel.filters.statusOptions.waitingAcceptance")}</SelectItem>
+                  <SelectItem value="WAITING_PAYMENT">{t("requestsPanel.filters.statusOptions.waitingPayment")}</SelectItem>
+                  <SelectItem value="FULFILLED">{t("requestsPanel.filters.statusOptions.fulfilled")}</SelectItem>
+                  <SelectItem value="REJECTED">{t("requestsPanel.filters.statusOptions.rejected")}</SelectItem>
+                  <SelectItem value="CANCELLED">{t("requestsPanel.filters.statusOptions.cancelled")}</SelectItem>
+                  <SelectItem value="EXPIRED">{t("requestsPanel.filters.statusOptions.expired")}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             
             <div className="flex flex-col gap-1.5 w-[120px]">
-              <span className="text-xs font-medium">Mã hội viên</span>
+              <span className="text-xs font-medium">{t("requestsPanel.filters.memberId")}</span>
               <Input 
                 className="h-8 text-xs" 
-                placeholder="ID..." 
+                placeholder={t("requestsPanel.filters.memberIdPlaceholder")} 
                 value={adminFilters.memberId}
                 onChange={(e) => onAdminFilterChange({ ...adminFilters, memberId: e.target.value })}
                 onKeyDown={(e) => e.key === 'Enter' && onSearchAdminFilters()}
@@ -88,10 +90,10 @@ export function RequestsPanel({
             </div>
             
             <div className="flex flex-col gap-1.5 w-[130px]">
-              <span className="text-xs font-medium">BS mong muốn</span>
+              <span className="text-xs font-medium">{t("requestsPanel.filters.preferredDoctor")}</span>
               <Input 
                 className="h-8 text-xs" 
-                placeholder="ID bác sĩ..." 
+                placeholder={t("requestsPanel.filters.doctorIdPlaceholder")} 
                 value={adminFilters.preferredDoctorId}
                 onChange={(e) => onAdminFilterChange({ ...adminFilters, preferredDoctorId: e.target.value })}
                 onKeyDown={(e) => e.key === 'Enter' && onSearchAdminFilters()}
@@ -99,7 +101,7 @@ export function RequestsPanel({
             </div>
 
             <div className="flex flex-col gap-1.5 w-[140px]">
-              <span className="text-xs font-medium">Từ ngày</span>
+              <span className="text-xs font-medium">{t("requestsPanel.filters.fromDate")}</span>
               <Input 
                 type="date"
                 className="h-8 text-xs" 
@@ -109,7 +111,7 @@ export function RequestsPanel({
             </div>
 
             <div className="flex flex-col gap-1.5 w-[140px]">
-              <span className="text-xs font-medium">Đến ngày</span>
+              <span className="text-xs font-medium">{t("requestsPanel.filters.toDate")}</span>
               <Input 
                 type="date"
                 className="h-8 text-xs" 
@@ -121,7 +123,7 @@ export function RequestsPanel({
             <div className="flex items-end pb-0.5">
               <Button size="sm" className="h-8" onClick={onSearchAdminFilters} disabled={loading}>
                 <Search className="w-3 h-3 mr-2" />
-                Lọc
+                {t("requestsPanel.filters.apply")}
               </Button>
             </div>
           </div>
@@ -131,17 +133,17 @@ export function RequestsPanel({
           <Table>
             <TableHeader>
               <TableRow className="bg-muted/30">
-                <TableHead className="min-w-[260px] text-xs font-semibold">Yêu cầu</TableHead>
-                <TableHead className="whitespace-nowrap min-w-[150px] text-xs font-semibold">Hội viên</TableHead>
-                <TableHead className="whitespace-nowrap min-w-[140px] text-xs font-semibold">Hồ sơ đo</TableHead>
-                <TableHead className="whitespace-nowrap min-w-[130px] text-xs font-semibold">Trạng thái</TableHead>
-                <TableHead className="whitespace-nowrap min-w-[150px] text-xs font-semibold">Bác sĩ</TableHead>
-                <TableHead className="whitespace-nowrap min-w-[150px] text-xs font-semibold">Ngày tạo</TableHead>
-                <TableHead className="text-right whitespace-nowrap min-w-[170px] text-xs font-semibold">Thao tác</TableHead>
+                <TableHead className="min-w-[260px] text-xs font-semibold">{t("requestsPanel.table.request")}</TableHead>
+                <TableHead className="whitespace-nowrap min-w-[150px] text-xs font-semibold">{t("requestsPanel.table.member")}</TableHead>
+                <TableHead className="whitespace-nowrap min-w-[140px] text-xs font-semibold">{t("requestsPanel.table.healthRecord")}</TableHead>
+                <TableHead className="whitespace-nowrap min-w-[130px] text-xs font-semibold">{t("requestsPanel.table.status")}</TableHead>
+                <TableHead className="whitespace-nowrap min-w-[150px] text-xs font-semibold">{t("requestsPanel.table.doctor")}</TableHead>
+                <TableHead className="whitespace-nowrap min-w-[150px] text-xs font-semibold">{t("requestsPanel.table.createdAt")}</TableHead>
+                <TableHead className="text-right whitespace-nowrap min-w-[170px] text-xs font-semibold">{t("requestsPanel.table.actions")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {requests.length === 0 && <EmptyRow colSpan={7} text={loading ? "Đang tải danh sách..." : "Không có yêu cầu nào."} />}
+              {requests.length === 0 && <EmptyRow colSpan={7} text={loading ? t("requestsPanel.loading") : t("requestsPanel.empty")} />}
               {requests.map((request) => (
                 <TableRow key={request.id} className="hover:bg-muted/20">
                   <TableCell className="min-w-[260px]">
@@ -150,20 +152,20 @@ export function RequestsPanel({
                         <span className="font-mono font-semibold text-xs text-primary">#{request.id}</span>
                         {request.flowType === "QUEUE_DISPATCH_V1" && (
                           <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-primary/10 text-primary font-bold">
-                            Hàng đợi {request.queueNumber ? `#${String(request.queueNumber).padStart(3, "0")}` : ""}
+                            {t("requestsPanel.queueLabel")} {request.queueNumber ? `#${String(request.queueNumber).padStart(3, "0")}` : ""}
                           </span>
                         )}
                       </div>
                       <span className="text-xs text-slate-600 whitespace-pre-wrap leading-relaxed">
-                        {request.reasonForCare || request.reason || "Yêu cầu tư vấn"}
+                        {request.reasonForCare || request.reason || t("requestsPanel.defaultReason")}
                       </span>
                       
                       {request.flowType !== "QUEUE_DISPATCH_V1" && request.status === "WAITING_ACCEPTANCE" && (
                         <div className="mt-1 text-xs text-warning-800 bg-warning-50 p-2 rounded-md border border-warning-200">
-                          Bác sĩ đã được giữ chỗ. Vui lòng xem và xác nhận Thỏa thuận dịch vụ để tiến hành thanh toán.
+                          {t("requestsPanel.waitingAcceptanceNotice")}
                           {request.paymentDeadline && (
                             <div className="mt-1 font-semibold">
-                              Hạn xác nhận: {formatDate(request.paymentDeadline)}
+                              {t("requestsPanel.acceptanceDeadline", { date: formatDate(request.paymentDeadline) })}
                             </div>
                           )}
                         </div>
@@ -171,10 +173,10 @@ export function RequestsPanel({
 
                       {request.flowType !== "QUEUE_DISPATCH_V1" && request.status === "WAITING_PAYMENT" && (
                         <div className="mt-1 text-xs text-primary-700 bg-primary-50 p-2 rounded-md border border-primary-200">
-                          Đã xác nhận thỏa thuận. Đang chờ thanh toán.
+                          {t("requestsPanel.waitingPaymentNotice")}
                           {request.paymentDeadline && (
                             <div className="mt-1 font-semibold">
-                              Hạn thanh toán: {formatDate(request.paymentDeadline)}
+                              {t("requestsPanel.paymentDeadline", { date: formatDate(request.paymentDeadline) })}
                             </div>
                           )}
                         </div>
@@ -182,13 +184,13 @@ export function RequestsPanel({
 
                       {request.status === "NEED_MORE_INFO" && request.moreInfoReason && (
                         <div className="mt-1 text-xs text-warning-700 bg-warning-50 p-2 rounded-md border border-warning-200">
-                          <strong>Lý do cần bổ sung:</strong> {request.moreInfoReason}
+                          <strong>{t("requestsPanel.moreInfoReason")}</strong> {request.moreInfoReason}
                         </div>
                       )}
 
                       {request.memberAdditionalNote && (
                         <div className="mt-1 text-xs text-slate-600 bg-slate-50 p-2 rounded-md">
-                          <strong>Thông tin đã bổ sung:</strong> {request.memberAdditionalNote}
+                          <strong>{t("requestsPanel.additionalInfo")}</strong> {request.memberAdditionalNote}
                         </div>
                       )}
                     </div>
@@ -208,26 +210,26 @@ export function RequestsPanel({
                           className="bg-warning-600 hover:bg-warning-700 text-white gap-1.5 shadow-xs whitespace-nowrap"
                         >
                           <Shield className="h-4 w-4" />
-                          Xem & Chấp nhận thỏa thuận
+                          {t("requestsPanel.actions.reviewAgreement")}
                         </Button>
                       )}
 
                       {!isAdmin && request.flowType !== "QUEUE_DISPATCH_V1" && request.status === "WAITING_PAYMENT" && onInitiatePayment && (
                         <Button size="sm" onClick={() => onInitiatePayment(request.id)} disabled={loading} className="gap-1.5 whitespace-nowrap">
                           <CreditCard className="h-4 w-4" />
-                          Thanh toán
+                          {t("requestsPanel.actions.pay")}
                         </Button>
                       )}
 
                       {!isAdmin && request.flowType !== "QUEUE_DISPATCH_V1" && request.status === "NEED_MORE_INFO" && onSubmitMoreInfo && (
                         <Button size="sm" onClick={() => onSubmitMoreInfo(request)} disabled={loading} className="whitespace-nowrap">
-                          Bổ sung thông tin
+                          {t("requestsPanel.actions.submitMoreInfo")}
                         </Button>
                       )}
 
                       {isAdmin && (
                         <Button size="sm" onClick={() => onApprove(request)} disabled={loading} className="whitespace-nowrap">
-                          Xem chi tiết
+                          {t("requestsPanel.actions.viewDetail")}
                         </Button>
                       )}
 
@@ -236,14 +238,14 @@ export function RequestsPanel({
                           variant="outline"
                           size="sm"
                           onClick={() => {
-                            if (window.confirm("Bạn có chắc chắn muốn hủy yêu cầu tư vấn này?")) {
+                            if (window.confirm(t("requestsPanel.confirmCancel"))) {
                               onCancel(request.id)
                             }
                           }}
                           disabled={loading}
                           className="text-slate-600 hover:text-danger-600 hover:border-danger-200 whitespace-nowrap"
                         >
-                          Hủy yêu cầu
+                          {t("requestsPanel.actions.cancel")}
                         </Button>
                       )}
                     </div>

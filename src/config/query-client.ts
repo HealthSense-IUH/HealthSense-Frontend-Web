@@ -5,7 +5,8 @@ export const queryClientConfig: QueryClientConfig = {
     queries: {
       refetchOnWindowFocus: false,
       retry: 1,
-      staleTime: 5 * 60 * 1000, // 5 phút
+      // 5 phút
+      staleTime: 5 * 60 * 1000,
     },
   },
 }

@@ -1,4 +1,5 @@
 import { Users, Stethoscope, ShieldCheck } from "lucide-react"
+import { useTranslation } from "react-i18next"
 import { USER_ROLES } from "@/constants"
 import type { UserRole } from "@/types/auth"
 
@@ -11,8 +12,8 @@ interface UserRoleTabsProps {
 
 interface RoleTabConfig {
   role: UserRole
-  label: string
-  description: string
+  /** Khoá i18n (namespace management) cho nhãn + mô tả của tab */
+  i18nKey: "member" | "doctor" | "admin"
   icon: React.ReactNode
   activeColor: string
 }
@@ -20,28 +21,26 @@ interface RoleTabConfig {
 const ROLE_TABS: RoleTabConfig[] = [
   {
     role: USER_ROLES.MEMBER,
-    label: "Bệnh nhân / Hội viên",
-    description: "Tài khoản theo dõi sức khỏe lâm sàng",
+    i18nKey: "member",
     icon: <Users className="w-4 h-4 text-primary-600 shrink-0" />,
     activeColor: "border-primary-600 bg-primary-50/70 text-primary-950 shadow-sm",
   },
   {
     role: USER_ROLES.DOCTOR,
-    label: "Bác sĩ / Lâm sàng",
-    description: "Bác sĩ chẩn đoán và theo dõi từ xa",
+    i18nKey: "doctor",
     icon: <Stethoscope className="w-4 h-4 text-success-600 shrink-0" />,
     activeColor: "border-success-600 bg-success-50/70 text-success-950 shadow-sm",
   },
   {
     role: USER_ROLES.ADMIN,
-    label: "Quản trị viên bệnh viện",
-    description: "Quản lý vận hành hệ thống bệnh viện",
+    i18nKey: "admin",
     icon: <ShieldCheck className="w-4 h-4 text-primary-600 shrink-0" />,
     activeColor: "border-primary-600 bg-primary-50/70 text-primary-950 shadow-sm",
   },
 ]
 
 export function UserRoleTabs({ selectedRole, onSelectRole, loading, effectiveRole }: UserRoleTabsProps) {
+  const { t } = useTranslation("management")
   const visibleTabs = ROLE_TABS.filter(tab => {
     if (effectiveRole !== USER_ROLES.SUPER_ADMIN) {
       if (tab.role === USER_ROLES.ADMIN) {
@@ -76,12 +75,12 @@ export function UserRoleTabs({ selectedRole, onSelectRole, loading, effectiveRol
             </div>
             <div className="min-w-0 flex-1">
               <div className="flex items-center justify-between gap-1">
-                <span className="text-sm font-black tracking-tight truncate">{tab.label}</span>
+                <span className="text-sm font-black tracking-tight truncate">{t(`users.roleTabs.${tab.i18nKey}.label`)}</span>
                 {isSelected && (
-                  <span className="h-2 w-2 rounded-full bg-primary-600 shrink-0" title="Active Filter" />
+                  <span className="h-2 w-2 rounded-full bg-primary-600 shrink-0" title={t("users.roleTabs.activeFilter")} />
                 )}
               </div>
-              <p className="text-xs font-medium text-slate-500 truncate mt-0.5">{tab.description}</p>
+              <p className="text-xs font-medium text-slate-500 truncate mt-0.5">{t(`users.roleTabs.${tab.i18nKey}.description`)}</p>
             </div>
           </button>
         )

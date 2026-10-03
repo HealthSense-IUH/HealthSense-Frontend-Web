@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next"
 import type { NutrientValue, NutrientCode } from "@/types/nutrition"
 import { cn } from "@/lib/utils"
 
@@ -14,6 +15,7 @@ export function NutrientHighlightCard({
   className,
   layout = "grid",
 }: NutrientHighlightCardProps) {
+  const { t } = useTranslation("nutrition")
   // If highlightCodes provided, pick those; otherwise pick isKey nutrients (up to 4)
   const displayedNutrients = highlightCodes && highlightCodes.length > 0
     ? highlightCodes
@@ -25,22 +27,22 @@ export function NutrientHighlightCard({
 
   // Short labels for compact card display
   const shortLabels: Partial<Record<NutrientCode, string>> = {
-    energy: "Năng lượng",
-    protein: "Đạm (Protein)",
+    energy: t("nutrientShort.energy"),
+    protein: t("nutrientShort.protein"),
     carbohydrate: "Carbs",
-    fiber: "Chất xơ",
-    fiber_crude: "Xơ thô",
-    sugars: "Đường",
-    fat_total: "Tổng chất béo",
-    fat_saturated: "Béo bão hòa",
-    fat_monounsaturated: "Béo không bão hòa đơn",
-    fat_polyunsaturated: "Béo không bão hòa đa",
+    fiber: t("nutrientShort.fiber"),
+    fiber_crude: t("nutrientShort.fiberCrude"),
+    sugars: t("nutrientShort.sugars"),
+    fat_total: t("nutrientShort.fatTotal"),
+    fat_saturated: t("nutrientShort.fatSaturated"),
+    fat_monounsaturated: t("nutrientShort.fatMonounsaturated"),
+    fat_polyunsaturated: t("nutrientShort.fatPolyunsaturated"),
     cholesterol: "Cholesterol",
-    sodium: "Natri (Sodium)",
-    potassium: "Kali (Potassium)",
-    magnesium: "Magie",
+    sodium: t("nutrientShort.sodium"),
+    potassium: t("nutrientShort.potassium"),
+    magnesium: t("nutrientShort.magnesium"),
     caffeine: "Caffeine",
-    alcohol: "Cồn",
+    alcohol: t("nutrientShort.alcohol"),
     vitamin_k: "Vitamin K",
     epa: "Omega-3 EPA",
     dha: "Omega-3 DHA",

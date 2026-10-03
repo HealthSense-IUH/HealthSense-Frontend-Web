@@ -1,4 +1,5 @@
 import { type FormEvent } from "react"
+import { useTranslation } from "react-i18next"
 
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
@@ -6,18 +7,19 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import i18n from "@/lib/i18n"
 
 import type { CareTerminationReason, ConsultationRequestItem, ConsultationSessionItem } from "@/types/consultation"
 
 const TERMINATION_REASONS: { value: CareTerminationReason; label: string }[] = [
-  { value: "ADMINISTRATIVE_CLOSURE", label: "Đóng phiên hành chính / Điều phối viên kết thúc" },
-  { value: "MEMBER_REQUESTED", label: "Hội viên yêu cầu kết thúc sớm" },
-  { value: "DOCTOR_UNAVAILABLE", label: "Bác sĩ không thể tiếp tục sắp xếp hỗ trợ" },
-  { value: "MEMBER_UNAVAILABLE", label: "Hội viên bận / không thể tiếp tục theo dõi" },
-  { value: "SAFETY_OR_SCOPE_REASON", label: "Cần can thiệp trực tiếp / Vượt phạm vi tư vấn từ xa" },
-  { value: "SERVICE_VIOLATION", label: "Vi phạm quy tắc trao đổi / dịch vụ" },
-  { value: "TECHNICAL_FAILURE", label: "Sự cố kỹ thuật / kết nối kéo dài" },
-  { value: "OTHER", label: "Lý do khác" },
+  { value: "ADMINISTRATIVE_CLOSURE", get label() { return i18n.t("consultation:adminActionDialog.terminationReasons.administrativeClosure") } },
+  { value: "MEMBER_REQUESTED", get label() { return i18n.t("consultation:adminActionDialog.terminationReasons.memberRequested") } },
+  { value: "DOCTOR_UNAVAILABLE", get label() { return i18n.t("consultation:adminActionDialog.terminationReasons.doctorUnavailable") } },
+  { value: "MEMBER_UNAVAILABLE", get label() { return i18n.t("consultation:adminActionDialog.terminationReasons.memberUnavailable") } },
+  { value: "SAFETY_OR_SCOPE_REASON", get label() { return i18n.t("consultation:adminActionDialog.terminationReasons.safetyOrScopeReason") } },
+  { value: "SERVICE_VIOLATION", get label() { return i18n.t("consultation:adminActionDialog.terminationReasons.serviceViolation") } },
+  { value: "TECHNICAL_FAILURE", get label() { return i18n.t("consultation:adminActionDialog.terminationReasons.technicalFailure") } },
+  { value: "OTHER", get label() { return i18n.t("consultation:adminActionDialog.terminationReasons.other") } },
 ]
 
 export type AdminDialogMode = "approve" | "reject" | "close" | null
@@ -53,19 +55,20 @@ export function AdminActionDialog({
   onSubmit: (event: FormEvent<HTMLFormElement>) => void
   onOpenChange: (open: boolean) => void
 }) {
+  const { t } = useTranslation("consultation")
   const isOpen = mode !== null
   const title =
     mode === "approve"
-      ? `Điều phối bác sĩ cho yêu cầu #${request?.id}`
+      ? t("adminActionDialog.approve.title", { id: request?.id })
       : mode === "reject"
-        ? `Từ chối yêu cầu #${request?.id}`
-        : `Đóng phiên tư vấn #${session?.id}`
+        ? t("adminActionDialog.reject.title", { id: request?.id })
+        : t("adminActionDialog.close.title", { id: session?.id })
   const description =
     mode === "approve"
-      ? "Chỉ định mã bác sĩ phụ trách cho phiên tư vấn này."
+      ? t("adminActionDialog.approve.description")
       : mode === "reject"
-        ? "Nhập lý do từ chối yêu cầu tư vấn."
-        : "Xác nhận đóng phiên tư vấn và thiết lập trạng thái phát sinh chăm sóc."
+        ? t("adminActionDialog.reject.description")
+        : t("adminActionDialog.close.description")
   const needsReason = mode === "reject" || mode === "close"
 
   return (
@@ -78,10 +81,10 @@ export function AdminActionDialog({
         <form className="flex flex-col gap-4" onSubmit={onSubmit}>
           {mode === "approve" && (
             <label className="flex flex-col gap-2 text-sm font-medium">
-              Mã Bác sĩ (Doctor ID) <span className="text-destructive">*</span>
+              {t("adminActionDialog.doctorIdLabel")} <span className="text-destructive">*</span>
               <Input
                 required
-                placeholder="Nhập ID bác sĩ..."
+                placeholder={t("adminActionDialog.doctorIdPlaceholder")}
                 value={doctorId}
                 onChange={(event) => onDoctorIdChange(event.target.value)}
               />
@@ -102,24 +105,24 @@ export function AdminActionDialog({
                     htmlFor="meaningful-care"
                     className="text-sm font-medium leading-none cursor-pointer"
                   >
-                    Đã phát sinh chăm sóc/tư vấn thực tế
+                    {t("adminActionDialog.meaningfulCareLabel")}
                   </label>
                   <p className="text-xs text-muted-foreground">
                     {session?.status === "ACTIVE"
-                      ? "Mặc định BẬT cho phiên đang hoạt động. Cho phép bác sĩ tiếp tục soạn và hoàn tất Tổng kết y khoa sau khi đóng phiên."
-                      : "Mặc định TẮT cho phiên chưa bắt đầu (SCHEDULED)."}
+                      ? t("adminActionDialog.meaningfulCareHintActive")
+                      : t("adminActionDialog.meaningfulCareHintScheduled")}
                   </p>
                 </div>
               </div>
 
               <label className="flex flex-col gap-2 text-sm font-medium">
-                Phân loại lý do kết thúc (Termination Reason)
+                {t("adminActionDialog.terminationReasonLabel")}
                 <Select
                   value={terminationReason || "ADMINISTRATIVE_CLOSURE"}
                   onValueChange={(val) => onTerminationReasonChange(val as CareTerminationReason)}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Chọn lý do kết thúc..." />
+                    <SelectValue placeholder={t("adminActionDialog.terminationReasonPlaceholder")} />
                   </SelectTrigger>
                   <SelectContent>
                     {TERMINATION_REASONS.map((tr) => (
@@ -135,11 +138,11 @@ export function AdminActionDialog({
 
           {needsReason && (
             <label className="flex flex-col gap-2 text-sm font-medium">
-              Lý do {mode === "close" ? "đóng phiên" : "từ chối"} <span className="text-destructive">*</span>
+              {mode === "close" ? t("adminActionDialog.closeReasonLabel") : t("adminActionDialog.rejectReasonLabel")} <span className="text-destructive">*</span>
               <Textarea
                 required
                 rows={3}
-                placeholder={mode === "close" ? "Nhập lý do đóng phiên tư vấn..." : "Nhập lý do từ chối..."}
+                placeholder={mode === "close" ? t("adminActionDialog.closeReasonPlaceholder") : t("adminActionDialog.rejectReasonPlaceholder")}
                 value={reason}
                 onChange={(event) => onReasonChange(event.target.value)}
               />
@@ -148,10 +151,10 @@ export function AdminActionDialog({
 
           <DialogFooter className="mt-2">
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={loading}>
-              Hủy
+              {t("adminActionDialog.cancel")}
             </Button>
             <Button type="submit" disabled={loading}>
-              {loading ? "Đang xử lý..." : "Xác nhận"}
+              {loading ? t("adminActionDialog.processing") : t("adminActionDialog.confirm")}
             </Button>
           </DialogFooter>
         </form>

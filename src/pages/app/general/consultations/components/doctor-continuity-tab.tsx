@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { useTranslation } from "react-i18next"
 import { History, FileText, AlertCircle, RefreshCw, CheckCircle2, Stethoscope, Package, Calendar, ChevronDown, ChevronUp } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -6,6 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
+import i18n from "@/lib/i18n"
 import { consultationApi } from "@/services"
 import type { CareContinuitySummaryResponse } from "@/types/consultation"
 import { formatDate } from "./shared"
@@ -16,11 +18,12 @@ interface DoctorContinuityTabProps {
 
 function readError(error: unknown, fallback: string) {
   const err = error as { response?: { status?: number; data?: { message?: string } }; message?: string }
-  if (err.response?.status === 403) return "Bạn không có quyền xem tóm tắt chăm sóc liên tục cho phiên này."
+  if (err.response?.status === 403) return i18n.t("consultation:continuityTab.errors.forbidden")
   return err.response?.data?.message || err.message || fallback
 }
 
 export function DoctorContinuityTab({ sessionId }: DoctorContinuityTabProps) {
+  const { t } = useTranslation("consultation")
   const [summaries, setSummaries] = useState<CareContinuitySummaryResponse[]>([])
   const [loading, setLoading] = useState(true)
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
@@ -43,7 +46,7 @@ export function DoctorContinuityTab({ sessionId }: DoctorContinuityTabProps) {
         setSummaries(res.data || [])
       })
       .catch((err) => {
-        setErrorMsg(readError(err, "Không thể tải tóm tắt liên tục chăm sóc."))
+        setErrorMsg(readError(err, t("continuityTab.errors.loadFailed")))
       })
       .finally(() => {
         setLoading(false)
@@ -69,7 +72,7 @@ export function DoctorContinuityTab({ sessionId }: DoctorContinuityTabProps) {
         <AlertCircle className="mx-auto h-8 w-8 text-danger-500 mb-2" />
         <p className="text-danger-700 font-medium text-sm">{errorMsg}</p>
         <Button variant="outline" size="sm" className="mt-4" onClick={fetchContinuity}>
-          Thử lại
+          {t("continuityTab.retry")}
         </Button>
       </div>
     )
@@ -81,9 +84,9 @@ export function DoctorContinuityTab({ sessionId }: DoctorContinuityTabProps) {
     return (
       <div className="py-12 text-center">
         <History className="mx-auto h-12 w-12 text-muted-foreground/40 mb-3" />
-        <p className="text-muted-foreground font-medium text-sm">Chưa có lịch sử chăm sóc trước đây cho bệnh nhân này.</p>
+        <p className="text-muted-foreground font-medium text-sm">{t("continuityTab.empty.title")}</p>
         <p className="text-muted-foreground/70 text-xs mt-1">
-          Các bản tổng kết chăm sóc đã hoàn tất từ các đợt khám trước sẽ hiển thị tại đây để phục vụ theo dõi liên tục.
+          {t("continuityTab.empty.description")}
         </p>
       </div>
     )
@@ -95,17 +98,17 @@ export function DoctorContinuityTab({ sessionId }: DoctorContinuityTabProps) {
         <div className="flex items-center gap-2">
           <History className="h-4 w-4 text-primary" />
           <h4 className="text-sm font-semibold text-foreground">
-            Lịch sử chăm sóc trước ({pastSummaries.length} đợt khám)
+            {t("continuityTab.header.title", { count: pastSummaries.length })}
           </h4>
         </div>
         <Button variant="ghost" size="sm" onClick={fetchContinuity} className="h-8 px-2 text-xs">
-          <RefreshCw className="h-3.5 w-3.5 mr-1" /> Làm mới
+          <RefreshCw className="h-3.5 w-3.5 mr-1" /> {t("continuityTab.refresh")}
         </Button>
       </div>
 
       <div className="space-y-4">
         {pastSummaries.map((item) => {
-          const summaryText = item.finalizedSummary?.summary || item.summary || "Không có tóm tắt"
+          const summaryText = item.finalizedSummary?.summary || item.summary || t("continuityTab.noSummary")
           const observationsText = item.finalizedSummary?.observations || item.observations
           const recommendationsText = item.finalizedSummary?.recommendations || item.recommendations
           const followUpText = item.finalizedSummary?.followUpRecommendation || item.followUpRecommendation
@@ -123,9 +126,9 @@ export function DoctorContinuityTab({ sessionId }: DoctorContinuityTabProps) {
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex-1 min-w-0">
                     <CardTitle className="text-sm font-semibold flex items-center gap-2">
-                      <span>Đợt chăm sóc #{item.sessionId}</span>
+                      <span>{t("continuityTab.item.title", { id: item.sessionId })}</span>
                       <Badge variant="outline" className="text-[10px] bg-success-50 text-success-700 border-success-200">
-                        <CheckCircle2 className="w-3 h-3 mr-1" /> Đã hoàn tất
+                        <CheckCircle2 className="w-3 h-3 mr-1" /> {t("continuityTab.item.completedBadge")}
                       </Badge>
                     </CardTitle>
                     <CardDescription className="text-xs mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-muted-foreground">
@@ -136,13 +139,13 @@ export function DoctorContinuityTab({ sessionId }: DoctorContinuityTabProps) {
                       {item.doctorName && (
                         <span className="flex items-center gap-1">
                           <Stethoscope className="h-3 w-3" />
-                          Bác sĩ: {item.doctorName}
+                          {t("continuityTab.item.doctor", { name: item.doctorName })}
                         </span>
                       )}
                       {item.packageName && (
                         <span className="flex items-center gap-1">
                           <Package className="h-3 w-3" />
-                          Gói: {item.packageName}
+                          {t("continuityTab.item.package", { name: item.packageName })}
                         </span>
                       )}
                     </CardDescription>
@@ -150,7 +153,7 @@ export function DoctorContinuityTab({ sessionId }: DoctorContinuityTabProps) {
                   <div className="flex items-center gap-3 shrink-0">
                     {finalizedAtDate && (
                       <span className="text-[11px] text-muted-foreground hidden sm:inline font-mono">
-                        Hoàn tất: {formatDate(finalizedAtDate)}
+                        {t("continuityTab.item.finalizedAt", { date: formatDate(finalizedAtDate) })}
                       </span>
                     )}
                     <div className="p-1 rounded-full text-muted-foreground">
@@ -167,7 +170,7 @@ export function DoctorContinuityTab({ sessionId }: DoctorContinuityTabProps) {
               {isExpanded && (
                 <CardContent className="p-4 border-t space-y-3 text-xs animate-in fade-in-50 duration-200">
                   <div className="space-y-1">
-                    <span className="font-semibold text-foreground">Tổng kết y tế:</span>
+                    <span className="font-semibold text-foreground">{t("continuityTab.sections.summary")}</span>
                     <p className="p-2.5 rounded-lg bg-muted/30 text-foreground/90 whitespace-pre-wrap leading-relaxed">
                       {summaryText}
                     </p>
@@ -175,7 +178,7 @@ export function DoctorContinuityTab({ sessionId }: DoctorContinuityTabProps) {
 
                   {observationsText && (
                     <div className="space-y-1">
-                      <span className="font-semibold text-foreground">Ghi nhận / Triệu chứng:</span>
+                      <span className="font-semibold text-foreground">{t("continuityTab.sections.observations")}</span>
                       <p className="p-2.5 rounded-lg bg-muted/30 text-foreground/90 whitespace-pre-wrap leading-relaxed">
                         {observationsText}
                       </p>
@@ -184,7 +187,7 @@ export function DoctorContinuityTab({ sessionId }: DoctorContinuityTabProps) {
 
                   {recommendationsText && (
                     <div className="space-y-1">
-                      <span className="font-semibold text-foreground">Khuyến nghị điều trị & lối sống:</span>
+                      <span className="font-semibold text-foreground">{t("continuityTab.sections.recommendations")}</span>
                       <p className="p-2.5 rounded-lg bg-muted/30 text-foreground/90 whitespace-pre-wrap leading-relaxed">
                         {recommendationsText}
                       </p>
@@ -193,7 +196,7 @@ export function DoctorContinuityTab({ sessionId }: DoctorContinuityTabProps) {
 
                   {followUpText && (
                     <div className="space-y-1">
-                      <span className="font-semibold text-foreground">Kế hoạch tái khám / Theo dõi tiếp theo:</span>
+                      <span className="font-semibold text-foreground">{t("continuityTab.sections.followUp")}</span>
                       <p className="p-2.5 rounded-lg bg-muted/30 text-foreground/90 whitespace-pre-wrap leading-relaxed">
                         {followUpText}
                       </p>
@@ -204,13 +207,13 @@ export function DoctorContinuityTab({ sessionId }: DoctorContinuityTabProps) {
                     <div className="mt-3 pt-3 border-t space-y-2">
                       <span className="font-semibold text-foreground flex items-center gap-1.5 text-xs text-warning-700">
                         <FileText className="w-3.5 h-3.5" />
-                        Phụ lục & Đính chính sau hoàn tất ({addendaList.length}):
+                        {t("continuityTab.sections.addenda", { count: addendaList.length })}
                       </span>
                       <div className="space-y-2">
                         {addendaList.map((addendum) => (
                           <div key={addendum.id} className="p-2.5 rounded-lg bg-warning-50/50 border border-warning-200/60 text-xs">
                             <div className="flex items-center justify-between font-medium text-warning-900 mb-1">
-                              <span>Lý do: {addendum.reason}</span>
+                              <span>{t("continuityTab.sections.reason", { reason: addendum.reason })}</span>
                               <span className="text-[10px] text-muted-foreground">{formatDate(addendum.createdAt)}</span>
                             </div>
                             <p className="text-foreground/90 whitespace-pre-wrap">{addendum.content}</p>

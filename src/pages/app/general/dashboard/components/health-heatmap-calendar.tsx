@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo, useCallback } from "react"
+import { useTranslation } from "react-i18next"
 import { Calendar as CalendarIcon, Flame, ShieldCheck, ChevronLeft, ChevronRight } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -20,15 +21,11 @@ interface DayStatus {
   recordCount: number
 }
 
-const MONTH_NAMES = [
-  "Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4",
-  "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8",
-  "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"
-]
-
-const DAY_LABELS = ["T2", "T3", "T4", "T5", "T6", "T7", "CN"]
+/** Khoá dịch tên tháng (health:heatmap.months.<0-11>) và thứ trong tuần, bắt đầu từ thứ Hai */
+const DAY_KEYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"] as const
 
 export function HealthHeatmapCalendar({ onSelectRecord, className = "" }: HealthHeatmapCalendarProps) {
+  const { t } = useTranslation("health")
   const [currentDate, setCurrentDate] = useState(() => new Date())
   const [availableDates, setAvailableDates] = useState<string[]>([])
   const [selectedDate, setSelectedDate] = useState<string | null>(null)
@@ -146,11 +143,11 @@ export function HealthHeatmapCalendar({ onSelectRecord, className = "" }: Health
           <div className="flex items-center gap-2">
             <CalendarIcon className="w-5 h-5 text-primary" />
             <CardTitle className="text-base font-bold text-foreground">
-              Lịch Theo Dõi & Bản Đồ Nhiệt Đo Nhịp Tim
+              {t("heatmap.title")}
             </CardTitle>
           </div>
           <CardDescription className="text-xs text-muted-foreground mt-0.5">
-            Tổng quan tần suất tầm soát và phân bố an toàn theo từng ngày trong tháng
+            {t("heatmap.description")}
           </CardDescription>
         </div>
 
@@ -165,7 +162,7 @@ export function HealthHeatmapCalendar({ onSelectRecord, className = "" }: Health
               <ChevronLeft className="w-4 h-4" />
             </button>
             <span className="text-xs font-bold text-foreground px-2 min-w-[100px] text-center">
-              {MONTH_NAMES[month]} / {year}
+              {t(`heatmap.months.${month}`)} / {year}
             </span>
             <button
               type="button"
@@ -182,7 +179,7 @@ export function HealthHeatmapCalendar({ onSelectRecord, className = "" }: Health
             onClick={resetToToday}
             className="h-8 text-xs font-semibold rounded-xl text-primary hover:bg-slate-50 cursor-pointer"
           >
-            Hôm nay
+            {t("common:date.today")}
           </Button>
         </div>
       </CardHeader>
@@ -195,8 +192,8 @@ export function HealthHeatmapCalendar({ onSelectRecord, className = "" }: Health
               <ShieldCheck className="w-4 h-4" />
             </div>
             <div>
-              <span className="text-[11px] text-muted-foreground block font-medium">Số ngày đã đo</span>
-              <strong className="text-sm font-bold text-foreground">{activeDaysThisMonth} ngày</strong>
+              <span className="text-[11px] text-muted-foreground block font-medium">{t("heatmap.daysMeasured")}</span>
+              <strong className="text-sm font-bold text-foreground">{t("heatmap.daysCount", { count: activeDaysThisMonth })}</strong>
             </div>
           </div>
 
@@ -205,19 +202,19 @@ export function HealthHeatmapCalendar({ onSelectRecord, className = "" }: Health
               <Flame className="w-4 h-4" />
             </div>
             <div>
-              <span className="text-[11px] text-muted-foreground block font-medium">Tổng ngày lịch sử</span>
-              <strong className="text-sm font-bold text-foreground">{availableDates.length} ngày</strong>
+              <span className="text-[11px] text-muted-foreground block font-medium">{t("heatmap.totalHistoryDays")}</span>
+              <strong className="text-sm font-bold text-foreground">{t("heatmap.daysCount", { count: availableDates.length })}</strong>
             </div>
           </div>
 
           <div className="p-3 rounded-2xl bg-slate-50 border border-border col-span-2 sm:col-span-1 flex items-center justify-between px-4">
             <div className="flex items-center gap-2">
               <span className="h-3 w-3 rounded-md bg-success-500" />
-              <span className="text-xs text-muted-foreground font-medium">Có bản ghi đo</span>
+              <span className="text-xs text-muted-foreground font-medium">{t("heatmap.legendHasData")}</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="h-3 w-3 rounded-md bg-slate-100 border border-border" />
-              <span className="text-xs text-muted-foreground font-medium">Chưa đo</span>
+              <span className="text-xs text-muted-foreground font-medium">{t("heatmap.legendNoData")}</span>
             </div>
           </div>
         </div>
@@ -226,8 +223,8 @@ export function HealthHeatmapCalendar({ onSelectRecord, className = "" }: Health
         <div className="border border-border rounded-2xl p-4 bg-slate-50/40">
           {/* Day of week header */}
           <div className="grid grid-cols-7 gap-2 mb-2 text-center text-[11px] font-bold text-muted-foreground">
-            {DAY_LABELS.map((d) => (
-              <div key={d}>{d}</div>
+            {DAY_KEYS.map((d) => (
+              <div key={d}>{t(`heatmap.weekdays.${d}`)}</div>
             ))}
           </div>
 
@@ -246,7 +243,7 @@ export function HealthHeatmapCalendar({ onSelectRecord, className = "" }: Health
                   type="button"
                   onClick={() => handleDayClick(day)}
                   disabled={!day.hasData}
-                  title={`${day.dateStr}${day.hasData ? " (Nhấn để xem các lần đo)" : ""}`}
+                  title={`${day.dateStr}${day.hasData ? t("heatmap.dayTooltipSuffix") : ""}`}
                   className={`h-11 rounded-xl flex flex-col items-center justify-center transition-all relative font-semibold text-xs ${
                     day.hasData
                       ? isSelected
@@ -275,10 +272,10 @@ export function HealthHeatmapCalendar({ onSelectRecord, className = "" }: Health
             <div className="flex items-center justify-between border-b border-border pb-2.5">
               <div className="flex items-center gap-2">
                 <span className="text-xs font-bold text-foreground">
-                  Các lần đo ngày {selectedDate}
+                  {t("heatmap.selected.title", { date: selectedDate })}
                 </span>
                 <span className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-success-50 text-success-900 border border-success-200">
-                  {selectedDateRecords.length} lần đo
+                  {t("heatmap.selected.count", { count: selectedDateRecords.length })}
                 </span>
               </div>
 
@@ -288,17 +285,17 @@ export function HealthHeatmapCalendar({ onSelectRecord, className = "" }: Health
                 onClick={() => setSelectedDate(null)}
                 className="h-7 text-xs text-muted-foreground hover:text-foreground"
               >
-                Đóng
+                {t("common:actions.close")}
               </Button>
             </div>
 
             {loadingRecords ? (
               <div className="py-6 text-center text-xs text-muted-foreground animate-pulse">
-                Đang tải dữ liệu đo của ngày {selectedDate}...
+                {t("heatmap.selected.loading", { date: selectedDate })}
               </div>
             ) : selectedDateRecords.length === 0 ? (
               <div className="py-4 text-center text-xs text-muted-foreground">
-                Không tìm thấy bản ghi đo nào trong ngày này.
+                {t("heatmap.selected.empty")}
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -316,10 +313,10 @@ export function HealthHeatmapCalendar({ onSelectRecord, className = "" }: Health
                     >
                       <div className="space-y-0.5 min-w-0">
                         <span className="text-xs font-bold text-foreground truncate block">
-                          File: {record.fileName}
+                          {t("heatmap.selected.file", { name: record.fileName })}
                         </span>
                         <span className="text-[11px] text-muted-foreground block">
-                          {hr ? `Nhịp tim: ${hr} BPM` : "Nhịp tim: --"} • {confPct ? `Khả năng AFib: ${confPct}%` : ""}
+                          {t("heatmap.selected.heartRate", { value: hr ? `${hr} BPM` : "--" })} • {confPct ? t("heatmap.selected.afibProbability", { value: confPct }) : ""}
                         </span>
                       </div>
 
@@ -328,7 +325,7 @@ export function HealthHeatmapCalendar({ onSelectRecord, className = "" }: Health
                         size="sm"
                         className="h-7 text-xs font-semibold rounded-lg bg-white shrink-0"
                       >
-                        Chi tiết
+                        {t("heatmap.selected.details")}
                       </Button>
                     </div>
                   )

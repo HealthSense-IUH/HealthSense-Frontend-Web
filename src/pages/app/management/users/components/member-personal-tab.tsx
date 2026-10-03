@@ -12,6 +12,7 @@ import {
   User,
   UserCheck,
 } from "lucide-react"
+import { useTranslation } from "react-i18next"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { UserStatusBadge } from "./user-status-badge"
@@ -33,10 +34,11 @@ export function MemberPersonalTab({
   onEdit,
   onFakeRecord,
 }: MemberPersonalTabProps) {
+  const { t } = useTranslation("management")
   if (!user && loading) {
     return (
       <div className="py-16 text-center text-slate-400 font-medium text-xs">
-        Đang tải thông tin cá nhân của Member...
+        {t("userDetail.personalTab.loading")}
       </div>
     )
   }
@@ -44,7 +46,7 @@ export function MemberPersonalTab({
   if (!user) {
     return (
       <div className="py-16 text-center text-slate-400 font-medium text-xs">
-        Không tìm thấy thông tin tài khoản.
+        {t("userDetail.personalTab.notFound")}
       </div>
     )
   }
@@ -64,7 +66,7 @@ export function MemberPersonalTab({
             <div>
               <div className="flex items-center gap-2 flex-wrap">
                 <h3 className="text-xl font-black text-slate-900 tracking-tight">
-                  {user.displayName || "Member chưa cập nhật tên"}
+                  {user.displayName || t("userDetail.personalTab.noName")}
                 </h3>
                 <span className="font-mono text-xs font-bold text-slate-400">
                   #{user.id}
@@ -98,7 +100,7 @@ export function MemberPersonalTab({
                 className="h-9 rounded-xl border-success-200 bg-success-50/50 text-success-800 hover:bg-success-100 font-extrabold text-xs cursor-pointer"
               >
                 <FilePlus className="w-4 h-4 mr-1.5 text-success-600" />
-                Tạo bản đo giả lập
+                {t("userDetail.personalTab.createFakeRecord")}
               </Button>
             )}
             {onEdit && (
@@ -108,7 +110,7 @@ export function MemberPersonalTab({
                 className="h-9 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-extrabold text-xs px-4 shadow-sm shadow-primary-500/20 cursor-pointer"
               >
                 <Edit3 className="w-4 h-4 mr-1.5" />
-                Chỉnh sửa
+                {t("userDetail.personalTab.edit")}
               </Button>
             )}
           </div>
@@ -121,44 +123,44 @@ export function MemberPersonalTab({
         <div className="p-6 rounded-2xl border border-slate-200/80 bg-white shadow-xs space-y-4">
           <div className="flex items-center gap-2 text-slate-700 font-black text-sm">
             <User className="w-4 h-4 text-primary-600" />
-            <span>Thông tin nhân khẩu học & Liên hệ</span>
+            <span>{t("userDetail.personalTab.demographicsTitle")}</span>
           </div>
 
           <div className="divide-y divide-slate-100 text-xs font-medium">
             <div className="py-3 flex items-center justify-between">
               <span className="text-slate-500 flex items-center gap-2">
                 <Calendar className="w-4 h-4 text-slate-400" />
-                <span>Ngày sinh</span>
+                <span>{t("userDetail.personalTab.dateOfBirth")}</span>
               </span>
               <span className="font-extrabold text-slate-800 font-mono">
-                {user.dateOfBirth || "Chưa thiết lập"}
+                {user.dateOfBirth || t("userDetail.personalTab.notSet")}
               </span>
             </div>
             <div className="py-3 flex items-center justify-between">
               <span className="text-slate-500 flex items-center gap-2">
                 <UserCheck className="w-4 h-4 text-slate-400" />
-                <span>Giới tính</span>
+                <span>{t("userDetail.personalTab.gender")}</span>
               </span>
               <span className="font-extrabold text-slate-800">
-                {user.gender || "Chưa xác định"}
+                {user.gender || t("userDetail.personalTab.notSpecified")}
               </span>
             </div>
             <div className="py-3 flex items-center justify-between">
               <span className="text-slate-500 flex items-center gap-2">
                 <Phone className="w-4 h-4 text-slate-400" />
-                <span>Số điện thoại</span>
+                <span>{t("userDetail.personalTab.phone")}</span>
               </span>
               <span className="font-extrabold font-mono text-slate-800">
-                {user.phone || "Chưa liên kết"}
+                {user.phone || t("userDetail.personalTab.notLinked")}
               </span>
             </div>
             <div className="py-3 flex items-center justify-between">
               <span className="text-slate-500 flex items-center gap-2">
                 <MapPin className="w-4 h-4 text-slate-400" />
-                <span>Địa chỉ thường trú</span>
+                <span>{t("userDetail.personalTab.address")}</span>
               </span>
               <span className="text-slate-800 text-right max-w-[240px] truncate">
-                {user.address || "Chưa cấu hình"}
+                {user.address || t("userDetail.personalTab.notConfigured")}
               </span>
             </div>
           </div>
@@ -168,18 +170,18 @@ export function MemberPersonalTab({
         <div className="p-6 rounded-2xl border border-slate-200/80 bg-white shadow-xs space-y-4">
           <div className="flex items-center gap-2 text-slate-700 font-black text-sm">
             <ShieldCheck className="w-4 h-4 text-success-600" />
-            <span>Trạng thái tài khoản & Dữ liệu sức khỏe</span>
+            <span>{t("userDetail.personalTab.accountTitle")}</span>
           </div>
 
           <div className="divide-y divide-slate-100 text-xs font-medium">
             <div className="py-3 flex items-center justify-between">
-              <span className="text-slate-500">Trạng thái vận hành:</span>
+              <span className="text-slate-500">{t("userDetail.personalTab.operationalStatus")}</span>
               <UserStatusBadge status={user.status} />
             </div>
             <div className="py-3 flex items-center justify-between">
               <span className="text-slate-500 flex items-center gap-2">
                 <Clock className="w-4 h-4 text-slate-400" />
-                <span>Ngày đăng ký tài khoản</span>
+                <span>{t("userDetail.personalTab.registeredAt")}</span>
               </span>
               <span className="font-mono text-slate-800">
                 {formatRecordDate(user.createdAt)}
@@ -188,21 +190,21 @@ export function MemberPersonalTab({
             <div className="py-3 flex items-center justify-between">
               <span className="text-slate-500 flex items-center gap-2">
                 <Activity className="w-4 h-4 text-primary-600" />
-                <span>Tổng số bản đo sức khỏe</span>
+                <span>{t("userDetail.personalTab.totalRecords")}</span>
               </span>
               <Badge variant="secondary" className="font-extrabold text-primary-700 bg-primary-50">
-                {totalHealthRecords} bản đo
+                {t("userDetail.personalTab.recordCount", { count: totalHealthRecords })}
               </Badge>
             </div>
             {latestRecord && (
               <div className="py-3 flex items-center justify-between">
                 <span className="text-slate-500 flex items-center gap-2">
                   <HeartPulse className="w-4 h-4 text-danger-500" />
-                  <span>Kết quả đo gần nhất</span>
+                  <span>{t("userDetail.personalTab.latestResult")}</span>
                 </span>
                 <div className="flex items-center gap-1.5">
                   <Badge variant="outline" className="font-bold">
-                    {latestRecord.predictionLabel || latestRecord.status || "Đã lưu"}
+                    {latestRecord.predictionLabel || latestRecord.status || t("userDetail.personalTab.saved")}
                   </Badge>
                   {latestRecord.confidence != null && (
                     <span className="font-mono text-[11px] text-slate-500">

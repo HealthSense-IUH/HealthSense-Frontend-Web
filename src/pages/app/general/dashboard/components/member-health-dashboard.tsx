@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react"
 import { useNavigate } from "react-router-dom"
+import { useTranslation } from "react-i18next"
 import {
   Activity,
   HeartPulse,
@@ -22,6 +23,7 @@ import {
 import type { MemberHealthRecord, HealthStatisticsResponse } from "@/types/health-record"
 
 export function MemberHealthDashboard() {
+  const { t } = useTranslation("health")
   const navigate = useNavigate()
 
   // State for stats & recent records
@@ -81,7 +83,7 @@ export function MemberHealthDashboard() {
         {/* Latest Heart Rate */}
         <Card className="rounded-2xl border border-border shadow-2xs bg-card hover:shadow-md transition-all duration-200">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <span className="text-xs font-semibold text-muted-foreground">Lần đo gần nhất</span>
+            <span className="text-xs font-semibold text-muted-foreground">{t("memberDashboard.latestMeasurement")}</span>
             <div className="h-9 w-9 rounded-xl bg-danger-500/10 text-danger-500 flex items-center justify-center">
               <HeartPulse className="h-4.5 w-4.5" />
             </div>
@@ -96,7 +98,7 @@ export function MemberHealthDashboard() {
                 {formatRecordDate(latestRecord.createdAt)}
               </span>
             ) : (
-              <span className="text-xs text-muted-foreground block">Chưa có dữ liệu</span>
+              <span className="text-xs text-muted-foreground block">{t("memberDashboard.noData")}</span>
             )}
           </CardContent>
         </Card>
@@ -104,7 +106,7 @@ export function MemberHealthDashboard() {
         {/* Latest AFib Risk Assessment */}
         <Card className="rounded-2xl border border-border shadow-2xs bg-card hover:shadow-md transition-all duration-200">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <span className="text-xs font-semibold text-muted-foreground">Khả năng bị rung nhĩ</span>
+            <span className="text-xs font-semibold text-muted-foreground">{t("memberDashboard.afibProbability")}</span>
             <div className="h-9 w-9 rounded-xl bg-primary-500/10 text-primary-500 flex items-center justify-center">
               <TrendingUp className="h-4.5 w-4.5" />
             </div>
@@ -120,7 +122,7 @@ export function MemberHealthDashboard() {
                 {latestMeta.badgeText}
               </span>
             ) : (
-              <span className="text-xs text-muted-foreground block">Chưa có đánh giá</span>
+              <span className="text-xs text-muted-foreground block">{t("memberDashboard.noAssessment")}</span>
             )}
           </CardContent>
         </Card>
@@ -128,7 +130,7 @@ export function MemberHealthDashboard() {
         {/* HRV Metrics (RMSSD & SDNN) */}
         <Card className="rounded-2xl border border-border shadow-2xs bg-card hover:shadow-md transition-all duration-200">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <span className="text-xs font-semibold text-muted-foreground">Biến thiên nhịp (RMSSD)</span>
+            <span className="text-xs font-semibold text-muted-foreground">{t("memberDashboard.hrvRmssd")}</span>
             <div className="h-9 w-9 rounded-xl bg-primary-500/10 text-primary-500 flex items-center justify-center">
               <Sliders className="h-4.5 w-4.5" />
             </div>
@@ -147,17 +149,17 @@ export function MemberHealthDashboard() {
         {/* Total Screenings Summary */}
         <Card className="rounded-2xl border border-border shadow-2xs bg-card hover:shadow-md transition-all duration-200">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <span className="text-xs font-semibold text-muted-foreground">Tổng lượt tầm soát</span>
+            <span className="text-xs font-semibold text-muted-foreground">{t("memberDashboard.totalScreenings")}</span>
             <div className="h-9 w-9 rounded-xl bg-success-500/10 text-success-500 flex items-center justify-center">
               <Activity className="h-4.5 w-4.5" />
             </div>
           </CardHeader>
           <CardContent className="space-y-1">
             <div className="text-2xl font-bold text-foreground">
-              {totalScreenings} <span className="text-xs font-normal text-muted-foreground">lần</span>
+              {totalScreenings} <span className="text-xs font-normal text-muted-foreground">{t("memberDashboard.timesUnit")}</span>
             </div>
             <span className="text-xs text-muted-foreground block truncate">
-              {totalNormal} bình thường • {totalAfib + totalSuspected} cảnh báo
+              {t("memberDashboard.screeningsBreakdown", { normal: totalNormal, warning: totalAfib + totalSuspected })}
             </span>
           </CardContent>
         </Card>
@@ -182,10 +184,10 @@ export function MemberHealthDashboard() {
             <CardHeader className="flex flex-row items-center justify-between border-b border-border pb-4">
               <div>
                 <CardTitle className="text-base font-bold text-foreground">
-                  Lịch sử Đo Gần Đây
+                  {t("memberDashboard.recent.title")}
                 </CardTitle>
                 <CardDescription className="text-xs text-muted-foreground mt-0.5">
-                  5 lần đo mới nhất của bạn trên hệ thống
+                  {t("memberDashboard.recent.description")}
                 </CardDescription>
               </div>
               <Button
@@ -194,7 +196,7 @@ export function MemberHealthDashboard() {
                 onClick={() => navigate("/app/general/afib-history")}
                 className="text-xs font-semibold text-primary hover:bg-slate-50 rounded-xl gap-1 cursor-pointer"
               >
-                <span>Xem tất cả</span>
+                <span>{t("memberDashboard.recent.viewAll")}</span>
                 <ChevronRight className="w-3.5 h-3.5" />
               </Button>
             </CardHeader>
@@ -209,17 +211,17 @@ export function MemberHealthDashboard() {
               ) : recentRecords.length === 0 ? (
                 <div className="p-12 text-center text-xs text-muted-foreground flex flex-col items-center justify-center gap-2">
                   <Activity className="h-8 w-8 text-slate-300" />
-                  <span>Chưa có bản ghi đo nào. Hãy tải lên file đầu tiên!</span>
+                  <span>{t("memberDashboard.recent.empty")}</span>
                 </div>
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-xs border-collapse">
                     <thead>
                       <tr className="border-b border-border text-muted-foreground font-semibold bg-slate-50/50">
-                        <th className="py-3 px-4">Thời gian đo</th>
-                        <th className="py-3 px-4">Kết luận AI</th>
-                        <th className="py-3 px-4 text-center">Khả năng AFib</th>
-                        <th className="py-3 px-4 text-right">Thao tác</th>
+                        <th className="py-3 px-4">{t("memberDashboard.recent.measuredAt")}</th>
+                        <th className="py-3 px-4">{t("memberDashboard.recent.aiConclusion")}</th>
+                        <th className="py-3 px-4 text-center">{t("memberDashboard.recent.afibProbability")}</th>
+                        <th className="py-3 px-4 text-right">{t("memberDashboard.recent.actions")}</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-border font-medium">
@@ -275,7 +277,7 @@ export function MemberHealthDashboard() {
                                 className="h-8 px-3 rounded-xl bg-white border border-border text-foreground hover:bg-slate-50 text-xs font-semibold gap-1.5 cursor-pointer shadow-2xs"
                               >
                                 <Eye className="w-3.5 h-3.5 text-muted-foreground" />
-                                <span>Xem chi tiết</span>
+                                <span>{t("memberDashboard.recent.viewDetails")}</span>
                               </Button>
                             </td>
                           </tr>

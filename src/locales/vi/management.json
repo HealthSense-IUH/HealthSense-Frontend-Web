@@ -1,1 +1,986 @@
-{}
+{
+  "doctorConsultations": {
+    "page": {
+      "title": "Quản lý phiên khám",
+      "description": "Bật trực điều phối để nhận ca tư vấn mới từ hàng đợi và theo dõi các phiên khám bạn đang phụ trách.",
+      "accessDenied": {
+        "title": "Quyền truy cập bị từ chối",
+        "description": "Bạn không có quyền truy cập trang bác sĩ.",
+        "backHome": "Về trang chủ"
+      },
+      "sessionsSection": {
+        "title": "Danh sách phiên khám (Active Care)",
+        "description": "Theo dõi danh sách phiên khám, trao đổi chuyên môn và quản lý tiến trình điều trị người bệnh."
+      },
+      "toast": {
+        "noDoctorAccess": "Bạn không có quyền truy cập trang bác sĩ.",
+        "loadSessionsError": "Lỗi tải danh sách phiên chăm sóc.",
+        "loadCareProfileError": "Không thể tải hồ sơ trực của bác sĩ.",
+        "dispatchAvailable": "Đã kích hoạt chế độ sẵn sàng nhận bệnh.",
+        "dispatchUnavailable": "Đã tạm dừng nhận bệnh mới.",
+        "updateDispatchStatusError": "Không thể cập nhật trạng thái trực.",
+        "stopAfterSessionOn": "Đã bật: Sẽ chuyển sang nghỉ trực sau khi kết thúc phiên khám hiện tại.",
+        "stopAfterSessionOff": "Đã tắt: Sẽ tiếp tục nhận ca sau khi kết thúc phiên.",
+        "updatePreferencesError": "Không thể cập nhật tùy chọn.",
+        "offerAccepted": "Đã tiếp nhận ca tư vấn! Đang chờ người bệnh xác nhận để bắt đầu phiên...",
+        "acceptOfferError": "Không thể tiếp nhận ca khám hoặc lời mời đã hết hạn.",
+        "offerRejected": "Đã từ chối ca tư vấn. Ca khám sẽ được chuyển tiếp cho bác sĩ khác trong hàng đợi.",
+        "rejectOfferError": "Không thể từ chối ca khám."
+      }
+    },
+    "workspace": {
+      "loading": "Đang tải không gian khám chuyên khoa...",
+      "notFound": {
+        "title": "Không tìm thấy phiên khám",
+        "description": "Phiên tư vấn này không tồn tại hoặc bạn không được phân công phụ trách.",
+        "backToList": "Quay lại danh sách"
+      },
+      "breadcrumb": "Quản lý phiên khám",
+      "patientFallback": "Bệnh nhân #{{id}}",
+      "memberIdBadge": "ID: #{{id}}",
+      "defaultPackage": "Tư vấn chuyên khoa",
+      "endsAt": "Hạn kết thúc: {{date}}",
+      "createSummary": "Lập tổng kết y khoa",
+      "scheduleAndDetails": "Lịch & Chi tiết",
+      "tabs": {
+        "chat": "Trò chuyện trực tiếp",
+        "records": "Hồ sơ sức khỏe & Bản đo",
+        "summary": "Tổng kết y khoa",
+        "summaryNeeded": "Cần lập",
+        "continuity": "Tiền sử chăm sóc",
+        "nutrition": "Dinh dưỡng"
+      },
+      "readOnly": {
+        "completed": "Phiên tư vấn đã hoàn tất. Bạn chỉ có thể xem lại lịch sử trao đổi.",
+        "cancelled": "Phiên tư vấn đã bị hủy. Không thể tiếp tục gửi tin nhắn.",
+        "scheduled": "Phiên tư vấn chưa bắt đầu."
+      },
+      "toast": {
+        "loadDetailError": "Không thể tải thông tin phiên tư vấn.",
+        "loadMessagesError": "Không thể tải lịch sử trao đổi.",
+        "loadOlderMessagesError": "Không thể tải tin nhắn cũ hơn.",
+        "sendMessageError": "Không thể gửi tin nhắn."
+      }
+    },
+    "dispatchHeader": {
+      "missingProfile": {
+        "title": "Tài khoản chưa được thiết lập hồ sơ trực:",
+        "description": "Vui lòng liên hệ Người quản lý hoặc Điều phối viên để thiết lập hồ sơ chuyên khoa và kích hoạt nhận bệnh trước khi bật chế độ trực.",
+        "retry": "Thử lại"
+      },
+      "title": "Trạng thái Trực điều phối",
+      "badges": {
+        "busy": "Đang bận phiên khám",
+        "available": "Sẵn sàng nhận bệnh",
+        "distributing": "Đang phân phối lượt chờ",
+        "unavailable": "Nghỉ trực (Tạm dừng)"
+      },
+      "hints": {
+        "noProfile": "Bạn cần có hồ sơ tư vấn hợp lệ trước khi có thể tham gia hàng đợi phân phối.",
+        "busy": "Bác sĩ đang trong phiên khám tư vấn trực tuyến (BUSY). Trạng thái sẽ tự động cập nhật khi phiên kết thúc.",
+        "available": "Hệ thống sẽ tự động gán ca khám mới từ hàng đợi tới bạn ngay khi có bệnh nhân phù hợp.",
+        "pendingOffer": "Bạn đang có lời mời tư vấn hoặc bệnh nhân đang xác nhận. Tạm thời không nhận ca mới.",
+        "unavailable": "Bạn đang ở chế độ nghỉ. Bật sẵn sàng để bắt đầu tiếp nhận bệnh nhân từ hàng đợi chung."
+      },
+      "workSchedule": "Lịch làm việc",
+      "stopAfterSession": "Nghỉ sau phiên này",
+      "actions": {
+        "inSession": "Đang trong phiên",
+        "pause": "Tạm nghỉ trực",
+        "start": "Bắt đầu trực"
+      }
+    },
+    "offerCard": {
+      "titleWaiting": "Đang chờ bệnh nhân xác nhận",
+      "titleOffered": "Lời mời nhận ca tư vấn mới!",
+      "countdown": "Còn {{seconds}}s để tiếp nhận",
+      "acceptedWaiting": "Đã tiếp nhận - Chờ bệnh nhân",
+      "offerCode": "Mã lời mời:",
+      "requestNumber": "Yêu cầu #{{id}}",
+      "intakeTitle": "Thông tin sơ bộ từ người bệnh:",
+      "reasonForCare": "Lý do cần tư vấn (Reason for Care):",
+      "currentConcern": "Vấn đề sức khỏe chính (Current Concern):",
+      "notProvided": "Chưa cung cấp",
+      "careGoal": "Mục tiêu chăm sóc: ",
+      "selfReportedContext": "Bối cảnh tự báo cáo: ",
+      "acceptedNotice": "Bạn đã chấp nhận ca tư vấn này.",
+      "acceptedNoticeDetail": "Hệ thống đang chờ bệnh nhân bấm xác nhận bắt đầu phiên tư vấn. Khi hoàn tất, phiên chat sẽ tự động kích hoạt.",
+      "reject": "Từ chối nhận ca",
+      "accepting": "Đang tiếp nhận...",
+      "accept": "Tiếp nhận ca tư vấn",
+      "waitingConfirmation": "Đang chờ bệnh nhân xác nhận..."
+    },
+    "scheduleDialog": {
+      "title": "Quản lý lịch làm việc & Khung giờ trực",
+      "description": "Bác sĩ có thể tự chủ động cập nhật các khung giờ sẵn sàng tiếp nhận tư vấn và múi giờ làm việc của mình.",
+      "days": {
+        "monday": "Thứ Hai (Monday)",
+        "tuesday": "Thứ Ba (Tuesday)",
+        "wednesday": "Thứ Tư (Wednesday)",
+        "thursday": "Thứ Năm (Thursday)",
+        "friday": "Thứ Sáu (Friday)",
+        "saturday": "Thứ Bảy (Saturday)",
+        "sunday": "Chủ Nhật (Sunday)"
+      },
+      "validation": {
+        "requireSlot": "Bác sĩ đang được cấu hình nhận tư vấn 1-1. Vui lòng thiết lập ít nhất 1 khung giờ trực trong tuần.",
+        "invalidTimeFormat": "Khung giờ thứ {{index}} có định dạng thời gian không hợp lệ (yêu cầu định dạng HH:mm, ví dụ 08:00).",
+        "endBeforeStart": "Khung giờ thứ {{index}} có giờ kết thúc ({{end}}) phải lớn hơn giờ bắt đầu ({{start}}).",
+        "overlap": "Khung giờ thứ {{first}} và {{second}} bị trùng lặp thời gian trong ngày {{day}}."
+      },
+      "toast": {
+        "successTitle": "Thành công",
+        "successDescription": "Đã cập nhật lịch trực cá nhân thành công."
+      },
+      "errors": {
+        "invalidSchedule": "Lịch hỗ trợ không hợp lệ. Vui lòng kiểm tra múi giờ, thời gian và các khung giờ bị trùng.",
+        "updateFailed": "Không thể cập nhật lịch trực cá nhân. Vui lòng thử lại."
+      },
+      "noProfile": {
+        "title": "Chưa có hồ sơ tiếp nhận tư vấn (Care Profile)",
+        "description": "Tài khoản Bác sĩ chưa được Quản trị viên khởi tạo hồ sơ điều phối ban đầu trên hệ thống. Vui lòng liên hệ Người quản lý hoặc Điều phối viên để thiết lập Chuyên khoa trước khi lưu lịch trực."
+      },
+      "managedProfile": {
+        "title": "Cấu hình hồ sơ chuyên môn do Điều phối viên / Quản trị viên quản lý:",
+        "readOnly": "Chỉ xem",
+        "specialty": "Chuyên khoa:",
+        "oneOnOne": "Nhận tư vấn 1-1:",
+        "accepts": "Có tiếp nhận",
+        "notAccepts": "Không tiếp nhận",
+        "maxConcurrent": "Số ca đồng thời tối đa:",
+        "sessionsCount": "{{count}} ca"
+      },
+      "timezone": "Múi giờ (Timezone):",
+      "weeklySlots": {
+        "title": "Khung giờ trực hàng tuần:",
+        "hint": "Hệ thống chỉ điều phối bệnh nhân vào các khung giờ này khi bác sĩ bật trực.",
+        "add": "Thêm khung giờ",
+        "empty": "Chưa cấu hình khung giờ nào. Bác sĩ sẽ không được điều phối tự động nếu không có lịch trực.",
+        "dayOfWeekAria": "Thứ trong tuần",
+        "remove": "Xóa khung giờ"
+      },
+      "cancel": "Hủy",
+      "saving": "Đang lưu...",
+      "save": "Lưu thay đổi"
+    },
+    "sessionStatus": {
+      "scheduled": "Đã lên lịch",
+      "active": "Đang chăm sóc",
+      "completed": "Đã hoàn tất",
+      "cancelledWithCare": "Đã hủy (Có chăm sóc)",
+      "cancelled": "Đã hủy",
+      "expired": "Đã hết hạn"
+    },
+    "summaryStatus": {
+      "afterSession": "Sau khi kết thúc phiên",
+      "finalized": "Đã tổng kết",
+      "locked": "Đã khóa y khoa",
+      "draft": "Đang lưu nháp",
+      "notCompleted": "Chưa hoàn tất",
+      "overdue": "Quá hạn 10 phút",
+      "notSummarized": "Chưa tổng kết",
+      "escalated": "Leo thang (Escalated)",
+      "due": "Hạn: {{date}}",
+      "deadline": "Thời hạn 10 phút"
+    },
+    "sessionsTable": {
+      "searchPlaceholder": "Tìm theo mã phiên, tên hoặc ID người bệnh...",
+      "filterPlaceholder": "Lọc trạng thái",
+      "filters": {
+        "all": "Tất cả trạng thái",
+        "active": "Đang chăm sóc (Active)",
+        "scheduled": "Đã lên lịch",
+        "summaryPending": "Cần lập tổng kết",
+        "completed": "Đã hoàn tất",
+        "cancelled": "Đã hủy",
+        "expired": "Hết hạn"
+      },
+      "refresh": "Làm mới",
+      "enterCurrentSession": "Vào ca khám hiện tại",
+      "viewLatestSession": "Xem phiên gần nhất",
+      "activeCount": "{{count}} đang khám",
+      "columns": {
+        "sessionId": "Mã phiên",
+        "patient": "Bệnh nhân / Người bệnh",
+        "package": "Gói tư vấn",
+        "startedAt": "Bắt đầu",
+        "endsAt": "Kết thúc",
+        "status": "Trạng thái",
+        "summary": "Tổng kết",
+        "clinicalAttention": "Chú ý y khoa",
+        "actions": "Thao tác"
+      },
+      "loading": "Đang tải danh sách phiên chăm sóc...",
+      "emptyTitle": "Không tìm thấy phiên chăm sóc",
+      "emptyFiltered": "Không có phiên khám nào khớp với điều kiện tìm kiếm hoặc bộ lọc trạng thái.",
+      "emptyNone": "Hiện tại bạn chưa được phân công phiên chăm sóc nào.",
+      "patientFallback": "Bệnh nhân #{{id}}",
+      "memberId": "ID: #{{id}}",
+      "sessionNumber": "Phiên #{{id}}",
+      "defaultPackage": "Tư vấn chuyên khoa",
+      "recordsToReview": "{{count}} hồ sơ cần xem",
+      "careOccurred": "Có chăm sóc",
+      "enterSession": "Vào ca khám",
+      "viewSummary": "Xem tổng kết",
+      "continueSummary": "Tiếp tục tổng kết",
+      "createSummary": "Lập tổng kết",
+      "viewSession": "Xem ca khám",
+      "viewDetails": "Xem thông tin chi tiết",
+      "pagination": {
+        "showing": "Hiển thị <strong>{{start}}</strong> - <strong>{{end}}</strong> trên tổng số <strong>{{total}}</strong> phiên khám",
+        "rowsPerPage": "Số dòng mỗi trang:",
+        "rowsPerPageAria": "Số dòng mỗi trang",
+        "pageOf": "Trang <strong>{{page}}</strong> / <strong>{{total}}</strong>",
+        "previous": "Trước",
+        "next": "Sau"
+      }
+    }
+  },
+  "hub": {
+    "title": "Bảng điều khiển quản trị",
+    "description": "Theo dõi hoạt động của nền tảng HealthSense và hiệu năng hệ thống."
+  },
+  "audit": {
+    "title": "Nhật ký Kiểm toán Doanh nghiệp (Business Audit)",
+    "subtitle": "Nhật ký bất biến (append-only) theo dõi toàn bộ vòng đời đối tượng nghiệp vụ (Vai trò: <strong>{{role}}</strong>)",
+    "refresh": "Làm mới",
+    "loadErrorTitle": "Lỗi",
+    "loadErrorDescription": "Không thể tải nhật ký kiểm toán doanh nghiệp.",
+    "filters": {
+      "domain": "Phạm vi đối tượng (Domain)",
+      "domainPlaceholder": "Chọn Domain",
+      "allDomains": "Tất cả Domain cho phép",
+      "domainId": "Mã đối tượng (Domain ID)",
+      "domainIdPlaceholder": "VD: 101, REQ_001...",
+      "eventType": "Loại sự kiện (Event Type)",
+      "eventTypePlaceholder": "VD: CREATED, STATUS_CHANGED..."
+    },
+    "loading": "Đang tải nhật ký kiểm toán...",
+    "emptyTitle": "Không có sự kiện kiểm toán nào",
+    "emptyDescription": "Không tìm thấy nhật ký kiểm toán phù hợp với bộ lọc trong phạm vi quyền hạn của bạn.",
+    "table": {
+      "time": "Thời gian",
+      "domain": "Domain",
+      "eventType": "Loại sự kiện (Event)",
+      "actor": "Tác nhân (Actor)",
+      "stateTransition": "Chuyển trạng thái",
+      "detail": "Chi tiết",
+      "view": "Xem"
+    },
+    "detail": {
+      "event": "Event #{{id}}",
+      "domainId": "Domain ID",
+      "occurredAt": "Thời điểm xảy ra",
+      "actor": "Tác nhân thực hiện:",
+      "actorUser": "Tài khoản #{{id}} ({{role}})",
+      "actorSystem": "Hệ thống tự động (SYSTEM)",
+      "reason": "Lý do nghiệp vụ:",
+      "stateTransition": "Chuyển đổi trạng thái",
+      "metadata": "Metadata an toàn (Filtered Safe Context)"
+    }
+  },
+  "healthRecords": {
+    "title": "Hồ sơ sức khỏe",
+    "description": "Quản lý hồ sơ sức khỏe của hội viên và các đặc trưng HRV.",
+    "createMock": "Tạo bản ghi giả lập",
+    "pageInfo": "Trang {{page}} / {{totalPages}}",
+    "totalRecords": " ({{total}} bản ghi)",
+    "previous": "Trước",
+    "next": "Sau",
+    "status": {
+      "PENDING_UPLOAD": "Chờ tải lên",
+      "PROCESSING": "Đang xử lý",
+      "COMPLETED": "Hoàn tất",
+      "FAILED": "Thất bại"
+    },
+    "prediction": {
+      "NORMAL": "Bình thường",
+      "AFIB": "Rung nhĩ",
+      "UNCERTAIN": "Không chắc chắn"
+    },
+    "fields": {
+      "fileName": "Tên tệp",
+      "memberId": "Mã hội viên",
+      "status": "Trạng thái",
+      "prediction": "Dự đoán",
+      "confidence": "Độ tin cậy",
+      "date": "Ngày",
+      "actions": "Thao tác"
+    },
+    "table": {
+      "loading": "Đang tải hồ sơ...",
+      "empty": "Không tìm thấy hồ sơ nào.",
+      "viewDetail": "Xem chi tiết"
+    },
+    "filters": {
+      "searchPlaceholder": "Tìm hồ sơ...",
+      "statusPlaceholder": "Trạng thái",
+      "allStatuses": "Tất cả trạng thái",
+      "predictionPlaceholder": "Dự đoán",
+      "allPredictions": "Tất cả dự đoán"
+    },
+    "detail": {
+      "title": "Chi tiết hồ sơ sức khỏe",
+      "recordId": "Mã hồ sơ: {{id}}",
+      "memberId": "Mã hội viên:",
+      "fileName": "Tên tệp:",
+      "status": "Trạng thái:",
+      "prediction": "Dự đoán:",
+      "confidence": "Độ tin cậy:",
+      "date": "Ngày:",
+      "hrvFeatures": "Đặc trưng HRV",
+      "noHrvFeatures": "Không có đặc trưng HRV."
+    },
+    "create": {
+      "title": "Tạo hồ sơ sức khỏe",
+      "description": "Tạo một hồ sơ sức khỏe giả lập cho hội viên.",
+      "memberIdLabel": "Mã hội viên *",
+      "memberIdPlaceholder": "VD: 208019534288613376",
+      "fileNameLabel": "Tên tệp",
+      "statusLabel": "Trạng thái",
+      "statusPlaceholder": "Chọn trạng thái",
+      "predictionLabel": "Dự đoán",
+      "predictionPlaceholder": "Chọn dự đoán",
+      "confidenceLabel": "Độ tin cậy (0-1)",
+      "hrvFeaturesLabel": "Đặc trưng HRV (JSON)",
+      "cancel": "Hủy",
+      "submitting": "Đang tạo...",
+      "submit": "Tạo hồ sơ",
+      "errors": {
+        "memberIdRequired": "Cần nhập mã hội viên",
+        "invalidJson": "Đặc trưng HRV phải là JSON hợp lệ",
+        "createFailed": "Không tạo được hồ sơ sức khỏe"
+      }
+    },
+    "chart": {
+      "title": "Tổng quan sức khỏe hệ thống",
+      "description": "Tổng hợp theo ngày kết quả phân loại nhịp tim của tất cả người dùng",
+      "loading": "Đang tải thống kê...",
+      "empty": "Không có dữ liệu thống kê nào trong khoảng thời gian đã chọn."
+    }
+  },
+  "nutritionRules": {
+    "title": "Ngưỡng đánh giá dinh dưỡng",
+    "description": "Ngưỡng mặc định của các quy tắc chấm xanh / vàng / đỏ cho người rung nhĩ. Quy tắc chỉ áp dụng cho bệnh nhân khi bác sĩ tick trong đơn ăn uống; bác sĩ có thể đặt ngưỡng riêng. Ngưỡng lưu trong cơ sở dữ liệu, sửa ở đây có hiệu lực ngay.",
+    "reload": "Tải lại",
+    "saving": "Đang lưu...",
+    "save": "Lưu thay đổi",
+    "priorityFallback": "Ưu tiên {{priority}}",
+    "resetInitial": "Giá trị ban đầu",
+    "limitLabel": "Đỏ (Nên hạn chế) khi trên",
+    "cautionLabel": "Vàng (Cần lưu ý) khi trên",
+    "notUsedPlaceholder": "Không dùng",
+    "source": "Nguồn: ",
+    "viewPaper": "Xem bài báo",
+    "updatedAt": "Cập nhật {{time}}",
+    "updatedBy": " bởi {{user}}",
+    "footer": "So sánh \"vượt quá\" trên 100 g phần ăn được. Gộp màu: có quy tắc đỏ là đỏ; không có đỏ mà có vàng là vàng; không có điểm xấu và có điểm tốt (Na/K thấp, hoặc giàu magie mà ít muối) là xanh. Tỷ lệ Na/K chỉ đỏ khi natri cũng vượt ngưỡng đỏ của muối; điểm magie chỉ tính khi natri không vượt ngưỡng vàng của muối. Để trống một ô nghĩa là quy tắc không có mức đó. Ngưỡng riêng bác sĩ đặt cho bệnh nhân luôn được ưu tiên hơn ngưỡng mặc định ở đây.",
+    "toast": {
+      "saved": "Đã lưu ngưỡng. Màu của các món sẽ tính theo ngưỡng mới ngay lập tức.",
+      "saveFailed": "Không lưu được ngưỡng."
+    },
+    "errors": {
+      "nonNegative": "Ngưỡng phải là số không âm.",
+      "atLeastOne": "Cần ít nhất một ngưỡng.",
+      "limitBelowCaution": "Ngưỡng đỏ phải lớn hơn hoặc bằng ngưỡng vàng.",
+      "goodAboveLimit": "Mức tốt không được cao hơn ngưỡng đỏ.",
+      "forbidden": "Bạn không có quyền sửa ngưỡng đánh giá.",
+      "loadFailed": "Không tải được ngưỡng đánh giá."
+    }
+  },
+  "needsActions": {
+    "page": {
+      "title": "Hàng đợi Xử lý Vận hành (Needs Action)",
+      "subtitle": "Các nghiệp vụ cần can thiệp xử lý, điều phối và đối soát ngoại tuyến (Vai trò: <role>{{role}}</role>)",
+      "refresh": "Làm mới",
+      "tabs": {
+        "all": "Tất cả",
+        "open": "Chờ xử lý",
+        "claimed": "Đang xử lý",
+        "resolved": "Đã xong"
+      },
+      "searchPlaceholder": "Tìm kiếm công việc...",
+      "typeFilterPlaceholder": "Lọc loại sự kiện",
+      "allTypes": "Tất cả loại sự kiện",
+      "loading": "Đang tải danh sách hàng đợi công việc...",
+      "emptyTitle": "Hàng đợi trống",
+      "emptyDescription": "Không có công việc vận hành nào cần xử lý trong danh mục được phân công cho vai trò của bạn.",
+      "assignee": "Phụ trách: #{{id}}",
+      "toast": {
+        "errorTitle": "Lỗi",
+        "loadFailed": "Không thể tải danh sách công việc cần xử lý."
+      },
+      "eventTypes": {
+        "PAYMENT_REQUIRES_REVIEW": "Xem xét thanh toán",
+        "PROVIDER_CANCELLATION_RECONCILIATION": "Hủy phía cổng thanh toán",
+        "REFUND_REVIEW_REQUIRED": "Xem xét hoàn tiền",
+        "REFUND_PROVIDER_FAILURE": "Lỗi hoàn tiền từ cổng thanh toán",
+        "DOCTOR_ACTIVE_CARE_INTERRUPTION": "Bác sĩ gián đoạn",
+        "MEMBER_ACTIVE_CARE_INTERRUPTION": "Hội viên gián đoạn",
+        "TERMINATION_REVIEW": "Xem xét chấm dứt",
+        "SUMMARY_PENDING": "Chờ tóm tắt",
+        "SUMMARY_OVERDUE": "Tóm tắt quá hạn",
+        "SUMMARY_ESCALATED": "Tóm tắt đã chuyển cấp"
+      }
+    },
+    "detail": {
+      "priority": {
+        "critical": "KHẨN CẤP (CRITICAL)",
+        "high": "CAO (HIGH)",
+        "normal": "BÌNH THƯỜNG (NORMAL)"
+      },
+      "status": {
+        "resolved": "ĐÃ XỬ LÝ (RESOLVED)",
+        "claimed": "ĐANG XỬ LÝ (CLAIMED)",
+        "open": "CHỜ XỬ LÝ (OPEN)"
+      },
+      "typeLabel": "Loại công việc",
+      "assignedRole": "Vai trò phân công",
+      "relatedObject": "Đối tượng liên quan",
+      "originalReference": "Tham chiếu gốc",
+      "createdAt": "Tạo lúc:",
+      "claimedByLabel": "Tiếp nhận bởi:",
+      "claimedBy": "Tài khoản #{{id}} ({{time}})",
+      "resolvedBy": "Đã giải quyết bởi Tài khoản #{{id}}:",
+      "actions": {
+        "close": "Đóng",
+        "claim": "Tiếp nhận xử lý",
+        "retryPayosCancellation": "Thử lại hủy PayOS",
+        "recommendRefund": "Tạo đề xuất hoàn tiền",
+        "processRefund": "Xử lý hoàn tiền",
+        "resolve": "Hoàn tất xử lý"
+      },
+      "resolveDialog": {
+        "title": "Ghi nhận kết quả xử lý #{{id}}",
+        "label": "Ghi chú giải quyết",
+        "placeholder": "Nêu rõ phương án xử lý đã thực hiện để đóng công việc này...",
+        "cancel": "Hủy",
+        "saving": "Đang lưu...",
+        "confirm": "Xác nhận đóng công việc"
+      },
+      "toast": {
+        "claimedTitle": "Đã tiếp nhận",
+        "claimedDescription": "Bạn đã nhận phụ trách công việc #{{id}}.",
+        "claimErrorTitle": "Lỗi tiếp nhận",
+        "claimFailed": "Không thể tiếp nhận công việc.",
+        "errorTitle": "Lỗi",
+        "missingPaymentId": "Không tìm thấy Payment ID tham chiếu.",
+        "cancellationSentTitle": "Đã gửi lệnh hủy",
+        "cancellationSentDescription": "Đã thử lại lệnh hủy liên kết thanh toán cho Payment #{{id}}.",
+        "retryErrorTitle": "Lỗi thử lại",
+        "retryFailed": "Không thể gửi lệnh thử lại hủy thanh toán.",
+        "missingInfoTitle": "Thiếu thông tin",
+        "missingResolution": "Vui lòng nhập ghi chú kết quả giải quyết.",
+        "resolvedTitle": "Đã hoàn tất xử lý",
+        "resolvedDescription": "Công việc #{{id}} đã được đánh dấu là RESOLVED.",
+        "resolveErrorTitle": "Lỗi giải quyết",
+        "resolveFailed": "Không thể ghi nhận giải quyết."
+      }
+    },
+    "recommend": {
+      "title": "Đề xuất Hoàn tiền (Điều phối viên)",
+      "description": "Đề xuất mức hoàn trả cho giao dịch thanh toán #{{id}}. Quyết định và thực hiện sẽ do Quản trị viên phê duyệt.",
+      "originalPaidAmount": "Số tiền gốc đã thanh toán:",
+      "levelLabel": "Mức độ đề xuất hoàn trả",
+      "options": {
+        "fullTitle": "Hoàn 100%",
+        "fullDescription": "Toàn bộ số tiền",
+        "partialTitle": "Hoàn một phần",
+        "partialDescription": "Tùy chỉnh số tiền",
+        "noneTitle": "Không hoàn",
+        "noneDescription": "Từ chối hoàn trả"
+      },
+      "amountLabel": "Số tiền đề xuất hoàn (VND)",
+      "amountPlaceholder": "Nhập số tiền...",
+      "reasonLabel": "Lý do đề xuất",
+      "reasonPlaceholder": "Nêu rõ căn cứ đề xuất hoàn trả (vd: Bác sĩ bận việc đột xuất, Hội viên yêu cầu dừng trước hạn...)",
+      "contextLabel": "Bối cảnh vận hành bổ sung (Tùy chọn)",
+      "contextPlaceholder": "Ghi chú thêm về liên hệ Hội viên, chính sách áp dụng...",
+      "cancel": "Hủy",
+      "submitting": "Đang gửi...",
+      "submit": "Gửi đề xuất hoàn tiền",
+      "toast": {
+        "missingInfoTitle": "Thiếu thông tin",
+        "missingReason": "Vui lòng nhập lý do đề xuất hoàn tiền.",
+        "invalidAmountTitle": "Số tiền không hợp lệ",
+        "invalidAmount": "Vui lòng nhập số tiền hoàn hợp lệ lớn hơn 0.",
+        "successTitle": "Đã gửi đề xuất",
+        "successDescription": "Đề xuất hoàn tiền đã được chuyển đến Quản trị viên để phê duyệt.",
+        "errorTitle": "Lỗi đề xuất hoàn tiền",
+        "failed": "Không thể tạo đề xuất hoàn tiền."
+      }
+    },
+    "decide": {
+      "title": "Quyết định Phê duyệt Hoàn tiền (Quản trị viên)",
+      "description": "Xem xét đề xuất từ điều phối viên và ra quyết định chính thức cho giao dịch hoàn #{{id}}.",
+      "originalAmount": "Số tiền gốc:",
+      "coordinatorRecommendation": "Đề xuất của Điều phối:",
+      "recommendationFull": "Hoàn 100%",
+      "recommendationPartial": "Hoàn {{amount}} VND",
+      "recommendationNone": "Không hoàn",
+      "decisionLabel": "Quyết định",
+      "approveTitle": "Phê duyệt hoàn",
+      "approveDescription": "Chấp thuận chi hoàn trả",
+      "rejectTitle": "Từ chối hoàn",
+      "rejectDescription": "Bác bỏ yêu cầu hoàn",
+      "amountLabel": "Số tiền phê duyệt hoàn (VND)",
+      "amountPlaceholder": "Nhập số tiền...",
+      "reasonLabel": "Lý do quyết định",
+      "reasonPlaceholder": "Ghi rõ lý do phê duyệt hoặc từ chối...",
+      "cancel": "Hủy",
+      "processing": "Đang xử lý...",
+      "submitApprove": "Phê duyệt hoàn tiền",
+      "submitReject": "Từ chối hoàn tiền",
+      "toast": {
+        "missingInfoTitle": "Thiếu thông tin",
+        "missingReason": "Vui lòng nhập lý do ra quyết định.",
+        "invalidAmountTitle": "Số tiền không hợp lệ",
+        "invalidAmount": "Số tiền phê duyệt hoàn phải lớn hơn 0.",
+        "approvedTitle": "Đã phê duyệt hoàn tiền",
+        "rejectedTitle": "Đã từ chối hoàn tiền",
+        "recordedDescription": "Yêu cầu hoàn tiền #{{id}} đã được ghi nhận quyết định.",
+        "errorTitle": "Lỗi phê duyệt",
+        "failed": "Không thể thực hiện quyết định hoàn tiền."
+      }
+    },
+    "reconcile": {
+      "title": "Đối soát Hoàn tiền Ngoại tuyến (Reconciliation)",
+      "description": "Ghi nhận kết quả chuyển tiền hoàn trả thực tế cho giao dịch hoàn #{{id}}.",
+      "noticeTitle": "Lưu ý Vận hành & Cổng Thanh toán",
+      "noticeBody": "Cổng PayOS hiện chưa hỗ trợ lệnh hoàn tiền trực tiếp qua API (lệnh <code>/execute</code> sẽ trả về trạng thái thất bại kỹ thuật). Quản trị viên cần thực hiện chuyển khoản hoàn tiền thủ công qua ngân hàng, sau đó đối soát và lưu mã giao dịch tại đây.",
+      "approvedAmount": "Số tiền phê duyệt hoàn:",
+      "currentStatus": "Trạng thái hiện tại:",
+      "outcomeLabel": "Kết quả đối soát thực tế",
+      "outcomeSucceeded": "Hoàn tiền Thành công (SUCCEEDED)",
+      "outcomeFailed": "Đối soát Thất bại (FAILED)",
+      "providerRefundIdLabel": "Mã tham chiếu giao dịch / Mã hoàn tiền (Tùy chọn)",
+      "providerRefundIdPlaceholder": "VD: FT240829123456 hoặc REF-99120",
+      "providerResultLabel": "Bằng chứng & Ghi chú đối soát",
+      "providerResultPlaceholder": "VD: Đã chuyển khoản qua Vietcombank số TK 0123456789 (Hội viên Nguyễn Văn A) ngày 29/08/2026. Giao dịch thành công.",
+      "cancel": "Hủy",
+      "submitting": "Đang ghi nhận...",
+      "submit": "Xác nhận đối soát hoàn tất",
+      "toast": {
+        "missingInfoTitle": "Thiếu thông tin",
+        "missingResult": "Vui lòng nhập ghi chú / kết quả đối soát hoàn tiền.",
+        "successTitle": "Đối soát thành công",
+        "successDescription": "Đã cập nhật trạng thái hoàn tiền #{{id}} sang {{status}}.",
+        "errorTitle": "Lỗi đối soát",
+        "failed": "Không thể thực hiện đối soát hoàn tiền."
+      }
+    },
+    "refundDetail": {
+      "title": "Chi tiết Hoàn tiền #{{id}}",
+      "subtitle": "Quản lý vòng đời hoàn trả tiền dịch vụ tư vấn",
+      "status": {
+        "succeeded": "Thành công (SUCCEEDED)",
+        "approved": "Đã duyệt (APPROVED)",
+        "recommended": "Đã đề xuất (RECOMMENDED)",
+        "reviewRequired": "Cần đánh giá (REVIEW_REQUIRED)",
+        "rejected": "Bác bỏ (REJECTED)",
+        "failed": "Thất bại (FAILED)",
+        "processing": "Đang xử lý (PROCESSING)"
+      },
+      "loading": "Đang tải thông tin hoàn tiền...",
+      "notFound": "Không tìm thấy thông tin hoàn tiền.",
+      "originalPaymentStatus": "Trạng thái thanh toán gốc (Payment #{{id}}):",
+      "paymentHistoryBadge": "Lịch sử: PAID (Bảo lưu)",
+      "originalAmount": "Số tiền gốc",
+      "approvedAmount": "Số tiền phê duyệt",
+      "coordinatorRecommendation": "Đề xuất Điều phối:",
+      "noRecommendation": "Chưa có",
+      "recommendationReason": "Lý do đề xuất:",
+      "decisionReason": "Lý do quyết định (Admin):",
+      "reconciliationResult": "Kết quả đối soát ngoại tuyến:",
+      "providerReference": "Mã tham chiếu: #{{id}}",
+      "auditTitle": "Nhật ký Kiểm toán (Business Audit Trail)",
+      "auditLoading": "Đang tải nhật ký kiểm toán...",
+      "auditEmpty": "Chưa có sự kiện kiểm toán được ghi nhận.",
+      "auditActorUser": "Tài khoản #{{id}} ({{role}})",
+      "auditActorSystem": "Hệ thống",
+      "auditDefaultReason": "Cập nhật trạng thái",
+      "actions": {
+        "decide": "Phê duyệt / Từ chối",
+        "retrying": "Đang thử lại...",
+        "retryGateway": "Thử lại gửi cổng",
+        "reconcile": "Đối soát hoàn tiền"
+      },
+      "toast": {
+        "errorTitle": "Lỗi",
+        "loadFailed": "Không thể tải chi tiết hoàn tiền.",
+        "executedTitle": "Đã kích hoạt lệnh",
+        "executedDescription": "Lệnh hoàn tiền đã được gửi tới cổng thanh toán.",
+        "executeErrorTitle": "Lỗi thực thi",
+        "executeFailed": "Không thể kích hoạt hoàn tiền tự động."
+      }
+    }
+  },
+  "userDetail": {
+    "page": {
+      "loadError": "Không thể lấy thông tin chi tiết của người dùng từ hệ thống.",
+      "updateSuccess": "Tài khoản #{{id}} đã được cập nhật thành công.",
+      "updateFailed": "Cập nhật thông tin thất bại.",
+      "fakeRecordSuccess": "Đã sinh dữ liệu bản đo mẫu cho {{name}}.",
+      "fakeRecordFailed": "Tạo bản đo mẫu thất bại.",
+      "accessDeniedTitle": "Truy cập bị từ chối: Trang được bảo vệ",
+      "accessDeniedDescription": "Trang <strong>Chi tiết người dùng</strong> chỉ dành cho quyền <primary>ADMIN</primary> và <warning>SUPER_ADMIN</warning> của tenant.",
+      "loading": "Đang tải thông tin hồ sơ Member #{{id}}...",
+      "breadcrumbUsers": "Quản lý tài khoản",
+      "breadcrumbDetail": "Chi tiết hội viên",
+      "fallbackTitle": "Hội viên #{{id}}",
+      "description": "Thông tin cá nhân, lịch sử các bản đo và lịch sử các lần tư vấn của hội viên.",
+      "tabs": {
+        "personal": "1. Thông tin cá nhân",
+        "records": "2. Lịch sử các bản đo",
+        "consultations": "3. Lịch sử các lần tư vấn"
+      }
+    },
+    "sessionStatus": {
+      "active": "Đang diễn ra",
+      "completed": "Hoàn tất",
+      "closed": "Đã đóng",
+      "scheduled": "Đã lên lịch",
+      "extensionPending": "Chờ gia hạn",
+      "cancelled": "Đã hủy"
+    },
+    "pagination": {
+      "showingSessions": "Hiển thị <strong>{{start}}</strong> - <strong>{{end}}</strong> trong <strong>{{total}}</strong> phiên",
+      "showingRecords": "Hiển thị <strong>{{start}}</strong> - <strong>{{end}}</strong> trong <strong>{{total}}</strong> bản ghi",
+      "rowsPerPage": "Hàng mỗi trang:",
+      "rowsPerPageAria": "Số hàng mỗi trang",
+      "pageOf": "Trang <strong>{{page}}</strong> / <strong>{{total}}</strong>",
+      "previous": "Trước",
+      "next": "Sau"
+    },
+    "common": {
+      "refresh": "Làm mới",
+      "detail": "Chi tiết",
+      "unassigned": "Chưa phân công",
+      "doctorFallback": "Doctor #{{id}}",
+      "memberFallback": "Member #{{id}}",
+      "days": "{{count}} ngày"
+    },
+    "sessionDialog": {
+      "summaryStatus": {
+        "finalized": "Đã chốt tổng kết",
+        "escalated": "Leo thang (Escalated)",
+        "pending": "Chờ hoàn tất",
+        "inProgress": "Đang thực hiện",
+        "none": "Chưa có"
+      },
+      "sessionCode": "Mã phiên #{{id}}",
+      "exceptionalOverride": "Ghi đè ngoại lệ",
+      "operationalReviewRequired": "Cần xử lý vận hành",
+      "title": "Chi tiết Phiên Tư vấn",
+      "createdAt": "Khởi tạo lúc: {{date}}",
+      "member": "Người khám (Member)",
+      "doctor": "Bác sĩ phụ trách",
+      "idLabel": "ID: {{id}}",
+      "typeAndPackage": "Loại phiên & Gói dịch vụ",
+      "flow": "Luồng khám (Flow)",
+      "source": "Nguồn phiên (Source)",
+      "packageCode": "Mã gói dịch vụ",
+      "priceAndDuration": "Giá snapshot / Thời hạn",
+      "durationDays": " / {{count}} ngày",
+      "milestones": "Mốc thời gian phiên",
+      "startedAt": "Bắt đầu phiên",
+      "activatedAt": "Kích hoạt",
+      "endsAt": "Hạn kết thúc phiên",
+      "supportEndsAt": "Hạn hỗ trợ (Support ends)",
+      "completedAt": "Hoàn thành lúc",
+      "closedAt": "Đóng phiên lúc",
+      "reasonsTitle": "Lý do kết thúc & Trạng thái đóng",
+      "completionReason": "Lý do hoàn thành:",
+      "closeReason": "Lý do đóng phiên:",
+      "terminationReason": "Lý do chấm dứt sớm:",
+      "summaryTitle": "Tổng kết bệnh án & Leo thang",
+      "summaryStatusLabel": "Trạng thái tổng kết:",
+      "summaryDueAt": "Hạn nộp tổng kết:",
+      "summaryEscalatedAt": "Đã leo thang tổng kết lúc:",
+      "reason": "Lý do: {{reason}}",
+      "scope": "Phạm vi: {{scope}}",
+      "adminWarningTitle": "Cảnh báo quản trị & Ghi đè ngoại lệ",
+      "overriddenByAdmin": "Phiên được ghi đè quyền bởi Admin #{{id}}",
+      "operationalReviewLabel": "Yêu cầu rà soát vận hành: ",
+      "operationalReviewDefault": "Cần quản trị viên kiểm tra dữ liệu phiên",
+      "linksTitle": "Liên kết & Tin nhắn gần nhất",
+      "linkedRecord": "Bản đo liên kết",
+      "noLinkedRecord": "Không gắn bản đo",
+      "requestId": "Yêu cầu gốc (Request ID)",
+      "lastMessage": "Tin nhắn gần nhất:",
+      "closeWindow": "Đóng cửa sổ"
+    },
+    "consultationsTab": {
+      "summaryStatus": {
+        "finalized": "Đã tổng kết",
+        "escalated": "Leo thang",
+        "pending": "Chờ tổng kết"
+      },
+      "title": "Lịch sử các lần tư vấn ({{count}})",
+      "description": "Các phiên tư vấn trực tuyến giữa Member với bác sĩ chuyên khoa.",
+      "columns": {
+        "sessionCode": "Mã phiên",
+        "member": "Member",
+        "doctor": "Bác sĩ",
+        "status": "Trạng thái",
+        "typeSource": "Loại/Nguồn",
+        "package": "Gói dịch vụ",
+        "start": "Bắt đầu",
+        "end": "Kết thúc",
+        "summary": "Tổng kết",
+        "lastMessage": "Tin nhắn gần nhất",
+        "flags": "Cờ xử lý",
+        "actions": "Thao tác"
+      },
+      "loading": "Đang tải lịch sử phiên tư vấn...",
+      "emptyTitle": "Không có phiên tư vấn nào",
+      "emptyDescription": "Member này chưa tham gia phiên tư vấn sức khỏe nào với bác sĩ trên hệ thống.",
+      "packageFallback": "Gói #{{id}}",
+      "operationalReviewTooltip": "Cần rà soát vận hành",
+      "exceptionalOverrideTooltip": "Ghi đè ngoại lệ",
+      "viewDetailTooltip": "Xem chi tiết phiên tư vấn"
+    },
+    "healthRecordsTab": {
+      "status": {
+        "completed": "Hoàn tất",
+        "processing": "Đang xử lý",
+        "pending": "Chờ tải lên",
+        "failed": "Thất bại"
+      },
+      "prediction": {
+        "normal": "Bình thường (NORMAL)",
+        "afib": "Rung nhĩ (AFIB)",
+        "afibSuspected": "Nghi ngờ (AFIB_SUSPECTED)",
+        "uncertain": "Chưa chắc chắn (UNCERTAIN)"
+      },
+      "title": "Lịch sử các bản đo sức khỏe ({{count}})",
+      "description": "Dữ liệu đo tín hiệu PPG / ECG và các chỉ số HRV được ghi nhận từ thiết bị đeo hoặc ứng dụng.",
+      "creating": "Đang tạo...",
+      "createMock": "Tạo bản đo mẫu",
+      "columns": {
+        "recordCode": "Mã bản đo",
+        "memberId": "Member ID",
+        "fileName": "Tên file",
+        "status": "Trạng thái xử lý",
+        "prediction": "Kết quả dự đoán",
+        "confidence": "Độ tin cậy",
+        "time": "Thời gian đo/tạo",
+        "actions": "Thao tác"
+      },
+      "loading": "Đang tải lịch sử bản đo...",
+      "emptyTitle": "Chưa có bản ghi đo nào",
+      "emptyDescription": "Member này hiện chưa tải lên bất kỳ bản ghi tín hiệu sức khỏe nào. Bạn có thể bấm \"Tạo bản đo mẫu\" để thử nghiệm.",
+      "viewDetailTooltip": "Xem chi tiết bản đo"
+    },
+    "personalTab": {
+      "loading": "Đang tải thông tin cá nhân của Member...",
+      "notFound": "Không tìm thấy thông tin tài khoản.",
+      "noName": "Member chưa cập nhật tên",
+      "createFakeRecord": "Tạo bản đo giả lập",
+      "edit": "Chỉnh sửa",
+      "demographicsTitle": "Thông tin nhân khẩu học & Liên hệ",
+      "dateOfBirth": "Ngày sinh",
+      "notSet": "Chưa thiết lập",
+      "gender": "Giới tính",
+      "notSpecified": "Chưa xác định",
+      "phone": "Số điện thoại",
+      "notLinked": "Chưa liên kết",
+      "address": "Địa chỉ thường trú",
+      "notConfigured": "Chưa cấu hình",
+      "accountTitle": "Trạng thái tài khoản & Dữ liệu sức khỏe",
+      "operationalStatus": "Trạng thái vận hành:",
+      "registeredAt": "Ngày đăng ký tài khoản",
+      "totalRecords": "Tổng số bản đo sức khỏe",
+      "recordCount": "{{count}} bản đo",
+      "latestResult": "Kết quả đo gần nhất",
+      "saved": "Đã lưu"
+    }
+  },
+  "users": {
+    "page": {
+      "title": "Quản lý tài khoản",
+      "description": "Tra cứu, tạo mới và cập nhật tài khoản người dùng theo từng vai trò trên hệ thống.",
+      "addAccount": "Thêm tài khoản",
+      "tableAria": "Bảng dữ liệu tài khoản",
+      "roleLabel": {
+        "member": "Bệnh nhân",
+        "doctor": "Bác sĩ",
+        "careCoordinator": "Điều phối viên",
+        "admin": "Quản trị viên bệnh viện"
+      },
+      "unauthorized": {
+        "title": "Từ chối truy cập: Trang được bảo vệ",
+        "body": "Phân hệ <module>Quản lý người dùng & tài khoản</module> chỉ dành riêng cho quyền <admin>ADMIN</admin> và <superAdmin>SUPER_ADMIN</superAdmin>. Vai trò hiện tại của bạn là <role>{{role}}</role>.",
+        "hint": "Vui lòng chuyển đổi vai trò sang ADMIN hoặc SUPER_ADMIN để truy cập trang này."
+      },
+      "alerts": {
+        "loadFailed": "Không thể tải danh sách tài khoản từ máy chủ. Vui lòng kiểm tra kết nối mạng.",
+        "updated": "Đã cập nhật thông tin tài khoản cho {{name}} thành công.",
+        "created": "Đã khởi tạo tài khoản cho {{name}} thành công! Mật khẩu tạm thời đã được gửi qua email.",
+        "deleted": "Đã xóa vĩnh viễn tài khoản #{{id}} ({{email}}).",
+        "deleteFailed": "Không thể xóa tài khoản. Máy chủ từ chối yêu cầu xóa.",
+        "fakeRecordCreated": "Đã tạo hồ sơ sức khỏe mẫu cho {{name}} thành công.",
+        "fakeRecordFailed": "Không thể tạo hồ sơ sức khỏe mẫu.",
+        "careProfileUpdated": "Đã cập nhật hồ sơ điều phối và lịch tư vấn của bác sĩ thành công."
+      }
+    },
+    "roleTabs": {
+      "member": {
+        "label": "Bệnh nhân / Hội viên",
+        "description": "Tài khoản theo dõi sức khỏe lâm sàng"
+      },
+      "doctor": {
+        "label": "Bác sĩ / Lâm sàng",
+        "description": "Bác sĩ chẩn đoán và theo dõi từ xa"
+      },
+      "admin": {
+        "label": "Quản trị viên bệnh viện",
+        "description": "Quản lý vận hành hệ thống bệnh viện"
+      },
+      "activeFilter": "Bộ lọc đang chọn"
+    },
+    "status": {
+      "active": "Hoạt động",
+      "pendingVerify": "Chờ xác thực",
+      "inactive": "Không hoạt động",
+      "locked": "Đã khóa",
+      "banned": "Bị cấm"
+    },
+    "tableHeader": {
+      "title": "Danh sách tài khoản {{role}}",
+      "total": "{{count}} Tổng số",
+      "description": "Quản lý trạng thái tài khoản, thông tin định danh và bảo mật.",
+      "searchPlaceholder": "Tìm kiếm theo ID, email hoặc SĐT...",
+      "allStatuses": "Tất cả trạng thái"
+    },
+    "table": {
+      "columns": {
+        "id": "ID",
+        "user": "Thành viên / Người dùng",
+        "role": "Vai trò",
+        "status": "Trạng thái",
+        "phone": "Số điện thoại",
+        "createdAt": "Ngày tạo",
+        "actions": "Thao tác"
+      },
+      "loading": "Đang tải danh sách tài khoản người dùng...",
+      "emptyTitle": "Không tìm thấy tài khoản phù hợp",
+      "emptyDescription": "Hiện chưa có tài khoản nào khớp với tìm kiếm hoặc danh mục vai trò đã chọn.",
+      "actions": {
+        "view": "Xem chi tiết tài khoản",
+        "memberDetail": "Xem chi tiết hồ sơ Member (Thông tin, Bản đo & Tư vấn)",
+        "fakeRecord": "Tạo hồ sơ sức khỏe mẫu (giả lập)",
+        "careProfile": "Quản lý hồ sơ tư vấn & lịch nhận lịch",
+        "edit": "Chỉnh sửa thông tin tài khoản",
+        "delete": "Xóa tài khoản"
+      },
+      "pagination": {
+        "showing": "Hiển thị <b>{{start}}</b> - <b>{{end}}</b> trên tổng số <b>{{total}}</b> tài khoản",
+        "rowsPerPage": "Số dòng mỗi trang:",
+        "rowsPerPageAria": "Số dòng mỗi trang",
+        "page": "Trang <b>{{page}}</b> / <b>{{totalPages}}</b>",
+        "prev": "Trước",
+        "next": "Sau"
+      }
+    },
+    "detail": {
+      "unnamed": "Tài khoản chưa có tên",
+      "notRecorded": "Chưa ghi nhận",
+      "notUpdated": "Chưa cập nhật",
+      "gender": {
+        "male": "Nam",
+        "female": "Nữ",
+        "other": "Khác"
+      },
+      "statusSection": "Trạng thái hoạt động",
+      "contactSection": "Thông tin liên lạc",
+      "email": "Địa chỉ Email",
+      "phone": "Số điện thoại",
+      "noPhone": "Chưa liên kết SĐT",
+      "address": "Địa chỉ cư trú",
+      "noAddress": "Chưa cập nhật địa chỉ",
+      "personalSection": "Thông tin cá nhân",
+      "dateOfBirth": "Ngày sinh",
+      "genderLabel": "Giới tính",
+      "loadingHealth": "Đang tải dữ liệu hồ sơ sức khỏe...",
+      "healthOverview": "Tổng quan hồ sơ sức khỏe",
+      "totalRecords": "Tổng số bản ghi sức khỏe:",
+      "recordsCount": "{{count}} bản ghi",
+      "latestMeasurement": "Lần đo gần nhất:",
+      "saved": "Đã lưu",
+      "registeredAt": "Ngày đăng ký:",
+      "viewFullProfile": "Xem hồ sơ chi tiết (Bản đo & Tư vấn)",
+      "close": "Đóng",
+      "edit": "Chỉnh sửa"
+    },
+    "form": {
+      "badgeEdit": "Cập nhật hồ sơ tài khoản",
+      "badgeCreate": "Cổng cấp phát tài khoản mới",
+      "titleEdit": "Chỉnh sửa: {{name}}",
+      "titleCreate": "Thêm mới tài khoản người dùng",
+      "descriptionEdit": "Chỉnh sửa quyền hạn, thông tin liên lạc và trạng thái hoạt động của tài khoản.",
+      "descriptionCreate": "Đăng ký tài khoản người dùng mới. Hệ thống sẽ tự động gửi mật khẩu tạm thời qua email.",
+      "errors": {
+        "invalidEmail": "Vui lòng nhập địa chỉ email hợp lệ.",
+        "roleRequired": "Vai trò người dùng là bắt buộc.",
+        "displayNameRequired": "Tên hiển thị là bắt buộc.",
+        "displayNameTooLong": "Tên hiển thị không được vượt quá 120 ký tự.",
+        "phoneTooLong": "Số điện thoại không được vượt quá 30 ký tự.",
+        "dateOfBirthFormat": "Ngày sinh phải theo định dạng YYYY-MM-DD.",
+        "genderTooLong": "Giới tính không được vượt quá 20 ký tự.",
+        "addressTooLong": "Địa chỉ không được vượt quá 500 ký tự.",
+        "saveFailed": "Đã xảy ra lỗi không mong muốn khi lưu thông tin."
+      },
+      "email": "Địa chỉ Email",
+      "emailPlaceholder": "bacsi.nguyen@healthsense.com",
+      "role": "Vai trò tài khoản",
+      "roleAria": "Chọn vai trò tài khoản",
+      "roleOptions": {
+        "member": "MEMBER - Bệnh nhân / Hội viên",
+        "doctor": "DOCTOR - Bác sĩ lâm sàng",
+        "admin": "ADMIN - Quản trị viên bệnh viện"
+      },
+      "displayName": "Tên hiển thị",
+      "displayNamePlaceholder": "BS. Nguyễn Văn A",
+      "status": "Trạng thái tài khoản",
+      "statusAria": "Chọn trạng thái tài khoản",
+      "statusOptions": {
+        "active": "ACTIVE - Đang hoạt động",
+        "pendingVerify": "PENDING_VERIFY - Chờ xác thực email",
+        "inactive": "INACTIVE - Không hoạt động",
+        "locked": "LOCKED - Đã khóa bảo mật",
+        "banned": "BANNED - Bị cấm hoạt động"
+      },
+      "phone": "Số điện thoại (Không bắt buộc)",
+      "dateOfBirth": "Ngày sinh (YYYY-MM-DD)",
+      "gender": "Giới tính",
+      "genderAria": "Chọn giới tính",
+      "genderOptions": {
+        "male": "Nam",
+        "female": "Nữ",
+        "other": "Khác"
+      },
+      "address": "Địa chỉ cư trú",
+      "addressPlaceholder": "TP. Hồ Chí Minh, Việt Nam",
+      "passwordNoticeTitle": "Thông báo bảo mật mật khẩu tự động",
+      "passwordNoticeBody": "Không cần thiết lập mật khẩu thủ công. Sau khi lưu, hệ thống sẽ tự động cấp mật khẩu tạm thời an toàn và gửi hướng dẫn kích hoạt tài khoản qua email.",
+      "cancel": "Hủy",
+      "saveChanges": "Lưu thay đổi",
+      "create": "Tạo tài khoản"
+    },
+    "deleteDialog": {
+      "title": "Xác nhận xóa tài khoản người dùng?",
+      "description": "Bạn đang thực hiện thao tác xóa vĩnh viễn tài khoản của <name>{{name}}</name> (Mã ID: #{{id}}). Hành động này sẽ ngay lập tức hủy phiên đăng nhập, liên kết hồ sơ bệnh án và thu hồi toàn bộ quyền truy cập hệ thống.",
+      "roleLabel": "Vai trò tài khoản:",
+      "cancel": "Hủy bỏ",
+      "confirm": "Xác nhận xóa"
+    },
+    "fakeRecordDialog": {
+      "title": "Tạo hồ sơ sức khỏe giả lập?",
+      "description": "Bạn có chắc chắn muốn tạo một bản ghi hồ sơ sức khỏe mẫu cho bệnh nhân <name>{{name}}</name> (Mã ID: #{{id}}) không? Dữ liệu này sẽ được hệ thống sinh ngẫu nhiên để phục vụ mục đích thử nghiệm và theo dõi lâm sàng.",
+      "recipientLabel": "Tài khoản tiếp nhận:",
+      "cancel": "Hủy bỏ",
+      "confirm": "Xác nhận tạo"
+    }
+  }
+}

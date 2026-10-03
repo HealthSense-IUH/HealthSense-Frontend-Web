@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom"
 import { ClipboardList, Search } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
+import i18n, { currentIntlLocale } from "@/lib/i18n"
 import { USER_ROLES } from "@/constants/roles"
 import { useAuthStore } from "@/stores/auth-store"
 import type { DietPrescriptionRule } from "@/types/nutrition"
@@ -18,19 +20,16 @@ function describe(rule: DietPrescriptionRule, sodium?: DietPrescriptionRule) {
     sodium && { limit: sodium.effectiveLimit, caution: sodium.effectiveCaution }
   )
   const custom = rule.limit != null || rule.caution != null || rule.good != null
-  return text ? `${text}${custom ? " (bác sĩ đặt riêng cho bạn)" : ""}.` : ""
+  if (!text) return ""
+  return custom ? i18n.t("nutrition:dietPrescription.ruleCustom", { text }) : i18n.t("nutrition:dietPrescription.rule", { text })
 }
 
-const LEGEND = [
-  { level: "GOOD", text: "Không có điểm xấu và có điểm tốt cho nhịp tim." },
-  { level: "OK", text: "Không vướng quy tắc nào, cũng chưa có điểm tốt nổi bật." },
-  { level: "CAUTION", text: "Ăn được, chú ý lượng." },
-  { level: "LIMIT", text: "Nên hạn chế hoặc tránh." },
-  { level: "UNKNOWN", text: "Nguồn dữ liệu thiếu số liệu để đánh giá." },
-] as const
+/** Chú giải màu; nội dung lấy theo khoá dietPrescription.legend.<LEVEL> */
+const LEGEND = ["GOOD", "OK", "CAUTION", "LIMIT", "UNKNOWN"] as const
 
 /** Tab "Đơn ăn uống": các quy tắc bác sĩ áp dụng trong đơn, lời dặn thêm và cách đọc màu của món. */
 export function DietPrescriptionTab() {
+  const { t } = useTranslation("nutrition")
   const role = useAuthStore((s) => s.userSession?.role)
   const isMember = role === USER_ROLES.MEMBER
   const { data: prescription, isLoading, isError, refetch } = useMyDietPrescription(isMember)
@@ -38,7 +37,7 @@ export function DietPrescriptionTab() {
   if (!isMember) {
     return (
       <div className="rounded-2xl border border-dashed border-slate-200 p-6 text-center text-sm text-muted-foreground">
-        Đơn ăn uống chỉ dành cho hội viên. Bác sĩ kê đơn cho bệnh nhân trong tab "Dinh dưỡng" của phiên tư vấn.
+        {t("dietPrescription.membersOnly")}
       </div>
     )
   }
@@ -48,9 +47,9 @@ export function DietPrescriptionTab() {
   if (isError || !prescription) {
     return (
       <div className="rounded-2xl border border-dashed border-slate-200 p-6 text-center text-sm text-muted-foreground space-y-2">
-        <p>Không tải được đơn ăn uống.</p>
+        <p>{t("dietPrescription.loadError")}</p>
         <button type="button" onClick={() => refetch()} className="text-primary font-medium hover:underline cursor-pointer">
-          Thử lại
+          {t("common.retry")}
         </button>
       </div>
     )
@@ -70,23 +69,23 @@ export function DietPrescriptionTab() {
             </div>
             <div>
               <h2 className="text-lg font-bold text-foreground">
-                Đơn ăn uống của bạn
+                {t("dietPrescription.title")}
               </h2>
               <p className="text-xs sm:text-sm text-muted-foreground">
                 {activeRules.length > 0
-                  ? `Bác sĩ kê trong buổi tư vấn${
-                      prescription.updatedAt
-                        ? ` (cập nhật ${new Date(prescription.updatedAt).toLocaleDateString("vi-VN")})`
-                        : ""
-                    }. Các món được chấm màu theo những quy tắc dưới đây.`
-                  : "Bác sĩ chưa kê quy tắc ăn uống nào cho bạn nên các món chưa được chấm màu, chỉ hiện số liệu dinh dưỡng."}
+                  ? prescription.updatedAt
+                    ? t("dietPrescription.subtitleUpdated", {
+                        date: new Date(prescription.updatedAt).toLocaleDateString(currentIntlLocale()),
+                      })
+                    : t("dietPrescription.subtitle")
+                  : t("dietPrescription.subtitleEmpty")}
               </p>
             </div>
           </div>
           <Button asChild variant="outline" size="sm" className="gap-1.5 self-start">
             <Link to="/app/general/nutrition?tab=foods">
               <Search className="w-3.5 h-3.5" />
-              Tra cứu món
+              {t("dietPrescription.searchFoods")}
             </Link>
           </Button>
         </div>
@@ -116,25 +115,22 @@ export function DietPrescriptionTab() {
 
         {prescription.note && (
           <div className="rounded-xl bg-slate-50 border border-slate-200/70 p-4">
-            <p className="text-xs font-semibold text-slate-600 mb-1">Bác sĩ dặn thêm</p>
+            <p className="text-xs font-semibold text-slate-600 mb-1">{t("dietPrescription.doctorNote")}</p>
             <p className="text-sm text-slate-800 whitespace-pre-line">{prescription.note}</p>
           </div>
         )}
       </section>
 
       <section className="rounded-2xl border border-border bg-card p-5 shadow-xs space-y-3">
-        <h2 className="text-base font-bold text-foreground">Cách đọc màu của món</h2>
+        <h2 className="text-base font-bold text-foreground">{t("dietPrescription.legendTitle")}</h2>
         <div className="grid gap-2 sm:grid-cols-2 text-xs text-muted-foreground">
-          {LEGEND.map((item) => (
-            <p key={item.level} className="flex items-center gap-2">
-              <DietAdviceBadge advice={{ level: item.level, reasons: [], personalized: true }} /> {item.text}
+          {LEGEND.map((level) => (
+            <p key={level} className="flex items-center gap-2">
+              <DietAdviceBadge advice={{ level, reasons: [], personalized: true }} /> {t(`dietPrescription.legend.${level}`)}
             </p>
           ))}
         </div>
-        <p className="text-xs text-muted-foreground">
-          Có điểm đỏ thì món là đỏ, không có đỏ mà có vàng thì là vàng. Mở từng món để xem lý do. Đánh giá chỉ so số liệu
-          trên 100 g với các ngưỡng, không thay thế lời khuyên trực tiếp của bác sĩ.
-        </p>
+        <p className="text-xs text-muted-foreground">{t("dietPrescription.legendNote")}</p>
       </section>
     </div>
   )

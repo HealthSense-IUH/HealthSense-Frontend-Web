@@ -15,84 +15,79 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
+import { useTranslation } from "react-i18next"
 
+type PillarKey = "timeDomain" | "frequencyDomain" | "nonlinearDomain"
+
+/**
+ * Phần không dịch của từng trụ cột (id, màu, công thức, đơn vị). Chữ hiển thị lấy từ
+ * landing:features.pillars.<key>.* lúc render.
+ */
 interface DomainPillar {
   id: string
-  step: string
-  title: string
-  subtitle: string
-  tagline: string
+  key: PillarKey
   accentColor: string
   borderColor: string
-  desc: string
-  keyStats: string[]
+  statKeys: string[]
   visualType: "ecg-time" | "frequency-spectrum" | "poincare-scatter"
-  technicalFeatures: { name: string; desc: string; formula: string; unit: string }[]
+  /** `unitKey` = đơn vị cần dịch (landing:features.units.<unitKey>), ngược lại dùng `unit` nguyên văn. */
+  technicalFeatures: { key: string; name: string; formula: string; unit?: string; unitKey?: string }[]
 }
 
 const domainPillars: DomainPillar[] = [
   {
     id: "time-domain",
-    step: "01 / MIỀN THỜI GIAN",
-    title: "BIẾN THIÊN TỨC THỜI",
-    subtitle: "Time-Domain Analysis (8 Chỉ số)",
-    tagline: "Đo đạc chính xác từng khoảng cách sóng R",
+    key: "timeDomain",
     accentColor: "from-primary-600 to-primary-600",
     borderColor: "border-primary-600 bg-primary-600",
-    desc: "AI quét liên tục từng nhịp đập qua thuật toán lọc đỉnh Pan-Tompkins. Các chỉ số RMSSD và pNN50 phản ánh tức thời phản xạ phó giao cảm và cảnh báo nhịp chậm/nhịp nhanh bất thường.",
-    keyStats: ["RMSSD nhạy > 50ms", "8 Đặc trưng thời gian thực", "Khung trượt 30 giây"],
+    statKeys: ["s1", "s2", "s3"],
     visualType: "ecg-time",
     technicalFeatures: [
-      { name: "HR_mean", desc: "Nhịp tim trung bình trong khung cửa sổ quan sát", formula: "60 / Mean(RR)", unit: "BPM" },
-      { name: "Mean_NN", desc: "Khoảng thời gian trung bình giữa 2 nhịp bình thường", formula: "1/N * Σ(RR_i)", unit: "ms" },
-      { name: "SDNN", desc: "Độ lệch chuẩn khoảng NN, biểu thị dung lượng thần kinh tim", formula: "std(RR)", unit: "ms" },
-      { name: "RMSSD", desc: "Căn bậc hai trung bình bình phương sai số các nhịp kề (Chỉ số Vàng)", formula: "sqrt(1/(N-1) * Σ(ΔRR_i)^2)", unit: "ms" },
-      { name: "NN50", desc: "Số lượng các cặp nhịp chênh lệch > 50ms", formula: "Count(|ΔRR| > 50ms)", unit: "Lần" },
-      { name: "pNN50", desc: "Tỷ lệ phần trăm các cặp nhịp chênh lệch > 50ms", formula: "(NN50 / Total_NN) * 100", unit: "%" },
-      { name: "CV_NN", desc: "Hệ số biến thiên phân tán chuẩn hóa", formula: "SDNN / Mean_NN", unit: "Ratio" }
+      { key: "hrMean", name: "HR_mean", formula: "60 / Mean(RR)", unit: "BPM" },
+      { key: "meanNn", name: "Mean_NN", formula: "1/N * Σ(RR_i)", unit: "ms" },
+      { key: "sdnn", name: "SDNN", formula: "std(RR)", unit: "ms" },
+      { key: "rmssd", name: "RMSSD", formula: "sqrt(1/(N-1) * Σ(ΔRR_i)^2)", unit: "ms" },
+      { key: "nn50", name: "NN50", formula: "Count(|ΔRR| > 50ms)", unitKey: "times" },
+      { key: "pnn50", name: "pNN50", formula: "(NN50 / Total_NN) * 100", unit: "%" },
+      { key: "cvNn", name: "CV_NN", formula: "SDNN / Mean_NN", unit: "Ratio" }
     ]
   },
   {
     id: "frequency-domain",
-    step: "02 / MIỀN TẦN SỐ",
-    title: "CÂN BẰNG THẦN KINH",
-    subtitle: "Frequency-Domain FFT (6 Chỉ số)",
-    tagline: "Phân tách phổ sóng năng lượng tim mạch",
+    key: "frequencyDomain",
     accentColor: "from-primary-600 to-primary-700",
     borderColor: "border-primary-600 bg-primary-600",
-    desc: "Nội suy chuỗi RR 4Hz và phân tích mật độ phổ Welch PSD. Tỷ lệ LF/HF làm rõ sự cân bằng giữa thần kinh giao cảm (áp lực, co mạch) và phó giao cảm (thư giãn, hồi phục).",
-    keyStats: ["LF: 0.04 - 0.15 Hz", "HF: 0.15 - 0.40 Hz", "Tỷ số cân bằng LF/HF"],
+    statKeys: ["s1", "s2", "s3"],
     visualType: "frequency-spectrum",
     technicalFeatures: [
-      { name: "LF", desc: "Công suất dải tần số thấp (Hoạt động giao cảm & vận mạch)", formula: "∫(0.04-0.15Hz) PSD df", unit: "ms²" },
-      { name: "HF", desc: "Công suất dải tần số cao (Phó giao cảm & hô hấp RSA)", formula: "∫(0.15-0.40Hz) PSD df", unit: "ms²" },
-      { name: "LF_norm", desc: "Công suất LF chuẩn hóa theo tổng năng lượng khả dụng", formula: "LF / (Total - VLF) * 100", unit: "n.u." },
-      { name: "HF_norm", desc: "Công suất HF chuẩn hóa phản ánh hoạt động dây X", formula: "HF / (Total - VLF) * 100", unit: "n.u." },
-      { name: "LF/HF Ratio", desc: "Tỷ lệ cân bằng giao cảm / phó giao cảm kinh điển", formula: "LF_Power / HF_Power", unit: "Ratio" },
-      { name: "Total_Power", desc: "Tổng năng lượng sinh học toàn dải tần số", formula: "∫(0-0.40Hz) PSD df", unit: "ms²" }
+      { key: "lf", name: "LF", formula: "∫(0.04-0.15Hz) PSD df", unit: "ms²" },
+      { key: "hf", name: "HF", formula: "∫(0.15-0.40Hz) PSD df", unit: "ms²" },
+      { key: "lfNorm", name: "LF_norm", formula: "LF / (Total - VLF) * 100", unit: "n.u." },
+      { key: "hfNorm", name: "HF_norm", formula: "HF / (Total - VLF) * 100", unit: "n.u." },
+      { key: "lfHfRatio", name: "LF/HF Ratio", formula: "LF_Power / HF_Power", unit: "Ratio" },
+      { key: "totalPower", name: "Total_Power", formula: "∫(0-0.40Hz) PSD df", unit: "ms²" }
     ]
   },
   {
     id: "nonlinear-domain",
-    step: "03 / PHI TUYẾN TÍNH",
-    title: "ĐỊNH DANH RUNG NHĨ",
-    subtitle: "Non-Linear Poincaré & SampEn (3 Chỉ số)",
-    tagline: "Nhận diện tính hỗn loạn và bất định của tim",
+    key: "nonlinearDomain",
     accentColor: "from-primary-600 to-success-700",
     borderColor: "border-primary-600 bg-primary-600",
-    desc: "Sử dụng đồ thị phân tán Poincaré (SD1/SD2) và Entropy mẫu (SampEn). Khi xảy ra Rung Nhĩ (AFib), nhịp tim mất tính chu kỳ làm SampEn tăng vọt — đây là chìa khóa phát hiện bệnh sớm.",
-    keyStats: ["Entropy Mẫu (SampEn)", "Đồ thị Poincaré SD1/SD2", "Độ chính xác 98.65%"],
+    statKeys: ["s1", "s2", "s3"],
     visualType: "poincare-scatter",
     technicalFeatures: [
-      { name: "SD1", desc: "Bán kính trục ngắn Poincaré: Biến thiên tức thời nhịp kề", formula: "sqrt(1/2 * Var(ΔRR))", unit: "ms" },
-      { name: "SD2", desc: "Bán kính trục dài Poincaré: Biến thiên tổng thể dài hạn", formula: "sqrt(2*Var(RR) - 1/2*Var(ΔRR))", unit: "ms" },
-      { name: "SampEn", desc: "Entropy Mẫu đo lường tính bất định và hỗn loạn nhịp (Chỉ số Vàng)", formula: "-ln(A / B) [m=2, r=0.2*SDNN]", unit: "Entropy" }
+      { key: "sd1", name: "SD1", formula: "sqrt(1/2 * Var(ΔRR))", unit: "ms" },
+      { key: "sd2", name: "SD2", formula: "sqrt(2*Var(RR) - 1/2*Var(ΔRR))", unit: "ms" },
+      { key: "sampEn", name: "SampEn", formula: "-ln(A / B) [m=2, r=0.2*SDNN]", unit: "Entropy" }
     ]
   }
 ]
 
 export function AIFeaturesSection() {
+  const { t } = useTranslation("landing")
   const [selectedDomain, setSelectedDomain] = useState<DomainPillar | null>(null)
+  const pillarText = (pillar: DomainPillar, field: "step" | "title" | "subtitle" | "tagline" | "desc") =>
+    t(`features.pillars.${pillar.key}.${field}`)
 
   return (
     <section className="w-full py-24 sm:py-32 relative bg-transparent text-slate-900 overflow-hidden">
@@ -111,7 +106,7 @@ export function AIFeaturesSection() {
             viewport={{ once: true }}
             className="text-3xl sm:text-4xl lg:text-5xl font-black mb-4 text-slate-900 font-heading tracking-tight uppercase"
           >
-            16 Đặc Trưng Sinh Học Cốt Lõi
+            {t("features.title")}
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -120,7 +115,7 @@ export function AIFeaturesSection() {
             transition={{ delay: 0.1 }}
             className="text-slate-600 text-sm sm:text-base lg:text-lg leading-relaxed font-sans"
           >
-            Quy trình phân rã sóng điện tim thành 3 trụ cột toán học sinh học cốt lõi giúp AI chẩn đoán chính xác nguy cơ tim mạch.
+            {t("features.subtitle")}
           </motion.p>
         </div>
 
@@ -187,7 +182,7 @@ export function AIFeaturesSection() {
                       {/* Header in visual */}
                       <div className="flex items-center gap-2 mb-4">
                         <span className="text-[11px] font-black tracking-widest text-primary-700 font-heading uppercase">
-                          {pillar.step}
+                          {pillarText(pillar, "step")}
                         </span>
                       </div>
 
@@ -199,7 +194,7 @@ export function AIFeaturesSection() {
                           <div className="w-full h-full flex flex-col justify-between">
                             <div className="flex items-center justify-between text-[11px] font-bold text-slate-500">
                               <span className="flex items-center gap-1.5 text-primary-600">
-                                <HeartPulse className="w-4 h-4" /> Sóng ECG Liên Tục
+                                <HeartPulse className="w-4 h-4" /> {t("features.visual.ecg.label")}
                               </span>
                               <span className="font-mono bg-primary-50 text-primary-700 px-2 py-0.5 rounded-md font-bold">
                                 RMSSD: 42.8 ms
@@ -217,8 +212,8 @@ export function AIFeaturesSection() {
                             </svg>
 
                             <div className="flex items-center justify-between text-[10px] text-slate-400 font-medium pt-2 border-t border-slate-100">
-                              <span>Khoảng RR: 820ms</span>
-                              <span className="text-success-600 font-bold">✓ Nhịp xoang đều</span>
+                              <span>{t("features.visual.ecg.rrInterval")}</span>
+                              <span className="text-success-600 font-bold">{t("features.visual.ecg.status")}</span>
                             </div>
                           </div>
                         )}
@@ -228,7 +223,7 @@ export function AIFeaturesSection() {
                           <div className="w-full h-full flex flex-col justify-between">
                             <div className="flex items-center justify-between text-[11px] font-bold text-slate-500">
                               <span className="flex items-center gap-1.5 text-primary-600">
-                                <Waves className="w-4 h-4" /> Phổ Năng Lượng FFT
+                                <Waves className="w-4 h-4" /> {t("features.visual.spectrum.label")}
                               </span>
                               <span className="font-mono bg-primary-50 text-primary-700 px-2 py-0.5 rounded-md font-bold">
                                 LF/HF = 1.45
@@ -252,8 +247,8 @@ export function AIFeaturesSection() {
                             </div>
 
                             <div className="flex items-center justify-between text-[10px] text-slate-400 font-medium pt-2 border-t border-slate-100">
-                              <span>Dải: 0.04 - 0.40 Hz</span>
-                              <span className="text-primary-600 font-bold">✓ Cân bằng Giao cảm</span>
+                              <span>{t("features.visual.spectrum.band")}</span>
+                              <span className="text-primary-600 font-bold">{t("features.visual.spectrum.status")}</span>
                             </div>
                           </div>
                         )}
@@ -263,7 +258,7 @@ export function AIFeaturesSection() {
                           <div className="w-full h-full flex flex-col justify-between">
                             <div className="flex items-center justify-between text-[11px] font-bold text-slate-500">
                               <span className="flex items-center gap-1.5 text-primary-600">
-                                <Zap className="w-4 h-4" /> Đồ thị Poincaré (SD1/SD2)
+                                <Zap className="w-4 h-4" /> {t("features.visual.poincare.label")}
                               </span>
                               <span className="font-mono bg-primary-50 text-primary-700 px-2 py-0.5 rounded-md font-bold">
                                 SampEn: 1.18
@@ -285,8 +280,8 @@ export function AIFeaturesSection() {
                             </div>
 
                             <div className="flex items-center justify-between text-[10px] text-slate-400 font-medium pt-2 border-t border-slate-100">
-                              <span>SD1: Ngắn hạn | SD2: Dài hạn</span>
-                              <span className="text-primary-600 font-bold">✓ Phát hiện Rung nhĩ</span>
+                              <span>{t("features.visual.poincare.legend")}</span>
+                              <span className="text-primary-600 font-bold">{t("features.visual.poincare.status")}</span>
                             </div>
                           </div>
                         )}
@@ -302,31 +297,31 @@ export function AIFeaturesSection() {
                   
                   {/* Step Number Tag */}
                   <span className="text-xs font-black tracking-widest text-primary-700 font-heading uppercase mb-2">
-                    {pillar.step}
+                    {pillarText(pillar, "step")}
                   </span>
 
                   {/* Big Bold Headline (NEXT Guideline Style) */}
                   <h3 className="text-3xl sm:text-4xl lg:text-[42px] font-black leading-[1.1] text-slate-900 font-heading uppercase mb-3">
-                    {pillar.title}
+                    {pillarText(pillar, "title")}
                   </h3>
 
                   <p className="text-sm font-semibold text-slate-500 mb-4">
-                    {pillar.subtitle} — <span className="text-slate-800">{pillar.tagline}</span>
+                    {pillarText(pillar, "subtitle")} — <span className="text-slate-800">{pillarText(pillar, "tagline")}</span>
                   </p>
 
                   <p className="text-slate-600 text-sm sm:text-base leading-relaxed mb-6 font-sans">
-                    {pillar.desc}
+                    {pillarText(pillar, "desc")}
                   </p>
 
                   {/* Key Stats Pills */}
                   <div className="flex flex-wrap items-center gap-2 mb-6">
-                    {pillar.keyStats.map((stat) => (
-                      <span 
-                        key={stat}
+                    {pillar.statKeys.map((statKey) => (
+                      <span
+                        key={statKey}
                         className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-white border border-slate-200/90 text-slate-800 shadow-2xs font-heading"
                       >
                         <CheckCircle2 className="w-3.5 h-3.5 text-primary-600" />
-                        <span>{stat}</span>
+                        <span>{t(`features.pillars.${pillar.key}.stats.${statKey}`)}</span>
                       </span>
                     ))}
                   </div>
@@ -340,7 +335,7 @@ export function AIFeaturesSection() {
                           className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white hover:bg-slate-50 text-slate-800 font-bold text-xs sm:text-sm border border-slate-200 shadow-xs hover:shadow-sm hover:border-slate-300 transition-all cursor-pointer font-heading group"
                         >
                           <Sliders className="w-4 h-4 text-primary-600" />
-                          <span>Xem chi tiết danh sách {pillar.technicalFeatures.length} công thức</span>
+                          <span>{t("features.detailButton", { total: pillar.technicalFeatures.length })}</span>
                           <ChevronRight className="w-4 h-4 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
                         </button>
                       </DialogTrigger>
@@ -349,7 +344,7 @@ export function AIFeaturesSection() {
                         <DialogContent className="max-w-2xl bg-white p-6 sm:p-6 rounded-2xl">
                           <DialogHeader className="mb-4">
                             <DialogTitle className="text-2xl font-black font-heading text-slate-900 uppercase">
-                              {selectedDomain.title} — {selectedDomain.subtitle}
+                              {pillarText(selectedDomain, "title")} — {pillarText(selectedDomain, "subtitle")}
                             </DialogTitle>
                           </DialogHeader>
 
@@ -365,15 +360,15 @@ export function AIFeaturesSection() {
                                       {feat.name}
                                     </span>
                                     <span className="text-xs font-semibold text-slate-700">
-                                      {feat.desc}
+                                      {t(`features.pillars.${selectedDomain.key}.tech.${feat.key}`)}
                                     </span>
                                   </div>
                                   <p className="text-[11px] font-mono text-slate-500 mt-1.5 pl-0.5">
-                                    Công thức: <code className="bg-white px-1.5 py-0.5 rounded border border-slate-200 text-slate-800 font-semibold">{feat.formula}</code>
+                                    {t("features.formulaLabel")} <code className="bg-white px-1.5 py-0.5 rounded border border-slate-200 text-slate-800 font-semibold">{feat.formula}</code>
                                   </p>
                                 </div>
                                 <span className="text-[11px] font-mono font-bold text-slate-500 shrink-0 bg-white px-2 py-1 rounded-lg border border-slate-200 shadow-2xs">
-                                  {feat.unit}
+                                  {feat.unitKey ? t(`features.units.${feat.unitKey}`) : feat.unit}
                                 </span>
                               </div>
                             ))}

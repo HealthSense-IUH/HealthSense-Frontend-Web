@@ -8,6 +8,7 @@ import {
 } from "lucide-react"
 import { useNavigate, Link } from "react-router-dom"
 import { motion, AnimatePresence } from "framer-motion"
+import { useTranslation } from "react-i18next"
 
 import { AIPipelineSection } from "./components/AIPipelineSection"
 import { AIFeaturesSection } from "./components/AIFeaturesSection"
@@ -17,16 +18,19 @@ import { LandingFooter } from "./components/LandingFooter"
 import { useAuthStore } from "@/stores/auth-store"
 import { BrandSlogan } from "@/components/custom/BrandSlogan"
 import { UserMenu } from "@/components/layout/user-menu"
+import { LanguageSwitcher } from "@/components/layout/language-switcher"
 import { getDefaultRouteForRole } from "@/constants"
 
+/** Nhãn của từng mục lấy từ landing:nav.<id> lúc render. */
 const navItems = [
-  { id: "about", label: "Về chúng tôi" },
-  { id: "features", label: "Chỉ số sinh học" },
-  { id: "pipeline", label: "Mô hình AI" },
-  { id: "benchmark", label: "Kiểm chứng lâm sàng" },
-]
+  { id: "about" },
+  { id: "features" },
+  { id: "pipeline" },
+  { id: "benchmark" },
+] as const
 
 export default function LandingPage() {
+  const { t } = useTranslation("landing")
   const navigate = useNavigate()
   const userSession = useAuthStore((state) => state.userSession)
 
@@ -128,7 +132,7 @@ export default function LandingPage() {
                     : "hover:text-primary-600 hover:bg-slate-100/60"
                     }`}
                 >
-                  <span className="whitespace-nowrap">{item.label}</span>
+                  <span className="whitespace-nowrap">{t(`nav.${item.id}`)}</span>
                   {isActive && (
                     <motion.span
                       layoutId="activeNavIndicator"
@@ -142,13 +146,14 @@ export default function LandingPage() {
 
           {/* Action Button */}
           <div className="flex items-center gap-2 text-xs xl:text-sm font-semibold shrink-0">
+            <LanguageSwitcher />
             {userSession ? (
               <>
                 <button
                   onClick={() => navigate(getDefaultRouteForRole(userSession.role))}
                   className="hidden sm:flex bg-gradient-to-r from-primary-600 to-primary-600 hover:from-primary-700 hover:to-primary-700 text-white transition-all px-4 sm:px-5 py-2 rounded-full shadow-md shadow-primary-900/20 font-bold items-center gap-1.5 hover:-translate-y-0.5 cursor-pointer font-heading whitespace-nowrap shrink-0"
                 >
-                  <span>Dashboard</span>
+                  <span>{t("nav.dashboard")}</span>
                   <ArrowRight className="w-4 h-4" />
                 </button>
                 <UserMenu showAppLink />
@@ -159,13 +164,13 @@ export default function LandingPage() {
                   to="/login"
                   className="text-slate-700 hover:text-primary-700 hover:bg-slate-100/80 font-bold px-3 sm:px-4 py-2 rounded-full transition-all cursor-pointer font-heading whitespace-nowrap shrink-0"
                 >
-                  Đăng nhập
+                  {t("nav.login")}
                 </Link>
                 <Link
                   to="/register"
                   className="bg-gradient-to-r from-primary-600 to-primary-600 hover:from-primary-700 hover:to-primary-700 text-white transition-all px-4 sm:px-5 py-2 rounded-full shadow-md shadow-primary-900/20 font-bold flex items-center gap-1 hover:-translate-y-0.5 cursor-pointer font-heading whitespace-nowrap shrink-0"
                 >
-                  <span className="whitespace-nowrap">Trải nghiệm</span>
+                  <span className="whitespace-nowrap">{t("nav.tryIt")}</span>
                   <ArrowUpRight className="w-4 h-4 shrink-0" />
                 </Link>
               </>
@@ -183,15 +188,15 @@ export default function LandingPage() {
 
             {/* Main Headline - Crystal Clear & Impactful */}
             <h1 className="text-4xl sm:text-5xl lg:text-[54px] font-black leading-[1.12] mb-5 tracking-tight text-slate-900 font-heading uppercase">
-              Giám sát tim 24/7 <br />
+              {t("hero.titleLine1")} <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 via-primary-600 to-primary-600">
-                Phát hiện rung nhĩ sớm
+                {t("hero.titleLine2")}
               </span>
             </h1>
 
             {/* Subtitle - Crisp, easy to understand value proposition */}
             <p className="text-slate-600 text-base sm:text-lg mb-8 max-w-[490px] leading-relaxed font-normal">
-              Hệ sinh thái AI phân tích dữ liệu điện tim và SpO2 liên tục từ thiết bị đeo, nhận diện sớm loạn nhịp nguy hiểm và kết nối bác sĩ tim mạch tức thì.
+              {t("hero.subtitle")}
             </p>
 
             {/* CTAs */}
@@ -201,7 +206,7 @@ export default function LandingPage() {
                   onClick={() => navigate('/app/general/dashboard')}
                   className="bg-gradient-to-r from-primary-600 via-primary-600 to-primary-600 hover:from-primary-700 hover:to-primary-700 text-white font-extrabold px-7 py-3.5 rounded-full shadow-lg shadow-primary-900/25 hover:shadow-primary-900/35 hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center gap-2.5 cursor-pointer text-sm sm:text-base font-heading"
                 >
-                  <span>Xem Dashboard Sức khỏe</span>
+                  <span>{t("hero.ctaDashboard")}</span>
                   <ArrowUpRight className="w-5 h-5" />
                 </button>
               ) : (
@@ -209,7 +214,7 @@ export default function LandingPage() {
                   to="/login"
                   className="bg-gradient-to-r from-primary-600 via-primary-600 to-primary-600 hover:from-primary-700 hover:to-primary-700 text-white font-extrabold px-7 py-3.5 rounded-full shadow-lg shadow-primary-900/25 hover:shadow-primary-900/35 hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center gap-2.5 cursor-pointer text-sm sm:text-base font-heading"
                 >
-                  <span>Tham gia ngay</span>
+                  <span>{t("hero.ctaJoin")}</span>
                   <ArrowUpRight className="w-5 h-5" />
                 </Link>
               )}
@@ -219,7 +224,7 @@ export default function LandingPage() {
                 className="px-5 py-3.5 rounded-full font-bold text-slate-700 bg-white hover:bg-slate-50 border border-slate-200/80 shadow-2xs hover:shadow-xs transition-all flex items-center gap-2 text-sm sm:text-base cursor-pointer font-heading"
               >
                 <Play className="w-4 h-4 text-primary-600 fill-primary-600" />
-                <span>Tìm hiểu cách hoạt động</span>
+                <span>{t("hero.ctaHowItWorks")}</span>
               </button>
             </div>
 
@@ -227,15 +232,15 @@ export default function LandingPage() {
             <div className="grid grid-cols-3 gap-4 pt-6 border-t border-slate-200/80">
               <div className="flex flex-col">
                 <span className="text-xl sm:text-2xl font-black text-slate-900 font-heading tracking-tight">98.65%</span>
-                <span className="text-[11px] text-slate-500 font-medium leading-snug mt-0.5">Độ chính xác (Stacking)</span>
+                <span className="text-[11px] text-slate-500 font-medium leading-snug mt-0.5">{t("hero.metrics.accuracy")}</span>
               </div>
               <div className="flex flex-col">
                 <span className="text-xl sm:text-2xl font-black text-primary-600 font-heading tracking-tight">99.11%</span>
-                <span className="text-[11px] text-slate-500 font-medium leading-snug mt-0.5">Độ nhạy phát hiện (Recall)</span>
+                <span className="text-[11px] text-slate-500 font-medium leading-snug mt-0.5">{t("hero.metrics.recall")}</span>
               </div>
               <div className="flex flex-col">
                 <span className="text-xl sm:text-2xl font-black text-success-600 font-heading tracking-tight">&lt; 100ms</span>
-                <span className="text-[11px] text-slate-500 font-medium leading-snug mt-0.5">Độ trễ phân tích tín hiệu</span>
+                <span className="text-[11px] text-slate-500 font-medium leading-snug mt-0.5">{t("hero.metrics.latency")}</span>
               </div>
             </div>
 
@@ -281,7 +286,7 @@ export default function LandingPage() {
             className="group flex flex-col items-center gap-2 text-slate-400 hover:text-primary-600 transition-all cursor-pointer"
           >
             <span className="text-[11px] font-bold tracking-wider uppercase font-heading text-slate-500 group-hover:text-primary-600 transition-colors">
-              Kéo xuống khám phá
+              {t("hero.scrollExplore")}
             </span>
             <div className="w-9 h-9 rounded-full bg-white border border-slate-200/80 shadow-xs flex items-center justify-center group-hover:border-primary-300 group-hover:bg-primary-50 group-hover:scale-105 transition-all animate-bounce">
               <ChevronDown className="w-4 h-4 text-slate-600 group-hover:text-primary-600" />
@@ -322,7 +327,7 @@ export default function LandingPage() {
             exit={{ opacity: 0, scale: 0.8, y: 16 }}
             transition={{ duration: 0.2 }}
             onClick={scrollToTop}
-            aria-label="Cuộn lên đầu trang"
+            aria-label={t("scrollToTop")}
             className="fixed bottom-6 right-6 z-50 w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-white/95 hover:bg-white text-slate-700 hover:text-primary-600 border border-slate-200/90 shadow-lg shadow-primary-950/10 backdrop-blur-md flex items-center justify-center cursor-pointer transition-all hover:scale-110 hover:shadow-xl active:scale-95 group"
           >
             <ArrowUp className="w-5 h-5 transition-transform group-hover:-translate-y-0.5" />

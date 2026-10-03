@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react"
 import { useAuthStore } from "@/stores/auth-store"
 import { creditsApi } from "@/services/credits.service"
 import { parseApiError } from "@/lib/errorHandler"
+import i18n from "@/lib/i18n"
 import { CREDIT_ERROR_CODE_MESSAGES } from "@/constants/credits"
 import type {
   CreditOrderDetail,
@@ -131,7 +132,7 @@ export function useCreditPurchase(
       setSelectedPackage({
         id: saved.packageId,
         code: "",
-        name: saved.packageName || `Gói #${saved.packageId}`,
+        name: saved.packageName || i18n.t("credits:purchase.packageFallbackName", { id: saved.packageId }),
         creditQuantity: saved.creditQuantity || 0,
         priceVnd: saved.priceVnd || 0,
       })
@@ -233,7 +234,7 @@ export function useCreditPurchase(
    */
   const executePurchase = useCallback(async (): Promise<CreditOrderDetail | null> => {
     if (!selectedPackage || !idempotencyKey || !userId) {
-      setLastError("Thiếu thông tin gói hoặc phiên đăng nhập.")
+      setLastError(i18n.t("credits:purchase.errors.missingInfo"))
       return null
     }
 
@@ -281,7 +282,7 @@ export function useCreditPurchase(
       if (payment.provider === "PAYOS" && order.status === "PENDING_PAYMENT") {
         // Nếu payment đang CREATING: chưa có link checkout
         if (payment.status === "CREATING") {
-          setCreatingNotice("Giao dịch đang được khởi tạo. Vui lòng kiểm tra lại sau.")
+          setCreatingNotice(i18n.t("credits:purchase.errors.creatingNotice"))
           setHasPendingRetry(true)
           // Lưu pending payment để trang sau có thể nhận diện order
           saveStoredPendingPayment({
@@ -319,7 +320,7 @@ export function useCreditPurchase(
             window.location.assign(payment.checkoutUrl)
             return result
           } else {
-            setLastError("Liên kết thanh toán từ cổng thanh toán không an toàn (yêu cầu HTTPS).")
+            setLastError(i18n.t("credits:purchase.errors.insecureCheckoutUrl"))
             return null
           }
         }
@@ -344,7 +345,7 @@ export function useCreditPurchase(
 
       // 4. Trường hợp: REQUIRES_REVIEW
       if (order.status === "REQUIRES_REVIEW") {
-        setLastError("Giao dịch đã được ghi nhận và đang được hệ thống kiểm tra.")
+        setLastError(i18n.t("credits:purchase.errors.requiresReview"))
         setHasPendingRetry(false)
         clearStoredPurchaseIntent(userId)
         return result
@@ -361,27 +362,27 @@ export function useCreditPurchase(
       // Xử lý riêng các mã lỗi theo contract
       if (parsed.statusCode === 503 || errCode === 4108) {
         setIsFeatureDisabled(true)
-        setLastError(CREDIT_ERROR_CODE_MESSAGES[4108] || "Chức năng mua lượt tư vấn tạm thời chưa khả dụng.")
+        setLastError(CREDIT_ERROR_CODE_MESSAGES[4108] || i18n.t("credits:purchase.errors.featureDisabled"))
       } else if (errCode === 4103) {
-        setLastError("Xung đột khóa giao dịch (Idempotency). Vui lòng thử lại với cùng gói hoặc kiểm tra lại lịch sử đơn.")
+        setLastError(i18n.t("credits:purchase.errors.idempotencyConflict"))
       } else if (errCode === 4105) {
-        setLastError("Gói lượt tư vấn đã ngừng mở bán. Vui lòng tải lại danh sách gói.")
+        setLastError(i18n.t("credits:purchase.errors.packageUnavailable"))
       } else if (errCode === 4106) {
-        setLastError("Không tìm thấy thông tin đơn mua lượt hoặc đơn không thuộc về bạn.")
+        setLastError(i18n.t("credits:purchase.errors.orderNotFound"))
       } else if (errCode === 4107) {
-        setLastError("Bằng chứng hoặc trạng thái thanh toán không hợp lệ.")
+        setLastError(i18n.t("credits:purchase.errors.invalidPaymentEvidence"))
       } else if (errCode === 4020 || parsed.statusCode === 500 && String(parsed.userMessage).includes("PayOS")) {
-        setLastError("Cổng thanh toán PayOS chưa được cấu hình trên hệ thống.")
+        setLastError(i18n.t("credits:purchase.errors.payosNotConfigured"))
       } else if (errCode === 4021 || parsed.statusCode === 502) {
-        setLastError("Cổng thanh toán PayOS không phản hồi hoặc từ chối thao tác. Vui lòng thử lại sau.")
+        setLastError(i18n.t("credits:purchase.errors.payosUnavailable"))
         setHasPendingRetry(true)
       } else if (errCode && CREDIT_ERROR_CODE_MESSAGES[errCode]) {
         setLastError(CREDIT_ERROR_CODE_MESSAGES[errCode])
       } else if (parsed.isNetworkError || (parsed.statusCode != null && parsed.statusCode >= 500)) {
-        setLastError("Không thể kết nối tới máy chủ. Trạng thái giao dịch chưa được xác nhận; vui lòng bấm Thử lại để kiểm tra với cùng mã yêu cầu.")
+        setLastError(i18n.t("credits:purchase.errors.network"))
         setHasPendingRetry(true)
       } else {
-        setLastError(parsed.userMessage || "Giao dịch mua không thành công. Vui lòng thử lại.")
+        setLastError(parsed.userMessage || i18n.t("credits:purchase.errors.generic"))
       }
 
       // Lưu thông tin lỗi vào intent để reload vẫn giữ key

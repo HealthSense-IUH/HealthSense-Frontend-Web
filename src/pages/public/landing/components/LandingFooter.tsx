@@ -1,8 +1,10 @@
 import { ArrowUpRight } from "lucide-react"
 import { Link } from "react-router-dom"
+import { Trans, useTranslation } from "react-i18next"
 import { BrandSlogan } from "@/components/custom/BrandSlogan"
 
 export function LandingFooter() {
+  const { t } = useTranslation("landing")
   const scrollToSection = (id: string) => {
     const el = document.getElementById(id)
     if (el) {
@@ -39,7 +41,7 @@ export function LandingFooter() {
               </div>
 
               <p className="text-xs sm:text-sm text-slate-400 leading-relaxed max-w-md font-sans">
-                Hệ sinh thái y tế AI tiên phong giám sát nhịp tim và nồng độ SpO2 liên tục 24/7 từ thiết bị đeo, nhận diện sớm Rung nhĩ (AFib) và bảo vệ trái tim của bạn.
+                {t("footer.description")}
               </p>
             </div>
           </div>
@@ -47,7 +49,7 @@ export function LandingFooter() {
           {/* Col 2: Technology & Pipeline (3 Cols) */}
           <div className="lg:col-span-3 space-y-4">
             <h4 className="text-xs font-bold font-heading uppercase text-white tracking-wider">
-              Công Nghệ &amp; AI
+              {t("footer.techHeading")}
             </h4>
             <ul className="space-y-2.5 text-xs sm:text-sm font-sans text-slate-400">
               <li>
@@ -55,7 +57,7 @@ export function LandingFooter() {
                   onClick={() => scrollToSection("features")} 
                   className="hover:text-white transition-colors cursor-pointer text-left"
                 >
-                  16 Chỉ số biến thiên nhịp (HRV)
+                  {t("footer.tech.hrv")}
                 </button>
               </li>
               <li>
@@ -63,7 +65,7 @@ export function LandingFooter() {
                   onClick={() => scrollToSection("pipeline")} 
                   className="hover:text-white transition-colors cursor-pointer text-left"
                 >
-                  Mô hình Stacking Ensemble
+                  {t("footer.tech.stacking")}
                 </button>
               </li>
               <li>
@@ -71,7 +73,7 @@ export function LandingFooter() {
                   onClick={() => scrollToSection("benchmark")} 
                   className="hover:text-white transition-colors cursor-pointer text-left"
                 >
-                  Kiểm chứng lâm sàng (Benchmark)
+                  {t("footer.tech.benchmark")}
                 </button>
               </li>
               <li>
@@ -79,7 +81,7 @@ export function LandingFooter() {
                   onClick={() => scrollToSection("benchmark")} 
                   className="hover:text-white transition-colors cursor-pointer text-left"
                 >
-                  Trí tuệ nhân tạo minh bạch (XAI)
+                  {t("footer.tech.xai")}
                 </button>
               </li>
               <li>
@@ -87,7 +89,7 @@ export function LandingFooter() {
                   onClick={() => scrollToSection("benchmark")} 
                   className="hover:text-white transition-colors cursor-pointer text-left"
                 >
-                  Cơ sở dữ liệu y tế MIMIC-III
+                  {t("footer.tech.mimic")}
                 </button>
               </li>
             </ul>
@@ -96,7 +98,7 @@ export function LandingFooter() {
           {/* Col 3: Company & Values (3 Cols) */}
           <div className="lg:col-span-3 space-y-4">
             <h4 className="text-xs font-bold font-heading uppercase text-white tracking-wider">
-              Về Chúng Tôi
+              {t("footer.aboutHeading")}
             </h4>
             <ul className="space-y-2.5 text-xs sm:text-sm font-sans text-slate-400">
               <li>
@@ -104,7 +106,7 @@ export function LandingFooter() {
                   onClick={() => scrollToSection("about")} 
                   className="hover:text-white transition-colors cursor-pointer text-left"
                 >
-                  Câu chuyện HealthSense
+                  {t("footer.about.story")}
                 </button>
               </li>
               <li>
@@ -112,18 +114,18 @@ export function LandingFooter() {
                   onClick={() => scrollToSection("about")} 
                   className="hover:text-white transition-colors cursor-pointer text-left"
                 >
-                  Giá trị cốt lõi C.A.R.E
+                  {t("footer.about.care")}
                 </button>
               </li>
               <li>
                 <Link to="/login" className="hover:text-white transition-colors flex items-center gap-1">
-                  <span>Trang đăng nhập</span>
+                  <span>{t("footer.about.loginPage")}</span>
                   <ArrowUpRight className="w-3.5 h-3.5 opacity-60" />
                 </Link>
               </li>
               <li>
                 <Link to="/terms" className="hover:text-white text-primary-400 transition-colors flex items-center gap-1 font-bold">
-                  <span>Điều khoản &amp; Miễn trừ y khoa</span>
+                  <span>{t("footer.about.terms")}</span>
                   <ArrowUpRight className="w-3.5 h-3.5 opacity-80" />
                 </Link>
               </li>
@@ -135,10 +137,17 @@ export function LandingFooter() {
         {/* Medical Disclaimer & Copyright Bottom Bar */}
         <div className="pt-8 flex flex-col md:flex-row items-center justify-between gap-6 text-xs text-slate-500 font-sans">
           <p className="text-[11px] leading-relaxed max-w-2xl text-center md:text-left text-slate-500">
-            <strong>Tuyên bố miễn trừ y khoa:</strong> HealthSense là nền tảng thử nghiệm công nghệ AI hỗ trợ theo dõi nhịp tim và tầm soát Rung nhĩ. Kết quả mang tính tham khảo và không thay thế chẩn đoán từ bác sĩ. Xem chi tiết tại <Link to="/terms" className="text-primary-400 underline font-bold hover:text-primary-300">Điều khoản sử dụng &amp; Miễn trừ trách nhiệm</Link>.
+            <Trans
+              t={t}
+              i18nKey="footer.disclaimer"
+              components={{
+                strong: <strong />,
+                termsLink: <Link to="/terms" className="text-primary-400 underline font-bold hover:text-primary-300" />,
+              }}
+            />
           </p>
           <div className="text-center md:text-right shrink-0 text-slate-400">
-            © {new Date().getFullYear()} HealthSense. All rights reserved.
+            {t("footer.copyright", { year: new Date().getFullYear() })}
           </div>
         </div>
 

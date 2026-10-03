@@ -5,6 +5,7 @@ import {
   ChevronsRight,
   MoreHorizontal
 } from "lucide-react"
+import { Trans, useTranslation } from "react-i18next"
 import { Button } from "@/components/ui/button"
 import {
   Select,
@@ -41,6 +42,7 @@ export function PaginationControl({
   showTotalInfo = true,
   className = "",
 }: PaginationControlProps) {
+  const { t } = useTranslation()
   // If no pages or only 1 page with no totalElements, don't show controls unless totalElements exists
   if (totalPages <= 0) return null
 
@@ -84,22 +86,19 @@ export function PaginationControl({
       <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground order-2 sm:order-1">
         {showTotalInfo && totalElements !== undefined && (
           <span>
-            Hiển thị{" "}
-            <strong className="font-semibold text-foreground">
-              {startItem}-{endItem}
-            </strong>{" "}
-            trong tổng số{" "}
-            <strong className="font-semibold text-foreground">
-              {totalElements}
-            </strong>{" "}
-            bản ghi
+            <Trans
+              t={t}
+              i18nKey="pagination.summary"
+              values={{ start: startItem, end: endItem, total: totalElements }}
+              components={{ strong: <strong className="font-semibold text-foreground" /> }}
+            />
           </span>
         )}
 
         {showPageSize && onPageSizeChange && (
           <div className="flex items-center gap-1.5 ml-0 sm:ml-2">
             <span className="text-slate-300">|</span>
-            <span>Hiển thị:</span>
+            <span>{t("pagination.show")}</span>
             <Select
               value={String(pageSize)}
               onValueChange={(val) => onPageSizeChange(Number(val))}
@@ -116,7 +115,7 @@ export function PaginationControl({
                 ))}
               </SelectContent>
             </Select>
-            <span>/ trang</span>
+            <span>{t("pagination.perPage")}</span>
           </div>
         )}
       </div>
@@ -127,7 +126,7 @@ export function PaginationControl({
         <Button
           variant="outline"
           size="sm"
-          title="Trang đầu tiên"
+          title={t("pagination.first")}
           disabled={currentPage <= 1 || isLoading}
           onClick={() => onPageChange(1)}
           className="h-8 w-8 p-0 rounded-xl bg-white border border-border text-foreground shadow-2xs hover:bg-slate-50 cursor-pointer disabled:opacity-40"
@@ -139,7 +138,7 @@ export function PaginationControl({
         <Button
           variant="outline"
           size="sm"
-          title="Trang trước"
+          title={t("pagination.previous")}
           disabled={currentPage <= 1 || isLoading}
           onClick={() => onPageChange(currentPage - 1)}
           className="h-8 w-8 p-0 rounded-xl bg-white border border-border text-foreground shadow-2xs hover:bg-slate-50 cursor-pointer disabled:opacity-40"
@@ -186,7 +185,7 @@ export function PaginationControl({
         <Button
           variant="outline"
           size="sm"
-          title="Trang sau"
+          title={t("pagination.next")}
           disabled={currentPage >= totalPages || isLoading}
           onClick={() => onPageChange(currentPage + 1)}
           className="h-8 w-8 p-0 rounded-xl bg-white border border-border text-foreground shadow-2xs hover:bg-slate-50 cursor-pointer disabled:opacity-40"
@@ -198,7 +197,7 @@ export function PaginationControl({
         <Button
           variant="outline"
           size="sm"
-          title="Trang cuối cùng"
+          title={t("pagination.last")}
           disabled={currentPage >= totalPages || isLoading}
           onClick={() => onPageChange(totalPages)}
           className="h-8 w-8 p-0 rounded-xl bg-white border border-border text-foreground shadow-2xs hover:bg-slate-50 cursor-pointer disabled:opacity-40"

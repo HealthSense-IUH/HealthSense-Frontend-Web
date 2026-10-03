@@ -1,5 +1,6 @@
 import { useState, useCallback, useMemo } from "react"
 import { useNavigate } from "react-router-dom"
+import { Trans, useTranslation } from "react-i18next"
 import { RefreshCw, FileText, MessagesSquare, ChevronLeft, ChevronRight } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -37,6 +38,7 @@ export function SessionsPanel({
   onClose: (session: ConsultationSessionItem) => void
   onSessionRefreshed?: () => void
 }) {
+  const { t } = useTranslation("consultation")
   const navigate = useNavigate()
   const { effectiveRole } = useAppShell()
   const isDoctor = effectiveRole === USER_ROLES.DOCTOR
@@ -77,11 +79,11 @@ export function SessionsPanel({
     <Card>
       <CardHeader className="flex-row items-start justify-between gap-4">
         <div className="flex flex-col gap-1.5">
-          <CardTitle>{isAdmin ? "Quản lý Phiên Tư vấn" : "Phiên Tư vấn của tôi"}</CardTitle>
+          <CardTitle>{isAdmin ? t("sessionsPanel.titleAdmin") : t("sessionsPanel.titleMember")}</CardTitle>
           <CardDescription>
             {isAdmin 
-              ? "Danh sách tất cả các phiên tư vấn chăm sóc sức khỏe trên hệ thống (Sắp xếp theo mới nhất)." 
-              : "Chỉ các phiên đang hoạt động (ACTIVE) mới có thể gửi tin nhắn."}
+              ? t("sessionsPanel.descriptionAdmin")
+              : t("sessionsPanel.descriptionMember")}
           </CardDescription>
         </div>
       </CardHeader>
@@ -96,16 +98,16 @@ export function SessionsPanel({
               <div>
                 <div className="flex items-center gap-2">
                   <span className="font-semibold text-success-950 text-sm">
-                    Bạn đang có phiên tư vấn trực tiếp đang diễn ra!
+                    {t("sessionsPanel.activeBanner.title")}
                   </span>
                   <Badge className="bg-success-600 hover:bg-success-700 text-white text-[10px] font-bold">
-                    Đang hoạt động
+                    {t("sessionsPanel.activeBanner.badge")}
                   </Badge>
                 </div>
                 <p className="text-xs text-muted-foreground mt-0.5">
-                  Bác sĩ: <span className="font-medium text-foreground">{activeSession.doctorDisplayName || `#${activeSession.doctorId}`}</span> • Mã phiên: #{activeSession.id}
+                  {t("sessionsPanel.activeBanner.doctor")} <span className="font-medium text-foreground">{activeSession.doctorDisplayName || `#${activeSession.doctorId}`}</span> • {t("sessionsPanel.activeBanner.sessionId", { id: activeSession.id })}
                   {activeSession.lastMessagePreview && (
-                    <span className="italic"> • Tin nhắn mới nhất: &ldquo;{activeSession.lastMessagePreview}&rdquo;</span>
+                    <span className="italic"> • {t("sessionsPanel.activeBanner.latestMessage", { message: activeSession.lastMessagePreview })}</span>
                   )}
                 </p>
               </div>
@@ -116,7 +118,7 @@ export function SessionsPanel({
               className="gap-1.5 bg-success-600 hover:bg-success-700 text-white shadow-sm shrink-0"
             >
               <MessagesSquare className="w-4 h-4" />
-              Vào phòng tư vấn ngay
+              {t("sessionsPanel.activeBanner.enterNow")}
             </Button>
           </div>
         )}
@@ -124,18 +126,18 @@ export function SessionsPanel({
           <Table>
             <TableHeader>
               <TableRow className="bg-muted/30">
-                <TableHead className="whitespace-nowrap min-w-[130px] text-xs font-semibold">Mã phiên</TableHead>
-                <TableHead className="whitespace-nowrap min-w-[160px] text-xs font-semibold">Hội viên</TableHead>
-                <TableHead className="whitespace-nowrap min-w-[160px] text-xs font-semibold">Bác sĩ</TableHead>
-                <TableHead className="whitespace-nowrap min-w-[130px] text-xs font-semibold">Trạng thái</TableHead>
-                <TableHead className="whitespace-nowrap min-w-[150px] text-xs font-semibold">Ngày tạo</TableHead>
-                <TableHead className="whitespace-nowrap min-w-[150px] text-xs font-semibold">Hạn kết thúc</TableHead>
-                <TableHead className="min-w-[180px] text-xs font-semibold">Tin nhắn gần nhất</TableHead>
-                <TableHead className="text-right whitespace-nowrap min-w-[180px] text-xs font-semibold">Thao tác</TableHead>
+                <TableHead className="whitespace-nowrap min-w-[130px] text-xs font-semibold">{t("sessionsPanel.table.sessionId")}</TableHead>
+                <TableHead className="whitespace-nowrap min-w-[160px] text-xs font-semibold">{t("sessionsPanel.table.member")}</TableHead>
+                <TableHead className="whitespace-nowrap min-w-[160px] text-xs font-semibold">{t("sessionsPanel.table.doctor")}</TableHead>
+                <TableHead className="whitespace-nowrap min-w-[130px] text-xs font-semibold">{t("sessionsPanel.table.status")}</TableHead>
+                <TableHead className="whitespace-nowrap min-w-[150px] text-xs font-semibold">{t("sessionsPanel.table.createdAt")}</TableHead>
+                <TableHead className="whitespace-nowrap min-w-[150px] text-xs font-semibold">{t("sessionsPanel.table.endsAt")}</TableHead>
+                <TableHead className="min-w-[180px] text-xs font-semibold">{t("sessionsPanel.table.lastMessage")}</TableHead>
+                <TableHead className="text-right whitespace-nowrap min-w-[180px] text-xs font-semibold">{t("sessionsPanel.table.actions")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {paginatedSessions.length === 0 && <EmptyRow colSpan={8} text={loading ? "Đang tải danh sách..." : "Không có phiên tư vấn nào."} />}
+              {paginatedSessions.length === 0 && <EmptyRow colSpan={8} text={loading ? t("sessionsPanel.loading") : t("sessionsPanel.empty")} />}
               {paginatedSessions.map((session) => (
                 <TableRow 
                   key={session.id} 
@@ -150,7 +152,7 @@ export function SessionsPanel({
                       {statusBadge(session.status)}
                       {isDoctor && session.status === "COMPLETED" && session.summaryClosureStatus === "SUMMARY_PENDING" && (
                         <Badge className="bg-warning-500 hover:bg-warning-600 text-white text-[10px]">
-                          Cần tổng kết
+                          {t("sessionsPanel.needsSummary")}
                         </Badge>
                       )}
                     </div>
@@ -158,7 +160,7 @@ export function SessionsPanel({
                   <TableCell className="whitespace-nowrap font-mono text-xs text-muted-foreground">{formatDate(session.createdAt)}</TableCell>
                   <TableCell className="whitespace-nowrap font-mono text-xs text-muted-foreground">{formatDate(session.endsAt)}</TableCell>
                   <TableCell>
-                    <span className="block max-w-xs truncate text-xs text-slate-500">{session.lastMessagePreview ?? "Chưa có tin nhắn"}</span>
+                    <span className="block max-w-xs truncate text-xs text-slate-500">{session.lastMessagePreview ?? t("sessionsPanel.noMessages")}</span>
                   </TableCell>
                   <TableCell className="text-right whitespace-nowrap">
                     <div className="flex justify-end gap-2 items-center flex-nowrap">
@@ -170,7 +172,7 @@ export function SessionsPanel({
                           className="gap-1 shadow-sm"
                         >
                           <MessagesSquare className="w-3.5 h-3.5" />
-                          Vào phòng tư vấn
+                          {t("sessionsPanel.actions.enterRoom")}
                         </Button>
                       ) : (
                         <Button
@@ -180,7 +182,7 @@ export function SessionsPanel({
                           className="gap-1"
                         >
                           <MessagesSquare className="w-3.5 h-3.5" />
-                          Xem tin nhắn
+                          {t("sessionsPanel.actions.viewMessages")}
                         </Button>
                       )
                     )}
@@ -192,7 +194,7 @@ export function SessionsPanel({
                           className="gap-1 shadow-sm"
                         >
                           <MessagesSquare className="w-3.5 h-3.5" />
-                          Vào ca khám
+                          {t("sessionsPanel.actions.enterVisit")}
                         </Button>
                       ) : (
                         <Button
@@ -202,7 +204,7 @@ export function SessionsPanel({
                           className="gap-1"
                         >
                           <MessagesSquare className="w-3.5 h-3.5" />
-                          Xem ca khám
+                          {t("sessionsPanel.actions.viewVisit")}
                         </Button>
                       )
                     )}
@@ -214,7 +216,7 @@ export function SessionsPanel({
                         className="gap-1 text-success-700 border-success-300 hover:bg-success-50"
                       >
                         <FileText className="w-3.5 h-3.5" />
-                        Tổng kết / Chi tiết
+                        {t("sessionsPanel.actions.summaryDetail")}
                       </Button>
                     )}
                     {!isAdmin && !isDoctor && session.flowType !== "QUEUE_DISPATCH_V1" && (session.status === "ACTIVE" || session.status === "COMPLETED") && (
@@ -225,22 +227,22 @@ export function SessionsPanel({
                         className="gap-1 text-primary hover:bg-primary/5"
                       >
                         <RefreshCw className="w-3.5 h-3.5" />
-                        Gia hạn
+                        {t("sessionsPanel.actions.renew")}
                       </Button>
                     )}
                     {isAdmin && session.status === "ACTIVE" && (
                       <Button variant="destructive" size="sm" onClick={() => onClose(session)} disabled={loading}>
-                        Đóng phiên
+                        {t("sessionsPanel.actions.closeSession")}
                       </Button>
                     )}
                     {isAdmin && session.status !== "SCHEDULED" && (
                       <Button variant="outline" size="sm" onClick={() => setSummarySessionId(session.id)}>
-                        Xem tổng kết
+                        {t("sessionsPanel.actions.viewSummary")}
                       </Button>
                     )}
                     {!isAdmin && !isDoctor && (session.status === "COMPLETED" || session.status === "CANCELLED") && (
                       <Button variant="outline" size="sm" onClick={() => setSummarySessionId(session.id)}>
-                        Xem tổng kết
+                        {t("sessionsPanel.actions.viewSummary")}
                       </Button>
                     )}
                   </div>
@@ -255,7 +257,7 @@ export function SessionsPanel({
         {totalElements > 0 && (
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-3 text-xs text-muted-foreground border-t border-border/60">
             <div className="flex items-center gap-2">
-              <span>Hiển thị</span>
+              <span>{t("sessionsPanel.pagination.show")}</span>
               <Select
                 value={String(pageSize)}
                 onValueChange={(val) => {
@@ -267,13 +269,18 @@ export function SessionsPanel({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="5" className="text-xs">5 phiên / trang</SelectItem>
-                  <SelectItem value="10" className="text-xs">10 phiên / trang</SelectItem>
-                  <SelectItem value="20" className="text-xs">20 phiên / trang</SelectItem>
+                  <SelectItem value="5" className="text-xs">{t("sessionsPanel.pagination.perPage", { count: 5 })}</SelectItem>
+                  <SelectItem value="10" className="text-xs">{t("sessionsPanel.pagination.perPage", { count: 10 })}</SelectItem>
+                  <SelectItem value="20" className="text-xs">{t("sessionsPanel.pagination.perPage", { count: 20 })}</SelectItem>
                 </SelectContent>
               </Select>
               <span>
-                • Trang <strong className="text-foreground font-semibold">{validCurrentPage}</strong> / {totalPages} (Tổng {totalElements} phiên)
+                <Trans
+                  t={t}
+                  i18nKey="sessionsPanel.pagination.pageInfo"
+                  values={{ page: validCurrentPage, totalPages, total: totalElements }}
+                  components={{ strong: <strong className="text-foreground font-semibold" /> }}
+                />
               </span>
             </div>
 
@@ -286,7 +293,7 @@ export function SessionsPanel({
                   disabled={validCurrentPage <= 1}
                   className="h-8 px-2.5 gap-1 text-xs"
                 >
-                  <ChevronLeft className="h-3.5 w-3.5" /> Trước
+                  <ChevronLeft className="h-3.5 w-3.5" /> {t("sessionsPanel.pagination.previous")}
                 </Button>
 
                 <div className="flex items-center gap-1">
@@ -317,7 +324,7 @@ export function SessionsPanel({
                   disabled={validCurrentPage >= totalPages}
                   className="h-8 px-2.5 gap-1 text-xs"
                 >
-                  Sau <ChevronRight className="h-3.5 w-3.5" />
+                  {t("sessionsPanel.pagination.next")} <ChevronRight className="h-3.5 w-3.5" />
                 </Button>
               </div>
             )}

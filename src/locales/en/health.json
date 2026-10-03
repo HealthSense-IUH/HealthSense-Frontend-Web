@@ -1,1 +1,346 @@
-{}
+{
+  "predictionLabel": {
+    "normal": {
+      "label": "Normal",
+      "short": "Normal",
+      "badge": "Normal",
+      "advice": "Your heart rhythm signal is stable and within the normal physiological range. Keep monitoring your health regularly."
+    },
+    "uncertain": {
+      "label": "Inconclusive",
+      "short": "Inconclusive",
+      "badge": "Inconclusive",
+      "advice": "Some segments of the data contain mild noise. The result is for reference only; consider measuring again while sitting still."
+    },
+    "afibSuspected": {
+      "label": "Suspected AFib",
+      "short": "Suspected AFib",
+      "badge": "Suspected AFib",
+      "advice": "There are signs of arrhythmia or mildly irregular R-R interval variability. Measuring again at rest is recommended."
+    },
+    "afib": {
+      "label": "AFib alert",
+      "short": "AFib alert",
+      "badge": "AFib alert",
+      "advice": "The AI detected heart rate variability consistent with atrial fibrillation. Please contact a cardiologist for a diagnosis."
+    },
+    "processing": {
+      "label": "Analyzing",
+      "short": "Processing",
+      "advice": "The data is being analyzed by the AI model. Please wait a moment..."
+    },
+    "failed": {
+      "label": "Analysis failed",
+      "short": "Error",
+      "advice": "The signal is too short or contains too much motion noise. Please measure again while at rest."
+    },
+    "unknown": {
+      "label": "No conclusion yet",
+      "short": "Inconclusive",
+      "advice": "This record is waiting for data synchronization."
+    }
+  },
+  "afibHistory": {
+    "title": "Measurement history",
+    "description": "History of your on-demand measurements and AI screening alerts",
+    "refresh": "Refresh",
+    "uploadNew": "Upload new recording",
+    "searchPlaceholder": "Search by date / file name...",
+    "filter": {
+      "placeholder": "Status",
+      "all": "All statuses",
+      "normal": "Normal (Safe)",
+      "warning": "Alert (Atrial fibrillation)",
+      "processing": "Analyzing"
+    },
+    "view": {
+      "tableTitle": "Table view",
+      "table": "Table",
+      "cardTitle": "Card view",
+      "card": "Cards"
+    },
+    "legend": "AI legend:",
+    "empty": {
+      "title": "No recordings yet",
+      "description": "No recordings match your filters. Upload a new data file to start screening.",
+      "uploadFirst": "Upload your first recording"
+    },
+    "table": {
+      "timeAndFile": "Measured at & File",
+      "avgHeartRate": "Avg. heart rate",
+      "hrv": "HRV",
+      "aiConclusion": "AI conclusion",
+      "afibProbability": "AFib probability",
+      "actions": "Actions"
+    },
+    "viewDetails": "View details",
+    "card": {
+      "heartRate": "Heart rate: {{value}}",
+      "afibProbability": "Atrial fibrillation probability: {{value}}%",
+      "file": "File: {{name}}"
+    }
+  },
+  "recordDetail": {
+    "title": "Heart Rhythm Screening Result Details",
+    "measuredAt": "Measured at: {{date}}",
+    "file": "File: {{name}}",
+    "aiConclusion": "AI conclusion:",
+    "afibProbability": "Atrial fibrillation probability",
+    "avgHeartRate": "Avg. heart rate",
+    "lfHfRatio": "LF/HF ratio",
+    "hrvTitle": "Heart Rate Variability (HRV) metrics",
+    "table": {
+      "metric": "Metric",
+      "value": "Measured value",
+      "referenceRange": "Reference range",
+      "meaning": "Clinical meaning"
+    },
+    "meaning": {
+      "meanNn": "Average time between two consecutive beats",
+      "sdnn": "Overall variability of the autonomic nervous system",
+      "rmssd": "Parasympathetic nervous activity (vagal tone)",
+      "pnn50": "Percentage of consecutive beat pairs differing by > 50 ms",
+      "cv": "Relative coefficient of variation of heart rate",
+      "lf": "Low-frequency band power (sympathetic activity and blood pressure)",
+      "hf": "High-frequency band power (respiration and parasympathetic activity)",
+      "lfHf": "Sympathetic / parasympathetic balance ratio"
+    },
+    "fileSize": "Size: {{size}} KB",
+    "downloadUrlNotFound": "Download link for the file was not found.",
+    "downloadUrlFailed": "Unable to get the file download link.",
+    "downloading": "Downloading...",
+    "downloadCsv": "Download original CSV"
+  },
+  "measurementVisuals": {
+    "sqi": {
+      "validRatio": " • {{value}}% valid beats",
+      "good": "Signal quality: Good{{ratio}}",
+      "poor": "Signal quality: Poor — please measure again"
+    },
+    "tiles": {
+      "spo2Note": "Reference only (measured on device)",
+      "respiratoryRate": "Respiratory rate",
+      "breathsPerMin": "breaths/min",
+      "respiratoryRateNote": "12 - 20 breaths/min",
+      "hrRange": "Heart rate min - max",
+      "hrRangeNote": "During the session",
+      "perfusionNote": "Low → loose fit / weak perfusion",
+      "stressScore": "Stress score",
+      "stressNote": "Reference only (Baevsky SI)"
+    },
+    "wave": {
+      "title": "Pulse waveform (PPG) during the session",
+      "hint": "Each peak is one heartbeat. Regular waves → stable rhythm; chaotic waves with irregular amplitude → abnormal rhythm."
+    },
+    "poincare": {
+      "title": "Poincaré plot",
+      "howToRead": "How to read the plot",
+      "dotExplain": "Each dot is <b>a pair of consecutive heartbeats</b>: the horizontal position is the previous beat interval, the vertical position is the next beat interval.",
+      "tight": "A <b>tight cluster hugging the diagonal</b> → regular heart rhythm.",
+      "scattered": "A <b>widely scattered, cloud-like cluster</b> → abnormal beat-to-beat variability, a typical pattern of atrial fibrillation.",
+      "basedOn": "Based on {{count}} beat intervals recorded during the session."
+    }
+  },
+  "uploadMeasurement": {
+    "title": "Upload New Recording",
+    "subtitle": "Supports CSV files containing PPG / heart rate signals",
+    "selectedHint": "{{size}} KB - Click to choose a different file",
+    "dropzone": "Click to choose a file or drag and drop it here",
+    "supportedFormats": "Supported format: .CSV (max 20MB)",
+    "uploading": "Uploading...",
+    "submit": "Start AI Analysis",
+    "errors": {
+      "invalidFormat": "Please choose a data file in CSV (.csv) or TXT format.",
+      "tooLarge": "File size must not exceed 20MB.",
+      "noFile": "Please choose a measurement data file.",
+      "uploadFailed": "Unable to upload the measurement file."
+    },
+    "success": {
+      "title": "Upload successful!",
+      "description": "Your recording has been sent to the system and is being analyzed by AI."
+    }
+  },
+  "dashboard": {
+    "title": "Health overview",
+    "description": "Your latest cardiovascular metrics, daily measurement calendar and recent atrial fibrillation screenings."
+  },
+  "adminDashboard": {
+    "selectPeriod": "Select time period",
+    "selectOrganization": "Select healthcare facility or organization"
+  },
+  "greeting": {
+    "fallbackName": "there",
+    "morning": {
+      "text": "Good morning",
+      "subtext": "Wishing you an energetic new day and a healthy heart."
+    },
+    "afternoon": {
+      "text": "Good afternoon",
+      "subtext": "Keep up the positive energy and stay in tune with your heart's vital signs."
+    },
+    "evening": {
+      "text": "Good evening",
+      "subtext": "Relax your mind, take care of your sleep and check how steady your heart rhythm is."
+    }
+  },
+  "memberDashboard": {
+    "latestMeasurement": "Latest measurement",
+    "noData": "No data yet",
+    "afibProbability": "Atrial fibrillation probability",
+    "noAssessment": "No assessment yet",
+    "hrvRmssd": "Heart rate variability (RMSSD)",
+    "totalScreenings": "Total screenings",
+    "timesUnit": "times",
+    "screeningsBreakdown": "{{normal}} normal • {{warning}} alerts",
+    "recent": {
+      "title": "Recent Measurements",
+      "description": "Your 5 most recent measurements in the system",
+      "viewAll": "View all",
+      "empty": "No recordings yet. Upload your first file!",
+      "measuredAt": "Measured at",
+      "aiConclusion": "AI conclusion",
+      "afibProbability": "AFib probability",
+      "actions": "Actions",
+      "viewDetails": "View details"
+    }
+  },
+  "heatmap": {
+    "title": "Heart Rate Measurement Calendar & Heatmap",
+    "description": "Overview of screening frequency and daily safety distribution across the month",
+    "months": {
+      "0": "January",
+      "1": "February",
+      "2": "March",
+      "3": "April",
+      "4": "May",
+      "5": "June",
+      "6": "July",
+      "7": "August",
+      "8": "September",
+      "9": "October",
+      "10": "November",
+      "11": "December"
+    },
+    "weekdays": {
+      "mon": "Mon",
+      "tue": "Tue",
+      "wed": "Wed",
+      "thu": "Thu",
+      "fri": "Fri",
+      "sat": "Sat",
+      "sun": "Sun"
+    },
+    "daysMeasured": "Days measured",
+    "totalHistoryDays": "Total history days",
+    "daysCount": "{{count}} days",
+    "legendHasData": "Has recordings",
+    "legendNoData": "Not measured",
+    "dayTooltipSuffix": " (Click to view measurements)",
+    "selected": {
+      "title": "Measurements on {{date}}",
+      "count": "{{count}} measurements",
+      "loading": "Loading measurement data for {{date}}...",
+      "empty": "No recordings found on this day.",
+      "file": "File: {{name}}",
+      "heartRate": "Heart rate: {{value}}",
+      "afibProbability": "AFib probability: {{value}}%",
+      "details": "Details",
+      "count_one": "{{count}} measurement",
+      "count_other": "{{count}} measurements"
+    },
+    "daysCount_one": "{{count}} day",
+    "daysCount_other": "{{count}} days"
+  },
+  "careHistory": {
+    "title": "Care history",
+    "description": "Look up your 1-on-1 consultation episodes, attending doctors and official medical summaries.",
+    "refresh": "Refresh",
+    "status": {
+      "active": "In progress",
+      "completed": "Completed",
+      "cancelled": "Cancelled",
+      "scheduled": "Scheduled"
+    },
+    "undetermined": "Not determined",
+    "empty": {
+      "title": "No care history yet",
+      "description": "You have not joined any consultation episodes yet. Subscribe to a care package to get started with a specialist."
+    },
+    "defaultPackageName": "Health consultation package",
+    "doctorLabel": "Doctor:",
+    "doctorFallback": "Doctor #{{id}}",
+    "startedAt": "Started: {{date}}",
+    "endsAt": "Ends: {{date}}",
+    "hasSummary": "Medical summary available",
+    "noSummary": "No medical summary yet",
+    "trackedRecords": "{{count}} tracked records",
+    "viewDetails": "View details",
+    "pagination": {
+      "summary": "Showing page {{page}} / {{totalPages}} ({{total}} care episodes)",
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "detail": {
+      "title": "Care Episode Details #{{id}}",
+      "attendingDoctor": "Attending doctor:",
+      "tabs": {
+        "overview": "Overview",
+        "summary": "Medical summary",
+        "records": "Shared records ({{count}})"
+      },
+      "package": "Service package",
+      "defaultPackageName": "Basic consultation package",
+      "packageCode": "Package code:",
+      "carePeriod": "Care period",
+      "startedAt": "Started:",
+      "endsAt": "Ends:",
+      "completedAt": "Completed:",
+      "closureStatus": "Record closure status:",
+      "summary": {
+        "general": "General summary",
+        "observations": "Clinical observations & assessment",
+        "recommendations": "Treatment & lifestyle recommendations",
+        "followUp": "Follow-up / monitoring plan",
+        "addenda": "Addenda ({{count}})",
+        "reason": "Reason: {{reason}}",
+        "emptyTitle": "There is no official medical summary for this care episode yet.",
+        "emptyDescription": "The attending doctor will complete the summary after the session ends."
+      },
+      "records": {
+        "fallbackName": "Record #{{id}}",
+        "measuredAt": "Measured on: {{date}}",
+        "saved": "Saved",
+        "empty": "No records were shared during this episode."
+      }
+    }
+  },
+  "reports": {
+    "title": "Health reports",
+    "description": "Summary of your {{count}} most recent measurements",
+    "refresh": "Refresh",
+    "loadError": "Unable to load report data. Please try again.",
+    "avgHeartRate": "Average heart rate",
+    "heartRateReference": "Reference range: 60 - 100 BPM",
+    "avgSpo2": "Average SpO2",
+    "spo2Reference": "Reference value (measured on device)",
+    "spo2NoData": "No SpO2 data from the device yet",
+    "avgHrv": "Average HRV (RMSSD)",
+    "hrvHint": "Heart rate variability — higher is usually better",
+    "screening": {
+      "normal": "Normal",
+      "uncertain": "Inconclusive",
+      "afibSuspected": "Suspected atrial fibrillation",
+      "afib": "Atrial fibrillation",
+      "per30Days": "measurements / 30 days"
+    },
+    "trend": {
+      "title": "Daily heart rate trend",
+      "description": "Daily average / minimum / maximum, calculated from actual measurements",
+      "empty": "No measurements yet — measure with your HealthSense device to see trends.",
+      "tooltipDate": "Date {{date}}",
+      "max": "Maximum",
+      "avg": "Average",
+      "min": "Minimum"
+    }
+  }
+}

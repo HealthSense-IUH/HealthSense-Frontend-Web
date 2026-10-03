@@ -8,6 +8,7 @@ import {
   Stethoscope,
   XCircle,
 } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -21,6 +22,7 @@ import {
 } from "@/components/ui/dialog"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { currentIntlLocale } from "@/lib/i18n"
 import type { CareHistoryEpisodeResponse } from "@/types/consultation"
 
 interface CareHistoryDetailDialogProps {
@@ -34,27 +36,28 @@ export function CareHistoryDetailDialog({
   open,
   onOpenChange,
 }: CareHistoryDetailDialogProps) {
+  const { t } = useTranslation("health")
   if (!episode) return null
 
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "ACTIVE":
-        return <Badge className="bg-success-600 hover:bg-success-700 text-white">Đang diễn ra</Badge>
+        return <Badge className="bg-success-600 hover:bg-success-700 text-white">{t("careHistory.status.active")}</Badge>
       case "COMPLETED":
-        return <Badge className="bg-primary-600 hover:bg-primary-700 text-white">Đã hoàn thành</Badge>
+        return <Badge className="bg-primary-600 hover:bg-primary-700 text-white">{t("careHistory.status.completed")}</Badge>
       case "CANCELLED":
-        return <Badge variant="destructive">Đã hủy</Badge>
+        return <Badge variant="destructive">{t("careHistory.status.cancelled")}</Badge>
       case "SCHEDULED":
-        return <Badge variant="secondary">Đã lên lịch</Badge>
+        return <Badge variant="secondary">{t("careHistory.status.scheduled")}</Badge>
       default:
         return <Badge variant="outline">{status}</Badge>
     }
   }
 
   const formatDate = (val?: string | null) => {
-    if (!val) return "Chưa xác định"
+    if (!val) return t("careHistory.undetermined")
     try {
-      return new Date(val).toLocaleString("vi-VN", {
+      return new Date(val).toLocaleString(currentIntlLocale(), {
         day: "2-digit",
         month: "2-digit",
         year: "numeric",
@@ -76,22 +79,22 @@ export function CareHistoryDetailDialog({
             <div className="flex items-center gap-2">
               <Stethoscope className="h-5 w-5 text-primary" />
               <DialogTitle className="text-xl">
-                Chi tiết Đợt Chăm sóc #{episode.sessionId}
+                {t("careHistory.detail.title", { id: episode.sessionId })}
               </DialogTitle>
             </div>
             {getStatusBadge(episode.status)}
           </div>
           <DialogDescription>
-            Bác sĩ phụ trách: <span className="font-semibold text-foreground">{episode.doctorName || `Bác sĩ #${episode.doctorId}`}</span>
+            {t("careHistory.detail.attendingDoctor")} <span className="font-semibold text-foreground">{episode.doctorName || t("careHistory.doctorFallback", { id: episode.doctorId })}</span>
           </DialogDescription>
         </DialogHeader>
 
         <Tabs defaultValue="overview" className="flex-1 flex flex-col min-h-0">
           <div className="px-6 border-b">
             <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="overview">Tổng quan</TabsTrigger>
-              <TabsTrigger value="summary">Tổng kết Y khoa</TabsTrigger>
-              <TabsTrigger value="records">Hồ sơ đã chia sẻ ({episode.authorizedHealthRecords?.length || 0})</TabsTrigger>
+              <TabsTrigger value="overview">{t("careHistory.detail.tabs.overview")}</TabsTrigger>
+              <TabsTrigger value="summary">{t("careHistory.detail.tabs.summary")}</TabsTrigger>
+              <TabsTrigger value="records">{t("careHistory.detail.tabs.records", { count: episode.authorizedHealthRecords?.length || 0 })}</TabsTrigger>
             </TabsList>
           </div>
 
@@ -102,30 +105,30 @@ export function CareHistoryDetailDialog({
                 <div className="p-4 rounded-xl border bg-muted/30 space-y-2">
                   <div className="flex items-center gap-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                     <Package className="h-4 w-4 text-primary" />
-                    Gói dịch vụ
+                    {t("careHistory.detail.package")}
                   </div>
                   <p className="font-medium text-foreground">
-                    {episode.packageNameSnapshot || "Gói tư vấn cơ bản"}
+                    {episode.packageNameSnapshot || t("careHistory.detail.defaultPackageName")}
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    Mã gói: <span className="font-mono">{episode.packageCodeSnapshot || "N/A"}</span>
+                    {t("careHistory.detail.packageCode")} <span className="font-mono">{episode.packageCodeSnapshot || "N/A"}</span>
                   </p>
                 </div>
 
                 <div className="p-4 rounded-xl border bg-muted/30 space-y-2">
                   <div className="flex items-center gap-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                     <Clock className="h-4 w-4 text-primary" />
-                    Thời gian chăm sóc
+                    {t("careHistory.detail.carePeriod")}
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    Bắt đầu: <span className="font-medium text-foreground">{formatDate(episode.startedAt)}</span>
+                    {t("careHistory.detail.startedAt")} <span className="font-medium text-foreground">{formatDate(episode.startedAt)}</span>
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    Kết thúc: <span className="font-medium text-foreground">{formatDate(episode.endsAt)}</span>
+                    {t("careHistory.detail.endsAt")} <span className="font-medium text-foreground">{formatDate(episode.endsAt)}</span>
                   </p>
                   {episode.completedAt && (
                     <p className="text-xs text-muted-foreground">
-                      Hoàn tất: <span className="font-medium text-foreground">{formatDate(episode.completedAt)}</span>
+                      {t("careHistory.detail.completedAt")} <span className="font-medium text-foreground">{formatDate(episode.completedAt)}</span>
                     </p>
                   )}
                 </div>
@@ -133,7 +136,7 @@ export function CareHistoryDetailDialog({
 
               {episode.closureStatus && (
                 <div className="p-4 rounded-xl border bg-slate-50 text-xs flex items-center justify-between">
-                  <span className="text-muted-foreground">Trạng thái đóng hồ sơ:</span>
+                  <span className="text-muted-foreground">{t("careHistory.detail.closureStatus")}</span>
                   <Badge variant="outline">{episode.closureStatus}</Badge>
                 </div>
               )}
@@ -146,7 +149,7 @@ export function CareHistoryDetailDialog({
                   <div className="p-4 rounded-xl border bg-primary-50/50 border-primary-100 space-y-2">
                     <div className="flex items-center gap-2 text-xs font-bold text-primary-800">
                       <FileText className="h-4 w-4" />
-                      Tóm tắt chung
+                      {t("careHistory.detail.summary.general")}
                     </div>
                     <p className="text-sm leading-relaxed text-foreground whitespace-pre-wrap">
                       {finalSummary.summary}
@@ -156,7 +159,7 @@ export function CareHistoryDetailDialog({
                   {finalSummary.observations && (
                     <div className="p-4 rounded-xl border bg-muted/30 space-y-2">
                       <div className="text-xs font-bold text-muted-foreground uppercase">
-                        Quan sát & Đánh giá lâm sàng
+                        {t("careHistory.detail.summary.observations")}
                       </div>
                       <p className="text-sm leading-relaxed text-foreground whitespace-pre-wrap">
                         {finalSummary.observations}
@@ -168,7 +171,7 @@ export function CareHistoryDetailDialog({
                     <div className="p-4 rounded-xl border bg-success-50/50 border-success-100 space-y-2">
                       <div className="flex items-center gap-2 text-xs font-bold text-success-800">
                         <CheckCircle2 className="h-4 w-4" />
-                        Khuyến nghị điều trị & Lối sống
+                        {t("careHistory.detail.summary.recommendations")}
                       </div>
                       <p className="text-sm leading-relaxed text-foreground whitespace-pre-wrap">
                         {finalSummary.recommendations}
@@ -180,7 +183,7 @@ export function CareHistoryDetailDialog({
                     <div className="p-4 rounded-xl border bg-warning-50/50 border-warning-100 space-y-2">
                       <div className="flex items-center gap-2 text-xs font-bold text-warning-800">
                         <Calendar className="h-4 w-4" />
-                        Kế hoạch tái khám / Theo dõi
+                        {t("careHistory.detail.summary.followUp")}
                       </div>
                       <p className="text-sm leading-relaxed text-foreground whitespace-pre-wrap">
                         {finalSummary.followUpRecommendation}
@@ -191,12 +194,12 @@ export function CareHistoryDetailDialog({
                   {finalSummary.addenda && finalSummary.addenda.length > 0 && (
                     <div className="space-y-3 pt-2">
                       <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                        Phụ lục bổ sung ({finalSummary.addenda.length})
+                        {t("careHistory.detail.summary.addenda", { count: finalSummary.addenda.length })}
                       </h4>
                       {finalSummary.addenda.map((addendum) => (
                         <div key={addendum.id ?? `${addendum.createdAt}-${addendum.reason}`} className="p-3 rounded-lg border bg-muted/40 space-y-1 text-xs">
                           <div className="flex items-center justify-between text-muted-foreground">
-                            <span className="font-semibold text-foreground">Lý do: {addendum.reason}</span>
+                            <span className="font-semibold text-foreground">{t("careHistory.detail.summary.reason", { reason: addendum.reason })}</span>
                             <span>{formatDate(addendum.createdAt)}</span>
                           </div>
                           <p className="text-foreground whitespace-pre-wrap">{addendum.content}</p>
@@ -208,8 +211,8 @@ export function CareHistoryDetailDialog({
               ) : (
                 <div className="py-12 text-center text-muted-foreground space-y-2">
                   <FileText className="h-10 w-10 mx-auto text-muted-foreground/50" />
-                  <p className="text-sm font-medium">Chưa có tổng kết y khoa chính thức cho đợt chăm sóc này.</p>
-                  <p className="text-xs text-muted-foreground">Tổng kết sẽ được bác sĩ phụ trách hoàn tất sau khi phiên kết thúc.</p>
+                  <p className="text-sm font-medium">{t("careHistory.detail.summary.emptyTitle")}</p>
+                  <p className="text-xs text-muted-foreground">{t("careHistory.detail.summary.emptyDescription")}</p>
                 </div>
               )}
             </TabsContent>
@@ -229,21 +232,21 @@ export function CareHistoryDetailDialog({
                         </div>
                         <div>
                           <p className="font-medium text-foreground">
-                            {rec.originalFileName || `Hồ sơ #${rec.id}`}
+                            {rec.originalFileName || t("careHistory.detail.records.fallbackName", { id: rec.id })}
                           </p>
                           <p className="text-muted-foreground">
-                            Ngày đo: {formatDate(rec.createdAt)}
+                            {t("careHistory.detail.records.measuredAt", { date: formatDate(rec.createdAt) })}
                           </p>
                         </div>
                       </div>
-                      <Badge variant="outline">{rec.predictionLabel || rec.status || "Đã lưu"}</Badge>
+                      <Badge variant="outline">{rec.predictionLabel || rec.status || t("careHistory.detail.records.saved")}</Badge>
                     </div>
                   ))}
                 </div>
               ) : (
                 <div className="py-12 text-center text-muted-foreground space-y-2">
                   <XCircle className="h-10 w-10 mx-auto text-muted-foreground/50" />
-                  <p className="text-sm font-medium">Không có hồ sơ nào được chia sẻ trong đợt này.</p>
+                  <p className="text-sm font-medium">{t("careHistory.detail.records.empty")}</p>
                 </div>
               )}
             </TabsContent>
@@ -252,7 +255,7 @@ export function CareHistoryDetailDialog({
 
         <DialogFooter className="p-4 border-t bg-muted/10">
           <Button variant="outline" onClick={() => onOpenChange(false)}>
-            Đóng
+            {t("common:actions.close")}
           </Button>
         </DialogFooter>
       </DialogContent>

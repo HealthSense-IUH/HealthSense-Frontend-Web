@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { Calendar, CheckCircle2, Coins, Inbox, RefreshCw, ShieldAlert, Stethoscope, Users, XCircle, X } from "lucide-react"
 import { useNavigate, useSearchParams } from "react-router-dom"
+import { useTranslation } from "react-i18next"
 
 import { Page, PageBody, PageHeader } from "@/components/layout/page"
 import { Button } from "@/components/ui/button"
@@ -27,6 +28,7 @@ import { SessionsPanel } from "@/pages/app/general/consultations/components/sess
 import { useConsultationsLogic } from "@/pages/app/general/consultations/hooks/use-consultations-logic"
 
 export default function ConsultationsPage() {
+  const { t } = useTranslation("consultation")
   const logic = useConsultationsLogic()
   const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
@@ -83,12 +85,12 @@ export default function ConsultationsPage() {
   if (!logic.isAdmin && !logic.isDoctor && !logic.isMember) {
     return (
       <Page>
-        <PageHeader icon={<Stethoscope className="w-5 h-5" />} title="Tư vấn & Chăm sóc" />
+        <PageHeader icon={<Stethoscope className="w-5 h-5" />} title={t("page.title")} />
         <PageBody className="items-center justify-center text-center">
           <div className="flex max-w-lg flex-col items-center gap-4">
             <ShieldAlert className="text-danger-500" />
-            <h2 className="text-2xl font-bold text-slate-950">Truy cập bị từ chối</h2>
-            <p className="text-sm text-slate-500">Mô-đun tư vấn chỉ dành cho các vai trò Hội viên, Bác sĩ và Quản trị viên.</p>
+            <h2 className="text-2xl font-bold text-slate-950">{t("page.accessDenied.title")}</h2>
+            <p className="text-sm text-slate-500">{t("page.accessDenied.description")}</p>
           </div>
         </PageBody>
       </Page>
@@ -99,12 +101,12 @@ export default function ConsultationsPage() {
     <Page>
       <PageHeader
         icon={<Stethoscope className="w-5 h-5" />}
-        title="Tư vấn & Chăm sóc"
-        description="Quản lý các buổi và phiên tư vấn 1-1 của bạn."
+        title={t("page.title")}
+        description={t("page.description")}
         actions={
           <Button variant="outline" size="sm" onClick={() => void logic.loadData()} disabled={logic.loading} className="shadow-sm">
             <RefreshCw className="mr-2 h-4 w-4" />
-            Làm mới
+            {t("page.refresh")}
           </Button>
         }
       />
@@ -123,7 +125,7 @@ export default function ConsultationsPage() {
             <span className="flex-1">{logic.alert.text}</span>
             <button
               type="button"
-              aria-label="Đóng thông báo"
+              aria-label={t("page.dismissAlert")}
               className="rounded-md p-1 opacity-60 hover:opacity-100 hover:bg-black/5 cursor-pointer"
               onClick={() => logic.setAlert(null)}
             >
@@ -139,16 +141,16 @@ export default function ConsultationsPage() {
                 <>
                   <TabsTrigger value="queue" className="rounded-lg text-xs font-semibold gap-1.5 px-3">
                     <Users className="w-3.5 h-3.5" />
-                    <span>Hàng đợi tư vấn</span>
+                    <span>{t("page.tabs.queue")}</span>
                     {hasActiveQueue && (
                       <span className="ml-1 px-1.5 py-0.5 rounded-full text-[10px] bg-warning-500 text-white font-bold animate-pulse">
-                        Đang chờ
+                        {t("page.tabs.waitingBadge")}
                       </span>
                     )}
                   </TabsTrigger>
                   <TabsTrigger value="sessions" className="rounded-lg text-xs font-semibold gap-1.5 px-3">
                     <Calendar className="w-3.5 h-3.5" />
-                    <span>Phiên tư vấn</span>
+                    <span>{t("page.tabs.sessions")}</span>
                     {logic.sessions.length > 0 && (
                       <span className="ml-1 px-1.5 py-0.5 rounded-full text-[10px] bg-muted-foreground/15 text-foreground font-bold">
                         {logic.sessions.length}
@@ -157,7 +159,7 @@ export default function ConsultationsPage() {
                   </TabsTrigger>
                   <TabsTrigger value="credits" className="rounded-lg text-xs font-semibold gap-1.5 px-3">
                     <Coins className="w-3.5 h-3.5" />
-                    <span>Lượt tư vấn</span>
+                    <span>{t("page.tabs.credits")}</span>
                   </TabsTrigger>
                 </>
               )}
@@ -166,7 +168,7 @@ export default function ConsultationsPage() {
                 <>
                   <TabsTrigger value="admin-requests" className="rounded-lg text-xs font-semibold gap-1.5 px-3">
                     <Inbox className="w-3.5 h-3.5" />
-                    <span>Yêu cầu tư vấn đến</span>
+                    <span>{t("page.tabs.adminRequests")}</span>
                     {logic.requests.length > 0 && (
                       <span className="ml-1 px-1.5 py-0.5 rounded-full text-[10px] bg-primary/15 text-primary font-bold">
                         {logic.requests.length}
@@ -175,7 +177,7 @@ export default function ConsultationsPage() {
                   </TabsTrigger>
                   <TabsTrigger value="sessions" className="rounded-lg text-xs font-semibold gap-1.5 px-3">
                     <Calendar className="w-3.5 h-3.5" />
-                    <span>Tất cả phiên tư vấn</span>
+                    <span>{t("page.tabs.allSessions")}</span>
                     {logic.sessions.length > 0 && (
                       <span className="ml-1 px-1.5 py-0.5 rounded-full text-[10px] bg-muted-foreground/15 text-foreground font-bold">
                         {logic.sessions.length}
@@ -189,7 +191,7 @@ export default function ConsultationsPage() {
                 <>
                   <TabsTrigger value="sessions" className="rounded-lg text-xs font-semibold gap-1.5 px-3">
                     <Calendar className="w-3.5 h-3.5" />
-                    <span>Phiên tư vấn phụ trách</span>
+                    <span>{t("page.tabs.doctorSessions")}</span>
                     {logic.sessions.length > 0 && (
                       <span className="ml-1 px-1.5 py-0.5 rounded-full text-[10px] bg-primary/15 text-primary font-bold">
                         {logic.sessions.length}
@@ -331,16 +333,16 @@ export default function ConsultationsPage() {
       <Dialog open={logic.isMoreInfoDialogOpen} onOpenChange={logic.setIsMoreInfoDialogOpen}>
         <DialogContent className="max-w-lg">
           <DialogHeader>
-            <DialogTitle>Bổ sung thông tin cho yêu cầu #{logic.targetRequest?.id}</DialogTitle>
+            <DialogTitle>{t("page.moreInfoDialog.title", { id: logic.targetRequest?.id ?? "" })}</DialogTitle>
             <DialogDescription>
-              Vui lòng cung cấp thêm thông tin theo yêu cầu của điều phối viên.
+              {t("page.moreInfoDialog.description")}
             </DialogDescription>
           </DialogHeader>
           <div className="flex flex-col gap-4 py-2">
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-foreground">Nội dung giải trình / Thông tin bổ sung *</label>
+              <label className="text-xs font-semibold text-foreground">{t("page.moreInfoDialog.noteLabel")}</label>
               <Textarea
-                placeholder="Nhập thông tin chi tiết bổ sung tại đây..."
+                placeholder={t("page.moreInfoDialog.notePlaceholder")}
                 value={logic.moreInfoNote}
                 onChange={(e) => logic.setMoreInfoNote(e.target.value)}
                 rows={3}
@@ -351,7 +353,7 @@ export default function ConsultationsPage() {
             {logic.healthRecords.length > 0 && (
               <div className="space-y-1.5">
                 <label className="text-xs font-semibold text-foreground">
-                  Đính kèm thêm hồ sơ đo đạc (Tùy chọn - {logic.moreInfoSelectedRecordIds.length} đã chọn)
+                  {t("page.moreInfoDialog.attachLabel", { selected: logic.moreInfoSelectedRecordIds.length })}
                 </label>
                 <div className="max-h-36 overflow-y-auto border rounded-xl p-2 space-y-1 bg-muted/10">
                   {logic.healthRecords.map((record) => {
@@ -394,10 +396,10 @@ export default function ConsultationsPage() {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => logic.setIsMoreInfoDialogOpen(false)}>
-              Hủy
+              {t("page.moreInfoDialog.cancel")}
             </Button>
             <Button onClick={() => void logic.handleSubmitMoreInfo()} disabled={logic.actionLoading || !logic.moreInfoNote.trim()}>
-              Gửi thông tin
+              {t("page.moreInfoDialog.submit")}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -447,14 +449,14 @@ export default function ConsultationsPage() {
       <Dialog open={logic.isAdminMoreInfoDialogOpen} onOpenChange={logic.setIsAdminMoreInfoDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Yêu cầu bổ sung thông tin</DialogTitle>
+            <DialogTitle>{t("page.adminMoreInfoDialog.title")}</DialogTitle>
             <DialogDescription>
-              Gửi yêu cầu bổ sung thông tin đến thành viên cho yêu cầu #{logic.targetRequest?.id}.
+              {t("page.adminMoreInfoDialog.description", { id: logic.targetRequest?.id ?? "" })}
             </DialogDescription>
           </DialogHeader>
           <div className="flex flex-col gap-4 py-4">
             <Textarea
-              placeholder="Nhập lý do cần bổ sung..."
+              placeholder={t("page.adminMoreInfoDialog.placeholder")}
               value={logic.adminMoreInfoReason}
               onChange={(e) => logic.setAdminMoreInfoReason(e.target.value)}
               rows={4}
@@ -462,10 +464,10 @@ export default function ConsultationsPage() {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => logic.setIsAdminMoreInfoDialogOpen(false)}>
-              Hủy
+              {t("page.adminMoreInfoDialog.cancel")}
             </Button>
             <Button onClick={() => void logic.handleAdminSubmitMoreInfoRequest()} disabled={logic.actionLoading || !logic.adminMoreInfoReason.trim()}>
-              Gửi yêu cầu
+              {t("page.adminMoreInfoDialog.submit")}
             </Button>
           </DialogFooter>
         </DialogContent>

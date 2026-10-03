@@ -1,1 +1,379 @@
-{}
+{
+  "nav": {
+    "about": "About us",
+    "features": "Biomarkers",
+    "pipeline": "AI model",
+    "benchmark": "Clinical validation",
+    "dashboard": "Dashboard",
+    "login": "Sign in",
+    "tryIt": "Get started"
+  },
+  "hero": {
+    "titleLine1": "24/7 heart monitoring",
+    "titleLine2": "Early AFib detection",
+    "subtitle": "An AI ecosystem that continuously analyzes ECG and SpO2 data from wearable devices, detects dangerous arrhythmias early and connects you with a cardiologist instantly.",
+    "ctaDashboard": "View health dashboard",
+    "ctaJoin": "Join now",
+    "ctaHowItWorks": "See how it works",
+    "metrics": {
+      "accuracy": "Accuracy (Stacking)",
+      "recall": "Detection sensitivity (Recall)",
+      "latency": "Signal analysis latency"
+    },
+    "scrollExplore": "Scroll down to explore"
+  },
+  "scrollToTop": "Scroll to top",
+  "footer": {
+    "description": "A pioneering AI healthcare ecosystem that monitors your heart rate and SpO2 levels continuously 24/7 from wearable devices, detects atrial fibrillation (AFib) early and protects your heart.",
+    "techHeading": "Technology & AI",
+    "tech": {
+      "hrv": "16 heart rate variability (HRV) metrics",
+      "stacking": "Stacking Ensemble model",
+      "benchmark": "Clinical validation (Benchmark)",
+      "xai": "Explainable AI (XAI)",
+      "mimic": "MIMIC-III medical database"
+    },
+    "aboutHeading": "About Us",
+    "about": {
+      "story": "The HealthSense story",
+      "care": "C.A.R.E core values",
+      "loginPage": "Sign-in page",
+      "terms": "Terms & Medical Disclaimer"
+    },
+    "disclaimer": "<strong>Medical disclaimer:</strong> HealthSense is an experimental AI technology platform that supports heart rate monitoring and atrial fibrillation screening. Results are for reference only and do not replace a diagnosis by a physician. See the <termsLink>Terms of Use & Disclaimer</termsLink> for details.",
+    "copyright": "© {{year}} HealthSense. All rights reserved."
+  },
+  "brandStory": {
+    "mission": "HealthSense was built with the pioneering spirit and breakthrough thinking of digital health. We believe everyone deserves a personalized AI solution to track their heart rate and proactively protect their cardiovascular health every day.",
+    "scrollToFeatures": "Scroll to the biomarkers section",
+    "story": {
+      "p1": "It all started with a worrying reality: millions of people live with atrial fibrillation (AFib) and arrhythmias that progress completely silently, with no clear symptoms until a stroke occurs.",
+      "p2": "We built HealthSense to close the gap between patients and specialized cardiac care, turning an ordinary smartwatch into a 24/7 ECG lab that is always by your side.",
+      "p3": "Backed by a Stacking Ensemble machine learning model that achieves 98.65% accuracy on standardized medical datasets, HealthSense continuously analyzes 16 heart rate variability (HRV) metrics in real time.",
+      "p4": "We believe your peace of mind is the greatest measure of our success. HealthSense will always be a trusted companion, listening to and protecting every heartbeat on every journey."
+    },
+    "valuesIntro": "Four core principles that shape HealthSense's mission to protect and care for your cardiovascular health.",
+    "values": {
+      "continuous": {
+        "title": "24/7 monitoring",
+        "desc": "Continuous wireless syncing of heart rate and SpO2 data every second via your smartwatch, without interrupting your daily life."
+      },
+      "accuracy": {
+        "title": "98.65% accurate",
+        "desc": "A Stacking Ensemble machine learning model analyzes 16 heart rate variability (HRV) metrics with medical-grade reliability."
+      },
+      "realtime": {
+        "title": "Instant alerts",
+        "desc": "Responds in under 100ms to detect atrial fibrillation (AFib) episodes and stroke risk early, before symptoms appear."
+      },
+      "expertCare": {
+        "title": "Doctors by your side",
+        "desc": "One-tap online connection with a team of cardiologists, with secure automatic sharing of your ECG records."
+      }
+    }
+  },
+  "features": {
+    "title": "16 Core Biological Features",
+    "subtitle": "A process that decomposes ECG signals into 3 core biomathematical pillars, helping the AI accurately assess cardiovascular risk.",
+    "detailButton": "View all {{total}} formulas",
+    "formulaLabel": "Formula:",
+    "units": {
+      "times": "Count"
+    },
+    "visual": {
+      "ecg": {
+        "label": "Continuous ECG Waveform",
+        "rrInterval": "RR interval: 820ms",
+        "status": "✓ Regular sinus rhythm"
+      },
+      "spectrum": {
+        "label": "FFT Power Spectrum",
+        "band": "Band: 0.04 - 0.40 Hz",
+        "status": "✓ Sympathetic balance"
+      },
+      "poincare": {
+        "label": "Poincaré Plot (SD1/SD2)",
+        "legend": "SD1: Short-term | SD2: Long-term",
+        "status": "✓ AFib detection"
+      }
+    },
+    "pillars": {
+      "timeDomain": {
+        "step": "01 / TIME DOMAIN",
+        "title": "BEAT-TO-BEAT VARIABILITY",
+        "subtitle": "Time-Domain Analysis (8 metrics)",
+        "tagline": "Precise measurement of every R-R interval",
+        "desc": "The AI continuously scans every heartbeat using the Pan-Tompkins peak detection algorithm. RMSSD and pNN50 instantly reflect parasympathetic activity and flag abnormally slow or fast heart rhythms.",
+        "stats": {
+          "s1": "RMSSD sensitive > 50ms",
+          "s2": "8 real-time features",
+          "s3": "30-second sliding window"
+        },
+        "tech": {
+          "hrMean": "Mean heart rate within the observation window",
+          "meanNn": "Mean interval between two normal beats",
+          "sdnn": "Standard deviation of NN intervals, reflecting cardiac autonomic capacity",
+          "rmssd": "Root mean square of successive beat-to-beat differences (Gold-standard metric)",
+          "nn50": "Number of successive beat pairs differing by > 50ms",
+          "pnn50": "Percentage of successive beat pairs differing by > 50ms",
+          "cvNn": "Normalized coefficient of variation"
+        }
+      },
+      "frequencyDomain": {
+        "step": "02 / FREQUENCY DOMAIN",
+        "title": "AUTONOMIC BALANCE",
+        "subtitle": "Frequency-Domain FFT (6 metrics)",
+        "tagline": "Spectral decomposition of cardiac power",
+        "desc": "The RR series is interpolated at 4Hz and analyzed with Welch power spectral density (PSD). The LF/HF ratio reveals the balance between the sympathetic (stress, vasoconstriction) and parasympathetic (relaxation, recovery) nervous systems.",
+        "stats": {
+          "s1": "LF: 0.04 - 0.15 Hz",
+          "s2": "HF: 0.15 - 0.40 Hz",
+          "s3": "LF/HF balance ratio"
+        },
+        "tech": {
+          "lf": "Low-frequency band power (sympathetic & vasomotor activity)",
+          "hf": "High-frequency band power (parasympathetic & respiratory sinus arrhythmia, RSA)",
+          "lfNorm": "LF power normalized to total available power",
+          "hfNorm": "Normalized HF power reflecting vagal activity",
+          "lfHfRatio": "Classic sympathetic / parasympathetic balance ratio",
+          "totalPower": "Total power across the full frequency band"
+        }
+      },
+      "nonlinearDomain": {
+        "step": "03 / NON-LINEAR",
+        "title": "AFIB IDENTIFICATION",
+        "subtitle": "Non-Linear Poincaré & SampEn (3 metrics)",
+        "tagline": "Detecting chaos and irregularity in the heart",
+        "desc": "Uses the Poincaré scatter plot (SD1/SD2) and Sample Entropy (SampEn). During atrial fibrillation (AFib), the heart rhythm loses its periodicity and SampEn rises sharply — the key to early detection.",
+        "stats": {
+          "s1": "Sample Entropy (SampEn)",
+          "s2": "Poincaré plot SD1/SD2",
+          "s3": "98.65% accuracy"
+        },
+        "tech": {
+          "sd1": "Poincaré short-axis radius: short-term beat-to-beat variability",
+          "sd2": "Poincaré long-axis radius: overall long-term variability",
+          "sampEn": "Sample Entropy measuring rhythm irregularity and chaos (Gold-standard metric)"
+        }
+      }
+    }
+  },
+  "pipeline": {
+    "badge": "Smart Workflow",
+    "title": "How AI Analyzes Your Heart Rhythm",
+    "intro": "The system automatically runs 3 continuous steps to protect and monitor your heart health 24/7.",
+    "stepLabel": "Step 0{{num}}",
+    "processDetail": "Process details",
+    "stages": {
+      "stage1": {
+        "title": "Cleaning the Heart Signal",
+        "subtitle": "Removing noise & detecting true heartbeats",
+        "tagline": "Automatically removes motion artifacts from hand movement to keep the most accurate heartbeat",
+        "summary": "When you walk, run or move your hands, the signal from a wearable sensor can be distorted by motion, blurring the heartbeat. The system automatically filters out this noise and keeps every heartbeat clear in real time.",
+        "bullets": {
+          "b1": "Sensor samples continuously 125 times per second",
+          "b2": "Automatically removes motion artifacts and noise while you move",
+          "b3": "Accurately detects every single heartbeat",
+          "b4": "Precisely measures the interval between consecutive beats"
+        },
+        "specs": {
+          "samplingRate": {
+            "label": "Sampling rate",
+            "value": "125 samples / second"
+          },
+          "motionDenoise": {
+            "label": "Motion artifact removal",
+            "value": "100% automatic"
+          },
+          "processingTime": {
+            "label": "Processing time",
+            "value": "< 12 milliseconds"
+          },
+          "beatAccuracy": {
+            "label": "Beat detection accuracy",
+            "value": "99.98%"
+          }
+        }
+      },
+      "stage2": {
+        "title": "Analyzing 16 Health Metrics",
+        "subtitle": "Measuring rhythm regularity & heart health",
+        "tagline": "Turns the intervals between heartbeats into 16 in-depth health metrics",
+        "summary": "A healthy heart always shows flexible variability. The AI analyzes 16 heart rate variability (HRV) metrics to detect irregular heartbeats, stress or overload early, before you even start to feel tired.",
+        "bullets": {
+          "b1": "Measures heart rhythm regularity (fast, slow or intermittent beats)",
+          "b2": "Assesses synchronization between heart rate and breathing",
+          "b3": "Detects hidden, hard-to-notice arrhythmia episodes",
+          "b4": "Normalizes all metrics to a standard scale for analysis"
+        },
+        "specs": {
+          "metrics": {
+            "label": "Metrics analyzed",
+            "value": "16 cardiac metrics"
+          },
+          "coverage": {
+            "label": "Coverage",
+            "value": "Full heart rhythm"
+          },
+          "dataSync": {
+            "label": "Data sync",
+            "value": "Instant, automatic"
+          },
+          "computeTime": {
+            "label": "Computation time",
+            "value": "< 24 milliseconds"
+          }
+        }
+      },
+      "stage3": {
+        "title": "Assessment & Alerts",
+        "subtitle": "Detecting and providing early warning of atrial fibrillation (AFib)",
+        "tagline": "Combines 4 AI models cross-checking each other for accurate, reassuring conclusions",
+        "summary": "Instead of relying on a single algorithm, HealthSense combines 4 artificial intelligence models that cross-evaluate the data. As a result, the system identifies atrial fibrillation (AFib) risk with up to 98.65% accuracy and alerts you instantly.",
+        "bullets": {
+          "b1": "4 AI models analyze independently to avoid false conclusions",
+          "b2": "Automatically selects the most reliable outcome",
+          "b3": "99.78% detection sensitivity (minimizing missed cases)",
+          "b4": "Ultra-fast alerts in under 85 milliseconds"
+        },
+        "specs": {
+          "mechanism": {
+            "label": "Analysis mechanism",
+            "value": "4 cross-checking AI models"
+          },
+          "accuracy": {
+            "label": "Accuracy",
+            "value": "98.65%"
+          },
+          "sensitivity": {
+            "label": "Detection sensitivity",
+            "value": "99.78%"
+          },
+          "alertSpeed": {
+            "label": "Alert speed",
+            "value": "< 85 milliseconds"
+          }
+        }
+      }
+    },
+    "monitor": {
+      "title": "Real-time visual simulation",
+      "subtitle": "Sample heart rhythm analysis data",
+      "live": "Running 24/7"
+    },
+    "stage1Viz": {
+      "label": "Heart rhythm waveform captured from the wearable",
+      "noiseOn": "Motion artifacts present",
+      "noiseOff": "Signal cleaned",
+      "heartRate": "Heart rate: 74 BPM",
+      "latency": "Latency: 12ms",
+      "statusNoisy": "⚠️ Filtering out motion artifacts",
+      "statusClean": "🟢 Heart rhythm waveform is stable and accurate",
+      "beatLocalization": "Beat-by-beat localization"
+    },
+    "stage2Viz": {
+      "label": "16 heart rate variability (HRV) metrics",
+      "scale": "Normalized scale",
+      "bars": {
+        "deviation": "Beat deviation",
+        "variability": "Variability",
+        "pauses": "Pauses",
+        "meanHr": "Mean HR",
+        "lowFreq": "Low freq.",
+        "highFreq": "High freq.",
+        "respRatio": "Resp. ratio",
+        "stability": "Stability"
+      },
+      "ready": "✓ 16 health metrics ready for AI analysis",
+      "synced": "Synced"
+    },
+    "stage3Viz": {
+      "label": "4 AI models cross-checking",
+      "sampleNormal": "Sample: Normal",
+      "sampleAfib": "Sample: Arrhythmia (AFib)",
+      "models": {
+        "rhythm": "Rhythm regularity check",
+        "rate": "Heart rate check",
+        "pauses": "Pause detection",
+        "waveform": "Waveform assessment"
+      },
+      "stable": "{{pct}} Stable",
+      "arrhythmia": "{{pct}} Arrhythmia",
+      "resultTitle": "OVERALL ASSESSMENT (< 85ms)",
+      "resultNormal": "Normal, stable heart rhythm",
+      "resultAfib": "Warning: Signs of atrial fibrillation (AFib) detected",
+      "accuracy": "Accuracy: 98.65%"
+    },
+    "viewing": "Viewing: {{title}}",
+    "validated": "Validated on the MIMIC-III medical database"
+  },
+  "benchmark": {
+    "badge": "DATA & SCIENTIFIC VALIDATION MADE SIMPLE",
+    "titleLine1": "Experimental Performance &",
+    "titleLine2": "Proven Medical Reliability",
+    "intro": "HealthSense AI does not make random guesses. Every conclusion is based on 5.25 million real-world medical data points and transparently validated against clinical standards.",
+    "pillars": {
+      "accuracy": {
+        "title": "Overall Accuracy",
+        "desc": "Out of 100 analyses, the AI distinguishes almost perfectly between healthy people and those at risk of atrial fibrillation (AFib)."
+      },
+      "recall": {
+        "title": "Sensitivity (No Missed Cases)",
+        "desc": "Medical safety first: across 8,165 real measurements, the AI missed only 2 cases that needed re-examination."
+      },
+      "speed": {
+        "title": "Real-Time Response Speed",
+        "desc": "Processes data faster than the blink of an eye and sends an emergency alert straight to your watch when your heart shows signs of sudden arrhythmia."
+      }
+    },
+    "xai": {
+      "title": "How Does the AI Know Your Heart Is Abnormal?",
+      "intro": "HealthSense AI is not a \"black box\". The system pinpoints the 3 most important biological markers that determine the result:",
+      "signs": {
+        "rmssd": {
+          "title": "Irregular beat-to-beat intervals (RMSSD)",
+          "desc": "The intervals between heartbeats jump erratically, a classic sign of atrial fibrillation."
+        },
+        "sampEn": {
+          "title": "Signal irregularity (SampEn)",
+          "desc": "The ECG trace loses its regular periodicity and chaotic electrical impulses appear."
+        },
+        "sd1": {
+          "title": "Instantaneous beat variability (SD1)",
+          "desc": "Two consecutive heartbeats change pace abruptly, without time to adapt."
+        }
+      },
+      "footnote": "100% consistent with the clinical signs taught in medical schools."
+    },
+    "chart": {
+      "title": "Contribution of each metric to the AI's conclusion",
+      "subtitle": "Percentages show the weight the algorithm assigns to each metric during analysis:",
+      "items": {
+        "rmssd": {
+          "name": "Heart rhythm irregularity (RMSSD)",
+          "meaning": "Erratic intervals between heartbeats"
+        },
+        "sampEn": {
+          "name": "Loss of rhythm pattern (SampEn)",
+          "meaning": "Abnormally disordered ECG signal"
+        },
+        "sd1": {
+          "name": "Instantaneous beat variability (SD1)",
+          "meaning": "Two consecutive heartbeats change pace abruptly"
+        },
+        "pnn50": {
+          "name": "Beats deviating > 50ms (pNN50)",
+          "meaning": "How often heartbeats deviate beyond the safe threshold"
+        },
+        "lfHf": {
+          "name": "Sympathetic imbalance (LF/HF)",
+          "meaning": "The autonomic nervous system regulating the heart is overloaded"
+        },
+        "cv": {
+          "name": "Coefficient of variation (CV)",
+          "meaning": "Dispersion across the entire beat series"
+        }
+      }
+    }
+  }
+}

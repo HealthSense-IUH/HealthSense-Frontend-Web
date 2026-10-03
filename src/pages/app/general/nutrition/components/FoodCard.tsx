@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom"
 import { ArrowRight, Sparkles, Image as ImageIcon } from "lucide-react"
+import { useTranslation } from "react-i18next"
 import type { Food } from "@/types/nutrition"
 import { GuidanceBadge } from "./GuidanceBadge"
 import { NutrientHighlightCard } from "./NutrientHighlightCard"
@@ -18,6 +19,7 @@ export function FoodCard({
   className,
   showDescription = true,
 }: FoodCardProps) {
+  const { t } = useTranslation("nutrition")
   const guidanceType = food.guidance
   const title = food.foodNameSpecific
   const subtitle = food.foodName !== food.foodNameSpecific ? food.foodName : undefined
@@ -45,7 +47,7 @@ export function FoodCard({
                 <ImageIcon className="w-5 h-5 stroke-[1.5]" />
               </div>
               <span className="text-[11px] font-medium text-slate-400 tracking-tight">
-                Chưa có hình ảnh
+                {t("foodCard.noImage")}
               </span>
             </div>
           )}
@@ -79,7 +81,7 @@ export function FoodCard({
         <div className="my-2.5">
           <div className="text-[11px] text-muted-foreground mb-1.5 flex items-center gap-1 font-medium">
             <Sparkles className="w-3 h-3 text-primary" />
-            <span>Thành phần dinh dưỡng nổi bật (trên 100g):</span>
+            <span>{t("foodCard.highlights")}</span>
           </div>
           <NutrientHighlightCard
             nutrients={food.nutrients}
@@ -90,7 +92,7 @@ export function FoodCard({
 
       <div className="pt-2 mt-auto border-t border-slate-100 flex items-center justify-between">
         <span className="text-[11px] text-muted-foreground">
-          Chuẩn 100g
+          {t("foodCard.per100g")}
         </span>
         <Button
           variant="ghost"
@@ -99,7 +101,7 @@ export function FoodCard({
           className="h-8 px-2.5 text-xs text-primary font-medium hover:text-primary hover:bg-primary/10 gap-1 rounded-lg cursor-pointer"
         >
           <Link to={`/app/general/nutrition/food/${food.id}`}>
-            <span>Xem chi tiết</span>
+            <span>{t("foodCard.viewDetail")}</span>
             <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
           </Link>
         </Button>

@@ -4,6 +4,7 @@ import {
   AUTH_ERROR_FALLBACK_MESSAGES,
   HTTP_STATUS_MESSAGES,
 } from "@/constants/errors"
+import i18n from "@/lib/i18n"
 import type { ErrorResponse } from "@/types/base"
 
 export interface ParsedApiError {
@@ -19,7 +20,7 @@ export function parseApiError(error: unknown): ParsedApiError {
   if (!(error instanceof AxiosError)) {
     return {
       message: error instanceof Error ? error.message : "Unknown error",
-      userMessage: "Đã xảy ra lỗi. Vui lòng thử lại.",
+      userMessage: i18n.t("errors:generic"),
       isServerError: false,
       isNetworkError: false,
     }
@@ -28,7 +29,7 @@ export function parseApiError(error: unknown): ParsedApiError {
   if (!error.response) {
     return {
       message: error.message || "Network error",
-      userMessage: "Không thể kết nối máy chủ. Vui lòng kiểm tra kết nối.",
+      userMessage: i18n.t("errors:network"),
       isServerError: false,
       isNetworkError: true,
     }
@@ -40,7 +41,7 @@ export function parseApiError(error: unknown): ParsedApiError {
   const userMessage =
     body?.message ||
     HTTP_STATUS_MESSAGES[statusCode] ||
-    "Đã xảy ra lỗi. Vui lòng thử lại."
+    i18n.t("errors:generic")
 
   return {
     message: serverMessage,
@@ -79,7 +80,7 @@ export function getAuthErrorMessage(error: unknown): string {
     if (error.response?.status === 429) {
       const retryAfter = error.response.headers["retry-after"]
       return retryAfter
-        ? `Thao tác quá nhanh, thử lại sau ${retryAfter} giây.`
+        ? i18n.t("errors:tooManyRequestsRetryAfter", { seconds: retryAfter })
         : AUTH_ERROR_FALLBACK_MESSAGES[429]
     }
   }

@@ -1,5 +1,6 @@
 import type { LucideIcon } from "lucide-react"
 import { Clock } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 interface ComingSoonTabProps {
   icon: LucideIcon
@@ -11,6 +12,7 @@ interface ComingSoonTabProps {
 
 /** Nội dung tạm cho tab chưa phát triển: giới thiệu tính năng sẽ làm gì, không giả lập dữ liệu. */
 export function ComingSoonTab({ icon: Icon, title, description, highlights, note }: ComingSoonTabProps) {
+  const { t } = useTranslation("nutrition")
   return (
     <div className="rounded-2xl border border-dashed border-slate-200 bg-white/60 p-6 sm:p-6 text-center space-y-5">
       <div className="mx-auto w-14 h-14 rounded-2xl bg-primary/10 text-primary flex items-center justify-center">
@@ -19,7 +21,7 @@ export function ComingSoonTab({ icon: Icon, title, description, highlights, note
       <div className="space-y-2 max-w-xl mx-auto">
         <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-warning-50 text-warning-700 border border-warning-200 text-[11px] font-medium">
           <Clock className="w-3 h-3" />
-          Sắp ra mắt
+          {t("common.comingSoon")}
         </span>
         <h2 className="text-xl font-bold text-slate-900">{title}</h2>
         <p className="text-sm text-muted-foreground leading-relaxed">{description}</p>

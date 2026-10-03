@@ -1,4 +1,5 @@
 import { Search, UserCheck } from "lucide-react"
+import { useTranslation } from "react-i18next"
 import { Input } from "@/components/ui/input"
 import {
   Select,
@@ -26,6 +27,7 @@ export function UserTableHeader({
   totalElements = 0,
   currentRoleLabel,
 }: UserTableHeaderProps) {
+  const { t } = useTranslation("management")
   return (
     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 py-2">
       <div className="flex items-center gap-3">
@@ -34,13 +36,13 @@ export function UserTableHeader({
         </div>
         <div>
           <h2 className="text-xl font-black text-slate-900 tracking-tight flex items-center gap-2.5">
-            <span>Danh sách tài khoản {currentRoleLabel}</span>
+            <span>{t("users.tableHeader.title", { role: currentRoleLabel })}</span>
             <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-slate-100 text-slate-700 border border-slate-200">
-              {totalElements} Tổng số
+              {t("users.tableHeader.total", { count: totalElements })}
             </span>
           </h2>
           <p className="text-xs text-slate-500 font-medium">
-            Quản lý trạng thái tài khoản, thông tin định danh và bảo mật.
+            {t("users.tableHeader.description")}
           </p>
         </div>
       </div>
@@ -51,7 +53,7 @@ export function UserTableHeader({
           <Input
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
-            placeholder="Tìm kiếm theo ID, email hoặc SĐT..."
+            placeholder={t("users.tableHeader.searchPlaceholder")}
             className="pl-9 h-10 bg-white border-slate-200/80 rounded-xl text-xs font-medium shadow-3xs focus:border-primary-500 transition-all"
           />
         </div>
@@ -61,13 +63,13 @@ export function UserTableHeader({
           onValueChange={onStatusFilterChange}
         >
           <SelectTrigger className="w-[170px] h-10 bg-white border-slate-200/80 rounded-xl text-xs font-medium shadow-3xs">
-            <SelectValue placeholder="Tất cả trạng thái" />
+            <SelectValue placeholder={t("users.tableHeader.allStatuses")} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="ALL">Tất cả trạng thái</SelectItem>
-            <SelectItem value="ACTIVE">Hoạt động</SelectItem>
-            <SelectItem value="INACTIVE">Không hoạt động</SelectItem>
-            <SelectItem value="PENDING_VERIFY">Chờ xác thực</SelectItem>
+            <SelectItem value="ALL">{t("users.tableHeader.allStatuses")}</SelectItem>
+            <SelectItem value="ACTIVE">{t("users.status.active")}</SelectItem>
+            <SelectItem value="INACTIVE">{t("users.status.inactive")}</SelectItem>
+            <SelectItem value="PENDING_VERIFY">{t("users.status.pendingVerify")}</SelectItem>
           </SelectContent>
         </Select>
       </div>

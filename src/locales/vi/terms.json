@@ -1,1 +1,135 @@
-{}
+{
+  "documentTitle": "Điều khoản sử dụng và miễn trừ trách nhiệm y tế",
+  "pdfFileTitle": "{{title}} (cập nhật {{date}})",
+  "topbar": {
+    "viewInteractive": "Cây HTML / Tương tác",
+    "viewInteractiveShort": "Web",
+    "viewDocument": "Văn bản Soạn thảo",
+    "viewDocumentShort": "Văn bản",
+    "login": "Đăng nhập"
+  },
+  "hero": {
+    "title": "Điều Khoản Sử Dụng & Miễn Trừ Trách Nhiệm Y Khoa",
+    "subtitle": "Quy định điều khoản sử dụng nền tảng thử nghiệm công nghệ y tế và AI tầm soát tim mạch HealthSense.",
+    "lastUpdated": "📅 Cập nhật lần cuối: <strong>23 Tháng 8, 2026</strong>"
+  },
+  "alert": {
+    "title": "CẢNH BÁO QUAN TRỌNG: ĐÂY LÀ SẢN PHẨM THỬ NGHIỆM – KHÔNG DÙNG CHO CẤP CỨU Y TẾ",
+    "body": "HealthSense là <strong>nền tảng nghiên cứu và thử nghiệm công nghệ AI</strong> trong việc theo dõi nhịp tim và tầm soát rung nhĩ (AFib). Hệ thống <strong>KHÔNG PHẢI</strong> là cơ sở y tế, <strong>KHÔNG CÓ</strong> chức năng cấp cứu tự động và <strong>KHÔNG THAY THẾ</strong> chẩn đoán trực tiếp của bác sĩ chuyên khoa tim mạch. Nếu bạn cảm thấy đau ngực, khó thở, chóng mặt hoặc có dấu hiệu đột quỵ, hãy gọi ngay <strong>Cấp cứu 115</strong> hoặc đến bệnh viện gần nhất."
+  },
+  "toc": {
+    "title": "Cây mục lục điều khoản"
+  },
+  "export": {
+    "label": "Xuất bản tài liệu",
+    "desc": "Tải văn bản quy chế soạn thảo chính thức dạng PDF phục vụ lưu trữ hoặc ký kết:",
+    "downloadPdf": "Tải tài liệu PDF",
+    "downloadPdfTitle": "Tải tài liệu dạng PDF (Lưu / In PDF)"
+  },
+  "sections": {
+    "s1": {
+      "title": "1. Bản chất thử nghiệm và mục đích của nền tảng",
+      "articleTitle": "ĐIỀU 1. BẢN CHẤT THỬ NGHIỆM VÀ MỤC ĐÍCH CỦA NỀN TẢNG",
+      "clauses": {
+        "c1": "<strong>1.1. Mục đích công nghệ:</strong> HealthSense là nền tảng số đang trong giai đoạn nghiên cứu và thử nghiệm công nghệ y tế (Experimental Beta/Pilot). Mục tiêu của dự án là nghiên cứu tính khả thi của việc thu nhận tín hiệu PPG/ECG liên tục từ thiết bị đeo thông minh để tính toán 16 chỉ số biến thiên nhịp tim (HRV) và hỗ trợ nhận diện sớm nguy cơ rối loạn nhịp tim (Rung nhĩ - AFib).",
+        "c2": "<strong>1.2. Tính chất thử nghiệm:</strong> Là sản phẩm thử nghiệm nghiên cứu, mọi tính năng, giao diện và thuật toán có thể được điều chỉnh, nâng cấp hoặc tạm ngưng phục vụ nghiên cứu mà không phải chịu bất kỳ chế tài hay ràng buộc thương mại bắt buộc nào."
+      }
+    },
+    "s2": {
+      "title": "2. Tuyên bố miễn trừ trách nhiệm y tế toàn diện",
+      "articleTitle": "ĐIỀU 2. TUYÊN BỐ MIỄN TRỪ TRÁCH NHIỆM Y TẾ TOÀN DIỆN",
+      "clauses": {
+        "c1": "<strong>2.1. Không cấu thành chẩn đoán y khoa:</strong> Mọi thông tin, biểu đồ, điểm nguy cơ AFib, phân đoạn giấc ngủ hay báo cáo trích xuất từ HealthSense chỉ có giá trị tham khảo cá nhân và nghiên cứu học thuật. Kết quả không thay thế cho điện tâm đồ lâm sàng 12 chuyển đạo chuẩn bệnh viện (Holter ECG) hay chỉ định của bác sĩ chuyên khoa tim mạch.",
+        "c2": "<strong>2.2. Cấm tự ý can thiệp phác đồ y khoa:</strong> Người dùng tuyệt đối không được căn cứ vào kết quả của HealthSense để tự ý mua thuốc, ngưng thuốc, thay đổi liều lượng thuốc trợ tim, thuốc chống đông máu hoặc bất kỳ phác đồ điều trị nào mà chưa có sự đồng ý của bác sĩ điều trị.",
+        "c3": "<strong>2.3. Tư vấn bác sĩ trực tuyến:</strong> Mọi trao đổi trực tuyến thông qua nền tảng chỉ mang tính chất định hướng sức khỏe ban đầu, không thay thế việc thăm khám trực tiếp tại cơ sở y tế có thẩm quyền."
+      }
+    },
+    "s3": {
+      "title": "3. Quy trình xử trí tình huống cấp cứu",
+      "articleTitle": "ĐIỀU 3. QUY TRÌNH XỬ TRÍ TÌNH HUỐNG CẤP CỨU",
+      "clauses": {
+        "c1": "<strong>3.1. Không có kết nối cấp cứu tự động:</strong> HealthSense không có kết nối cơ học với hệ thống xe cấp cứu 115 hay bất kỳ trung tâm cấp cứu khẩn cấp nào. Các cảnh báo nhịp tim chỉ mang tính chất hỗ trợ người dùng tự theo dõi.",
+        "c2": "<strong>3.2. Hành động khi có triệu chứng nguy hiểm:</strong> Khi xuất hiện các triệu chứng như đau thắt ngực lan ra vai/tay, khó thở, chóng mặt dữ dội, vã mồ hôi lạnh, ngất xỉu, mất ý thức hoặc nghi ngờ tai biến mạch máu não, Người dùng hoặc thân nhân <strong>phải lập tức gọi Tổng đài Cấp cứu 115</strong> hoặc đến bệnh viện gần nhất."
+      }
+    },
+    "s4": {
+      "title": "4. Độ chính xác và sai số thiết bị phần cứng",
+      "articleTitle": "ĐIỀU 4. ĐỘ CHÍNH XÁC VÀ SAI SỐ THIẾT BỊ PHẦN CỨNG",
+      "clauses": {
+        "c1": "<strong>4.1. Nhiễu tín hiệu & Sai số phần cứng:</strong> Tín hiệu PPG/ECG từ đồng hồ/vòng đeo tay thông minh phụ thuộc trực tiếp vào cảm biến quang học, độ siết của dây đeo, vận động mạnh, mồ hôi, màu da và độ ẩm, do đó có thể phát sinh sai số hoặc báo động giả (dương tính giả / âm tính giả).",
+        "c2": "<strong>4.2. Không cam kết độ chính xác 100%:</strong> Mặc dù mô hình AI được đào tạo trên cơ sở dữ liệu y tế chuẩn quốc tế (MIMIC-III / PhysioNet) với độ chính xác thực nghiệm cao, Ban phát triển không đưa ra bất kỳ bảo đảm ngụ ý hoặc minh thị nào rằng hệ thống sẽ phát hiện được 100% tất cả các đợt rối loạn nhịp tim trong mọi tình huống đời thực."
+      }
+    },
+    "s5": {
+      "title": "5. Quyền riêng tư và bảo mật dữ liệu sức khỏe",
+      "articleTitle": "ĐIỀU 5. QUYỀN RIÊNG TƯ VÀ BẢO MẬT DỮ LIỆU SỨC KHỎE",
+      "clauses": {
+        "c1": "<strong>5.1. Mã hóa dữ liệu an toàn:</strong> Dữ liệu sức khỏe (nhịp tim, HRV, nhật ký đo) được truyền qua giao thức HTTPS/TLS được mã hóa an toàn và lưu trữ có kiểm soát phân quyền nghiêm ngặt theo vai trò (RBAC).",
+        "c2": "<strong>5.2. Ẩn danh hóa dữ liệu phục vụ nghiên cứu:</strong> Nhằm phục vụ mục tiêu cải tiến thuật toán AI phát hiện bệnh tim, Người dùng đồng ý cho phép hệ thống tách bỏ định danh cá nhân (De-identified / Anonymized) dữ liệu đo đạc để phục vụ nghiên cứu học thuật theo quy chuẩn đạo đức nghiên cứu y sinh học."
+      }
+    },
+    "s6": {
+      "title": "6. Trách nhiệm và nghĩa vụ của người dùng",
+      "articleTitle": "ĐIỀU 6. TRÁCH NHIỆM VÀ NGHĨA VỤ CỦA NGƯỜI DÙNG",
+      "clauses": {
+        "c1": "<strong>6.1. Cung cấp thông tin trung thực:</strong> Cung cấp thông tin nhân trắc học, độ tuổi, giới tính và tiền sử sức khỏe chính xác nhằm hỗ trợ thuật toán AI đưa ra các ngưỡng cảnh báo phù hợp nhất.",
+        "c2": "<strong>6.2. Bảo mật tài khoản cá nhân:</strong> Tự chịu trách nhiệm bảo vệ mật khẩu và tài khoản đăng nhập cá nhân, không chia sẻ quyền truy cập cho bất kỳ bên thứ ba nào khi chưa được phép.",
+        "c3": "<strong>6.3. Tuân thủ hướng dẫn kỹ thuật:</strong> Sử dụng thiết bị đeo đúng quy cách hướng dẫn của nhà sản xuất phần cứng để đảm bảo chất lượng tiếp xúc cảm biến da và độ tin cậy của dữ liệu đo."
+      }
+    },
+    "s7": {
+      "title": "7. Giới hạn trách nhiệm pháp lý tối đa",
+      "articleTitle": "ĐIỀU 7. GIỚI HẠN TRÁCH NHIỆM PHÁP LÝ TỐI ĐA",
+      "clauses": {
+        "c1": "<strong>7.1. Miễn trừ biến cố sức khỏe:</strong> Trong phạm vi tối đa luật pháp hiện hành cho phép, Đội ngũ sáng lập, các nhà nghiên cứu, kỹ sư phần mềm, giảng viên hướng dẫn và đơn vị chủ quản của HealthSense được miễn trừ toàn bộ trách nhiệm dân sự, hình sự hoặc bồi thường thiệt hại trực tiếp/gián tiếp đối với bất kỳ sự cố y tế, thương tật thân thể, biến cố tim mạch hoặc tử vong nào của Người dùng.",
+        "c2": "<strong>7.2. Miễn trừ phán đoán điều trị cá nhân:</strong> Miễn trừ mọi tổn thất hoặc khiếu nại phát sinh từ việc Người dùng tự đưa ra quyết định chẩn đoán hoặc điều trị y khoa chỉ dựa trên các thông số hiển thị từ nền tảng.",
+        "c3": "<strong>7.3. Miễn trừ sự cố kỹ thuật bên thứ ba:</strong> Miễn trừ mọi sự cố gián đoạn kết nối Internet, mất đồng bộ Bluetooth/BLE hoặc lỗi phần cứng thiết bị đeo của bên thứ ba."
+      }
+    },
+    "s8": {
+      "title": "8. Hiệu lực và sự tự nguyện chấp thuận",
+      "articleTitle": "ĐIỀU 8. HIỆU LỰC VÀ SỰ TỰ NGUYỆN CHẤP THUẬN",
+      "clauses": {
+        "c1": "<strong>8.1. Hiệu lực áp dụng:</strong> Văn bản này có hiệu lực kể từ thời điểm Người dùng thực hiện đăng ký tài khoản, kết nối thiết bị đeo hoặc sử dụng bất kỳ tính năng nào của HealthSense.",
+        "c2": "<strong>8.2. Sự tự nguyện cam kết:</strong> Bằng việc đăng ký tài khoản hoặc tiếp tục sử dụng dịch vụ, Người dùng xác nhận đã đủ 18 tuổi (hoặc có sự giám hộ hợp pháp), đã đọc, hiểu rõ bản chất thử nghiệm và hoàn toàn tự nguyện cam kết tuân thủ toàn bộ các điều khoản này.",
+        "c3": "<strong>8.3. Cập nhật điều khoản:</strong> Ban phát triển bảo lưu quyền cập nhật hoặc điều chỉnh quy chế này theo từng giai đoạn nghiên cứu khoa học. Các cập nhật quan trọng sẽ được thông báo công khai trên giao diện website."
+      }
+    }
+  },
+  "emergencySymptoms": {
+    "chestPain": "Đau thắt ngực hoặc cảm giác đè nặng vùng ngực",
+    "breathlessness": "Khó thở, thở gấp, hụt hơi đột ngột",
+    "fainting": "Ngất xỉu, chóng mặt mất thăng bằng đột ngột",
+    "strokeSigns": "Tê yếu một bên cơ thể, nói khó (dấu hiệu đột quỵ)",
+    "palpitations": "Tim đập thình thịch liên tục kèm vã mồ hôi lạnh",
+    "unconsciousness": "Mất ý thức hoặc co giật"
+  },
+  "document": {
+    "toolbarLabel": "Định dạng Văn bản Soạn thảo Chuẩn A4",
+    "copied": "Đã sao chép",
+    "copyAll": "Sao chép toàn bộ",
+    "nationalTitle": "CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM",
+    "nationalMotto": "Độc lập – Tự do – Hạnh phúc",
+    "placeDate": "TP. Hồ Chí Minh, ngày 23 tháng 08 năm 2026",
+    "title": "QUY CHẾ SỬ DỤNG VÀ TUYÊN BỐ MIỄN TRỪ TRÁCH NHIỆM Y KHOA",
+    "subtitle": "(Áp dụng cho người dùng nền tảng thử nghiệm công nghệ y tế HealthSense)",
+    "preamble1": "Căn cứ vào định hướng nghiên cứu và thử nghiệm khoa học công nghệ trong việc ứng dụng trí tuệ nhân tạo (AI/Machine Learning) hỗ trợ phát hiện sớm Rung nhĩ (AFib) và theo dõi các chỉ số biến thiên nhịp tim (HRV);",
+    "preamble2": "Văn bản này quy định rõ ràng và đầy đủ các điều khoản sử dụng dịch vụ, giới hạn phạm vi công nghệ cũng như <strong>tuyên bố miễn trừ trách nhiệm y tế</strong> giữa Ban phát triển Nền tảng HealthSense (sau đây gọi là <em>\"HealthSense\"</em>) và Người sử dụng (sau đây gọi là <em>\"Người dùng\"</em>).",
+    "specialTitle": "⚠️ ĐIỀU KHOẢN ĐẶC BIỆT: KHÔNG THAY THẾ CHẨN ĐOÁN VÀ CẤP CỨU Y TẾ",
+    "specialBody": "HealthSense là công trình thử nghiệm kỹ thuật số hỗ trợ nghiên cứu sức khỏe. Mọi thông báo, chỉ số, cảnh báo AFib hay điểm số tim mạch được tạo ra từ thuật toán máy tính chỉ có giá trị tham khảo. Hệ thống <strong>tuyệt đối không phải là thiết bị chẩn đoán y khoa</strong>, không được dùng để thay thế bác sĩ và <strong>không có khả năng cấp cứu</strong> trong các tình huống khẩn cấp.",
+    "signatures": {
+      "userTitle": "ĐẠI DIỆN NGƯỜI SỬ DỤNG",
+      "userNote": "(Đã đọc, hiểu rõ và đồng ý điện tử)",
+      "userPlaceholder": "[Xác nhận tự động qua tài khoản]",
+      "boardTitle": "BAN ĐIỀU HÀNH HEALTHSENSE",
+      "boardNote": "(Đã ký duyệt phát hành)"
+    }
+  },
+  "footer": {
+    "copyright": "© {{year}} HealthSense. Mọi quyền được bảo lưu.",
+    "home": "Trang chủ",
+    "login": "Đăng nhập",
+    "viewA4": "Xem văn bản soạn thảo A4"
+  },
+  "scrollToTop": "Cuộn lên đầu trang"
+}

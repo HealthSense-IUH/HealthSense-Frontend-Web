@@ -1,5 +1,7 @@
 import { useEffect, useState, useCallback, useRef } from "react"
 import { useNavigate } from "react-router-dom"
+import { useTranslation } from "react-i18next"
+import i18n from "@/lib/i18n"
 import { ShieldAlert, Stethoscope } from "lucide-react"
 
 import { Page, PageBody, PageHeader } from "@/components/layout/page"
@@ -28,6 +30,7 @@ function readError(error: unknown, fallback: string) {
 
 export default function DoctorSessionsPage() {
   const navigate = useNavigate()
+  const { t } = useTranslation("management")
   const { toast } = useToast()
   const { effectiveRole } = useAppShell()
   const isDoctor = effectiveRole === USER_ROLES.DOCTOR
@@ -137,9 +140,9 @@ export default function DoctorSessionsPage() {
     } catch (error: unknown) {
       const err = error as { response?: { status?: number } }
       if (err?.response?.status === 403) {
-        toast({ variant: "destructive", description: "Bạn không có quyền truy cập trang bác sĩ." })
+        toast({ variant: "destructive", description: i18n.t("management:doctorConsultations.page.toast.noDoctorAccess") })
       } else {
-        toast({ variant: "destructive", description: readError(error, "Lỗi tải danh sách phiên chăm sóc.") })
+        toast({ variant: "destructive", description: readError(error, i18n.t("management:doctorConsultations.page.toast.loadSessionsError")) })
       }
     } finally {
       setLoading(false)
@@ -167,7 +170,7 @@ export default function DoctorSessionsPage() {
         setHasProfile(false)
         toast({
           variant: "destructive",
-          description: readError(err, "Không thể tải hồ sơ trực của bác sĩ."),
+          description: readError(err, i18n.t("management:doctorConsultations.page.toast.loadCareProfileError")),
         })
       }
     } finally {
@@ -266,11 +269,11 @@ export default function DoctorSessionsPage() {
         variant: "default",
         description:
           newStatus === "AVAILABLE"
-            ? "Đã kích hoạt chế độ sẵn sàng nhận bệnh."
-            : "Đã tạm dừng nhận bệnh mới.",
+            ? t("doctorConsultations.page.toast.dispatchAvailable")
+            : t("doctorConsultations.page.toast.dispatchUnavailable"),
       })
     } catch (error) {
-      toast({ variant: "destructive", description: readError(error, "Không thể cập nhật trạng thái trực.") })
+      toast({ variant: "destructive", description: readError(error, t("doctorConsultations.page.toast.updateDispatchStatusError")) })
     } finally {
       setActionLoading(false)
     }
@@ -284,11 +287,11 @@ export default function DoctorSessionsPage() {
       toast({
         variant: "default",
         description: stop
-          ? "Đã bật: Sẽ chuyển sang nghỉ trực sau khi kết thúc phiên khám hiện tại."
-          : "Đã tắt: Sẽ tiếp tục nhận ca sau khi kết thúc phiên.",
+          ? t("doctorConsultations.page.toast.stopAfterSessionOn")
+          : t("doctorConsultations.page.toast.stopAfterSessionOff"),
       })
     } catch (error) {
-      toast({ variant: "destructive", description: readError(error, "Không thể cập nhật tùy chọn.") })
+      toast({ variant: "destructive", description: readError(error, t("doctorConsultations.page.toast.updatePreferencesError")) })
     }
   }
 
@@ -300,12 +303,12 @@ export default function DoctorSessionsPage() {
       setCurrentOffer(res.data)
       toast({
         variant: "default",
-        description: "Đã tiếp nhận ca tư vấn! Đang chờ người bệnh xác nhận để bắt đầu phiên...",
+        description: t("doctorConsultations.page.toast.offerAccepted"),
       })
       // Immediately refetch dispatch status
       await fetchDispatchAndOffer()
     } catch (error) {
-      toast({ variant: "destructive", description: readError(error, "Không thể tiếp nhận ca khám hoặc lời mời đã hết hạn.") })
+      toast({ variant: "destructive", description: readError(error, t("doctorConsultations.page.toast.acceptOfferError")) })
       await fetchDispatchAndOffer()
     } finally {
       setActionLoading(false)
@@ -320,11 +323,11 @@ export default function DoctorSessionsPage() {
       setCurrentOffer(null)
       toast({
         variant: "default",
-        description: "Đã từ chối ca tư vấn. Ca khám sẽ được chuyển tiếp cho bác sĩ khác trong hàng đợi.",
+        description: t("doctorConsultations.page.toast.offerRejected"),
       })
       await fetchDispatchAndOffer()
     } catch (error) {
-      toast({ variant: "destructive", description: readError(error, "Không thể từ chối ca khám.") })
+      toast({ variant: "destructive", description: readError(error, t("doctorConsultations.page.toast.rejectOfferError")) })
       await fetchDispatchAndOffer()
     } finally {
       setActionLoading(false)
@@ -336,9 +339,9 @@ export default function DoctorSessionsPage() {
       <Page>
         <PageBody className="items-center justify-center text-center gap-0 py-20">
           <ShieldAlert className="h-12 w-12 text-danger-500 mb-4" />
-          <h2 className="text-xl font-bold text-slate-900 mb-2">Quyền truy cập bị từ chối</h2>
-          <p className="text-slate-500 mb-6">Bạn không có quyền truy cập trang bác sĩ.</p>
-          <Button onClick={() => navigate("/app/general/dashboard")}>Về trang chủ</Button>
+          <h2 className="text-xl font-bold text-slate-900 mb-2">{t("doctorConsultations.page.accessDenied.title")}</h2>
+          <p className="text-slate-500 mb-6">{t("doctorConsultations.page.accessDenied.description")}</p>
+          <Button onClick={() => navigate("/app/general/dashboard")}>{t("doctorConsultations.page.accessDenied.backHome")}</Button>
         </PageBody>
       </Page>
     )
@@ -348,8 +351,8 @@ export default function DoctorSessionsPage() {
     <Page>
       <PageHeader
         icon={<Stethoscope className="w-5 h-5" />}
-        title="Quản lý phiên khám"
-        description="Bật trực điều phối để nhận ca tư vấn mới từ hàng đợi và theo dõi các phiên khám bạn đang phụ trách."
+        title={t("doctorConsultations.page.title")}
+        description={t("doctorConsultations.page.description")}
       />
 
       <PageBody>
@@ -381,10 +384,10 @@ export default function DoctorSessionsPage() {
         <section className="flex flex-col gap-4">
           <div className="space-y-1">
             <h2 className="text-lg sm:text-xl font-bold tracking-tight text-slate-900">
-              Danh sách phiên khám (Active Care)
+              {t("doctorConsultations.page.sessionsSection.title")}
             </h2>
             <p className="text-xs sm:text-sm text-muted-foreground">
-              Theo dõi danh sách phiên khám, trao đổi chuyên môn và quản lý tiến trình điều trị người bệnh.
+              {t("doctorConsultations.page.sessionsSection.description")}
             </p>
           </div>
 

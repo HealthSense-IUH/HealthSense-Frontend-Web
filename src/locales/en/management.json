@@ -1,1 +1,986 @@
-{}
+{
+  "doctorConsultations": {
+    "page": {
+      "title": "Consultation sessions",
+      "description": "Go on duty to receive new consultation requests from the queue and keep track of the sessions you are responsible for.",
+      "accessDenied": {
+        "title": "Access denied",
+        "description": "You do not have permission to access the doctor page.",
+        "backHome": "Back to home"
+      },
+      "sessionsSection": {
+        "title": "Consultation sessions (Active Care)",
+        "description": "Track your consultation sessions, communicate with patients and manage their treatment progress."
+      },
+      "toast": {
+        "noDoctorAccess": "You do not have permission to access the doctor page.",
+        "loadSessionsError": "Failed to load care sessions.",
+        "loadCareProfileError": "Unable to load the doctor's on-duty profile.",
+        "dispatchAvailable": "You are now available to receive patients.",
+        "dispatchUnavailable": "You have paused receiving new patients.",
+        "updateDispatchStatusError": "Unable to update your on-duty status.",
+        "stopAfterSessionOn": "Enabled: you will go off duty after the current consultation session ends.",
+        "stopAfterSessionOff": "Disabled: you will keep receiving cases after the session ends.",
+        "updatePreferencesError": "Unable to update preferences.",
+        "offerAccepted": "Consultation accepted! Waiting for the patient to confirm and start the session...",
+        "acceptOfferError": "Unable to accept the consultation, or the offer has expired.",
+        "offerRejected": "Consultation declined. The case will be forwarded to another doctor in the queue.",
+        "rejectOfferError": "Unable to decline the consultation."
+      }
+    },
+    "workspace": {
+      "loading": "Loading the consultation workspace...",
+      "notFound": {
+        "title": "Consultation session not found",
+        "description": "This consultation session does not exist or you are not assigned to it.",
+        "backToList": "Back to list"
+      },
+      "breadcrumb": "Consultation sessions",
+      "patientFallback": "Patient #{{id}}",
+      "memberIdBadge": "ID: #{{id}}",
+      "defaultPackage": "Specialist consultation",
+      "endsAt": "Ends at: {{date}}",
+      "createSummary": "Write clinical summary",
+      "scheduleAndDetails": "Schedule & details",
+      "tabs": {
+        "chat": "Live chat",
+        "records": "Health records & measurements",
+        "summary": "Clinical summary",
+        "summaryNeeded": "Required",
+        "continuity": "Care history",
+        "nutrition": "Nutrition"
+      },
+      "readOnly": {
+        "completed": "This consultation session has ended. You can only review the conversation history.",
+        "cancelled": "This consultation session was cancelled. Messages can no longer be sent.",
+        "scheduled": "This consultation session has not started yet."
+      },
+      "toast": {
+        "loadDetailError": "Unable to load consultation session details.",
+        "loadMessagesError": "Unable to load the conversation history.",
+        "loadOlderMessagesError": "Unable to load older messages.",
+        "sendMessageError": "Unable to send the message."
+      }
+    },
+    "dispatchHeader": {
+      "missingProfile": {
+        "title": "Your account does not have an on-duty profile yet:",
+        "description": "Please contact a Manager or Coordinator to set up your specialty profile and enable patient intake before going on duty.",
+        "retry": "Retry"
+      },
+      "title": "On-duty dispatch status",
+      "badges": {
+        "busy": "In a consultation",
+        "available": "Available for patients",
+        "distributing": "Assigning queued request",
+        "unavailable": "Off duty (Paused)"
+      },
+      "hints": {
+        "noProfile": "You need a valid consultation profile before you can join the dispatch queue.",
+        "busy": "You are currently in an online consultation session (BUSY). Your status will update automatically when the session ends.",
+        "available": "The system will automatically assign new cases from the queue to you as soon as a suitable patient is available.",
+        "pendingOffer": "You have a pending consultation offer or a patient is confirming. New cases are temporarily on hold.",
+        "unavailable": "You are off duty. Turn on availability to start receiving patients from the shared queue."
+      },
+      "workSchedule": "Work schedule",
+      "stopAfterSession": "Go off duty after this session",
+      "actions": {
+        "inSession": "In session",
+        "pause": "Go off duty",
+        "start": "Go on duty"
+      }
+    },
+    "offerCard": {
+      "titleWaiting": "Waiting for patient confirmation",
+      "titleOffered": "New consultation request!",
+      "countdown": "{{seconds}}s left to accept",
+      "acceptedWaiting": "Accepted - Waiting for patient",
+      "offerCode": "Offer ID:",
+      "requestNumber": "Request #{{id}}",
+      "intakeTitle": "Patient intake information:",
+      "reasonForCare": "Reason for care:",
+      "currentConcern": "Current concern:",
+      "notProvided": "Not provided",
+      "careGoal": "Care goal: ",
+      "selfReportedContext": "Self-reported context: ",
+      "acceptedNotice": "You have accepted this consultation.",
+      "acceptedNoticeDetail": "The system is waiting for the patient to confirm the start of the consultation session. Once confirmed, the chat session will start automatically.",
+      "reject": "Decline",
+      "accepting": "Accepting...",
+      "accept": "Accept consultation",
+      "waitingConfirmation": "Waiting for patient confirmation..."
+    },
+    "scheduleDialog": {
+      "title": "Work schedule & on-duty hours",
+      "description": "Doctors can update their own availability for consultations and their working time zone.",
+      "days": {
+        "monday": "Monday",
+        "tuesday": "Tuesday",
+        "wednesday": "Wednesday",
+        "thursday": "Thursday",
+        "friday": "Friday",
+        "saturday": "Saturday",
+        "sunday": "Sunday"
+      },
+      "validation": {
+        "requireSlot": "This doctor is configured to accept 1-on-1 consultations. Please set at least one weekly on-duty time slot.",
+        "invalidTimeFormat": "Time slot {{index}} has an invalid time format (HH:mm required, e.g. 08:00).",
+        "endBeforeStart": "In time slot {{index}}, the end time ({{end}}) must be later than the start time ({{start}}).",
+        "overlap": "Time slots {{first}} and {{second}} overlap on {{day}}."
+      },
+      "toast": {
+        "successTitle": "Success",
+        "successDescription": "Your on-duty schedule has been updated."
+      },
+      "errors": {
+        "invalidSchedule": "Invalid availability schedule. Please check the time zone, times and any overlapping time slots.",
+        "updateFailed": "Unable to update your on-duty schedule. Please try again."
+      },
+      "noProfile": {
+        "title": "No care profile yet",
+        "description": "An administrator has not yet created an initial dispatch profile for this doctor account. Please contact a Manager or Coordinator to set up your specialty before saving your schedule."
+      },
+      "managedProfile": {
+        "title": "Professional profile settings managed by Coordinators / Administrators:",
+        "readOnly": "Read-only",
+        "specialty": "Specialty:",
+        "oneOnOne": "1-on-1 consultations:",
+        "accepts": "Accepted",
+        "notAccepts": "Not accepted",
+        "maxConcurrent": "Max concurrent sessions:",
+        "sessionsCount": "{{count}} sessions"
+      },
+      "timezone": "Time zone:",
+      "weeklySlots": {
+        "title": "Weekly on-duty time slots:",
+        "hint": "Patients are only dispatched to you during these time slots while you are on duty.",
+        "add": "Add time slot",
+        "empty": "No time slots configured. You will not be dispatched patients automatically without an on-duty schedule.",
+        "dayOfWeekAria": "Day of the week",
+        "remove": "Remove time slot"
+      },
+      "cancel": "Cancel",
+      "saving": "Saving...",
+      "save": "Save changes"
+    },
+    "sessionStatus": {
+      "scheduled": "Scheduled",
+      "active": "In progress",
+      "completed": "Completed",
+      "cancelledWithCare": "Cancelled (care provided)",
+      "cancelled": "Cancelled",
+      "expired": "Expired"
+    },
+    "summaryStatus": {
+      "afterSession": "After the session ends",
+      "finalized": "Summarized",
+      "locked": "Clinically locked",
+      "draft": "Draft saved",
+      "notCompleted": "Not completed",
+      "overdue": "10 minutes overdue",
+      "notSummarized": "Not summarized",
+      "escalated": "Escalated",
+      "due": "Due: {{date}}",
+      "deadline": "10-minute deadline"
+    },
+    "sessionsTable": {
+      "searchPlaceholder": "Search by session ID, patient name or ID...",
+      "filterPlaceholder": "Filter by status",
+      "filters": {
+        "all": "All statuses",
+        "active": "In progress (Active)",
+        "scheduled": "Scheduled",
+        "summaryPending": "Summary required",
+        "completed": "Completed",
+        "cancelled": "Cancelled",
+        "expired": "Expired"
+      },
+      "refresh": "Refresh",
+      "enterCurrentSession": "Join current session",
+      "viewLatestSession": "View latest session",
+      "activeCount": "{{count}} in progress",
+      "columns": {
+        "sessionId": "Session ID",
+        "patient": "Patient",
+        "package": "Consultation package",
+        "startedAt": "Started",
+        "endsAt": "Ends",
+        "status": "Status",
+        "summary": "Summary",
+        "clinicalAttention": "Clinical attention",
+        "actions": "Actions"
+      },
+      "loading": "Loading care sessions...",
+      "emptyTitle": "No care sessions found",
+      "emptyFiltered": "No consultation sessions match your search or status filter.",
+      "emptyNone": "You have not been assigned any care sessions yet.",
+      "patientFallback": "Patient #{{id}}",
+      "memberId": "ID: #{{id}}",
+      "sessionNumber": "Session #{{id}}",
+      "defaultPackage": "Specialist consultation",
+      "recordsToReview": "{{count}} records to review",
+      "careOccurred": "Care provided",
+      "enterSession": "Join session",
+      "viewSummary": "View summary",
+      "continueSummary": "Continue summary",
+      "createSummary": "Write summary",
+      "viewSession": "View session",
+      "viewDetails": "View details",
+      "pagination": {
+        "showing": "Showing <strong>{{start}}</strong> - <strong>{{end}}</strong> of <strong>{{total}}</strong> consultation sessions",
+        "rowsPerPage": "Rows per page:",
+        "rowsPerPageAria": "Rows per page",
+        "pageOf": "Page <strong>{{page}}</strong> / <strong>{{total}}</strong>",
+        "previous": "Previous",
+        "next": "Next"
+      }
+    }
+  },
+  "hub": {
+    "title": "Admin dashboard",
+    "description": "Monitor HealthSense platform activity and system performance."
+  },
+  "audit": {
+    "title": "Business Audit Log",
+    "subtitle": "Immutable (append-only) log tracking the full lifecycle of business objects (Role: <strong>{{role}}</strong>)",
+    "refresh": "Refresh",
+    "loadErrorTitle": "Error",
+    "loadErrorDescription": "Unable to load the business audit log.",
+    "filters": {
+      "domain": "Object scope (Domain)",
+      "domainPlaceholder": "Select domain",
+      "allDomains": "All permitted domains",
+      "domainId": "Object ID (Domain ID)",
+      "domainIdPlaceholder": "e.g. 101, REQ_001...",
+      "eventType": "Event type",
+      "eventTypePlaceholder": "e.g. CREATED, STATUS_CHANGED..."
+    },
+    "loading": "Loading audit log...",
+    "emptyTitle": "No audit events",
+    "emptyDescription": "No audit log entries match your filters within your permission scope.",
+    "table": {
+      "time": "Time",
+      "domain": "Domain",
+      "eventType": "Event type",
+      "actor": "Actor",
+      "stateTransition": "State transition",
+      "detail": "Details",
+      "view": "View"
+    },
+    "detail": {
+      "event": "Event #{{id}}",
+      "domainId": "Domain ID",
+      "occurredAt": "Occurred at",
+      "actor": "Performed by:",
+      "actorUser": "Account #{{id}} ({{role}})",
+      "actorSystem": "Automated system (SYSTEM)",
+      "reason": "Business reason:",
+      "stateTransition": "State transition",
+      "metadata": "Safe metadata (filtered safe context)"
+    }
+  },
+  "healthRecords": {
+    "title": "Health records",
+    "description": "Manage member health records and HRV features.",
+    "createMock": "Create Mock Record",
+    "pageInfo": "Showing page {{page}} of {{totalPages}}",
+    "totalRecords": " ({{total}} total records)",
+    "previous": "Previous",
+    "next": "Next",
+    "status": {
+      "PENDING_UPLOAD": "Pending",
+      "PROCESSING": "Processing",
+      "COMPLETED": "Completed",
+      "FAILED": "Failed"
+    },
+    "prediction": {
+      "NORMAL": "Normal",
+      "AFIB": "AFib",
+      "UNCERTAIN": "Uncertain"
+    },
+    "fields": {
+      "fileName": "File Name",
+      "memberId": "Member ID",
+      "status": "Status",
+      "prediction": "Prediction",
+      "confidence": "Confidence",
+      "date": "Date",
+      "actions": "Actions"
+    },
+    "table": {
+      "loading": "Loading records...",
+      "empty": "No records found.",
+      "viewDetail": "View Detail"
+    },
+    "filters": {
+      "searchPlaceholder": "Search records...",
+      "statusPlaceholder": "Status",
+      "allStatuses": "All Statuses",
+      "predictionPlaceholder": "Prediction",
+      "allPredictions": "All Predictions"
+    },
+    "detail": {
+      "title": "Health Record Details",
+      "recordId": "Record ID: {{id}}",
+      "memberId": "Member ID:",
+      "fileName": "File Name:",
+      "status": "Status:",
+      "prediction": "Prediction:",
+      "confidence": "Confidence:",
+      "date": "Date:",
+      "hrvFeatures": "HRV Features",
+      "noHrvFeatures": "No HRV features available."
+    },
+    "create": {
+      "title": "Create Health Record",
+      "description": "Create a mock health record for a member.",
+      "memberIdLabel": "Member ID *",
+      "memberIdPlaceholder": "e.g. 208019534288613376",
+      "fileNameLabel": "File Name",
+      "statusLabel": "Status",
+      "statusPlaceholder": "Select status",
+      "predictionLabel": "Prediction",
+      "predictionPlaceholder": "Select prediction",
+      "confidenceLabel": "Confidence (0-1)",
+      "hrvFeaturesLabel": "HRV Features (JSON)",
+      "cancel": "Cancel",
+      "submitting": "Creating...",
+      "submit": "Create Record",
+      "errors": {
+        "memberIdRequired": "Member ID is required",
+        "invalidJson": "HRV features must be valid JSON",
+        "createFailed": "Failed to create health record"
+      }
+    },
+    "chart": {
+      "title": "System Health Overview",
+      "description": "Daily aggregation of all user heart rate classifications",
+      "loading": "Loading statistics...",
+      "empty": "No statistics available for the selected date range."
+    }
+  },
+  "nutritionRules": {
+    "title": "Nutrition assessment thresholds",
+    "description": "Default thresholds for the green / yellow / red rating rules for people with atrial fibrillation. A rule applies to a patient only when the doctor ticks it in the diet prescription; doctors can set custom thresholds. Thresholds are stored in the database and changes here take effect immediately.",
+    "reload": "Reload",
+    "saving": "Saving...",
+    "save": "Save changes",
+    "priorityFallback": "Priority {{priority}}",
+    "resetInitial": "Initial values",
+    "limitLabel": "Red (Limit) when above",
+    "cautionLabel": "Yellow (Caution) when above",
+    "notUsedPlaceholder": "Not used",
+    "source": "Source: ",
+    "viewPaper": "View paper",
+    "updatedAt": "Updated {{time}}",
+    "updatedBy": " by {{user}}",
+    "footer": "\"Exceeds\" is compared per 100 g of edible portion. Color merging: any red rule makes it red; no red but some yellow makes it yellow; no negative points and at least one positive point (low Na/K, or magnesium-rich with little salt) makes it green. The Na/K ratio is red only when sodium also exceeds the salt red threshold; the magnesium point only counts when sodium does not exceed the salt yellow threshold. Leaving a field empty means the rule has no such level. Custom thresholds a doctor sets for a patient always take precedence over the defaults here.",
+    "toast": {
+      "saved": "Thresholds saved. Food colors are now calculated using the new thresholds.",
+      "saveFailed": "Could not save thresholds."
+    },
+    "errors": {
+      "nonNegative": "Thresholds must be non-negative numbers.",
+      "atLeastOne": "At least one threshold is required.",
+      "limitBelowCaution": "The red threshold must be greater than or equal to the yellow threshold.",
+      "goodAboveLimit": "The good level must not be higher than the red threshold.",
+      "forbidden": "You do not have permission to edit assessment thresholds.",
+      "loadFailed": "Could not load assessment thresholds."
+    }
+  },
+  "needsActions": {
+    "page": {
+      "title": "Operations Queue (Needs Action)",
+      "subtitle": "Operations that require intervention, coordination and offline reconciliation (Role: <role>{{role}}</role>)",
+      "refresh": "Refresh",
+      "tabs": {
+        "all": "All",
+        "open": "Open",
+        "claimed": "In progress",
+        "resolved": "Resolved"
+      },
+      "searchPlaceholder": "Search tasks...",
+      "typeFilterPlaceholder": "Filter by event type",
+      "allTypes": "All event types",
+      "loading": "Loading task queue...",
+      "emptyTitle": "Queue is empty",
+      "emptyDescription": "There are no operational tasks to handle in the categories assigned to your role.",
+      "assignee": "Assignee: #{{id}}",
+      "toast": {
+        "errorTitle": "Error",
+        "loadFailed": "Unable to load the needs-action task list."
+      },
+      "eventTypes": {
+        "PAYMENT_REQUIRES_REVIEW": "Payment Review",
+        "PROVIDER_CANCELLATION_RECONCILIATION": "Provider Cancellation",
+        "REFUND_REVIEW_REQUIRED": "Refund Review",
+        "REFUND_PROVIDER_FAILURE": "Refund Provider Failure",
+        "DOCTOR_ACTIVE_CARE_INTERRUPTION": "Doctor Interruption",
+        "MEMBER_ACTIVE_CARE_INTERRUPTION": "Member Interruption",
+        "TERMINATION_REVIEW": "Termination Review",
+        "SUMMARY_PENDING": "Summary Pending",
+        "SUMMARY_OVERDUE": "Summary Overdue",
+        "SUMMARY_ESCALATED": "Summary Escalated"
+      }
+    },
+    "detail": {
+      "priority": {
+        "critical": "CRITICAL",
+        "high": "HIGH",
+        "normal": "NORMAL"
+      },
+      "status": {
+        "resolved": "RESOLVED",
+        "claimed": "IN PROGRESS (CLAIMED)",
+        "open": "OPEN"
+      },
+      "typeLabel": "Task type",
+      "assignedRole": "Assigned role",
+      "relatedObject": "Related object",
+      "originalReference": "Original reference",
+      "createdAt": "Created at:",
+      "claimedByLabel": "Claimed by:",
+      "claimedBy": "Account #{{id}} ({{time}})",
+      "resolvedBy": "Resolved by Account #{{id}}:",
+      "actions": {
+        "close": "Close",
+        "claim": "Claim task",
+        "retryPayosCancellation": "Retry PayOS cancellation",
+        "recommendRefund": "Create refund recommendation",
+        "processRefund": "Process refund",
+        "resolve": "Mark as resolved"
+      },
+      "resolveDialog": {
+        "title": "Record resolution for #{{id}}",
+        "label": "Resolution notes",
+        "placeholder": "Describe the actions taken to close this task...",
+        "cancel": "Cancel",
+        "saving": "Saving...",
+        "confirm": "Confirm and close task"
+      },
+      "toast": {
+        "claimedTitle": "Task claimed",
+        "claimedDescription": "You are now responsible for task #{{id}}.",
+        "claimErrorTitle": "Claim failed",
+        "claimFailed": "Unable to claim the task.",
+        "errorTitle": "Error",
+        "missingPaymentId": "Reference Payment ID not found.",
+        "cancellationSentTitle": "Cancellation sent",
+        "cancellationSentDescription": "Retried the payment link cancellation for Payment #{{id}}.",
+        "retryErrorTitle": "Retry failed",
+        "retryFailed": "Unable to send the payment cancellation retry.",
+        "missingInfoTitle": "Missing information",
+        "missingResolution": "Please enter resolution notes.",
+        "resolvedTitle": "Task resolved",
+        "resolvedDescription": "Task #{{id}} has been marked as RESOLVED.",
+        "resolveErrorTitle": "Resolution failed",
+        "resolveFailed": "Unable to record the resolution."
+      }
+    },
+    "recommend": {
+      "title": "Refund Recommendation (Care Coordinator)",
+      "description": "Recommend a refund amount for payment #{{id}}. The decision and execution will be approved by an Administrator.",
+      "originalPaidAmount": "Original amount paid:",
+      "levelLabel": "Recommended refund level",
+      "options": {
+        "fullTitle": "Refund 100%",
+        "fullDescription": "Full amount",
+        "partialTitle": "Partial refund",
+        "partialDescription": "Custom amount",
+        "noneTitle": "No refund",
+        "noneDescription": "Decline refund"
+      },
+      "amountLabel": "Recommended refund amount (VND)",
+      "amountPlaceholder": "Enter amount...",
+      "reasonLabel": "Recommendation reason",
+      "reasonPlaceholder": "State the grounds for the refund recommendation (e.g. doctor had an unexpected conflict, member requested early termination...)",
+      "contextLabel": "Additional operational context (Optional)",
+      "contextPlaceholder": "Additional notes on member contact, applicable policy...",
+      "cancel": "Cancel",
+      "submitting": "Submitting...",
+      "submit": "Submit refund recommendation",
+      "toast": {
+        "missingInfoTitle": "Missing information",
+        "missingReason": "Please enter a reason for the refund recommendation.",
+        "invalidAmountTitle": "Invalid amount",
+        "invalidAmount": "Please enter a valid refund amount greater than 0.",
+        "successTitle": "Recommendation submitted",
+        "successDescription": "The refund recommendation has been sent to an Administrator for approval.",
+        "errorTitle": "Refund recommendation failed",
+        "failed": "Unable to create the refund recommendation."
+      }
+    },
+    "decide": {
+      "title": "Refund Approval Decision (Administrator)",
+      "description": "Review the coordinator's recommendation and make the official decision for refund #{{id}}.",
+      "originalAmount": "Original amount:",
+      "coordinatorRecommendation": "Coordinator recommendation:",
+      "recommendationFull": "Refund 100%",
+      "recommendationPartial": "Refund {{amount}} VND",
+      "recommendationNone": "No refund",
+      "decisionLabel": "Decision",
+      "approveTitle": "Approve refund",
+      "approveDescription": "Authorize the refund payout",
+      "rejectTitle": "Reject refund",
+      "rejectDescription": "Deny the refund request",
+      "amountLabel": "Approved refund amount (VND)",
+      "amountPlaceholder": "Enter amount...",
+      "reasonLabel": "Decision reason",
+      "reasonPlaceholder": "State the reason for approval or rejection...",
+      "cancel": "Cancel",
+      "processing": "Processing...",
+      "submitApprove": "Approve refund",
+      "submitReject": "Reject refund",
+      "toast": {
+        "missingInfoTitle": "Missing information",
+        "missingReason": "Please enter a reason for the decision.",
+        "invalidAmountTitle": "Invalid amount",
+        "invalidAmount": "The approved refund amount must be greater than 0.",
+        "approvedTitle": "Refund approved",
+        "rejectedTitle": "Refund rejected",
+        "recordedDescription": "The decision for refund request #{{id}} has been recorded.",
+        "errorTitle": "Approval failed",
+        "failed": "Unable to apply the refund decision."
+      }
+    },
+    "reconcile": {
+      "title": "Offline Refund Reconciliation",
+      "description": "Record the actual refund transfer result for refund #{{id}}.",
+      "noticeTitle": "Operations & Payment Gateway Notice",
+      "noticeBody": "The PayOS gateway does not yet support direct refunds via API (the <code>/execute</code> command will return a technical failure status). Administrators must make the refund manually by bank transfer, then reconcile and record the transaction reference here.",
+      "approvedAmount": "Approved refund amount:",
+      "currentStatus": "Current status:",
+      "outcomeLabel": "Actual reconciliation outcome",
+      "outcomeSucceeded": "Refund succeeded (SUCCEEDED)",
+      "outcomeFailed": "Reconciliation failed (FAILED)",
+      "providerRefundIdLabel": "Transaction reference / Refund ID (Optional)",
+      "providerRefundIdPlaceholder": "E.g. FT240829123456 or REF-99120",
+      "providerResultLabel": "Reconciliation evidence & notes",
+      "providerResultPlaceholder": "E.g. Transferred via Vietcombank to account 0123456789 (member Nguyen Van A) on 29/08/2026. Transaction successful.",
+      "cancel": "Cancel",
+      "submitting": "Recording...",
+      "submit": "Confirm reconciliation",
+      "toast": {
+        "missingInfoTitle": "Missing information",
+        "missingResult": "Please enter the refund reconciliation notes / result.",
+        "successTitle": "Reconciliation successful",
+        "successDescription": "Refund #{{id}} status updated to {{status}}.",
+        "errorTitle": "Reconciliation failed",
+        "failed": "Unable to reconcile the refund."
+      }
+    },
+    "refundDetail": {
+      "title": "Refund Details #{{id}}",
+      "subtitle": "Manage the refund lifecycle for consultation services",
+      "status": {
+        "succeeded": "Succeeded (SUCCEEDED)",
+        "approved": "Approved (APPROVED)",
+        "recommended": "Recommended (RECOMMENDED)",
+        "reviewRequired": "Review required (REVIEW_REQUIRED)",
+        "rejected": "Rejected (REJECTED)",
+        "failed": "Failed (FAILED)",
+        "processing": "Processing (PROCESSING)"
+      },
+      "loading": "Loading refund information...",
+      "notFound": "Refund information not found.",
+      "originalPaymentStatus": "Original payment status (Payment #{{id}}):",
+      "paymentHistoryBadge": "History: PAID (Preserved)",
+      "originalAmount": "Original amount",
+      "approvedAmount": "Approved amount",
+      "coordinatorRecommendation": "Coordinator recommendation:",
+      "noRecommendation": "None yet",
+      "recommendationReason": "Recommendation reason:",
+      "decisionReason": "Decision reason (Admin):",
+      "reconciliationResult": "Offline reconciliation result:",
+      "providerReference": "Reference: #{{id}}",
+      "auditTitle": "Business Audit Trail",
+      "auditLoading": "Loading audit trail...",
+      "auditEmpty": "No audit events recorded yet.",
+      "auditActorUser": "Account #{{id}} ({{role}})",
+      "auditActorSystem": "System",
+      "auditDefaultReason": "Status update",
+      "actions": {
+        "decide": "Approve / Reject",
+        "retrying": "Retrying...",
+        "retryGateway": "Retry gateway submission",
+        "reconcile": "Reconcile refund"
+      },
+      "toast": {
+        "errorTitle": "Error",
+        "loadFailed": "Unable to load refund details.",
+        "executedTitle": "Command triggered",
+        "executedDescription": "The refund command has been sent to the payment gateway.",
+        "executeErrorTitle": "Execution failed",
+        "executeFailed": "Unable to trigger the automatic refund."
+      }
+    }
+  },
+  "userDetail": {
+    "page": {
+      "loadError": "Unable to retrieve the user's details from the system.",
+      "updateSuccess": "Account #{{id}} has been updated successfully.",
+      "updateFailed": "Failed to update information.",
+      "fakeRecordSuccess": "Sample measurement data generated for {{name}}.",
+      "fakeRecordFailed": "Failed to create sample measurement.",
+      "accessDeniedTitle": "Access Denied: Protected Route",
+      "accessDeniedDescription": "The <strong>User Detail</strong> view is restricted solely to tenant <primary>ADMIN</primary> and <warning>SUPER_ADMIN</warning> authorities.",
+      "loading": "Loading profile of Member #{{id}}...",
+      "breadcrumbUsers": "Account management",
+      "breadcrumbDetail": "Member details",
+      "fallbackTitle": "Member #{{id}}",
+      "description": "The member's personal information, measurement history and consultation history.",
+      "tabs": {
+        "personal": "1. Personal information",
+        "records": "2. Measurement history",
+        "consultations": "3. Consultation history"
+      }
+    },
+    "sessionStatus": {
+      "active": "In progress",
+      "completed": "Completed",
+      "closed": "Closed",
+      "scheduled": "Scheduled",
+      "extensionPending": "Extension pending",
+      "cancelled": "Cancelled"
+    },
+    "pagination": {
+      "showingSessions": "Showing <strong>{{start}}</strong> - <strong>{{end}}</strong> of <strong>{{total}}</strong> sessions",
+      "showingRecords": "Showing <strong>{{start}}</strong> - <strong>{{end}}</strong> of <strong>{{total}}</strong> records",
+      "rowsPerPage": "Rows per page:",
+      "rowsPerPageAria": "Rows per page",
+      "pageOf": "Page <strong>{{page}}</strong> / <strong>{{total}}</strong>",
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "common": {
+      "refresh": "Refresh",
+      "detail": "Details",
+      "unassigned": "Unassigned",
+      "doctorFallback": "Doctor #{{id}}",
+      "memberFallback": "Member #{{id}}",
+      "days": "{{count}} days"
+    },
+    "sessionDialog": {
+      "summaryStatus": {
+        "finalized": "Summary finalized",
+        "escalated": "Escalated",
+        "pending": "Pending completion",
+        "inProgress": "In progress",
+        "none": "None"
+      },
+      "sessionCode": "Session #{{id}}",
+      "exceptionalOverride": "Exceptional override",
+      "operationalReviewRequired": "Operational review required",
+      "title": "Consultation Session Details",
+      "createdAt": "Created at: {{date}}",
+      "member": "Patient (Member)",
+      "doctor": "Assigned doctor",
+      "idLabel": "ID: {{id}}",
+      "typeAndPackage": "Session type & Service package",
+      "flow": "Consultation flow",
+      "source": "Session source",
+      "packageCode": "Service package ID",
+      "priceAndDuration": "Snapshot price / Duration",
+      "durationDays": " / {{count}} days",
+      "milestones": "Session timeline",
+      "startedAt": "Session started",
+      "activatedAt": "Activated",
+      "endsAt": "Session end deadline",
+      "supportEndsAt": "Support ends",
+      "completedAt": "Completed at",
+      "closedAt": "Closed at",
+      "reasonsTitle": "End reasons & Closure status",
+      "completionReason": "Completion reason:",
+      "closeReason": "Close reason:",
+      "terminationReason": "Early termination reason:",
+      "summaryTitle": "Clinical summary & Escalation",
+      "summaryStatusLabel": "Summary status:",
+      "summaryDueAt": "Summary due:",
+      "summaryEscalatedAt": "Summary escalated at:",
+      "reason": "Reason: {{reason}}",
+      "scope": "Scope: {{scope}}",
+      "adminWarningTitle": "Admin alerts & Exceptional override",
+      "overriddenByAdmin": "Session permissions overridden by Admin #{{id}}",
+      "operationalReviewLabel": "Operational review request: ",
+      "operationalReviewDefault": "An administrator needs to check this session's data",
+      "linksTitle": "Links & Latest message",
+      "linkedRecord": "Linked measurement",
+      "noLinkedRecord": "No linked measurement",
+      "requestId": "Original request (Request ID)",
+      "lastMessage": "Latest message:",
+      "closeWindow": "Close"
+    },
+    "consultationsTab": {
+      "summaryStatus": {
+        "finalized": "Summarized",
+        "escalated": "Escalated",
+        "pending": "Awaiting summary"
+      },
+      "title": "Consultation history ({{count}})",
+      "description": "Online consultation sessions between the Member and specialist doctors.",
+      "columns": {
+        "sessionCode": "Session ID",
+        "member": "Member",
+        "doctor": "Doctor",
+        "status": "Status",
+        "typeSource": "Type/Source",
+        "package": "Service package",
+        "start": "Start",
+        "end": "End",
+        "summary": "Summary",
+        "lastMessage": "Latest message",
+        "flags": "Flags",
+        "actions": "Actions"
+      },
+      "loading": "Loading consultation history...",
+      "emptyTitle": "No consultation sessions",
+      "emptyDescription": "This Member has not had any health consultation sessions with a doctor on the system yet.",
+      "packageFallback": "Package #{{id}}",
+      "operationalReviewTooltip": "Operational review required",
+      "exceptionalOverrideTooltip": "Exceptional override",
+      "viewDetailTooltip": "View consultation session details"
+    },
+    "healthRecordsTab": {
+      "status": {
+        "completed": "Completed",
+        "processing": "Processing",
+        "pending": "Pending",
+        "failed": "Failed"
+      },
+      "prediction": {
+        "normal": "Normal (NORMAL)",
+        "afib": "Atrial fibrillation (AFIB)",
+        "afibSuspected": "Suspected (AFIB_SUSPECTED)",
+        "uncertain": "Uncertain (UNCERTAIN)"
+      },
+      "title": "Health measurement history ({{count}})",
+      "description": "PPG / ECG signal data and HRV metrics recorded from wearable devices or the app.",
+      "creating": "Creating...",
+      "createMock": "Create sample measurement",
+      "columns": {
+        "recordCode": "Record ID",
+        "memberId": "Member ID",
+        "fileName": "File name",
+        "status": "Processing status",
+        "prediction": "Prediction result",
+        "confidence": "Confidence",
+        "time": "Measured/Created at",
+        "actions": "Actions"
+      },
+      "loading": "Loading measurement history...",
+      "emptyTitle": "No measurement records yet",
+      "emptyDescription": "This Member has not uploaded any health signal records yet. You can click \"Create sample measurement\" to try it out.",
+      "viewDetailTooltip": "View measurement details"
+    },
+    "personalTab": {
+      "loading": "Loading the Member's personal information...",
+      "notFound": "Account information not found.",
+      "noName": "Member has not set a name",
+      "createFakeRecord": "Create simulated measurement",
+      "edit": "Edit",
+      "demographicsTitle": "Demographics & Contact",
+      "dateOfBirth": "Date of birth",
+      "notSet": "Not set",
+      "gender": "Gender",
+      "notSpecified": "Not specified",
+      "phone": "Phone number",
+      "notLinked": "Not linked",
+      "address": "Permanent address",
+      "notConfigured": "Not configured",
+      "accountTitle": "Account status & Health data",
+      "operationalStatus": "Operational status:",
+      "registeredAt": "Registration date",
+      "totalRecords": "Total health measurements",
+      "recordCount": "{{count}} measurements",
+      "latestResult": "Latest measurement result",
+      "saved": "Saved"
+    }
+  },
+  "users": {
+    "page": {
+      "title": "Account management",
+      "description": "Look up, create and update user accounts for each role in the system.",
+      "addAccount": "Add account",
+      "tableAria": "Account data table",
+      "roleLabel": {
+        "member": "Patient",
+        "doctor": "Doctor",
+        "careCoordinator": "Care coordinator",
+        "admin": "Hospital administrator"
+      },
+      "unauthorized": {
+        "title": "Access denied: Protected page",
+        "body": "The <module>User & account management</module> module is reserved for the <admin>ADMIN</admin> and <superAdmin>SUPER_ADMIN</superAdmin> roles. Your current role is <role>{{role}}</role>.",
+        "hint": "Please switch your role to ADMIN or SUPER_ADMIN to access this page."
+      },
+      "alerts": {
+        "loadFailed": "Could not load the account list from the server. Please check your network connection.",
+        "updated": "Account details for {{name}} were updated successfully.",
+        "created": "Account for {{name}} was created successfully! A temporary password has been sent by email.",
+        "deleted": "Account #{{id}} ({{email}}) was permanently deleted.",
+        "deleteFailed": "Could not delete the account. The server rejected the delete request.",
+        "fakeRecordCreated": "Sample health record for {{name}} was created successfully.",
+        "fakeRecordFailed": "Could not create the sample health record.",
+        "careProfileUpdated": "The doctor's care profile and consultation schedule were updated successfully."
+      }
+    },
+    "roleTabs": {
+      "member": {
+        "label": "Patients / Members",
+        "description": "Clinical health monitoring accounts"
+      },
+      "doctor": {
+        "label": "Doctors / Clinical",
+        "description": "Doctors for diagnosis and remote monitoring"
+      },
+      "admin": {
+        "label": "Hospital administrators",
+        "description": "Manage hospital system operations"
+      },
+      "activeFilter": "Active filter"
+    },
+    "status": {
+      "active": "Active",
+      "pendingVerify": "Pending verification",
+      "inactive": "Inactive",
+      "locked": "Locked",
+      "banned": "Banned"
+    },
+    "tableHeader": {
+      "title": "{{role}} accounts",
+      "total": "{{count}} total",
+      "description": "Manage account status, identity information and security.",
+      "searchPlaceholder": "Search by ID, email or phone...",
+      "allStatuses": "All statuses"
+    },
+    "table": {
+      "columns": {
+        "id": "ID",
+        "user": "Member / User",
+        "role": "Role",
+        "status": "Status",
+        "phone": "Phone number",
+        "createdAt": "Created",
+        "actions": "Actions"
+      },
+      "loading": "Loading user accounts...",
+      "emptyTitle": "No matching accounts found",
+      "emptyDescription": "No accounts match your search or the selected role category yet.",
+      "actions": {
+        "view": "View account details",
+        "memberDetail": "View member profile (Info, Measurements & Consultations)",
+        "fakeRecord": "Create sample health record (simulated)",
+        "careProfile": "Manage consultation profile & booking schedule",
+        "edit": "Edit account details",
+        "delete": "Delete account"
+      },
+      "pagination": {
+        "showing": "Showing <b>{{start}}</b> - <b>{{end}}</b> of <b>{{total}}</b> accounts",
+        "rowsPerPage": "Rows per page:",
+        "rowsPerPageAria": "Rows per page",
+        "page": "Page <b>{{page}}</b> / <b>{{totalPages}}</b>",
+        "prev": "Previous",
+        "next": "Next"
+      }
+    },
+    "detail": {
+      "unnamed": "Unnamed account",
+      "notRecorded": "Not recorded",
+      "notUpdated": "Not provided",
+      "gender": {
+        "male": "Male",
+        "female": "Female",
+        "other": "Other"
+      },
+      "statusSection": "Account status",
+      "contactSection": "Contact information",
+      "email": "Email address",
+      "phone": "Phone number",
+      "noPhone": "No phone linked",
+      "address": "Residential address",
+      "noAddress": "No address provided",
+      "personalSection": "Personal information",
+      "dateOfBirth": "Date of birth",
+      "genderLabel": "Gender",
+      "loadingHealth": "Loading health record data...",
+      "healthOverview": "Health record overview",
+      "totalRecords": "Total health records:",
+      "recordsCount": "{{count}} records",
+      "latestMeasurement": "Latest measurement:",
+      "saved": "Saved",
+      "registeredAt": "Registered on:",
+      "viewFullProfile": "View full profile (Measurements & Consultations)",
+      "close": "Close",
+      "edit": "Edit"
+    },
+    "form": {
+      "badgeEdit": "Update account profile",
+      "badgeCreate": "New account provisioning",
+      "titleEdit": "Edit: {{name}}",
+      "titleCreate": "Add new user account",
+      "descriptionEdit": "Edit the account's permissions, contact information and status.",
+      "descriptionCreate": "Register a new user account. The system will automatically email a temporary password.",
+      "errors": {
+        "invalidEmail": "Please enter a valid email address.",
+        "roleRequired": "User role is required.",
+        "displayNameRequired": "Display name is required.",
+        "displayNameTooLong": "Display name must not exceed 120 characters.",
+        "phoneTooLong": "Phone number must not exceed 30 characters.",
+        "dateOfBirthFormat": "Date of birth must be in YYYY-MM-DD format.",
+        "genderTooLong": "Gender must not exceed 20 characters.",
+        "addressTooLong": "Address must not exceed 500 characters.",
+        "saveFailed": "An unexpected error occurred while saving."
+      },
+      "email": "Email address",
+      "emailPlaceholder": "doctor.nguyen@healthsense.com",
+      "role": "Account role",
+      "roleAria": "Select account role",
+      "roleOptions": {
+        "member": "MEMBER - Patient / Member",
+        "doctor": "DOCTOR - Clinician",
+        "admin": "ADMIN - Hospital administrator"
+      },
+      "displayName": "Display name",
+      "displayNamePlaceholder": "Dr. Nguyen Van A",
+      "status": "Account status",
+      "statusAria": "Select account status",
+      "statusOptions": {
+        "active": "ACTIVE - Active",
+        "pendingVerify": "PENDING_VERIFY - Awaiting email verification",
+        "inactive": "INACTIVE - Inactive",
+        "locked": "LOCKED - Locked for security",
+        "banned": "BANNED - Banned"
+      },
+      "phone": "Phone number (optional)",
+      "dateOfBirth": "Date of birth (YYYY-MM-DD)",
+      "gender": "Gender",
+      "genderAria": "Select gender",
+      "genderOptions": {
+        "male": "Male",
+        "female": "Female",
+        "other": "Other"
+      },
+      "address": "Residential address",
+      "addressPlaceholder": "Ho Chi Minh City, Vietnam",
+      "passwordNoticeTitle": "Automatic password security notice",
+      "passwordNoticeBody": "No need to set a password manually. After saving, the system will automatically issue a secure temporary password and email account activation instructions.",
+      "cancel": "Cancel",
+      "saveChanges": "Save changes",
+      "create": "Create account"
+    },
+    "deleteDialog": {
+      "title": "Delete this user account?",
+      "description": "You are about to permanently delete the account of <name>{{name}}</name> (ID: #{{id}}). This will immediately end their sessions, unlink their medical records and revoke all system access.",
+      "roleLabel": "Account role:",
+      "cancel": "Cancel",
+      "confirm": "Confirm delete"
+    },
+    "fakeRecordDialog": {
+      "title": "Create a simulated health record?",
+      "description": "Are you sure you want to create a sample health record for patient <name>{{name}}</name> (ID: #{{id}})? The data will be randomly generated by the system for testing and clinical monitoring purposes.",
+      "recipientLabel": "Recipient account:",
+      "cancel": "Cancel",
+      "confirm": "Confirm create"
+    }
+  }
+}

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react"
+import { useTranslation } from "react-i18next"
 import { useToast } from "@/hooks/use-toast"
 import {
   Dialog,
@@ -13,6 +14,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { refundApi } from "@/services"
+import { currentIntlLocale } from "@/lib/i18n"
 import type { ConsultationRefundResponse } from "@/types/refund"
 
 interface DecideRefundDialogProps {
@@ -28,6 +30,7 @@ export function DecideRefundDialog({
   onOpenChange,
   onSuccess,
 }: DecideRefundDialogProps) {
+  const { t } = useTranslation("management")
   const { toast } = useToast()
   const [loading, setLoading] = useState(false)
   const [approved, setApproved] = useState<boolean>(true)
@@ -53,8 +56,8 @@ export function DecideRefundDialog({
     if (!reason.trim()) {
       toast({
         variant: "destructive",
-        title: "Thiếu thông tin",
-        description: "Vui lòng nhập lý do ra quyết định.",
+        title: t("needsActions.decide.toast.missingInfoTitle"),
+        description: t("needsActions.decide.toast.missingReason"),
       })
       return
     }
@@ -62,8 +65,8 @@ export function DecideRefundDialog({
     if (approved && (!approvedAmount || approvedAmount <= 0)) {
       toast({
         variant: "destructive",
-        title: "Số tiền không hợp lệ",
-        description: "Số tiền phê duyệt hoàn phải lớn hơn 0.",
+        title: t("needsActions.decide.toast.invalidAmountTitle"),
+        description: t("needsActions.decide.toast.invalidAmount"),
       })
       return
     }
@@ -77,8 +80,8 @@ export function DecideRefundDialog({
       })
 
       toast({
-        title: approved ? "Đã phê duyệt hoàn tiền" : "Đã từ chối hoàn tiền",
-        description: `Yêu cầu hoàn tiền #${refund.id} đã được ghi nhận quyết định.`,
+        title: approved ? t("needsActions.decide.toast.approvedTitle") : t("needsActions.decide.toast.rejectedTitle"),
+        description: t("needsActions.decide.toast.recordedDescription", { id: refund.id }),
       })
       onSuccess?.()
       onOpenChange(false)
@@ -86,8 +89,8 @@ export function DecideRefundDialog({
       const anyErr = err as { response?: { data?: { message?: string } } }
       toast({
         variant: "destructive",
-        title: "Lỗi phê duyệt",
-        description: anyErr.response?.data?.message || "Không thể thực hiện quyết định hoàn tiền.",
+        title: t("needsActions.decide.toast.errorTitle"),
+        description: anyErr.response?.data?.message || t("needsActions.decide.toast.failed"),
       })
     } finally {
       setLoading(false)
@@ -104,9 +107,9 @@ export function DecideRefundDialog({
       <DialogContent className="sm:max-w-[540px]">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
-            <DialogTitle>Quyết định Phê duyệt Hoàn tiền (Quản trị viên)</DialogTitle>
+            <DialogTitle>{t("needsActions.decide.title")}</DialogTitle>
             <DialogDescription>
-              Xem xét đề xuất từ điều phối viên và ra quyết định chính thức cho giao dịch hoàn #{refund.id}.
+              {t("needsActions.decide.description", { id: refund.id })}
             </DialogDescription>
           </DialogHeader>
 
@@ -114,19 +117,19 @@ export function DecideRefundDialog({
             {/* Context Card */}
             <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-100 space-y-2">
               <div className="flex items-center justify-between">
-                <span className="text-slate-500 font-medium">Số tiền gốc:</span>
+                <span className="text-slate-500 font-medium">{t("needsActions.decide.originalAmount")}</span>
                 <span className="font-mono font-bold text-slate-800">
-                  {origAmount.toLocaleString("vi-VN")} {refund.currency || "VND"}
+                  {origAmount.toLocaleString(currentIntlLocale())} {refund.currency || "VND"}
                 </span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-slate-500 font-medium">Đề xuất của Điều phối:</span>
+                <span className="text-slate-500 font-medium">{t("needsActions.decide.coordinatorRecommendation")}</span>
                 <span className="font-bold text-primary-600">
                   {refund.recommendation === "FULL"
-                    ? "Hoàn 100%"
+                    ? t("needsActions.decide.recommendationFull")
                     : refund.recommendation === "PARTIAL"
-                    ? `Hoàn ${refund.recommendedAmount?.toLocaleString("vi-VN")} VND`
-                    : "Không hoàn"}
+                    ? t("needsActions.decide.recommendationPartial", { amount: refund.recommendedAmount?.toLocaleString(currentIntlLocale()) })
+                    : t("needsActions.decide.recommendationNone")}
                 </span>
               </div>
               {coordReason && (
@@ -138,7 +141,7 @@ export function DecideRefundDialog({
 
             {/* Decision choice */}
             <div className="space-y-2">
-              <Label className="text-xs font-bold text-slate-700">Quyết định</Label>
+              <Label className="text-xs font-bold text-slate-700">{t("needsActions.decide.decisionLabel")}</Label>
               <div className="grid grid-cols-2 gap-3">
                 <button
                   type="button"
@@ -148,8 +151,8 @@ export function DecideRefundDialog({
                   }`}
                   disabled={loading}
                 >
-                  <span className="font-bold text-success-700">Phê duyệt hoàn</span>
-                  <span className="text-[10px] text-slate-500 mt-0.5">Chấp thuận chi hoàn trả</span>
+                  <span className="font-bold text-success-700">{t("needsActions.decide.approveTitle")}</span>
+                  <span className="text-[10px] text-slate-500 mt-0.5">{t("needsActions.decide.approveDescription")}</span>
                 </button>
 
                 <button
@@ -160,8 +163,8 @@ export function DecideRefundDialog({
                   }`}
                   disabled={loading}
                 >
-                  <span className="font-bold text-danger-700">Từ chối hoàn</span>
-                  <span className="text-[10px] text-slate-500 mt-0.5">Bác bỏ yêu cầu hoàn</span>
+                  <span className="font-bold text-danger-700">{t("needsActions.decide.rejectTitle")}</span>
+                  <span className="text-[10px] text-slate-500 mt-0.5">{t("needsActions.decide.rejectDescription")}</span>
                 </button>
               </div>
             </div>
@@ -169,7 +172,7 @@ export function DecideRefundDialog({
             {approved && (
               <div className="space-y-1.5">
                 <Label htmlFor="approvedAmount" className="text-xs font-bold text-slate-700">
-                  Số tiền phê duyệt hoàn (VND)
+                  {t("needsActions.decide.amountLabel")}
                 </Label>
                 <Input
                   id="approvedAmount"
@@ -179,19 +182,19 @@ export function DecideRefundDialog({
                   value={approvedAmount || ""}
                   onChange={(e) => setApprovedAmount(Number(e.target.value))}
                   disabled={loading}
-                  placeholder="Nhập số tiền..."
+                  placeholder={t("needsActions.decide.amountPlaceholder")}
                 />
               </div>
             )}
 
             <div className="space-y-1.5">
               <Label htmlFor="decisionReason" className="text-xs font-bold text-slate-700">
-                Lý do quyết định <span className="text-danger-500">*</span>
+                {t("needsActions.decide.reasonLabel")} <span className="text-danger-500">*</span>
               </Label>
               <Textarea
                 id="decisionReason"
                 rows={3}
-                placeholder="Ghi rõ lý do phê duyệt hoặc từ chối..."
+                placeholder={t("needsActions.decide.reasonPlaceholder")}
                 value={reason}
                 onChange={(e) => setReason(e.target.value)}
                 disabled={loading}
@@ -206,14 +209,14 @@ export function DecideRefundDialog({
               onClick={() => onOpenChange(false)}
               disabled={loading}
             >
-              Hủy
+              {t("needsActions.decide.cancel")}
             </Button>
             <Button
               type="submit"
               disabled={loading}
               className={approved ? "bg-success-600 hover:bg-success-700 text-white" : "bg-danger-600 hover:bg-danger-700 text-white"}
             >
-              {loading ? "Đang xử lý..." : approved ? "Phê duyệt hoàn tiền" : "Từ chối hoàn tiền"}
+              {loading ? t("needsActions.decide.processing") : approved ? t("needsActions.decide.submitApprove") : t("needsActions.decide.submitReject")}
             </Button>
           </DialogFooter>
         </form>

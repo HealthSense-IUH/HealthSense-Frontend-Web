@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next"
 import {
   Dialog,
   DialogContent,
@@ -18,36 +19,37 @@ interface HealthRecordDetailDialogProps {
 }
 
 export function HealthRecordDetailDialog({ record, open, onOpenChange }: HealthRecordDetailDialogProps) {
+  const { t } = useTranslation("management")
   if (!record) return null
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-3xl max-h-[90vh] flex flex-col">
         <DialogHeader>
-          <DialogTitle>Health Record Details</DialogTitle>
+          <DialogTitle>{t("healthRecords.detail.title")}</DialogTitle>
           <DialogDescription>
-            Record ID: {record.id}
+            {t("healthRecords.detail.recordId", { id: record.id })}
           </DialogDescription>
         </DialogHeader>
 
         <ScrollArea className="flex-1 pr-4">
           <div className="grid grid-cols-2 gap-4 text-sm mb-6">
             <div>
-              <span className="font-semibold text-slate-500">Member ID:</span>
+              <span className="font-semibold text-slate-500">{t("healthRecords.detail.memberId")}</span>
               <p>{record.userId}</p>
             </div>
             <div>
-              <span className="font-semibold text-slate-500">File Name:</span>
+              <span className="font-semibold text-slate-500">{t("healthRecords.detail.fileName")}</span>
               <p>{record.fileName || '-'}</p>
             </div>
             <div>
-              <span className="font-semibold text-slate-500">Status:</span>
+              <span className="font-semibold text-slate-500">{t("healthRecords.detail.status")}</span>
               <p>
                 <Badge variant="outline">{record.status}</Badge>
               </p>
             </div>
             <div>
-              <span className="font-semibold text-slate-500">Prediction:</span>
+              <span className="font-semibold text-slate-500">{t("healthRecords.detail.prediction")}</span>
               <p>
                 {record.predictionLabel ? (
                   <Badge variant="outline">{record.predictionLabel}</Badge>
@@ -55,11 +57,11 @@ export function HealthRecordDetailDialog({ record, open, onOpenChange }: HealthR
               </p>
             </div>
             <div>
-              <span className="font-semibold text-slate-500">Confidence:</span>
+              <span className="font-semibold text-slate-500">{t("healthRecords.detail.confidence")}</span>
               <p>{record.confidence ? `${(record.confidence * 100).toFixed(2)}%` : '-'}</p>
             </div>
             <div>
-              <span className="font-semibold text-slate-500">Date:</span>
+              <span className="font-semibold text-slate-500">{t("healthRecords.detail.date")}</span>
               <p>{formatRecordDate(record.createdAt)}</p>
             </div>
           </div>
@@ -71,7 +73,7 @@ export function HealthRecordDetailDialog({ record, open, onOpenChange }: HealthR
           )}
 
           <div>
-            <h3 className="font-semibold mb-2">HRV Features</h3>
+            <h3 className="font-semibold mb-2">{t("healthRecords.detail.hrvFeatures")}</h3>
             {record.hrvFeatures && Object.keys(record.hrvFeatures).length > 0 ? (
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                 {Object.entries(record.hrvFeatures)
@@ -87,7 +89,7 @@ export function HealthRecordDetailDialog({ record, open, onOpenChange }: HealthR
                   ))}
               </div>
             ) : (
-              <p className="text-sm text-slate-500 italic">No HRV features available.</p>
+              <p className="text-sm text-slate-500 italic">{t("healthRecords.detail.noHrvFeatures")}</p>
             )}
           </div>
         </ScrollArea>

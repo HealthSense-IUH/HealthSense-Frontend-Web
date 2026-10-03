@@ -24,6 +24,8 @@ import { creditsApi } from "@/services/credits.service"
 import { formatCreditQuantity, formatVndPrice } from "@/constants/credits"
 import type { AdminMemberCreditSummary, MemberAccountStatus } from "@/types/credits"
 import { MemberTransactionsDialog } from "./member-transactions-dialog"
+import { Trans, useTranslation } from "react-i18next"
+import i18n, { currentIntlLocale } from "@/lib/i18n"
 
 interface MemberCreditSummaryTableProps {
   onSelectMemberForOrders?: (memberId: string) => void
@@ -34,6 +36,7 @@ export function MemberCreditSummaryTable({
   onSelectMemberForOrders: _onSelectMemberForOrders,
   activeMemberId,
 }: MemberCreditSummaryTableProps) {
+  const { t } = useTranslation("credits")
   const { toast } = useToast()
 
   const [members, setMembers] = useState<AdminMemberCreditSummary[]>([])
@@ -86,8 +89,8 @@ export function MemberCreditSummaryTable({
         const parsed = parseApiError(err)
         toast({
           variant: "destructive",
-          title: "Lỗi tải danh sách thành viên",
-          description: parsed.userMessage || "Không thể tải danh sách thành viên.",
+          title: i18n.t("credits:admin.memberSummary.errors.loadTitle"),
+          description: parsed.userMessage || i18n.t("credits:admin.memberSummary.errors.load"),
         })
       } finally {
         setLoading(false)
@@ -135,7 +138,7 @@ export function MemberCreditSummaryTable({
             variant="outline"
             className="text-[11px] font-semibold bg-success-500/10 text-success-600 border-success-500/30"
           >
-            Hoạt động
+            {t("admin.accountStatus.active")}
           </Badge>
         )
       case "PENDING_VERIFY":
@@ -144,7 +147,7 @@ export function MemberCreditSummaryTable({
             variant="outline"
             className="text-[11px] font-semibold bg-warning-500/10 text-warning-600 border-warning-500/30"
           >
-            Chờ xác thực
+            {t("admin.accountStatus.pendingVerify")}
           </Badge>
         )
       case "INACTIVE":
@@ -154,7 +157,7 @@ export function MemberCreditSummaryTable({
             variant="outline"
             className="text-[11px] font-semibold bg-muted text-muted-foreground border-border"
           >
-            Tạm khóa
+            {t("admin.accountStatus.inactive")}
           </Badge>
         )
     }
@@ -168,17 +171,17 @@ export function MemberCreditSummaryTable({
             <div className="flex items-center gap-2">
               <CardTitle className="text-base font-bold flex items-center gap-1.5">
                 <Users className="w-4 h-4 text-primary" />
-                Thống kê nạp token theo thành viên
+                {t("admin.memberSummary.title")}
               </CardTitle>
               <Badge variant="secondary" className="text-xs font-mono">
-                {totalElements} thành viên
+                {t("admin.memberSummary.count", { count: totalElements })}
               </Badge>
             </div>
             <CardDescription className="text-xs mt-0.5 flex items-center gap-1.5 text-muted-foreground">
-              <span>Tra cứu số dư ví hiện tại và tổng kết lịch sử nạp token.</span>
+              <span>{t("admin.memberSummary.description")}</span>
               <span className="inline-flex items-center gap-1 font-semibold text-primary/90 bg-primary/10 px-1.5 py-0.5 rounded text-[10px]">
                 <Info className="w-3 h-3" />
-                Số liệu tổng kết là Toàn thời gian (Lifetime)
+                {t("admin.memberSummary.lifetimeBadge")}
               </span>
             </CardDescription>
           </div>
@@ -188,7 +191,7 @@ export function MemberCreditSummaryTable({
             <div className="relative w-full sm:w-60">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
               <Input
-                placeholder="Tìm theo Tên, Email, SĐT, ID..."
+                placeholder={t("admin.memberSummary.searchPlaceholder")}
                 value={keywordInput}
                 onChange={(e) => setKeywordInput(e.target.value)}
                 className="pl-8 h-8 rounded-xl text-xs"
@@ -199,13 +202,13 @@ export function MemberCreditSummaryTable({
               <SlidersHorizontal className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
               <Select value={statusFilter} onValueChange={setStatusFilter}>
                 <SelectTrigger className="w-[140px] h-8 rounded-xl text-xs">
-                  <SelectValue placeholder="Trạng thái" />
+                  <SelectValue placeholder={t("admin.memberSummary.statusPlaceholder")} />
                 </SelectTrigger>
                 <SelectContent className="rounded-xl text-xs">
-                  <SelectItem value="ALL">Tất cả trạng thái</SelectItem>
-                  <SelectItem value="ACTIVE">Hoạt động</SelectItem>
-                  <SelectItem value="PENDING_VERIFY">Chờ xác thực</SelectItem>
-                  <SelectItem value="INACTIVE">Tạm khóa</SelectItem>
+                  <SelectItem value="ALL">{t("filters.allStatuses")}</SelectItem>
+                  <SelectItem value="ACTIVE">{t("admin.accountStatus.active")}</SelectItem>
+                  <SelectItem value="PENDING_VERIFY">{t("admin.accountStatus.pendingVerify")}</SelectItem>
+                  <SelectItem value="INACTIVE">{t("admin.accountStatus.inactive")}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -229,23 +232,23 @@ export function MemberCreditSummaryTable({
           <Table>
             <TableHeader>
               <TableRow className="bg-muted/30">
-                <TableHead className="text-xs font-semibold">Hội viên</TableHead>
-                <TableHead className="text-xs font-semibold">Liên hệ</TableHead>
-                <TableHead className="text-xs font-semibold text-center">Trạng thái</TableHead>
-                <TableHead className="text-xs font-semibold text-center">Token khả dụng</TableHead>
+                <TableHead className="text-xs font-semibold">{t("admin.memberSummary.columns.member")}</TableHead>
+                <TableHead className="text-xs font-semibold">{t("admin.memberSummary.columns.contact")}</TableHead>
+                <TableHead className="text-xs font-semibold text-center">{t("admin.memberSummary.columns.status")}</TableHead>
+                <TableHead className="text-xs font-semibold text-center">{t("admin.memberSummary.columns.available")}</TableHead>
                 <TableHead className="text-xs font-semibold text-right">
-                  Tổng tiền đã nạp
-                  <span className="block text-[10px] text-muted-foreground font-normal">(Toàn thời gian)</span>
+                  {t("admin.memberSummary.columns.totalPaid")}
+                  <span className="block text-[10px] text-muted-foreground font-normal">{t("admin.memberSummary.columns.lifetime")}</span>
                 </TableHead>
                 <TableHead className="text-xs font-semibold text-center">
-                  Tổng token đã mua
-                  <span className="block text-[10px] text-muted-foreground font-normal">(Toàn thời gian)</span>
+                  {t("admin.memberSummary.columns.totalPurchased")}
+                  <span className="block text-[10px] text-muted-foreground font-normal">{t("admin.memberSummary.columns.lifetime")}</span>
                 </TableHead>
                 <TableHead className="text-xs font-semibold text-center">
-                  Đơn thành công
-                  <span className="block text-[10px] text-muted-foreground font-normal">(Toàn thời gian)</span>
+                  {t("admin.memberSummary.columns.successfulOrders")}
+                  <span className="block text-[10px] text-muted-foreground font-normal">{t("admin.memberSummary.columns.lifetime")}</span>
                 </TableHead>
-                <TableHead className="text-xs font-semibold text-right">Thao tác</TableHead>
+                <TableHead className="text-xs font-semibold text-right">{t("admin.memberSummary.columns.actions")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -253,13 +256,13 @@ export function MemberCreditSummaryTable({
                 <TableRow>
                   <TableCell colSpan={8} className="h-36 text-center text-xs text-muted-foreground">
                     <RefreshCw className="w-5 h-5 animate-spin mx-auto mb-2 text-primary" />
-                    Đang tải danh sách thành viên...
+                    {t("admin.memberSummary.loading")}
                   </TableCell>
                 </TableRow>
               ) : members.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={8} className="h-36 text-center text-xs text-muted-foreground">
-                    Không tìm thấy thành viên.
+                    {t("admin.memberSummary.empty")}
                   </TableCell>
                 </TableRow>
               ) : (
@@ -319,7 +322,7 @@ export function MemberCreditSummaryTable({
                               : "text-muted-foreground"
                           }
                         >
-                          {member.available} lượt
+                          {t("quantity.credits", { count: member.available, value: member.available })}
                         </span>
                       </TableCell>
 
@@ -335,7 +338,7 @@ export function MemberCreditSummaryTable({
 
                       {/* Lifetime Successful Order Count */}
                       <TableCell className="text-center font-mono font-semibold text-xs">
-                        {(member.successfulOrderCount || 0).toLocaleString("vi-VN")}
+                        {(member.successfulOrderCount || 0).toLocaleString(currentIntlLocale())}
                       </TableCell>
 
                       {/* Action */}
@@ -345,10 +348,10 @@ export function MemberCreditSummaryTable({
                           size="sm"
                           onClick={() => handleOpenTransactionsModal(member)}
                           className="h-8 px-2.5 text-xs gap-1.5 rounded-lg shadow-3xs hover:bg-primary hover:text-primary-foreground transition-colors"
-                          title="Xem lịch sử giao dịch thanh toán của hội viên này"
+                          title={t("admin.memberSummary.viewTransactionsTitle")}
                         >
                           <CreditCard className="w-3.5 h-3.5" />
-                          <span>Lịch sử giao dịch</span>
+                          <span>{t("admin.memberSummary.viewTransactions")}</span>
                           <ArrowRight className="w-3 h-3 ml-0.5 opacity-70" />
                         </Button>
                       </TableCell>
@@ -364,7 +367,7 @@ export function MemberCreditSummaryTable({
         {totalElements > 0 && (
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-4 py-3 border-t text-xs text-muted-foreground">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="text-xs">Hiển thị</span>
+              <span className="text-xs">{t("admin.pagination.show")}</span>
               <Select
                 value={String(pageSize)}
                 onValueChange={(val) => handlePageSizeChange(Number(val))}
@@ -373,20 +376,25 @@ export function MemberCreditSummaryTable({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent className="rounded-xl text-xs">
-                  <SelectItem value="5">5 / trang</SelectItem>
-                  <SelectItem value="10">10 / trang</SelectItem>
-                  <SelectItem value="20">20 / trang</SelectItem>
-                  <SelectItem value="50">50 / trang</SelectItem>
+                  <SelectItem value="5">{t("admin.pagination.perPage", { count: 5 })}</SelectItem>
+                  <SelectItem value="10">{t("admin.pagination.perPage", { count: 10 })}</SelectItem>
+                  <SelectItem value="20">{t("admin.pagination.perPage", { count: 20 })}</SelectItem>
+                  <SelectItem value="50">{t("admin.pagination.perPage", { count: 50 })}</SelectItem>
                 </SelectContent>
               </Select>
               <span className="text-xs text-muted-foreground">
-                (Đang xem {((page - 1) * pageSize) + 1} - {Math.min(page * pageSize, totalElements)} trong tổng {totalElements} thành viên)
+                {t("admin.memberSummary.range", { from: ((page - 1) * pageSize) + 1, to: Math.min(page * pageSize, totalElements), total: totalElements })}
               </span>
             </div>
 
             <div className="flex items-center gap-1.5">
               <span className="text-xs mr-1 hidden md:inline">
-                Trang <strong className="text-foreground font-semibold">{page}</strong> / {Math.max(1, totalPages)}
+                <Trans
+                  t={t}
+                  i18nKey="admin.pagination.pageOf"
+                  values={{ page, totalPages: Math.max(1, totalPages) }}
+                  components={{ strong: <strong className="text-foreground font-semibold" /> }}
+                />
               </span>
 
               <Button
@@ -397,7 +405,7 @@ export function MemberCreditSummaryTable({
                 className="h-8 px-2.5 rounded-xl text-xs gap-1"
               >
                 <ChevronLeft className="w-3.5 h-3.5" />
-                <span>Trước</span>
+                <span>{t("shared.prev")}</span>
               </Button>
 
               <div className="flex items-center gap-1">
@@ -430,7 +438,7 @@ export function MemberCreditSummaryTable({
                 disabled={page >= totalPages || loading}
                 className="h-8 px-2.5 rounded-xl text-xs gap-1"
               >
-                <span>Sau</span>
+                <span>{t("shared.next")}</span>
                 <ChevronRight className="w-3.5 h-3.5" />
               </Button>
             </div>

@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, type ChangeEvent, type FormEvent } from "react"
+import { useTranslation } from "react-i18next"
 import { UploadCloud, FileText, Loader2, X, AlertCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useToast } from "@/hooks/use-toast"
@@ -11,6 +12,7 @@ interface UploadMeasurementModalProps {
 }
 
 export function UploadMeasurementModal({ isOpen, onClose, onSuccess }: UploadMeasurementModalProps) {
+  const { t } = useTranslation("health")
   const { toast } = useToast()
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
@@ -38,13 +40,13 @@ export function UploadMeasurementModal({ isOpen, onClose, onSuccess }: UploadMea
     if (!file) return
 
     if (!file.name.toLowerCase().endsWith(".csv") && !file.name.toLowerCase().endsWith(".txt")) {
-      setErrorMsg("Vui lòng chọn file dữ liệu định dạng CSV (.csv) hoặc TXT.")
+      setErrorMsg(t("uploadMeasurement.errors.invalidFormat"))
       setSelectedFile(null)
       return
     }
 
     if (file.size > 20 * 1024 * 1024) {
-      setErrorMsg("Kích thước file không được vượt quá 20MB.")
+      setErrorMsg(t("uploadMeasurement.errors.tooLarge"))
       setSelectedFile(null)
       return
     }
@@ -56,7 +58,7 @@ export function UploadMeasurementModal({ isOpen, onClose, onSuccess }: UploadMea
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
     if (!selectedFile) {
-      setErrorMsg("Vui lòng chọn một file dữ liệu đo.")
+      setErrorMsg(t("uploadMeasurement.errors.noFile"))
       return
     }
 
@@ -66,14 +68,14 @@ export function UploadMeasurementModal({ isOpen, onClose, onSuccess }: UploadMea
     try {
       await healthRecordApi.uploadDirect(selectedFile)
       toast({
-        title: "Tải lên thành công!",
-        description: "Bản ghi đo đã được gửi lên hệ thống và đang được AI phân tích.",
+        title: t("uploadMeasurement.success.title"),
+        description: t("uploadMeasurement.success.description"),
       })
       onSuccess()
       onClose()
     } catch (err: unknown) {
       const anyErr = err as { message?: string; response?: { data?: { message?: string } } }
-      setErrorMsg(anyErr?.response?.data?.message || anyErr?.message || "Không thể tải lên file đo.")
+      setErrorMsg(anyErr?.response?.data?.message || anyErr?.message || t("uploadMeasurement.errors.uploadFailed"))
     } finally {
       setIsUploading(false)
     }
@@ -96,10 +98,10 @@ export function UploadMeasurementModal({ isOpen, onClose, onSuccess }: UploadMea
             </div>
             <div>
               <h3 className="text-lg font-black text-slate-900">
-                Tải lên Bản ghi Đo Mới
+                {t("uploadMeasurement.title")}
               </h3>
               <p className="text-xs text-slate-500 mt-0.5">
-                Hỗ trợ file CSV chứa tín hiệu PPG / Nhịp tim
+                {t("uploadMeasurement.subtitle")}
               </p>
             </div>
           </div>
@@ -146,7 +148,7 @@ export function UploadMeasurementModal({ isOpen, onClose, onSuccess }: UploadMea
                   {selectedFile.name}
                 </span>
                 <span className="text-xs text-slate-500">
-                  {(selectedFile.size / 1024).toFixed(1)} KB - Bấm để chọn file khác
+                  {t("uploadMeasurement.selectedHint", { size: (selectedFile.size / 1024).toFixed(1) })}
                 </span>
               </div>
             ) : (
@@ -156,10 +158,10 @@ export function UploadMeasurementModal({ isOpen, onClose, onSuccess }: UploadMea
                 </div>
                 <div>
                   <p className="text-sm font-bold text-slate-800">
-                    Bấm để chọn file hoặc kéo thả file vào đây
+                    {t("uploadMeasurement.dropzone")}
                   </p>
                   <p className="text-xs text-slate-400 mt-1">
-                    Định dạng hỗ trợ: .CSV (Tối đa 20MB)
+                    {t("uploadMeasurement.supportedFormats")}
                   </p>
                 </div>
               </div>
@@ -175,7 +177,7 @@ export function UploadMeasurementModal({ isOpen, onClose, onSuccess }: UploadMea
               onClick={onClose}
               className="h-10 rounded-xl border-slate-200 text-xs font-bold"
             >
-              Hủy
+              {t("common:actions.cancel")}
             </Button>
             <Button
               type="submit"
@@ -185,12 +187,12 @@ export function UploadMeasurementModal({ isOpen, onClose, onSuccess }: UploadMea
               {isUploading ? (
                 <>
                   <Loader2 className="w-4 h-4 animate-spin" />
-                  <span>Đang tải lên...</span>
+                  <span>{t("uploadMeasurement.uploading")}</span>
                 </>
               ) : (
                 <>
                   <UploadCloud className="w-4 h-4" />
-                  <span>Bắt đầu Phân tích AI</span>
+                  <span>{t("uploadMeasurement.submit")}</span>
                 </>
               )}
             </Button>

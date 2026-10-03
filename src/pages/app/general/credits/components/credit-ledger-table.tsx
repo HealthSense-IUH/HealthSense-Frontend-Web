@@ -18,6 +18,7 @@ import {
 } from "@/constants/credits"
 import type { PageResponse } from "@/types/base"
 import type { CreditLedgerEntry } from "@/types/credits"
+import { Trans, useTranslation } from "react-i18next"
 
 interface CreditLedgerTableProps {
   ledgerData: PageResponse<CreditLedgerEntry> | null
@@ -38,6 +39,7 @@ export function CreditLedgerTable({
   onViewOrderDetail,
   onRetry,
 }: CreditLedgerTableProps) {
+  const { t } = useTranslation("credits")
   if (loading && !ledgerData) {
     return (
       <div className="space-y-3">
@@ -55,11 +57,11 @@ export function CreditLedgerTable({
         <div className="max-w-md mx-auto space-y-3">
           <AlertCircle className="h-8 w-8 text-danger-600 mx-auto" />
           <h3 className="text-sm font-semibold text-danger-800">
-            Không thể tải lịch sử biến động lượt
+            {t("ledgerTable.loadError")}
           </h3>
           <p className="text-xs text-danger-600">{error}</p>
           <Button variant="outline" size="sm" onClick={onRetry} className="gap-1.5 mt-2">
-            <RefreshCw className="h-3.5 w-3.5" /> Thử lại
+            <RefreshCw className="h-3.5 w-3.5" /> {t("shared.retry")}
           </Button>
         </div>
       </Card>
@@ -76,10 +78,10 @@ export function CreditLedgerTable({
         <div className="max-w-md mx-auto space-y-3">
           <History className="h-12 w-12 text-muted-foreground/40 mx-auto" />
           <h3 className="text-base font-semibold text-foreground">
-            Chưa có biến động lượt tư vấn nào
+            {t("ledgerTable.emptyTitle")}
           </h3>
           <p className="text-xs text-muted-foreground">
-            Mọi thao tác mua lượt, giữ lượt hoặc bồi hoàn sẽ được ghi chép minh bạch tại đây.
+            {t("ledgerTable.emptyDescription")}
           </p>
         </div>
       </Card>
@@ -92,12 +94,12 @@ export function CreditLedgerTable({
         <Table>
           <TableHeader>
             <TableRow className="bg-muted/50 hover:bg-muted/50">
-              <TableHead className="w-[170px] text-xs font-semibold">Thời gian</TableHead>
-              <TableHead className="text-xs font-semibold">Loại biến động</TableHead>
-              <TableHead className="text-xs font-semibold">Lượt khả dụng</TableHead>
-              <TableHead className="text-xs font-semibold">Tổng lượt</TableHead>
-              <TableHead className="text-xs font-semibold">Số dư sau</TableHead>
-              <TableHead className="text-right text-xs font-semibold">Nguồn gốc</TableHead>
+              <TableHead className="w-[170px] text-xs font-semibold">{t("ledgerTable.columns.time")}</TableHead>
+              <TableHead className="text-xs font-semibold">{t("ledgerTable.columns.operation")}</TableHead>
+              <TableHead className="text-xs font-semibold">{t("ledgerTable.columns.available")}</TableHead>
+              <TableHead className="text-xs font-semibold">{t("ledgerTable.columns.total")}</TableHead>
+              <TableHead className="text-xs font-semibold">{t("ledgerTable.columns.balanceAfter")}</TableHead>
+              <TableHead className="text-right text-xs font-semibold">{t("ledgerTable.columns.source")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -130,7 +132,7 @@ export function CreditLedgerTable({
                             : "text-muted-foreground"
                       }`}
                     >
-                      {deltaAvailable > 0 ? `+${deltaAvailable}` : deltaAvailable} lượt
+                      {t("ledgerTable.deltaCredits", { count: Math.abs(deltaAvailable), value: deltaAvailable > 0 ? `+${deltaAvailable}` : deltaAvailable })}
                     </span>
                   </TableCell>
                   {/* Thay đổi tổng lượt */}
@@ -140,7 +142,7 @@ export function CreditLedgerTable({
                   {/* Số dư sau giao dịch */}
                   <TableCell>
                     <span className="text-xs font-bold text-success-600">
-                      {availableAfter} khả dụng
+                      {t("ledgerTable.availableAfter", { value: availableAfter })}
                     </span>
                   </TableCell>
                   {/* Đối tượng nguồn */}
@@ -154,7 +156,7 @@ export function CreditLedgerTable({
                           type="button"
                           onClick={() => onViewOrderDetail(entry.sourceId)}
                           className="inline-flex items-center gap-1 text-xs font-mono text-primary hover:underline hover:text-primary/80 transition-colors cursor-pointer"
-                          title="Xem chi tiết đơn mua này"
+                          title={t("ledgerTable.viewOrderTitle")}
                         >
                           <span>#{entry.sourceId}</span>
                           <ExternalLink className="h-3 w-3" />
@@ -177,7 +179,12 @@ export function CreditLedgerTable({
       {totalPages > 1 && (
         <div className="flex items-center justify-between px-2 pt-1 text-xs text-muted-foreground">
           <div>
-            Trang <span className="font-semibold text-foreground">{page}</span> / {totalPages} (Tổng {totalElements} biến động)
+            <Trans
+              t={t}
+              i18nKey="ledgerTable.pagination"
+              values={{ page, totalPages, total: totalElements }}
+              components={{ strong: <span className="font-semibold text-foreground" /> }}
+            />
           </div>
           <div className="flex items-center gap-1.5">
             <Button
@@ -187,7 +194,7 @@ export function CreditLedgerTable({
               disabled={page <= 1 || loading}
               className="h-8 px-2.5 gap-1 text-xs"
             >
-              <ChevronLeft className="h-3.5 w-3.5" /> Trước
+              <ChevronLeft className="h-3.5 w-3.5" /> {t("shared.prev")}
             </Button>
             <Button
               variant="outline"
@@ -196,7 +203,7 @@ export function CreditLedgerTable({
               disabled={page >= totalPages || loading}
               className="h-8 px-2.5 gap-1 text-xs"
             >
-              Sau <ChevronRight className="h-3.5 w-3.5" />
+              {t("shared.next")} <ChevronRight className="h-3.5 w-3.5" />
             </Button>
           </div>
         </div>

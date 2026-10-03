@@ -14,6 +14,7 @@ import {
   Loader2 
 } from "lucide-react"
 import { useLocation, useNavigate, useSearchParams, Link } from "react-router-dom"
+import { Trans, useTranslation } from "react-i18next"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -24,6 +25,7 @@ import { useAuthStore } from "@/stores/auth-store"
 import { getAuthErrorMessage } from "@/lib/errorHandler"
 import { getDefaultRouteForRole } from "@/constants"
 import { BrandSlogan } from "@/components/custom/BrandSlogan"
+import { LanguageSwitcher } from "@/components/layout/language-switcher"
 
 type LoginLocationState = {
   from?: {
@@ -36,6 +38,7 @@ type LoginLocationState = {
 type AuthMode = "login" | "register"
 
 export default function LoginPage() {
+  const { t } = useTranslation("auth")
   const location = useLocation()
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
@@ -119,22 +122,22 @@ export default function LoginPage() {
     const email = registerEmail.trim()
 
     if (!fullName) {
-      setErrorMessage("Vui lòng nhập họ và tên.")
+      setErrorMessage(t("validation.fullNameRequired"))
       return
     }
 
     if (!email) {
-      setErrorMessage("Vui lòng nhập địa chỉ email hợp lệ.")
+      setErrorMessage(t("validation.emailRequired"))
       return
     }
 
     if (registerPassword.length < 8) {
-      setErrorMessage("Mật khẩu phải có tối thiểu 8 ký tự.")
+      setErrorMessage(t("validation.passwordMinLength"))
       return
     }
 
     if (registerPassword !== registerConfirmPassword) {
-      setErrorMessage("Mật khẩu xác nhận không khớp. Vui lòng kiểm tra lại.")
+      setErrorMessage(t("validation.passwordMismatch"))
       return
     }
 
@@ -164,7 +167,7 @@ export default function LoginPage() {
           state: {
             ...state,
             email,
-            successMessage: "Đăng ký tài khoản thành công! Vui lòng đăng nhập để tiếp tục.",
+            successMessage: t("register.success"),
           },
           replace: true,
         })
@@ -200,13 +203,16 @@ export default function LoginPage() {
           </div>
         </Link>
 
-        <Link
-          to="/"
-          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold text-slate-600 hover:text-slate-900 bg-white/80 hover:bg-white border border-slate-200 shadow-2xs transition-all cursor-pointer"
-        >
-          <ArrowLeft className="w-3.5 h-3.5" />
-          <span>Về trang chủ</span>
-        </Link>
+        <div className="flex items-center gap-2">
+          <LanguageSwitcher />
+          <Link
+            to="/"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold text-slate-600 hover:text-slate-900 bg-white/80 hover:bg-white border border-slate-200 shadow-2xs transition-all cursor-pointer"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" />
+            <span>{t("header.backHome")}</span>
+          </Link>
+        </div>
       </header>
 
       {/* Centered Main Form Container */}
@@ -228,7 +234,7 @@ export default function LoginPage() {
               )}
             >
               <LogIn className={cn("w-4 h-4", mode === "login" ? "text-primary-600" : "text-slate-400")} />
-              <span>Đăng nhập</span>
+              <span>{t("tabs.login")}</span>
             </button>
             
             <button
@@ -242,19 +248,19 @@ export default function LoginPage() {
               )}
             >
               <UserPlus className={cn("w-4 h-4", mode === "register" ? "text-primary-600" : "text-slate-400")} />
-              <span>Đăng ký</span>
+              <span>{t("tabs.register")}</span>
             </button>
           </div>
 
           {/* Header / Subtitle */}
           <div className="flex flex-col items-center text-center mb-6">
             <h2 className="text-2xl font-black text-slate-900 tracking-tight font-heading uppercase">
-              {mode === "login" ? "Chào mừng trở lại" : "Tạo tài khoản mới"}
+              {mode === "login" ? t("login.title") : t("register.title")}
             </h2>
             <p className="text-slate-500 text-xs sm:text-sm font-medium mt-1 font-sans">
               {mode === "login"
-                ? "Đăng nhập tài khoản HealthSense để tiếp tục"
-                : "Đăng ký thành viên để theo dõi sức khỏe toàn diện"}
+                ? t("login.subtitle")
+                : t("register.subtitle")}
             </p>
           </div>
 
@@ -278,7 +284,7 @@ export default function LoginPage() {
             <form className="flex flex-col gap-4 w-full" onSubmit={handleLoginSubmit}>
               <div className="space-y-1.5">
                 <Label htmlFor="login-email" className="text-xs font-bold text-slate-700 ml-1 font-heading">
-                  Địa chỉ Email
+                  {t("login.emailLabel")}
                 </Label>
                 <div className="relative">
                   <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
@@ -289,7 +295,7 @@ export default function LoginPage() {
                     value={loginEmail}
                     onChange={(event) => setLoginEmail(event.target.value)}
                     required
-                    placeholder="user@example.com hoặc bacsi@healthsense.vn"
+                    placeholder={t("login.emailPlaceholder")}
                     className="w-full pl-10 rounded-xl h-11 bg-slate-50/70 border border-slate-200 text-slate-900 placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:border-transparent transition-all text-xs sm:text-sm font-medium shadow-2xs hover:border-slate-300"
                   />
                 </div>
@@ -298,13 +304,13 @@ export default function LoginPage() {
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between ml-1 mr-1">
                   <Label htmlFor="login-password" className="text-xs font-bold text-slate-700 font-heading">
-                    Mật khẩu
+                    {t("login.passwordLabel")}
                   </Label>
                   <Link
                     to="/forgot-password"
                     className="text-xs font-bold text-primary-600 hover:text-primary-700 hover:underline transition-all cursor-pointer font-sans"
                   >
-                    Quên mật khẩu?
+                    {t("login.forgotPassword")}
                   </Link>
                 </div>
                 <div className="relative">
@@ -324,7 +330,7 @@ export default function LoginPage() {
                     onClick={() => setShowLoginPassword((prev) => !prev)}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors cursor-pointer p-1"
                     tabIndex={-1}
-                    aria-label={showLoginPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
+                    aria-label={showLoginPassword ? t("password.hide") : t("password.show")}
                   >
                     {showLoginPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
@@ -339,11 +345,11 @@ export default function LoginPage() {
                 {isSubmitting ? (
                   <div className="flex items-center justify-center gap-2">
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    <span>Đang xác thực thông tin...</span>
+                    <span>{t("login.submitting")}</span>
                   </div>
                 ) : (
                   <div className="flex items-center justify-center gap-1.5">
-                    <span>Đăng nhập hệ thống</span>
+                    <span>{t("login.submit")}</span>
                     <ArrowUpRight className="w-4 h-4" />
                   </div>
                 )}
@@ -356,7 +362,7 @@ export default function LoginPage() {
             <form className="flex flex-col gap-3.5 w-full" onSubmit={handleRegisterSubmit}>
               <div className="space-y-1.5">
                 <Label htmlFor="register-name" className="text-xs font-bold text-slate-700 ml-1 font-heading">
-                  Họ và tên
+                  {t("register.fullNameLabel")}
                 </Label>
                 <div className="relative">
                   <User className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
@@ -367,7 +373,7 @@ export default function LoginPage() {
                     value={registerFullName}
                     onChange={(event) => setRegisterFullName(event.target.value)}
                     required
-                    placeholder="Nguyễn Văn A"
+                    placeholder={t("register.fullNamePlaceholder")}
                     className="w-full pl-10 rounded-xl h-11 bg-slate-50/70 border border-slate-200 text-slate-900 placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:border-transparent transition-all text-xs sm:text-sm font-medium shadow-2xs hover:border-slate-300"
                   />
                 </div>
@@ -375,7 +381,7 @@ export default function LoginPage() {
 
               <div className="space-y-1.5">
                 <Label htmlFor="register-email" className="text-xs font-bold text-slate-700 ml-1 font-heading">
-                  Địa chỉ Email
+                  {t("register.emailLabel")}
                 </Label>
                 <div className="relative">
                   <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
@@ -386,7 +392,7 @@ export default function LoginPage() {
                     value={registerEmail}
                     onChange={(event) => setRegisterEmail(event.target.value)}
                     required
-                    placeholder="user@example.com"
+                    placeholder={t("register.emailPlaceholder")}
                     className="w-full pl-10 rounded-xl h-11 bg-slate-50/70 border border-slate-200 text-slate-900 placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:border-transparent transition-all text-xs sm:text-sm font-medium shadow-2xs hover:border-slate-300"
                   />
                 </div>
@@ -394,7 +400,7 @@ export default function LoginPage() {
 
               <div className="space-y-1.5">
                 <Label htmlFor="register-password" className="text-xs font-bold text-slate-700 ml-1 font-heading">
-                  Mật khẩu
+                  {t("register.passwordLabel")}
                 </Label>
                 <div className="relative">
                   <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
@@ -405,7 +411,7 @@ export default function LoginPage() {
                     value={registerPassword}
                     onChange={(event) => setRegisterPassword(event.target.value)}
                     required
-                    placeholder="Tối thiểu 8 ký tự"
+                    placeholder={t("register.passwordPlaceholder")}
                     minLength={8}
                     className="w-full pl-10 pr-10 rounded-xl h-11 bg-slate-50/70 border border-slate-200 text-slate-900 placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:border-transparent transition-all text-xs sm:text-sm font-medium shadow-2xs hover:border-slate-300"
                   />
@@ -414,7 +420,7 @@ export default function LoginPage() {
                     onClick={() => setShowRegisterPassword((prev) => !prev)}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors cursor-pointer p-1"
                     tabIndex={-1}
-                    aria-label={showRegisterPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
+                    aria-label={showRegisterPassword ? t("password.hide") : t("password.show")}
                   >
                     {showRegisterPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
@@ -423,7 +429,7 @@ export default function LoginPage() {
 
               <div className="space-y-1.5">
                 <Label htmlFor="register-confirm-password" className="text-xs font-bold text-slate-700 ml-1 font-heading">
-                  Xác nhận mật khẩu
+                  {t("register.confirmPasswordLabel")}
                 </Label>
                 <div className="relative">
                   <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
@@ -434,7 +440,7 @@ export default function LoginPage() {
                     value={registerConfirmPassword}
                     onChange={(event) => setRegisterConfirmPassword(event.target.value)}
                     required
-                    placeholder="Nhập lại mật khẩu"
+                    placeholder={t("register.confirmPasswordPlaceholder")}
                     minLength={8}
                     className="w-full pl-10 pr-10 rounded-xl h-11 bg-slate-50/70 border border-slate-200 text-slate-900 placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:border-transparent transition-all text-xs sm:text-sm font-medium shadow-2xs hover:border-slate-300"
                   />
@@ -443,7 +449,7 @@ export default function LoginPage() {
                     onClick={() => setShowRegisterConfirmPassword((prev) => !prev)}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors cursor-pointer p-1"
                     tabIndex={-1}
-                    aria-label={showRegisterConfirmPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
+                    aria-label={showRegisterConfirmPassword ? t("password.hide") : t("password.show")}
                   >
                     {showRegisterConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
@@ -458,22 +464,24 @@ export default function LoginPage() {
                 {isSubmitting ? (
                   <div className="flex items-center justify-center gap-2">
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    <span>Đang tạo tài khoản...</span>
+                    <span>{t("register.submitting")}</span>
                   </div>
                 ) : (
                   <div className="flex items-center justify-center gap-1.5">
-                    <span>Tạo tài khoản mới</span>
+                    <span>{t("register.submit")}</span>
                     <UserPlus className="w-4 h-4" />
                   </div>
                 )}
               </Button>
 
               <p className="text-[11px] text-slate-400 text-center leading-relaxed mt-1">
-                Bằng việc tiếp tục, bạn đồng ý với{" "}
-                <Link to="/terms" target="_blank" className="text-primary-600 font-bold hover:underline">
-                  Điều khoản sử dụng &amp; Miễn trừ y tế
-                </Link>{" "}
-                của HealthSense.
+                <Trans
+                  t={t}
+                  i18nKey="register.termsNotice"
+                  components={{
+                    termsLink: <Link to="/terms" target="_blank" className="text-primary-600 font-bold hover:underline" />,
+                  }}
+                />
               </p>
             </form>
           )}
@@ -482,24 +490,24 @@ export default function LoginPage() {
           <div className="mt-6 pt-5 border-t border-slate-100 text-center">
             {mode === "login" ? (
               <p className="text-xs text-slate-500 font-sans">
-                Bạn chưa có tài khoản?{" "}
+                {t("login.noAccount")}{" "}
                 <button
                   type="button"
                   onClick={() => handleSwitchMode("register")}
                   className="font-bold text-primary-600 hover:text-primary-700 hover:underline cursor-pointer transition-colors"
                 >
-                  Đăng ký ngay
+                  {t("login.registerNow")}
                 </button>
               </p>
             ) : (
               <p className="text-xs text-slate-500 font-sans">
-                Bạn đã có tài khoản?{" "}
+                {t("register.hasAccount")}{" "}
                 <button
                   type="button"
                   onClick={() => handleSwitchMode("login")}
                   className="font-bold text-primary-600 hover:text-primary-700 hover:underline cursor-pointer transition-colors"
                 >
-                  Đăng nhập ngay
+                  {t("register.loginNow")}
                 </button>
               </p>
             )}
@@ -511,7 +519,7 @@ export default function LoginPage() {
 
       {/* Footer spacer */}
       <footer className="py-4 text-center text-xs text-slate-400">
-        &copy; {new Date().getFullYear()} HealthSense. Bản quyền thuộc về HealthSense.
+        {t("footer.copyright", { year: new Date().getFullYear() })}
       </footer>
 
     </div>

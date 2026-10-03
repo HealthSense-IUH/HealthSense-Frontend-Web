@@ -1,38 +1,40 @@
 import { motion } from "framer-motion"
 import { HeartPulse, ArrowDown } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
+/**
+ * Bộ giá trị C.A.R.E. `enTitle` là từ khoá thương hiệu (giữ tiếng Anh ở mọi ngôn ngữ);
+ * tiêu đề phụ và mô tả lấy từ landing:brandStory.values.<key> lúc render.
+ */
 const coreValues = [
   {
+    key: "continuous",
     letter: "C",
     enTitle: "Continuous",
-    viTitle: "Giám sát 24/7",
-    desc: "Đồng bộ không dây liên tục dữ liệu nhịp tim và SpO2 từng giây qua smartwatch mà không làm gián đoạn sinh hoạt.",
     letterColor: "text-primary-400",
   },
   {
+    key: "accuracy",
     letter: "A",
     enTitle: "Accuracy",
-    viTitle: "Chuẩn xác 98.65%",
-    desc: "Mô hình học máy Stacking Ensemble phân tích 16 chỉ số biến thiên nhịp tim (HRV) đạt độ tin cậy chuẩn y tế.",
     letterColor: "text-success-300",
   },
   {
+    key: "realtime",
     letter: "R",
     enTitle: "Real-time",
-    viTitle: "Cảnh báo tức thì",
-    desc: "Phản xạ nhanh dưới 100ms phát hiện sớm cơn Rung nhĩ (AFib) và nguy cơ đột quỵ trước khi có triệu chứng.",
     letterColor: "text-primary-400",
   },
   {
+    key: "expertCare",
     letter: "E",
     enTitle: "Expert Care",
-    viTitle: "Bác sĩ đồng hành",
-    desc: "Kết nối trực tuyến 1 chạm với đội ngũ bác sĩ chuyên khoa tim mạch và tự động chia sẻ hồ sơ điện tim an toàn.",
     letterColor: "text-primary-400",
   },
-]
+] as const
 
 export function HealthSenseBrandStorySection() {
+  const { t } = useTranslation("landing")
   return (
     <section className="w-full relative overflow-hidden bg-gradient-to-br from-slate-900 via-primary-700 to-slate-950 text-white py-20 sm:py-28">
       
@@ -99,7 +101,7 @@ export function HealthSenseBrandStorySection() {
           {/* Right Column: Mission Paragraph + Action Circle Button */}
           <div className="lg:col-span-5 flex items-end justify-between gap-6 pt-4 lg:pt-0">
             <p className="text-xs sm:text-sm text-primary-100/90 leading-relaxed max-w-md font-sans">
-              HealthSense được phát triển với tinh thần tiên phong và tư duy đột phá của y tế số. Chúng mình tin rằng mỗi người đều xứng đáng sở hữu giải pháp AI cá nhân hóa để theo dõi nhịp tim và bảo vệ sức khỏe tim mạch chủ động mỗi ngày.
+              {t("brandStory.mission")}
             </p>
 
             {/* Circular Arrow Badge */}
@@ -107,7 +109,7 @@ export function HealthSenseBrandStorySection() {
               onClick={() => {
                 document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })
               }}
-              aria-label="Scroll to features section"
+              aria-label={t("brandStory.scrollToFeatures")}
               className="w-12 h-12 rounded-full bg-primary-600/80 hover:bg-primary-500 border border-primary-400/30 text-white flex items-center justify-center shadow-lg shadow-primary-950/40 shrink-0 hover:scale-110 active:scale-95 transition-all cursor-pointer group"
             >
               <ArrowDown className="w-5 h-5 group-hover:translate-y-0.5 transition-transform" />
@@ -141,10 +143,10 @@ export function HealthSenseBrandStorySection() {
               className="space-y-3"
             >
               <p>
-                Xuất phát từ thực tế đáng lo ngại khi hàng triệu người bệnh đối mặt với các cơn Rung nhĩ (AFib) và loạn nhịp diễn ra hoàn toàn âm thầm, không có triệu chứng rõ ràng cho đến khi biến chứng đột quỵ xảy ra.
+                {t("brandStory.story.p1")}
               </p>
               <p>
-                Chúng mình đã xây dựng HealthSense với mong muốn xóa bỏ khoảng cách giữa bệnh nhân và chăm sóc tim mạch chuyên sâu, biến chiếc đồng hồ đeo tay thông thường thành một phòng điện tim 24/7 luôn túc trực bên bạn.
+                {t("brandStory.story.p2")}
               </p>
             </motion.div>
 
@@ -157,10 +159,10 @@ export function HealthSenseBrandStorySection() {
               className="space-y-3"
             >
               <p>
-                Được bảo chứng bởi mô hình học máy Stacking Ensemble đạt độ chính xác 98.65% trên cơ sở dữ liệu y khoa chuẩn hóa, HealthSense liên tục phân tích 16 chỉ số biến thiên nhịp tim (HRV) theo thời gian thực.
+                {t("brandStory.story.p3")}
               </p>
               <p>
-                Chúng mình tin rằng sự an tâm của bạn chính là thước đo thành công lớn nhất. HealthSense sẽ luôn là người bạn đồng hành tin cậy, lắng nghe và bảo vệ từng nhịp đập của bạn trên mọi hành trình.
+                {t("brandStory.story.p4")}
               </p>
             </motion.div>
 
@@ -179,7 +181,7 @@ export function HealthSenseBrandStorySection() {
               </h3>
             </div>
             <p className="text-xs sm:text-sm text-primary-100/70 max-w-md font-sans">
-              4 tiêu chí cốt lõi định hình nên sứ mệnh bảo vệ và chăm sóc sức khỏe tim mạch của HealthSense.
+              {t("brandStory.valuesIntro")}
             </p>
           </div>
 
@@ -215,12 +217,12 @@ export function HealthSenseBrandStorySection() {
 
                     {/* Vietnamese Title Text */}
                     <span className="text-xs font-bold font-heading text-primary-300 block mb-3">
-                      {val.viTitle}
+                      {t(`brandStory.values.${val.key}.title`)}
                     </span>
 
                     {/* Description Copy */}
                     <p className="text-xs text-primary-100/85 leading-relaxed font-sans">
-                      {val.desc}
+                      {t(`brandStory.values.${val.key}.desc`)}
                     </p>
                   </div>
 

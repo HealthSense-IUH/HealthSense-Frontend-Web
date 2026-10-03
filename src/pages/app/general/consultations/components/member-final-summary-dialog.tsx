@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { CheckCircle2, FileText, Activity } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -17,6 +18,7 @@ import type { ConsultationFinalSummaryResponse } from "@/types/consultation"
 import { formatDate } from "./shared"
 import { useAppShell } from "@/components/layout/app-shell-context"
 import { USER_ROLES } from "@/constants"
+import i18n from "@/lib/i18n"
 
 interface MemberFinalSummaryDialogProps {
   sessionId: string | number
@@ -27,11 +29,12 @@ interface MemberFinalSummaryDialogProps {
 
 function readError(error: unknown, fallback: string) {
   const err = error as { response?: { status?: number; data?: { message?: string } }; message?: string }
-  if (err.response?.status === 403) return "Bạn không có quyền xem thông tin này."
+  if (err.response?.status === 403) return i18n.t("consultation:memberFinalSummaryDialog.errors.forbidden")
   return err.response?.data?.message || err.message || fallback
 }
 
 export function MemberFinalSummaryDialog({ sessionId, open, onOpenChange, isAdminView }: MemberFinalSummaryDialogProps) {
+  const { t } = useTranslation("consultation")
   const { effectiveRole } = useAppShell()
   const isStaff = isAdminView !== undefined
     ? (isAdminView && (effectiveRole === USER_ROLES.ADMIN || effectiveRole === USER_ROLES.SUPER_ADMIN || effectiveRole === USER_ROLES.CARE_COORDINATOR))
@@ -76,13 +79,13 @@ export function MemberFinalSummaryDialog({ sessionId, open, onOpenChange, isAdmi
           setSummary(null) // Not finalized / not created yet = empty state
           setErrorMsg(null)
         } else {
-          setErrorMsg(readError(err, "Không thể tải tổng kết chăm sóc."))
+          setErrorMsg(readError(err, t("memberFinalSummaryDialog.errors.loadFailed")))
         }
       })
       .finally(() => {
         setLoading(false)
       })
-  }, [sessionId, open, isStaff, isDoctor])
+  }, [sessionId, open, isStaff, isDoctor, t])
 
   const isFinalized = summary?.status === "FINALIZED"
 
@@ -92,7 +95,7 @@ export function MemberFinalSummaryDialog({ sessionId, open, onOpenChange, isAdmi
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <FileText className="h-5 w-5 text-primary" />
-            Tổng kết phiên tư vấn #{sessionId}
+            {t("memberFinalSummaryDialog.title", { id: sessionId })}
           </DialogTitle>
         </DialogHeader>
 
@@ -108,11 +111,11 @@ export function MemberFinalSummaryDialog({ sessionId, open, onOpenChange, isAdmi
           ) : !summary || !isFinalized ? (
             <div className="flex flex-col items-center justify-center py-10 text-center">
               <Activity className="h-12 w-12 text-muted-foreground/40 mb-3" />
-              <p className="text-foreground font-medium">Bác sĩ đang hoàn tất tổng kết phiên tư vấn.</p>
+              <p className="text-foreground font-medium">{t("memberFinalSummaryDialog.pending.title")}</p>
               <p className="text-sm text-muted-foreground mt-1.5 max-w-sm">
                 {isStaff
-                  ? "Bản tổng kết chăm sóc sẽ hiển thị tại đây ngay sau khi Bác sĩ phụ trách hoàn tất (Finalize)."
-                  : "Tổng kết y khoa sẽ xuất hiện tại đây ngay sau khi bác sĩ hoàn tất."}
+                  ? t("memberFinalSummaryDialog.pending.staffDescription")
+                  : t("memberFinalSummaryDialog.pending.memberDescription")}
               </p>
             </div>
           ) : (
@@ -121,26 +124,26 @@ export function MemberFinalSummaryDialog({ sessionId, open, onOpenChange, isAdmi
                 <div className="flex items-center gap-3">
                   <CheckCircle2 className="h-5 w-5 text-success-600" />
                   <div>
-                    <p className="font-medium text-success-900">Bản tổng kết đã được hoàn tất</p>
+                    <p className="font-medium text-success-900">{t("memberFinalSummaryDialog.finalized.title")}</p>
                     <p className="text-sm text-success-700">
-                      Lúc: {formatDate(summary.finalizedAt) || "-"}
+                      {t("memberFinalSummaryDialog.finalized.at", { time: formatDate(summary.finalizedAt) || "-" })}
                     </p>
                   </div>
                 </div>
-                <Badge className="bg-success-600 hover:bg-success-700">Đã hoàn tất</Badge>
+                <Badge className="bg-success-600 hover:bg-success-700">{t("memberFinalSummaryDialog.finalized.badge")}</Badge>
               </div>
 
               <div className="space-y-4">
                 <div className="space-y-1.5">
-                  <h4 className="text-sm font-semibold text-slate-900">Tổng kết</h4>
+                  <h4 className="text-sm font-semibold text-slate-900">{t("memberFinalSummaryDialog.sections.summary")}</h4>
                   <div className="rounded-md border bg-slate-50 p-4 text-sm text-slate-800 whitespace-pre-wrap">
-                    {summary.summary || <span className="text-slate-400 italic">Không có nội dung</span>}
+                    {summary.summary || <span className="text-slate-400 italic">{t("memberFinalSummaryDialog.sections.noContent")}</span>}
                   </div>
                 </div>
 
                 {summary.observations && (
                   <div className="space-y-1.5">
-                    <h4 className="text-sm font-semibold text-slate-900">Nhận xét</h4>
+                    <h4 className="text-sm font-semibold text-slate-900">{t("memberFinalSummaryDialog.sections.observations")}</h4>
                     <div className="rounded-md border bg-slate-50 p-4 text-sm text-slate-800 whitespace-pre-wrap">
                       {summary.observations}
                     </div>
@@ -149,7 +152,7 @@ export function MemberFinalSummaryDialog({ sessionId, open, onOpenChange, isAdmi
 
                 {summary.recommendations && (
                   <div className="space-y-1.5">
-                    <h4 className="text-sm font-semibold text-slate-900">Khuyến nghị</h4>
+                    <h4 className="text-sm font-semibold text-slate-900">{t("memberFinalSummaryDialog.sections.recommendations")}</h4>
                     <div className="rounded-md border bg-slate-50 p-4 text-sm text-slate-800 whitespace-pre-wrap">
                       {summary.recommendations}
                     </div>
@@ -158,7 +161,7 @@ export function MemberFinalSummaryDialog({ sessionId, open, onOpenChange, isAdmi
 
                 {summary.followUpRecommendation && (
                   <div className="space-y-1.5">
-                    <h4 className="text-sm font-semibold text-slate-900">Khuyến nghị theo dõi</h4>
+                    <h4 className="text-sm font-semibold text-slate-900">{t("memberFinalSummaryDialog.sections.followUp")}</h4>
                     <div className="rounded-md border bg-slate-50 p-4 text-sm text-slate-800 whitespace-pre-wrap">
                       {summary.followUpRecommendation}
                     </div>
@@ -168,12 +171,12 @@ export function MemberFinalSummaryDialog({ sessionId, open, onOpenChange, isAdmi
                 {/* Referenced Health Records */}
                 {summary.referencedHealthRecordIds && summary.referencedHealthRecordIds.length > 0 && (
                   <div className="space-y-1.5 pt-2 border-t">
-                    <h4 className="text-sm font-semibold text-slate-900">Hồ sơ đo đạc tham chiếu</h4>
+                    <h4 className="text-sm font-semibold text-slate-900">{t("memberFinalSummaryDialog.sections.referencedRecords")}</h4>
                     <div className="flex flex-wrap gap-2">
                       {summary.referencedHealthRecordIds.map((recId) => (
                         <Badge key={recId} variant="secondary" className="text-xs py-1 px-2.5 gap-1.5">
                           <FileText className="w-3.5 h-3.5" />
-                          Hồ sơ #{recId}
+                          {t("memberFinalSummaryDialog.sections.recordLabel", { id: recId })}
                         </Badge>
                       ))}
                     </div>
@@ -185,7 +188,7 @@ export function MemberFinalSummaryDialog({ sessionId, open, onOpenChange, isAdmi
                   <div className="space-y-2.5 pt-3 border-t">
                     <h4 className="text-sm font-semibold text-warning-900 flex items-center gap-1.5">
                       <FileText className="w-4 h-4 text-warning-600" />
-                      Phụ lục & Đính chính sau hoàn tất ({summary.addenda.length})
+                      {t("memberFinalSummaryDialog.sections.addenda", { count: summary.addenda.length })}
                     </h4>
                     <div className="space-y-2">
                       {summary.addenda.map((addendum) => (
@@ -194,7 +197,7 @@ export function MemberFinalSummaryDialog({ sessionId, open, onOpenChange, isAdmi
                           className="p-3 rounded-lg bg-warning-50/60 border border-warning-200/60 text-xs"
                         >
                           <div className="flex items-center justify-between font-medium text-warning-950 mb-1">
-                            <span>Lý do: {addendum.reason}</span>
+                            <span>{t("memberFinalSummaryDialog.sections.reason", { reason: addendum.reason })}</span>
                             <span className="text-[10px] text-muted-foreground">{formatDate(addendum.createdAt)}</span>
                           </div>
                           <p className="text-foreground/90 whitespace-pre-wrap">{addendum.content}</p>
@@ -210,7 +213,7 @@ export function MemberFinalSummaryDialog({ sessionId, open, onOpenChange, isAdmi
 
         <DialogFooter className="mt-2">
           <Button variant="outline" onClick={() => onOpenChange(false)}>
-            Đóng
+            {t("memberFinalSummaryDialog.close")}
           </Button>
         </DialogFooter>
       </DialogContent>

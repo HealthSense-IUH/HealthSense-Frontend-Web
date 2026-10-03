@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { useTranslation } from "react-i18next"
 import { AlertCircle, CheckCircle2, Clock, Loader2, Sparkles, User, XCircle } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
@@ -21,6 +22,7 @@ export function DoctorOfferCard({
   onReject,
   onOfferExpired,
 }: DoctorOfferCardProps) {
+  const { t } = useTranslation("management")
   const [secondsRemaining, setSecondsRemaining] = useState<number | null>(null)
 
   // Derive countdown strictly from offer.doctorOfferExpiresAt
@@ -63,7 +65,7 @@ export function DoctorOfferCard({
             <span className="flex h-3 w-3 rounded-full bg-success-500 animate-ping" />
             <CardTitle className="text-base sm:text-lg font-bold text-foreground flex items-center gap-2">
               <Sparkles className="w-5 h-5 text-primary" />
-              {isWaitingMember ? "Đang chờ bệnh nhân xác nhận" : "Lời mời nhận ca tư vấn mới!"}
+              {isWaitingMember ? t("doctorConsultations.offerCard.titleWaiting") : t("doctorConsultations.offerCard.titleOffered")}
             </CardTitle>
           </div>
 
@@ -78,20 +80,21 @@ export function DoctorOfferCard({
                 }`}
               >
                 <Clock className="w-3.5 h-3.5 mr-1" />
-                Còn {secondsRemaining}s để tiếp nhận
+                {t("doctorConsultations.offerCard.countdown", { seconds: secondsRemaining })}
               </Badge>
             )}
 
             {isWaitingMember && (
               <Badge variant="outline" className="border-warning-400 bg-warning-50 text-warning-800 font-medium">
                 <Loader2 className="w-3.5 h-3.5 mr-1 animate-spin" />
-                Đã tiếp nhận - Chờ bệnh nhân
+                {t("doctorConsultations.offerCard.acceptedWaiting")}
               </Badge>
             )}
           </div>
         </div>
         <CardDescription className="text-xs">
-          Mã lời mời: <span className="font-mono text-foreground font-semibold">{offer.offerId}</span> • Yêu cầu #{offer.requestId}
+          {t("doctorConsultations.offerCard.offerCode")} <span className="font-mono text-foreground font-semibold">{offer.offerId}</span> •{" "}
+          {t("doctorConsultations.offerCard.requestNumber", { id: offer.requestId })}
         </CardDescription>
       </CardHeader>
 
@@ -100,39 +103,39 @@ export function DoctorOfferCard({
         <div className="rounded-xl border border-border bg-muted/20 p-4 space-y-3">
           <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
             <User className="w-4 h-4 text-primary" />
-            <span>Thông tin sơ bộ từ người bệnh:</span>
+            <span>{t("doctorConsultations.offerCard.intakeTitle")}</span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
             <div className="rounded-lg bg-background p-3 border border-border/80">
               <span className="text-xs text-muted-foreground block font-medium mb-1">
-                Lý do cần tư vấn (Reason for Care):
+                {t("doctorConsultations.offerCard.reasonForCare")}
               </span>
               <p className="font-medium text-foreground whitespace-pre-line">
-                {intake?.reasonForCare || "Chưa cung cấp"}
+                {intake?.reasonForCare || t("doctorConsultations.offerCard.notProvided")}
               </p>
             </div>
 
             <div className="rounded-lg bg-background p-3 border border-border/80">
               <span className="text-xs text-muted-foreground block font-medium mb-1">
-                Vấn đề sức khỏe chính (Current Concern):
+                {t("doctorConsultations.offerCard.currentConcern")}
               </span>
               <p className="font-medium text-foreground whitespace-pre-line">
-                {intake?.currentConcern || "Chưa cung cấp"}
+                {intake?.currentConcern || t("doctorConsultations.offerCard.notProvided")}
               </p>
             </div>
           </div>
 
           {intake?.careGoal && (
             <div className="text-xs text-muted-foreground pt-1">
-              <span className="font-medium text-foreground">Mục tiêu chăm sóc: </span>
+              <span className="font-medium text-foreground">{t("doctorConsultations.offerCard.careGoal")}</span>
               {intake.careGoal}
             </div>
           )}
 
           {intake?.relevantSelfReportedContext && (
             <div className="text-xs text-muted-foreground pt-1">
-              <span className="font-medium text-foreground">Bối cảnh tự báo cáo: </span>
+              <span className="font-medium text-foreground">{t("doctorConsultations.offerCard.selfReportedContext")}</span>
               {intake.relevantSelfReportedContext}
             </div>
           )}
@@ -142,9 +145,9 @@ export function DoctorOfferCard({
           <div className="rounded-lg bg-warning-50 border border-warning-200 p-3.5 flex items-start gap-2.5 text-xs text-warning-900">
             <AlertCircle className="w-4 h-4 text-warning-600 shrink-0 mt-0.5" />
             <div className="space-y-1">
-              <p className="font-medium">Bạn đã chấp nhận ca tư vấn này.</p>
+              <p className="font-medium">{t("doctorConsultations.offerCard.acceptedNotice")}</p>
               <p className="text-warning-700">
-                Hệ thống đang chờ bệnh nhân bấm xác nhận bắt đầu phiên tư vấn. Khi hoàn tất, phiên chat sẽ tự động kích hoạt.
+                {t("doctorConsultations.offerCard.acceptedNoticeDetail")}
               </p>
             </div>
           </div>
@@ -162,7 +165,7 @@ export function DoctorOfferCard({
               className="w-full sm:w-auto text-destructive hover:bg-destructive/10 hover:text-destructive border-destructive/30"
             >
               <XCircle className="w-4 h-4 mr-1.5" />
-              Từ chối nhận ca
+              {t("doctorConsultations.offerCard.reject")}
             </Button>
 
             <Button
@@ -173,13 +176,13 @@ export function DoctorOfferCard({
               className="w-full sm:w-auto bg-success-600 hover:bg-success-700 text-white font-medium shadow-sm"
             >
               <CheckCircle2 className="w-4 h-4 mr-1.5" />
-              {actionLoading ? "Đang tiếp nhận..." : "Tiếp nhận ca tư vấn"}
+              {actionLoading ? t("doctorConsultations.offerCard.accepting") : t("doctorConsultations.offerCard.accept")}
             </Button>
           </>
         ) : (
           <div className="text-xs text-muted-foreground flex items-center gap-1.5 py-1">
             <Loader2 className="w-3.5 h-3.5 animate-spin text-primary" />
-            Đang chờ bệnh nhân xác nhận...
+            {t("doctorConsultations.offerCard.waitingConfirmation")}
           </div>
         )}
       </CardFooter>

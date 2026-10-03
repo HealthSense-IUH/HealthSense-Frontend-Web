@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react"
 import { useSearchParams, useNavigate } from "react-router-dom"
+import { useTranslation } from "react-i18next"
 import {
   Coins,
   History,
@@ -27,6 +28,7 @@ import { MemberPaymentFilterBar } from "./components/member-payment-filter-bar"
 import type { CreditPackage } from "@/types/credits"
 
 export default function CreditsPage() {
+  const { t } = useTranslation("credits")
   const navigate = useNavigate()
   const { toast } = useToast()
   const userSession = useAuthStore((state) => state.userSession)
@@ -90,8 +92,8 @@ export default function CreditsPage() {
   // Purchase hook
   const purchaseState = useCreditPurchase((detail) => {
     toast({
-      title: "Thành công",
-      description: "Mua lượt tư vấn thành công!",
+      title: t("page.purchaseSuccessTitle"),
+      description: t("page.purchaseSuccessDescription"),
     })
 
     if (detail.wallet) {
@@ -152,10 +154,10 @@ export default function CreditsPage() {
       <div className="flex h-96 flex-col items-center justify-center space-y-4 text-center">
         <ShieldAlert className="h-12 w-12 text-destructive" />
         <h2 className="text-xl font-bold tracking-tight text-foreground">
-          Truy cập bị từ chối
+          {t("page.accessDenied")}
         </h2>
         <p className="max-w-md text-xs text-muted-foreground">
-          Trang mua và quản lý ví lượt tư vấn chỉ dành cho Hội viên (Member).
+          {t("page.accessDeniedDescription")}
         </p>
       </div>
     )
@@ -168,10 +170,10 @@ export default function CreditsPage() {
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-foreground flex items-center gap-2">
             <Coins className="w-6 h-6 text-primary" />
-            Ví lượt tư vấn
+            {t("page.title")}
           </h1>
           <p className="text-xs text-muted-foreground mt-1">
-            Quản lý số dư lượt tư vấn, mua thêm lượt và theo dõi lịch sử giao dịch minh bạch.
+            {t("page.description")}
           </p>
         </div>
         <Button
@@ -188,7 +190,7 @@ export default function CreditsPage() {
                 : ""
             }`}
           />
-          Làm mới ví & gói
+          {t("page.refresh")}
         </Button>
       </div>
 
@@ -206,15 +208,15 @@ export default function CreditsPage() {
           <TabsList className="bg-muted/60 p-1">
             <TabsTrigger value="packages" className="gap-2 text-xs font-medium">
               <Package className="h-4 w-4" />
-              Gói lượt tư vấn
+              {t("page.tabs.packages")}
             </TabsTrigger>
             <TabsTrigger value="orders" className="gap-2 text-xs font-medium">
               <ShoppingBag className="h-4 w-4" />
-              Lịch sử đơn mua
+              {t("page.tabs.orders")}
             </TabsTrigger>
             <TabsTrigger value="ledger" className="gap-2 text-xs font-medium">
               <History className="h-4 w-4" />
-              Biến động lượt
+              {t("page.tabs.ledger")}
             </TabsTrigger>
           </TabsList>
         </div>
@@ -224,10 +226,10 @@ export default function CreditsPage() {
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-lg font-bold text-foreground">
-                Danh sách gói lượt đang mở bán
+                {t("page.packagesTitle")}
               </h2>
               <p className="text-xs text-muted-foreground">
-                Chọn gói lượt phù hợp để nạp thêm vào ví tư vấn của bạn.
+                {t("page.packagesDescription")}
               </p>
             </div>
           </div>
@@ -246,9 +248,9 @@ export default function CreditsPage() {
         <TabsContent value="orders" className="space-y-6 focus-visible:outline-hidden">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-lg font-bold text-foreground">Tổng kết & Lịch sử đơn mua</h2>
+              <h2 className="text-lg font-bold text-foreground">{t("page.ordersTitle")}</h2>
               <p className="text-xs text-muted-foreground">
-                Theo dõi tổng quan tài chính token đã mua và chi tiết các đơn nạp lượt tư vấn.
+                {t("page.ordersDescription")}
               </p>
             </div>
           </div>
@@ -293,10 +295,10 @@ export default function CreditsPage() {
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-lg font-bold text-foreground">
-                Lịch sử biến động lượt
+                {t("page.ledgerTitle")}
               </h2>
               <p className="text-xs text-muted-foreground">
-                Nhật ký chi tiết các giao dịch mua, giữ lượt và sử dụng lượt tư vấn.
+                {t("page.ledgerDescription")}
               </p>
             </div>
           </div>

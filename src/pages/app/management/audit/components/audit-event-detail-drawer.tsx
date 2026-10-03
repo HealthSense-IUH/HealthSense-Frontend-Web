@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next"
 import {
   Dialog,
   DialogContent,
@@ -13,6 +14,7 @@ import {
   ArrowRight,
 } from "lucide-react"
 import type { BusinessAuditEventResponse } from "@/types/business-audit"
+import { currentIntlLocale } from "@/lib/i18n"
 
 interface AuditEventDetailDrawerProps {
   event: BusinessAuditEventResponse | null
@@ -25,6 +27,7 @@ export function AuditEventDetailDrawer({
   open,
   onOpenChange,
 }: AuditEventDetailDrawerProps) {
+  const { t } = useTranslation("management")
   if (!event) return null
 
   let metadataString = ""
@@ -44,7 +47,7 @@ export function AuditEventDetailDrawer({
           <div className="flex items-center justify-between gap-2">
             <div>
               <div className="flex items-center gap-2 mb-1">
-                <span className="font-mono text-xs text-slate-400 font-bold">Event #{event.id}</span>
+                <span className="font-mono text-xs text-slate-400 font-bold">{t("audit.detail.event", { id: event.id })}</span>
                 <Badge variant="outline" className="font-bold uppercase text-[10px] bg-slate-50">
                   {event.domainType}
                 </Badge>
@@ -64,13 +67,13 @@ export function AuditEventDetailDrawer({
             {/* Domain info */}
             <div className="grid grid-cols-2 gap-3">
               <div className="p-3.5 rounded-2xl border border-slate-100 bg-slate-50/50">
-                <span className="text-[10px] text-slate-400 font-bold uppercase block mb-1">Domain ID</span>
+                <span className="text-[10px] text-slate-400 font-bold uppercase block mb-1">{t("audit.detail.domainId")}</span>
                 <span className="font-mono font-bold text-slate-900 text-sm">#{event.domainId}</span>
               </div>
               <div className="p-3.5 rounded-2xl border border-slate-100 bg-slate-50/50">
-                <span className="text-[10px] text-slate-400 font-bold uppercase block mb-1">Thời điểm xảy ra</span>
+                <span className="text-[10px] text-slate-400 font-bold uppercase block mb-1">{t("audit.detail.occurredAt")}</span>
                 <span className="font-mono font-bold text-slate-700 text-xs">
-                  {new Date(event.occurredAt).toLocaleString("vi-VN")}
+                  {new Date(event.occurredAt).toLocaleString(currentIntlLocale())}
                 </span>
               </div>
             </div>
@@ -80,15 +83,17 @@ export function AuditEventDetailDrawer({
               <div className="flex items-center justify-between">
                 <span className="text-slate-500 font-medium flex items-center gap-1.5">
                   {event.actorType === "USER" ? <User className="w-3.5 h-3.5 text-primary-600" /> : <Cpu className="w-3.5 h-3.5 text-primary-600" />}
-                  <span>Tác nhân thực hiện:</span>
+                  <span>{t("audit.detail.actor")}</span>
                 </span>
                 <span className="font-bold text-slate-800">
-                  {event.actorType === "USER" ? `Tài khoản #${event.actorId || "N/A"} (${event.actorRole || "USER"})` : "Hệ thống tự động (SYSTEM)"}
+                  {event.actorType === "USER"
+                    ? t("audit.detail.actorUser", { id: event.actorId || "N/A", role: event.actorRole || "USER" })
+                    : t("audit.detail.actorSystem")}
                 </span>
               </div>
               {event.reason && (
                 <div className="pt-2 border-t border-slate-200/60">
-                  <span className="text-[10px] text-slate-400 uppercase font-bold block mb-0.5">Lý do nghiệp vụ:</span>
+                  <span className="text-[10px] text-slate-400 uppercase font-bold block mb-0.5">{t("audit.detail.reason")}</span>
                   <p className="text-slate-700 font-medium">{event.reason}</p>
                 </div>
               )}
@@ -97,7 +102,7 @@ export function AuditEventDetailDrawer({
             {/* State Transition */}
             {(event.previousState || event.newState) && (
               <div className="p-4 rounded-2xl border border-slate-100 bg-slate-50/30 space-y-2">
-                <span className="text-[10px] text-slate-400 font-bold uppercase block">Chuyển đổi trạng thái</span>
+                <span className="text-[10px] text-slate-400 font-bold uppercase block">{t("audit.detail.stateTransition")}</span>
                 <div className="flex items-center gap-3 font-mono font-bold text-xs">
                   <Badge variant="outline" className="bg-white">
                     {event.previousState || "INITIAL"}
@@ -115,7 +120,7 @@ export function AuditEventDetailDrawer({
               <div className="space-y-1.5 pt-1">
                 <div className="flex items-center gap-1.5 text-slate-600 font-bold text-xs">
                   <FileCode className="w-3.5 h-3.5 text-primary-600" />
-                  <span>Metadata an toàn (Filtered Safe Context)</span>
+                  <span>{t("audit.detail.metadata")}</span>
                 </div>
                 <div className="p-3.5 rounded-2xl bg-slate-900 text-slate-100 font-mono text-[11px] overflow-x-auto leading-relaxed">
                   <pre>{metadataString}</pre>

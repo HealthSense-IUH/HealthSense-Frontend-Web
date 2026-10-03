@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from "react"
 import { Mail, ArrowRight, ArrowLeft, AlertCircle, Loader2 } from "lucide-react"
 import { Link } from "react-router-dom"
+import { useTranslation } from "react-i18next"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -13,6 +14,7 @@ interface RequestOtpFormProps {
 }
 
 export function RequestOtpForm({ initialEmail, onSuccess }: RequestOtpFormProps) {
+  const { t } = useTranslation("auth")
   const [email, setEmail] = useState(initialEmail)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [errorMessage, setErrorMessage] = useState("")
@@ -23,7 +25,7 @@ export function RequestOtpForm({ initialEmail, onSuccess }: RequestOtpFormProps)
     
     const trimmedEmail = email.trim()
     if (!trimmedEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
-      setErrorMessage("Please enter a valid email address.")
+      setErrorMessage(t("forgotPassword.request.invalidEmail"))
       return
     }
 
@@ -34,7 +36,7 @@ export function RequestOtpForm({ initialEmail, onSuccess }: RequestOtpFormProps)
     } catch (error: unknown) {
       const anyErr = error as { response?: { data?: { message?: string } }; message?: string }
       setErrorMessage(
-        anyErr?.response?.data?.message || anyErr?.message || "Failed to request verification code. Please try again."
+        anyErr?.response?.data?.message || anyErr?.message || t("forgotPassword.request.requestFailed")
       )
     } finally {
       setIsSubmitting(false)
@@ -47,9 +49,9 @@ export function RequestOtpForm({ initialEmail, onSuccess }: RequestOtpFormProps)
         <div className="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center mb-4 shadow-2xs border border-primary/20">
           <Mail className="w-6 h-6" />
         </div>
-        <h2 className="text-2xl font-black text-slate-900 tracking-tight">Forgot password</h2>
+        <h2 className="text-2xl font-black text-slate-900 tracking-tight">{t("forgotPassword.request.title")}</h2>
         <p className="text-slate-500 text-xs sm:text-sm font-medium mt-1 max-w-[300px]">
-          Enter your email to receive a verification code.
+          {t("forgotPassword.request.subtitle")}
         </p>
       </div>
 
@@ -63,7 +65,7 @@ export function RequestOtpForm({ initialEmail, onSuccess }: RequestOtpFormProps)
 
         <div className="space-y-1.5">
           <Label htmlFor="email" className="text-xs font-bold text-slate-700 ml-1">
-            Email Address
+            {t("forgotPassword.request.emailLabel")}
           </Label>
           <div className="relative">
             <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
@@ -88,11 +90,11 @@ export function RequestOtpForm({ initialEmail, onSuccess }: RequestOtpFormProps)
           {isSubmitting ? (
             <>
               <Loader2 className="w-4 h-4 animate-spin" />
-              <span>Sending Code...</span>
+              <span>{t("forgotPassword.request.submitting")}</span>
             </>
           ) : (
             <>
-              <span>Send Verification Code</span>
+              <span>{t("forgotPassword.request.submit")}</span>
               <ArrowRight className="w-4 h-4" />
             </>
           )}
@@ -105,7 +107,7 @@ export function RequestOtpForm({ initialEmail, onSuccess }: RequestOtpFormProps)
           className="flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-slate-800 transition-colors py-1 px-3 rounded-full hover:bg-slate-50"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
-          <span>Back to sign in</span>
+          <span>{t("forgotPassword.request.backToSignIn")}</span>
         </Link>
       </div>
     </div>

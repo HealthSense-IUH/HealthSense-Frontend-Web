@@ -39,10 +39,10 @@ export function Page({ children, fill = false, bleed = false, className }: PageP
       className={cn(
         "flex flex-col gap-4",
         bleed ? "w-auto -m-(--app-page-pad)" : "w-full",
+        // Khi fill: chiều cao còn lại = màn hình - topbar - khoảng đệm trên dưới của <main> (biến đặt ở MainLayout)
         bleed
           ? "h-[calc(100dvh_-_var(--app-topbar-h))] min-h-[32rem] gap-0"
-          : // Chiều cao còn lại = màn hình - topbar - khoảng đệm trên dưới của <main> (biến đặt ở MainLayout)
-            fill
+          : fill
             ? "h-[calc(100dvh_-_var(--app-topbar-h)_-_2*var(--app-page-pad))] min-h-[32rem]"
             : "flex-1",
         className

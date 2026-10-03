@@ -1,5 +1,7 @@
 import { useState, useEffect, useCallback } from "react"
 import { useNavigate } from "react-router-dom"
+import { Trans, useTranslation } from "react-i18next"
+import i18n from "@/lib/i18n"
 import { ShieldAlert, Sparkles, CheckCircle2, AlertCircle, Plus } from "lucide-react"
 import { useDebounce } from "@/hooks/use-debounce"
 import { useAppShell } from "@/components/layout/app-shell-context"
@@ -34,6 +36,7 @@ function normalizeUserPage(pageData: UserPageResponse | undefined, selectedRole:
 
 export default function UserManagementPage() {
   const navigate = useNavigate()
+  const { t } = useTranslation("management")
   const { effectiveRole } = useAppShell()
 
   // Strict RBAC Verification at page level
@@ -85,7 +88,7 @@ export default function UserManagementPage() {
       setTotalPages(1)
       setStatusAlert({
         type: "error",
-        text: err?.response?.data?.message || "Không thể tải danh sách tài khoản từ máy chủ. Vui lòng kiểm tra kết nối mạng.",
+        text: err?.response?.data?.message || i18n.t("management:users.page.alerts.loadFailed"),
       })
     } finally {
       setLoading(false)
@@ -117,7 +120,7 @@ export default function UserManagementPage() {
           setTotalPages(1)
           setStatusAlert({
             type: "error",
-            text: err?.response?.data?.message || "Không thể tải danh sách tài khoản từ máy chủ. Vui lòng kiểm tra kết nối mạng.",
+            text: err?.response?.data?.message || i18n.t("management:users.page.alerts.loadFailed"),
           })
         }
       })
@@ -170,14 +173,14 @@ export default function UserManagementPage() {
       if (targetUser) {
         // Update mode (PATCH)
         await userManagementApi.updateUser(targetUser.id, payload as UserUpdateRequest)
-        setStatusAlert({ type: "success", text: `Đã cập nhật thông tin tài khoản cho ${targetUser.displayName || targetUser.email} thành công.` })
+        setStatusAlert({ type: "success", text: t("users.page.alerts.updated", { name: targetUser.displayName || targetUser.email }) })
       } else {
         // Create mode (POST)
         const created = await userManagementApi.createUser(payload as UserCreateRequest)
         const newEmail = (payload as UserCreateRequest).email
         setStatusAlert({
           type: "success",
-          text: `Đã khởi tạo tài khoản cho ${created.data?.displayName || newEmail} thành công! Mật khẩu tạm thời đã được gửi qua email.`,
+          text: t("users.page.alerts.created", { name: created.data?.displayName || newEmail }),
         })
       }
       setIsFormOpen(false)
@@ -193,14 +196,14 @@ export default function UserManagementPage() {
     setStatusAlert(null)
     try {
       await userManagementApi.deleteUser(targetUser.id)
-      setStatusAlert({ type: "success", text: `Đã xóa vĩnh viễn tài khoản #${targetUser.id} (${targetUser.email}).` })
+      setStatusAlert({ type: "success", text: t("users.page.alerts.deleted", { id: targetUser.id, email: targetUser.email }) })
       setIsDeleteOpen(false)
       await fetchUsers()
     } catch (error: unknown) {
       const err = error as { message?: string; response?: { data?: { message?: string } } }
       setStatusAlert({
         type: "error",
-        text: err?.response?.data?.message || "Không thể xóa tài khoản. Máy chủ từ chối yêu cầu xóa.",
+        text: err?.response?.data?.message || t("users.page.alerts.deleteFailed"),
       })
       setIsDeleteOpen(false)
     } finally {
@@ -219,13 +222,13 @@ export default function UserManagementPage() {
     setStatusAlert(null)
     try {
       await userManagementApi.createFakeHealthRecord({ memberId: targetUser.id })
-      setStatusAlert({ type: "success", text: `Đã tạo hồ sơ sức khỏe mẫu cho ${targetUser.displayName || targetUser.email} thành công.` })
+      setStatusAlert({ type: "success", text: t("users.page.alerts.fakeRecordCreated", { name: targetUser.displayName || targetUser.email }) })
       setIsFakeRecordOpen(false)
     } catch (error: unknown) {
       const err = error as { message?: string; response?: { data?: { message?: string } } }
       setStatusAlert({
         type: "error",
-        text: err?.response?.data?.message || "Không thể tạo hồ sơ sức khỏe mẫu.",
+        text: err?.response?.data?.message || t("users.page.alerts.fakeRecordFailed"),
       })
       setIsFakeRecordOpen(false)
     } finally {
@@ -242,13 +245,23 @@ export default function UserManagementPage() {
             <div className="p-5 rounded-2xl bg-danger-50 text-danger-600 border border-danger-200/80 shadow-xs mb-5">
               <ShieldAlert className="w-12 h-12 stroke-[2.2]" />
             </div>
-            <h2 className="text-2xl font-black text-slate-900 tracking-tight">Từ chối truy cập: Trang được bảo vệ</h2>
+            <h2 className="text-2xl font-black text-slate-900 tracking-tight">{t("users.page.unauthorized.title")}</h2>
             <p className="text-sm font-medium text-slate-500 mt-2 leading-relaxed">
-              Phân hệ <strong className="text-slate-800">Quản lý người dùng & tài khoản</strong> chỉ dành riêng cho quyền <strong className="text-primary-600">ADMIN</strong> và <strong className="text-warning-600">SUPER_ADMIN</strong>. Vai trò hiện tại của bạn là <strong className="text-slate-900">{effectiveRole}</strong>.
+              <Trans
+                t={t}
+                i18nKey="users.page.unauthorized.body"
+                values={{ role: effectiveRole }}
+                components={{
+                  module: <strong className="text-slate-800" />,
+                  admin: <strong className="text-primary-600" />,
+                  superAdmin: <strong className="text-warning-600" />,
+                  role: <strong className="text-slate-900" />,
+                }}
+              />
             </p>
             <div className="mt-6 p-4 rounded-2xl bg-slate-50 border border-slate-200 w-full text-xs font-bold text-slate-600 flex items-center justify-center gap-2">
               <Sparkles className="w-4 h-4 text-warning-500" />
-              <span>Vui lòng chuyển đổi vai trò sang ADMIN hoặc SUPER_ADMIN để truy cập trang này.</span>
+              <span>{t("users.page.unauthorized.hint")}</span>
             </div>
           </div>
         </PageBody>
@@ -258,10 +271,10 @@ export default function UserManagementPage() {
 
   const getRoleDisplayLabel = () => {
     switch (selectedRole) {
-      case USER_ROLES.MEMBER: return "Bệnh nhân"
-      case USER_ROLES.DOCTOR: return "Bác sĩ"
-      case USER_ROLES.CARE_COORDINATOR: return "Điều phối viên"
-      case USER_ROLES.ADMIN: return "Quản trị viên bệnh viện"
+      case USER_ROLES.MEMBER: return t("users.page.roleLabel.member")
+      case USER_ROLES.DOCTOR: return t("users.page.roleLabel.doctor")
+      case USER_ROLES.CARE_COORDINATOR: return t("users.page.roleLabel.careCoordinator")
+      case USER_ROLES.ADMIN: return t("users.page.roleLabel.admin")
       default: return String(selectedRole)
     }
   }
@@ -269,8 +282,8 @@ export default function UserManagementPage() {
   return (
     <Page>
       <PageHeader
-        title="Quản lý tài khoản"
-        description="Tra cứu, tạo mới và cập nhật tài khoản người dùng theo từng vai trò trên hệ thống."
+        title={t("users.page.title")}
+        description={t("users.page.description")}
         actions={
           <Button
             onClick={handleOpenCreate}
@@ -278,7 +291,7 @@ export default function UserManagementPage() {
             className="h-10 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-extrabold text-xs px-4.5 shadow-sm shadow-primary-500/25 flex items-center gap-2 transition-transform active:scale-95 cursor-pointer shrink-0"
           >
             <Plus className="h-4 w-4 stroke-[3]" />
-            <span>Thêm tài khoản</span>
+            <span>{t("users.page.addAccount")}</span>
           </Button>
         }
       />
@@ -315,7 +328,7 @@ export default function UserManagementPage() {
         )}
 
         {/* Table Section with Header Controls */}
-        <section aria-label="Account Registry Data Table" className="space-y-4">
+        <section aria-label={t("users.page.tableAria")} className="space-y-4">
           <UserTableHeader
             searchQuery={searchQuery}
             onSearchChange={(val) => {
@@ -398,7 +411,7 @@ export default function UserManagementPage() {
           onSuccess={() => {
             setStatusAlert({
               type: "success",
-              text: "Đã cập nhật hồ sơ điều phối và lịch tư vấn của bác sĩ thành công.",
+              text: t("users.page.alerts.careProfileUpdated"),
             })
           }}
         />

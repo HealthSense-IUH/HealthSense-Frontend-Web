@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { useTranslation } from "react-i18next"
 import { Shield, FileText, Stethoscope, Clock, AlertCircle, CheckCircle2 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -7,6 +8,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { useToast } from "@/hooks/use-toast"
+import { currentIntlLocale } from "@/lib/i18n"
 
 import { consultationApi } from "@/services"
 import type { CareServiceAgreementResponse } from "@/types/consultation"
@@ -25,6 +27,7 @@ export function CareAgreementDialog({
   onOpenChange,
   onAgreementAccepted,
 }: CareAgreementDialogProps) {
+  const { t } = useTranslation("consultation")
   const { toast } = useToast()
   const [loading, setLoading] = useState(false)
   const [submitting, setSubmitting] = useState(false)
@@ -40,10 +43,10 @@ export function CareAgreementDialog({
           setAgreement(res.data)
         })
         .catch((err) => {
-          const msg = err.response?.data?.message || "Không thể tải thỏa thuận dịch vụ."
+          const msg = err.response?.data?.message || t("careAgreementDialog.toast.loadErrorDescription")
           toast({
             variant: "destructive",
-            title: "Lỗi tải thỏa thuận",
+            title: t("careAgreementDialog.toast.loadErrorTitle"),
             description: msg,
           })
           onOpenChange(false)
@@ -55,7 +58,7 @@ export function CareAgreementDialog({
       setAgreement(null)
       setAcceptedTerms(false)
     }
-  }, [open, requestId, toast, onOpenChange])
+  }, [open, requestId, toast, onOpenChange, t])
 
   const handleAccept = async () => {
     if (!requestId || !agreement || !acceptedTerms) return
@@ -70,16 +73,16 @@ export function CareAgreementDialog({
         accepted: true,
       })
       toast({
-        title: "Xác nhận thỏa thuận thành công",
-        description: "Bạn đã chấp nhận thỏa thuận. Vui lòng tiến hành thanh toán để kích hoạt phiên tư vấn.",
+        title: t("careAgreementDialog.toast.acceptSuccessTitle"),
+        description: t("careAgreementDialog.toast.acceptSuccessDescription"),
       })
       onOpenChange(false)
       onAgreementAccepted()
     } catch (err: any) {
-      const msg = err.response?.data?.message || "Không thể xác nhận thỏa thuận lúc này."
+      const msg = err.response?.data?.message || t("careAgreementDialog.toast.acceptErrorDescription")
       toast({
         variant: "destructive",
-        title: "Lỗi xác nhận",
+        title: t("careAgreementDialog.toast.acceptErrorTitle"),
         description: msg,
       })
     } finally {
@@ -87,7 +90,7 @@ export function CareAgreementDialog({
     }
   }
 
-  const pkgName = agreement?.packageName || agreement?.packageSnapshot?.name || "Gói chăm sóc sức khỏe"
+  const pkgName = agreement?.packageName || agreement?.packageSnapshot?.name || t("careAgreementDialog.packageFallback")
   const pkgCode = agreement?.packageCode || agreement?.packageSnapshot?.code || ""
   const priceAmount = agreement?.priceAmount ?? agreement?.packageSnapshot?.priceAmount ?? 0
   const currency = agreement?.currency || agreement?.packageSnapshot?.currency || "VND"
@@ -97,7 +100,7 @@ export function CareAgreementDialog({
   const supportPolicy = agreement?.supportPolicy || agreement?.packageSnapshot?.supportPolicy || "ASSIGNED_DOCTOR_SUPPORT_SCHEDULE"
   const supportSchedule = agreement?.supportScheduleSnapshotJson || agreement?.doctorSnapshot?.declaredSupportSchedule
   const supportTimezone = agreement?.supportTimezoneSnapshot || agreement?.doctorSnapshot?.timezone || "Asia/Ho_Chi_Minh"
-  const doctorName = agreement?.doctorSnapshot?.displayName || "Bác sĩ phụ trách"
+  const doctorName = agreement?.doctorSnapshot?.displayName || t("careAgreementDialog.doctorFallback")
   const doctorEmail = agreement?.doctorSnapshot?.email
   const doctorSpecialty = agreement?.doctorSnapshot?.specialty
 
@@ -111,15 +114,15 @@ export function CareAgreementDialog({
                 <Shield className="w-5 h-5" />
               </div>
               <div>
-                <DialogTitle className="text-xl font-bold">Thỏa thuận Dịch vụ Chăm sóc Sức khỏe</DialogTitle>
+                <DialogTitle className="text-xl font-bold">{t("careAgreementDialog.title")}</DialogTitle>
                 <DialogDescription>
-                  Care Service Agreement &bull; Yêu cầu #{requestId}
+                  Care Service Agreement &bull; {t("careAgreementDialog.requestNumber", { id: requestId })}
                 </DialogDescription>
               </div>
             </div>
             {agreement?.status && (
               <Badge variant="outline" className="bg-warning-50 text-warning-800 border-warning-300 font-medium">
-                {agreement.status === "PENDING_ACCEPTANCE" ? "Chờ bạn xác nhận" : agreement.status}
+                {agreement.status === "PENDING_ACCEPTANCE" ? t("careAgreementDialog.awaitingYourConfirmation") : agreement.status}
               </Badge>
             )}
           </div>
@@ -129,7 +132,7 @@ export function CareAgreementDialog({
           {loading ? (
             <div className="py-16 text-center text-muted-foreground flex flex-col items-center justify-center gap-3">
               <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-              <span>Đang tải thông tin thỏa thuận dịch vụ...</span>
+              <span>{t("careAgreementDialog.loading")}</span>
             </div>
           ) : agreement ? (
             <div className="space-y-6">
@@ -138,8 +141,8 @@ export function CareAgreementDialog({
                 <div className="flex items-start gap-2.5 p-3.5 bg-warning-50 border border-warning-200 rounded-xl text-xs text-warning-900">
                   <Clock className="w-4 h-4 text-warning-600 shrink-0 mt-0.5" />
                   <div>
-                    <strong>Thời hạn chấp nhận & giữ chỗ:</strong> Thỏa thuận này có hiệu lực đến{" "}
-                    <span className="font-semibold">{formatDate(agreement.validUntil)}</span>. Sau thời gian này nếu chưa hoàn tất thanh toán, bác sĩ sẽ được giải phóng cho hội viên khác.
+                    <strong>{t("careAgreementDialog.validity.label")}</strong> {t("careAgreementDialog.validity.validUntil")}{" "}
+                    <span className="font-semibold">{formatDate(agreement.validUntil)}</span>{t("careAgreementDialog.validity.afterDeadline")}
                   </div>
                 </div>
               )}
@@ -150,14 +153,14 @@ export function CareAgreementDialog({
                 <div className="p-4 border rounded-xl bg-card space-y-3 shadow-xs">
                   <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
                     <Stethoscope className="w-4 h-4 text-primary" />
-                    Bác sĩ phụ trách chăm sóc
+                    {t("careAgreementDialog.doctorCard.title")}
                   </div>
                   <div className="space-y-1 text-sm">
                     <div className="font-medium text-base text-foreground">{doctorName}</div>
                     {doctorEmail && <div className="text-xs text-muted-foreground">{doctorEmail}</div>}
                     {doctorSpecialty && (
                       <div className="text-xs pt-1">
-                        <span className="text-muted-foreground">Chuyên khoa:</span>{" "}
+                        <span className="text-muted-foreground">{t("careAgreementDialog.doctorCard.specialty")}</span>{" "}
                         <span className="font-medium text-foreground">{doctorSpecialty}</span>
                       </div>
                     )}
@@ -168,7 +171,7 @@ export function CareAgreementDialog({
                           <div className="space-y-1.5 pt-2">
                             <div className="text-xs font-semibold text-foreground flex items-center gap-1.5">
                               <Clock className="w-3.5 h-3.5 text-primary" />
-                              <span>Khung giờ hỗ trợ:</span>
+                              <span>{t("careAgreementDialog.doctorCard.supportHours")}</span>
                             </div>
                             <div className="space-y-1 bg-muted/40 p-2.5 rounded-lg border border-border/50 text-xs">
                               {scheduleList.map((item) => (
@@ -179,7 +182,7 @@ export function CareAgreementDialog({
                               ))}
                               {supportTimezone && (
                                 <div className="text-[10px] text-muted-foreground text-right pt-1 mt-0.5">
-                                  Múi giờ: {supportTimezone}
+                                  {t("careAgreementDialog.doctorCard.timezone", { timezone: supportTimezone })}
                                 </div>
                               )}
                             </div>
@@ -189,7 +192,7 @@ export function CareAgreementDialog({
                       if (supportSchedule) {
                         return (
                           <div className="text-xs pt-1 bg-muted/30 p-2 rounded-md text-muted-foreground font-mono">
-                            Khung giờ hỗ trợ: {supportSchedule} {supportTimezone ? `(${supportTimezone})` : ""}
+                            {t("careAgreementDialog.doctorCard.supportHours")} {supportSchedule} {supportTimezone ? `(${supportTimezone})` : ""}
                           </div>
                         )
                       }
@@ -202,14 +205,14 @@ export function CareAgreementDialog({
                 <div className="p-4 border rounded-xl bg-card space-y-3 shadow-xs">
                   <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
                     <FileText className="w-4 h-4 text-primary" />
-                    Gói dịch vụ đã chọn
+                    {t("careAgreementDialog.packageCard.title")}
                   </div>
                   <div className="space-y-1 text-sm">
                     <div className="font-medium text-base text-foreground">{pkgName}</div>
-                    {pkgCode && <div className="text-xs text-muted-foreground">Mã gói: {pkgCode}</div>}
+                    {pkgCode && <div className="text-xs text-muted-foreground">{t("careAgreementDialog.packageCard.code", { code: pkgCode })}</div>}
                     <div className="pt-1 text-base font-bold text-primary">
-                      {priceAmount > 0 ? priceAmount.toLocaleString("vi-VN", { style: "currency", currency }) : "Miễn phí"}{" "}
-                      <span className="text-xs font-normal text-muted-foreground">/ {durationDays} ngày đồng hành</span>
+                      {priceAmount > 0 ? priceAmount.toLocaleString(currentIntlLocale(), { style: "currency", currency }) : t("careAgreementDialog.packageCard.free")}{" "}
+                      <span className="text-xs font-normal text-muted-foreground">{t("careAgreementDialog.packageCard.duration", { count: durationDays })}</span>
                     </div>
                     {description && (
                       <p className="text-xs text-muted-foreground pt-1 line-clamp-2">{description}</p>
@@ -222,34 +225,34 @@ export function CareAgreementDialog({
               <div className="p-4 border rounded-xl bg-muted/20 space-y-3 text-xs text-muted-foreground">
                 <div className="font-semibold text-sm text-foreground flex items-center gap-2">
                   <AlertCircle className="w-4 h-4 text-primary" />
-                  Phạm vi & Điều khoản dịch vụ
+                  {t("careAgreementDialog.terms.title")}
                 </div>
                 
                 {termsPolicy && (
                   <div>
-                    <strong className="text-foreground">Tham chiếu điều khoản & giới hạn:</strong> {termsPolicy}
+                    <strong className="text-foreground">{t("careAgreementDialog.terms.termsReference")}</strong> {termsPolicy}
                   </div>
                 )}
 
                 {agreement?.emergencyLimitation && (
                   <div>
-                    <strong className="text-foreground">Giới hạn cấp cứu:</strong> {agreement.emergencyLimitation}
+                    <strong className="text-foreground">{t("careAgreementDialog.terms.emergencyLimitation")}</strong> {agreement.emergencyLimitation}
                   </div>
                 )}
 
                 {supportPolicy && (
                   <div>
-                    <strong className="text-foreground">Chính sách hỗ trợ:</strong> {supportPolicy === "ASSIGNED_DOCTOR_SUPPORT_SCHEDULE" ? "Theo lịch làm việc của bác sĩ phụ trách" : supportPolicy}
+                    <strong className="text-foreground">{t("careAgreementDialog.terms.supportPolicy")}</strong> {supportPolicy === "ASSIGNED_DOCTOR_SUPPORT_SCHEDULE" ? t("careAgreementDialog.terms.assignedDoctorSchedule") : supportPolicy}
                   </div>
                 )}
 
                 <div className="pt-2 border-t text-slate-500 leading-relaxed">
-                  * Lưu ý: Dịch vụ tư vấn trực tuyến và theo dõi sức khỏe này không thay thế cho việc cấp cứu y tế khẩn cấp hoặc chỉ định điều trị nội trú. Trong trường hợp có các dấu hiệu nguy kịch như đau thắt ngực dữ dội, khó thở cấp tính, vui lòng liên hệ ngay cơ sở y tế gần nhất hoặc gọi 115.
+                  {t("careAgreementDialog.terms.note")}
                 </div>
               </div>
             </div>
           ) : (
-            <div className="py-12 text-center text-muted-foreground">Không có dữ liệu thỏa thuận.</div>
+            <div className="py-12 text-center text-muted-foreground">{t("careAgreementDialog.empty")}</div>
           )}
         </ScrollArea>
 
@@ -268,7 +271,7 @@ export function CareAgreementDialog({
                 htmlFor="accept-terms"
                 className="text-xs sm:text-sm font-medium leading-tight sm:leading-relaxed text-foreground cursor-pointer select-none"
               >
-                Tôi đã đọc, hiểu rõ và đồng ý với các điều khoản dịch vụ, phạm vi chăm sóc, khung giờ hỗ trợ của bác sĩ và mức phí quy định trong bản Thỏa thuận này.
+                {t("careAgreementDialog.acceptTerms")}
               </label>
             </div>
           </div>
@@ -281,7 +284,7 @@ export function CareAgreementDialog({
             onClick={() => onOpenChange(false)}
             disabled={submitting}
           >
-            Đóng
+            {t("careAgreementDialog.close")}
           </Button>
           <Button
             type="button"
@@ -290,7 +293,7 @@ export function CareAgreementDialog({
             className="gap-1.5"
           >
             <CheckCircle2 className="w-4 h-4" />
-            {submitting ? "Đang xác nhận..." : "Xác nhận & Tiến hành thanh toán"}
+            {submitting ? t("careAgreementDialog.confirming") : t("careAgreementDialog.confirmAndPay")}
           </Button>
         </DialogFooter>
       </DialogContent>

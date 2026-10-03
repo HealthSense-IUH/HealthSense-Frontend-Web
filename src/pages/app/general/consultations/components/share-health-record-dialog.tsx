@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { Share2, FileText, CheckCircle2, AlertCircle, RefreshCw, Activity } from "lucide-react"
+import { Trans, useTranslation } from "react-i18next"
 
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
@@ -10,6 +11,7 @@ import { useToast } from "@/hooks/use-toast"
 import { consultationApi } from "@/services"
 import type { HealthRecordItem } from "@/types/consultation"
 import { formatDate } from "./shared"
+import i18n from "@/lib/i18n"
 
 interface ShareHealthRecordDialogProps {
   sessionId: string | number
@@ -21,8 +23,8 @@ interface ShareHealthRecordDialogProps {
 
 function readError(error: unknown, fallback: string) {
   const err = error as { response?: { status?: number; data?: { message?: string } }; message?: string }
-  if (err.response?.status === 403) return "Bạn không có quyền chia sẻ hồ sơ trong phiên này."
-  if (err.response?.status === 400) return err.response?.data?.message || "Hồ sơ không hợp lệ hoặc phiên chưa được kích hoạt."
+  if (err.response?.status === 403) return i18n.t("consultation:shareHealthRecordDialog.errors.forbidden")
+  if (err.response?.status === 400) return err.response?.data?.message || i18n.t("consultation:shareHealthRecordDialog.errors.invalid")
   return err.response?.data?.message || err.message || fallback
 }
 
@@ -33,6 +35,7 @@ export function ShareHealthRecordDialog({
   onOpenChange,
   onSharedSuccess,
 }: ShareHealthRecordDialogProps) {
+  const { t } = useTranslation("consultation")
   const { toast } = useToast()
   const [records, setRecords] = useState<HealthRecordItem[]>([])
   const [loading, setLoading] = useState(false)
@@ -52,8 +55,8 @@ export function ShareHealthRecordDialog({
         .catch((err) => {
           toast({
             variant: "destructive",
-            title: "Lỗi tải hồ sơ",
-            description: readError(err, "Không thể tải danh sách hồ sơ sức khỏe của bạn."),
+            title: t("shareHealthRecordDialog.toast.loadErrorTitle"),
+            description: readError(err, t("shareHealthRecordDialog.toast.loadErrorDescription")),
           })
         })
         .finally(() => {
@@ -62,15 +65,15 @@ export function ShareHealthRecordDialog({
     } else {
       setSelectedRecordId(null)
     }
-  }, [open, toast])
+  }, [open, toast, t])
 
   const handleShare = async () => {
     if (!selectedRecordId) return
     if (!isSessionActive) {
       toast({
         variant: "destructive",
-        title: "Phiên không hợp lệ",
-        description: "Chỉ có thể chia sẻ hồ sơ khi phiên tư vấn đang hoạt động (ACTIVE).",
+        title: t("shareHealthRecordDialog.toast.invalidSessionTitle"),
+        description: t("shareHealthRecordDialog.toast.invalidSessionDescription"),
       })
       return
     }
@@ -79,16 +82,16 @@ export function ShareHealthRecordDialog({
     try {
       await consultationApi.shareHealthRecord(sessionId, selectedRecordId)
       toast({
-        title: "Chia sẻ hồ sơ thành công",
-        description: `Hồ sơ #${selectedRecordId} đã được cấp quyền cho bác sĩ phụ trách xem xét.`,
+        title: t("shareHealthRecordDialog.toast.successTitle"),
+        description: t("shareHealthRecordDialog.toast.successDescription", { id: selectedRecordId }),
       })
       onOpenChange(false)
       onSharedSuccess?.()
     } catch (err) {
       toast({
         variant: "destructive",
-        title: "Lỗi chia sẻ hồ sơ",
-        description: readError(err, "Không thể chia sẻ hồ sơ lúc này."),
+        title: t("shareHealthRecordDialog.toast.shareErrorTitle"),
+        description: readError(err, t("shareHealthRecordDialog.toast.shareErrorDescription")),
       })
     } finally {
       setSharing(false)
@@ -104,9 +107,9 @@ export function ShareHealthRecordDialog({
               <Share2 className="w-5 h-5" />
             </div>
             <div>
-              <DialogTitle className="text-lg font-bold">Chia sẻ Hồ sơ Sức khỏe</DialogTitle>
+              <DialogTitle className="text-lg font-bold">{t("shareHealthRecordDialog.title")}</DialogTitle>
               <DialogDescription>
-                Cấp quyền cho bác sĩ phụ trách xem kết quả đo nhịp tim trong phiên tư vấn #{sessionId}
+                {t("shareHealthRecordDialog.description", { id: sessionId })}
               </DialogDescription>
             </div>
           </div>
@@ -117,27 +120,32 @@ export function ShareHealthRecordDialog({
             <div className="flex items-start gap-2 p-3 bg-warning-50 border border-warning-200 rounded-xl text-xs text-warning-800">
               <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
               <span>
-                Phiên chăm sóc hiện đang ở trạng thái <strong>{sessionStatus || "INACTIVE"}</strong>. Bạn chỉ có thể chia sẻ thêm hồ sơ đo đạc khi phiên tư vấn đang hoạt động (ACTIVE).
+                <Trans
+                  t={t}
+                  i18nKey="shareHealthRecordDialog.inactiveNotice"
+                  values={{ status: sessionStatus || "INACTIVE" }}
+                  components={{ strong: <strong /> }}
+                />
               </span>
             </div>
           )}
 
           <div className="text-xs text-muted-foreground flex items-center justify-between">
-            <span>Chọn 1 hồ sơ đo đạc của bạn để chia sẻ:</span>
-            <span>{records.length} hồ sơ khả dụng</span>
+            <span>{t("shareHealthRecordDialog.selectPrompt")}</span>
+            <span>{t("shareHealthRecordDialog.availableCount", { count: records.length })}</span>
           </div>
 
           <ScrollArea className="flex-1 max-h-[42vh] pr-2">
             {loading ? (
               <div className="py-12 text-center text-muted-foreground flex flex-col items-center justify-center gap-2">
                 <RefreshCw className="w-6 h-6 animate-spin text-primary" />
-                <span className="text-xs">Đang tải danh sách hồ sơ...</span>
+                <span className="text-xs">{t("shareHealthRecordDialog.loading")}</span>
               </div>
             ) : records.length === 0 ? (
               <div className="py-12 text-center text-muted-foreground flex flex-col items-center justify-center gap-2 border border-dashed rounded-xl p-4">
                 <FileText className="w-8 h-8 text-muted-foreground/50" />
-                <span className="text-sm font-medium">Chưa có hồ sơ đo đạc nào</span>
-                <span className="text-xs text-muted-foreground">Bạn hãy tải lên bản ghi ECG/HRV mới ở mục Quản lý Hồ sơ trước.</span>
+                <span className="text-sm font-medium">{t("shareHealthRecordDialog.emptyTitle")}</span>
+                <span className="text-xs text-muted-foreground">{t("shareHealthRecordDialog.emptyDescription")}</span>
               </div>
             ) : (
               <div className="space-y-2.5">
@@ -174,7 +182,7 @@ export function ShareHealthRecordDialog({
                             )}
                           </div>
                           <div className="text-[11px] text-muted-foreground mt-0.5">
-                            Ngày tạo: {formatDate(record.createdAt)}
+                            {t("shareHealthRecordDialog.createdAt", { date: formatDate(record.createdAt) })}
                           </div>
                         </div>
                       </div>
@@ -197,7 +205,7 @@ export function ShareHealthRecordDialog({
             onClick={() => onOpenChange(false)}
             disabled={sharing}
           >
-            Đóng
+            {t("shareHealthRecordDialog.close")}
           </Button>
           <Button
             type="button"
@@ -206,7 +214,7 @@ export function ShareHealthRecordDialog({
             className="gap-1.5"
           >
             <Share2 className="w-4 h-4" />
-            {sharing ? "Đang chia sẻ..." : "Chia sẻ hồ sơ này"}
+            {sharing ? t("shareHealthRecordDialog.sharing") : t("shareHealthRecordDialog.share")}
           </Button>
         </DialogFooter>
       </DialogContent>

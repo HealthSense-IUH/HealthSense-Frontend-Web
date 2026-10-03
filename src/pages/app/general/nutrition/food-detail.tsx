@@ -13,6 +13,7 @@ import {
   Zap,
   Image as ImageIcon,
 } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 import { Page, PageBody, PageFooter, PageHeader } from "@/components/layout/page"
 import { Button } from "@/components/ui/button"
@@ -24,6 +25,7 @@ import type { EvidenceSourceType, NutrientValue } from "@/types/nutrition"
 import { cn } from "@/lib/utils"
 
 export default function FoodDetailPage() {
+  const { t } = useTranslation("nutrition")
   const { foodId } = useParams<{ foodId: string }>()
   const navigate = useNavigate()
   const [showAllNutrients, setShowAllNutrients] = useState(false)
@@ -44,12 +46,12 @@ export default function FoodDetailPage() {
   if (!food) {
     return (
       <div className="max-w-md mx-auto p-6 text-center space-y-4">
-        <h2 className="text-xl font-bold">Không tìm thấy món ăn</h2>
+        <h2 className="text-xl font-bold">{t("foodDetail.notFoundTitle")}</h2>
         <p className="text-muted-foreground text-sm">
-          Món ăn bạn đang tìm kiếm không tồn tại hoặc đã được cập nhật.
+          {t("foodDetail.notFoundDescription")}
         </p>
         <Button onClick={() => navigate("/app/general/nutrition")}>
-          Quay lại trang Dinh dưỡng
+          {t("foodDetail.backToNutrition")}
         </Button>
       </div>
     )
@@ -73,23 +75,23 @@ export default function FoodDetailPage() {
 
   const sourceTypeLabels: Record<EvidenceSourceType, { label: string; cls: string }> = {
     GUIDELINE: {
-      label: "Hướng dẫn lâm sàng (Guideline)",
+      label: t("foodDetail.evidenceType.GUIDELINE"),
       cls: "bg-primary-50 text-primary-700 border-primary-200",
     },
     SYSTEMATIC_REVIEW: {
-      label: "Tổng quan hệ thống (Systematic Review)",
+      label: t("foodDetail.evidenceType.SYSTEMATIC_REVIEW"),
       cls: "bg-primary-50 text-primary-700 border-primary-200",
     },
     META_ANALYSIS: {
-      label: "Phân tích gộp (Meta-analysis)",
+      label: t("foodDetail.evidenceType.META_ANALYSIS"),
       cls: "bg-primary-50 text-primary-700 border-primary-200",
     },
     RCT: {
-      label: "Thử nghiệm đối chứng ngẫu nhiên (RCT)",
+      label: t("foodDetail.evidenceType.RCT"),
       cls: "bg-success-50 text-success-700 border-success-200",
     },
     OTHER: {
-      label: "Khuyến cáo chuyên khoa (Clinical Review)",
+      label: t("foodDetail.evidenceType.OTHER"),
       cls: "bg-slate-50 text-slate-700 border-slate-200",
     },
   }
@@ -98,12 +100,12 @@ export default function FoodDetailPage() {
     <Page>
       <PageHeader
         breadcrumbs={[
-          { label: "Dinh dưỡng", to: "/app/general/nutrition" },
+          { label: t("common.breadcrumbNutrition"), to: "/app/general/nutrition" },
           { label: food.groupName, to: `/app/general/nutrition/category/${food.group}` },
           { label: food.foodNameSpecific },
         ]}
         title={food.foodNameSpecific}
-        description={food.sourceDescription ? `Nguồn tham chiếu FNDDS: ${food.sourceDescription}` : undefined}
+        description={food.sourceDescription ? t("foodDetail.fnddsSource", { source: food.sourceDescription }) : undefined}
         meta={
           <>
             <Link
@@ -114,13 +116,13 @@ export default function FoodDetailPage() {
             </Link>
             {food.foodName !== food.foodNameSpecific && (
               <span className="text-xs font-medium text-slate-600 bg-slate-100 px-2.5 py-0.5 rounded-md">
-                Loại: {food.foodName}
+                {t("foodDetail.type", { name: food.foodName })}
               </span>
             )}
             {guidanceType && <GuidanceBadge type={guidanceType} size="md" />}
             <span className="inline-flex items-center gap-1 text-xs font-medium text-slate-600 bg-slate-100 px-2.5 py-0.5 rounded-md">
               <Scale className="w-3 h-3 text-primary" />
-              Định lượng chuẩn: 100 g
+              {t("foodDetail.standardServing")}
             </span>
           </>
         }
@@ -143,10 +145,10 @@ export default function FoodDetailPage() {
               </div>
               <div className="text-center sm:text-left">
                 <p className="text-xs font-semibold text-slate-700">
-                  Hình ảnh thực phẩm
+                  {t("foodDetail.imageTitle")}
                 </p>
                 <p className="text-[11px] text-muted-foreground">
-                  Khu vực hiển thị ảnh đại diện khi tích hợp dữ liệu hình ảnh
+                  {t("foodDetail.imagePlaceholder")}
                 </p>
               </div>
             </div>
@@ -183,13 +185,13 @@ export default function FoodDetailPage() {
           <CardHeader className="bg-slate-50/60 border-b border-slate-100 pb-4">
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle className="text-lg font-bold">Thành phần dinh dưỡng</CardTitle>
+                <CardTitle className="text-lg font-bold">{t("foodDetail.nutritionTitle")}</CardTitle>
                 <p className="text-xs text-muted-foreground mt-0.5">
-                  Tính trên mỗi 100g thực phẩm (chuẩn cơ sở dữ liệu USDA FNDDS 2021-2023)
+                  {t("foodDetail.nutritionSubtitle")}
                 </p>
               </div>
               <span className="text-xs font-medium text-slate-500 bg-white px-2.5 py-1 rounded-lg border border-slate-200">
-                Per 100g
+                {t("foodDetail.per100g")}
               </span>
             </div>
           </CardHeader>
@@ -227,8 +229,8 @@ export default function FoodDetailPage() {
                 >
                   <span>
                     {showAllNutrients
-                      ? "Thu gọn thành phần vi lượng"
-                      : `Xem thêm ${otherNutrients.length} thành phần dinh dưỡng chi tiết`}
+                      ? t("foodDetail.collapseNutrients")
+                      : t("foodDetail.showMoreNutrients", { count: otherNutrients.length })}
                   </span>
                   {showAllNutrients ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                 </Button>
@@ -258,7 +260,7 @@ export default function FoodDetailPage() {
           <div className="flex items-center gap-2">
             <Heart className="w-5 h-5 text-danger-500 fill-danger-500" />
             <h2 className="text-lg sm:text-xl font-bold text-slate-900">
-              Ý nghĩa đối với sức khỏe của bạn
+              {t("foodDetail.healthMeaning")}
             </h2>
           </div>
 
@@ -269,7 +271,7 @@ export default function FoodDetailPage() {
                 <CardHeader className="pb-2">
                   <CardTitle className="text-sm sm:text-base font-semibold text-danger-900 flex items-center gap-2">
                     <Heart className="w-4 h-4 text-danger-600" />
-                    <span>Sức khỏe tim mạch & Huyết áp</span>
+                    <span>{t("foodDetail.cardiovascular")}</span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -286,7 +288,7 @@ export default function FoodDetailPage() {
                 <CardHeader className="pb-2">
                   <CardTitle className="text-sm sm:text-base font-semibold text-warning-900 flex items-center gap-2">
                     <Zap className="w-4 h-4 text-warning-600" />
-                    <span>Rung tâm nhĩ & Nhịp tim</span>
+                    <span>{t("foodDetail.af")}</span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -303,7 +305,7 @@ export default function FoodDetailPage() {
                 <CardHeader className="pb-2">
                   <CardTitle className="text-sm sm:text-base font-semibold text-primary-900 flex items-center gap-2">
                     <Pill className="w-4 h-4 text-primary-600" />
-                    <span>Lưu ý khi sử dụng thuốc điều trị</span>
+                    <span>{t("foodDetail.medication")}</span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -322,11 +324,11 @@ export default function FoodDetailPage() {
             <div className="flex items-center gap-2">
               <FileText className="w-5 h-5 text-primary" />
               <h2 className="text-lg font-bold text-slate-900">
-                Cơ sở tham khảo & Bằng chứng y học
+                {t("foodDetail.evidenceTitle")}
               </h2>
             </div>
             <p className="text-xs text-muted-foreground -mt-2">
-              Các khuyến nghị dinh dưỡng trên được đối chiếu từ tài liệu hướng dẫn lâm sàng và thử nghiệm y khoa chính thống.
+              {t("foodDetail.evidenceDescription")}
             </p>
 
             <div className="space-y-3">
@@ -347,7 +349,7 @@ export default function FoodDetailPage() {
                         {meta.label}
                       </span>
                       {source.year && (
-                        <span className="text-xs text-muted-foreground">Năm {source.year}</span>
+                        <span className="text-xs text-muted-foreground">{t("foodDetail.year", { year: source.year })}</span>
                       )}
                     </div>
 
@@ -381,7 +383,7 @@ export default function FoodDetailPage() {
                           rel="noreferrer"
                           className="text-xs text-primary hover:underline inline-flex items-center gap-1 font-medium"
                         >
-                          <span>Xem tài liệu gốc</span>
+                          <span>{t("foodDetail.viewSource")}</span>
                           <ExternalLink className="w-3 h-3" />
                         </a>
                       </div>
@@ -399,9 +401,7 @@ export default function FoodDetailPage() {
         <p className="flex items-start gap-2">
           <Info className="w-4 h-4 shrink-0 mt-0.5 text-slate-400" />
           <span>
-            Dữ liệu dinh dưỡng được trích xuất từ cơ sở dữ liệu USDA Food and Nutrient Database for Dietary Studies
-            (FNDDS 2021-2023). Các thông tin về rung nhĩ và tim mạch chỉ mang tính giáo dục sức khỏe, không thay thế chẩn
-            đoán hoặc phác đồ từ bác sĩ chuyên khoa tim mạch.
+            {t("foodDetail.footer")}
           </span>
         </p>
       </PageFooter>

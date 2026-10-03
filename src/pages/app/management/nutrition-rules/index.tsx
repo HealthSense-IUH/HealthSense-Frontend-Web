@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { useTranslation } from "react-i18next"
 import { ExternalLink, Info, RefreshCw, RotateCcw, Save, SlidersHorizontal } from "lucide-react"
 
 import { Page, PageBody, PageFooter, PageHeader } from "@/components/layout/page"
@@ -6,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Skeleton } from "@/components/ui/skeleton"
 import { useToast } from "@/hooks/use-toast"
+import i18n, { currentIntlLocale } from "@/lib/i18n"
 import { nutritionApi } from "@/services/nutrition.service"
 import type { DietRule, DietRuleCode } from "@/types/nutrition"
 import {
@@ -53,26 +55,27 @@ function parse(value: string): number | null {
 /** Kiểm tra giống backend để báo lỗi ngay trên form. */
 function validate(code: DietRuleCode, draft: Values): string | null {
   const values = fieldsOf(code).map((field) => parse(draft[field]))
-  if (values.some((value) => value !== null && (Number.isNaN(value) || value < 0))) return "Ngưỡng phải là số không âm."
-  if (values.every((value) => value === null)) return "Cần ít nhất một ngưỡng."
+  if (values.some((value) => value !== null && (Number.isNaN(value) || value < 0))) return i18n.t("management:nutritionRules.errors.nonNegative")
+  if (values.every((value) => value === null)) return i18n.t("management:nutritionRules.errors.atLeastOne")
   const limit = parse(draft.limit)
   const caution = parse(draft.caution)
   const good = parse(draft.good)
   if (code !== "NA_K_RATIO" && limit !== null && caution !== null && limit < caution)
-    return "Ngưỡng đỏ phải lớn hơn hoặc bằng ngưỡng vàng."
+    return i18n.t("management:nutritionRules.errors.limitBelowCaution")
   if (code === "NA_K_RATIO" && limit !== null && good !== null && good > limit)
-    return "Mức tốt không được cao hơn ngưỡng đỏ."
+    return i18n.t("management:nutritionRules.errors.goodAboveLimit")
   return null
 }
 
 function readError(error: unknown, fallback: string) {
   const err = error as { response?: { status?: number; data?: { message?: string } }; message?: string }
-  if (err.response?.status === 403) return "Bạn không có quyền sửa ngưỡng đánh giá."
+  if (err.response?.status === 403) return i18n.t("management:nutritionRules.errors.forbidden")
   return err.response?.data?.message || err.message || fallback
 }
 
 /** Admin đặt ngưỡng mặc định của bộ quy tắc cho người rung nhĩ; quy tắc chỉ áp dụng khi bác sĩ tick trong đơn và cho bệnh nhân. */
 export default function AdminNutritionRulesPage() {
+  const { t } = useTranslation("management")
   const { toast } = useToast()
   const [rules, setRules] = useState<DietRule[]>([])
   const [draft, setDraft] = useState<Draft>(INITIAL)
@@ -91,7 +94,7 @@ export default function AdminNutritionRulesPage() {
     try {
       apply((await nutritionApi.getDietRules()).data)
     } catch (err) {
-      setErrorMsg(readError(err, "Không tải được ngưỡng đánh giá."))
+      setErrorMsg(readError(err, t("nutritionRules.errors.loadFailed")))
     } finally {
       setLoading(false)
     }
@@ -117,9 +120,9 @@ export default function AdminNutritionRulesPage() {
         return { code: rule.code, limit: value("limit"), caution: value("caution"), good: value("good") }
       })
       apply((await nutritionApi.updateDietRules(thresholds)).data)
-      toast({ description: "Đã lưu ngưỡng. Màu của các món sẽ tính theo ngưỡng mới ngay lập tức." })
+      toast({ description: t("nutritionRules.toast.saved") })
     } catch (err) {
-      toast({ variant: "destructive", description: readError(err, "Không lưu được ngưỡng.") })
+      toast({ variant: "destructive", description: readError(err, t("nutritionRules.toast.saveFailed")) })
     } finally {
       setSaving(false)
     }
@@ -134,17 +137,17 @@ export default function AdminNutritionRulesPage() {
     <Page>
       <PageHeader
         icon={<SlidersHorizontal className="w-5 h-5" />}
-        title="Ngưỡng đánh giá dinh dưỡng"
-        description="Ngưỡng mặc định của các quy tắc chấm xanh / vàng / đỏ cho người rung nhĩ. Quy tắc chỉ áp dụng cho bệnh nhân khi bác sĩ tick trong đơn ăn uống; bác sĩ có thể đặt ngưỡng riêng. Ngưỡng lưu trong cơ sở dữ liệu, sửa ở đây có hiệu lực ngay."
+        title={t("nutritionRules.title")}
+        description={t("nutritionRules.description")}
         actions={
           <>
             <Button variant="outline" size="sm" onClick={() => void load()} disabled={loading || saving} className="gap-1.5">
               <RefreshCw className="w-3.5 h-3.5" />
-              Tải lại
+              {t("nutritionRules.reload")}
             </Button>
             <Button size="sm" onClick={() => void save()} disabled={loading || saving || hasErrors || !dirty} className="gap-1.5">
               <Save className="w-3.5 h-3.5" />
-              {saving ? "Đang lưu..." : "Lưu thay đổi"}
+              {saving ? t("nutritionRules.saving") : t("nutritionRules.save")}
             </Button>
           </>
         }
@@ -161,7 +164,7 @@ export default function AdminNutritionRulesPage() {
           priorities.map((priority) => (
             <section key={priority} className="space-y-2">
               <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                {PRIORITY_LABEL[priority] ?? `Ưu tiên ${priority}`}
+                {PRIORITY_LABEL[priority] ?? t("nutritionRules.priorityFallback", { priority })}
               </h2>
               <div className="rounded-2xl border border-border bg-card shadow-xs divide-y divide-slate-100">
                 {rules
@@ -187,7 +190,7 @@ export default function AdminNutritionRulesPage() {
                             className="gap-1.5 text-xs"
                           >
                             <RotateCcw className="w-3.5 h-3.5" />
-                            Giá trị ban đầu
+                            {t("nutritionRules.resetInitial")}
                           </Button>
                         </div>
                         <div className="grid gap-3 sm:grid-cols-2">
@@ -195,14 +198,14 @@ export default function AdminNutritionRulesPage() {
                             <label key={field} className="space-y-1">
                               <span className="flex items-center gap-1.5 text-xs font-semibold text-slate-700">
                                 <span className={`w-2 h-2 rounded-full ${THRESHOLD_FIELD_STYLE[field].dot}`} />
-                                {field === "good" ? THRESHOLD_FIELD_STYLE.good.label(rule.code) : field === "limit" ? "Đỏ (Nên hạn chế) khi trên" : "Vàng (Cần lưu ý) khi trên"}
+                                {field === "good" ? THRESHOLD_FIELD_STYLE.good.label(rule.code) : field === "limit" ? t("nutritionRules.limitLabel") : t("nutritionRules.cautionLabel")}
                               </span>
                               <div className="flex items-center gap-2">
                                 <Input
                                   inputMode="decimal"
                                   value={draft[rule.code][field]}
                                   onChange={(event) => setField(rule.code, field, event.target.value)}
-                                  placeholder="Không dùng"
+                                  placeholder={t("nutritionRules.notUsedPlaceholder")}
                                   disabled={saving}
                                 />
                                 <span className="text-xs text-muted-foreground whitespace-nowrap">{perUnit}</span>
@@ -213,7 +216,7 @@ export default function AdminNutritionRulesPage() {
                         {errors[rule.code] && <p className="text-xs font-medium text-danger-600">{errors[rule.code]}</p>}
                         {rule.evidence && (
                           <p className="text-[11px] text-muted-foreground leading-relaxed">
-                            <span className="font-semibold text-slate-600">Nguồn: </span>
+                            <span className="font-semibold text-slate-600">{t("nutritionRules.source")}</span>
                             {rule.evidence}
                             {rule.evidenceUrl && (
                               <a
@@ -222,15 +225,15 @@ export default function AdminNutritionRulesPage() {
                                 rel="noreferrer"
                                 className="ml-1 inline-flex items-center gap-0.5 text-primary hover:underline"
                               >
-                                Xem bài báo <ExternalLink className="w-3 h-3" />
+                                {t("nutritionRules.viewPaper")} <ExternalLink className="w-3 h-3" />
                               </a>
                             )}
                           </p>
                         )}
                         {rule.updatedAt && (
                           <p className="text-[11px] text-muted-foreground">
-                            Cập nhật {new Date(rule.updatedAt).toLocaleString("vi-VN")}
-                            {rule.updatedBy ? ` bởi ${rule.updatedBy}` : ""}
+                            {t("nutritionRules.updatedAt", { time: new Date(rule.updatedAt).toLocaleString(currentIntlLocale()) })}
+                            {rule.updatedBy ? t("nutritionRules.updatedBy", { user: rule.updatedBy }) : ""}
                           </p>
                         )}
                       </div>
@@ -245,12 +248,7 @@ export default function AdminNutritionRulesPage() {
       <PageFooter>
         <p className="flex items-start gap-2">
           <Info className="w-4 h-4 shrink-0 mt-0.5 text-slate-400" />
-          <span>
-            So sánh "vượt quá" trên 100 g phần ăn được. Gộp màu: có quy tắc đỏ là đỏ; không có đỏ mà có vàng là vàng; không
-            có điểm xấu và có điểm tốt (Na/K thấp, hoặc giàu magie mà ít muối) là xanh. Tỷ lệ Na/K chỉ đỏ khi natri cũng
-            vượt ngưỡng đỏ của muối; điểm magie chỉ tính khi natri không vượt ngưỡng vàng của muối. Để trống một ô nghĩa là
-            quy tắc không có mức đó. Ngưỡng riêng bác sĩ đặt cho bệnh nhân luôn được ưu tiên hơn ngưỡng mặc định ở đây.
-          </span>
+          <span>{t("nutritionRules.footer")}</span>
         </p>
       </PageFooter>
     </Page>

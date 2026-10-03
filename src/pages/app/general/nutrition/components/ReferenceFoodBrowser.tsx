@@ -1,10 +1,12 @@
 import { Link, useSearchParams } from "react-router-dom"
 import { ChevronLeft, ChevronRight, Search, X } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Skeleton } from "@/components/ui/skeleton"
+import { currentIntlLocale } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
 import type { ReferenceFoodSource } from "@/types/nutrition"
 import { formatNutrientAmount } from "../format"
@@ -22,11 +24,12 @@ function parseSource(value: string | null): ReferenceFoodSource | undefined {
   return value === "VN_FCT" || value === "USDA_FNDDS" ? value : undefined
 }
 
+/** Cột tóm tắt; nhãn lấy theo khoá referenceBrowser.columns.<key> */
 const SUMMARY_COLUMNS = [
-  { key: "energyKcal", label: "Năng lượng", unit: "kcal" },
-  { key: "proteinG", label: "Đạm", unit: "g" },
-  { key: "carbohydrateG", label: "Tinh bột", unit: "g" },
-  { key: "fatTotalG", label: "Chất béo", unit: "g" },
+  { key: "energyKcal", unit: "kcal" },
+  { key: "proteinG", unit: "g" },
+  { key: "carbohydrateG", unit: "g" },
+  { key: "fatTotalG", unit: "g" },
 ] as const
 
 interface ReferenceFoodBrowserProps {
@@ -42,6 +45,9 @@ interface ReferenceFoodBrowserProps {
  * kết quả; các tham số khác của trang chứa nó (ví dụ `tab`) được giữ nguyên.
  */
 export function ReferenceFoodBrowser({ fixedGroup, layout = "list" }: ReferenceFoodBrowserProps = {}) {
+  const { t } = useTranslation("nutrition")
+  const locale = currentIntlLocale()
+  const columnLabel = (key: (typeof SUMMARY_COLUMNS)[number]["key"]) => t(`referenceBrowser.columns.${key}`)
   const [searchParams, setSearchParams] = useSearchParams()
   const q = searchParams.get("q") ?? ""
   const group = fixedGroup ?? searchParams.get("group") ?? ""
@@ -87,7 +93,7 @@ export function ReferenceFoodBrowser({ fixedGroup, layout = "list" }: ReferenceF
   const countBySource = (s?: ReferenceFoodSource) =>
     countedGroups.reduce((sum, g) => sum + (s ? (g.sourceCounts[s] ?? 0) : g.foodCount), 0)
   const sourceOptions: { value?: ReferenceFoodSource; label: string; count: number }[] = [
-    { label: "Tất cả", count: countBySource() },
+    { label: t("referenceBrowser.allSources"), count: countBySource() },
     ...SOURCE_ORDER.map((s) => ({ value: s, label: REFERENCE_SOURCES[s].short, count: countBySource(s) })),
   ]
   // Nhóm không có món nào ở nguồn đang chọn thì ẩn, trừ nhóm đang chọn
@@ -111,7 +117,7 @@ export function ReferenceFoodBrowser({ fixedGroup, layout = "list" }: ReferenceF
             )}
           >
             {option.label}
-            {option.count > 0 && <span className="ml-1 opacity-70">({option.count.toLocaleString("vi-VN")})</span>}
+            {option.count > 0 && <span className="ml-1 opacity-70">({option.count.toLocaleString(locale)})</span>}
           </button>
         ))}
       </div>
@@ -124,12 +130,12 @@ export function ReferenceFoodBrowser({ fixedGroup, layout = "list" }: ReferenceF
               key={q}
               name="q"
               defaultValue={q}
-              placeholder="Tên tiếng Việt hoặc tiếng Anh, ví dụ: rau muống, giò lụa, salmon..."
+              placeholder={t("referenceBrowser.placeholder")}
               className="pl-10 h-11 rounded-2xl bg-white"
             />
           </div>
           <Button type="submit" className="h-11 rounded-2xl px-5">
-            Tìm
+            {t("referenceBrowser.search")}
           </Button>
         </form>
         {!fixedGroup && (
@@ -138,15 +144,15 @@ export function ReferenceFoodBrowser({ fixedGroup, layout = "list" }: ReferenceF
             onValueChange={(value) => updateParams({ group: value === ALL_GROUPS ? "" : value, page: 1 })}
           >
             <SelectTrigger className="h-11 rounded-2xl md:w-72 bg-white">
-              <SelectValue placeholder="Tất cả nhóm" />
+              <SelectValue placeholder={t("referenceBrowser.allGroups")} />
             </SelectTrigger>
             <SelectContent className="max-h-80">
-              <SelectItem value={ALL_GROUPS}>Tất cả nhóm</SelectItem>
+              <SelectItem value={ALL_GROUPS}>{t("referenceBrowser.allGroups")}</SelectItem>
               {groupOptions.map((g) => (
                 <SelectItem key={g.id} value={g.id}>
                   <span className="inline-flex items-center gap-2">
                     <FoodGroupIcon icon={g.icon} className="w-4 h-4 shrink-0" />
-                    {g.name} ({g.count.toLocaleString("vi-VN")})
+                    {g.name} ({g.count.toLocaleString(locale)})
                   </span>
                 </SelectItem>
               ))}
@@ -157,10 +163,16 @@ export function ReferenceFoodBrowser({ fixedGroup, layout = "list" }: ReferenceF
 
       <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground">
         <span>
-          {data ? `${data.totalElements.toLocaleString("vi-VN")} kết quả` : "Đang tải..."}
+          {data
+            ? t("referenceBrowser.resultCount", {
+                count: data.totalElements,
+                value: data.totalElements.toLocaleString(locale),
+              })
+            : t("referenceBrowser.loading")}
           {q && (
             <>
-              {" cho "}
+              {" "}
+              {t("referenceBrowser.forQuery")}{" "}
               <span className="font-medium text-foreground">&ldquo;{q}&rdquo;</span>
             </>
           )}
@@ -172,16 +184,16 @@ export function ReferenceFoodBrowser({ fixedGroup, layout = "list" }: ReferenceF
             className="inline-flex items-center gap-1 text-primary font-medium hover:underline cursor-pointer"
           >
             <X className="w-3.5 h-3.5" />
-            Xóa bộ lọc
+            {t("referenceBrowser.clearFilters")}
           </button>
         )}
       </div>
 
       {isError ? (
         <div className="rounded-2xl border border-dashed border-slate-200 p-6 text-center text-sm text-muted-foreground space-y-2">
-          <p>Không tải được dữ liệu dinh dưỡng.</p>
+          <p>{t("referenceBrowser.loadError")}</p>
           <button type="button" onClick={() => refetch()} className="text-primary font-medium hover:underline cursor-pointer">
-            Thử lại
+            {t("common.retry")}
           </button>
         </div>
       ) : isLoading ? (
@@ -192,10 +204,8 @@ export function ReferenceFoodBrowser({ fixedGroup, layout = "list" }: ReferenceF
         </div>
       ) : foods.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-slate-200 p-6 text-center text-sm text-muted-foreground space-y-1">
-          <p>Không tìm thấy thực phẩm phù hợp.</p>
-          <p className="text-xs">
-            Thử tên tiếng Việt (có hoặc không dấu) hoặc tiếng Anh, ví dụ: rau muong, gio lua, chicken, rice.
-          </p>
+          <p>{t("referenceBrowser.empty")}</p>
+          <p className="text-xs">{t("referenceBrowser.emptyHint")}</p>
         </div>
       ) : layout === "cards" ? (
         <div
@@ -226,7 +236,7 @@ export function ReferenceFoodBrowser({ fixedGroup, layout = "list" }: ReferenceF
                 <dl className="pt-3 grid grid-cols-4 gap-2 border-t border-slate-100">
                   {SUMMARY_COLUMNS.map((col) => (
                     <div key={col.key} className="min-w-0">
-                      <dt className="text-[10px] text-muted-foreground truncate">{col.label}</dt>
+                      <dt className="text-[10px] text-muted-foreground truncate">{columnLabel(col.key)}</dt>
                       <dd className="text-xs font-semibold text-slate-700">
                         {formatNutrientAmount(food[col.key])}
                         <span className="ml-0.5 font-normal text-muted-foreground">{col.unit}</span>
@@ -241,10 +251,10 @@ export function ReferenceFoodBrowser({ fixedGroup, layout = "list" }: ReferenceF
       ) : (
         <div className={isFetching ? "opacity-60 transition-opacity" : "transition-opacity"}>
           <div className="hidden md:grid grid-cols-[1fr_repeat(4,6.5rem)] gap-3 px-4 pb-2 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-            <span>Thực phẩm</span>
+            <span>{t("referenceBrowser.foodColumn")}</span>
             {SUMMARY_COLUMNS.map((col) => (
               <span key={col.key} className="text-right">
-                {col.label} ({col.unit})
+                {columnLabel(col.key)} ({col.unit})
               </span>
             ))}
           </div>
@@ -276,7 +286,7 @@ export function ReferenceFoodBrowser({ fixedGroup, layout = "list" }: ReferenceF
                   </div>
                   {SUMMARY_COLUMNS.map((col) => (
                     <p key={col.key} className="text-xs md:text-sm md:text-right text-slate-700">
-                      <span className="md:hidden text-muted-foreground">{col.label}: </span>
+                      <span className="md:hidden text-muted-foreground">{columnLabel(col.key)}: </span>
                       <span className="font-semibold">{formatNutrientAmount(food[col.key])}</span>
                       <span className="md:hidden text-muted-foreground"> {col.unit}</span>
                     </p>
@@ -298,10 +308,10 @@ export function ReferenceFoodBrowser({ fixedGroup, layout = "list" }: ReferenceF
             className="rounded-xl gap-1"
           >
             <ChevronLeft className="w-4 h-4" />
-            Trước
+            {t("referenceBrowser.prev")}
           </Button>
           <span className="text-xs text-muted-foreground">
-            Trang {page} / {totalPages}
+            {t("referenceBrowser.page", { page, total: totalPages })}
           </span>
           <Button
             variant="outline"
@@ -310,7 +320,7 @@ export function ReferenceFoodBrowser({ fixedGroup, layout = "list" }: ReferenceF
             onClick={() => updateParams({ page: page + 1 })}
             className="rounded-xl gap-1"
           >
-            Sau
+            {t("referenceBrowser.next")}
             <ChevronRight className="w-4 h-4" />
           </Button>
         </div>

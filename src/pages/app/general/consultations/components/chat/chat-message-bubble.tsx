@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next"
 import { cn } from "@/lib/utils"
 import type { ConsultationMessageItem } from "@/types/consultation"
 
@@ -9,6 +10,7 @@ interface ChatMessageBubbleProps {
 }
 
 export function ChatMessageBubble({ message, mine, isFirstInGroup, isLastInGroup }: ChatMessageBubbleProps) {
+  const { t } = useTranslation("consultation")
   const roundedClass = mine
     ? cn(
         "rounded-l-2xl",
@@ -41,7 +43,7 @@ export function ChatMessageBubble({ message, mine, isFirstInGroup, isLastInGroup
           target="_blank" 
           rel="noreferrer"
         >
-          <div className="truncate font-medium">{message.attachmentName ?? "View Attachment"}</div>
+          <div className="truncate font-medium">{message.attachmentName ?? t("chat.bubble.viewAttachment")}</div>
         </a>
       )}
     </div>

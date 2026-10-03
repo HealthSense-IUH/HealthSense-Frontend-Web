@@ -1,5 +1,7 @@
 import { memo } from "react"
 import { Search, User } from "lucide-react"
+import { useTranslation } from "react-i18next"
+import { currentIntlLocale } from "@/lib/i18n"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { cn } from "@/lib/utils"
 import type { ConsultationSessionItem } from "@/types/consultation"
@@ -14,6 +16,7 @@ interface ChatSidebarProps {
 }
 
 export const ChatSidebar = memo(function ChatSidebar({ sessions, selectedSession, isDoctor, isMember, onSelectSession }: ChatSidebarProps) {
+  const { t } = useTranslation("consultation")
   return (
     <div className="flex w-full md:w-[320px] lg:w-[360px] flex-shrink-0 flex-col border-r border-border bg-background relative h-full">
       <div className="border-b border-border/50 px-5 py-4 bg-background">
@@ -21,7 +24,7 @@ export const ChatSidebar = memo(function ChatSidebar({ sessions, selectedSession
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/70" />
           <input 
             type="text" 
-            placeholder="Tìm kiếm..." 
+            placeholder={t("chat.sidebar.searchPlaceholder")} 
             className="w-full bg-muted/40 hover:bg-muted/60 focus:bg-muted focus:ring-1 focus:ring-primary/30 transition-colors rounded-full pl-10 pr-4 py-2 text-[13px] outline-none text-foreground placeholder:text-muted-foreground"
           />
         </div>
@@ -30,7 +33,7 @@ export const ChatSidebar = memo(function ChatSidebar({ sessions, selectedSession
         <div className="flex flex-col gap-0">
           {sessions.length === 0 && (
             <div className="p-4 text-center text-sm text-muted-foreground">
-              Không có phiên tư vấn nào.
+              {t("chat.sidebar.empty")}
             </div>
           )}
           {sessions.map((session) => {
@@ -58,19 +61,19 @@ export const ChatSidebar = memo(function ChatSidebar({ sessions, selectedSession
                         isSelected ? "text-foreground" : "text-foreground/80"
                       )}>
                         {isDoctor 
-                          ? (session.memberDisplayName || (session as any).memberName || (session as any).member?.displayName || `Hội viên #${session.memberId}`)
+                          ? (session.memberDisplayName || (session as any).memberName || (session as any).member?.displayName || t("chat.names.member", { id: session.memberId }))
                           : isMember 
-                            ? (session.doctorDisplayName || (session as any).doctorName || (session as any).doctor?.displayName || `Bác sĩ #${session.doctorId}`)
-                            : `${session.doctorDisplayName || (session as any).doctorName || `BS #${session.doctorId}`} - ${session.memberDisplayName || (session as any).memberName || `HV #${session.memberId}`}`}
+                            ? (session.doctorDisplayName || (session as any).doctorName || (session as any).doctor?.displayName || t("chat.names.doctor", { id: session.doctorId }))
+                            : `${session.doctorDisplayName || (session as any).doctorName || t("chat.names.doctorShort", { id: session.doctorId })} - ${session.memberDisplayName || (session as any).memberName || t("chat.names.memberShort", { id: session.memberId })}`}
                       </span>
                       <span className="flex-shrink-0 scale-75 origin-right">{statusBadge(session.status)}</span>
                     </div>
                     <div className="mt-1 flex items-center justify-between gap-2">
                       <span className="truncate text-[12px] text-muted-foreground">
-                        {session.lastMessagePreview || "Chưa có tin nhắn"}
+                        {session.lastMessagePreview || t("chat.sidebar.noMessages")}
                       </span>
                       <span className="shrink-0 text-[11px] font-medium text-muted-foreground/70">
-                        {session.lastMessageAt ? new Date(session.lastMessageAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ""}
+                        {session.lastMessageAt ? new Date(session.lastMessageAt).toLocaleTimeString(currentIntlLocale(), { hour: '2-digit', minute: '2-digit' }) : ""}
                       </span>
                     </div>
                   </div>

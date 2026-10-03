@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { Trans, useTranslation } from "react-i18next"
 import {
   Clock,
   Users,
@@ -19,6 +20,7 @@ import { Badge } from "@/components/ui/badge"
 import type { CurrentQueueStateResponse, ConsultationRequestItem } from "@/types/consultation"
 import type { CreditReservationStatus } from "@/types/credits"
 import { getCreditReservationStatusConfig, getCreditDisplay } from "@/constants/credits"
+import { currentIntlLocale } from "@/lib/i18n"
 
 export interface MemberQueuePanelProps {
   queueState: CurrentQueueStateResponse | null
@@ -87,6 +89,7 @@ export function MemberQueuePanel({
   onOpenSession,
   onRegisterNew,
 }: MemberQueuePanelProps) {
+  const { t } = useTranslation("consultation")
   const navigate = useNavigate()
   const creditPolicy = queueState?.creditPolicy || latestRequest?.creditPolicy
   const reservationStatus: CreditReservationStatus | null | undefined =
@@ -113,10 +116,10 @@ export function MemberQueuePanel({
             <Stethoscope className="h-6 w-6" />
           </div>
           <div>
-            <Badge className="bg-success-500 hover:bg-success-600 text-white mb-1.5">Phiên tư vấn đang diễn ra</Badge>
-            <h2 className="text-xl font-bold text-foreground">Bác sĩ đang đợi bạn trong phòng tư vấn</h2>
+            <Badge className="bg-success-500 hover:bg-success-600 text-white mb-1.5">{t("queuePanel.activeSession.badge")}</Badge>
+            <h2 className="text-xl font-bold text-foreground">{t("queuePanel.activeSession.title")}</h2>
             <p className="text-xs text-muted-foreground mt-0.5">
-              Phiên tư vấn #{queueState.sessionId} đã được kích hoạt thành công.
+              {t("queuePanel.activeSession.activated", { id: queueState.sessionId })}
             </p>
           </div>
         </div>
@@ -124,14 +127,14 @@ export function MemberQueuePanel({
         <CardContent className="p-6 space-y-4">
           <div className="bg-muted/30 border rounded-xl p-4 space-y-2 text-sm">
             <div className="flex justify-between items-center text-xs">
-              <span className="text-muted-foreground">Mã phiên tư vấn:</span>
+              <span className="text-muted-foreground">{t("queuePanel.activeSession.sessionCode")}</span>
               <span className="font-mono font-bold text-foreground">#{queueState.sessionId}</span>
             </div>
             {queueState.sessionStartedAt && (
               <div className="flex justify-between items-center text-xs">
-                <span className="text-muted-foreground">Thời gian bắt đầu:</span>
+                <span className="text-muted-foreground">{t("queuePanel.activeSession.startTime")}</span>
                 <span className="font-medium text-foreground">
-                  {new Date(queueState.sessionStartedAt).toLocaleTimeString("vi-VN", {
+                  {new Date(queueState.sessionStartedAt).toLocaleTimeString(currentIntlLocale(), {
                     hour: "2-digit",
                     minute: "2-digit",
                   })}
@@ -140,9 +143,9 @@ export function MemberQueuePanel({
             )}
             {queueState.sessionEndsAt && (
               <div className="flex justify-between items-center text-xs">
-                <span className="text-muted-foreground">Thời gian kết thúc block 15 phút:</span>
+                <span className="text-muted-foreground">{t("queuePanel.activeSession.blockEndTime")}</span>
                 <span className="font-medium text-foreground">
-                  {new Date(queueState.sessionEndsAt).toLocaleTimeString("vi-VN", {
+                  {new Date(queueState.sessionEndsAt).toLocaleTimeString(currentIntlLocale(), {
                     hour: "2-digit",
                     minute: "2-digit",
                   })}
@@ -151,7 +154,7 @@ export function MemberQueuePanel({
             )}
             {reservationStatus && reservationConfig && (
               <div className="flex justify-between items-center text-xs pt-1 border-t">
-                <span className="text-muted-foreground">Trạng thái lượt:</span>
+                <span className="text-muted-foreground">{t("queuePanel.activeSession.reservationStatus")}</span>
                 <span className={`inline-flex items-center px-2 py-0.5 rounded-md font-semibold border ${reservationConfig.className}`}>
                   {reservationConfig.label}
                 </span>
@@ -166,7 +169,7 @@ export function MemberQueuePanel({
             className="w-full h-12 rounded-xl font-semibold gap-2 shadow-sm"
             onClick={() => onOpenSession(queueState.sessionId!)}
           >
-            Vào phòng tư vấn ngay (Mở Chat)
+            {t("queuePanel.activeSession.enterRoom")}
             <ArrowRight className="w-4 h-4" />
           </Button>
         </CardFooter>
@@ -191,17 +194,17 @@ export function MemberQueuePanel({
             </div>
             <div>
               <Badge className="bg-primary text-primary-foreground mb-1.5 animate-pulse">
-                Bác sĩ đã sẵn sàng
+                {t("queuePanel.confirmation.badge")}
               </Badge>
-              <h2 className="text-xl font-bold text-foreground">Bác sĩ đã nhận lượt tư vấn của bạn!</h2>
+              <h2 className="text-xl font-bold text-foreground">{t("queuePanel.confirmation.title")}</h2>
               <p className="text-xs text-muted-foreground mt-0.5">
-                Vui lòng xác nhận để bắt đầu phiên tư vấn trực tiếp.
+                {t("queuePanel.confirmation.subtitle")}
               </p>
             </div>
           </div>
 
           <div className="text-right shrink-0">
-            <span className="text-[11px] font-medium text-muted-foreground block">Thời gian còn lại</span>
+            <span className="text-[11px] font-medium text-muted-foreground block">{t("queuePanel.confirmation.timeLeft")}</span>
             <div className="flex items-center gap-1 font-mono font-bold text-lg text-primary">
               <Clock className="w-4 h-4" />
               <span>{confirmTimerFormatted}</span>
@@ -212,18 +215,18 @@ export function MemberQueuePanel({
         <CardContent className="p-6 space-y-4">
           <div className="p-4 rounded-xl bg-muted/20 border space-y-3">
             <div className="flex items-center justify-between text-sm">
-              <span className="text-muted-foreground">Số thứ tự của bạn:</span>
+              <span className="text-muted-foreground">{t("queuePanel.confirmation.yourNumber")}</span>
               <span className="font-mono font-bold text-base text-primary">
                 #{String(queueState.queueNumber).padStart(3, "0")}
               </span>
             </div>
             <div className="flex items-center justify-between text-sm">
-              <span className="text-muted-foreground">Trạng thái:</span>
-              <span className="font-semibold text-success-600">Bác sĩ đã chấp nhận kết nối</span>
+              <span className="text-muted-foreground">{t("queuePanel.confirmation.status")}</span>
+              <span className="font-semibold text-success-600">{t("queuePanel.confirmation.doctorAccepted")}</span>
             </div>
             {creditDisplay && (
               <div className="flex items-center justify-between text-sm pt-2 border-t">
-                <span className="text-muted-foreground">Thông tin lượt:</span>
+                <span className="text-muted-foreground">{t("queuePanel.confirmation.creditInfo")}</span>
                 <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-semibold border bg-primary/5 text-primary border-primary/20">
                   {creditDisplay}
                 </span>
@@ -236,9 +239,9 @@ export function MemberQueuePanel({
               <div className="flex items-start sm:items-center gap-2.5">
                 <AlertCircle className="w-5 h-5 text-warning-600 shrink-0 mt-0.5 sm:mt-0" />
                 <div>
-                  <p className="font-semibold text-sm text-foreground">Không còn đủ lượt tại thời điểm bắt đầu phiên</p>
+                  <p className="font-semibold text-sm text-foreground">{t("queuePanel.confirmation.insufficientTitle")}</p>
                   <p className="text-xs text-muted-foreground mt-0.5">
-                    Màn hình xác nhận vẫn được giữ. Vui lòng nạp thêm lượt tư vấn để tiếp tục.
+                    {t("queuePanel.confirmation.insufficientDescription")}
                   </p>
                 </div>
               </div>
@@ -249,7 +252,7 @@ export function MemberQueuePanel({
                 onClick={() => navigate("/app/general/consultations?tab=credits")}
               >
                 <Coins className="w-3.5 h-3.5" />
-                Mua thêm lượt tư vấn
+                {t("queuePanel.confirmation.buyCredits")}
               </Button>
             </div>
           )}
@@ -258,7 +261,7 @@ export function MemberQueuePanel({
             <div className="p-3 bg-danger-50 border border-danger-200 rounded-xl text-xs text-danger-800 flex items-start gap-2">
               <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-danger-600" />
               <span>
-                Đã hết thời gian xác nhận. Hệ thống đang làm mới trạng thái hàng đợi...
+                {t("queuePanel.confirmation.expired")}
               </span>
             </div>
           ) : (
@@ -266,8 +269,8 @@ export function MemberQueuePanel({
               <Info className="w-4 h-4 shrink-0 mt-0.5 text-primary-600" />
               <span>
                 {creditPolicy === "PER_SESSION_CONFIRM_V2"
-                  ? "Bạn có tối đa 15 phút để xác nhận. Sau khi bạn xác nhận, 1 lượt tư vấn sẽ được trừ và phiên tư vấn sẽ được bắt đầu ngay lập tức."
-                  : "Bạn có tối đa 15 phút để xác nhận. Sau khi bạn xác nhận, phiên tư vấn và khung chat trực tiếp sẽ được mở ngay lập tức."}
+                  ? t("queuePanel.confirmation.hintPerSession")
+                  : t("queuePanel.confirmation.hintDefault")}
               </span>
             </div>
           )}
@@ -284,7 +287,7 @@ export function MemberQueuePanel({
               }
             }}
           >
-            {actionLoading ? "Đang tạo phiên tư vấn..." : "Tham gia tư vấn"}
+            {actionLoading ? t("queuePanel.confirmation.creatingSession") : t("queuePanel.confirmation.join")}
           </Button>
 
           <Button
@@ -293,13 +296,13 @@ export function MemberQueuePanel({
             className="h-12 rounded-xl text-muted-foreground hover:text-danger-600 hover:border-danger-200"
             disabled={actionLoading}
             onClick={() => {
-              if (window.confirm("Bạn có chắc chắn muốn hủy lượt tư vấn này?")) {
+              if (window.confirm(t("queuePanel.confirmation.cancelConfirm"))) {
                 onCancel(queueState.requestId)
               }
             }}
           >
             <XCircle className="w-4 h-4 mr-1.5" />
-            Hủy lượt
+            {t("queuePanel.confirmation.cancel")}
           </Button>
         </CardFooter>
       </Card>
@@ -320,11 +323,11 @@ export function MemberQueuePanel({
                 <Users className="h-5 w-5" />
               </div>
               <div>
-                <CardTitle className="text-lg font-bold">Hàng đợi Tư vấn Sức khỏe</CardTitle>
+                <CardTitle className="text-lg font-bold">{t("queuePanel.queue.title")}</CardTitle>
                 <CardDescription className="text-xs">
                   {isOfferingDoctor
-                    ? "Hệ thống đang kết nối bạn với bác sĩ..."
-                    : "Bạn đang trong hàng đợi trực tuyến (FIFO)"}
+                    ? t("queuePanel.queue.connecting")
+                    : t("queuePanel.queue.inQueue")}
                 </CardDescription>
               </div>
             </div>
@@ -337,7 +340,7 @@ export function MemberQueuePanel({
               onClick={onRefresh}
             >
               <RefreshCw className={`w-3.5 h-3.5 mr-1.5 ${loading ? "animate-spin" : ""}`} />
-              Làm mới
+              {t("queuePanel.queue.refresh")}
             </Button>
           </div>
         </CardHeader>
@@ -347,20 +350,20 @@ export function MemberQueuePanel({
           <div className="flex flex-col sm:flex-row items-center justify-between p-5 rounded-2xl bg-primary/5 border border-primary/20 gap-4 text-center sm:text-left">
             <div>
               <span className="text-xs font-medium text-muted-foreground block uppercase tracking-wider">
-                Số thứ tự của bạn
+                {t("queuePanel.queue.yourNumber")}
               </span>
               <span className="text-3xl sm:text-4xl font-extrabold text-primary font-mono tracking-tight">
                 #{String(queueState.queueNumber).padStart(3, "0")}
               </span>
               <span className="text-xs text-muted-foreground block mt-1">
-                Ngày tiếp nhận: {queueState.queueDate}
+                {t("queuePanel.queue.queueDate", { date: queueState.queueDate })}
               </span>
             </div>
 
             <div className="flex flex-col items-center sm:items-end gap-1.5">
               <div className="flex flex-wrap items-center gap-1.5 justify-center sm:justify-end">
                 <Badge variant="outline" className="px-3 py-1 text-xs font-semibold bg-background">
-                  {isOfferingDoctor ? "Đang kết nối bác sĩ" : "Đang chờ đến lượt"}
+                  {isOfferingDoctor ? t("queuePanel.queue.connectingDoctor") : t("queuePanel.queue.waitingTurn")}
                 </Badge>
                 {creditDisplay && (
                   <Badge variant="outline" className="px-2.5 py-1 text-xs font-semibold bg-primary/5 text-primary border-primary/20">
@@ -369,7 +372,12 @@ export function MemberQueuePanel({
                 )}
               </div>
               <p className="text-sm font-medium text-foreground">
-                Còn <strong className="text-primary font-bold text-base">{queueState.peopleAhead}</strong> người trước bạn
+                <Trans
+                  t={t}
+                  i18nKey="queuePanel.queue.peopleAhead"
+                  count={queueState.peopleAhead}
+                  components={{ strong: <strong className="text-primary font-bold text-base" /> }}
+                />
               </p>
             </div>
           </div>
@@ -382,7 +390,7 @@ export function MemberQueuePanel({
                 <span className="relative inline-flex rounded-full h-3 w-3 bg-warning-500"></span>
               </div>
               <p className="font-medium">
-                Hệ thống đang kết nối bạn với bác sĩ... Vui lòng giữ màn hình này và chờ phản hồi từ bác sĩ.
+                {t("queuePanel.queue.connectingNotice")}
               </p>
             </div>
           )}
@@ -392,9 +400,9 @@ export function MemberQueuePanel({
             <div className="flex items-start gap-3 p-4 rounded-xl bg-muted/40 border border-border text-xs text-muted-foreground">
               <Info className="w-4 h-4 text-primary shrink-0 mt-0.5" />
               <div>
-                <p className="font-semibold text-foreground">Hiện chưa có bác sĩ sẵn sàng.</p>
+                <p className="font-semibold text-foreground">{t("queuePanel.queue.noDoctorsTitle")}</p>
                 <p className="mt-0.5">
-                  Yêu cầu của bạn đã được xếp hàng và sẽ được xử lý khi có bác sĩ trực. Bạn không cần gửi lại yêu cầu.
+                  {t("queuePanel.queue.noDoctorsDescription")}
                 </p>
               </div>
             </div>
@@ -402,18 +410,18 @@ export function MemberQueuePanel({
 
           {/* Realtime Doctor Statistics */}
           <div className="border rounded-xl p-4 bg-muted/10 space-y-2">
-            <span className="text-xs font-semibold text-foreground block mb-2">Thống kê đội ngũ bác sĩ:</span>
+            <span className="text-xs font-semibold text-foreground block mb-2">{t("queuePanel.queue.doctorStats")}</span>
             <div className="grid grid-cols-3 gap-3 text-center">
               <div className="p-2.5 rounded-lg bg-background border">
-                <span className="text-[11px] text-muted-foreground block">Đang trực</span>
+                <span className="text-[11px] text-muted-foreground block">{t("queuePanel.queue.onDuty")}</span>
                 <span className="text-base font-bold text-foreground font-mono">{queueState.doctorsOnDuty}</span>
               </div>
               <div className="p-2.5 rounded-lg bg-background border">
-                <span className="text-[11px] text-muted-foreground block">Sẵn sàng</span>
+                <span className="text-[11px] text-muted-foreground block">{t("queuePanel.queue.available")}</span>
                 <span className="text-base font-bold text-success-600 font-mono">{queueState.availableDoctors}</span>
               </div>
               <div className="p-2.5 rounded-lg bg-background border">
-                <span className="text-[11px] text-muted-foreground block">Đang bận</span>
+                <span className="text-[11px] text-muted-foreground block">{t("queuePanel.queue.busy")}</span>
                 <span className="text-base font-bold text-warning-600 font-mono">{queueState.busyDoctors}</span>
               </div>
             </div>
@@ -422,7 +430,7 @@ export function MemberQueuePanel({
 
         <CardFooter className="border-t bg-muted/5 p-4 px-6 flex justify-between items-center">
           <span className="text-xs text-muted-foreground">
-            Bạn có thể hủy lượt bất cứ lúc nào trước khi phiên bắt đầu.
+            {t("queuePanel.queue.cancelHint")}
           </span>
           <Button
             variant="outline"
@@ -430,13 +438,13 @@ export function MemberQueuePanel({
             className="text-xs text-muted-foreground hover:text-danger-600 hover:border-danger-200"
             disabled={actionLoading}
             onClick={() => {
-              if (window.confirm("Bạn có chắc chắn muốn rời khỏi hàng đợi tư vấn?")) {
+              if (window.confirm(t("queuePanel.queue.leaveConfirm"))) {
                 onCancel(queueState.requestId)
               }
             }}
           >
             <XCircle className="w-3.5 h-3.5 mr-1" />
-            Hủy lượt chờ
+            {t("queuePanel.queue.leave")}
           </Button>
         </CardFooter>
       </Card>
@@ -451,9 +459,9 @@ export function MemberQueuePanel({
           <Clock className="w-6 h-6" />
         </div>
         <div className="space-y-1">
-          <h3 className="text-lg font-bold text-foreground">Bạn đã bỏ lỡ lượt tư vấn</h3>
+          <h3 className="text-lg font-bold text-foreground">{t("queuePanel.timedOut.title")}</h3>
           <p className="text-xs text-muted-foreground max-w-sm mx-auto">
-            Thời hạn xác nhận lượt tư vấn trước đó đã hết. Nếu bạn vẫn muốn được bác sĩ tư vấn, vui lòng đăng ký lại để nhận số thứ tự mới.
+            {t("queuePanel.timedOut.description")}
           </p>
           {reservationStatus && reservationConfig && (
             <div className="pt-1">
@@ -465,7 +473,7 @@ export function MemberQueuePanel({
         </div>
         <div className="pt-2">
           <Button onClick={onRegisterNew} className="rounded-xl font-semibold shadow-sm">
-            Đăng ký tư vấn mới
+            {t("queuePanel.registerNew")}
           </Button>
         </div>
       </Card>
@@ -479,9 +487,9 @@ export function MemberQueuePanel({
           <XCircle className="w-6 h-6" />
         </div>
         <div className="space-y-1">
-          <h3 className="text-lg font-bold text-foreground">Yêu cầu tư vấn đã được hủy</h3>
+          <h3 className="text-lg font-bold text-foreground">{t("queuePanel.cancelled.title")}</h3>
           <p className="text-xs text-muted-foreground max-w-sm mx-auto">
-            Lượt xếp hàng trước đó của bạn đã kết thúc. Bạn có thể tạo yêu cầu tư vấn mới bất cứ lúc nào.
+            {t("queuePanel.cancelled.description")}
           </p>
           {reservationStatus && reservationConfig && (
             <div className="pt-1">
@@ -493,7 +501,7 @@ export function MemberQueuePanel({
         </div>
         <div className="pt-2">
           <Button onClick={onRegisterNew} className="rounded-xl font-semibold shadow-sm">
-            Đăng ký tư vấn mới
+            {t("queuePanel.registerNew")}
           </Button>
         </div>
       </Card>
@@ -507,14 +515,14 @@ export function MemberQueuePanel({
         <Stethoscope className="w-7 h-7" />
       </div>
       <div className="space-y-1.5">
-        <h3 className="text-lg font-bold text-foreground">Bạn chưa có yêu cầu tư vấn đang hoạt động</h3>
+        <h3 className="text-lg font-bold text-foreground">{t("queuePanel.empty.title")}</h3>
         <p className="text-xs text-muted-foreground max-w-sm mx-auto">
-          Đăng ký để được xếp vào hàng đợi tư vấn trực tiếp 1-1 với bác sĩ chuyên khoa.
+          {t("queuePanel.empty.description")}
         </p>
       </div>
       <div className="pt-2">
         <Button onClick={onRegisterNew} size="lg" className="rounded-xl font-semibold shadow-sm">
-          Đăng ký tư vấn ngay
+          {t("queuePanel.empty.register")}
         </Button>
       </div>
     </Card>
