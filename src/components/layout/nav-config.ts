@@ -1,5 +1,6 @@
 import {
   Activity,
+  BarChart3,
   Coins,
   FileText,
   HeartPulse,
@@ -60,6 +61,12 @@ export const allNavigationGroups: NavigationGroup[] = [
         id: "user-management",
         href: "/app/management/users",
         icon: Users,
+        allowedRoles: [USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN],
+      },
+      {
+        id: "statistics",
+        href: "/app/management/statistics/users",
+        icon: BarChart3,
         allowedRoles: [USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN],
       },
       {
