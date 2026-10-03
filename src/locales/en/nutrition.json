@@ -2,7 +2,6 @@
   "common": {
     "comingSoon": "Coming soon",
     "retry": "Try again",
-    "breadcrumbNutrition": "Nutrition",
     "all": "All"
   },
   "dietRules": {
@@ -67,13 +66,6 @@
       "note": "Results are only estimates and do not replace weighing food or nutrition counseling."
     },
     "disclaimer": "<strong>Medical note:</strong> The nutrition recommendations on HealthSense are based on clinical guidelines from the American College of Cardiology/American Heart Association (ACC/AHA) and systematic medical reviews. No food can cure or fully prevent atrial fibrillation on its own. Any major change in diet or use of supplements should be discussed with your treating physician."
-  },
-  "database": {
-    "breadcrumb": "Full database lookup",
-    "eyebrow": "National Institute of Nutrition 2007 · USDA FNDDS 2021-2023",
-    "title": "Nutrition database",
-    "description": "Look up the nutritional composition of nearly 6,000 foods: 526 Vietnamese foods and 5,431 USDA foods and dishes. Values are per 100 g of edible portion.",
-    "footer": "Sources: National Institute of Nutrition - Ministry of Health (2007), Vietnamese Food Composition Table, Medical Publishing House; and USDA FoodData Central, FNDDS 2021-2023. These are reference figures; color ratings follow the diet prescription from your doctor (if any). See the recommendations under <link>Food lookup</link>."
   },
   "dietAdvice": {
     "level": {
@@ -182,7 +174,8 @@
   },
   "category": {
     "notFound": "Food group not found.",
-    "backToNutrition": "Back to nutrition",
+    "backToGroups": "All food groups",
+    "allGroups": "Food groups",
     "eyebrow": "Food group",
     "variantsDescription": "Variants of {{food}} in the {{group}} group, classified by recommendation level for heart health and atrial fibrillation.",
     "recommendedTitle": "With heart-health recommendations ({{count}})",
@@ -203,7 +196,6 @@
     "defaultPortion": "Typical serving",
     "notFoundTitle": "Food not found",
     "notFoundDescription": "This food is not in the nutrition database.",
-    "backToLookup": "Back to lookup",
     "sourceCode": "{{source}} · code {{code}}",
     "sourceCategory": "Original category: {{category}}",
     "wastePct": "Refuse (waste) during preparation: <strong>{{value}}%</strong>. The figures below are for the edible portion.",
@@ -220,7 +212,6 @@
   "foodDetail": {
     "notFoundTitle": "Food not found",
     "notFoundDescription": "The food you are looking for does not exist or has been updated.",
-    "backToNutrition": "Back to Nutrition",
     "evidenceType": {
       "GUIDELINE": "Clinical guideline",
       "SYSTEMATIC_REVIEW": "Systematic review",
@@ -231,8 +222,6 @@
     "fnddsSource": "FNDDS reference: {{source}}",
     "type": "Type: {{name}}",
     "standardServing": "Standard amount: 100 g",
-    "imageTitle": "Food image",
-    "imagePlaceholder": "A representative image will appear here once image data is integrated",
     "nutritionTitle": "Nutrition facts",
     "nutritionSubtitle": "Per 100g of food (based on the USDA FNDDS 2021-2023 database)",
     "per100g": "Per 100g",
@@ -248,5 +237,8 @@
     "year": "Year {{year}}",
     "viewSource": "View original source",
     "footer": "Nutrition data is taken from the USDA Food and Nutrient Database for Dietary Studies (FNDDS 2021-2023). Information about atrial fibrillation and heart health is for health education only and does not replace a diagnosis or treatment plan from a cardiologist."
+  },
+  "detail": {
+    "loading": "Loading..."
   }
 }

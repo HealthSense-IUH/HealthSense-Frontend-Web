@@ -2,7 +2,6 @@
   "common": {
     "comingSoon": "Sắp ra mắt",
     "retry": "Thử lại",
-    "breadcrumbNutrition": "Dinh dưỡng",
     "all": "Tất cả"
   },
   "dietRules": {
@@ -67,13 +66,6 @@
       "note": "Kết quả chỉ là ước tính, không thay thế việc cân đo thực phẩm hay tư vấn dinh dưỡng."
     },
     "disclaimer": "<strong>Lưu ý y khoa:</strong> Các khuyến cáo dinh dưỡng trên HealthSense được tham khảo từ hướng dẫn lâm sàng của Hội Tim mạch Hoa Kỳ (ACC/AHA) và các tổng quan hệ thống y khoa. Không có thực phẩm nào tự chữa khỏi hoặc hoàn toàn ngăn ngừa rung nhĩ. Mọi thay đổi lớn về chế độ ăn hoặc sử dụng chất bổ sung cần có sự tư vấn của bác sĩ điều trị."
-  },
-  "database": {
-    "breadcrumb": "Tra cứu toàn bộ dữ liệu",
-    "eyebrow": "Viện Dinh dưỡng 2007 · USDA FNDDS 2021-2023",
-    "title": "Cơ sở dữ liệu dinh dưỡng",
-    "description": "Tra cứu thành phần dinh dưỡng của gần 6.000 thực phẩm: 526 thực phẩm Việt Nam và 5.431 thực phẩm, món ăn USDA. Giá trị tính trên 100 g phần ăn được.",
-    "footer": "Nguồn: Viện Dinh dưỡng - Bộ Y tế (2007), Bảng thành phần thực phẩm Việt Nam, Nhà xuất bản Y học; và USDA FoodData Central, FNDDS 2021-2023. Đây là số liệu tham khảo; màu đánh giá theo đơn ăn uống bác sĩ kê (nếu có). Xem các khuyến nghị ở mục <link>Tra cứu thực phẩm</link>."
   },
   "dietAdvice": {
     "level": {
@@ -182,7 +174,8 @@
   },
   "category": {
     "notFound": "Không tìm thấy nhóm thực phẩm.",
-    "backToNutrition": "Quay lại trang dinh dưỡng",
+    "backToGroups": "Tất cả nhóm thực phẩm",
+    "allGroups": "Nhóm thực phẩm",
     "eyebrow": "Nhóm thực phẩm",
     "variantsDescription": "Các biến thể của {{food}} trong nhóm {{group}}, phân loại theo mức độ khuyến nghị cho tim mạch và rung nhĩ.",
     "recommendedTitle": "Có khuyến nghị cho tim mạch ({{count}})",
@@ -203,7 +196,6 @@
     "defaultPortion": "Khẩu phần thường dùng",
     "notFoundTitle": "Không tìm thấy thực phẩm",
     "notFoundDescription": "Thực phẩm này không có trong cơ sở dữ liệu dinh dưỡng.",
-    "backToLookup": "Quay lại tra cứu",
     "sourceCode": "{{source}} · mã {{code}}",
     "sourceCategory": "Phân loại gốc: {{category}}",
     "wastePct": "Tỉ lệ thải bỏ khi sơ chế: <strong>{{value}}%</strong>. Số liệu bên dưới tính trên phần ăn được.",
@@ -220,7 +212,6 @@
   "foodDetail": {
     "notFoundTitle": "Không tìm thấy món ăn",
     "notFoundDescription": "Món ăn bạn đang tìm kiếm không tồn tại hoặc đã được cập nhật.",
-    "backToNutrition": "Quay lại trang Dinh dưỡng",
     "evidenceType": {
       "GUIDELINE": "Hướng dẫn lâm sàng (Guideline)",
       "SYSTEMATIC_REVIEW": "Tổng quan hệ thống (Systematic Review)",
@@ -231,8 +222,6 @@
     "fnddsSource": "Nguồn tham chiếu FNDDS: {{source}}",
     "type": "Loại: {{name}}",
     "standardServing": "Định lượng chuẩn: 100 g",
-    "imageTitle": "Hình ảnh thực phẩm",
-    "imagePlaceholder": "Khu vực hiển thị ảnh đại diện khi tích hợp dữ liệu hình ảnh",
     "nutritionTitle": "Thành phần dinh dưỡng",
     "nutritionSubtitle": "Tính trên mỗi 100g thực phẩm (chuẩn cơ sở dữ liệu USDA FNDDS 2021-2023)",
     "per100g": "Per 100g",
@@ -248,5 +237,8 @@
     "year": "Năm {{year}}",
     "viewSource": "Xem tài liệu gốc",
     "footer": "Dữ liệu dinh dưỡng được trích xuất từ cơ sở dữ liệu USDA Food and Nutrient Database for Dietary Studies (FNDDS 2021-2023). Các thông tin về rung nhĩ và tim mạch chỉ mang tính giáo dục sức khỏe, không thay thế chẩn đoán hoặc phác đồ từ bác sĩ chuyên khoa tim mạch."
+  },
+  "detail": {
+    "loading": "Đang tải..."
   }
 }

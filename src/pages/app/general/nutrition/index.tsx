@@ -7,10 +7,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ComingSoonTab } from "./components/ComingSoonTab"
 import { DietPrescriptionTab } from "./components/DietPrescriptionTab"
 import { FoodsTab } from "./components/FoodsTab"
+import { GuidanceFoodDialog } from "./components/GuidanceFoodDialog"
+import { ReferenceFoodDialog } from "./components/ReferenceFoodDialog"
 
 const NUTRITION_TABS = ["foods", "diet", "scan"] as const
 type NutritionTab = (typeof NUTRITION_TABS)[number]
 
+/** Trang dinh dưỡng (route duy nhất): tab qua ?tab, nhóm qua ?category, chi tiết món mở popup qua ?food / ?ref. */
 export default function NutritionHomePage() {
   const { t } = useTranslation("nutrition")
   const comingSoonBadge = (
@@ -85,6 +88,9 @@ export default function NutritionHomePage() {
           </span>
         </p>
       </PageFooter>
+
+      <GuidanceFoodDialog />
+      <ReferenceFoodDialog />
     </Page>
   )
 }

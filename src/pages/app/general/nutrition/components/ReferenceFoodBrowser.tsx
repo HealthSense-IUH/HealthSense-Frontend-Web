@@ -12,6 +12,7 @@ import type { ReferenceFoodSource } from "@/types/nutrition"
 import { formatNutrientAmount } from "../format"
 import { FoodGroupIcon } from "../group-icons"
 import { useNutritionGroups, useReferenceFoods } from "../hooks/use-nutrition"
+import { useDetailLink } from "../nutrition-nav"
 import { REFERENCE_SOURCES } from "../sources"
 import { DietAdviceBadge } from "./DietAdvice"
 
@@ -49,6 +50,7 @@ export function ReferenceFoodBrowser({ fixedGroup, layout = "list" }: ReferenceF
   const locale = currentIntlLocale()
   const columnLabel = (key: (typeof SUMMARY_COLUMNS)[number]["key"]) => t(`referenceBrowser.columns.${key}`)
   const [searchParams, setSearchParams] = useSearchParams()
+  const detailLink = useDetailLink()
   const q = searchParams.get("q") ?? ""
   const group = fixedGroup ?? searchParams.get("group") ?? ""
   const source = parseSource(searchParams.get("source"))
@@ -217,7 +219,7 @@ export function ReferenceFoodBrowser({ fixedGroup, layout = "list" }: ReferenceF
           {foods.map((food) => (
             <Link
               key={food.id}
-              to={`/app/general/nutrition/database/${food.id}`}
+              {...detailLink("ref", food.id)}
               className="group flex flex-col rounded-2xl border border-border bg-card p-5 shadow-xs transition-all hover:border-primary-300 hover:shadow-md"
             >
               <div className="flex items-start justify-between gap-2">
@@ -262,7 +264,7 @@ export function ReferenceFoodBrowser({ fixedGroup, layout = "list" }: ReferenceF
             {foods.map((food) => (
               <li key={food.id}>
                 <Link
-                  to={`/app/general/nutrition/database/${food.id}`}
+                  {...detailLink("ref", food.id)}
                   className="group grid grid-cols-2 md:grid-cols-[1fr_repeat(4,6.5rem)] gap-x-3 gap-y-2 items-center rounded-2xl border border-slate-200/80 bg-white px-4 py-3 shadow-2xs hover:border-primary/50"
                 >
                   <div className="col-span-2 md:col-span-1 min-w-0">

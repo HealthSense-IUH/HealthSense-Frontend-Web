@@ -1,11 +1,11 @@
 import { useState, useRef, useEffect } from "react"
-import { useNavigate } from "react-router-dom"
 import { Search, X, ChevronRight, Loader2 } from "lucide-react"
 import { Trans, useTranslation } from "react-i18next"
 import { Input } from "@/components/ui/input"
 import { useDebounce } from "@/hooks/use-debounce"
 import { GuidanceBadge } from "./GuidanceBadge"
 import { useNutritionSearch } from "../hooks/use-nutrition"
+import { useNutritionNav } from "../nutrition-nav"
 import type { Food } from "@/types/nutrition"
 import { cn } from "@/lib/utils"
 
@@ -23,7 +23,7 @@ export function FoodSearchBar({
   const { t } = useTranslation("nutrition")
   const [query, setQuery] = useState("")
   const [isOpen, setIsOpen] = useState(false)
-  const navigate = useNavigate()
+  const { openFood } = useNutritionNav()
   const containerRef = useRef<HTMLDivElement>(null)
 
   const debouncedQuery = useDebounce(query, 250)
@@ -48,7 +48,7 @@ export function FoodSearchBar({
     if (onSelectFood) {
       onSelectFood(food)
     } else {
-      navigate(`/app/general/nutrition/food/${food.id}`)
+      openFood(food.id)
     }
   }
 

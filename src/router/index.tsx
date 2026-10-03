@@ -21,10 +21,6 @@ const MemberSessionWorkspacePage = lazy(() => import("@/pages/app/general/consul
 const PaymentResultPage = lazy(() => import("@/pages/app/general/payment-result"))
 const CreditPaymentResultPage = lazy(() => import("@/pages/app/general/credits/payment-result"))
 const NutritionHomePage = lazy(() => import("@/pages/app/general/nutrition"))
-const NutritionCategoryPage = lazy(() => import("@/pages/app/general/nutrition/category"))
-const NutritionFoodDetailPage = lazy(() => import("@/pages/app/general/nutrition/food-detail"))
-const NutritionDatabasePage = lazy(() => import("@/pages/app/general/nutrition/database"))
-const NutritionDatabaseFoodPage = lazy(() => import("@/pages/app/general/nutrition/database-food"))
 
 const ManagementPage = lazy(() => import("@/pages/app/management/hub"))
 const UserManagementPage = lazy(() => import("@/pages/app/management/users"))
@@ -149,29 +145,14 @@ export const router = createBrowserRouter([
             ),
           },
           {
+            // Một route duy nhất: nhóm đang xem và chi tiết món (popup) nằm trên query của trang này
             path: "nutrition",
-            children: [
-              {
-                index: true,
-                element: wrap(<NutritionHomePage />),
-              },
-              {
-                path: "category/:categoryId",
-                element: wrap(<NutritionCategoryPage />),
-              },
-              {
-                path: "food/:foodId",
-                element: wrap(<NutritionFoodDetailPage />),
-              },
-              {
-                path: "database",
-                element: wrap(<NutritionDatabasePage />),
-              },
-              {
-                path: "database/:foodId",
-                element: wrap(<NutritionDatabaseFoodPage />),
-              },
-            ],
+            element: wrap(<NutritionHomePage />),
+          },
+          {
+            // Đường dẫn con cũ (category/food/database) không còn trang riêng
+            path: "nutrition/*",
+            element: <Navigate to="/app/general/nutrition" replace />,
           },
           {
             path: "packages/*",

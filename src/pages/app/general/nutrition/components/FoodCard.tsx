@@ -6,6 +6,7 @@ import { GuidanceBadge } from "./GuidanceBadge"
 import { NutrientHighlightCard } from "./NutrientHighlightCard"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+import { useDetailLink } from "../nutrition-nav"
 
 interface FoodCardProps {
   food: Food
@@ -20,6 +21,7 @@ export function FoodCard({
   showDescription = true,
 }: FoodCardProps) {
   const { t } = useTranslation("nutrition")
+  const detailLink = useDetailLink()
   const guidanceType = food.guidance
   const title = food.foodNameSpecific
   const subtitle = food.foodName !== food.foodNameSpecific ? food.foodName : undefined
@@ -100,7 +102,7 @@ export function FoodCard({
           asChild
           className="h-8 px-2.5 text-xs text-primary font-medium hover:text-primary hover:bg-primary/10 gap-1 rounded-lg cursor-pointer"
         >
-          <Link to={`/app/general/nutrition/food/${food.id}`}>
+          <Link {...detailLink("food", food.id)}>
             <span>{t("foodCard.viewDetail")}</span>
             <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
           </Link>
