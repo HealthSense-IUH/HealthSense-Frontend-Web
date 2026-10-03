@@ -16,6 +16,8 @@ import { HealthSenseBrandStorySection } from "./components/HealthSenseBrandStory
 import { LandingFooter } from "./components/LandingFooter"
 import { useAuthStore } from "@/stores/auth-store"
 import { BrandSlogan } from "@/components/custom/BrandSlogan"
+import { UserMenu } from "@/components/layout/user-menu"
+import { getDefaultRouteForRole } from "@/constants"
 
 const navItems = [
   { id: "about", label: "Về chúng tôi" },
@@ -141,13 +143,16 @@ export default function LandingPage() {
           {/* Action Button */}
           <div className="flex items-center gap-2 text-xs xl:text-sm font-semibold shrink-0">
             {userSession ? (
-              <button
-                onClick={() => navigate('/app/general/dashboard')}
-                className="bg-gradient-to-r from-primary-600 to-primary-600 hover:from-primary-700 hover:to-primary-700 text-white transition-all px-4 sm:px-5 py-2 rounded-full shadow-md shadow-primary-900/20 font-bold flex items-center gap-1.5 hover:-translate-y-0.5 cursor-pointer font-heading whitespace-nowrap shrink-0"
-              >
-                <span>Dashboard</span>
-                <ArrowRight className="w-4 h-4" />
-              </button>
+              <>
+                <button
+                  onClick={() => navigate(getDefaultRouteForRole(userSession.role))}
+                  className="hidden sm:flex bg-gradient-to-r from-primary-600 to-primary-600 hover:from-primary-700 hover:to-primary-700 text-white transition-all px-4 sm:px-5 py-2 rounded-full shadow-md shadow-primary-900/20 font-bold items-center gap-1.5 hover:-translate-y-0.5 cursor-pointer font-heading whitespace-nowrap shrink-0"
+                >
+                  <span>Dashboard</span>
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+                <UserMenu showAppLink />
+              </>
             ) : (
               <>
                 <Link

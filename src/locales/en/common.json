@@ -51,7 +51,8 @@
   },
   "topbar": {
     "profile": "My profile",
-    "logout": "Sign out"
+    "logout": "Sign out",
+    "openApp": "Open app"
   },
   "notification": {
     "title": "Notifications",

@@ -51,7 +51,8 @@
   },
   "topbar": {
     "profile": "Hồ sơ cá nhân",
-    "logout": "Đăng xuất"
+    "logout": "Đăng xuất",
+    "openApp": "Vào ứng dụng"
   },
   "notification": {
     "title": "Thông báo",

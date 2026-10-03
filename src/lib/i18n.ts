@@ -10,13 +10,25 @@
  * - Ngôn ngữ đã chọn được lưu vào localStorage nên giữ nguyên sau khi tải lại.
  * - Bản dịch nhúng thẳng vào bundle (không tải qua HTTP) để không chớp chữ khi
  *   trang vừa mở.
+ * - Mỗi khu vực một namespace: src/locales/{vi,en}/<namespace>.json, nạp tự động
+ *   (thêm file mới là dùng được). Component dùng useTranslation("<namespace>");
+ *   code ngoài React gọi i18n.t("<namespace>:khoá") lúc chạy, không lúc nạp module.
  */
 import i18n from "i18next"
 import LanguageDetector from "i18next-browser-languagedetector"
 import { initReactI18next } from "react-i18next"
 
-import enCommon from "@/locales/en/common.json"
-import viCommon from "@/locales/vi/common.json"
+type Messages = Record<string, unknown>
+
+/** { vi: { common: {...}, nutrition: {...} }, en: {...} } từ các file src/locales/<lang>/<namespace>.json */
+const LOCALE_FILES = import.meta.glob<Messages>("../locales/*/*.json", { eager: true, import: "default" })
+const resources: Record<string, Record<string, Messages>> = {}
+for (const [path, messages] of Object.entries(LOCALE_FILES)) {
+  const [, lang, namespace] = path.match(/locales\/([^/]+)\/([^/]+)\.json$/) ?? []
+  if (!lang || !namespace) continue
+  ;(resources[lang] ??= {})[namespace] = messages
+}
+export const NAMESPACES = Object.keys(resources.vi ?? { common: {} })
 
 export const SUPPORTED_LANGUAGES = ["vi", "en"] as const
 export type SupportedLanguage = (typeof SUPPORTED_LANGUAGES)[number]
@@ -33,11 +45,8 @@ void i18n
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
-    resources: {
-      vi: { common: viCommon },
-      en: { common: enCommon },
-    },
-    ns: ["common"],
+    resources,
+    ns: NAMESPACES,
     defaultNS: "common",
     fallbackLng: "vi",
     supportedLngs: [...SUPPORTED_LANGUAGES],

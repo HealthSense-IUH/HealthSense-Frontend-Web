@@ -4,10 +4,15 @@
  *   npm run i18n:check              # bảng tổng hợp + kiểm khoá
  *   node scripts/i18n-coverage.mjs --files
  *
- * Thoát với mã 1 nếu có khoá t() thiếu bản dịch — dùng được trong CI.
+ * Bản dịch chia theo namespace: src/locales/{vi,en}/<namespace>.json. Namespace của một khoá:
+ *   - "ns:khoá" ghi rõ trong t()/i18n.t(), hoặc
+ *   - namespace đầu tiên của useTranslation("ns") / useTranslation(["ns", ...]) trong file, hoặc
+ *   - "common" nếu file không chỉ định.
+ *
+ * Thoát với mã 1 nếu có khoá t() thiếu bản dịch hoặc hai ngôn ngữ lệch khoá — dùng được trong CI.
  */
 import { readFileSync, readdirSync, statSync } from "node:fs"
-import { join, relative } from "node:path"
+import { join, relative, basename } from "node:path"
 
 const SRC = "src"
 const VI_CHARS =
@@ -28,7 +33,7 @@ function countHardcoded(file) {
   for (const raw of readFileSync(file, "utf8").split("\n")) {
     const line = raw.trim()
     if (!VI_CHARS.test(line)) continue
-    if (line.startsWith("//") || line.startsWith("*") || line.startsWith("/*")) continue
+    if (line.startsWith("//") || line.startsWith("*") || line.startsWith("/*") || line.startsWith("{/*")) continue
     if (/\bt\(["'`]/.test(line)) continue
     n++
   }
@@ -69,34 +74,59 @@ for (const [a, v] of [...byArea].sort((x, y) => y[1].lines - x[1].lines)) {
 console.log("  " + "-".repeat(46))
 console.log("  " + "TỔNG".padEnd(32) + String(rows.length).padStart(6) + String(total).padStart(8))
 
-// --- Kiểm tra khoá: mọi khoá t() phải có trong CẢ HAI file dịch ---
+// --- Kiểm tra khoá: mọi khoá t() phải có trong CẢ HAI ngôn ngữ, đúng namespace ---
 const flat = (o, pre = "") =>
   Object.entries(o).flatMap(([k, v]) =>
     v && typeof v === "object" ? flat(v, pre + k + ".") : [pre + k])
 
-const vi = new Set(flat(JSON.parse(readFileSync("src/locales/vi/common.json", "utf8"))))
-const en = new Set(flat(JSON.parse(readFileSync("src/locales/en/common.json", "utf8"))))
+function loadLang(lang) {
+  const dir = join(SRC, "locales", lang)
+  const out = new Map()
+  for (const name of readdirSync(dir).filter((n) => n.endsWith(".json"))) {
+    out.set(basename(name, ".json"), new Set(flat(JSON.parse(readFileSync(join(dir, name), "utf8")))))
+  }
+  return out
+}
+const vi = loadLang("vi")
+const en = loadLang("en")
 
-const used = new Set()
-const KEY_RE = /\bt\(\s*["`]([a-zA-Z0-9_.-]+)["`]/g
+const NS_RE = /useTranslation\(\s*(?:\[\s*)?["'`]([a-zA-Z0-9_-]+)["'`]/
+const KEY_RE = /\bt\(\s*["`']([a-zA-Z0-9_.:-]+)["`']/g
+const used = new Map() // "ns:key" -> file
 for (const f of files) {
-  for (const m of readFileSync(f, "utf8").matchAll(KEY_RE)) used.add(m[1])
+  const text = readFileSync(f, "utf8")
+  const fileNs = text.match(NS_RE)?.[1] ?? "common"
+  for (const m of text.matchAll(KEY_RE)) {
+    const raw = m[1]
+    const [ns, key] = raw.includes(":") ? raw.split(":", 2) : [fileNs, raw]
+    if (!key || /\.$/.test(key)) continue // khoá ghép động, ví dụ t(`group.${id}`)
+    used.set(`${ns}:${key}`, relative(SRC, f).replaceAll("\\", "/"))
+  }
 }
 
-const missVi = [...used].filter((k) => !vi.has(k))
-const missEn = [...used].filter((k) => !en.has(k))
-const drift = [
-  ...[...vi].filter((k) => !en.has(k)),
-  ...[...en].filter((k) => !vi.has(k)),
-]
+const has = (lang, nsKey) => {
+  const [ns, key] = nsKey.split(":", 2)
+  return lang.get(ns)?.has(key) ?? false
+}
+const missVi = [...used.keys()].filter((k) => !has(vi, k))
+const missEn = [...used.keys()].filter((k) => !has(en, k))
+const drift = []
+for (const ns of new Set([...vi.keys(), ...en.keys()])) {
+  const a = vi.get(ns) ?? new Set()
+  const b = en.get(ns) ?? new Set()
+  for (const k of a) if (!b.has(k)) drift.push(`${ns}:${k} (thiếu en)`)
+  for (const k of b) if (!a.has(k)) drift.push(`${ns}:${k} (thiếu vi)`)
+}
 
+const show = (list) => (list.length ? "\n    " + list.slice(0, 40).map((k) => `${k}  ← ${used.get(k) ?? ""}`).join("\n    ") + (list.length > 40 ? `\n    … và ${list.length - 40} khoá khác` : "") : "không")
 console.log("")
 console.log("KIỂM TRA KHOÁ DỊCH")
 console.log("")
+console.log("  namespace            : " + [...vi.keys()].join(", "))
 console.log("  khoá t() đang dùng   : " + used.size)
-console.log("  thiếu trong vi       : " + (missVi.length ? missVi.join(", ") : "không"))
-console.log("  thiếu trong en       : " + (missEn.length ? missEn.join(", ") : "không"))
-console.log("  lệch giữa 2 file     : " + (drift.length ? drift.join(", ") : "không"))
+console.log("  thiếu trong vi       : " + show(missVi))
+console.log("  thiếu trong en       : " + show(missEn))
+console.log("  lệch giữa 2 ngôn ngữ : " + (drift.length ? "\n    " + drift.slice(0, 40).join("\n    ") : "không"))
 
 if (missVi.length + missEn.length + drift.length > 0) {
   console.log("")
