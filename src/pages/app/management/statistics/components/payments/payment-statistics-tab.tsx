@@ -1,0 +1,153 @@
+import { useState, useMemo } from "react"
+import { useTranslation } from "react-i18next"
+import { AlertCircle } from "lucide-react"
+
+import { Button } from "@/components/ui/button"
+import type { StatisticsGroupBy } from "@/types/statistics"
+
+import { usePaymentStatistics } from "../../hooks/use-payment-statistics"
+import {
+  DASHBOARD_TIMEZONE,
+  type StatisticsPreset,
+  getPresetDateRange,
+  nextDayOf,
+  toStartOfDayInstant,
+} from "../../utils/date-range"
+
+import { StatisticsFilterBar } from "../statistics-filter-bar"
+import { PaymentSummaryCards } from "./payment-summary-cards"
+import { PaymentRevenueTrendChart } from "./payment-revenue-trend-chart"
+import { PaymentTransactionTrendChart } from "./payment-transaction-trend-chart"
+import { PaymentRevenueBySourceChart } from "./payment-revenue-by-source-chart"
+import { PaymentStatusDistributionChart } from "./payment-status-distribution-chart"
+import { StatisticsSkeleton } from "../statistics-skeleton"
+
+export function PaymentStatisticsTab() {
+  const { t } = useTranslation("management")
+
+  // Tab-specific filter state (completely independent from other tabs)
+  const defaultRange = useMemo(() => getPresetDateRange("7d"), [])
+  const [preset, setPreset] = useState<StatisticsPreset>("7d")
+  const [startDateStr, setStartDateStr] = useState(defaultRange.startDateStr)
+  const [endDateStr, setEndDateStr] = useState(defaultRange.endDateStr)
+  const [groupBy, setGroupBy] = useState<StatisticsGroupBy>("DAY")
+
+  const queryParams = useMemo(() => {
+    const from = toStartOfDayInstant(startDateStr)
+    const nextDay = nextDayOf(endDateStr)
+    const to = toStartOfDayInstant(nextDay)
+    return {
+      from,
+      to,
+      groupBy,
+      timezone: DASHBOARD_TIMEZONE,
+    }
+  }, [startDateStr, endDateStr, groupBy])
+
+  const {
+    data: statsData,
+    isLoading,
+    isFetching,
+    error,
+    refetch,
+  } = usePaymentStatistics(queryParams)
+
+  const handlePresetChange = (newPreset: StatisticsPreset) => {
+    setPreset(newPreset)
+    if (newPreset !== "custom") {
+      const range = getPresetDateRange(newPreset)
+      setStartDateStr(range.startDateStr)
+      setEndDateStr(range.endDateStr)
+    }
+  }
+
+  const handleCustomRangeChange = (start: string, end: string) => {
+    setStartDateStr(start)
+    setEndDateStr(end)
+  }
+
+  const errorMessage = useMemo(() => {
+    if (!error) return null
+    const err = error as {
+      response?: { data?: { message?: string } }
+      message?: string
+    }
+    return (
+      err.response?.data?.message ||
+      err.message ||
+      t("statistics.error.loadFailed")
+    )
+  }, [error, t])
+
+  return (
+    <div className="space-y-6">
+      {/* Tab-specific Filter Bar */}
+      <StatisticsFilterBar
+        preset={preset}
+        startDateStr={startDateStr}
+        endDateStr={endDateStr}
+        groupBy={groupBy}
+        isFetching={isFetching}
+        onPresetChange={handlePresetChange}
+        onCustomRangeChange={handleCustomRangeChange}
+        onGroupByChange={setGroupBy}
+        onRefresh={() => refetch()}
+      />
+
+      {/* Error Alert */}
+      {error && (
+        <div className="rounded-2xl border border-red-200 bg-red-50 p-4 text-xs text-red-800 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
+            <span>{errorMessage}</span>
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => refetch()}
+            className="h-7 text-xs border-red-200 text-red-700 hover:bg-red-100"
+          >
+            {t("statistics.error.retry")}
+          </Button>
+        </div>
+      )}
+
+      {/* Loading Skeleton */}
+      {isLoading ? (
+        <StatisticsSkeleton />
+      ) : statsData ? (
+        <div className="space-y-6">
+          {/* Summary KPI Cards */}
+          <PaymentSummaryCards
+            summary={statsData.summary}
+            startDateStr={startDateStr}
+            endDateStr={endDateStr}
+          />
+
+          {/* Revenue Trend Chart */}
+          <PaymentRevenueTrendChart
+            data={statsData.revenueTrend || []}
+            groupBy={statsData.period?.groupBy || groupBy}
+          />
+
+          {/* Transaction Trend Chart */}
+          <PaymentTransactionTrendChart
+            data={statsData.transactionTrend || []}
+            groupBy={statsData.period?.groupBy || groupBy}
+          />
+
+          {/* Breakdown Distributions */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <PaymentRevenueBySourceChart
+              data={statsData.revenueBySource || []}
+            />
+            <PaymentStatusDistributionChart
+              directCare={statsData.statusDistributionBySource?.directCare || []}
+              creditPurchase={statsData.statusDistributionBySource?.creditPurchase || []}
+            />
+          </div>
+        </div>
+      ) : null}
+    </div>
+  )
+}
