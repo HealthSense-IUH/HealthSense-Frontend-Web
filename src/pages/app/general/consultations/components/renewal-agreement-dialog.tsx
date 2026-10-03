@@ -120,7 +120,7 @@ export function RenewalAgreementDialog({
               <div>
                 <DialogTitle className="text-xl font-bold">{t("renewalAgreementDialog.title")}</DialogTitle>
                 <DialogDescription>
-                  Renewal Care Service Agreement &bull; {t("renewalAgreementDialog.requestNumber", { id: renewalId })}
+                  {t("renewalAgreementDialog.subtitle")} &bull; {t("renewalAgreementDialog.requestNumber", { id: renewalId })}
                 </DialogDescription>
               </div>
             </div>

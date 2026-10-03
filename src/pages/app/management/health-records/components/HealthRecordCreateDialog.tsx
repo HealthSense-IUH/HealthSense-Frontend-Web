@@ -144,10 +144,10 @@ export function HealthRecordCreateDialog({ open, onOpenChange, onSuccess }: Heal
                   <SelectValue placeholder={t("healthRecords.create.statusPlaceholder")} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="PENDING_UPLOAD">PENDING_UPLOAD</SelectItem>
-                  <SelectItem value="PROCESSING">PROCESSING</SelectItem>
-                  <SelectItem value="COMPLETED">COMPLETED</SelectItem>
-                  <SelectItem value="FAILED">FAILED</SelectItem>
+                  <SelectItem value="PENDING_UPLOAD">{t("healthRecords.status.PENDING_UPLOAD")}</SelectItem>
+                  <SelectItem value="PROCESSING">{t("healthRecords.status.PROCESSING")}</SelectItem>
+                  <SelectItem value="COMPLETED">{t("healthRecords.status.COMPLETED")}</SelectItem>
+                  <SelectItem value="FAILED">{t("healthRecords.status.FAILED")}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -159,9 +159,9 @@ export function HealthRecordCreateDialog({ open, onOpenChange, onSuccess }: Heal
                   <SelectValue placeholder={t("healthRecords.create.predictionPlaceholder")} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="NORMAL">NORMAL</SelectItem>
-                  <SelectItem value="AFIB">AFIB</SelectItem>
-                  <SelectItem value="UNCERTAIN">UNCERTAIN</SelectItem>
+                  <SelectItem value="NORMAL">{t("healthRecords.prediction.NORMAL")}</SelectItem>
+                  <SelectItem value="AFIB">{t("healthRecords.prediction.AFIB")}</SelectItem>
+                  <SelectItem value="UNCERTAIN">{t("healthRecords.prediction.UNCERTAIN")}</SelectItem>
                 </SelectContent>
               </Select>
             </div>

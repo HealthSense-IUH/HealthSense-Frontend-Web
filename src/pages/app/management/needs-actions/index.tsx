@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from "react"
 import { useSearchParams } from "react-router-dom"
 import { useTranslation, Trans } from "react-i18next"
+import { roleLabel } from "@/constants"
 import {
   ListTodo,
   RefreshCw,
@@ -113,22 +114,22 @@ export default function NeedsActionsPage() {
   const getPriorityBadge = (priority: string) => {
     switch (priority) {
       case "CRITICAL":
-        return <Badge className="bg-danger-600 hover:bg-danger-700 text-white font-black text-[10px]">CRITICAL</Badge>
+        return <Badge className="bg-danger-600 hover:bg-danger-700 text-white font-black text-[10px]">{t("needsActions.page.priority.critical")}</Badge>
       case "HIGH":
-        return <Badge className="bg-warning-500 hover:bg-warning-600 text-white font-bold text-[10px]">HIGH</Badge>
+        return <Badge className="bg-warning-500 hover:bg-warning-600 text-white font-bold text-[10px]">{t("needsActions.page.priority.high")}</Badge>
       default:
-        return <Badge className="bg-primary-600 hover:bg-primary-700 text-white font-medium text-[10px]">NORMAL</Badge>
+        return <Badge className="bg-primary-600 hover:bg-primary-700 text-white font-medium text-[10px]">{t("needsActions.page.priority.normal")}</Badge>
     }
   }
 
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "RESOLVED":
-        return <Badge className="bg-success-500 hover:bg-success-600 text-white font-bold text-[10px]">RESOLVED</Badge>
+        return <Badge className="bg-success-500 hover:bg-success-600 text-white font-bold text-[10px]">{t("needsActions.page.status.resolved")}</Badge>
       case "CLAIMED":
-        return <Badge className="bg-primary-500 hover:bg-primary-600 text-white font-bold text-[10px]">CLAIMED</Badge>
+        return <Badge className="bg-primary-500 hover:bg-primary-600 text-white font-bold text-[10px]">{t("needsActions.page.status.claimed")}</Badge>
       default:
-        return <Badge className="bg-warning-500 hover:bg-warning-600 text-white font-bold text-[10px]">OPEN</Badge>
+        return <Badge className="bg-warning-500 hover:bg-warning-600 text-white font-bold text-[10px]">{t("needsActions.page.status.open")}</Badge>
     }
   }
 
@@ -249,7 +250,7 @@ export default function NeedsActionsPage() {
                       {getPriorityBadge(item.priority)}
                       {getStatusBadge(item.status)}
                       <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold bg-slate-100 text-slate-700">
-                        {item.assignedRole}
+                        {roleLabel(item.assignedRole)}
                       </span>
                     </div>
                     <h3 className="text-sm font-bold text-slate-900 leading-snug line-clamp-1">

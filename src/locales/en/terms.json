@@ -122,7 +122,8 @@
       "userNote": "(Read, understood and accepted electronically)",
       "userPlaceholder": "[Automatically confirmed via account]",
       "boardTitle": "HEALTHSENSE EXECUTIVE BOARD",
-      "boardNote": "(Signed and approved for release)"
+      "boardNote": "(Signed and approved for release)",
+      "boardSignature": "HealthSense Development Team"
     }
   },
   "footer": {

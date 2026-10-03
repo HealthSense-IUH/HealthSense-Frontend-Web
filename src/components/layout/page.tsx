@@ -1,6 +1,7 @@
 import { Fragment, type ReactNode } from "react"
 import { Link } from "react-router-dom"
 import { ChevronRight } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 import { useDocumentTitle } from "@/hooks/use-document-title"
 import { cn } from "@/lib/utils"
@@ -61,8 +62,9 @@ export interface PageBreadcrumbItem {
 }
 
 export function PageBreadcrumb({ items, className }: { items: PageBreadcrumbItem[]; className?: string }) {
+  const { t } = useTranslation()
   return (
-    <nav aria-label="Breadcrumb" className={cn("flex flex-wrap items-center gap-1.5 text-xs sm:text-sm text-muted-foreground", className)}>
+    <nav aria-label={t("common.breadcrumb")} className={cn("flex flex-wrap items-center gap-1.5 text-xs sm:text-sm text-muted-foreground", className)}>
       {items.map((item, index) => {
         const isLast = index === items.length - 1
         const linkClass = "font-medium hover:text-primary transition-colors cursor-pointer"

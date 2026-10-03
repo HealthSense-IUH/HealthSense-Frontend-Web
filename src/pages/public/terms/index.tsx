@@ -460,7 +460,7 @@ export default function TermsAndConditionsPage() {
               <p className="text-[11px] text-slate-500 italic">{t("document.signatures.boardNote")}</p>
               <div className="h-16 flex items-center justify-center">
                 <span className="text-primary-700 font-bold tracking-wider text-sm border-b border-primary-300 pb-0.5">
-                  HealthSense Development Team
+                  {t("document.signatures.boardSignature")}
                 </span>
               </div>
             </div>

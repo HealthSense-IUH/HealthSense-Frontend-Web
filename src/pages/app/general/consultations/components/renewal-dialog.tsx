@@ -16,7 +16,7 @@ import type {
   SessionExtensionResponse,
   ConsultationRenewalStatus,
 } from "@/types/consultation"
-import { formatDate } from "./shared"
+import { formatDate, statusLabel } from "./shared"
 import { RenewalAgreementDialog } from "./renewal-agreement-dialog"
 
 interface RenewalDialogProps {
@@ -211,7 +211,7 @@ export function RenewalDialog({
                 </div>
               </div>
               <Badge variant={isSessionActive ? "default" : "outline"} className={isSessionActive ? "bg-success-600" : ""}>
-                {session.status}
+                {statusLabel(session.status)}
               </Badge>
             </div>
           </DialogHeader>

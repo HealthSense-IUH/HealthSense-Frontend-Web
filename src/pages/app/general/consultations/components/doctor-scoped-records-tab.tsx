@@ -134,11 +134,11 @@ export function DoctorScopedRecordsTab({ sessionId }: DoctorScopedRecordsTabProp
                 <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-slate-500">
                   <span>{formatDate(item.record.createdAt) || "-"}</span>
                   <span className="flex items-center gap-1.5">
-                    {t("scopedRecordsTab.statusLabel")}{" "}<Badge variant="secondary" className="text-[10px] px-1.5 py-0">{item.record.status || "UNKNOWN"}</Badge>
+                    {t("scopedRecordsTab.statusLabel")}{" "}<Badge variant="secondary" className="text-[10px] px-1.5 py-0">{item.record.status ? t(`management:healthRecords.status.${item.record.status}`, { defaultValue: item.record.status }) : t("scopedRecordsTab.unknownStatus")}</Badge>
                   </span>
                   {item.record.predictionLabel && (
                     <span className="flex items-center gap-1.5">
-                      AI: <Badge variant={item.record.predictionLabel === "NORMAL" ? "outline" : "destructive"} className="text-[10px] px-1.5 py-0">{item.record.predictionLabel}</Badge>
+                      AI: <Badge variant={item.record.predictionLabel === "NORMAL" ? "outline" : "destructive"} className="text-[10px] px-1.5 py-0">{t(`management:healthRecords.prediction.${item.record.predictionLabel}`, { defaultValue: item.record.predictionLabel })}</Badge>
                     </span>
                   )}
                   {item.record.confidence && (

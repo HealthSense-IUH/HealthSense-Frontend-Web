@@ -122,7 +122,8 @@
       "userNote": "(Đã đọc, hiểu rõ và đồng ý điện tử)",
       "userPlaceholder": "[Xác nhận tự động qua tài khoản]",
       "boardTitle": "BAN ĐIỀU HÀNH HEALTHSENSE",
-      "boardNote": "(Đã ký duyệt phát hành)"
+      "boardNote": "(Đã ký duyệt phát hành)",
+      "boardSignature": "Nhóm phát triển HealthSense"
     }
   },
   "footer": {

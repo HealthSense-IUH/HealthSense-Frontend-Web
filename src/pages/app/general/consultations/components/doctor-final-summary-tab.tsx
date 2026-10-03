@@ -356,7 +356,7 @@ export function DoctorFinalSummaryTab({
               </p>
             </div>
           </div>
-          <Badge className="bg-success-600 hover:bg-success-700 shrink-0">FINALIZED</Badge>
+          <Badge className="bg-success-600 hover:bg-success-700 shrink-0">{t("finalSummaryTab.finalizedBadge")}</Badge>
         </div>
       )}
 

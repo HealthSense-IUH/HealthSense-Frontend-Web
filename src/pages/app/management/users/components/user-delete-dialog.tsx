@@ -2,6 +2,7 @@ import { AlertTriangle, Loader2, Trash2 } from "lucide-react"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Trans, useTranslation } from "react-i18next"
+import { roleLabel } from "@/constants"
 import type { UserItem } from "@/types/user"
 
 interface UserDeleteDialogProps {
@@ -45,7 +46,7 @@ export function UserDeleteDialog({
         <div className="px-6 py-3.5 bg-danger-50/50 border-y border-danger-100 text-danger-900 text-xs font-extrabold flex items-center justify-between">
           <span>{t("users.deleteDialog.roleLabel")}</span>
           <span className="font-mono bg-danger-100 text-danger-800 px-2 py-0.5 rounded-md border border-danger-200/80">
-            {user?.role}
+            {roleLabel(user?.role)}
           </span>
         </div>
 

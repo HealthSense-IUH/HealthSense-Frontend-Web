@@ -421,6 +421,16 @@
         "SUMMARY_PENDING": "Summary Pending",
         "SUMMARY_OVERDUE": "Summary Overdue",
         "SUMMARY_ESCALATED": "Summary Escalated"
+      },
+      "priority": {
+        "critical": "Critical",
+        "high": "High",
+        "normal": "Normal"
+      },
+      "status": {
+        "resolved": "Resolved",
+        "claimed": "Claimed",
+        "open": "Open"
       }
     },
     "detail": {

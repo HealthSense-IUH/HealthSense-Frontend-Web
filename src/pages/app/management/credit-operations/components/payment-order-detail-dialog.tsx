@@ -234,7 +234,7 @@ export function PaymentOrderDetailDialog({
 
                             {attempt.paymentLinkId && (
                               <div className="sm:col-span-2">
-                                <span>Payment Link ID: </span>
+                                <span>{t("paymentOrderDetail.paymentLinkId")} </span>
                                 <span className="font-mono text-muted-foreground">
                                   {attempt.paymentLinkId}
                                 </span>

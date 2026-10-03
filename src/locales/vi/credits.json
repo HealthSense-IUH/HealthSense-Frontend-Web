@@ -797,5 +797,8 @@
         "records_other": "({{count}} bản ghi)"
       }
     }
+  },
+  "paymentOrderDetail": {
+    "paymentLinkId": "Mã liên kết thanh toán:"
   }
 }

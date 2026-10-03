@@ -18,7 +18,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 import { consultationApi } from "@/services"
 import type { DoctorConsultationDetailResponse } from "@/types/consultation"
-import { formatDate } from "./shared"
+import { formatDate, statusLabel } from "./shared"
 import { DoctorScopedRecordsTab } from "./doctor-scoped-records-tab"
 import { DoctorFinalSummaryTab } from "./doctor-final-summary-tab"
 import { DoctorContinuityTab } from "./doctor-continuity-tab"
@@ -169,7 +169,7 @@ export function DoctorSessionDetailDialog({ sessionId, open, onOpenChange, onSes
               <Badge variant={session.status === "ACTIVE" ? "default" : "outline"} className={
                 session.status === "ACTIVE" ? "bg-success-500 hover:bg-success-600" : ""
               }>
-                {session.status}
+                {statusLabel(session.status)}
               </Badge>
             )}
           </div>

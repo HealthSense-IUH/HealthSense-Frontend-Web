@@ -146,7 +146,6 @@ export default function LandingPage() {
 
           {/* Action Button */}
           <div className="flex items-center gap-2 text-xs xl:text-sm font-semibold shrink-0">
-            <LanguageSwitcher />
             {userSession ? (
               <>
                 <button
@@ -335,6 +334,8 @@ export default function LandingPage() {
         )}
       </AnimatePresence>
 
+      {/* Đổi ngôn ngữ: nút nổi góc trái dưới (nút lên đầu trang ở góc phải) */}
+      <LanguageSwitcher variant="floating" />
     </div>
   )
 }

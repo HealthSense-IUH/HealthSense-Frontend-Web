@@ -70,7 +70,11 @@
         "title": "Bác sĩ đồng hành",
         "desc": "Kết nối trực tuyến 1 chạm với đội ngũ bác sĩ chuyên khoa tim mạch và tự động chia sẻ hồ sơ điện tim an toàn."
       }
-    }
+    },
+    "headlineTop": "Khám phá",
+    "headlineBottom": "HealthSense",
+    "ourStory": "Câu chuyện của chúng tôi",
+    "valuesTitle": "Giá trị cốt lõi C.A.R.E"
   },
   "features": {
     "title": "16 Đặc Trưng Sinh Học Cốt Lõi",

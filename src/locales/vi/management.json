@@ -421,6 +421,16 @@
         "SUMMARY_PENDING": "Chờ tóm tắt",
         "SUMMARY_OVERDUE": "Tóm tắt quá hạn",
         "SUMMARY_ESCALATED": "Tóm tắt đã chuyển cấp"
+      },
+      "priority": {
+        "critical": "Khẩn cấp",
+        "high": "Cao",
+        "normal": "Bình thường"
+      },
+      "status": {
+        "resolved": "Đã xử lý",
+        "claimed": "Đang xử lý",
+        "open": "Chờ xử lý"
       }
     },
     "detail": {

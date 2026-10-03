@@ -13,6 +13,7 @@ import {
   UserCheck,
 } from "lucide-react"
 import { useTranslation } from "react-i18next"
+import { roleLabel } from "@/constants"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { UserStatusBadge } from "./user-status-badge"
@@ -72,7 +73,7 @@ export function MemberPersonalTab({
                   #{user.id}
                 </span>
                 <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-extrabold bg-primary-50 text-primary-800 border border-primary-200">
-                  {user.role}
+                  {roleLabel(user.role)}
                 </span>
                 <UserStatusBadge status={user.status} />
               </div>

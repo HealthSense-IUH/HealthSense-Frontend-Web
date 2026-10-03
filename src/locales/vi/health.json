@@ -126,7 +126,8 @@
       "hrRangeNote": "Trong phiên đo",
       "perfusionNote": "Thấp → đeo lỏng / tưới máu yếu",
       "stressScore": "Điểm căng thẳng",
-      "stressNote": "Tham khảo (Baevsky SI)"
+      "stressNote": "Tham khảo (Baevsky SI)",
+      "perfusionIndex": "Chỉ số tưới máu (PI)"
     },
     "wave": {
       "title": "Sóng mạch (PPG) trong phiên đo",
@@ -166,7 +167,138 @@
   },
   "adminDashboard": {
     "selectPeriod": "Chọn khoảng thời gian",
-    "selectOrganization": "Chọn cơ sở y tế hoặc tổ chức"
+    "selectOrganization": "Chọn cơ sở y tế hoặc tổ chức",
+    "header": {
+      "export": "Xuất báo cáo",
+      "exporting": "Đang chuẩn bị xuất báo cáo lâm sàng...",
+      "addUser": "Thêm người dùng",
+      "addingUser": "Đang mở hộp thoại thêm người dùng...",
+      "filters": "Bộ lọc:",
+      "periods": {
+        "7d": "7 ngày qua",
+        "30d": "30 ngày qua",
+        "90d": "90 ngày qua",
+        "6m": "6 tháng qua"
+      },
+      "allOrganizations": "Tất cả cơ sở",
+      "organizations": {
+        "org1": "Bệnh viện Chợ Rẫy",
+        "org2": "Bệnh viện Đại học Y Dược TP.HCM",
+        "org3": "Phòng khám Trung tâm Tim mạch"
+      }
+    },
+    "sections": {
+      "kpi": "Chỉ số chính",
+      "analytics": "Phân tích và biểu đồ nền tảng",
+      "alerts": "Cảnh báo lâm sàng và trạng thái hệ thống",
+      "activity": "Nhật ký hoạt động và việc cần xử lý"
+    },
+    "metrics": {
+      "totalUsers": "Tổng người dùng",
+      "activeDoctors": "Bác sĩ đang hoạt động",
+      "activeMembers": "Hội viên đang hoạt động",
+      "criticalAlerts": "Cảnh báo nghiêm trọng",
+      "change": {
+        "growthPercent": "+{{value}}% so với tháng trước",
+        "pendingVerification": "{{countText}} chờ xác minh",
+        "newThisMonth": "+{{countText}} trong tháng này",
+        "unresolved": "{{countText}} chưa xử lý"
+      }
+    },
+    "roles": {
+      "members": "Hội viên",
+      "doctors": "Bác sĩ",
+      "admins": "Quản trị viên",
+      "superAdmins": "Quản trị cấp cao",
+      "system": "Hệ thống"
+    },
+    "status": {
+      "operational": "Hoạt động",
+      "degraded": "Suy giảm",
+      "critical": "Nghiêm trọng",
+      "success": "Thành công",
+      "warning": "Cảnh báo"
+    },
+    "growth": {
+      "title": "Tăng trưởng người dùng",
+      "description": "Số tài khoản mới theo tháng của mọi vai trò.",
+      "totalRate": "Tăng {{value}}"
+    },
+    "distribution": {
+      "title": "Phân bố người dùng",
+      "description": "Tỉ lệ tài khoản theo vai trò."
+    },
+    "alerts": {
+      "title": "Tổng quan cảnh báo sức khỏe",
+      "description": "Cảnh báo theo dõi bệnh nhân theo thời gian thực, phân loại theo mức độ.",
+      "critical": "Nghiêm trọng",
+      "warning": "Cảnh báo",
+      "resolved": "Đã xử lý"
+    },
+    "system": {
+      "title": "Trạng thái hệ thống",
+      "description": "Tình trạng hạ tầng lâm sàng cốt lõi",
+      "refresh": "Làm mới trạng thái",
+      "refreshing": "Đang kiểm tra các dịch vụ...",
+      "uptime": "Thời gian hoạt động:",
+      "ping": "Độ trễ:",
+      "sla": "SLA toàn hệ thống:",
+      "allActive": "Mọi dịch vụ đang chạy",
+      "services": {
+        "apiGateway": "API Gateway và dịch vụ",
+        "database": "Cơ sở dữ liệu lâm sàng (PostgreSQL)",
+        "notification": "Dịch vụ thông báo và đo từ xa",
+        "wearableSync": "Đồng bộ thiết bị đeo"
+      }
+    },
+    "activity": {
+      "title": "Nhật ký hoạt động gần đây",
+      "description": "Sự kiện hệ thống và thao tác quản trị",
+      "columns": {
+        "actor": "Người thực hiện",
+        "role": "Vai trò",
+        "action": "Thao tác",
+        "time": "Thời gian",
+        "status": "Trạng thái"
+      },
+      "systemActor": "Hệ thống đo từ xa",
+      "actions": {
+        "updatedRecord": "Cập nhật hồ sơ tim mạch #{{id}}",
+        "createdDoctor": "Tạo tài khoản bác sĩ đã xác minh",
+        "syncFailed": "Đồng bộ dữ liệu thiết bị đeo thất bại",
+        "afibAlert": "Kích hoạt cảnh báo khẩn rung nhĩ",
+        "linkedDevice": "Liên kết thành công {{device}}"
+      }
+    },
+    "pending": {
+      "title": "Việc cần xử lý",
+      "description": "Các mục cần quản trị viên can thiệp",
+      "count": "{{count}} việc",
+      "count_one": "{{count}} việc",
+      "starting": "Bắt đầu: {{action}} - {{title}}",
+      "items": {
+        "doctorVerifications": "{{count}} bác sĩ chờ xác minh",
+        "doctorVerifications_one": "{{count}} bác sĩ chờ xác minh",
+        "criticalAlerts": "{{count}} cảnh báo nghiêm trọng chưa xử lý",
+        "criticalAlerts_one": "{{count}} cảnh báo nghiêm trọng chưa xử lý",
+        "inactiveOrganizations": "{{count}} cơ sở y tế ngưng hoạt động",
+        "inactiveOrganizations_one": "{{count}} cơ sở y tế ngưng hoạt động",
+        "failedSyncs": "{{count}} lần đồng bộ thiết bị thất bại",
+        "failedSyncs_one": "{{count}} lần đồng bộ thiết bị thất bại"
+      },
+      "categories": {
+        "credentialing": "Xác minh hồ sơ",
+        "telemetry": "Theo dõi bệnh nhân",
+        "tenants": "Quản lý cơ sở",
+        "infrastructure": "Hạ tầng"
+      },
+      "actions": {
+        "review": "Xem xét",
+        "inspect": "Kiểm tra",
+        "manage": "Quản lý",
+        "retry": "Thử lại"
+      }
+    }
   },
   "greeting": {
     "fallbackName": "Bạn",

@@ -145,7 +145,8 @@
       "reasonPlaceholder": "E.g.: Additional paraclinical results, Adjusted recommended dosage...",
       "contentLabel": "Additional content",
       "contentPlaceholder": "Enter the details of the correction or additional recommendations..."
-    }
+    },
+    "finalizedBadge": "Finalized"
   },
   "dietPrescriptionTab": {
     "flags": {
@@ -262,7 +263,8 @@
     "needsReview": "Needs review",
     "reviewed": "Reviewed",
     "statusLabel": "Status:",
-    "confidence": "Confidence: {{value}}%"
+    "confidence": "Confidence: {{value}}%",
+    "unknownStatus": "Unknown"
   },
   "recordDetailDialog": {
     "errors": {
@@ -422,7 +424,8 @@
     "acceptTerms": "I have read, understood, and agree to the renewal terms, the fee, and the commitment to continue care with the assigned doctor in this consultation session.",
     "close": "Close",
     "confirming": "Confirming...",
-    "confirmAndPay": "Confirm & Proceed to Payment"
+    "confirmAndPay": "Confirm & Proceed to Payment",
+    "subtitle": "Care service renewal agreement"
   },
   "adminRenewalsDialog": {
     "toast": {
@@ -529,7 +532,8 @@
     "acceptTerms": "I have read, understood, and agree to the terms of service, scope of care, the doctor's support hours, and the fees set out in this Agreement.",
     "close": "Close",
     "confirming": "Confirming...",
-    "confirmAndPay": "Confirm & Proceed to Payment"
+    "confirmAndPay": "Confirm & Proceed to Payment",
+    "subtitle": "Care service agreement"
   },
   "queuePanel": {
     "activeSession": {

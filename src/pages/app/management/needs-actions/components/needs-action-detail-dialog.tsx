@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
+import { roleLabel } from "@/constants"
 import { useToast } from "@/hooks/use-toast"
 import {
   Dialog,
@@ -199,7 +200,7 @@ export function NeedsActionDetailDialog({
               </div>
               <div className="p-3.5 rounded-2xl border border-slate-100 bg-slate-50/40">
                 <span className="text-[10px] text-slate-400 font-bold uppercase block mb-1">{t("needsActions.detail.assignedRole")}</span>
-                <span className="font-bold text-primary-600 text-xs">{item.assignedRole}</span>
+                <span className="font-bold text-primary-600 text-xs">{roleLabel(item.assignedRole)}</span>
               </div>
             </div>
 

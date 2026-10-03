@@ -6,7 +6,8 @@
   "lang": {
     "label": "Language",
     "vi": "Tiếng Việt",
-    "en": "English"
+    "en": "English",
+    "switchTo": "Switch to {{lang}}"
   },
   "nav": {
     "group": {
@@ -69,7 +70,8 @@
   "common": {
     "notAvailable": "Not available",
     "notUpdated": "Not set",
-    "dash": "—"
+    "dash": "—",
+    "breadcrumb": "Breadcrumb"
   },
   "sidebar": {
     "titleManagement": "HealthSense - Administration",
@@ -106,5 +108,19 @@
   },
   "appLoader": {
     "loading": "Loading HealthSense..."
+  },
+  "roles": {
+    "SUPER_ADMIN": "Super admin",
+    "ADMIN": "Administrator",
+    "CARE_COORDINATOR": "Care coordinator",
+    "DOCTOR": "Doctor",
+    "MEMBER": "Member"
+  },
+  "rolesShort": {
+    "SUPER_ADMIN": "S-Admin",
+    "ADMIN": "Admin",
+    "CARE_COORDINATOR": "Coordinator",
+    "DOCTOR": "Doctor",
+    "MEMBER": "Member"
   }
 }

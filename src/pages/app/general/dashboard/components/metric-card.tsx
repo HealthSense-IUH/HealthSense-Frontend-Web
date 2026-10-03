@@ -1,9 +1,12 @@
 import { Users, Stethoscope, UserCheck, AlertTriangle } from "lucide-react"
 import { ResponsiveContainer, LineChart, Line } from "recharts"
+import { useTranslation } from "react-i18next"
 
+import { formatCount } from "../data/admin-format"
 import type { MetricItem } from "../data/super-admin-dashboard.mock"
 
 export function MetricCard({ item }: { item: MetricItem }) {
+  const { t } = useTranslation("health")
   const chartData = item.trend.map((val, index) => ({ index, value: val }))
 
   const getIcon = () => {
@@ -49,7 +52,7 @@ export function MetricCard({ item }: { item: MetricItem }) {
     <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm transition-all hover:shadow-md flex flex-col justify-between h-36">
       <div className="flex items-center justify-between">
         <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
-          {item.label}
+          {t(`adminDashboard.metrics.${item.id}`)}
         </span>
         <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100 shadow-2xs">
           {getIcon()}
@@ -59,12 +62,16 @@ export function MetricCard({ item }: { item: MetricItem }) {
       <div className="flex items-end justify-between gap-2 mt-2">
         <div>
           <h3 className="text-2xl lg:text-3xl font-black tracking-tight text-slate-900">
-            {item.value}
+            {formatCount(item.value)}
           </h3>
           <span
             className={`mt-1 inline-block rounded-md border px-2 py-0.5 text-[11px] font-semibold ${getBadgeStyle()}`}
           >
-            {item.changeText}
+            {t(`adminDashboard.metrics.change.${item.change.key}`, {
+              count: item.change.values.count,
+              // Số hiển thị định dạng theo ngôn ngữ (8,2 / 8.2); count giữ dạng số để chọn số ít / số nhiều
+              ...Object.fromEntries(Object.entries(item.change.values).map(([k, v]) => [k === "count" ? "countText" : k, formatCount(v)])),
+            })}
           </span>
         </div>
 

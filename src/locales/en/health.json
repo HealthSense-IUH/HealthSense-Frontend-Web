@@ -126,7 +126,8 @@
       "hrRangeNote": "During the session",
       "perfusionNote": "Low → loose fit / weak perfusion",
       "stressScore": "Stress score",
-      "stressNote": "Reference only (Baevsky SI)"
+      "stressNote": "Reference only (Baevsky SI)",
+      "perfusionIndex": "Perfusion index"
     },
     "wave": {
       "title": "Pulse waveform (PPG) during the session",
@@ -165,8 +166,139 @@
     "description": "Your latest cardiovascular metrics, daily measurement calendar and recent atrial fibrillation screenings."
   },
   "adminDashboard": {
-    "selectPeriod": "Select time period",
-    "selectOrganization": "Select healthcare facility or organization"
+    "selectPeriod": "Select a time period",
+    "selectOrganization": "Select a facility or organization",
+    "header": {
+      "export": "Export report",
+      "exporting": "Preparing the clinical report export...",
+      "addUser": "Add user",
+      "addingUser": "Opening the add user dialog...",
+      "filters": "Filters:",
+      "periods": {
+        "7d": "Last 7 days",
+        "30d": "Last 30 days",
+        "90d": "Last 90 days",
+        "6m": "Last 6 months"
+      },
+      "allOrganizations": "All organizations",
+      "organizations": {
+        "org1": "Cho Ray Hospital",
+        "org2": "University Medical Center HCMC",
+        "org3": "Heart Center clinic"
+      }
+    },
+    "sections": {
+      "kpi": "Key performance indicators",
+      "analytics": "Platform analytics and charts",
+      "alerts": "Clinical alerts and infrastructure status",
+      "activity": "Activity logs and pending actions"
+    },
+    "metrics": {
+      "totalUsers": "Total users",
+      "activeDoctors": "Active doctors",
+      "activeMembers": "Active members",
+      "criticalAlerts": "Critical alerts",
+      "change": {
+        "growthPercent": "+{{value}}% from last month",
+        "pendingVerification": "{{countText}} pending verification",
+        "newThisMonth": "+{{countText}} this month",
+        "unresolved": "{{countText}} unresolved"
+      }
+    },
+    "roles": {
+      "members": "Members",
+      "doctors": "Doctors",
+      "admins": "Admins",
+      "superAdmins": "Super admins",
+      "system": "System"
+    },
+    "status": {
+      "operational": "Operational",
+      "degraded": "Degraded",
+      "critical": "Critical",
+      "success": "Success",
+      "warning": "Warning"
+    },
+    "growth": {
+      "title": "User growth",
+      "description": "Monthly onboarding trend across all platform roles.",
+      "totalRate": "{{value}} total"
+    },
+    "distribution": {
+      "title": "User distribution",
+      "description": "Share of accounts by role."
+    },
+    "alerts": {
+      "title": "Health alerts overview",
+      "description": "Real-time patient monitoring alerts, classified by severity.",
+      "critical": "Critical",
+      "warning": "Warning",
+      "resolved": "Resolved"
+    },
+    "system": {
+      "title": "System status",
+      "description": "Core clinical infrastructure health",
+      "refresh": "Refresh status",
+      "refreshing": "Pinging infrastructure services...",
+      "uptime": "Uptime:",
+      "ping": "Ping:",
+      "sla": "Global SLA:",
+      "allActive": "All services running",
+      "services": {
+        "apiGateway": "API gateway and services",
+        "database": "Clinical database (PostgreSQL)",
+        "notification": "Notification and telemetry service",
+        "wearableSync": "Wearable device synchronization"
+      }
+    },
+    "activity": {
+      "title": "Recent activity",
+      "description": "System events and administrative actions",
+      "columns": {
+        "actor": "User / actor",
+        "role": "Role",
+        "action": "Action",
+        "time": "Time",
+        "status": "Status"
+      },
+      "systemActor": "System telemetry",
+      "actions": {
+        "updatedRecord": "Updated cardiology record #{{id}}",
+        "createdDoctor": "Created a verified doctor account",
+        "syncFailed": "Wearable synchronization failed",
+        "afibAlert": "Triggered an emergency AFib alert",
+        "linkedDevice": "Linked {{device}}"
+      }
+    },
+    "pending": {
+      "title": "Pending actions",
+      "description": "Items that need an administrator",
+      "count": "{{count}} items",
+      "count_one": "{{count}} item",
+      "starting": "Starting: {{action}} - {{title}}",
+      "items": {
+        "doctorVerifications": "{{count}} doctor verifications",
+        "doctorVerifications_one": "{{count}} doctor verification",
+        "criticalAlerts": "{{count}} unresolved critical alerts",
+        "criticalAlerts_one": "{{count}} unresolved critical alert",
+        "inactiveOrganizations": "{{count}} inactive facilities",
+        "inactiveOrganizations_one": "{{count}} inactive facility",
+        "failedSyncs": "{{count}} failed device syncs",
+        "failedSyncs_one": "{{count}} failed device sync"
+      },
+      "categories": {
+        "credentialing": "Credentialing",
+        "telemetry": "Patient telemetry",
+        "tenants": "Facility management",
+        "infrastructure": "Infrastructure"
+      },
+      "actions": {
+        "review": "Review",
+        "inspect": "Inspect",
+        "manage": "Manage",
+        "retry": "Retry"
+      }
+    }
   },
   "greeting": {
     "fallbackName": "there",

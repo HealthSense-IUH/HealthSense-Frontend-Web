@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
 import {
   superAdminMetrics,
   userGrowthData,
@@ -23,6 +24,7 @@ import { PendingActionsCard } from "./pending-actions-card"
  * nút thao tác (DashboardHeaderActions).
  */
 export function SuperAdminDashboard() {
+  const { t } = useTranslation("health")
   const [filters, setFilters] = useState<DashboardFilters>({
     period: "30d",
     organizationId: "all",
@@ -38,7 +40,7 @@ export function SuperAdminDashboard() {
       <DashboardHeader filters={filters} onFilterChange={handleFilterChange} />
 
       {/* Section 1: KPI Summary Cards (4 columns on wide screen, 2 on laptop/narrower screens) */}
-      <section aria-label="Key Performance Indicators">
+      <section aria-label={t("adminDashboard.sections.kpi")}>
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
           {superAdminMetrics.map((item) => (
             <MetricCard key={item.id} item={item} />
@@ -47,7 +49,7 @@ export function SuperAdminDashboard() {
       </section>
 
       {/* Section 2: Core Analytics & Growth Charts */}
-      <section aria-label="Platform Analytics & Charts">
+      <section aria-label={t("adminDashboard.sections.analytics")}>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2">
             <UserGrowthChart data={userGrowthData} />
@@ -59,7 +61,7 @@ export function SuperAdminDashboard() {
       </section>
 
       {/* Section 3: Clinical Health Alerts & Infrastructure Status */}
-      <section aria-label="Clinical Alerts and Infrastructure Status">
+      <section aria-label={t("adminDashboard.sections.alerts")}>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2">
             <HealthAlertsChart data={healthAlertsOverview} />
@@ -71,7 +73,7 @@ export function SuperAdminDashboard() {
       </section>
 
       {/* Section 4: Operational Action Items & Activity Logs */}
-      <section aria-label="Activity Logs and Pending Actions">
+      <section aria-label={t("adminDashboard.sections.activity")}>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2">
             <RecentActivityTable activities={recentActivitiesData} />

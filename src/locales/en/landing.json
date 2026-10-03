@@ -70,7 +70,11 @@
         "title": "Doctors by your side",
         "desc": "One-tap online connection with a team of cardiologists, with secure automatic sharing of your ECG records."
       }
-    }
+    },
+    "headlineTop": "What's",
+    "headlineBottom": "HealthSense",
+    "ourStory": "Our story",
+    "valuesTitle": "C.A.R.E core values"
   },
   "features": {
     "title": "16 Core Biological Features",

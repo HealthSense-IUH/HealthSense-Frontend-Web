@@ -6,7 +6,8 @@
   "lang": {
     "label": "Ngôn ngữ",
     "vi": "Tiếng Việt",
-    "en": "English"
+    "en": "English",
+    "switchTo": "Chuyển sang {{lang}}"
   },
   "nav": {
     "group": {
@@ -69,7 +70,8 @@
   "common": {
     "notAvailable": "Chưa có",
     "notUpdated": "Chưa cập nhật",
-    "dash": "—"
+    "dash": "—",
+    "breadcrumb": "Đường dẫn trang"
   },
   "sidebar": {
     "titleManagement": "HealthSense - Phân hệ Quản trị",
@@ -106,5 +108,19 @@
   },
   "appLoader": {
     "loading": "Đang tải HealthSense..."
+  },
+  "roles": {
+    "SUPER_ADMIN": "Quản trị cấp cao",
+    "ADMIN": "Quản trị viên",
+    "CARE_COORDINATOR": "Điều phối chăm sóc",
+    "DOCTOR": "Bác sĩ",
+    "MEMBER": "Hội viên"
+  },
+  "rolesShort": {
+    "SUPER_ADMIN": "QT cấp cao",
+    "ADMIN": "Quản trị",
+    "CARE_COORDINATOR": "Điều phối",
+    "DOCTOR": "Bác sĩ",
+    "MEMBER": "Hội viên"
   }
 }

@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next"
 
 import { AvatarPlaceholder } from "@/components/ui/avatar"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { getDefaultRouteForRole } from "@/constants"
+import { getDefaultRouteForRole, roleLabel } from "@/constants"
 import { authApi } from "@/services"
 import { useAuthStore } from "@/stores/auth-store"
 
@@ -52,7 +52,7 @@ export function UserMenu({ role, showAppLink = false }: UserMenuProps) {
           <div className="hidden sm:flex flex-col text-left text-xs max-w-[130px]">
             <span className="font-bold text-slate-900 truncate text-[13px] leading-tight">{displayName}</span>
             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider truncate font-mono">
-              {shownRole}
+              {roleLabel(shownRole)}
             </span>
           </div>
           <ChevronDown className="h-3.5 w-3.5 text-slate-400 ml-0.5" />

@@ -13,6 +13,13 @@ export function formatDate(value?: string | null) {
   }).format(new Date(value))
 }
 
+/** Tên trạng thái phiên / yêu cầu theo ngôn ngữ đang chọn ("ACTIVE" -> "Đang hoạt động"); trạng thái lạ giữ nguyên mã. */
+export function statusLabel(status?: string | null): string {
+  if (!status) return ""
+  const key = status === "IN_PROGRESS" ? "processing" : status.toLowerCase().replace(/_([a-z])/g, (_, c: string) => c.toUpperCase())
+  return i18n.t(`consultation:status.${key}`, { defaultValue: status })
+}
+
 export function statusBadge(status: string) {
   const statusText = (key: string) => i18n.t(`consultation:status.${key}`)
   let label = status

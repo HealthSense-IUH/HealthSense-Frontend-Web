@@ -2,7 +2,7 @@ import { Eye, Edit3, Trash2, ChevronLeft, ChevronRight, Inbox, Loader2, FilePlus
 import { Trans, useTranslation } from "react-i18next"
 import { Button } from "@/components/ui/button"
 import { UserStatusBadge } from "./user-status-badge"
-import { USER_ROLES } from "@/constants"
+import { USER_ROLES, roleLabel } from "@/constants"
 import type { UserItem } from "@/types/user"
 import { formatShortDate } from "@/lib/formatters"
 
@@ -112,7 +112,7 @@ export function UserTable({
                   </td>
                   <td className="py-4 px-4">
                     <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-extrabold bg-primary-50/80 text-primary-800 border border-primary-200/60">
-                      {item.role}
+                      {roleLabel(item.role)}
                     </span>
                   </td>
                   <td className="py-4 px-4 whitespace-nowrap">

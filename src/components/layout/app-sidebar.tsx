@@ -1,21 +1,21 @@
 import { Link } from "react-router-dom"
 import { ShieldCheck, Stethoscope } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 import { useAppShell } from "./app-shell-context"
 import { SidebarContent } from "./sidebar-content"
-import { USER_ROLES, getDefaultRouteForRole } from "@/constants"
+import { USER_ROLES, getDefaultRouteForRole, roleLabel } from "@/constants"
 
 export function AppSidebar() {
+  const { t } = useTranslation()
   const { effectiveRole } = useAppShell()
 
   const isStaff = effectiveRole !== USER_ROLES.MEMBER
   const isDoctor = effectiveRole === USER_ROLES.DOCTOR
   const homeRoute = getDefaultRouteForRole(effectiveRole)
 
-  const roleBadgeLabel =
-    effectiveRole === USER_ROLES.SUPER_ADMIN
-      ? "S-ADMIN"
-      : effectiveRole
+  // Huy hiệu hẹp dưới logo nên dùng tên vai trò rút gọn
+  const roleBadgeLabel = t(`rolesShort.${effectiveRole}`, { defaultValue: effectiveRole })
 
   return (
     <aside className="fixed left-0 top-0 z-40 flex h-screen w-[92px] flex-col select-none border-r border-shell-border bg-shell text-shell-foreground">
@@ -24,7 +24,7 @@ export function AppSidebar() {
         <Link
           to={homeRoute}
           className="flex flex-col items-center group"
-          title={`HealthSense - ${effectiveRole}`}
+          title={`${t("brand.name")} - ${roleLabel(effectiveRole)}`}
         >
           {isStaff ? (
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary-600 text-white shadow-sm group-hover:bg-primary-500 transition-colors">
@@ -33,7 +33,7 @@ export function AppSidebar() {
           ) : (
             <img
               src="/logo.png"
-              alt="HealthSense Logo"
+              alt={t("brand.name")}
               className="h-10 w-10 object-contain rounded-xl shrink-0"
             />
           )}

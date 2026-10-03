@@ -797,5 +797,8 @@
         "records_other": "({{count}} records)"
       }
     }
+  },
+  "paymentOrderDetail": {
+    "paymentLinkId": "Payment link ID:"
   }
 }

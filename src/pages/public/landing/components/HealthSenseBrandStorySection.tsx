@@ -76,10 +76,10 @@ export function HealthSenseBrandStorySection() {
               <div className="relative">
                 {/* 3D Offset Shadow */}
                 <span className="text-6xl sm:text-8xl lg:text-[104px] font-black font-heading tracking-tighter leading-[0.9] text-primary-950/70 absolute top-1.5 left-1.5 uppercase -z-10">
-                  WHAT&apos;S
+                  {t("brandStory.headlineTop")}
                 </span>
                 <h2 className="text-6xl sm:text-8xl lg:text-[104px] font-black font-heading tracking-tighter leading-[0.9] text-white uppercase drop-shadow-md">
-                  WHAT&apos;S
+                  {t("brandStory.headlineTop")}
                 </h2>
               </div>
 
@@ -87,10 +87,10 @@ export function HealthSenseBrandStorySection() {
               <div className="relative mt-1 sm:mt-2">
                 {/* 3D Offset Shadow */}
                 <span className="text-5xl sm:text-7xl lg:text-[92px] font-black font-heading tracking-tighter leading-[0.9] text-primary-950/70 absolute top-1.5 left-1.5 uppercase -z-10">
-                  HEALTHSENSE
+                  {t("brandStory.headlineBottom")}
                 </span>
                 <h2 className="text-5xl sm:text-7xl lg:text-[92px] font-black font-heading tracking-tighter leading-[0.9] text-white uppercase drop-shadow-md">
-                  HEALTHSENSE
+                  {t("brandStory.headlineBottom")}
                 </h2>
               </div>
 
@@ -128,7 +128,7 @@ export function HealthSenseBrandStorySection() {
             viewport={{ once: true }}
             className="text-2xl sm:text-3xl font-black font-heading tracking-tight text-white mb-8 italic"
           >
-            Our story
+            {t("brandStory.ourStory")}
           </motion.h3>
 
           {/* Two Editorial Narrative Columns */}
@@ -177,7 +177,7 @@ export function HealthSenseBrandStorySection() {
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-12 sm:mb-16">
             <div>
               <h3 className="text-2xl sm:text-4xl font-black font-heading tracking-tight text-white uppercase">
-                C.A.R.E Core Values
+                {t("brandStory.valuesTitle")}
               </h3>
             </div>
             <p className="text-xs sm:text-sm text-primary-100/70 max-w-md font-sans">

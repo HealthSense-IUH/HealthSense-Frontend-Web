@@ -1,13 +1,18 @@
 import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip } from "recharts"
+import { useTranslation } from "react-i18next"
+
+import { formatCount, formatPercent } from "../data/admin-format"
 import type { UserDistributionItem } from "../data/super-admin-dashboard.mock"
 
 export function UserDistributionChart({ data }: { data: UserDistributionItem[] }) {
+  const { t } = useTranslation("health")
+  const chartData = data.map((item) => ({ ...item, name: t(`adminDashboard.roles.${item.role}`) }))
   return (
     <div className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm flex flex-col justify-between h-full">
       <div>
-        <h3 className="text-base font-bold text-slate-900">User Distribution</h3>
+        <h3 className="text-base font-bold text-slate-900">{t("adminDashboard.distribution.title")}</h3>
         <p className="text-xs text-slate-500 mt-0.5">
-          Proportion of accounts by active role.
+          {t("adminDashboard.distribution.description")}
         </p>
       </div>
 
@@ -26,7 +31,7 @@ export function UserDistributionChart({ data }: { data: UserDistributionItem[] }
               }}
             />
             <Pie
-              data={data}
+              data={chartData}
               dataKey="value"
               nameKey="name"
               cx="50%"
@@ -36,8 +41,8 @@ export function UserDistributionChart({ data }: { data: UserDistributionItem[] }
               paddingAngle={4}
               stroke="none"
             >
-              {data.map((item) => (
-                <Cell key={item.name} fill={item.color} />
+              {chartData.map((item) => (
+                <Cell key={item.role} fill={item.color} />
               ))}
             </Pie>
           </PieChart>
@@ -46,8 +51,8 @@ export function UserDistributionChart({ data }: { data: UserDistributionItem[] }
 
       {/* Clean list breakdown legend */}
       <div className="space-y-2 border-t border-slate-100 pt-3">
-        {data.map((item) => (
-          <div key={item.name} className="flex items-center justify-between text-xs">
+        {chartData.map((item) => (
+          <div key={item.role} className="flex items-center justify-between text-xs">
             <div className="flex items-center gap-2 font-semibold text-slate-700">
               <span
                 className="h-2.5 w-2.5 rounded-full shrink-0"
@@ -56,8 +61,8 @@ export function UserDistributionChart({ data }: { data: UserDistributionItem[] }
               <span>{item.name}</span>
             </div>
             <div className="flex items-center gap-3">
-              <span className="font-mono text-slate-500">{item.value.toLocaleString("vi-VN")}</span>
-              <span className="font-extrabold text-slate-900 w-9 text-right">{item.percentage}</span>
+              <span className="font-mono text-slate-500">{formatCount(item.value)}</span>
+              <span className="font-extrabold text-slate-900 w-9 text-right">{formatPercent(item.percentage)}</span>
             </div>
           </div>
         ))}

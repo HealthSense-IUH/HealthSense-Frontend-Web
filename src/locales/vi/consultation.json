@@ -145,7 +145,8 @@
       "reasonPlaceholder": "VD: Cập nhật kết quả cận lâm sàng bổ sung, Điều chỉnh liều khuyến nghị...",
       "contentLabel": "Nội dung bổ sung",
       "contentPlaceholder": "Nhập chi tiết nội dung đính chính hoặc khuyến nghị bổ sung..."
-    }
+    },
+    "finalizedBadge": "Đã chốt"
   },
   "dietPrescriptionTab": {
     "flags": {
@@ -262,7 +263,8 @@
     "needsReview": "Cần xem",
     "reviewed": "Đã xem",
     "statusLabel": "Trạng thái:",
-    "confidence": "Tin cậy: {{value}}%"
+    "confidence": "Tin cậy: {{value}}%",
+    "unknownStatus": "Không rõ"
   },
   "recordDetailDialog": {
     "errors": {
@@ -422,7 +424,8 @@
     "acceptTerms": "Tôi đã đọc, hiểu rõ và đồng ý với các điều khoản gia hạn, mức phí và cam kết tiếp tục đồng hành chăm sóc cùng bác sĩ phụ trách trong phiên tư vấn này.",
     "close": "Đóng",
     "confirming": "Đang xác nhận...",
-    "confirmAndPay": "Xác nhận & Tiến hành thanh toán"
+    "confirmAndPay": "Xác nhận & Tiến hành thanh toán",
+    "subtitle": "Thỏa thuận gia hạn dịch vụ chăm sóc"
   },
   "adminRenewalsDialog": {
     "toast": {
@@ -529,7 +532,8 @@
     "acceptTerms": "Tôi đã đọc, hiểu rõ và đồng ý với các điều khoản dịch vụ, phạm vi chăm sóc, khung giờ hỗ trợ của bác sĩ và mức phí quy định trong bản Thỏa thuận này.",
     "close": "Đóng",
     "confirming": "Đang xác nhận...",
-    "confirmAndPay": "Xác nhận & Tiến hành thanh toán"
+    "confirmAndPay": "Xác nhận & Tiến hành thanh toán",
+    "subtitle": "Thỏa thuận dịch vụ chăm sóc"
   },
   "queuePanel": {
     "activeSession": {

@@ -116,7 +116,7 @@ export function CareAgreementDialog({
               <div>
                 <DialogTitle className="text-xl font-bold">{t("careAgreementDialog.title")}</DialogTitle>
                 <DialogDescription>
-                  Care Service Agreement &bull; {t("careAgreementDialog.requestNumber", { id: requestId })}
+                  {t("careAgreementDialog.subtitle")} &bull; {t("careAgreementDialog.requestNumber", { id: requestId })}
                 </DialogDescription>
               </div>
             </div>

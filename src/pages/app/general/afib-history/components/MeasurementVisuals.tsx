@@ -90,7 +90,7 @@ function buildExtraTiles(features: HRVFeatures, t: TFunction): MetricTile[] {
     tiles.push({
       key: "pi",
       icon: Activity,
-      label: "Perfusion Index",
+      label: t("measurementVisuals.tiles.perfusionIndex"),
       value: features.perfusionIndex.toFixed(2),
       unit: "%",
       note: t("measurementVisuals.tiles.perfusionNote"),

@@ -8,7 +8,9 @@ import {
   CartesianGrid,
   Legend,
 } from "recharts"
+import { useTranslation } from "react-i18next"
 
+import { formatWeekday } from "../data/admin-format"
 import type { healthAlertsOverview } from "../data/super-admin-dashboard.mock"
 
 export function HealthAlertsChart({
@@ -16,12 +18,14 @@ export function HealthAlertsChart({
 }: {
   data: typeof healthAlertsOverview
 }) {
+  const { t } = useTranslation("health")
+  const chartData = data.dailyData.map((d) => ({ ...d, day: formatWeekday(d.weekday) }))
   return (
     <div className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm flex flex-col justify-between h-full">
       <div>
-        <h3 className="text-base font-bold text-slate-900">Health Alerts Overview</h3>
+        <h3 className="text-base font-bold text-slate-900">{t("adminDashboard.alerts.title")}</h3>
         <p className="text-xs text-slate-500 mt-0.5">
-          Real-time patient monitoring alert classification by severity.
+          {t("adminDashboard.alerts.description")}
         </p>
 
         {/* 3 Summary Badges */}
@@ -31,7 +35,7 @@ export function HealthAlertsChart({
               {data.summary.critical}
             </span>
             <span className="text-[11px] font-bold text-danger-700 uppercase tracking-wide">
-              Critical
+              {t("adminDashboard.alerts.critical")}
             </span>
           </div>
           <div className="rounded-xl bg-warning-50/70 border border-warning-200/80 p-3 text-center">
@@ -39,7 +43,7 @@ export function HealthAlertsChart({
               {data.summary.warning}
             </span>
             <span className="text-[11px] font-bold text-warning-700 uppercase tracking-wide">
-              Warning
+              {t("adminDashboard.alerts.warning")}
             </span>
           </div>
           <div className="rounded-xl bg-success-50/70 border border-success-200/80 p-3 text-center">
@@ -47,7 +51,7 @@ export function HealthAlertsChart({
               {data.summary.resolved}
             </span>
             <span className="text-[11px] font-bold text-success-700 uppercase tracking-wide">
-              Resolved
+              {t("adminDashboard.alerts.resolved")}
             </span>
           </div>
         </div>
@@ -56,7 +60,7 @@ export function HealthAlertsChart({
       {/* Bar Chart wrapper with ResponsiveContainer */}
       <div className="h-[250px] w-full mt-6">
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={data.dailyData} margin={{ top: 10, right: 10, left: -15, bottom: 0 }}>
+          <BarChart data={chartData} margin={{ top: 10, right: 10, left: -15, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="var(--color-slate-100)" vertical={false} />
             <XAxis dataKey="day" stroke="var(--color-slate-400)" fontSize={12} tickLine={false} axisLine={false} />
             <YAxis stroke="var(--color-slate-400)" fontSize={12} tickLine={false} axisLine={false} />
@@ -71,9 +75,9 @@ export function HealthAlertsChart({
               }}
             />
             <Legend iconType="circle" wrapperStyle={{ fontSize: "12px", paddingTop: "12px", fontWeight: 600 }} />
-            <Bar dataKey="Critical" fill="var(--color-danger-500)" radius={[6, 6, 0, 0]} barSize={12} />
-            <Bar dataKey="Warning" fill="var(--color-warning-500)" radius={[6, 6, 0, 0]} barSize={12} />
-            <Bar dataKey="Resolved" fill="var(--color-success-500)" radius={[6, 6, 0, 0]} barSize={12} />
+            <Bar dataKey="critical" name={t("adminDashboard.alerts.critical")} fill="var(--color-danger-500)" radius={[6, 6, 0, 0]} barSize={12} />
+            <Bar dataKey="warning" name={t("adminDashboard.alerts.warning")} fill="var(--color-warning-500)" radius={[6, 6, 0, 0]} barSize={12} />
+            <Bar dataKey="resolved" name={t("adminDashboard.alerts.resolved")} fill="var(--color-success-500)" radius={[6, 6, 0, 0]} barSize={12} />
           </BarChart>
         </ResponsiveContainer>
       </div>
