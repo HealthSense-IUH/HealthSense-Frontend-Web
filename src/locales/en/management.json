@@ -992,5 +992,214 @@
       "cancel": "Cancel",
       "confirm": "Confirm create"
     }
+  },
+  "statistics": {
+    "page": {
+      "title": "Reports & Statistics",
+      "description": "Monitor system-wide metrics regarding users, medical records, consultations, and finance."
+    },
+    "tabs": {
+      "users": "Users",
+      "records": "Health Records",
+      "consultations": "Consultations",
+      "payments": "Finance & Payments"
+    },
+    "comingSoon": {
+      "badge": "In Development",
+      "recordsTitle": "Health Records Statistics",
+      "recordsDesc": "Aggregated clinical metrics, AFib logs, health alerts, and patient record distributions are currently in development.",
+      "consultationsTitle": "Consultation Statistics",
+      "consultationsDesc": "Session completion rates, consultation durations, clinical ratings, and doctor performance analytics are currently in development.",
+      "paymentsTitle": "Finance & Payment Statistics",
+      "paymentsDesc": "Package purchase revenue, token transaction histories, and payment settlement reconciliations are currently in development."
+    },
+    "filter": {
+      "presets": {
+        "7d": "Last 7 days",
+        "30d": "Last 30 days",
+        "90d": "Last 90 days",
+        "custom": "Custom range"
+      },
+      "from": "From date",
+      "to": "To date",
+      "groupBy": "Group by",
+      "groupByOptions": {
+        "DAY": "Day",
+        "WEEK": "Week",
+        "MONTH": "Month"
+      },
+      "refresh": "Refresh data",
+      "weekFrom": "Week of {{date}}",
+      "rangeExceeded": "Date range cannot exceed 366 days",
+      "rangeInvalid": "Start date must be before or equal to end date"
+    },
+    "summary": {
+      "totalUsers": "Total Users",
+      "totalUsersDesc": "All registered accounts in the system",
+      "newUsers": "New Accounts in Period",
+      "newUsersDesc": "Registered from {{from}} to {{to}}",
+      "activeAccounts": "Active Accounts",
+      "activeAccountsDesc": "Accounts with ACTIVE status",
+      "totalDoctors": "Total Doctors",
+      "totalDoctorsDesc": "Accounts with DOCTOR role"
+    },
+    "trend": {
+      "title": "Registration Trend",
+      "description": "Number of new accounts created across selected intervals",
+      "countLabel": "New accounts",
+      "empty": "No user registrations recorded for this period."
+    },
+    "roleDistribution": {
+      "title": "Role Distribution",
+      "description": "Proportion of user roles across all current accounts",
+      "empty": "No role distribution data available"
+    },
+    "statusDistribution": {
+      "title": "Status Distribution",
+      "description": "Proportion of account statuses system-wide",
+      "empty": "No account status data available"
+    },
+    "statuses": {
+      "ACTIVE": "Active",
+      "INACTIVE": "Inactive",
+      "PENDING_VERIFY": "Pending verification"
+    },
+    "consultations": {
+      "summary": {
+        "totalConsultations": "Total Consultations",
+        "totalConsultationsDesc": "All consultation sessions in the system",
+        "consultationsInPeriod": "Consultations in Period",
+        "consultationsInPeriodDesc": "Sessions created from {{from}} to {{to}}",
+        "completedInPeriod": "Completed in Period",
+        "completedInPeriodDesc": "Created in period and currently COMPLETED",
+        "cancelledInPeriod": "Cancelled in Period",
+        "cancelledInPeriodDesc": "Created in period and currently CANCELLED",
+        "cohortTooltip": "Sessions created during the selected period and currently in this status."
+      },
+      "trend": {
+        "title": "Consultation Creation Trend",
+        "description": "Number of consultation sessions created across selected intervals",
+        "countLabel": "New consultations",
+        "empty": "No consultations created for this period."
+      },
+      "statusDistribution": {
+        "title": "Consultation Status Breakdown",
+        "description": "Status breakdown of consultations created in this period",
+        "empty": "No consultation sessions in this period"
+      },
+      "statuses": {
+        "SCHEDULED": "Scheduled",
+        "ACTIVE": "In Progress",
+        "COMPLETED": "Completed",
+        "CANCELLED": "Cancelled"
+      }
+    },
+    "healthRecords": {
+      "summary": {
+        "totalRecords": "Total Records",
+        "totalRecordsDesc": "All health records in the system",
+        "recordsInPeriod": "Records in Period",
+        "recordsInPeriodDesc": "Records created from {{from}} to {{to}}",
+        "uniqueUsersInPeriod": "Users with Records",
+        "uniqueUsersInPeriodDesc": "Distinct users who recorded in period",
+        "afDetectedOrSuspectedInPeriod": "AF Detected/Suspected",
+        "afDetectedOrSuspectedInPeriodDesc": "Records with AFIB or AFIB_SUSPECTED"
+      },
+      "trend": {
+        "title": "Health Records Trend",
+        "description": "Number of health records created across selected intervals",
+        "countLabel": "New records",
+        "empty": "No health records recorded for this period.",
+        "tooltip": "Number of records created/recorded during each period."
+      },
+      "resultDistribution": {
+        "title": "Analysis Result Distribution",
+        "description": "Heart rhythm classification breakdown of processed records",
+        "empty": "No processed records in this period",
+        "tooltip": "Includes only processed records with prediction results.",
+        "results": {
+          "NORMAL": "Normal",
+          "AFIB": "Atrial Fibrillation (AFib)",
+          "UNCERTAIN": "Uncertain",
+          "AFIB_SUSPECTED": "Suspected AFib"
+        }
+      },
+      "recordedHourDistribution": {
+        "title": "Recorded Hour Distribution",
+        "description": "Distribution of record creation/upload times across 24 hours",
+        "countLabel": "Records",
+        "empty": "No records in this period",
+        "tooltip": "Time when the system recorded the upload, not necessarily measurement time."
+      }
+    },
+    "payments": {
+      "summary": {
+        "totalRevenue": "Total Revenue",
+        "totalRevenueDesc": "All-time (PAID transactions)",
+        "totalRevenueTooltip": "Total amount from successfully paid PayOS transactions.",
+        "revenueInPeriod": "Revenue in Period",
+        "revenueInPeriodDesc": "Based on payment time from {{from}} to {{to}}",
+        "revenueInPeriodTooltip": "Revenue recorded by the time of successful payment.",
+        "totalTransactions": "Total Transactions",
+        "totalTransactionsDesc": "All PayOS business transactions",
+        "totalTransactionsTooltip": "Total PayOS business transactions; purchase retries are not counted as new transactions.",
+        "averagePaidValue": "Average Transaction Value",
+        "averagePaidValueDesc": "Average across PAID transactions",
+        "averagePaidValueTooltip": "Average value of all successfully paid transactions all-time."
+      },
+      "revenueTrend": {
+        "title": "Revenue Trend",
+        "description": "Successfully paid revenue across selected intervals",
+        "tooltip": "Revenue recorded by the time of successful payment.",
+        "totalLabel": "Total Revenue",
+        "directCareLabel": "Direct Consultation",
+        "creditPurchaseLabel": "Credit Package Purchase",
+        "empty": "No revenue recorded for this period."
+      },
+      "transactionTrend": {
+        "title": "Transaction Trend",
+        "description": "Number of PayOS business transactions created over time",
+        "tooltip": "Number of transactions created over time, across all statuses.",
+        "countLabel": "Transactions",
+        "empty": "No transactions created for this period."
+      },
+      "revenueBySource": {
+        "title": "Revenue by Source in Period",
+        "description": "Proportion of revenue breakdown by payment source",
+        "empty": "No revenue recorded in this period",
+        "sources": {
+          "DIRECT_CARE": "Direct Consultation",
+          "CREDIT_PURCHASE": "Credit Package Purchase"
+        }
+      },
+      "statusDistribution": {
+        "title": "Transaction Status by Source",
+        "description": "Current status distribution of transactions created during the period",
+        "tooltip": "Current status of transactions created during the selected period.",
+        "directCareTitle": "Direct Consultation Payment",
+        "creditPurchaseTitle": "Credit Purchase Orders",
+        "emptyDirect": "No direct consultation transactions in this period",
+        "emptyCredit": "No credit purchase orders in this period",
+        "directStatuses": {
+          "PENDING": "Pending",
+          "PAID": "Paid",
+          "EXPIRED": "Expired",
+          "CANCELLED": "Cancelled",
+          "FAILED": "Failed",
+          "REQUIRES_REVIEW": "Requires Review"
+        },
+        "creditStatuses": {
+          "PENDING_PAYMENT": "Pending Payment",
+          "PAID": "Paid",
+          "CANCELLED": "Cancelled",
+          "EXPIRED": "Expired",
+          "REQUIRES_REVIEW": "Requires Review"
+        }
+      }
+    },
+    "error": {
+      "loadFailed": "Unable to load statistics data. Please try again later.",
+      "retry": "Retry"
+    }
   }
 }

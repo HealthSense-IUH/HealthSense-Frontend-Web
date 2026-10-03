@@ -31,7 +31,8 @@
       "admin-credit-operations": "Quản lý lượt tư vấn",
       "health-records-management": "Hồ sơ sức khỏe bệnh nhân",
       "nutrition-rules": "Ngưỡng đánh giá dinh dưỡng",
-      "doctor-consultations": "Phiên khám Bác sĩ"
+      "doctor-consultations": "Phiên khám Bác sĩ",
+      "statistics": "Thống kê"
     },
     "short": {
       "dashboard": "Tổng quan",
@@ -47,7 +48,8 @@
       "admin-credit-operations": "Lượt tư vấn",
       "health-records-management": "Hồ sơ bệnh",
       "nutrition-rules": "Dinh dưỡng",
-      "doctor-consultations": "Phiên khám"
+      "doctor-consultations": "Phiên khám",
+      "statistics": "Thống kê"
     }
   },
   "topbar": {

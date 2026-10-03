@@ -992,5 +992,214 @@
       "cancel": "Hủy bỏ",
       "confirm": "Xác nhận tạo"
     }
+  },
+  "statistics": {
+    "page": {
+      "title": "Báo cáo & Thống kê",
+      "description": "Theo dõi các chỉ số vận hành hệ thống về người dùng, hồ sơ bệnh án, tư vấn và thanh toán."
+    },
+    "tabs": {
+      "users": "Người dùng",
+      "records": "Bản ghi sức khỏe",
+      "consultations": "Phiên tư vấn",
+      "payments": "Tài chính & Thanh toán"
+    },
+    "comingSoon": {
+      "badge": "Đang triển khai",
+      "recordsTitle": "Thống kê Bản ghi sức khỏe",
+      "recordsDesc": "Phân hệ tổng hợp dữ liệu chỉ số lâm sàng, đo AFib, cảnh báo bất thường và phân bố hồ sơ bệnh án đang được phát triển.",
+      "consultationsTitle": "Thống kê Phiên tư vấn",
+      "consultationsDesc": "Phân hệ theo dõi tỷ lệ ca khám, thời lượng tư vấn, đánh giá chuyên môn và hiệu suất bác sĩ đang được phát triển.",
+      "paymentsTitle": "Thống kê Tài chính & Thanh toán",
+      "paymentsDesc": "Phân hệ báo cáo doanh thu gói lượt, lịch sử giao dịch nạp tiền và đối soát thanh toán đang được phát triển."
+    },
+    "filter": {
+      "presets": {
+        "7d": "7 ngày qua",
+        "30d": "30 ngày qua",
+        "90d": "90 ngày qua",
+        "custom": "Tùy chọn"
+      },
+      "from": "Từ ngày",
+      "to": "Đến ngày",
+      "groupBy": "Gom nhóm theo",
+      "groupByOptions": {
+        "DAY": "Ngày",
+        "WEEK": "Tuần",
+        "MONTH": "Tháng"
+      },
+      "refresh": "Làm mới dữ liệu",
+      "weekFrom": "Tuần từ {{date}}",
+      "rangeExceeded": "Khoảng thời gian không được vượt quá 366 ngày",
+      "rangeInvalid": "Ngày bắt đầu phải trước hoặc bằng ngày kết thúc"
+    },
+    "summary": {
+      "totalUsers": "Tổng tài khoản",
+      "totalUsersDesc": "Toàn bộ tài khoản trong hệ thống",
+      "newUsers": "Tài khoản mới trong kỳ",
+      "newUsersDesc": "Tạo từ {{from}} đến {{to}}",
+      "activeAccounts": "Tài khoản đang hoạt động",
+      "activeAccountsDesc": "Tài khoản có trạng thái ACTIVE",
+      "totalDoctors": "Tổng bác sĩ",
+      "totalDoctorsDesc": "Tài khoản có vai trò DOCTOR"
+    },
+    "trend": {
+      "title": "Xu hướng đăng ký tài khoản",
+      "description": "Số lượng tài khoản mới được tạo theo đơn vị thời gian đã chọn",
+      "countLabel": "Tài khoản mới",
+      "empty": "Không có lượt đăng ký nào trong khoảng thời gian đã chọn."
+    },
+    "roleDistribution": {
+      "title": "Phân bố theo vai trò",
+      "description": "Tỷ lệ các nhóm vai trò trên tổng số tài khoản hiện tại",
+      "empty": "Chưa có dữ liệu vai trò"
+    },
+    "statusDistribution": {
+      "title": "Phân bố theo trạng thái",
+      "description": "Tỷ lệ trạng thái tài khoản trên toàn hệ thống",
+      "empty": "Chưa có dữ liệu trạng thái"
+    },
+    "statuses": {
+      "ACTIVE": "Đang hoạt động",
+      "INACTIVE": "Ngừng hoạt động",
+      "PENDING_VERIFY": "Chờ xác minh"
+    },
+    "consultations": {
+      "summary": {
+        "totalConsultations": "Tổng lượt tư vấn",
+        "totalConsultationsDesc": "Toàn bộ phiên tư vấn trong hệ thống",
+        "consultationsInPeriod": "Lượt tư vấn trong kỳ",
+        "consultationsInPeriodDesc": "Phiên được tạo từ {{from}} đến {{to}}",
+        "completedInPeriod": "Phiên trong kỳ hiện đã hoàn thành",
+        "completedInPeriodDesc": "Tạo trong kỳ và hiện có trạng thái COMPLETED",
+        "cancelledInPeriod": "Phiên trong kỳ hiện đã hủy",
+        "cancelledInPeriodDesc": "Tạo trong kỳ và hiện có trạng thái CANCELLED",
+        "cohortTooltip": "Số phiên được tạo trong khoảng thời gian đã chọn và hiện có trạng thái tương ứng."
+      },
+      "trend": {
+        "title": "Xu hướng tạo phiên tư vấn",
+        "description": "Số lượng phiên tư vấn được tạo theo đơn vị thời gian đã chọn",
+        "countLabel": "Phiên tư vấn mới",
+        "empty": "Không có phiên tư vấn nào được tạo trong khoảng thời gian đã chọn."
+      },
+      "statusDistribution": {
+        "title": "Phân bố theo trạng thái phiên tư vấn",
+        "description": "Tỷ lệ trạng thái của các phiên tư vấn được tạo trong kỳ",
+        "empty": "Chưa có dữ liệu phiên tư vấn trong kỳ"
+      },
+      "statuses": {
+        "SCHEDULED": "Đã lên lịch",
+        "ACTIVE": "Đang diễn ra",
+        "COMPLETED": "Đã hoàn thành",
+        "CANCELLED": "Đã hủy"
+      }
+    },
+    "healthRecords": {
+      "summary": {
+        "totalRecords": "Tổng bản ghi",
+        "totalRecordsDesc": "Toàn bộ bản ghi sức khỏe trong hệ thống",
+        "recordsInPeriod": "Bản ghi trong kỳ",
+        "recordsInPeriodDesc": "Bản ghi được tạo từ {{from}} đến {{to}}",
+        "uniqueUsersInPeriod": "Người dùng có bản ghi",
+        "uniqueUsersInPeriodDesc": "Số người dùng khác nhau ghi nhận trong kỳ",
+        "afDetectedOrSuspectedInPeriod": "Phát hiện/nghi ngờ AF",
+        "afDetectedOrSuspectedInPeriodDesc": "Bản ghi có kết quả AFIB hoặc AFIB_SUSPECTED"
+      },
+      "trend": {
+        "title": "Xu hướng bản ghi sức khỏe",
+        "description": "Số lượng bản ghi được tạo theo đơn vị thời gian đã chọn",
+        "countLabel": "Bản ghi mới",
+        "empty": "Không có bản ghi nào được ghi nhận trong khoảng thời gian đã chọn.",
+        "tooltip": "Số bản ghi được tạo/ghi nhận trong từng khoảng thời gian."
+      },
+      "resultDistribution": {
+        "title": "Phân bố kết quả phân tích",
+        "description": "Tỷ lệ phân loại nhịp tim của các bản ghi đã hoàn tất xử lý",
+        "empty": "Chưa có bản ghi nào hoàn tất phân tích trong kỳ",
+        "tooltip": "Chỉ bao gồm bản ghi đã xử lý hoàn tất và có kết quả dự đoán.",
+        "results": {
+          "NORMAL": "Bình thường",
+          "AFIB": "Rung nhĩ",
+          "UNCERTAIN": "Chưa xác định",
+          "AFIB_SUSPECTED": "Nghi ngờ rung nhĩ"
+        }
+      },
+      "recordedHourDistribution": {
+        "title": "Khung giờ bản ghi được ghi nhận",
+        "description": "Phân bố thời điểm upload/tạo bản ghi trong 24 giờ",
+        "countLabel": "Bản ghi",
+        "empty": "Chưa có bản ghi nào trong kỳ",
+        "tooltip": "Khung giờ hệ thống ghi nhận bản ghi, không nhất thiết là thời điểm thực hiện phép đo."
+      }
+    },
+    "payments": {
+      "summary": {
+        "totalRevenue": "Tổng doanh thu",
+        "totalRevenueDesc": "Toàn thời gian (giao dịch PAID)",
+        "totalRevenueTooltip": "Tổng tiền từ các giao dịch PayOS đã thanh toán thành công.",
+        "revenueInPeriod": "Doanh thu trong kỳ",
+        "revenueInPeriodDesc": "Theo thời điểm thanh toán từ {{from}} đến {{to}}",
+        "revenueInPeriodTooltip": "Doanh thu được ghi nhận theo thời điểm thanh toán thành công.",
+        "totalTransactions": "Tổng giao dịch",
+        "totalTransactionsDesc": "Toàn bộ business transaction PayOS",
+        "totalTransactionsTooltip": "Tổng business transaction PayOS; retry mua lượt không bị tính thành giao dịch mới.",
+        "averagePaidValue": "Giá trị giao dịch trung bình",
+        "averagePaidValueDesc": "Trung bình các giao dịch PAID",
+        "averagePaidValueTooltip": "Giá trị trung bình trên các giao dịch thanh toán thành công toàn thời gian."
+      },
+      "revenueTrend": {
+        "title": "Xu hướng doanh thu",
+        "description": "Doanh thu thanh toán thành công theo đơn vị thời gian đã chọn",
+        "tooltip": "Doanh thu được ghi nhận theo thời điểm thanh toán thành công.",
+        "totalLabel": "Tổng doanh thu",
+        "directCareLabel": "Tư vấn trực tiếp",
+        "creditPurchaseLabel": "Mua lượt tư vấn",
+        "empty": "Không có doanh thu nào trong khoảng thời gian đã chọn."
+      },
+      "transactionTrend": {
+        "title": "Xu hướng số giao dịch",
+        "description": "Số lượng business transaction PayOS được tạo theo thời gian",
+        "tooltip": "Số giao dịch được tạo theo thời gian, gồm mọi trạng thái.",
+        "countLabel": "Giao dịch",
+        "empty": "Không có giao dịch nào được tạo trong khoảng thời gian đã chọn."
+      },
+      "revenueBySource": {
+        "title": "Nguồn doanh thu trong kỳ",
+        "description": "Tỷ lệ cơ cấu doanh thu theo nguồn thanh toán",
+        "empty": "Không có doanh thu trong kỳ",
+        "sources": {
+          "DIRECT_CARE": "Tư vấn trực tiếp",
+          "CREDIT_PURCHASE": "Mua lượt tư vấn"
+        }
+      },
+      "statusDistribution": {
+        "title": "Trạng thái giao dịch theo nguồn",
+        "description": "Phân bố trạng thái hiện tại của các giao dịch được tạo trong kỳ",
+        "tooltip": "Trạng thái hiện tại của các giao dịch được tạo trong khoảng đã chọn.",
+        "directCareTitle": "Thanh toán tư vấn trực tiếp",
+        "creditPurchaseTitle": "Đơn mua lượt tư vấn",
+        "emptyDirect": "Không có giao dịch tư vấn trực tiếp trong kỳ",
+        "emptyCredit": "Không có đơn mua lượt trong kỳ",
+        "directStatuses": {
+          "PENDING": "Chờ thanh toán",
+          "PAID": "Thành công",
+          "EXPIRED": "Hết hạn",
+          "CANCELLED": "Đã hủy",
+          "FAILED": "Thất bại",
+          "REQUIRES_REVIEW": "Cần kiểm tra"
+        },
+        "creditStatuses": {
+          "PENDING_PAYMENT": "Chờ thanh toán",
+          "PAID": "Thành công",
+          "CANCELLED": "Đã hủy",
+          "EXPIRED": "Hết hạn",
+          "REQUIRES_REVIEW": "Cần kiểm tra"
+        }
+      }
+    },
+    "error": {
+      "loadFailed": "Không thể tải dữ liệu thống kê. Vui lòng thử lại sau.",
+      "retry": "Thử lại"
+    }
   }
 }

@@ -31,7 +31,8 @@
       "admin-credit-operations": "Credit management",
       "health-records-management": "Patient health records",
       "nutrition-rules": "Nutrition rating thresholds",
-      "doctor-consultations": "Doctor sessions"
+      "doctor-consultations": "Doctor sessions",
+      "statistics": "Statistics"
     },
     "short": {
       "dashboard": "Overview",
@@ -47,7 +48,8 @@
       "admin-credit-operations": "Credits",
       "health-records-management": "Records",
       "nutrition-rules": "Nutrition",
-      "doctor-consultations": "Sessions"
+      "doctor-consultations": "Sessions",
+      "statistics": "Statistics"
     }
   },
   "topbar": {

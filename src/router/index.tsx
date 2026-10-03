@@ -28,6 +28,7 @@ const MemberDetailPage = lazy(() => import("@/pages/app/management/users/detail"
 const AdminCreditOperationsPage = lazy(() => import("@/pages/app/management/credit-operations"))
 const AdminHealthRecordsPage = lazy(() => import("@/pages/app/management/health-records"))
 const AdminNutritionRulesPage = lazy(() => import("@/pages/app/management/nutrition-rules"))
+const AdminStatisticsPage = lazy(() => import("@/pages/app/management/statistics"))
 const DoctorSessionsPage = lazy(() => import("@/pages/app/management/doctor-consultations"))
 const DoctorSessionWorkspacePage = lazy(() => import("@/pages/app/management/doctor-consultations/workspace"))
 
@@ -278,6 +279,34 @@ export const router = createBrowserRouter([
                 {wrap(<AdminHealthRecordsPage />)}
               </ProtectedRoute>
             ),
+          },
+          {
+            path: "statistics",
+            element: (
+              <ProtectedRoute allowedRoles={[USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN]} />
+            ),
+            children: [
+              {
+                index: true,
+                element: <Navigate to="/app/management/statistics/users" replace />,
+              },
+              {
+                path: "users",
+                element: wrap(<AdminStatisticsPage />),
+              },
+              {
+                path: "consultations",
+                element: wrap(<AdminStatisticsPage />),
+              },
+              {
+                path: "records",
+                element: wrap(<AdminStatisticsPage />),
+              },
+              {
+                path: "payments",
+                element: wrap(<AdminStatisticsPage />),
+              },
+            ],
           },
           {
             path: "needs-actions",
