@@ -24,7 +24,7 @@ export function getDefaultRouteForRole(role?: string | null): string {
     role === USER_ROLES.SUPER_ADMIN ||
     role === USER_ROLES.ADMIN
   ) {
-    return "/app/management"
+    return "/app/management/statistics/users"
   }
   return "/app/general/dashboard"
 }
