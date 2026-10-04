@@ -55,7 +55,7 @@ export function PaymentRevenueTrendChart({
 }: PaymentRevenueTrendChartProps) {
   const { t } = useTranslation("management")
 
-  const totalInPeriod = data.reduce((sum, item) => sum + item.totalVnd, 0)
+  const totalInPeriod = data.reduce((sum, item) => sum + item.creditPurchaseVnd, 0)
   const chartData = data.map((item) => ({
     ...item,
     formattedLabel: formatBucketLabel(
@@ -151,17 +151,9 @@ export function PaymentRevenueTrendChart({
                       <div className="font-semibold text-slate-800">
                         {item.formattedLabel}
                       </div>
-                      <div className="flex items-center justify-between gap-4 text-sky-600">
-                        <span>{t("statistics.payments.revenueTrend.directCareLabel")}:</span>
-                        <span className="font-semibold">{formatVnd(item.directCareVnd)}</span>
-                      </div>
-                      <div className="flex items-center justify-between gap-4 text-purple-600">
+                      <div className="flex items-center justify-between gap-4 text-purple-600 font-medium">
                         <span>{t("statistics.payments.revenueTrend.creditPurchaseLabel")}:</span>
-                        <span className="font-semibold">{formatVnd(item.creditPurchaseVnd)}</span>
-                      </div>
-                      <div className="pt-1.5 border-t border-slate-100 flex items-center justify-between gap-4 text-slate-900 font-bold">
-                        <span>{t("statistics.payments.revenueTrend.totalLabel")}:</span>
-                        <span className="text-emerald-600">{formatVnd(item.totalVnd)}</span>
+                        <span className="font-semibold text-slate-900">{formatVnd(item.creditPurchaseVnd)}</span>
                       </div>
                     </div>
                   )
@@ -172,20 +164,12 @@ export function PaymentRevenueTrendChart({
                 align="right"
                 wrapperStyle={{ paddingBottom: 10, fontSize: 12 }}
                 formatter={(val) => {
-                  if (val === "directCareVnd") return t("statistics.payments.revenueTrend.directCareLabel")
                   if (val === "creditPurchaseVnd") return t("statistics.payments.revenueTrend.creditPurchaseLabel")
                   return String(val)
                 }}
               />
               <Bar
-                dataKey="directCareVnd"
-                stackId="revenue"
-                fill="#0284c7"
-                radius={[0, 0, 0, 0]}
-              />
-              <Bar
                 dataKey="creditPurchaseVnd"
-                stackId="revenue"
                 fill="#8b5cf6"
                 radius={[4, 4, 0, 0]}
               />

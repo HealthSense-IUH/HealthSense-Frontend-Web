@@ -142,7 +142,6 @@ export function PaymentStatisticsTab() {
               data={statsData.revenueBySource || []}
             />
             <PaymentStatusDistributionChart
-              directCare={statsData.statusDistributionBySource?.directCare || []}
               creditPurchase={statsData.statusDistributionBySource?.creditPurchase || []}
             />
           </div>

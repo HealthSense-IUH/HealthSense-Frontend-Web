@@ -20,10 +20,12 @@ export function PaymentRevenueBySourceChart({
 }: PaymentRevenueBySourceChartProps) {
   const { t } = useTranslation("management")
 
-  const totalRevenue = data.reduce((sum, item) => sum + item.amountVnd, 0)
+  // Exclude DIRECT_CARE per user requirement
+  const filteredData = data.filter((item) => item.key !== "DIRECT_CARE")
+  const totalRevenue = filteredData.reduce((sum, item) => sum + item.amountVnd, 0)
 
   // Map source strictly by KEY
-  const chartData = data.map((item) => {
+  const chartData = filteredData.map((item) => {
     const label = t(`statistics.payments.revenueBySource.sources.${item.key}`, {
       defaultValue: item.key,
     })
