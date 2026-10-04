@@ -51,22 +51,15 @@ export const allNavigationGroups: NavigationGroup[] = [
     id: "management-main",
     items: [
       {
-        id: "management-overview",
-        href: "/app/management",
-        icon: LayoutDashboard,
+        id: "statistics",
+        href: "/app/management/statistics",
+        icon: BarChart3,
         allowedRoles: [USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN],
-        exact: true,
       },
       {
         id: "user-management",
         href: "/app/management/users",
         icon: Users,
-        allowedRoles: [USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN],
-      },
-      {
-        id: "statistics",
-        href: "/app/management/statistics/users",
-        icon: BarChart3,
         allowedRoles: [USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN],
       },
       {
