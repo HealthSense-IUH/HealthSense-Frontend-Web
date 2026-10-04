@@ -22,7 +22,6 @@ const PaymentResultPage = lazy(() => import("@/pages/app/general/payment-result"
 const CreditPaymentResultPage = lazy(() => import("@/pages/app/general/credits/payment-result"))
 const NutritionHomePage = lazy(() => import("@/pages/app/general/nutrition"))
 
-const ManagementPage = lazy(() => import("@/pages/app/management/hub"))
 const UserManagementPage = lazy(() => import("@/pages/app/management/users"))
 const MemberDetailPage = lazy(() => import("@/pages/app/management/users/detail"))
 const AdminCreditOperationsPage = lazy(() => import("@/pages/app/management/credit-operations"))
@@ -220,7 +219,7 @@ export const router = createBrowserRouter([
               <ProtectedRoute
                 allowedRoles={[USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN]}
               >
-                {wrap(<ManagementPage />)}
+                <Navigate to="/app/management/statistics/users" replace />
               </ProtectedRoute>
             ),
           },
