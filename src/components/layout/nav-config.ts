@@ -93,6 +93,12 @@ export const allNavigationGroups: NavigationGroup[] = [
         icon: Stethoscope,
         allowedRoles: [USER_ROLES.DOCTOR],
       },
+      {
+        id: "doctor-statistics",
+        href: "/app/doctor/statistics",
+        icon: BarChart3,
+        allowedRoles: [USER_ROLES.DOCTOR],
+      },
     ],
   },
 
@@ -106,6 +112,12 @@ export const allNavigationGroups: NavigationGroup[] = [
         icon: LayoutDashboard,
         allowedRoles: [USER_ROLES.MEMBER],
         exact: true,
+      },
+      {
+        id: "member-statistics",
+        href: "/app/general/statistics",
+        icon: BarChart3,
+        allowedRoles: [USER_ROLES.MEMBER],
       },
       {
         id: "reports",
