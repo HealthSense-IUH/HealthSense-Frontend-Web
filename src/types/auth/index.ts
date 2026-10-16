@@ -59,3 +59,8 @@ export type VerifyForgotPasswordOtpResponse = {
   expiresInSeconds: number
 }
 
+// Change password types
+export type ChangePasswordRequest = {
+  currentPassword: string
+  newPassword: string
+}

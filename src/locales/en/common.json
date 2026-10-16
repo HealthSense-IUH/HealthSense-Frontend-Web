@@ -58,6 +58,7 @@
   },
   "topbar": {
     "profile": "My profile",
+    "changePassword": "Change password",
     "logout": "Sign out",
     "openApp": "Open app"
   },

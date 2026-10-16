@@ -58,6 +58,7 @@
   },
   "topbar": {
     "profile": "Hồ sơ cá nhân",
+    "changePassword": "Đổi mật khẩu",
     "logout": "Đăng xuất",
     "openApp": "Vào ứng dụng"
   },

@@ -1,5 +1,6 @@
 import axiosClient from "@/lib/axiosClient"
 import type {
+  ChangePasswordRequest,
   CurrentUser,
   LoginRequest,
   LoginResponse,
@@ -32,6 +33,13 @@ export const authApi = {
   logout() {
     return axiosClient.post<ApiResponse<void>, ApiResponse<void>>(
       "/api/auth/logout"
+    )
+  },
+
+  changePassword(payload: ChangePasswordRequest) {
+    return axiosClient.post<ApiResponse<void>, ApiResponse<void>>(
+      "/api/auth/change-password",
+      payload
     )
   },
 
