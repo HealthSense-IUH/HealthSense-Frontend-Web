@@ -32,7 +32,9 @@
       "health-records-management": "Hồ sơ sức khỏe bệnh nhân",
       "nutrition-rules": "Ngưỡng đánh giá dinh dưỡng",
       "doctor-consultations": "Phiên khám Bác sĩ",
-      "statistics": "Thống kê"
+      "doctor-statistics": "Thống kê khám bệnh",
+      "statistics": "Thống kê",
+      "member-statistics": "Thống kê của tôi"
     },
     "short": {
       "dashboard": "Tổng quan",
@@ -49,7 +51,9 @@
       "health-records-management": "Hồ sơ bệnh",
       "nutrition-rules": "Dinh dưỡng",
       "doctor-consultations": "Phiên khám",
-      "statistics": "Thống kê"
+      "doctor-statistics": "Thống kê",
+      "statistics": "Thống kê",
+      "member-statistics": "Thống kê"
     }
   },
   "topbar": {

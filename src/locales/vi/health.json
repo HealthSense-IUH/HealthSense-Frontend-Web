@@ -474,5 +474,314 @@
       "avg": "Trung bình",
       "min": "Thấp nhất"
     }
+  },
+  "memberStatistics": {
+    "page": {
+      "title": "Thống kê của tôi",
+      "description": "Theo dõi chi tiết số liệu về các buổi tư vấn sức khỏe, thanh toán và dữ liệu sức khỏe cá nhân của bạn."
+    },
+    "tabs": {
+      "consultations": "Tư vấn",
+      "payments": "Lượt & Thanh toán",
+      "health": "Sức khỏe"
+    },
+    "comingSoon": {
+      "badge": "Đang triển khai",
+      "paymentsTitle": "Thống kê Lượt tư vấn & Thanh toán",
+      "paymentsDesc": "Phân hệ theo dõi số dư lượt khám, lịch sử nạp gói lượt và đối soát hóa đơn thanh toán cá nhân đang được phát triển.",
+      "healthTitle": "Thống kê Dữ liệu sức khỏe",
+      "healthDesc": "Phân hệ tổng hợp diễn tiến nhịp tim, dữ liệu AFib theo chu kỳ và xu hướng các chỉ số sinh hiệu đang được phát triển."
+    },
+    "filter": {
+      "presets": {
+        "7d": "7 ngày qua",
+        "30d": "30 ngày qua",
+        "90d": "90 ngày qua",
+        "custom": "Tùy chọn"
+      },
+      "from": "Từ ngày",
+      "to": "Đến ngày",
+      "groupBy": "Gom nhóm theo",
+      "groupByOptions": {
+        "DAY": "Ngày",
+        "WEEK": "Tuần",
+        "MONTH": "Tháng"
+      },
+      "refresh": "Làm mới dữ liệu",
+      "weekFrom": "Tuần từ {{date}}",
+      "rangeExceeded": "Khoảng thời gian không được vượt quá 366 ngày",
+      "rangeInvalid": "Ngày bắt đầu phải trước hoặc bằng ngày kết thúc"
+    },
+    "consultations": {
+      "summary": {
+        "totalConsultations": "Tổng số buổi tư vấn",
+        "totalConsultationsDesc": "Toàn bộ phiên tư vấn bạn đã tham gia",
+        "consultationsInPeriod": "Phiên tư vấn trong kỳ",
+        "consultationsInPeriodDesc": "Được tạo từ {{from}} đến {{to}}",
+        "completedInPeriod": "Hoàn thành trong kỳ",
+        "completedInPeriodDesc": "Tạo trong kỳ và hiện đã hoàn tất",
+        "cancelledInPeriod": "Đã hủy trong kỳ",
+        "cancelledInPeriodDesc": "Tạo trong kỳ và hiện đã hủy",
+        "cohortTooltip": "Số buổi tư vấn được tạo trong khoảng thời gian đã chọn và hiện có trạng thái tương ứng."
+      },
+      "trend": {
+        "title": "Xu hướng tư vấn theo thời gian",
+        "description": "Số lượng buổi tư vấn được tạo theo đơn vị thời gian đã chọn",
+        "countLabel": "Lượt tư vấn",
+        "empty": "Không có phiên tư vấn nào trong khoảng thời gian đã chọn."
+      },
+      "statusDistribution": {
+        "title": "Phân bố theo trạng thái",
+        "description": "Tỷ lệ trạng thái của các phiên tư vấn được tạo trong kỳ",
+        "empty": "Chưa có dữ liệu trạng thái"
+      },
+      "statuses": {
+        "SCHEDULED": "Đã lên lịch",
+        "ACTIVE": "Đang diễn ra",
+        "COMPLETED": "Đã hoàn thành",
+        "CANCELLED": "Đã hủy"
+      }
+    },
+    "payments": {
+      "summary": {
+        "paidInPeriod": "Đã thanh toán trong kỳ",
+        "paidInPeriodDesc": "Tổng số tiền các đơn đã thanh toán từ {{from}} đến {{to}}",
+        "totalPaid": "Tổng đã thanh toán trọn đời: {{amount}}",
+        "purchasedCreditsInPeriod": "Lượt tư vấn đã mua trong kỳ",
+        "purchasedCreditsInPeriodDesc": "Số lượt mua thành công từ {{from}} đến {{to}}",
+        "totalPurchasedCredits": "Tổng lượt mua trọn đời: {{count}} lượt",
+        "successfulOrdersInPeriod": "Đơn thanh toán thành công",
+        "successfulOrdersInPeriodDesc": "Giao dịch thành công từ {{from}} đến {{to}}",
+        "totalSuccessfulOrders": "Tổng đơn thành công trọn đời: {{count}} đơn",
+        "averagePaidOrderValue": "Giá trị trung bình mỗi đơn: {{amount}}",
+        "walletAvailable": "Lượt tư vấn khả dụng",
+        "walletAvailableDesc": "Số lượt bạn có thể sử dụng ngay hiện tại",
+        "walletDetails": "Tổng số dư: {{balance}} lượt • Đang giữ chỗ: {{reserved}} lượt",
+        "paidAtTooltip": "Thống kê này tính theo thời điểm thanh toán thành công (paidAt)."
+      },
+      "trend": {
+        "title": "Xu hướng thanh toán & mua lượt",
+        "description": "Số tiền đã thanh toán và lượt tư vấn mua thành công theo thời gian",
+        "paidVndLabel": "Tiền thanh toán",
+        "creditsLabel": "Lượt đã mua",
+        "ordersLabel": "Đơn thành công",
+        "empty": "Không có giao dịch thanh toán nào trong khoảng thời gian đã chọn."
+      },
+      "statusDistribution": {
+        "title": "Phân bố trạng thái đơn hàng",
+        "description": "Tỷ lệ trạng thái của các đơn mua lượt được tạo trong kỳ",
+        "empty": "Chưa có dữ liệu trạng thái đơn hàng",
+        "createdAtTooltip": "Thống kê trạng thái tính theo thời điểm tạo đơn (createdAt) trong khoảng thời gian đã chọn."
+      },
+      "statuses": {
+        "PENDING_PAYMENT": "Chờ thanh toán",
+        "PAID": "Đã thanh toán",
+        "CANCELLED": "Đã hủy",
+        "EXPIRED": "Hết hạn",
+        "REQUIRES_REVIEW": "Cần kiểm tra"
+      }
+    },
+    "health": {
+      "summary": {
+        "totalRecords": "Tổng số bản ghi ECG",
+        "totalRecordsDesc": "Toàn bộ bản ghi đo nhịp tim đã lưu trong hồ sơ",
+        "recordsInPeriod": "Bản ghi đo trong kỳ",
+        "recordsInPeriodDesc": "Bản ghi được tạo từ {{from}} đến {{to}}",
+        "completedInPeriod": "Đã phân tích hoàn tất",
+        "completedInPeriodDesc": "Bản ghi trong kỳ đã có kết luận phân tích",
+        "failedInPeriodWarning": "Có {{count}} bản ghi phân tích thất bại",
+        "afDetectedOrSuspectedInPeriod": "Có dấu hiệu loạn nhịp / AFib",
+        "afDetectedOrSuspectedInPeriodDesc": "Bản ghi trong kỳ có kết quả AFib hoặc Nghi ngờ AFib",
+        "latestRecordAt": "Bản ghi gần nhất: {{date}}",
+        "noRecordsYet": "Chưa có bản ghi nào",
+        "cohortTooltip": "Tính theo thời điểm tạo bản ghi (createdAt) trong khoảng thời gian đã chọn."
+      },
+      "trend": {
+        "title": "Xu hướng đo nhịp tim theo thời gian",
+        "description": "Số lượng bản ghi đo ECG được tạo theo đơn vị thời gian",
+        "countLabel": "Bản ghi",
+        "empty": "Không có bản ghi nào trong khoảng thời gian đã chọn."
+      },
+      "resultDistribution": {
+        "title": "Phân bố kết quả phân tích nhịp tim",
+        "description": "Tỷ lệ kết quả dự đoán từ các bản ghi đã phân tích hoàn tất trong kỳ",
+        "disclaimer": "Kết quả phân tích nhịp tim từ AI chỉ mang tính tham khảo và hỗ trợ sàng lọc, không thay thế chẩn đoán chuyên môn của bác sĩ.",
+        "empty": "Chưa có kết quả phân tích nào"
+      },
+      "statusDistribution": {
+        "title": "Phân bố trạng thái xử lý",
+        "description": "Tỷ lệ trạng thái xử lý dữ liệu của các bản ghi tạo trong kỳ",
+        "empty": "Chưa có dữ liệu trạng thái"
+      },
+      "hourDistribution": {
+        "title": "Thời điểm đo phổ biến trong ngày",
+        "description": "Phân bố 24 khung giờ đo lường phản ánh thói quen theo dõi sức khỏe của bạn",
+        "hourLabel": "{{hour}}:00",
+        "countLabel": "Bản ghi",
+        "empty": "Chưa có dữ liệu thời điểm đo"
+      },
+      "results": {
+        "NORMAL": "Bình thường",
+        "AFIB": "Rung nhĩ (AFib)",
+        "AFIB_SUSPECTED": "Nghi ngờ rung nhĩ",
+        "UNCERTAIN": "Chưa xác định"
+      },
+      "statuses": {
+        "PENDING_UPLOAD": "Chờ tải lên",
+        "PROCESSING": "Đang xử lý",
+        "COMPLETED": "Đã hoàn tất",
+        "FAILED": "Xử lý thất bại"
+      }
+    },
+    "error": {
+      "loadFailed": "Không thể tải dữ liệu thống kê. Vui lòng thử lại sau."
+    }
+  },
+  "doctorStatistics": {
+    "page": {
+      "title": "Thống kê khám & Bệnh nhân",
+      "description": "Theo dõi các chỉ số hiệu quả tư vấn và lịch sử khám bệnh của các bệnh nhân đã từng chăm sóc."
+    },
+    "tabs": {
+      "consultations": "Tư vấn",
+      "patients": "Bệnh nhân đã khám"
+    },
+    "filter": {
+      "presets": {
+        "7d": "7 ngày qua",
+        "30d": "30 ngày qua",
+        "90d": "90 ngày qua",
+        "custom": "Tùy chọn"
+      },
+      "from": "Từ ngày",
+      "to": "Đến ngày",
+      "refresh": "Làm mới dữ liệu",
+      "rangeExceeded": "Khoảng thời gian không được vượt quá 366 ngày",
+      "rangeInvalid": "Ngày bắt đầu phải trước hoặc bằng ngày kết thúc"
+    },
+    "consultations": {
+      "summary": {
+        "totalConsultations": "Tổng phiên toàn thời gian",
+        "totalConsultationsDesc": "Toàn bộ phiên tư vấn được giao cho bạn",
+        "consultationsInPeriod": "Phiên trong kỳ",
+        "consultationsInPeriodDesc": "Được tạo từ {{from}} đến {{to}}",
+        "scheduledInPeriod": "Đã lên lịch",
+        "scheduledInPeriodDesc": "Phiên tạo trong kỳ đang chờ tới lịch hẹn",
+        "activeInPeriod": "Đang diễn ra",
+        "activeInPeriodDesc": "Phiên tạo trong kỳ đang được tiến hành",
+        "completedInPeriod": "Đã hoàn thành",
+        "completedInPeriodDesc": "Phiên tạo trong kỳ đã hoàn tất khám",
+        "cancelledInPeriod": "Đã hủy",
+        "cancelledInPeriodDesc": "Phiên tạo trong kỳ đã bị hủy",
+        "completionRate": "Tỷ lệ hoàn thành",
+        "completionRateDesc": "Tỷ lệ phiên hoàn tất trên số phiên tạo trong kỳ",
+        "cancellationRate": "Tỷ lệ hủy",
+        "cancellationRateDesc": "Tỷ lệ phiên hủy trên số phiên tạo trong kỳ",
+        "cohortTooltip": "Số liệu phân loại theo ngày tạo phiên (createdAt) và trạng thái hiện tại trong kỳ."
+      },
+      "empty": "Không có phiên tư vấn trong khoảng thời gian đã chọn."
+    },
+    "patients": {
+      "summary": {
+        "totalPatients": "Tổng bệnh nhân đã khám",
+        "totalPatientsDesc": "Bệnh nhân từng có phiên tư vấn được kích hoạt",
+        "patientsInPeriod": "Bệnh nhân trong kỳ",
+        "patientsInPeriodDesc": "Có phiên được kích hoạt từ {{from}} đến {{to}}",
+        "newPatientsInPeriod": "Bệnh nhân mới",
+        "newPatientsInPeriodDesc": "Lần đầu kích hoạt phiên tư vấn với bạn trong kỳ",
+        "returningPatientsInPeriod": "Bệnh nhân quay lại",
+        "returningPatientsInPeriodDesc": "Đã từng khám trước kỳ và có phiên tái khám trong kỳ",
+        "averageConsultations": "Trung bình phiên / BN",
+        "averageConsultationsDesc": "Số phiên kích hoạt trung bình trên mỗi bệnh nhân trong kỳ",
+        "cohortTooltip": "Chỉ tính bệnh nhân có phiên tư vấn đã thực sự được kích hoạt (activatedAt khác null)."
+      },
+      "searchPlaceholder": "Tìm theo tên hoặc mã bệnh nhân...",
+      "table": {
+        "patient": "Bệnh nhân",
+        "memberId": "Mã bệnh nhân",
+        "totalSessions": "Tổng phiên",
+        "completedSessions": "Đã hoàn thành",
+        "firstConsultation": "Lần khám đầu",
+        "latestConsultation": "Lần khám gần nhất",
+        "latestStatus": "Trạng thái gần nhất",
+        "action": "Thao tác",
+        "viewDetail": "Xem chi tiết",
+        "empty": "Không tìm thấy bệnh nhân phù hợp.",
+        "pagination": "Trang {{page}} / {{totalPages}} • Tổng số {{total}} bệnh nhân"
+      }
+    },
+    "detail": {
+      "title": "Hồ sơ & Lịch sử bệnh nhân",
+      "personalInfo": "Thông tin bệnh nhân",
+      "phone": "Số điện thoại",
+      "email": "Email",
+      "gender": "Giới tính",
+      "dateOfBirth": "Ngày sinh",
+      "age": "{{age}} tuổi",
+      "address": "Địa chỉ",
+      "insurance": "Số thẻ BHYT",
+      "timezone": "Múi giờ",
+      "genderMale": "Nam",
+      "genderFemale": "Nữ",
+      "genderOther": "Khác",
+      "notProvided": "Chưa cập nhật",
+      "tabs": {
+        "consultations": "Lịch sử tư vấn",
+        "medicalHistory": "Bệnh án đã hoàn tất",
+        "healthRecords": "Hồ sơ đo chia sẻ"
+      },
+      "consultationsTab": {
+        "sessionId": "Mã phiên",
+        "status": "Trạng thái",
+        "createdAt": "Thời gian tạo",
+        "startedAt": "Bắt đầu lúc",
+        "activatedAt": "Kích hoạt lúc",
+        "completedAt": "Hoàn thành lúc",
+        "closureStatus": "Bệnh án",
+        "openWorkspace": "Vào phòng tư vấn",
+        "empty": "Chưa có phiên tư vấn nào với bệnh nhân này."
+      },
+      "medicalHistoryTab": {
+        "summary": "Tóm tắt buổi khám",
+        "observations": "Quan sát chuyên môn",
+        "recommendations": "Khuyến nghị điều trị & chế độ",
+        "followUp": "Đề xuất tái khám",
+        "finalizedAt": "Thời điểm hoàn tất",
+        "referencedRecords": "Bản ghi liên quan ({{count}})",
+        "sessionLabel": "Phiên #{{sessionId}}",
+        "empty": "Chưa có bệnh án đã hoàn tất."
+      },
+      "healthRecordsTab": {
+        "fileName": "Tên tệp",
+        "status": "Trạng thái xử lý",
+        "predictionLabel": "Kết luận nhịp tim",
+        "confidence": "Độ tin cậy",
+        "recordedAt": "Thời điểm đo",
+        "source": "Nguồn chia sẻ",
+        "authorizedAt": "Ủy quyền lúc",
+        "empty": "Bệnh nhân chưa chia sẻ hồ sơ đo nào trong các phiên tư vấn với bạn.",
+        "disclaimer": "Kết quả phân tích nhịp tim mang tính chất tham khảo kỹ thuật, không thay thế chẩn đoán chuyên môn của bác sĩ.",
+        "sources": {
+          "INITIAL_SHARED": "Chia sẻ khi đặt lịch",
+          "SHARED_DURING_CARE": "Chia sẻ trong phiên",
+          "CREATED_DURING_CARE": "Đo trong phiên"
+        }
+      },
+      "closureStatuses": {
+        "SUMMARY_PENDING": "Chờ hoàn tất bệnh án",
+        "SUMMARY_OVERDUE": "Bệnh án quá hạn",
+        "SUMMARY_FINALIZED": "Bệnh án đã hoàn tất",
+        "ESCALATED": "Đã chuyển xử lý"
+      },
+      "pageSummary": "Trang {{page}} / {{totalPages}}",
+      "errors": {
+        "accessDenied": "Bạn không có quyền truy cập thông tin bệnh nhân này.",
+        "loadFailed": "Không thể tải thông tin chi tiết. Vui lòng thử lại sau."
+      }
+    },
+    "error": {
+      "loadFailed": "Không thể tải dữ liệu thống kê. Vui lòng thử lại sau."
+    }
   }
 }
+

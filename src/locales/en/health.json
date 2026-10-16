@@ -474,5 +474,314 @@
       "avg": "Average",
       "min": "Minimum"
     }
+  },
+  "memberStatistics": {
+    "page": {
+      "title": "My Statistics",
+      "description": "Track detailed metrics on your health consultations, payments, and personal health trends."
+    },
+    "tabs": {
+      "consultations": "Consultations",
+      "payments": "Credits & Payments",
+      "health": "Health"
+    },
+    "comingSoon": {
+      "badge": "Under Development",
+      "paymentsTitle": "Credits & Payments Statistics",
+      "paymentsDesc": "Personal credit balance tracking, package purchase history, and payment invoice reconciliation are currently under development.",
+      "healthTitle": "Health Data Statistics",
+      "healthDesc": "Aggregated heart rate trends, cyclical AFib data, and vital metrics overview are currently under development."
+    },
+    "filter": {
+      "presets": {
+        "7d": "Last 7 days",
+        "30d": "Last 30 days",
+        "90d": "Last 90 days",
+        "custom": "Custom"
+      },
+      "from": "From date",
+      "to": "To date",
+      "groupBy": "Group by",
+      "groupByOptions": {
+        "DAY": "Day",
+        "WEEK": "Week",
+        "MONTH": "Month"
+      },
+      "refresh": "Refresh data",
+      "weekFrom": "Week of {{date}}",
+      "rangeExceeded": "Date range cannot exceed 366 days",
+      "rangeInvalid": "Start date must be before or equal to end date"
+    },
+    "consultations": {
+      "summary": {
+        "totalConsultations": "Total Consultations",
+        "totalConsultationsDesc": "All consultation sessions you have participated in",
+        "consultationsInPeriod": "Consultations in Period",
+        "consultationsInPeriodDesc": "Created from {{from}} to {{to}}",
+        "completedInPeriod": "Completed in Period",
+        "completedInPeriodDesc": "Created in period and currently completed",
+        "cancelledInPeriod": "Cancelled in Period",
+        "cancelledInPeriodDesc": "Created in period and currently cancelled",
+        "cohortTooltip": "Number of consultation sessions created in the selected period and currently in this status."
+      },
+      "trend": {
+        "title": "Consultation Trends Over Time",
+        "description": "Number of consultation sessions created by selected time unit",
+        "countLabel": "Consultations",
+        "empty": "No consultation sessions found in the selected period."
+      },
+      "statusDistribution": {
+        "title": "Status Distribution",
+        "description": "Status proportion of consultation sessions created in the period",
+        "empty": "No status data available"
+      },
+      "statuses": {
+        "SCHEDULED": "Scheduled",
+        "ACTIVE": "Active",
+        "COMPLETED": "Completed",
+        "CANCELLED": "Cancelled"
+      }
+    },
+    "payments": {
+      "summary": {
+        "paidInPeriod": "Paid in Period",
+        "paidInPeriodDesc": "Total amount of paid orders from {{from}} to {{to}}",
+        "totalPaid": "Lifetime total paid: {{amount}}",
+        "purchasedCreditsInPeriod": "Credits Purchased in Period",
+        "purchasedCreditsInPeriodDesc": "Credits successfully purchased from {{from}} to {{to}}",
+        "totalPurchasedCredits": "Lifetime total credits: {{count}} credits",
+        "successfulOrdersInPeriod": "Successful Orders",
+        "successfulOrdersInPeriodDesc": "Orders completed successfully from {{from}} to {{to}}",
+        "totalSuccessfulOrders": "Lifetime successful orders: {{count}} orders",
+        "averagePaidOrderValue": "Average order value: {{amount}}",
+        "walletAvailable": "Available Credits",
+        "walletAvailableDesc": "Credits you can use immediately",
+        "walletDetails": "Total balance: {{balance}} credits • Reserved: {{reserved}} credits",
+        "paidAtTooltip": "This metric is based on payment completion time (paidAt)."
+      },
+      "trend": {
+        "title": "Payment & Credit Purchase Trends",
+        "description": "Amount paid and credits purchased over selected time unit",
+        "paidVndLabel": "Amount Paid",
+        "creditsLabel": "Credits Purchased",
+        "ordersLabel": "Successful Orders",
+        "empty": "No payment transactions found in the selected period."
+      },
+      "statusDistribution": {
+        "title": "Order Status Distribution",
+        "description": "Proportion of order statuses for orders created in the period",
+        "empty": "No order status data available",
+        "createdAtTooltip": "Order status is based on creation time (createdAt) within the selected period."
+      },
+      "statuses": {
+        "PENDING_PAYMENT": "Pending Payment",
+        "PAID": "Paid",
+        "CANCELLED": "Cancelled",
+        "EXPIRED": "Expired",
+        "REQUIRES_REVIEW": "Requires Review"
+      }
+    },
+    "health": {
+      "summary": {
+        "totalRecords": "Total ECG Records",
+        "totalRecordsDesc": "All ECG measurement records saved in your profile",
+        "recordsInPeriod": "Records in Period",
+        "recordsInPeriodDesc": "Records created from {{from}} to {{to}}",
+        "completedInPeriod": "Successfully Analyzed",
+        "completedInPeriodDesc": "Records in period with completed analysis",
+        "failedInPeriodWarning": "{{count}} records failed to process",
+        "afDetectedOrSuspectedInPeriod": "Arrhythmia / AFib Signs",
+        "afDetectedOrSuspectedInPeriodDesc": "Records in period with AFib or Suspected AFib results",
+        "latestRecordAt": "Latest record: {{date}}",
+        "noRecordsYet": "No records yet",
+        "cohortTooltip": "Based on record creation time (createdAt) within the selected period."
+      },
+      "trend": {
+        "title": "ECG Measurements Over Time",
+        "description": "Number of ECG records created by selected time unit",
+        "countLabel": "Records",
+        "empty": "No records found in the selected period."
+      },
+      "resultDistribution": {
+        "title": "Analysis Result Distribution",
+        "description": "Distribution of prediction labels among completed records in the period",
+        "disclaimer": "AI health analysis results are intended for reference and screening assistance only, and do not replace professional doctor diagnosis.",
+        "empty": "No analysis results available"
+      },
+      "statusDistribution": {
+        "title": "Processing Status Distribution",
+        "description": "Distribution of record processing statuses created in the period",
+        "empty": "No status data available"
+      },
+      "hourDistribution": {
+        "title": "Measurement Times of Day",
+        "description": "24-hour distribution of measurement records showing your routine habits",
+        "hourLabel": "{{hour}}:00",
+        "countLabel": "Records",
+        "empty": "No measurement hour data"
+      },
+      "results": {
+        "NORMAL": "Normal",
+        "AFIB": "Atrial Fibrillation (AFib)",
+        "AFIB_SUSPECTED": "Suspected AFib",
+        "UNCERTAIN": "Inconclusive"
+      },
+      "statuses": {
+        "PENDING_UPLOAD": "Pending Upload",
+        "PROCESSING": "Processing",
+        "COMPLETED": "Completed",
+        "FAILED": "Failed"
+      }
+    },
+    "error": {
+      "loadFailed": "Failed to load statistics data. Please try again later."
+    }
+  },
+  "doctorStatistics": {
+    "page": {
+      "title": "Consultation & Patient Statistics",
+      "description": "Track consultation performance metrics and care history for patients under your medical attention."
+    },
+    "tabs": {
+      "consultations": "Consultations",
+      "patients": "Examined Patients"
+    },
+    "filter": {
+      "presets": {
+        "7d": "Last 7 days",
+        "30d": "Last 30 days",
+        "90d": "Last 90 days",
+        "custom": "Custom"
+      },
+      "from": "From",
+      "to": "To",
+      "refresh": "Refresh data",
+      "rangeExceeded": "Date range cannot exceed 366 days",
+      "rangeInvalid": "Start date must be before or equal to end date"
+    },
+    "consultations": {
+      "summary": {
+        "totalConsultations": "Lifetime Consultations",
+        "totalConsultationsDesc": "All consultation sessions assigned to you",
+        "consultationsInPeriod": "Sessions in Period",
+        "consultationsInPeriodDesc": "Created from {{from}} to {{to}}",
+        "scheduledInPeriod": "Scheduled",
+        "scheduledInPeriodDesc": "Sessions in period currently waiting for appointment",
+        "activeInPeriod": "In Progress",
+        "activeInPeriodDesc": "Sessions in period currently underway",
+        "completedInPeriod": "Completed",
+        "completedInPeriodDesc": "Sessions in period with completed consultation",
+        "cancelledInPeriod": "Cancelled",
+        "cancelledInPeriodDesc": "Sessions in period that were cancelled",
+        "completionRate": "Completion Rate",
+        "completionRateDesc": "Ratio of completed sessions to total created in period",
+        "cancellationRate": "Cancellation Rate",
+        "cancellationRateDesc": "Ratio of cancelled sessions to total created in period",
+        "cohortTooltip": "Cohort classification by creation date (createdAt) and current session status in period."
+      },
+      "empty": "No consultation sessions found in the selected period."
+    },
+    "patients": {
+      "summary": {
+        "totalPatients": "Total Examined Patients",
+        "totalPatientsDesc": "Patients who ever had an activated consultation with you",
+        "patientsInPeriod": "Patients in Period",
+        "patientsInPeriodDesc": "Had an activated session from {{from}} to {{to}}",
+        "newPatientsInPeriod": "New Patients",
+        "newPatientsInPeriodDesc": "First activated consultation with you occurred in this period",
+        "returningPatientsInPeriod": "Returning Patients",
+        "returningPatientsInPeriodDesc": "Examined before this period and had a revisit session in period",
+        "averageConsultations": "Avg Sessions / Patient",
+        "averageConsultationsDesc": "Average number of activated sessions per patient in period",
+        "cohortTooltip": "Only counts patients whose consultation sessions were genuinely activated (activatedAt not null)."
+      },
+      "searchPlaceholder": "Search by patient name or ID...",
+      "table": {
+        "patient": "Patient",
+        "memberId": "Patient ID",
+        "totalSessions": "Total Sessions",
+        "completedSessions": "Completed",
+        "firstConsultation": "First Visit",
+        "latestConsultation": "Latest Visit",
+        "latestStatus": "Latest Status",
+        "action": "Action",
+        "viewDetail": "View Details",
+        "empty": "No matching patients found.",
+        "pagination": "Page {{page}} / {{totalPages}} • Total {{total}} patients"
+      }
+    },
+    "detail": {
+      "title": "Patient Profile & History",
+      "personalInfo": "Patient Information",
+      "phone": "Phone Number",
+      "email": "Email",
+      "gender": "Gender",
+      "dateOfBirth": "Date of Birth",
+      "age": "{{age}} yrs",
+      "address": "Address",
+      "insurance": "Health Insurance No.",
+      "timezone": "Timezone",
+      "genderMale": "Male",
+      "genderFemale": "Female",
+      "genderOther": "Other",
+      "notProvided": "Not provided",
+      "tabs": {
+        "consultations": "Consultation History",
+        "medicalHistory": "Finalized Medical Records",
+        "healthRecords": "Shared Health Records"
+      },
+      "consultationsTab": {
+        "sessionId": "Session ID",
+        "status": "Status",
+        "createdAt": "Created At",
+        "startedAt": "Started At",
+        "activatedAt": "Activated At",
+        "completedAt": "Completed At",
+        "closureStatus": "Medical Record",
+        "openWorkspace": "Open Consultation Room",
+        "empty": "No consultation sessions with this patient."
+      },
+      "medicalHistoryTab": {
+        "summary": "Consultation Summary",
+        "observations": "Clinical Observations",
+        "recommendations": "Recommendations & Regimen",
+        "followUp": "Follow-up Recommendation",
+        "finalizedAt": "Finalized At",
+        "referencedRecords": "Referenced Records ({{count}})",
+        "sessionLabel": "Session #{{sessionId}}",
+        "empty": "No finalized medical records available."
+      },
+      "healthRecordsTab": {
+        "fileName": "File Name",
+        "status": "Processing Status",
+        "predictionLabel": "ECG Result",
+        "confidence": "Confidence",
+        "recordedAt": "Recorded At",
+        "source": "Authorization Source",
+        "authorizedAt": "Authorized At",
+        "empty": "The patient has not shared any health records in sessions with you.",
+        "disclaimer": "AI ECG analysis results are technical screening references and do not replace professional physician diagnosis.",
+        "sources": {
+          "INITIAL_SHARED": "Shared at booking",
+          "SHARED_DURING_CARE": "Shared during session",
+          "CREATED_DURING_CARE": "Recorded during session"
+        }
+      },
+      "closureStatuses": {
+        "SUMMARY_PENDING": "Summary pending",
+        "SUMMARY_OVERDUE": "Summary overdue",
+        "SUMMARY_FINALIZED": "Summary finalized",
+        "ESCALATED": "Escalated"
+      },
+      "pageSummary": "Page {{page}} of {{totalPages}}",
+      "errors": {
+        "accessDenied": "You do not have permission to access this patient's data.",
+        "loadFailed": "Failed to load patient details. Please try again."
+      }
+    },
+    "error": {
+      "loadFailed": "Failed to load statistics data. Please try again later."
+    }
   }
 }
+

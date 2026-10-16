@@ -32,7 +32,9 @@
       "health-records-management": "Patient health records",
       "nutrition-rules": "Nutrition rating thresholds",
       "doctor-consultations": "Doctor sessions",
-      "statistics": "Statistics"
+      "doctor-statistics": "Consultation Statistics",
+      "statistics": "Statistics",
+      "member-statistics": "My Statistics"
     },
     "short": {
       "dashboard": "Overview",
@@ -49,7 +51,9 @@
       "health-records-management": "Records",
       "nutrition-rules": "Nutrition",
       "doctor-consultations": "Sessions",
-      "statistics": "Statistics"
+      "doctor-statistics": "Statistics",
+      "statistics": "Statistics",
+      "member-statistics": "Statistics"
     }
   },
   "topbar": {
