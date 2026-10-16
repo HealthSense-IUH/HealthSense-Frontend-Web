@@ -1,5 +1,7 @@
 import type { UserRoleConst } from "@/constants/roles"
 import type { CreditOrderStatus } from "./credits"
+import type { FinalSummaryClosureStatus } from "./consultation"
+export type { CreditOrderStatus, FinalSummaryClosureStatus }
 
 export type StatisticsGroupBy = "DAY" | "WEEK" | "MONTH"
 
@@ -156,3 +158,190 @@ export interface PaymentStatisticsResponse {
   revenueBySource: PaymentRevenueBySourceItem[]
 }
 
+export interface MemberConsultationStatisticsParams {
+  from: string
+  to: string
+  groupBy?: StatisticsGroupBy
+  timezone?: string
+}
+
+export interface MemberConsultationStatisticsSummary {
+  totalConsultations: number
+  consultationsInPeriod: number
+  completedInPeriod: number
+  cancelledInPeriod: number
+}
+
+export interface MemberConsultationStatisticsResponse {
+  period: StatisticsPeriod
+  summary: MemberConsultationStatisticsSummary
+  consultationTrend: StatisticsCountBucket[]
+  byStatus: CategoryCount<StatisticsConsultationStatus>[]
+}
+
+export type MemberStatisticsParams = MemberConsultationStatisticsParams
+
+export interface MemberPaymentStatisticsSummary {
+  totalPaidVnd: number
+  paidInPeriodVnd: number
+  totalPurchasedCredits: number
+  purchasedCreditsInPeriod: number
+  totalSuccessfulOrders: number
+  successfulOrdersInPeriod: number
+  totalOrdersInPeriod: number
+  averagePaidOrderValueInPeriodVnd: number
+}
+
+export interface MemberWalletSummary {
+  balance: number
+  reserved: number
+  available: number
+}
+
+export interface MemberPaymentTrendBucket {
+  bucketStart: string
+  paidVnd: number
+  purchasedCredits: number
+  successfulOrders: number
+}
+
+export interface MemberPaymentStatisticsResponse {
+  period: StatisticsPeriod
+  summary: MemberPaymentStatisticsSummary
+  wallet: MemberWalletSummary
+  paymentTrend: MemberPaymentTrendBucket[]
+  orderStatusDistribution: CategoryCount<CreditOrderStatus>[]
+}
+
+export type MemberRecordStatus = "PENDING_UPLOAD" | "PROCESSING" | "COMPLETED" | "FAILED"
+
+export interface MemberHealthRecordStatisticsSummary {
+  totalRecords: number
+  recordsInPeriod: number
+  completedInPeriod: number
+  failedInPeriod: number
+  afDetectedOrSuspectedInPeriod: number
+  latestRecordAt: string | null
+}
+
+export interface MemberHealthRecordStatisticsResponse {
+  period: StatisticsPeriod
+  summary: MemberHealthRecordStatisticsSummary
+  recordTrend: StatisticsCountBucket[]
+  resultDistribution: CategoryCount<StatisticsPredictionLabel>[]
+  statusDistribution: CategoryCount<MemberRecordStatus>[]
+  recordedHourDistribution: HourCount[]
+}
+
+// -------------------------------------------------------------
+// Doctor Consultation & Patient Statistics Types
+// -------------------------------------------------------------
+
+export interface DoctorStatisticsRangeParams {
+  from: string
+  to: string
+}
+
+export interface DoctorStatisticsPeriod {
+  from: string
+  to: string
+}
+
+export interface DoctorConsultationStatisticsSummary {
+  totalConsultations: number
+  consultationsInPeriod: number
+  scheduledInPeriod: number
+  activeInPeriod: number
+  completedInPeriod: number
+  cancelledInPeriod: number
+  completionRate: number
+  cancellationRate: number
+}
+
+export interface DoctorConsultationStatisticsResponse {
+  period: DoctorStatisticsPeriod
+  summary: DoctorConsultationStatisticsSummary
+}
+
+export interface DoctorPatientStatisticsSummary {
+  totalPatients: number
+  patientsInPeriod: number
+  newPatientsInPeriod: number
+  returningPatientsInPeriod: number
+  averageConsultationsPerPatientInPeriod: number
+}
+
+export interface DoctorPatientStatisticsResponse {
+  period: DoctorStatisticsPeriod
+  summary: DoctorPatientStatisticsSummary
+}
+
+export interface DoctorPatientListParams extends DoctorStatisticsRangeParams {
+  keyword?: string
+  page?: number
+  size?: number
+}
+
+export interface DoctorPatientListItem {
+  memberId: string
+  displayName: string
+  avatarUrl: string | null
+  totalConsultations: number
+  completedConsultations: number
+  firstConsultationAt: string
+  latestConsultationAt: string
+  latestConsultationStatus: StatisticsConsultationStatus
+}
+
+export interface DoctorPatientDetail {
+  memberId: string
+  email: string
+  displayName: string
+  phone: string | null
+  dateOfBirth: string | null
+  gender: string | null
+  avatarUrl: string | null
+  address: string | null
+  timezone: string | null
+  healthInsuranceNumber: string | null
+}
+
+export interface DoctorPatientConsultation {
+  sessionId: string
+  status: StatisticsConsultationStatus
+  createdAt: string
+  startedAt: string | null
+  activatedAt: string
+  endsAt: string
+  completedAt: string | null
+  summaryClosureStatus: FinalSummaryClosureStatus | null
+}
+
+export interface DoctorPatientMedicalHistory {
+  summaryId: string
+  sessionId: string
+  summary: string | null
+  observations: string | null
+  recommendations: string | null
+  followUpRecommendation: string | null
+  finalizedAt: string
+  referencedHealthRecordIds: string[]
+}
+
+export type EpisodeHealthRecordAuthorizationSource =
+  | "INITIAL_SHARED"
+  | "SHARED_DURING_CARE"
+  | "CREATED_DURING_CARE"
+
+export interface DoctorPatientHealthRecord {
+  recordId: string
+  sessionId: string
+  fileName: string
+  fileSize: number | null
+  status: MemberRecordStatus
+  predictionLabel: StatisticsPredictionLabel | null
+  confidence: number | null
+  recordedAt: string
+  authorizationSource: EpisodeHealthRecordAuthorizationSource
+  authorizedAt: string
+}

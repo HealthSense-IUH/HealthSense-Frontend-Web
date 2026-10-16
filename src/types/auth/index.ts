@@ -50,15 +50,12 @@ export type ResetPasswordRequest = {
 }
 
 export type ForgotPasswordOtpResponse = {
-  email?: string
-  expiresInSeconds?: number
-  message?: string
+  message: string
 }
 
 export type VerifyForgotPasswordOtpResponse = {
-  resetToken?: string
-  token?: string
-  passwordResetToken?: string
-  expiresInSeconds?: number
-  message?: string
+  resetToken: string
+  tokenType: "Bearer"
+  expiresInSeconds: number
 }
+
