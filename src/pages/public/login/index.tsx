@@ -54,7 +54,7 @@ export default function LoginPage() {
   const redirectTo = state?.from?.pathname ?? "/app/general/dashboard"
 
   // Login form state
-  const [loginEmail, setLoginEmail] = useState(state?.email || "")
+  const [loginEmail, setLoginEmail] = useState(state?.email || searchParams.get("email") || "")
   const [loginPassword, setLoginPassword] = useState("")
   const [showLoginPassword, setShowLoginPassword] = useState(false)
 
@@ -72,13 +72,16 @@ export default function LoginPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   useEffect(() => {
+    const queryEmail = searchParams.get("email")
     if (state?.email) {
       setLoginEmail(state.email)
+    } else if (queryEmail) {
+      setLoginEmail(queryEmail)
     }
     if (state?.successMessage) {
       setSuccessMessage(state.successMessage)
     }
-  }, [state])
+  }, [state, searchParams])
 
   const handleSwitchMode = (newMode: AuthMode) => {
     setErrorMessage("")

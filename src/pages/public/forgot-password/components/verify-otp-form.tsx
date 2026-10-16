@@ -1,5 +1,14 @@
-import { useState, type FormEvent } from "react"
-import { KeyRound, ArrowRight, ArrowLeft, RefreshCw, AlertCircle, CheckCircle2, Loader2 } from "lucide-react"
+import { useState, useEffect, type FormEvent } from "react"
+import {
+  KeyRound,
+  ArrowRight,
+  ArrowLeft,
+  RefreshCw,
+  AlertCircle,
+  CheckCircle2,
+  Loader2,
+  Clock,
+} from "lucide-react"
 import { Trans, useTranslation } from "react-i18next"
 
 import { Button } from "@/components/ui/button"
@@ -13,6 +22,12 @@ interface VerifyOtpFormProps {
   onBack: () => void
 }
 
+function formatMinutesSeconds(totalSeconds: number): string {
+  const m = Math.floor(totalSeconds / 60)
+  const s = totalSeconds % 60
+  return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`
+}
+
 export function VerifyOtpForm({ email, onSuccess, onBack }: VerifyOtpFormProps) {
   const { t } = useTranslation("auth")
   const [otp, setOtp] = useState("")
@@ -21,10 +36,29 @@ export function VerifyOtpForm({ email, onSuccess, onBack }: VerifyOtpFormProps) 
   const [errorMessage, setErrorMessage] = useState("")
   const [successMessage, setSuccessMessage] = useState("")
 
+  // UX Countdown timers: 5 minutes (300s) validity & 60s resend cooldown
+  const [otpSecondsLeft, setOtpSecondsLeft] = useState(300)
+  const [resendCooldown, setResendCooldown] = useState(60)
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setOtpSecondsLeft((prev) => (prev > 0 ? prev - 1 : 0))
+      setResendCooldown((prev) => (prev > 0 ? prev - 1 : 0))
+    }, 1000)
+    return () => clearInterval(timer)
+  }, [])
+
+  const isExpired = otpSecondsLeft === 0
+
   async function handleVerifySubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setErrorMessage("")
     setSuccessMessage("")
+
+    if (isExpired) {
+      setErrorMessage(t("forgotPassword.verify.otpExpired"))
+      return
+    }
 
     const cleanOtp = otp.trim()
     if (!/^\d{6}$/.test(cleanOtp)) {
@@ -35,11 +69,7 @@ export function VerifyOtpForm({ email, onSuccess, onBack }: VerifyOtpFormProps) 
     setIsSubmitting(true)
     try {
       const response = await forgotPasswordApi.verifyOtp({ email, otp: cleanOtp })
-      // Handle possible field names defensively
-      const resetToken =
-        response.data?.resetToken ??
-        response.data?.token ??
-        response.data?.passwordResetToken
+      const resetToken = response.data?.resetToken
 
       if (!resetToken) {
         setErrorMessage(t("forgotPassword.verify.noResetToken"))
@@ -63,7 +93,11 @@ export function VerifyOtpForm({ email, onSuccess, onBack }: VerifyOtpFormProps) 
     setIsResending(true)
     try {
       await forgotPasswordApi.requestOtp({ email })
-      setSuccessMessage(t("forgotPassword.verify.resent"))
+      // When resending succeeds: clear entered OTP, reset 5-minute timer & 60s cooldown
+      setOtp("")
+      setOtpSecondsLeft(300)
+      setResendCooldown(60)
+      setSuccessMessage(t("forgotPassword.verify.resendNotice"))
     } catch (error: unknown) {
       const anyErr = error as { response?: { data?: { message?: string } }; message?: string }
       setErrorMessage(
@@ -89,6 +123,18 @@ export function VerifyOtpForm({ email, onSuccess, onBack }: VerifyOtpFormProps) 
             components={{ email: <span className="text-slate-800 font-bold underline decoration-slate-300" /> }}
           />
         </p>
+
+        {/* 5-minute validity timer */}
+        <div className="mt-2.5 flex items-center gap-1.5 text-xs font-semibold">
+          <Clock className={`w-3.5 h-3.5 ${isExpired ? "text-danger-600" : "text-slate-400"}`} />
+          {isExpired ? (
+            <span className="text-danger-600">{t("forgotPassword.verify.otpExpired")}</span>
+          ) : (
+            <span className="text-slate-600">
+              {t("forgotPassword.verify.expiresIn", { time: formatMinutesSeconds(otpSecondsLeft) })}
+            </span>
+          )}
+        </div>
       </div>
 
       <form onSubmit={handleVerifySubmit} className="flex flex-col gap-4 w-full">
@@ -131,7 +177,7 @@ export function VerifyOtpForm({ email, onSuccess, onBack }: VerifyOtpFormProps) 
 
         <Button
           type="submit"
-          disabled={isSubmitting || otp.length < 6}
+          disabled={isSubmitting || otp.length < 6 || isExpired}
           className="w-full rounded-xl h-11 mt-1 text-sm font-bold bg-primary hover:bg-primary/90 text-primary-foreground shadow-md shadow-primary/20 hover:shadow-lg hover:shadow-primary/30 transition-all duration-200 cursor-pointer flex items-center justify-center gap-2"
         >
           {isSubmitting ? (
@@ -162,11 +208,17 @@ export function VerifyOtpForm({ email, onSuccess, onBack }: VerifyOtpFormProps) 
         <button
           type="button"
           onClick={handleResendCode}
-          disabled={isResending || isSubmitting}
+          disabled={isResending || isSubmitting || resendCooldown > 0}
           className="flex items-center gap-1.5 text-xs font-bold text-primary hover:text-primary/80 transition-colors py-1.5 px-3 rounded-full hover:bg-primary/5 cursor-pointer disabled:opacity-50"
         >
           <RefreshCw className={`w-3.5 h-3.5 ${isResending ? "animate-spin text-slate-400" : ""}`} />
-          <span>{isResending ? t("forgotPassword.verify.resending") : t("forgotPassword.verify.resend")}</span>
+          <span>
+            {isResending
+              ? t("forgotPassword.verify.resending")
+              : resendCooldown > 0
+              ? t("forgotPassword.verify.resendCooldown", { seconds: resendCooldown })
+              : t("forgotPassword.verify.resend")}
+          </span>
         </button>
       </div>
     </div>

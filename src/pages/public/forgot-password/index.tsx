@@ -29,7 +29,7 @@ export default function ForgotPasswordPage() {
   // Derive active step safely without side-effect setState cascades:
   let activeStep = step
   if (step === "verify" && !email) activeStep = "request"
-  if ((step === "reset" || step === "success") && !resetToken) activeStep = "request"
+  if (step === "reset" && !resetToken) activeStep = "request"
 
   // Security & Route sync: if accessing verify or reset without in-memory state, return to request route
   useEffect(() => {
@@ -37,7 +37,7 @@ export default function ForgotPasswordPage() {
       if (location.pathname !== "/forgot-password") navigate("/forgot-password", { replace: true })
       return
     }
-    if ((location.pathname === "/reset-password" || step === "reset" || step === "success") && !resetToken) {
+    if ((location.pathname === "/reset-password" || step === "reset") && !resetToken && step !== "success") {
       if (location.pathname !== "/forgot-password") navigate("/forgot-password", { replace: true })
       return
     }
@@ -61,7 +61,14 @@ export default function ForgotPasswordPage() {
     navigate("/forgot-password", { replace: true })
   }
 
+  const handleTokenExpired = () => {
+    setResetToken("")
+    setStep("request")
+    navigate("/forgot-password", { replace: true })
+  }
+
   const handleResetComplete = () => {
+    setResetToken("") // Clear sensitive token immediately upon completion
     setStep("success")
     // Keep URL on /reset-password for success state
   }
@@ -123,7 +130,9 @@ export default function ForgotPasswordPage() {
           {(activeStep === "reset" || activeStep === "success") && (
             <ResetPasswordForm
               resetToken={resetToken}
+              email={email}
               onComplete={handleResetComplete}
+              onTokenExpired={handleTokenExpired}
               isCompleted={activeStep === "success"}
             />
           )}

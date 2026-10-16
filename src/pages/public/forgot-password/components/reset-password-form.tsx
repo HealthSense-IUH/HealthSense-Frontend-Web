@@ -12,9 +12,17 @@ interface ResetPasswordFormProps {
   resetToken: string
   onComplete: () => void
   isCompleted: boolean
+  email?: string
+  onTokenExpired?: () => void
 }
 
-export function ResetPasswordForm({ resetToken, onComplete, isCompleted }: ResetPasswordFormProps) {
+export function ResetPasswordForm({
+  resetToken,
+  onComplete,
+  isCompleted,
+  email,
+  onTokenExpired,
+}: ResetPasswordFormProps) {
   const { t } = useTranslation("auth")
   const navigate = useNavigate()
   const [newPassword, setNewPassword] = useState("")
@@ -54,10 +62,27 @@ export function ResetPasswordForm({ resetToken, onComplete, isCompleted }: Reset
       await forgotPasswordApi.resetPassword({ resetToken, newPassword })
       onComplete()
     } catch (error: unknown) {
-      const anyErr = error as { response?: { data?: { message?: string } }; message?: string }
-      setErrorMessage(
-        anyErr?.response?.data?.message || anyErr?.message || t("forgotPassword.reset.resetFailed")
-      )
+      const anyErr = error as {
+        response?: {
+          status?: number
+          data?: { code?: number; message?: string }
+        }
+        message?: string
+      }
+      const status = anyErr?.response?.status
+      const code = anyErr?.response?.data?.code
+      const backendMsg = anyErr?.response?.data?.message
+
+      // Handle expired or invalid reset token (401 / code 1007)
+      if (status === 401 || code === 1007) {
+        setErrorMessage(backendMsg || t("forgotPassword.reset.tokenExpired"))
+        setTimeout(() => {
+          onTokenExpired?.()
+        }, 2000)
+        return
+      }
+
+      setErrorMessage(backendMsg || anyErr?.message || t("forgotPassword.reset.resetFailed"))
     } finally {
       setIsSubmitting(false)
     }
@@ -81,7 +106,10 @@ export function ResetPasswordForm({ resetToken, onComplete, isCompleted }: Reset
         <div className="w-full mt-2">
           <Button
             type="button"
-            onClick={() => navigate("/login", { replace: true })}
+            onClick={() => {
+              const loginUrl = email ? `/login?email=${encodeURIComponent(email)}` : "/login"
+              navigate(loginUrl, { replace: true, state: { email } })
+            }}
             className="w-full rounded-xl h-11 font-bold text-sm bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all duration-200 cursor-pointer flex items-center justify-center gap-2"
           >
             <LogIn className="w-4 h-4" />
