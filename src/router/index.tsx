@@ -21,6 +21,7 @@ const MemberSessionWorkspacePage = lazy(() => import("@/pages/app/general/consul
 const PaymentResultPage = lazy(() => import("@/pages/app/general/payment-result"))
 const CreditPaymentResultPage = lazy(() => import("@/pages/app/general/credits/payment-result"))
 const NutritionHomePage = lazy(() => import("@/pages/app/general/nutrition"))
+const MemberStatisticsPage = lazy(() => import("@/pages/app/general/statistics"))
 
 const UserManagementPage = lazy(() => import("@/pages/app/management/users"))
 const MemberDetailPage = lazy(() => import("@/pages/app/management/users/detail"))
@@ -30,6 +31,7 @@ const AdminNutritionRulesPage = lazy(() => import("@/pages/app/management/nutrit
 const AdminStatisticsPage = lazy(() => import("@/pages/app/management/statistics"))
 const DoctorSessionsPage = lazy(() => import("@/pages/app/management/doctor-consultations"))
 const DoctorSessionWorkspacePage = lazy(() => import("@/pages/app/management/doctor-consultations/workspace"))
+const DoctorStatisticsPage = lazy(() => import("@/pages/app/doctor/statistics"))
 
 const LandingPage = lazy(() => import("@/pages/public/landing"))
 const LoginPage = lazy(() => import("@/pages/public/login"))
@@ -119,6 +121,30 @@ export const router = createBrowserRouter([
                 {wrap(<DashboardPage />)}
               </ProtectedRoute>
             ),
+          },
+          {
+            path: "statistics",
+            element: (
+              <ProtectedRoute allowedRoles={[USER_ROLES.MEMBER]} />
+            ),
+            children: [
+              {
+                index: true,
+                element: <Navigate to="/app/general/statistics/consultations" replace />,
+              },
+              {
+                path: "consultations",
+                element: wrap(<MemberStatisticsPage />),
+              },
+              {
+                path: "payments",
+                element: wrap(<MemberStatisticsPage />),
+              },
+              {
+                path: "health",
+                element: wrap(<MemberStatisticsPage />),
+              },
+            ],
           },
           {
             path: "afib-history",
@@ -328,6 +354,42 @@ export const router = createBrowserRouter([
               {
                 path: ":sessionId",
                 element: wrap(<DoctorSessionWorkspacePage />),
+              },
+            ],
+          },
+          {
+            path: "doctor/statistics",
+            element: <Navigate to="/app/doctor/statistics" replace />,
+          },
+          {
+            path: "doctor/statistics/*",
+            element: <Navigate to="/app/doctor/statistics" replace />,
+          },
+        ],
+      },
+
+      // ----- PHÂN HỆ BÁC SĨ (DOCTOR) -----
+      {
+        path: "doctor",
+        element: (
+          <ProtectedRoute allowedRoles={[USER_ROLES.DOCTOR]} />
+        ),
+        children: [
+          { index: true, element: <Navigate to="/app/doctor/statistics" replace /> },
+          {
+            path: "statistics",
+            children: [
+              {
+                index: true,
+                element: <Navigate to="/app/doctor/statistics/consultations" replace />,
+              },
+              {
+                path: "consultations",
+                element: wrap(<DoctorStatisticsPage />),
+              },
+              {
+                path: "patients",
+                element: wrap(<DoctorStatisticsPage />),
               },
             ],
           },
