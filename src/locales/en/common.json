@@ -34,7 +34,8 @@
       "doctor-consultations": "Doctor sessions",
       "doctor-statistics": "Consultation Statistics",
       "statistics": "Statistics",
-      "member-statistics": "My Statistics"
+      "member-statistics": "My Statistics",
+      "knowledge": "Knowledge base"
     },
     "short": {
       "dashboard": "Overview",
@@ -53,7 +54,8 @@
       "doctor-consultations": "Sessions",
       "doctor-statistics": "Statistics",
       "statistics": "Statistics",
-      "member-statistics": "Statistics"
+      "member-statistics": "Statistics",
+      "knowledge": "Knowledge"
     }
   },
   "topbar": {
@@ -129,5 +131,10 @@
     "CARE_COORDINATOR": "Coordinator",
     "DOCTOR": "Doctor",
     "MEMBER": "Member"
+  },
+  "areaSwitch": {
+    "label": "Switch area",
+    "general": "Personal",
+    "management": "Management"
   }
 }

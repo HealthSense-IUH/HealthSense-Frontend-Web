@@ -34,7 +34,8 @@
       "doctor-consultations": "Phiên khám Bác sĩ",
       "doctor-statistics": "Thống kê khám bệnh",
       "statistics": "Thống kê",
-      "member-statistics": "Thống kê của tôi"
+      "member-statistics": "Thống kê của tôi",
+      "knowledge": "Kho tri thức"
     },
     "short": {
       "dashboard": "Tổng quan",
@@ -53,7 +54,8 @@
       "doctor-consultations": "Phiên khám",
       "doctor-statistics": "Thống kê",
       "statistics": "Thống kê",
-      "member-statistics": "Thống kê"
+      "member-statistics": "Thống kê",
+      "knowledge": "Tri thức"
     }
   },
   "topbar": {
@@ -129,5 +131,10 @@
     "CARE_COORDINATOR": "Điều phối",
     "DOCTOR": "Bác sĩ",
     "MEMBER": "Hội viên"
+  },
+  "areaSwitch": {
+    "label": "Chuyển phân hệ",
+    "general": "Cá nhân",
+    "management": "Quản trị"
   }
 }

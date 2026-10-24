@@ -16,6 +16,18 @@ export function roleLabel(role?: string | null): string {
   return i18n.t(`common:roles.${role}`, { defaultValue: role })
 }
 
+/** Trang mặc định của phân hệ Cá nhân (/app/general) theo vai trò; staff cũng có vài trang ở đây. */
+export function getDefaultGeneralRouteForRole(role?: string | null): string {
+  if (role === USER_ROLES.DOCTOR) return "/app/general/nutrition"
+  if (role === USER_ROLES.SUPER_ADMIN || role === USER_ROLES.ADMIN) return "/app/general/consultations"
+  return "/app/general/dashboard"
+}
+
+/** Vai trò có phân hệ Quản trị (được chuyển qua lại giữa /app/general và /app/management). */
+export function hasManagementArea(role?: string | null): boolean {
+  return role === USER_ROLES.SUPER_ADMIN || role === USER_ROLES.ADMIN || role === USER_ROLES.DOCTOR
+}
+
 export function getDefaultRouteForRole(role?: string | null): string {
   if (role === USER_ROLES.DOCTOR) {
     return "/app/management/doctor/consultations"

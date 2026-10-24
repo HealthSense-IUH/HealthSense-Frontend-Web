@@ -1,0 +1,68 @@
+{
+  "title": "Kho tri thức",
+  "description": "Tài liệu hướng dẫn, chính sách và kiến thức y khoa để trợ lý Cara tra cứu khi trả lời",
+  "summary": {
+    "total": "Tổng tài liệu",
+    "ready": "Sẵn sàng",
+    "processing": "Đang xử lý",
+    "failed": "Lỗi"
+  },
+  "search": {
+    "placeholder": "Tìm theo tiêu đề hoặc tên file…",
+    "button": "Tìm"
+  },
+  "upload": {
+    "button": "Tải tài liệu lên",
+    "title": "Tải tài liệu lên",
+    "description": "Hỗ trợ PDF, DOCX, TXT, MD, HTML, CSV, XLSX, PPTX; tối đa 20 MB. Tài liệu được tách đoạn và embedding trên máy chủ, mất vài phút với file lớn.",
+    "fileLabel": "File",
+    "titleLabel": "Tiêu đề (tuỳ chọn)",
+    "titlePlaceholder": "Mặc định lấy theo tên file",
+    "submit": "Tải lên",
+    "uploading": "Đang tải lên…",
+    "cancel": "Huỷ",
+    "success": "Đã tải lên, đang chờ xử lý",
+    "failed": "Tải lên thất bại",
+    "fileRequired": "Hãy chọn một file",
+    "tooLarge": "File vượt quá 20 MB"
+  },
+  "table": {
+    "title": "Tiêu đề",
+    "file": "File",
+    "size": "Kích thước",
+    "status": "Trạng thái",
+    "chunks": "Số đoạn",
+    "updated": "Cập nhật",
+    "actions": "Thao tác",
+    "empty": "Chưa có tài liệu nào. Tải tài liệu lên để Cara tra cứu được.",
+    "loading": "Đang tải…",
+    "reingest": "Ingest lại",
+    "delete": "Xoá"
+  },
+  "status": {
+    "PENDING": "Chờ xử lý",
+    "PROCESSING": "Đang xử lý",
+    "READY": "Sẵn sàng",
+    "FAILED": "Lỗi"
+  },
+  "delete": {
+    "title": "Xoá tài liệu?",
+    "description": "Tài liệu \"{{title}}\" sẽ bị xoá khỏi kho và trợ lý không tra cứu được nữa.",
+    "confirm": "Xoá",
+    "cancel": "Huỷ",
+    "success": "Đã xoá tài liệu",
+    "failed": "Xoá thất bại"
+  },
+  "reingest": {
+    "success": "Đã yêu cầu ingest lại",
+    "failed": "Không gửi được yêu cầu ingest lại"
+  },
+  "pagination": {
+    "info": "Trang {{page}}/{{totalPages}} · {{total}} tài liệu",
+    "previous": "Trước",
+    "next": "Sau"
+  },
+  "errors": {
+    "load": "Không tải được danh sách tài liệu"
+  }
+}

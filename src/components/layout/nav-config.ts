@@ -1,6 +1,7 @@
 import {
   Activity,
   BarChart3,
+  BookOpen,
   Coins,
   FileText,
   HeartPulse,
@@ -78,6 +79,12 @@ export const allNavigationGroups: NavigationGroup[] = [
         id: "nutrition-rules",
         href: "/app/management/nutrition-rules",
         icon: SlidersHorizontal,
+        allowedRoles: [USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN],
+      },
+      {
+        id: "knowledge",
+        href: "/app/management/knowledge",
+        icon: BookOpen,
         allowedRoles: [USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN],
       },
     ],
@@ -189,6 +196,11 @@ export const managementNavigationGroups = allNavigationGroups
  * Xác định pathname có thuộc phân hệ Quản trị (Management) hay không.
  */
 export function isManagementPath(pathname: string): boolean {
-  return pathname.startsWith("/app/management")
+  return pathname.startsWith("/app/management") || pathname.startsWith("/app/doctor")
+}
+
+/** Nhóm điều hướng thuộc phân hệ Quản trị (id bắt đầu bằng management- hoặc doctor-); các nhóm còn lại thuộc phân hệ Cá nhân. */
+export function isManagementGroup(groupId: string): boolean {
+  return groupId.startsWith("management-") || groupId.startsWith("doctor-")
 }
 

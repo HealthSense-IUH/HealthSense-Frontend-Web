@@ -11,6 +11,7 @@
   "send": "Send",
   "stop": "Stop",
   "thinking": "Cara is answering…",
+  "thinkingSlow": "Cara is reading your data, one moment…",
   "welcome": "Hi! I'm Cara, the HealthSense assistant. I can read your own data to answer, for example:",
   "suggestions": {
     "latest": "How was my latest measurement?",

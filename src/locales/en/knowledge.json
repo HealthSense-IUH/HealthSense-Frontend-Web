@@ -1,0 +1,68 @@
+{
+  "title": "Knowledge base",
+  "description": "Guides, policies and medical references the Cara assistant looks up when answering",
+  "summary": {
+    "total": "Documents",
+    "ready": "Ready",
+    "processing": "Processing",
+    "failed": "Failed"
+  },
+  "search": {
+    "placeholder": "Search by title or file name…",
+    "button": "Search"
+  },
+  "upload": {
+    "button": "Upload document",
+    "title": "Upload document",
+    "description": "PDF, DOCX, TXT, MD, HTML, CSV, XLSX, PPTX up to 20 MB. The server splits and embeds the document; large files take a few minutes.",
+    "fileLabel": "File",
+    "titleLabel": "Title (optional)",
+    "titlePlaceholder": "Defaults to the file name",
+    "submit": "Upload",
+    "uploading": "Uploading…",
+    "cancel": "Cancel",
+    "success": "Uploaded, waiting to be processed",
+    "failed": "Upload failed",
+    "fileRequired": "Please choose a file",
+    "tooLarge": "File exceeds 20 MB"
+  },
+  "table": {
+    "title": "Title",
+    "file": "File",
+    "size": "Size",
+    "status": "Status",
+    "chunks": "Chunks",
+    "updated": "Updated",
+    "actions": "Actions",
+    "empty": "No documents yet. Upload one so Cara can look it up.",
+    "loading": "Loading…",
+    "reingest": "Re-ingest",
+    "delete": "Delete"
+  },
+  "status": {
+    "PENDING": "Pending",
+    "PROCESSING": "Processing",
+    "READY": "Ready",
+    "FAILED": "Failed"
+  },
+  "delete": {
+    "title": "Delete document?",
+    "description": "\"{{title}}\" will be removed from the knowledge base and the assistant will no longer use it.",
+    "confirm": "Delete",
+    "cancel": "Cancel",
+    "success": "Document deleted",
+    "failed": "Delete failed"
+  },
+  "reingest": {
+    "success": "Re-ingest requested",
+    "failed": "Could not request re-ingest"
+  },
+  "pagination": {
+    "info": "Page {{page}}/{{totalPages}} · {{total}} documents",
+    "previous": "Previous",
+    "next": "Next"
+  },
+  "errors": {
+    "load": "Could not load documents"
+  }
+}

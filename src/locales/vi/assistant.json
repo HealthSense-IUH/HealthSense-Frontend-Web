@@ -11,6 +11,7 @@
   "send": "Gửi",
   "stop": "Dừng",
   "thinking": "Cara đang trả lời…",
+  "thinkingSlow": "Cara đang đọc dữ liệu của bạn, chờ chút…",
   "welcome": "Xin chào! Mình là Cara, trợ lý của HealthSense. Mình có thể đọc dữ liệu của chính bạn để trả lời, ví dụ:",
   "suggestions": {
     "latest": "Lần đo gần nhất của tôi thế nào?",

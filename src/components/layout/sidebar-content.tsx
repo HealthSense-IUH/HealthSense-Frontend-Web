@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom"
-import { allNavigationGroups, type NavigationItem } from "./nav-config"
+import { allNavigationGroups, isManagementGroup, isManagementPath, type NavigationItem } from "./nav-config"
 import { useAppShell } from "./app-shell-context"
 import { useNavLabel } from "./use-nav-label"
 import {
@@ -14,7 +14,9 @@ export function SidebarContent() {
   const { effectiveRole } = useAppShell()
   const { itemLabel, itemShortLabel } = useNavLabel()
 
-  const currentGroups = allNavigationGroups
+  // Staff có cả hai phân hệ: chỉ hiện nhóm của phân hệ đang đứng, chuyển phân hệ bằng nút trên topbar
+  const inManagement = isManagementPath(location.pathname)
+  const currentGroups = allNavigationGroups.filter((group) => isManagementGroup(group.id) === inManagement)
 
   function isItemActive(item: NavigationItem): boolean {
     if (item.exact) {

@@ -7,7 +7,7 @@ import { LazyElement } from "@/components/custom/LazyElement"
 import { GuestOnlyRoute } from "@/pages/commons/GuestOnlyRoute"
 import { ProtectedRoute } from "@/pages/commons/ProtectedRoute"
 
-import { USER_ROLES, getDefaultRouteForRole } from "@/constants"
+import { USER_ROLES, getDefaultGeneralRouteForRole, getDefaultRouteForRole } from "@/constants"
 import { useAuthStore } from "@/stores/auth-store"
 
 const AppLayout = lazy(() => import("@/pages/app/app-layout"))
@@ -28,6 +28,7 @@ const MemberDetailPage = lazy(() => import("@/pages/app/management/users/detail"
 const AdminCreditOperationsPage = lazy(() => import("@/pages/app/management/credit-operations"))
 const AdminHealthRecordsPage = lazy(() => import("@/pages/app/management/health-records"))
 const AdminNutritionRulesPage = lazy(() => import("@/pages/app/management/nutrition-rules"))
+const KnowledgeManagementPage = lazy(() => import("@/pages/app/management/knowledge"))
 const AdminStatisticsPage = lazy(() => import("@/pages/app/management/statistics"))
 const DoctorSessionsPage = lazy(() => import("@/pages/app/management/doctor-consultations"))
 const DoctorSessionWorkspacePage = lazy(() => import("@/pages/app/management/doctor-consultations/workspace"))
@@ -47,6 +48,12 @@ function RedirectPreserveQuery({ to }: { to: string }) {
 function AppRoleHomeRedirect() {
   const userSession = useAuthStore((state) => state.userSession)
   return <Navigate to={getDefaultRouteForRole(userSession?.role)} replace />
+}
+
+/** /app/general: vào trang mặc định của phân hệ Cá nhân (staff cũng có trang ở đây, không đá về Quản trị). */
+function AppGeneralHomeRedirect() {
+  const userSession = useAuthStore((state) => state.userSession)
+  return <Navigate to={getDefaultGeneralRouteForRole(userSession?.role)} replace />
 }
 
 const wrap = (node: React.ReactNode) => <LazyElement>{node}</LazyElement>
@@ -113,7 +120,7 @@ export const router = createBrowserRouter([
       {
         path: "general",
         children: [
-          { index: true, element: <AppRoleHomeRedirect /> },
+          { index: true, element: <AppGeneralHomeRedirect /> },
           {
             path: "dashboard",
             element: (
@@ -294,6 +301,14 @@ export const router = createBrowserRouter([
             element: (
               <ProtectedRoute allowedRoles={[USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN]}>
                 {wrap(<AdminNutritionRulesPage />)}
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "knowledge",
+            element: (
+              <ProtectedRoute allowedRoles={[USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN]}>
+                {wrap(<KnowledgeManagementPage />)}
               </ProtectedRoute>
             ),
           },
