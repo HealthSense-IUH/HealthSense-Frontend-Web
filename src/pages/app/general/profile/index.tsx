@@ -150,11 +150,11 @@ export default function ProfilePage() {
         {/* Loading Skeleton */}
         {loading && !user && (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 animate-pulse">
-            <div className="lg:col-span-4 h-96 rounded-2xl bg-slate-100 border border-slate-200/60 flex flex-col items-center justify-center p-6 text-slate-400">
+            <div className="lg:col-span-4 h-96 rounded-2xl bg-muted border border-border/60 flex flex-col items-center justify-center p-6 text-muted-foreground/70">
               <Loader2 className="w-8 h-8 animate-spin mb-3 text-primary-600" />
-              <span className="text-xs font-bold text-slate-600">{t("page.loading")}</span>
+              <span className="text-xs font-bold text-muted-foreground">{t("page.loading")}</span>
             </div>
-            <div className="lg:col-span-8 h-96 rounded-2xl bg-slate-100 border border-slate-200/60" />
+            <div className="lg:col-span-8 h-96 rounded-2xl bg-muted border border-border/60" />
           </div>
         )}
 
@@ -162,8 +162,8 @@ export default function ProfilePage() {
         {error && !loading && !user && (
           <div className="p-6 rounded-2xl bg-danger-50/80 border border-danger-200 text-center max-w-lg mx-auto my-8">
             <AlertCircle className="w-10 h-10 text-danger-600 mx-auto mb-3" />
-            <h3 className="text-base font-black text-slate-900">{t("page.loadErrorTitle")}</h3>
-            <p className="text-xs font-medium text-slate-600 max-w-sm mx-auto mt-1 mb-5 leading-relaxed">
+            <h3 className="text-base font-black text-foreground">{t("page.loadErrorTitle")}</h3>
+            <p className="text-xs font-medium text-muted-foreground max-w-sm mx-auto mt-1 mb-5 leading-relaxed">
               {error}
             </p>
             <Button
@@ -180,14 +180,14 @@ export default function ProfilePage() {
         {!loading && user && (
           <div className="w-full space-y-6">
             {user.role === USER_ROLES.DOCTOR && (
-              <div className="bg-white border border-slate-200/80 rounded-2xl p-5 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div className="bg-white border border-border rounded-2xl p-5 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div className="flex items-start sm:items-center gap-3.5">
                   <div className="h-11 w-11 rounded-xl bg-primary-50 border border-primary-100 flex items-center justify-center text-primary-600 shrink-0">
                     <Stethoscope className="w-5 h-5" />
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <h3 className="text-sm font-bold text-slate-800">
+                      <h3 className="text-sm font-bold text-foreground">
                         {t("doctor.title")}
                       </h3>
                       {careProfile ? (
@@ -200,7 +200,7 @@ export default function ProfilePage() {
                         </span>
                       )}
                     </div>
-                    <p className="text-xs text-slate-500 mt-0.5">
+                    <p className="text-xs text-muted-foreground mt-0.5">
                       {careProfile
                         ? t("doctor.summary", {
                             specialty: careProfile.specialty,

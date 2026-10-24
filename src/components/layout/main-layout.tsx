@@ -1,4 +1,5 @@
 import { Outlet } from "react-router-dom"
+import { AssistantWidget } from "@/components/assistant/assistant-widget"
 import { AppSidebar } from "./app-sidebar"
 import { Topbar } from "./topbar"
 import { AppShellProvider } from "./app-shell-provider"
@@ -18,6 +19,8 @@ function AppShellInner() {
           <Outlet />
         </main>
       </div>
+      {/* Trợ lý AI nổi ở góc phải dưới, có trên mọi trang trong app */}
+      <AssistantWidget />
     </div>
   )
 }

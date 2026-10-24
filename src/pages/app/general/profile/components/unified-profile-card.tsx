@@ -56,13 +56,13 @@ function StatusBadge({ status }: { status?: ProfileAccountStatus }) {
       case "PENDING_VERIFY":
         return { bg: "bg-warning-50 text-warning-700 border-warning-200", dot: "bg-warning-500", label: t("status.PENDING_VERIFY") }
       case "INACTIVE":
-        return { bg: "bg-slate-100 text-slate-600 border-slate-200", dot: "bg-slate-400", label: t("status.INACTIVE") }
+        return { bg: "bg-muted text-muted-foreground border-border", dot: "bg-slate-400", label: t("status.INACTIVE") }
       case "LOCKED":
         return { bg: "bg-danger-50 text-danger-700 border-danger-200", dot: "bg-danger-500", label: t("status.LOCKED") }
       case "BANNED":
         return { bg: "bg-primary-50 text-primary-700 border-primary-200", dot: "bg-primary-600", label: t("status.BANNED") }
       default:
-        return { bg: "bg-slate-100 text-slate-700 border-slate-200", dot: "bg-slate-500", label: status === "ACTIVE" ? t("status.ACTIVE") : (status || t("status.ACTIVE")) }
+        return { bg: "bg-muted text-foreground/80 border-border", dot: "bg-muted/300", label: status === "ACTIVE" ? t("status.ACTIVE") : (status || t("status.ACTIVE")) }
     }
   }
 
@@ -340,9 +340,9 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
   }
 
   return (
-    <div className="rounded-2xl border border-slate-200/80 bg-white shadow-sm overflow-hidden">
+    <div className="rounded-2xl border border-border bg-card shadow-sm overflow-hidden">
       {/* Top Banner & Header Section */}
-      <div className="bg-gradient-to-r from-primary-500/10 via-primary-500/5 to-slate-50/80 p-6 border-b border-slate-100">
+      <div className="bg-muted/30 p-6 border-b border-border">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
           <div className="flex items-center gap-5">
             {/* Interactive Avatar */}
@@ -388,11 +388,11 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                 </span>
                 <StatusBadge status={user.status} />
               </div>
-              <h2 className="text-2xl sm:text-3xl font-black text-slate-900 truncate tracking-tight">
+              <h2 className="text-2xl sm:text-3xl font-black text-foreground truncate tracking-tight">
                 {currentDisplayName}
               </h2>
-              <p className="text-sm font-mono font-medium text-slate-500 flex items-center gap-1.5">
-                <Mail className="w-4 h-4 text-slate-400 shrink-0" />
+              <p className="text-sm font-mono font-medium text-muted-foreground flex items-center gap-1.5">
+                <Mail className="w-4 h-4 text-muted-foreground/70 shrink-0" />
                 <span className="truncate">{user.email || t("card.noEmail")}</span>
               </p>
             </div>
@@ -404,7 +404,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
               <Button
                 type="button"
                 onClick={() => setIsEditing(true)}
-                className="h-10 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-xs px-5 shadow-sm flex items-center gap-2 cursor-pointer transition-transform active:scale-95"
+                className="h-10 rounded-xl font-extrabold text-xs px-5 shadow-sm flex items-center gap-2 cursor-pointer transition-transform active:scale-95"
               >
                 <Edit2 className="w-4 h-4" />
                 <span>{t("card.edit")}</span>
@@ -440,57 +440,57 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
           <div className="space-y-8">
             {/* Personal Information */}
             <div>
-              <h3 className="text-sm font-extrabold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
-                <UserIcon className="w-4 h-4 text-slate-400" />
+              <h3 className="text-sm font-extrabold text-muted-foreground/70 uppercase tracking-wider mb-4 flex items-center gap-2">
+                <UserIcon className="w-4 h-4 text-muted-foreground/70" />
                 <span>{t("view.personalTitle")}</span>
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="p-4 rounded-2xl bg-slate-50/70 border border-slate-100/80 flex flex-col gap-1">
-                  <span className="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-                    <Phone className="w-3.5 h-3.5 text-slate-400" />
+                <div className="p-4 rounded-2xl bg-muted/30/70 border border-border/60/80 flex flex-col gap-1">
+                  <span className="text-[11px] font-extrabold text-muted-foreground/70 uppercase tracking-wider flex items-center gap-1.5">
+                    <Phone className="w-3.5 h-3.5 text-muted-foreground/70" />
                     <span>{t("fields.phone")}</span>
                   </span>
-                  <span className="text-sm font-bold font-mono text-slate-800 pl-5">
-                    {user.phone || <span className="text-slate-400 font-sans font-normal italic">{t("card.notUpdated")}</span>}
+                  <span className="text-sm font-bold font-mono text-foreground pl-5">
+                    {user.phone || <span className="text-muted-foreground/70 font-sans font-normal italic">{t("card.notUpdated")}</span>}
                   </span>
                 </div>
 
-                <div className="p-4 rounded-2xl bg-slate-50/70 border border-slate-100/80 flex flex-col gap-1">
-                  <span className="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-                    <Calendar className="w-3.5 h-3.5 text-slate-400" />
+                <div className="p-4 rounded-2xl bg-muted/30/70 border border-border/60/80 flex flex-col gap-1">
+                  <span className="text-[11px] font-extrabold text-muted-foreground/70 uppercase tracking-wider flex items-center gap-1.5">
+                    <Calendar className="w-3.5 h-3.5 text-muted-foreground/70" />
                     <span>{t("fields.dateOfBirth")}</span>
                   </span>
-                  <span className="text-sm font-bold font-mono text-slate-800 pl-5">
-                    {user.dateOfBirth || <span className="text-slate-400 font-sans font-normal italic">{t("card.notUpdated")}</span>}
+                  <span className="text-sm font-bold font-mono text-foreground pl-5">
+                    {user.dateOfBirth || <span className="text-muted-foreground/70 font-sans font-normal italic">{t("card.notUpdated")}</span>}
                   </span>
                 </div>
 
-                <div className="p-4 rounded-2xl bg-slate-50/70 border border-slate-100/80 flex flex-col gap-1">
-                  <span className="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-                    <UserIcon className="w-3.5 h-3.5 text-slate-400" />
+                <div className="p-4 rounded-2xl bg-muted/30/70 border border-border/60/80 flex flex-col gap-1">
+                  <span className="text-[11px] font-extrabold text-muted-foreground/70 uppercase tracking-wider flex items-center gap-1.5">
+                    <UserIcon className="w-3.5 h-3.5 text-muted-foreground/70" />
                     <span>{t("fields.gender")}</span>
                   </span>
-                  <span className="text-sm font-bold text-slate-800 pl-5">
-                    {user.gender ? (user.gender === "MALE" ? t("gender.MALE") : user.gender === "FEMALE" ? t("gender.FEMALE") : t("gender.OTHER")) : <span className="text-slate-400 font-normal italic">{t("card.notSpecified")}</span>}
+                  <span className="text-sm font-bold text-foreground pl-5">
+                    {user.gender ? (user.gender === "MALE" ? t("gender.MALE") : user.gender === "FEMALE" ? t("gender.FEMALE") : t("gender.OTHER")) : <span className="text-muted-foreground/70 font-normal italic">{t("card.notSpecified")}</span>}
                   </span>
                 </div>
 
-                <div className="p-4 rounded-2xl bg-slate-50/70 border border-slate-100/80 flex flex-col gap-1">
-                  <span className="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-                    <MapPin className="w-3.5 h-3.5 text-slate-400" />
+                <div className="p-4 rounded-2xl bg-muted/30/70 border border-border/60/80 flex flex-col gap-1">
+                  <span className="text-[11px] font-extrabold text-muted-foreground/70 uppercase tracking-wider flex items-center gap-1.5">
+                    <MapPin className="w-3.5 h-3.5 text-muted-foreground/70" />
                     <span>{t("fields.address")}</span>
                   </span>
-                  <span className="text-sm font-semibold text-slate-800 pl-5 leading-relaxed">
-                    {user.address || <span className="text-slate-400 font-normal italic">{t("card.noAddress")}</span>}
+                  <span className="text-sm font-semibold text-foreground pl-5 leading-relaxed">
+                    {user.address || <span className="text-muted-foreground/70 font-normal italic">{t("card.noAddress")}</span>}
                   </span>
                 </div>
               </div>
             </div>
 
             {/* Identification & Sensitive Information */}
-            <div className="pt-6 border-t border-slate-100">
+            <div className="pt-6 border-t border-border/60">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-sm font-extrabold text-slate-400 uppercase tracking-wider flex items-center gap-2">
+                <h3 className="text-sm font-extrabold text-muted-foreground/70 uppercase tracking-wider flex items-center gap-2">
                   <CreditCard className="w-4 h-4 text-primary-500" />
                   <span>{t("view.identityTitle")}</span>
                 </h3>
@@ -514,44 +514,44 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                <div className="p-4 rounded-2xl bg-primary-50/40 border border-primary-100/60 flex flex-col gap-1">
+                <div className="p-4 rounded-2xl bg-muted/40 border border-border flex flex-col gap-1">
                   <span className="text-[11px] font-extrabold text-primary-500 uppercase tracking-wider flex items-center gap-1.5">
                     <CreditCard className="w-3.5 h-3.5 text-primary-500" />
                     <span>{t("view.citizenId")}</span>
                   </span>
-                  <span className="text-sm font-bold font-mono text-slate-800 pl-5">
+                  <span className="text-sm font-bold font-mono text-foreground pl-5">
                     {user.citizenId ? (
                       showSensitive ? user.citizenId : maskSensitiveText(user.citizenId)
                     ) : (
-                      <span className="text-slate-400 font-sans font-normal italic">{t("card.notUpdated")}</span>
+                      <span className="text-muted-foreground/70 font-sans font-normal italic">{t("card.notUpdated")}</span>
                     )}
                   </span>
                 </div>
 
-                <div className="p-4 rounded-2xl bg-primary-50/40 border border-primary-100/60 flex flex-col gap-1">
+                <div className="p-4 rounded-2xl bg-muted/40 border border-border flex flex-col gap-1">
                   <span className="text-[11px] font-extrabold text-primary-500 uppercase tracking-wider flex items-center gap-1.5">
                     <Building2 className="w-3.5 h-3.5 text-primary-500" />
                     <span>{t("fields.bankAccount")}</span>
                   </span>
-                  <span className="text-sm font-bold font-mono text-slate-800 pl-5">
+                  <span className="text-sm font-bold font-mono text-foreground pl-5">
                     {user.bankAccount ? (
                       showSensitive ? user.bankAccount : maskSensitiveText(user.bankAccount)
                     ) : (
-                      <span className="text-slate-400 font-sans font-normal italic">{t("card.notUpdated")}</span>
+                      <span className="text-muted-foreground/70 font-sans font-normal italic">{t("card.notUpdated")}</span>
                     )}
                   </span>
                 </div>
 
-                <div className="p-4 rounded-2xl bg-primary-50/40 border border-primary-100/60 flex flex-col gap-1">
+                <div className="p-4 rounded-2xl bg-muted/40 border border-border flex flex-col gap-1">
                   <span className="text-[11px] font-extrabold text-primary-500 uppercase tracking-wider flex items-center gap-1.5">
                     <HeartHandshake className="w-3.5 h-3.5 text-primary-500" />
                     <span>{t("fields.healthInsurance")}</span>
                   </span>
-                  <span className="text-sm font-bold font-mono text-slate-800 pl-5">
+                  <span className="text-sm font-bold font-mono text-foreground pl-5">
                     {user.healthInsuranceNumber ? (
                       showSensitive ? user.healthInsuranceNumber : maskSensitiveText(user.healthInsuranceNumber)
                     ) : (
-                      <span className="text-slate-400 font-sans font-normal italic">{t("card.notUpdated")}</span>
+                      <span className="text-muted-foreground/70 font-sans font-normal italic">{t("card.notUpdated")}</span>
                     )}
                   </span>
                 </div>
@@ -560,9 +560,9 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
               {/* CCCD Image Preview Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 {/* Front CCCD Card */}
-                <div className="rounded-2xl border border-slate-200/80 bg-slate-50/40 p-4 flex flex-col items-center">
+                <div className="rounded-2xl border border-border bg-muted/30/40 p-4 flex flex-col items-center">
                   <div className="w-full flex items-center justify-between mb-3">
-                    <span className="text-xs font-extrabold text-slate-700 flex items-center gap-1.5">
+                    <span className="text-xs font-extrabold text-foreground/80 flex items-center gap-1.5">
                       <FileCheck className="w-4 h-4 text-success-600" />
                       <span>{t("cccd.front")}</span>
                     </span>
@@ -584,7 +584,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                     )}
                   </div>
                   {user.identityCardFrontUrl ? (
-                    <div className="w-full h-44 rounded-xl overflow-hidden bg-slate-900/5 flex items-center justify-center p-2 border border-slate-200">
+                    <div className="w-full h-44 rounded-xl overflow-hidden bg-muted/50 flex items-center justify-center p-2 border border-border">
                       <img
                         src={user.identityCardFrontUrl}
                         alt={t("cccd.front")}
@@ -596,17 +596,17 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                       />
                     </div>
                   ) : (
-                    <div className="w-full h-44 rounded-xl border-2 border-dashed border-slate-200 bg-white flex flex-col items-center justify-center text-slate-400 gap-2">
-                      <CreditCard className="w-8 h-8 text-slate-300" />
+                    <div className="w-full h-44 rounded-xl border-2 border-dashed border-border bg-white flex flex-col items-center justify-center text-muted-foreground/70 gap-2">
+                      <CreditCard className="w-8 h-8 text-muted-foreground/50" />
                       <span className="text-xs font-semibold">{t("cccd.frontNotUploaded")}</span>
                     </div>
                   )}
                 </div>
 
                 {/* Back CCCD Card */}
-                <div className="rounded-2xl border border-slate-200/80 bg-slate-50/40 p-4 flex flex-col items-center">
+                <div className="rounded-2xl border border-border bg-muted/30/40 p-4 flex flex-col items-center">
                   <div className="w-full flex items-center justify-between mb-3">
-                    <span className="text-xs font-extrabold text-slate-700 flex items-center gap-1.5">
+                    <span className="text-xs font-extrabold text-foreground/80 flex items-center gap-1.5">
                       <FileCheck className="w-4 h-4 text-success-600" />
                       <span>{t("cccd.back")}</span>
                     </span>
@@ -628,7 +628,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                     )}
                   </div>
                   {user.identityCardBackUrl ? (
-                    <div className="w-full h-44 rounded-xl overflow-hidden bg-slate-900/5 flex items-center justify-center p-2 border border-slate-200">
+                    <div className="w-full h-44 rounded-xl overflow-hidden bg-muted/50 flex items-center justify-center p-2 border border-border">
                       <img
                         src={user.identityCardBackUrl}
                         alt={t("cccd.back")}
@@ -640,8 +640,8 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                       />
                     </div>
                   ) : (
-                    <div className="w-full h-44 rounded-xl border-2 border-dashed border-slate-200 bg-white flex flex-col items-center justify-center text-slate-400 gap-2">
-                      <CreditCard className="w-8 h-8 text-slate-300" />
+                    <div className="w-full h-44 rounded-xl border-2 border-dashed border-border bg-white flex flex-col items-center justify-center text-muted-foreground/70 gap-2">
+                      <CreditCard className="w-8 h-8 text-muted-foreground/50" />
                       <span className="text-xs font-semibold">{t("cccd.backNotUploaded")}</span>
                     </div>
                   )}
@@ -650,26 +650,26 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
             </div>
 
             {/* System Security & Timestamps */}
-            <div className="pt-6 border-t border-slate-100">
-              <h3 className="text-sm font-extrabold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+            <div className="pt-6 border-t border-border/60">
+              <h3 className="text-sm font-extrabold text-muted-foreground/70 uppercase tracking-wider mb-4 flex items-center gap-2">
                 <ShieldCheck className="w-4 h-4 text-primary-500" />
                 <span>{t("view.securityTitle")}</span>
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="flex items-center justify-between p-4 rounded-2xl bg-slate-50/50 border border-slate-100 text-xs">
-                  <span className="font-bold text-slate-500 flex items-center gap-2">
-                    <CalendarDays className="w-4 h-4 text-slate-400" />
+                <div className="flex items-center justify-between p-4 rounded-2xl bg-muted/30 border border-border/60 text-xs">
+                  <span className="font-bold text-muted-foreground flex items-center gap-2">
+                    <CalendarDays className="w-4 h-4 text-muted-foreground/70" />
                     <span>{t("view.joinedAt")}</span>
                   </span>
-                  <span className="font-mono font-bold text-slate-800">{formatDate(user.createdAt)}</span>
+                  <span className="font-mono font-bold text-foreground">{formatDate(user.createdAt)}</span>
                 </div>
 
-                <div className="flex items-center justify-between p-4 rounded-2xl bg-slate-50/50 border border-slate-100 text-xs">
-                  <span className="font-bold text-slate-500 flex items-center gap-2">
-                    <RefreshCw className="w-4 h-4 text-slate-400" />
+                <div className="flex items-center justify-between p-4 rounded-2xl bg-muted/30 border border-border/60 text-xs">
+                  <span className="font-bold text-muted-foreground flex items-center gap-2">
+                    <RefreshCw className="w-4 h-4 text-muted-foreground/70" />
                     <span>{t("view.lastUpdated")}</span>
                   </span>
-                  <span className="font-mono font-bold text-slate-800">{formatDate(user.updatedAt || user.createdAt)}</span>
+                  <span className="font-mono font-bold text-foreground">{formatDate(user.updatedAt || user.createdAt)}</span>
                 </div>
               </div>
             </div>
@@ -677,11 +677,11 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
         ) : (
           /* EDITABLE FORM MODE */
           <form onSubmit={handleSubmit} className="space-y-8">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+            <div className="flex items-center justify-between pb-3 border-b border-border/60">
               <h3 className="text-base font-bold text-foreground">
                 {t("form.title")}
               </h3>
-              <span className="text-xs text-slate-500">
+              <span className="text-xs text-muted-foreground">
                 <Trans t={t} i18nKey="form.requiredNote" components={{ mark: <span className="text-danger-500 font-bold" /> }} />
               </span>
             </div>
@@ -769,7 +769,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
             </div>
 
             {/* Section 2: Sensitive Numbers */}
-            <div className="space-y-4 pt-6 border-t border-slate-100">
+            <div className="space-y-4 pt-6 border-t border-border/60">
               <h4 className="text-sm font-semibold text-foreground flex items-center gap-2">
                 <CreditCard className="w-4 h-4 text-primary-500" />
                 <span>{t("form.section2")}</span>
@@ -821,22 +821,22 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
             </div>
 
             {/* Section 3: CCCD Front & Back Image Upload with Rotation */}
-            <div className="space-y-4 pt-6 border-t border-slate-100">
+            <div className="space-y-4 pt-6 border-t border-border/60">
               <div className="flex items-center justify-between">
                 <h4 className="text-sm font-semibold text-foreground flex items-center gap-2">
                   <UploadCloud className="w-4 h-4 text-primary-500" />
                   <span>{t("form.section3")}</span>
                 </h4>
-                <span className="text-[11px] text-slate-400 italic">
+                <span className="text-[11px] text-muted-foreground/70 italic">
                   {t("form.section3Hint")}
                 </span>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 {/* Front CCCD Card Box */}
-                <div className="rounded-2xl border border-slate-200 bg-slate-50/50 p-5 flex flex-col gap-3">
+                <div className="rounded-2xl border border-border bg-muted/30 p-5 flex flex-col gap-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-extrabold text-slate-800 flex items-center gap-1.5">
+                    <span className="text-xs font-extrabold text-foreground flex items-center gap-1.5">
                       <CreditCard className="w-4 h-4 text-primary-600" />
                       <span>{t("cccd.front")}</span>
                     </span>
@@ -848,9 +848,9 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                   </div>
 
                   {/* Image Display Area with CSS transition rotate */}
-                  <div className="relative w-full h-48 rounded-xl bg-slate-900/5 border border-slate-200/80 overflow-hidden flex items-center justify-center p-2 group">
+                  <div className="relative w-full h-48 rounded-xl bg-muted/50 border border-border overflow-hidden flex items-center justify-center p-2 group">
                     {uploadingFrontCccd ? (
-                      <div className="flex flex-col items-center gap-2 text-slate-500">
+                      <div className="flex flex-col items-center gap-2 text-muted-foreground">
                         <Loader2 className="w-8 h-8 animate-spin text-primary-600" />
                         <span className="text-xs font-bold">{t("cccd.uploading")}</span>
                       </div>
@@ -865,10 +865,10 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                         }}
                       />
                     ) : (
-                      <div className="flex flex-col items-center justify-center text-slate-400 gap-2 p-4 text-center">
-                        <UploadCloud className="w-8 h-8 text-slate-300" />
-                        <span className="text-xs font-bold text-slate-600">{t("cccd.frontEmpty")}</span>
-                        <span className="text-[10px] text-slate-400">{t("cccd.fileHint")}</span>
+                      <div className="flex flex-col items-center justify-center text-muted-foreground/70 gap-2 p-4 text-center">
+                        <UploadCloud className="w-8 h-8 text-muted-foreground/50" />
+                        <span className="text-xs font-bold text-muted-foreground">{t("cccd.frontEmpty")}</span>
+                        <span className="text-[10px] text-muted-foreground/70">{t("cccd.fileHint")}</span>
                       </div>
                     )}
                   </div>
@@ -893,7 +893,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                       size="sm"
                       onClick={() => frontCccdInputRef.current?.click()}
                       disabled={uploadingFrontCccd}
-                      className="h-9 rounded-xl text-xs font-bold border-slate-200 hover:bg-white cursor-pointer"
+                      className="h-9 rounded-xl text-xs font-bold border-border hover:bg-white cursor-pointer"
                     >
                       <UploadCloud className="w-3.5 h-3.5 mr-1.5 text-primary-600" />
                       <span>{identityCardFrontUrl ? t("card.changePhoto") : t("cccd.upload")}</span>
@@ -907,7 +907,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                           size="sm"
                           onClick={rotateFrontCounterClockwise}
                           title={t("cccd.rotateLeft90")}
-                          className="h-9 w-9 p-0 rounded-xl border-slate-200 hover:bg-white text-slate-700 cursor-pointer"
+                          className="h-9 w-9 p-0 rounded-xl border-border hover:bg-white text-foreground/80 cursor-pointer"
                         >
                           <RotateCcw className="w-4 h-4" />
                         </Button>
@@ -917,7 +917,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                           size="sm"
                           onClick={rotateFrontClockwise}
                           title={t("cccd.rotateRight90")}
-                          className="h-9 w-9 p-0 rounded-xl border-slate-200 hover:bg-white text-slate-700 cursor-pointer"
+                          className="h-9 w-9 p-0 rounded-xl border-border hover:bg-white text-foreground/80 cursor-pointer"
                         >
                           <RotateCw className="w-4 h-4" />
                         </Button>
@@ -940,9 +940,9 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                 </div>
 
                 {/* Back CCCD Card Box */}
-                <div className="rounded-2xl border border-slate-200 bg-slate-50/50 p-5 flex flex-col gap-3">
+                <div className="rounded-2xl border border-border bg-muted/30 p-5 flex flex-col gap-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-extrabold text-slate-800 flex items-center gap-1.5">
+                    <span className="text-xs font-extrabold text-foreground flex items-center gap-1.5">
                       <CreditCard className="w-4 h-4 text-primary-600" />
                       <span>{t("cccd.back")}</span>
                     </span>
@@ -954,9 +954,9 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                   </div>
 
                   {/* Image Display Area with CSS transition rotate */}
-                  <div className="relative w-full h-48 rounded-xl bg-slate-900/5 border border-slate-200/80 overflow-hidden flex items-center justify-center p-2 group">
+                  <div className="relative w-full h-48 rounded-xl bg-muted/50 border border-border overflow-hidden flex items-center justify-center p-2 group">
                     {uploadingBackCccd ? (
-                      <div className="flex flex-col items-center gap-2 text-slate-500">
+                      <div className="flex flex-col items-center gap-2 text-muted-foreground">
                         <Loader2 className="w-8 h-8 animate-spin text-primary-600" />
                         <span className="text-xs font-bold">{t("cccd.uploading")}</span>
                       </div>
@@ -971,10 +971,10 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                         }}
                       />
                     ) : (
-                      <div className="flex flex-col items-center justify-center text-slate-400 gap-2 p-4 text-center">
-                        <UploadCloud className="w-8 h-8 text-slate-300" />
-                        <span className="text-xs font-bold text-slate-600">{t("cccd.backEmpty")}</span>
-                        <span className="text-[10px] text-slate-400">{t("cccd.fileHint")}</span>
+                      <div className="flex flex-col items-center justify-center text-muted-foreground/70 gap-2 p-4 text-center">
+                        <UploadCloud className="w-8 h-8 text-muted-foreground/50" />
+                        <span className="text-xs font-bold text-muted-foreground">{t("cccd.backEmpty")}</span>
+                        <span className="text-[10px] text-muted-foreground/70">{t("cccd.fileHint")}</span>
                       </div>
                     )}
                   </div>
@@ -999,7 +999,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                       size="sm"
                       onClick={() => backCccdInputRef.current?.click()}
                       disabled={uploadingBackCccd}
-                      className="h-9 rounded-xl text-xs font-bold border-slate-200 hover:bg-white cursor-pointer"
+                      className="h-9 rounded-xl text-xs font-bold border-border hover:bg-white cursor-pointer"
                     >
                       <UploadCloud className="w-3.5 h-3.5 mr-1.5 text-primary-600" />
                       <span>{identityCardBackUrl ? t("card.changePhoto") : t("cccd.upload")}</span>
@@ -1013,7 +1013,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                           size="sm"
                           onClick={rotateBackCounterClockwise}
                           title={t("cccd.rotateLeft90")}
-                          className="h-9 w-9 p-0 rounded-xl border-slate-200 hover:bg-white text-slate-700 cursor-pointer"
+                          className="h-9 w-9 p-0 rounded-xl border-border hover:bg-white text-foreground/80 cursor-pointer"
                         >
                           <RotateCcw className="w-4 h-4" />
                         </Button>
@@ -1023,7 +1023,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                           size="sm"
                           onClick={rotateBackClockwise}
                           title={t("cccd.rotateRight90")}
-                          className="h-9 w-9 p-0 rounded-xl border-slate-200 hover:bg-white text-slate-700 cursor-pointer"
+                          className="h-9 w-9 p-0 rounded-xl border-border hover:bg-white text-foreground/80 cursor-pointer"
                         >
                           <RotateCw className="w-4 h-4" />
                         </Button>
@@ -1048,13 +1048,13 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
             </div>
 
             {/* Bottom Buttons */}
-            <div className="pt-6 border-t border-slate-100 flex items-center justify-end gap-3">
+            <div className="pt-6 border-t border-border/60 flex items-center justify-end gap-3">
               <Button
                 type="button"
                 variant="outline"
                 disabled={loading || uploadingFrontCccd || uploadingBackCccd}
                 onClick={handleReset}
-                className="h-11 rounded-xl border-slate-200 font-bold text-slate-600 text-xs px-5 hover:bg-slate-50 cursor-pointer"
+                className="h-11 rounded-xl border-border font-bold text-muted-foreground text-xs px-5 hover:bg-muted/30 cursor-pointer"
               >
                 <RotateCcw className="w-4 h-4 mr-2" />
                 <span>{t("form.cancel")}</span>
@@ -1084,7 +1084,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
               <button
                 type="button"
                 onClick={() => setPreviewImage(null)}
-                className="p-1.5 rounded-full hover:bg-slate-800 text-slate-400 hover:text-white transition-colors cursor-pointer"
+                className="p-1.5 rounded-full hover:bg-slate-800 text-muted-foreground/70 hover:text-white transition-colors cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>

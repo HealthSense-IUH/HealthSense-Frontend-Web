@@ -1,0 +1,27 @@
+{
+  "title": "HealthSense Assistant",
+  "subtitle": "Ask about your measurements, consultations, workouts, nutrition, or how to use the app",
+  "open": "Open AI assistant",
+  "close": "Close",
+  "newConversation": "New conversation",
+  "history": "Previous conversations",
+  "noHistory": "No conversations yet",
+  "untitled": "New conversation",
+  "placeholder": "Type your question… (Enter to send, Shift+Enter for a new line)",
+  "send": "Send",
+  "stop": "Stop",
+  "thinking": "Answering…",
+  "welcome": "Hi! I am the HealthSense assistant. I can read your own data to answer, for example:",
+  "suggestions": {
+    "latest": "How was my latest measurement?",
+    "workout": "How many minutes did I work out this week?",
+    "consultation": "Do I have any upcoming consultation?",
+    "navigate": "Where do I change my password?"
+  },
+  "disclaimer": "The assistant supports screening and guidance only; it does not replace a doctor's diagnosis. In an emergency call 115.",
+  "errors": {
+    "stream": "The assistant ran into a problem, please try again.",
+    "unauthorized": "Your session has expired, please sign in again.",
+    "load": "Could not load the conversation."
+  }
+}
