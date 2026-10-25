@@ -21,7 +21,8 @@ function storageKey(userId: string | number) {
 
 const POSITION_KEY = "healthsense.assistant.position"
 const EXPANDED_KEY = "healthsense.assistant.expanded"
-const PANEL_GAP = 68 // khung chat nằm 12px phía trên nút nổi 56px (56 + 12), nút cố định ở góc phải dưới
+// Khung chat nằm 12px phía trên nút nổi 56px (56 + 12); nút cố định ở góc phải dưới
+const PANEL_GAP = 68
 
 type Viewport = { w: number; h: number }
 

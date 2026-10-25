@@ -242,3 +242,81 @@
   }
   *::-webkit-scrollbar-track { background: transparent; }
 }
+
+/* ===== Màn tải (AppLoader) ===== */
+@layer components {
+  /* nét điện tim vẽ theo chấm sáng (cùng chu kỳ 3 giây với animateMotion), cuối chu kỳ mờ đi rồi vẽ lại */
+  .loader-trace {
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+    animation: loader-trace 3s linear infinite;
+  }
+  @keyframes loader-trace {
+    0% { stroke-dashoffset: 100; opacity: 1; }
+    88% { stroke-dashoffset: 0; opacity: 1; }
+    100% { stroke-dashoffset: 0; opacity: 0; }
+  }
+  .loader-heartbeat {
+    transform-origin: 50% 55%;
+    animation: loader-heartbeat 1.4s ease-in-out infinite;
+  }
+  @keyframes loader-heartbeat {
+    0%, 100% { transform: scale(1); }
+    14% { transform: scale(1.14); }
+    28% { transform: scale(1); }
+    42% { transform: scale(1.1); }
+    60% { transform: scale(1); }
+  }
+  .loader-ripple {
+    animation: loader-ripple 1.4s ease-out infinite;
+  }
+  @keyframes loader-ripple {
+    0% { transform: scale(0.55); opacity: 0.9; }
+    100% { transform: scale(1.35); opacity: 0; }
+  }
+  .loader-shimmer {
+    background-image: linear-gradient(100deg, #ffffff 0%, #bae6fd 35%, #ffffff 50%, #a7f3d0 70%, #ffffff 100%);
+    background-size: 250% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: loader-shimmer 3.2s linear infinite;
+  }
+  @keyframes loader-shimmer {
+    from { background-position: 125% 0; }
+    to { background-position: -125% 0; }
+  }
+  .loader-sweep {
+    animation: loader-sweep 1.6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  }
+  @keyframes loader-sweep {
+    from { transform: translateX(-120%); }
+    to { transform: translateX(320%); }
+  }
+  .loader-blink {
+    animation: loader-blink 1.4s ease-in-out infinite;
+  }
+  @keyframes loader-blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.25; }
+  }
+  /* ba chấm "..." lần lượt hiện sau câu gợi ý */
+  .loader-dots::after {
+    content: "";
+    display: inline-block;
+    width: 1.2em;
+    text-align: left;
+    animation: loader-dots 1.5s steps(4, end) infinite;
+  }
+  @keyframes loader-dots {
+    0% { content: ""; }
+    25% { content: "."; }
+    50% { content: ".."; }
+    75% { content: "..."; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .loader-trace { animation: none; stroke-dasharray: none; opacity: 1; }
+    .loader-heartbeat, .loader-ripple, .loader-shimmer, .loader-sweep, .loader-blink { animation: none; }
+    .loader-ripple { opacity: 0; }
+  }
+}

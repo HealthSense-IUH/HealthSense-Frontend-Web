@@ -116,7 +116,12 @@
     "goBack": "Quay lại"
   },
   "appLoader": {
-    "loading": "Đang tải HealthSense..."
+    "loading": "Đang tải HealthSense...",
+    "hints": {
+      "connect": "Đang kết nối vòng đeo",
+      "sync": "Đang đồng bộ nhịp tim",
+      "prepare": "Đang chuẩn bị bảng điều khiển"
+    }
   },
   "roles": {
     "SUPER_ADMIN": "Quản trị cấp cao",

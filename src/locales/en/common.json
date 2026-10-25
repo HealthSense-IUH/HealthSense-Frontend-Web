@@ -116,7 +116,12 @@
     "goBack": "Go Back"
   },
   "appLoader": {
-    "loading": "Loading HealthSense..."
+    "loading": "Loading HealthSense...",
+    "hints": {
+      "connect": "Connecting to your wearable",
+      "sync": "Syncing heart rhythm",
+      "prepare": "Preparing your dashboard"
+    }
   },
   "roles": {
     "SUPER_ADMIN": "Super admin",

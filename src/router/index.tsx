@@ -4,6 +4,7 @@ import { Navigate, createBrowserRouter, useLocation } from "react-router-dom"
 
 import { GlobalErrorBoundary } from "@/components/custom/GlobalErrorBoundary"
 import { LazyElement } from "@/components/custom/LazyElement"
+import AppLoader from "@/components/custom/AppLoader"
 import { GuestOnlyRoute } from "@/pages/commons/GuestOnlyRoute"
 import { ProtectedRoute } from "@/pages/commons/ProtectedRoute"
 
@@ -78,6 +79,8 @@ export const router = createBrowserRouter([
     errorElement: <GlobalErrorBoundary />,
     element: wrap(<LandingPage />),
   },
+  // Chỉ khi chạy dev server: xem thử màn tải toàn màn hình
+  ...(import.meta.env.DEV ? [{ path: "/dev/loader", element: <AppLoader /> }] : []),
   {
     path: "/terms",
     errorElement: <GlobalErrorBoundary />,
