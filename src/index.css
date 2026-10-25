@@ -320,3 +320,70 @@
     .loader-ripple { opacity: 0; }
   }
 }
+
+/* Màn tải tông sáng: Cara nhún nhảy, sao lấp lánh, chữ gradient tươi */
+@layer components {
+  .loader-bounce {
+    animation: loader-bounce 1.6s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  }
+  @keyframes loader-bounce {
+    0%, 100% { transform: translateY(0) scale(1); }
+    30% { transform: translateY(-10px) scale(1.03, 0.97); }
+    50% { transform: translateY(0) scale(0.98, 1.02); }
+    60% { transform: translateY(-3px) scale(1); }
+  }
+  .loader-sparkle {
+    animation: loader-sparkle 2.6s ease-in-out infinite;
+  }
+  @keyframes loader-sparkle {
+    0%, 100% { transform: translateY(0) scale(0.6) rotate(0deg); opacity: 0.35; }
+    50% { transform: translateY(-10px) scale(1.15) rotate(20deg); opacity: 1; }
+  }
+  .loader-shimmer-bright {
+    background-image: linear-gradient(100deg, #0284c7 0%, #0ea5e9 25%, #34d399 50%, #fb7185 75%, #0284c7 100%);
+    background-size: 250% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: loader-shimmer 4s linear infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .loader-bounce, .loader-sparkle, .loader-shimmer-bright { animation: none; }
+    .loader-sparkle { opacity: 0.8; }
+  }
+}
+
+/* Cara ở góc thỉnh thoảng vẫy; skeleton có vệt sáng quét */
+@layer components {
+  .cara-wiggle {
+    transform-origin: 50% 80%;
+    animation: cara-wiggle 9s ease-in-out infinite;
+  }
+  @keyframes cara-wiggle {
+    0%, 88%, 100% { transform: rotate(0); }
+    90% { transform: rotate(-10deg); }
+    92% { transform: rotate(9deg); }
+    94% { transform: rotate(-7deg); }
+    96% { transform: rotate(5deg); }
+    98% { transform: rotate(-2deg); }
+  }
+  .skeleton-shimmer {
+    position: relative;
+    overflow: hidden;
+  }
+  .skeleton-shimmer::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background-image: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.7), transparent);
+    animation: skeleton-shimmer 1.6s ease-in-out infinite;
+  }
+  @keyframes skeleton-shimmer {
+    to { transform: translateX(100%); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .cara-wiggle { animation: none; }
+    .skeleton-shimmer::after { animation: none; display: none; }
+  }
+}

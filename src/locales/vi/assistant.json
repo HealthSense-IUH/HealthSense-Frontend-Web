@@ -26,5 +26,9 @@
     "load": "Không tải được hội thoại."
   },
   "expand": "Mở rộng khung chat",
-  "collapse": "Thu gọn khung chat"
+  "collapse": "Thu gọn khung chat",
+  "tip": {
+    "title": "Chào, mình là Cara!",
+    "body": "Hỏi mình về lần đo gần nhất, lịch tư vấn, tập luyện hay cách dùng ứng dụng nhé."
+  }
 }

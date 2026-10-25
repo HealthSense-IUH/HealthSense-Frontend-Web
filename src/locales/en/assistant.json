@@ -26,5 +26,9 @@
     "load": "Could not load the conversation."
   },
   "expand": "Expand chat",
-  "collapse": "Collapse chat"
+  "collapse": "Collapse chat",
+  "tip": {
+    "title": "Hi, I'm Cara!",
+    "body": "Ask me about your latest measurement, consultations, workouts or how to use the app."
+  }
 }

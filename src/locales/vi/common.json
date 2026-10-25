@@ -141,5 +141,12 @@
     "label": "Chuyển phân hệ",
     "general": "Cá nhân",
     "management": "Quản trị"
+  },
+  "notFound": {
+    "title": "Trang này không tồn tại",
+    "description": "Đường dẫn có thể đã đổi hoặc bạn gõ nhầm. Về trang chủ hoặc quay lại trang trước nhé.",
+    "home": "Về trang chủ",
+    "back": "Quay lại",
+    "caraQuip": "Cara đã tìm khắp nơi mà không thấy trang này. Thử lại từ trang chủ nhé!"
   }
 }

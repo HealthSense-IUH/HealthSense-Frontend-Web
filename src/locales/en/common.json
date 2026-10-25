@@ -141,5 +141,12 @@
     "label": "Switch area",
     "general": "Personal",
     "management": "Management"
+  },
+  "notFound": {
+    "title": "This page does not exist",
+    "description": "The link may have changed or there is a typo. Head home or go back to the previous page.",
+    "home": "Go home",
+    "back": "Go back",
+    "caraQuip": "Cara looked everywhere and could not find this page. Try again from home!"
   }
 }

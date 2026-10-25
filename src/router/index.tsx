@@ -39,6 +39,7 @@ const LandingPage = lazy(() => import("@/pages/public/landing"))
 const LoginPage = lazy(() => import("@/pages/public/login"))
 const ForgotPasswordPage = lazy(() => import("@/pages/public/forgot-password"))
 const TermsPage = lazy(() => import("@/pages/public/terms"))
+const NotFoundPage = lazy(() => import("@/pages/public/not-found"))
 
 /** Redirect giữ nguyên query string (quan trọng với URL PayOS trả về). */
 function RedirectPreserveQuery({ to }: { to: string }) {
@@ -427,4 +428,7 @@ export const router = createBrowserRouter([
       },
     ],
   },
+
+  // ---------- 404 ----------
+  { path: "*", element: wrap(<NotFoundPage />) },
 ])

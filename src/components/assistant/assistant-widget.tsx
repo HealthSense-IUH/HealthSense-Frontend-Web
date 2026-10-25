@@ -21,6 +21,7 @@ function storageKey(userId: string | number) {
 
 const POSITION_KEY = "healthsense.assistant.position"
 const EXPANDED_KEY = "healthsense.assistant.expanded"
+const TIP_KEY = "healthsense.assistant.tip-seen"
 // Khung chat nằm 12px phía trên nút nổi 56px (56 + 12); nút cố định ở góc phải dưới
 const PANEL_GAP = 68
 
@@ -111,6 +112,22 @@ export function AssistantWidget() {
   const userId = useAuthStore((s) => s.userSession?.userId)
 
   const [open, setOpen] = useState(false)
+  // Bong bóng chào ở lần đầu thấy Cara; đóng hoặc mở chat là không hiện lại
+  const [tipVisible, setTipVisible] = useState(() => {
+    try {
+      return localStorage.getItem(TIP_KEY) !== "1"
+    } catch {
+      return false
+    }
+  })
+  const dismissTip = () => {
+    setTipVisible(false)
+    try {
+      localStorage.setItem(TIP_KEY, "1")
+    } catch {
+      /* bỏ qua */
+    }
+  }
   const [showHistory, setShowHistory] = useState(false)
   const [conversations, setConversations] = useState<AssistantConversation[]>([])
   const [conversationId, setConversationId] = useState<string | null>(null)
@@ -322,17 +339,45 @@ export function AssistantWidget() {
 
   return (
     <div className="fixed bottom-5 right-5 z-40 h-14 w-14">
+      {/* Bong bóng chào lần đầu */}
+      {tipVisible && !open && (
+        <div className="absolute bottom-full right-0 mb-3 w-64 motion-safe:animate-fade-up">
+          <div className="relative rounded-2xl border border-border/70 bg-card p-3 pr-8 text-xs leading-relaxed text-foreground shadow-card">
+            <p className="font-bold text-primary">{t("tip.title")}</p>
+            <p className="mt-0.5 text-muted-foreground">{t("tip.body")}</p>
+            <button
+              type="button"
+              aria-label={t("close")}
+              onClick={dismissTip}
+              className="absolute right-2 top-2 rounded-md p-1 text-muted-foreground hover:bg-muted hover:text-foreground"
+            >
+              <X className="h-3.5 w-3.5" />
+            </button>
+            <span className="absolute -bottom-1.5 right-6 h-3 w-3 rotate-45 border-b border-r border-border/70 bg-card" aria-hidden="true" />
+          </div>
+        </div>
+      )}
+
       {/* Nút nổi: cố định ở góc, bấm để mở/đóng */}
       <button
         type="button"
-        onClick={() => setOpen((v) => !v)}
+        onClick={() => {
+          if (tipVisible) dismissTip()
+          setOpen((v) => !v)
+        }}
         aria-label={open ? t("close") : t("open")}
         className={cn(
           "flex h-14 w-14 items-center justify-center rounded-full border border-border bg-card text-foreground shadow-lg transition-transform hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
           open && "scale-95"
         )}
       >
-        {open ? <X className="h-6 w-6" /> : <CaraMascot size={46} />}
+        {open ? (
+          <X className="h-6 w-6" />
+        ) : (
+          <span className="cara-wiggle inline-flex">
+            <CaraMascot size={46} />
+          </span>
+        )}
       </button>
 
       {/* Khung chat: lớp ngoài kéo được (giới hạn trong màn hình), lớp trong chạy hiệu ứng genie */}

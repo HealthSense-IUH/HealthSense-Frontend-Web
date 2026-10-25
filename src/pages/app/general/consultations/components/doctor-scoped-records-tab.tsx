@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { EmptyState } from "@/components/custom/EmptyState"
 import { useTranslation } from "react-i18next"
 import { AlertCircle, AlertTriangle, FileText, CheckCircle2 } from "lucide-react"
 
@@ -88,10 +89,7 @@ export function DoctorScopedRecordsTab({ sessionId }: DoctorScopedRecordsTabProp
   return (
     <div className="py-4">
       {records.length === 0 ? (
-        <div className="py-12 text-center">
-          <FileText className="mx-auto h-12 w-12 text-slate-300 mb-3" />
-          <p className="text-slate-500 font-medium">{t("scopedRecordsTab.empty")}</p>
-        </div>
+        <EmptyState illustration="heart" title={t("scopedRecordsTab.empty")} />
       ) : (
         <div className="space-y-3">
           {records.map((item) => {

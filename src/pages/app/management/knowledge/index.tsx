@@ -13,6 +13,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
+import { AnimatedNumber } from "@/components/custom/AnimatedNumber"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useToast } from "@/hooks/use-toast"
@@ -134,7 +135,7 @@ export default function KnowledgeManagementPage() {
           {summaryItems.map(({ key, tone }) => (
             <div key={key} className="rounded-xl border border-border bg-card px-4 py-3">
               <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t(`summary.${key}`)}</p>
-              <p className={`mt-1 text-2xl font-bold tabular-nums ${tone}`}>{summary ? summary[key] : "—"}</p>
+              <p className={`mt-1 text-2xl font-bold tabular-nums ${tone}`}>{summary ? <AnimatedNumber value={summary[key]} /> : "—"}</p>
             </div>
           ))}
         </div>

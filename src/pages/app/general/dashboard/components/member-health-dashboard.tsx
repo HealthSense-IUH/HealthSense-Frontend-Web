@@ -16,6 +16,7 @@ import { HealthRecordDetailModal } from "@/pages/app/general/afib-history/compon
 import { HealthHeatmapCalendar } from "./health-heatmap-calendar"
 import { MemberGreetingBanner } from "./member-greeting-banner"
 import { EmptyState } from "@/components/custom/EmptyState"
+import { AnimatedNumber } from "@/components/custom/AnimatedNumber"
 import { 
   getPredictionMeta, 
   formatHrvNumber, 
@@ -157,7 +158,7 @@ export function MemberHealthDashboard() {
           </CardHeader>
           <CardContent className="space-y-1">
             <div className="text-3xl font-extrabold tracking-tight text-foreground">
-              {totalScreenings} <span className="text-xs font-normal text-muted-foreground">{t("memberDashboard.timesUnit")}</span>
+              <AnimatedNumber value={totalScreenings} /> <span className="text-xs font-normal text-muted-foreground">{t("memberDashboard.timesUnit")}</span>
             </div>
             <span className="text-xs text-muted-foreground block truncate">
               {t("memberDashboard.screeningsBreakdown", { normal: totalNormal, warning: totalAfib + totalSuspected })}
