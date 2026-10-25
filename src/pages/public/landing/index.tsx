@@ -10,10 +10,11 @@ import { useNavigate, Link } from "react-router-dom"
 import { motion, AnimatePresence } from "framer-motion"
 import { useTranslation } from "react-i18next"
 
-import { AIPipelineSection } from "./components/AIPipelineSection"
-import { AIFeaturesSection } from "./components/AIFeaturesSection"
-import { AIClinicalBenchmarkSection } from "./components/AIClinicalBenchmarkSection"
-import { HealthSenseBrandStorySection } from "./components/HealthSenseBrandStorySection"
+import { AboutSection } from "./components/AboutSection"
+import { BenefitsSection } from "./components/BenefitsSection"
+import { HowItWorksSection } from "./components/HowItWorksSection"
+import { CaraSection } from "./components/CaraSection"
+import { CtaSection } from "./components/CtaSection"
 import { LandingFooter } from "./components/LandingFooter"
 import { useAuthStore } from "@/stores/auth-store"
 import { BrandSlogan } from "@/components/custom/BrandSlogan"
@@ -25,8 +26,8 @@ import { getDefaultRouteForRole } from "@/constants"
 const navItems = [
   { id: "about" },
   { id: "features" },
-  { id: "pipeline" },
-  { id: "benchmark" },
+  { id: "how" },
+  { id: "cara" },
 ] as const
 
 export default function LandingPage() {
@@ -227,20 +228,17 @@ export default function LandingPage() {
               </button>
             </div>
 
-            {/* Real Measured Performance Metrics Strip */}
-            <div className="grid grid-cols-3 gap-4 pt-6 border-t border-slate-200/80">
-              <div className="flex flex-col">
-                <span className="text-xl sm:text-2xl font-black text-slate-900 font-heading tracking-tight">98.65%</span>
-                <span className="text-[11px] text-slate-500 font-medium leading-snug mt-0.5">{t("hero.metrics.accuracy")}</span>
-              </div>
-              <div className="flex flex-col">
-                <span className="text-xl sm:text-2xl font-black text-primary-600 font-heading tracking-tight">99.11%</span>
-                <span className="text-[11px] text-slate-500 font-medium leading-snug mt-0.5">{t("hero.metrics.recall")}</span>
-              </div>
-              <div className="flex flex-col">
-                <span className="text-xl sm:text-2xl font-black text-success-600 font-heading tracking-tight">&lt; 100ms</span>
-                <span className="text-[11px] text-slate-500 font-medium leading-snug mt-0.5">{t("hero.metrics.latency")}</span>
-              </div>
+            {/* Ba điểm mạnh, nói bằng lời thường */}
+            <div className="flex flex-wrap gap-2.5 pt-6 border-t border-slate-200/80">
+              {(["monitor", "alert", "doctor"] as const).map((key) => (
+                <span
+                  key={key}
+                  className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-card px-3.5 py-1.5 text-xs font-semibold text-slate-700 shadow-xs"
+                >
+                  <span className="h-1.5 w-1.5 rounded-full bg-primary-500" />
+                  {t(`hero.chips.${key}`)}
+                </span>
+              ))}
             </div>
 
           </div>
@@ -294,25 +292,28 @@ export default function LandingPage() {
         </div>
       </main>
 
-      {/* 01. Brand Story & Mission Section */}
+      {/* 01. Về HealthSense */}
       <div id="about" className="scroll-mt-20 sm:scroll-mt-24">
-        <HealthSenseBrandStorySection />
+        <AboutSection />
       </div>
 
-      {/* 02. Bio Features Section (16 Core Biological Features) */}
+      {/* 02. Bạn nhận được gì */}
       <div id="features" className="scroll-mt-20 sm:scroll-mt-24">
-        <AIFeaturesSection />
+        <BenefitsSection />
       </div>
 
-      {/* 03. AI Pipeline Section (6-Step Architecture Flow & Terminal) */}
-      <div id="pipeline" className="scroll-mt-20 sm:scroll-mt-24">
-        <AIPipelineSection />
+      {/* 03. Cách hoạt động */}
+      <div id="how" className="scroll-mt-20 sm:scroll-mt-24">
+        <HowItWorksSection />
       </div>
 
-      {/* 04. Unified Clinical Benchmark & Dataset Section */}
-      <div id="benchmark" className="scroll-mt-20 sm:scroll-mt-24">
-        <AIClinicalBenchmarkSection />
+      {/* 04. Trợ lý Cara */}
+      <div id="cara" className="scroll-mt-20 sm:scroll-mt-24">
+        <CaraSection />
       </div>
+
+      {/* 05. Lời mời */}
+      <CtaSection signedIn={!!userSession} dashboardTo={userSession ? getDefaultRouteForRole(userSession.role) : "/login"} />
 
       {/* Professional Full Footer */}
       <LandingFooter />

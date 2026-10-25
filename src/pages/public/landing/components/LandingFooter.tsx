@@ -62,7 +62,7 @@ export function LandingFooter() {
               </li>
               <li>
                 <button 
-                  onClick={() => scrollToSection("pipeline")} 
+                  onClick={() => scrollToSection("features")} 
                   className="hover:text-white transition-colors cursor-pointer text-left"
                 >
                   {t("footer.tech.stacking")}
@@ -70,7 +70,7 @@ export function LandingFooter() {
               </li>
               <li>
                 <button 
-                  onClick={() => scrollToSection("benchmark")} 
+                  onClick={() => scrollToSection("features")} 
                   className="hover:text-white transition-colors cursor-pointer text-left"
                 >
                   {t("footer.tech.benchmark")}
@@ -78,7 +78,7 @@ export function LandingFooter() {
               </li>
               <li>
                 <button 
-                  onClick={() => scrollToSection("benchmark")} 
+                  onClick={() => scrollToSection("features")} 
                   className="hover:text-white transition-colors cursor-pointer text-left"
                 >
                   {t("footer.tech.xai")}
@@ -86,7 +86,7 @@ export function LandingFooter() {
               </li>
               <li>
                 <button 
-                  onClick={() => scrollToSection("benchmark")} 
+                  onClick={() => scrollToSection("cara")} 
                   className="hover:text-white transition-colors cursor-pointer text-left"
                 >
                   {t("footer.tech.mimic")}
@@ -111,7 +111,7 @@ export function LandingFooter() {
               </li>
               <li>
                 <button 
-                  onClick={() => scrollToSection("about")} 
+                  onClick={() => scrollToSection("features")} 
                   className="hover:text-white transition-colors cursor-pointer text-left"
                 >
                   {t("footer.about.care")}

@@ -1,6 +1,5 @@
 import { motion } from "framer-motion"
 
-import { AreaSwitcher } from "./area-switcher"
 import { useAppShell } from "./app-shell-context"
 import { DemoRoleSwitcher } from "./demo-role-switcher"
 import { LanguageSwitcher } from "./language-switcher"
@@ -198,7 +197,6 @@ export function Topbar() {
         {/* DEV ONLY: Role Switcher */}
         {import.meta.env.DEV ? <DemoRoleSwitcher /> : null}
 
-        <AreaSwitcher />
 
         <LanguageSwitcher />
 

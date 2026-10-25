@@ -2,6 +2,7 @@ import { Link } from "react-router-dom"
 import { ShieldCheck, Stethoscope } from "lucide-react"
 import { useTranslation } from "react-i18next"
 
+import { SidebarAreaToggle } from "./area-switcher"
 import { useAppShell } from "./app-shell-context"
 import { SidebarContent } from "./sidebar-content"
 import { USER_ROLES, getDefaultRouteForRole, roleLabel } from "@/constants"
@@ -47,6 +48,9 @@ export function AppSidebar() {
       <div className="flex-1 overflow-y-auto overflow-x-hidden pb-2">
         <SidebarContent />
       </div>
+
+      {/* Chuyển phân hệ Cá nhân / Quản trị (vai trò có quyền quản trị) */}
+      <SidebarAreaToggle />
     </aside>
   )
 }
