@@ -126,7 +126,8 @@ function useAutoBreadcrumbs(title: ReactNode): PageBreadcrumbItem[] {
     const label = t(`nav.item.${match.id}`, { defaultValue: match.title ?? match.id })
     const deeper = pathname !== match.href
     crumbs.push(deeper ? { label, to: match.href } : { label })
-    if (deeper && title) crumbs.push({ label: title })
+    // Đường dẫn sâu hơn mục điều hướng (chi tiết, tab con): thêm trang hiện tại, trừ khi trùng nhãn mục
+    if (deeper && title && !(typeof title === "string" && title === label)) crumbs.push({ label: title })
   } else if (title) {
     crumbs.push({ label: title })
   }
@@ -180,7 +181,7 @@ export function PageHeader({
           {icon && (
             <div
               className={cn(
-                "flex shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-primary-500 to-primary-700 text-white shadow-md shadow-primary-600/25",
+                "flex shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-primary-500 to-primary-700 text-white shadow-md shadow-primary-600/25 [&_svg]:text-white",
                 compact ? "h-10 w-10" : "h-12 w-12"
               )}
             >
