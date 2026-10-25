@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
-import { AnimatePresence, animate, motion, useDragControls, useMotionValue, useReducedMotion } from "framer-motion"
+import { AnimatePresence, LazyMotion, animate, domMax, m, useDragControls, useMotionValue, useReducedMotion } from "framer-motion"
 import { ChevronLeft, ChevronRight, History, Loader2, Plus, Send, Square, Trash2, X } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -324,7 +324,8 @@ export function AssistantWidget() {
   }
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === "Enter" && !e.shiftKey) {
+    // Đang gõ qua bộ gõ (IME) thì Enter chỉ chốt chữ, không gửi
+    if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing) {
       e.preventDefault()
       void send()
     }
@@ -338,6 +339,7 @@ export function AssistantWidget() {
   }
 
   return (
+    <LazyMotion features={domMax} strict>
     <div className="fixed bottom-5 right-5 z-40 h-14 w-14">
       {/* Bong bóng chào lần đầu */}
       {tipVisible && !open && (
@@ -383,7 +385,7 @@ export function AssistantWidget() {
       {/* Khung chat: lớp ngoài kéo được (giới hạn trong màn hình), lớp trong chạy hiệu ứng genie */}
       <AnimatePresence>
         {open && (
-          <motion.div
+          <m.div
             key="panel"
             className="absolute bottom-[68px] right-0"
             style={{ x, y }}
@@ -395,7 +397,7 @@ export function AssistantWidget() {
             dragConstraints={bounds}
             onDragEnd={() => localStorage.setItem(POSITION_KEY, JSON.stringify({ x: x.get(), y: y.get() }))}
           >
-            <motion.div
+            <m.div
               role="dialog"
               aria-label={t("title")}
               variants={reducedMotion ? fade : genie}
@@ -575,10 +577,11 @@ export function AssistantWidget() {
                 </div>
                 <p className="mt-2 text-[11px] leading-snug text-muted-foreground">{t("disclaimer")}</p>
               </div>
-            </motion.div>
-          </motion.div>
+            </m.div>
+          </m.div>
         )}
       </AnimatePresence>
     </div>
+    </LazyMotion>
   )
 }

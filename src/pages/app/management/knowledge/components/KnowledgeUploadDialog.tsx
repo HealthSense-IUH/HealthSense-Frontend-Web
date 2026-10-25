@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { Loader2, Upload } from "lucide-react"
 
@@ -14,7 +14,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { knowledgeApi } from "@/services/knowledge.service"
-import { formatFileSize } from "./KnowledgeTable"
+import { formatFileSize } from "@/lib/formatters"
 
 const ACCEPT = ".pdf,.docx,.doc,.txt,.md,.markdown,.html,.htm,.csv,.xlsx,.pptx,.rtf,.odt"
 const MAX_SIZE = 20 * 1024 * 1024
@@ -33,15 +33,18 @@ export function KnowledgeUploadDialog({ open, onOpenChange, onSuccess }: Knowled
   const [error, setError] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
 
-  useEffect(() => {
-    if (open) {
-      setFile(null)
-      setTitle("")
-      setError(null)
-      setSubmitting(false)
-      if (inputRef.current) inputRef.current.value = ""
-    }
-  }, [open])
+  // Dọn form khi đóng, nên lần mở sau luôn bắt đầu trống (không cần effect theo prop open)
+  const reset = () => {
+    setFile(null)
+    setTitle("")
+    setError(null)
+    setSubmitting(false)
+    if (inputRef.current) inputRef.current.value = ""
+  }
+  const close = () => {
+    reset()
+    onOpenChange(false)
+  }
 
   const pick = (f: File | null) => {
     setError(null)
@@ -64,7 +67,7 @@ export function KnowledgeUploadDialog({ open, onOpenChange, onSuccess }: Knowled
     try {
       await knowledgeApi.upload(file, title)
       onSuccess()
-      onOpenChange(false)
+      close()
     } catch (err) {
       const message = (err as { response?: { data?: { message?: string } } })?.response?.data?.message
       setError(message || t("upload.failed"))
@@ -74,7 +77,7 @@ export function KnowledgeUploadDialog({ open, onOpenChange, onSuccess }: Knowled
   }
 
   return (
-    <Dialog open={open} onOpenChange={(o) => !submitting && onOpenChange(o)}>
+    <Dialog open={open} onOpenChange={(o) => !submitting && (o ? onOpenChange(true) : close())}>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>{t("upload.title")}</DialogTitle>
@@ -113,7 +116,7 @@ export function KnowledgeUploadDialog({ open, onOpenChange, onSuccess }: Knowled
         </div>
 
         <DialogFooter>
-          <Button type="button" variant="outline" disabled={submitting} onClick={() => onOpenChange(false)}>
+          <Button type="button" variant="outline" disabled={submitting} onClick={close}>
             {t("upload.cancel")}
           </Button>
           <Button type="button" disabled={submitting || !file} onClick={() => void submit()}>

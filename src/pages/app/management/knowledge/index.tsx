@@ -57,7 +57,7 @@ export default function KnowledgeManagementPage() {
       } catch {
         if (!silent) toast({ variant: "destructive", title: t("errors.load") })
       } finally {
-        if (!silent) setIsLoading(false)
+        setIsLoading(false)
       }
     },
     [keyword, page, t, toast]

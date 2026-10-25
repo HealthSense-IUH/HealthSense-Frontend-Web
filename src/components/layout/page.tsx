@@ -76,7 +76,7 @@ export function PageBreadcrumb({ items, className }: { items: PageBreadcrumbItem
         const isLast = index === items.length - 1
         const linkClass = "font-medium transition-colors hover:text-primary cursor-pointer"
         return (
-          <Fragment key={index}>
+          <Fragment key={item.to ?? (typeof item.label === "string" ? item.label : `crumb-${index}`)}>
             <ChevronRight className="h-3.5 w-3.5 shrink-0 text-slate-300" />
             {isLast && !item.to && !item.onClick ? (
               <span aria-current="page" className="line-clamp-1 font-semibold text-slate-900">

@@ -5,7 +5,7 @@ import { EmptyState } from "@/components/custom/EmptyState"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { formatRecordDate } from "@/lib/formatters"
+import { formatFileSize, formatRecordDate } from "@/lib/formatters"
 import type { KnowledgeDocument } from "@/types/knowledge"
 
 interface KnowledgeTableProps {
@@ -14,12 +14,6 @@ interface KnowledgeTableProps {
   busyId: string | null
   onReingest: (doc: KnowledgeDocument) => void
   onDelete: (doc: KnowledgeDocument) => void
-}
-
-export function formatFileSize(bytes: number): string {
-  if (bytes < 1024) return `${bytes} B`
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
-  return `${(bytes / (1024 * 1024)).toFixed(2)} MB`
 }
 
 export function KnowledgeTable({ documents, isLoading, busyId, onReingest, onDelete }: KnowledgeTableProps) {

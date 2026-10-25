@@ -430,5 +430,5 @@ export const router = createBrowserRouter([
   },
 
   // ---------- 404 ----------
-  { path: "*", element: wrap(<NotFoundPage />) },
+  { path: "*", element: wrap(<NotFoundPage />), errorElement: <GlobalErrorBoundary /> },
 ])

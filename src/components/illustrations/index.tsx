@@ -316,18 +316,3 @@ export function ShieldUserIllustration(props: IllustrationProps) {
     </Svg>
   )
 }
-
-export const illustrations = {
-  heart: HeartPulseIllustration,
-  empty: EmptyBoxIllustration,
-  search: NoResultsIllustration,
-  documents: DocumentsIllustration,
-  consultation: ConsultationIllustration,
-  nutrition: NutritionIllustration,
-  chart: ChartIllustration,
-  error: ErrorIllustration,
-  wearable: WearableIllustration,
-  shield: ShieldUserIllustration,
-} as const
-
-export type IllustrationName = keyof typeof illustrations

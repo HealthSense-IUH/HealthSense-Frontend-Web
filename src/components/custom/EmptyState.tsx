@@ -1,6 +1,6 @@
 import type { ReactNode } from "react"
 
-import { illustrations, type IllustrationName } from "@/components/illustrations"
+import { illustrations, type IllustrationName } from "@/components/illustrations/registry"
 import { cn } from "@/lib/utils"
 
 interface EmptyStateProps {
