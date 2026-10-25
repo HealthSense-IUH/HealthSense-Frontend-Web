@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next"
 import { Loader2, RefreshCw, Trash2 } from "lucide-react"
 
+import { EmptyState } from "@/components/custom/EmptyState"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
@@ -57,7 +58,11 @@ export function KnowledgeTable({ documents, isLoading, busyId, onReingest, onDel
   }
 
   if (documents.length === 0) {
-    return <div className="py-10 text-center text-muted-foreground">{t("table.empty")}</div>
+    return (
+      <div className="rounded-2xl border border-dashed border-border bg-card/60">
+        <EmptyState illustration="documents" title={t("table.emptyTitle")} description={t("table.empty")} />
+      </div>
+    )
   }
 
   return (

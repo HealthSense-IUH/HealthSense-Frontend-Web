@@ -37,7 +37,8 @@
     "empty": "Chưa có tài liệu nào. Tải tài liệu lên để Cara tra cứu được.",
     "loading": "Đang tải…",
     "reingest": "Ingest lại",
-    "delete": "Xoá"
+    "delete": "Xoá",
+    "emptyTitle": "Kho tri thức đang trống"
   },
   "status": {
     "PENDING": "Chờ xử lý",

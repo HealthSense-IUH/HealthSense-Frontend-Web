@@ -313,6 +313,10 @@
     "evening": {
       "text": "Chào buổi tối",
       "subtext": "Thư giãn tinh thần, chăm sóc giấc ngủ và kiểm tra sự ổn định của nhịp tim."
+    },
+    "cta": {
+      "history": "Xem lịch sử đo",
+      "consult": "Đặt tư vấn"
     }
   },
   "memberDashboard": {
@@ -784,4 +788,3 @@
     }
   }
 }
-

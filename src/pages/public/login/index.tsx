@@ -26,6 +26,7 @@ import { getAuthErrorMessage } from "@/lib/errorHandler"
 import { getDefaultRouteForRole } from "@/constants"
 import { BrandSlogan } from "@/components/custom/BrandSlogan"
 import { LanguageSwitcher } from "@/components/layout/language-switcher"
+import { AuthShowcase } from "./components/auth-showcase"
 
 type LoginLocationState = {
   from?: {
@@ -219,7 +220,9 @@ export default function LoginPage() {
       </header>
 
       {/* Centered Main Form Container */}
-      <div className="relative z-10 w-full max-w-md mx-auto px-4 sm:px-6 py-6 my-auto flex flex-col items-center">
+      <div className="relative z-10 mx-auto my-auto grid w-full max-w-6xl grid-cols-1 items-center gap-8 px-4 py-6 sm:px-6 lg:grid-cols-[1.1fr_minmax(0,28rem)] lg:gap-12">
+        <AuthShowcase />
+        <div className="flex w-full max-w-md flex-col items-center justify-self-center lg:justify-self-end">
         
         {/* Auth Card */}
         <div className="w-full bg-white rounded-3xl p-7 sm:p-9 shadow-[0_20px_60px_-15px_rgba(15,23,42,0.08)] border border-slate-200/80 relative transition-all duration-300">
@@ -516,6 +519,7 @@ export default function LoginPage() {
             )}
           </div>
 
+        </div>
         </div>
 
       </div>

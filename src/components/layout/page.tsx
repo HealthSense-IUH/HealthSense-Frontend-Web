@@ -1,16 +1,19 @@
 import { Fragment, type ReactNode } from "react"
-import { Link } from "react-router-dom"
-import { ChevronRight } from "lucide-react"
+import { Link, useLocation } from "react-router-dom"
+import { ChevronRight, Home } from "lucide-react"
 import { useTranslation } from "react-i18next"
 
+import { getDefaultGeneralRouteForRole, getDefaultRouteForRole } from "@/constants"
 import { useDocumentTitle } from "@/hooks/use-document-title"
 import { cn } from "@/lib/utils"
+import { useAuthStore } from "@/stores/auth-store"
+import { allNavigationGroups, isManagementPath } from "./nav-config"
 
 /*
  * Bố cục thống nhất cho mọi trang trong app. MainLayout lo sidebar + topbar + khoảng đệm; mỗi trang chỉ dựng:
  *
  *   <Page>
- *     <PageHeader title="..." description="..." actions={...} />   tiêu đề
+ *     <PageHeader title="..." description="..." actions={...} />   tiêu đề (+ breadcrumb tự suy từ đường dẫn)
  *     <PageBody>                                                    nội dung, chia phần bằng
  *       <PageSection title="..." description="...">...</PageSection>
  *     </PageBody>
@@ -38,7 +41,7 @@ export function Page({ children, fill = false, bleed = false, className }: PageP
   return (
     <div
       className={cn(
-        "flex flex-col gap-4",
+        "flex flex-col gap-4 motion-safe:animate-fade-up",
         bleed ? "w-auto -m-(--app-page-pad)" : "w-full",
         // Khi fill: chiều cao còn lại = màn hình - topbar - khoảng đệm trên dưới của <main> (biến đặt ở MainLayout)
         bleed
@@ -64,15 +67,19 @@ export interface PageBreadcrumbItem {
 export function PageBreadcrumb({ items, className }: { items: PageBreadcrumbItem[]; className?: string }) {
   const { t } = useTranslation()
   return (
-    <nav aria-label={t("common.breadcrumb")} className={cn("flex flex-wrap items-center gap-1.5 text-xs sm:text-sm text-muted-foreground", className)}>
+    <nav
+      aria-label={t("common.breadcrumb")}
+      className={cn("flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground sm:text-[13px]", className)}
+    >
+      <Home className="h-3.5 w-3.5 shrink-0 text-slate-400" />
       {items.map((item, index) => {
         const isLast = index === items.length - 1
-        const linkClass = "font-medium hover:text-primary transition-colors cursor-pointer"
+        const linkClass = "font-medium transition-colors hover:text-primary cursor-pointer"
         return (
           <Fragment key={index}>
-            {index > 0 && <ChevronRight className="w-3.5 h-3.5 text-slate-300 shrink-0" />}
+            <ChevronRight className="h-3.5 w-3.5 shrink-0 text-slate-300" />
             {isLast && !item.to && !item.onClick ? (
-              <span aria-current="page" className="font-semibold text-slate-900 line-clamp-1">
+              <span aria-current="page" className="line-clamp-1 font-semibold text-slate-900">
                 {item.label}
               </span>
             ) : item.to ? (
@@ -93,13 +100,47 @@ export function PageBreadcrumb({ items, className }: { items: PageBreadcrumbItem
   )
 }
 
+/**
+ * Breadcrumb tự suy từ đường dẫn: Phân hệ (Cá nhân / Quản trị) › mục điều hướng khớp dài nhất › trang hiện tại
+ * (chỉ thêm khi đường dẫn sâu hơn mục đó, ví dụ chi tiết người dùng). Trang nào cần khác thì truyền `breadcrumbs`.
+ */
+function useAutoBreadcrumbs(title: ReactNode): PageBreadcrumbItem[] {
+  const { t } = useTranslation()
+  const { pathname } = useLocation()
+  const role = useAuthStore((state) => state.userSession?.role)
+
+  const inManagement = isManagementPath(pathname)
+  const crumbs: PageBreadcrumbItem[] = [
+    {
+      label: t(inManagement ? "areaSwitch.management" : "areaSwitch.general"),
+      to: inManagement ? getDefaultRouteForRole(role) : getDefaultGeneralRouteForRole(role),
+    },
+  ]
+
+  const match = allNavigationGroups
+    .flatMap((group) => group.items)
+    .filter((item) => pathname === item.href || pathname.startsWith(`${item.href}/`))
+    .sort((a, b) => b.href.length - a.href.length)[0]
+
+  if (match) {
+    const label = t(`nav.item.${match.id}`, { defaultValue: match.title ?? match.id })
+    const deeper = pathname !== match.href
+    crumbs.push(deeper ? { label, to: match.href } : { label })
+    if (deeper && title) crumbs.push({ label: title })
+  } else if (title) {
+    crumbs.push({ label: title })
+  }
+  return crumbs
+}
+
 interface PageHeaderProps {
   title: ReactNode
   description?: ReactNode
-  /** Icon trong ô vuông màu nhạt bên trái tiêu đề, ví dụ <Heart className="w-5 h-5" /> */
+  /** Icon trong ô vuông gradient bên trái tiêu đề, ví dụ <Heart className="w-5 h-5" /> */
   icon?: ReactNode
   /** Nhãn nhỏ phía trên tiêu đề (nhóm, phân hệ) */
   eyebrow?: ReactNode
+  /** Truyền để thay breadcrumb tự động; mảng rỗng để ẩn */
   breadcrumbs?: PageBreadcrumbItem[]
   /** Nút thao tác bên phải */
   actions?: ReactNode
@@ -128,31 +169,39 @@ export function PageHeader({
   className,
 }: PageHeaderProps) {
   useDocumentTitle(documentTitle ?? (typeof title === "string" ? title : undefined))
+  const autoCrumbs = useAutoBreadcrumbs(title)
+  const crumbs = breadcrumbs ?? autoCrumbs
+
   return (
-    <header className={cn("flex flex-col gap-3 shrink-0", className)}>
-      {breadcrumbs && breadcrumbs.length > 0 && <PageBreadcrumb items={breadcrumbs} />}
+    <header className={cn("flex shrink-0 flex-col gap-3", className)}>
+      {crumbs.length > 0 && <PageBreadcrumb items={crumbs} />}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-        <div className="flex items-start gap-3 min-w-0">
+        <div className="flex min-w-0 items-start gap-3.5">
           {icon && (
-            <div className={cn("rounded-xl bg-primary/10 text-primary shrink-0", compact ? "p-2" : "p-2.5")}>{icon}</div>
+            <div
+              className={cn(
+                "flex shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-primary-500 to-primary-700 text-white shadow-md shadow-primary-600/25",
+                compact ? "h-10 w-10" : "h-12 w-12"
+              )}
+            >
+              {icon}
+            </div>
           )}
           <div className="min-w-0 space-y-1">
-            {eyebrow && <div className="text-xs font-semibold text-primary">{eyebrow}</div>}
+            {eyebrow && <div className="text-xs font-bold uppercase tracking-wider text-primary">{eyebrow}</div>}
             <h1
               className={cn(
-                "font-bold tracking-tight text-slate-900 break-words",
+                "break-words font-extrabold tracking-tight text-slate-900",
                 compact ? "text-lg sm:text-xl" : "text-2xl sm:text-3xl"
               )}
             >
               {title}
             </h1>
-            {description && (
-              <div className="text-sm text-muted-foreground leading-relaxed max-w-3xl">{description}</div>
-            )}
+            {description && <div className="max-w-3xl text-sm leading-relaxed text-muted-foreground">{description}</div>}
             {meta && <div className="flex flex-wrap items-center gap-2 pt-1">{meta}</div>}
           </div>
         </div>
-        {actions && <div className="flex flex-wrap items-center gap-2 shrink-0">{actions}</div>}
+        {actions && <div className="flex shrink-0 flex-wrap items-center gap-2">{actions}</div>}
       </div>
     </header>
   )
@@ -160,7 +209,7 @@ export function PageHeader({
 
 /** Nội dung chính. Trong trang `fill`, phần này chiếm chỗ còn lại; phần tử con tự lo cuộn. */
 export function PageBody({ children, className }: { children: ReactNode; className?: string }) {
-  return <div className={cn("flex-1 min-h-0 min-w-0 flex flex-col gap-4", className)}>{children}</div>
+  return <div className={cn("flex min-h-0 min-w-0 flex-1 flex-col gap-4", className)}>{children}</div>
 }
 
 interface PageSectionProps {
@@ -178,10 +227,10 @@ export function PageSection({ title, description, actions, children, className }
     <section className={cn("flex flex-col gap-3", className)}>
       <div className="flex flex-wrap items-end justify-between gap-2">
         <div className="min-w-0">
-          <h2 className="text-lg font-semibold tracking-tight text-foreground">{title}</h2>
+          <h2 className="text-lg font-bold tracking-tight text-foreground">{title}</h2>
           {description && <p className="mt-0.5 text-sm text-muted-foreground">{description}</p>}
         </div>
-        {actions && <div className="flex flex-wrap items-center gap-2 shrink-0">{actions}</div>}
+        {actions && <div className="flex shrink-0 flex-wrap items-center gap-2">{actions}</div>}
       </div>
       {children}
     </section>
@@ -193,7 +242,7 @@ export function PageFooter({ children, className }: { children: ReactNode; class
   return (
     <footer
       className={cn(
-        "shrink-0 flex flex-col gap-3 border-t border-border pt-3 text-xs text-muted-foreground leading-relaxed",
+        "flex shrink-0 flex-col gap-3 border-t border-border pt-3 text-xs leading-relaxed text-muted-foreground",
         className
       )}
     >

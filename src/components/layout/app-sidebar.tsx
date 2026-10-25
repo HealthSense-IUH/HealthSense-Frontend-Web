@@ -27,7 +27,7 @@ export function AppSidebar() {
           title={`${t("brand.name")} - ${roleLabel(effectiveRole)}`}
         >
           {isStaff ? (
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary-600 text-white shadow-sm group-hover:bg-primary-500 transition-colors">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 to-primary-700 text-white shadow-lg shadow-primary-900/40 ring-1 ring-white/10 group-hover:from-primary-400 group-hover:to-primary-600 transition-colors">
               {isDoctor ? <Stethoscope className="h-5 w-5" /> : <ShieldCheck className="h-5 w-5" />}
             </div>
           ) : (

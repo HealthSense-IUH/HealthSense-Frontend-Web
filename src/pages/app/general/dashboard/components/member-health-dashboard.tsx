@@ -15,6 +15,7 @@ import { healthRecordApi } from "@/services"
 import { HealthRecordDetailModal } from "@/pages/app/general/afib-history/components/HealthRecordDetailModal"
 import { HealthHeatmapCalendar } from "./health-heatmap-calendar"
 import { MemberGreetingBanner } from "./member-greeting-banner"
+import { EmptyState } from "@/components/custom/EmptyState"
 import { 
   getPredictionMeta, 
   formatHrvNumber, 
@@ -81,15 +82,15 @@ export function MemberHealthDashboard() {
       {/* 4 Overview Stat Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Latest Heart Rate */}
-        <Card className="rounded-2xl border border-border shadow-2xs bg-card hover:shadow-md transition-all duration-200">
+        <Card className="group rounded-2xl border border-border/70 bg-card shadow-card transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary-900/5">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <span className="text-xs font-semibold text-muted-foreground">{t("memberDashboard.latestMeasurement")}</span>
-            <div className="h-9 w-9 rounded-xl bg-danger-500/10 text-danger-500 flex items-center justify-center">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-danger-400 to-danger-600 text-white shadow-md shadow-danger-500/30">
               <HeartPulse className="h-4.5 w-4.5" />
             </div>
           </CardHeader>
           <CardContent className="space-y-1">
-            <div className="text-2xl font-bold text-foreground">
+            <div className="text-3xl font-extrabold tracking-tight text-foreground">
               {latestHr ? `${latestHr} ` : "-- "}
               <span className="text-xs font-normal text-muted-foreground">BPM</span>
             </div>
@@ -104,15 +105,15 @@ export function MemberHealthDashboard() {
         </Card>
 
         {/* Latest AFib Risk Assessment */}
-        <Card className="rounded-2xl border border-border shadow-2xs bg-card hover:shadow-md transition-all duration-200">
+        <Card className="group rounded-2xl border border-border/70 bg-card shadow-card transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary-900/5">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <span className="text-xs font-semibold text-muted-foreground">{t("memberDashboard.afibProbability")}</span>
-            <div className="h-9 w-9 rounded-xl bg-primary-500/10 text-primary-500 flex items-center justify-center">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary-400 to-primary-600 text-white shadow-md shadow-primary-500/30">
               <TrendingUp className="h-4.5 w-4.5" />
             </div>
           </CardHeader>
           <CardContent className="space-y-1.5">
-            <div className="text-2xl font-bold text-foreground">
+            <div className="text-3xl font-extrabold tracking-tight text-foreground">
               {latestRecord?.confidence !== null && latestRecord?.confidence !== undefined
                 ? `${(latestRecord.confidence * 100).toFixed(1)}%`
                 : "--"}
@@ -128,15 +129,15 @@ export function MemberHealthDashboard() {
         </Card>
 
         {/* HRV Metrics (RMSSD & SDNN) */}
-        <Card className="rounded-2xl border border-border shadow-2xs bg-card hover:shadow-md transition-all duration-200">
+        <Card className="group rounded-2xl border border-border/70 bg-card shadow-card transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary-900/5">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <span className="text-xs font-semibold text-muted-foreground">{t("memberDashboard.hrvRmssd")}</span>
-            <div className="h-9 w-9 rounded-xl bg-primary-500/10 text-primary-500 flex items-center justify-center">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-warning-300 to-warning-500 text-white shadow-md shadow-warning-500/30">
               <Sliders className="h-4.5 w-4.5" />
             </div>
           </CardHeader>
           <CardContent className="space-y-1">
-            <div className="text-2xl font-bold text-foreground">
+            <div className="text-3xl font-extrabold tracking-tight text-foreground">
               {latestRmssd ? `${formatHrvNumber(latestRmssd, 1)} ` : "-- "}
               <span className="text-xs font-normal text-muted-foreground">ms</span>
             </div>
@@ -147,15 +148,15 @@ export function MemberHealthDashboard() {
         </Card>
 
         {/* Total Screenings Summary */}
-        <Card className="rounded-2xl border border-border shadow-2xs bg-card hover:shadow-md transition-all duration-200">
+        <Card className="group rounded-2xl border border-border/70 bg-card shadow-card transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary-900/5">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <span className="text-xs font-semibold text-muted-foreground">{t("memberDashboard.totalScreenings")}</span>
-            <div className="h-9 w-9 rounded-xl bg-success-500/10 text-success-500 flex items-center justify-center">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-success-400 to-success-600 text-white shadow-md shadow-success-500/30">
               <Activity className="h-4.5 w-4.5" />
             </div>
           </CardHeader>
           <CardContent className="space-y-1">
-            <div className="text-2xl font-bold text-foreground">
+            <div className="text-3xl font-extrabold tracking-tight text-foreground">
               {totalScreenings} <span className="text-xs font-normal text-muted-foreground">{t("memberDashboard.timesUnit")}</span>
             </div>
             <span className="text-xs text-muted-foreground block truncate">
@@ -180,7 +181,7 @@ export function MemberHealthDashboard() {
         {/* Right Column: Recent Screenings Table (6 cols) */}
         <div className="lg:col-span-6 space-y-6 flex flex-col justify-start">
           {/* Recent Screenings Table */}
-          <Card className="rounded-2xl border border-border shadow-xs bg-white flex flex-col justify-between overflow-hidden">
+          <Card className="flex flex-col justify-between overflow-hidden rounded-2xl border border-border/70 bg-card shadow-card">
             <CardHeader className="flex flex-row items-center justify-between border-b border-border pb-4">
               <div>
                 <CardTitle className="text-base font-bold text-foreground">
@@ -209,10 +210,7 @@ export function MemberHealthDashboard() {
                   ))}
                 </div>
               ) : recentRecords.length === 0 ? (
-                <div className="p-12 text-center text-xs text-muted-foreground flex flex-col items-center justify-center gap-2">
-                  <Activity className="h-8 w-8 text-slate-300" />
-                  <span>{t("memberDashboard.recent.empty")}</span>
-                </div>
+                <EmptyState compact illustration="heart" title={t("memberDashboard.recent.empty")} />
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-xs border-collapse">

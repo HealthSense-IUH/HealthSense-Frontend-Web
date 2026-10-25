@@ -11,7 +11,7 @@ import { AppShellProvider } from "./app-shell-provider"
  */
 function AppShellInner() {
   return (
-    <div className="min-h-screen flex bg-background text-foreground font-sans [--app-topbar-h:4rem]">
+    <div className="app-canvas min-h-screen flex text-foreground font-sans [--app-topbar-h:4rem]">
       <AppSidebar />
       <div className="flex-1 min-w-0 flex flex-col pl-[92px]">
         <Topbar />

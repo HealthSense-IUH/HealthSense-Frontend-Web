@@ -313,6 +313,10 @@
     "evening": {
       "text": "Good evening",
       "subtext": "Relax your mind, take care of your sleep and check how steady your heart rhythm is."
+    },
+    "cta": {
+      "history": "View measurements",
+      "consult": "Book a consultation"
     }
   },
   "memberDashboard": {
@@ -784,4 +788,3 @@
     }
   }
 }
-

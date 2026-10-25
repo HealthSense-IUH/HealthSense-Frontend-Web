@@ -57,9 +57,14 @@ export function SidebarContent() {
                     <Link
                       to={targetHref}
                       className={`group relative flex flex-col items-center justify-center w-full py-2.5 px-1 rounded-xl transition-colors ${
-                        active ? "bg-primary-500/20 text-white ring-1 ring-primary-400/40" : "text-slate-400 hover:bg-white/5 hover:text-white"
+                        active
+                          ? "bg-gradient-to-b from-primary-500/35 to-primary-600/15 text-white ring-1 ring-primary-400/40 shadow-inner shadow-primary-900/30"
+                          : "text-slate-400 hover:bg-white/5 hover:text-white"
                       }`}
                     >
+                      {active && (
+                        <span className="absolute left-0 top-1/2 h-6 w-1 -translate-y-1/2 rounded-r-full bg-primary-400" aria-hidden="true" />
+                      )}
                       <div className="relative">
                         <Icon
                           className={`h-5 w-5 shrink-0 transition-colors ${
