@@ -1,7 +1,6 @@
 import {
   Activity,
   BarChart3,
-  BookOpen,
   Coins,
   FileText,
   HeartPulse,
@@ -79,12 +78,6 @@ export const allNavigationGroups: NavigationGroup[] = [
         id: "nutrition-rules",
         href: "/app/management/nutrition-rules",
         icon: SlidersHorizontal,
-        allowedRoles: [USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN],
-      },
-      {
-        id: "knowledge",
-        href: "/app/management/knowledge",
-        icon: BookOpen,
         allowedRoles: [USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN],
       },
     ],

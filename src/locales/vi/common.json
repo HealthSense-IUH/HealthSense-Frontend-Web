@@ -34,8 +34,7 @@
       "doctor-consultations": "Phiên khám Bác sĩ",
       "doctor-statistics": "Thống kê khám bệnh",
       "statistics": "Thống kê",
-      "member-statistics": "Thống kê của tôi",
-      "knowledge": "Kho tri thức"
+      "member-statistics": "Thống kê của tôi"
     },
     "short": {
       "dashboard": "Tổng quan",
@@ -54,8 +53,7 @@
       "doctor-consultations": "Phiên khám",
       "doctor-statistics": "Thống kê",
       "statistics": "Thống kê",
-      "member-statistics": "Thống kê",
-      "knowledge": "Tri thức"
+      "member-statistics": "Thống kê"
     }
   },
   "topbar": {

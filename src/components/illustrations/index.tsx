@@ -158,7 +158,7 @@ export function NoResultsIllustration(props: IllustrationProps) {
   )
 }
 
-/** Chồng tài liệu có dấu bookmark và tia sáng: kho tri thức */
+/** Chồng tài liệu có dấu bookmark và tia sáng: báo cáo, hồ sơ, giấy tờ */
 export function DocumentsIllustration(props: IllustrationProps) {
   return (
     <Svg {...props}>

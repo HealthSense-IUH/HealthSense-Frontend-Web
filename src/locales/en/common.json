@@ -34,8 +34,7 @@
       "doctor-consultations": "Doctor sessions",
       "doctor-statistics": "Consultation Statistics",
       "statistics": "Statistics",
-      "member-statistics": "My Statistics",
-      "knowledge": "Knowledge base"
+      "member-statistics": "My Statistics"
     },
     "short": {
       "dashboard": "Overview",
@@ -54,8 +53,7 @@
       "doctor-consultations": "Sessions",
       "doctor-statistics": "Statistics",
       "statistics": "Statistics",
-      "member-statistics": "Statistics",
-      "knowledge": "Knowledge"
+      "member-statistics": "Statistics"
     }
   },
   "topbar": {
