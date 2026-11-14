@@ -26,7 +26,33 @@ export interface PredictionLabelMeta {
   icon: ReactNode
 }
 
+export interface AnalysisWindow {
+  index: number
+  startS: number
+  endS: number
+  accepted: boolean
+  pMeta?: number
+  sigmaDis?: number | null
+  baseProbabilities?: Record<string, number>
+  reason?: string
+}
+
+export interface WindowAnalysis {
+  windowSeconds: number
+  stepSeconds: number
+  windows: AnalysisWindow[]
+  acceptedWindows: number
+  rejectedWindows: number
+  meanProbability: number
+  temporalRuleAvailable: boolean
+  alert: boolean
+  alertBranch: "five_window_persistence" | "two_window_high_confidence" | null
+  alertTimeS: number | null
+}
+
 export interface HRVFeatures {
+  windowAnalysis?: WindowAnalysis
+  afAlert?: boolean
   HR_mean?: number
   Mean_NN?: number
   SDNN?: number
@@ -104,6 +130,7 @@ export interface PresignedUrlRequest {
 export interface PresignedUrlResponse {
   recordId: number
   uploadUrl: string
+  downloadUrl?: string
   s3Key: string
 }
 

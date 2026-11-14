@@ -57,7 +57,12 @@ export default function AfibHistoryPage() {
     else setLoading(true)
 
     try {
-      const recordsRes = await healthRecordApi.getMyRecords({ page, size: pageSize })
+      const recordsRes = await healthRecordApi.getMyRecords({
+        page,
+        size: pageSize,
+        keyword: searchKeyword,
+        filter: statusFilter,
+      })
       const pageData = recordsRes.data
 
       if (pageData && pageData.content) {
@@ -76,26 +81,25 @@ export default function AfibHistoryPage() {
       setLoading(false)
       setRefreshing(false)
     }
-  }, [page, pageSize])
+  }, [page, pageSize, searchKeyword, statusFilter])
 
   useEffect(() => {
     fetchRecords()
   }, [fetchRecords])
 
-  // Filter records based on search and status
-  const filteredRecords = records.filter((r) => {
-    if (searchKeyword.trim()) {
-      const kw = searchKeyword.toLowerCase()
-      const matchFile = r.fileName?.toLowerCase().includes(kw)
-      const matchDate = r.createdAt?.toLowerCase().includes(kw)
-      if (!matchFile && !matchDate) return false
-    }
+  // Auto-poll mỗi 5 giây khi có bản ghi đang PROCESSING để tự cập nhật kết quả
+  useEffect(() => {
+    const hasProcessing = records.some(
+      (r) => r.status === "PROCESSING" || r.status === "PENDING_UPLOAD"
+    )
+    if (!hasProcessing) return
+    const timer = setInterval(() => {
+      fetchRecords(true)
+    }, 5000)
+    return () => clearInterval(timer)
+  }, [records, fetchRecords])
 
-    if (statusFilter === "normal") return r.predictionLabel === "NORMAL"
-    if (statusFilter === "warning") return r.predictionLabel === "AFIB" || r.predictionLabel === "AFIB_SUSPECTED"
-    if (statusFilter === "processing") return r.status === "PROCESSING" || r.status === "PENDING_ANALYSIS"
-    return true
-  })
+  const filteredRecords = records
 
   const handleOpenDetail = (record: MemberHealthRecord) => {
     setSelectedRecord(record)
@@ -141,12 +145,21 @@ export default function AfibHistoryPage() {
                 <Input
                   type="search"
                   value={searchKeyword}
-                  onChange={(e) => setSearchKeyword(e.target.value)}
+                  onChange={(e) => {
+                    setSearchKeyword(e.target.value)
+                    setPage(1)
+                  }}
                   placeholder={t("afibHistory.searchPlaceholder")}
                   className="w-full pl-9 bg-white border-0 rounded-xl shadow-xs h-10 text-xs font-medium"
                 />
               </div>
-              <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <Select
+                value={statusFilter}
+                onValueChange={(value) => {
+                  setStatusFilter(value)
+                  setPage(1)
+                }}
+              >
                 <SelectTrigger className="w-[200px] bg-white border-0 rounded-xl shadow-xs h-10 text-xs font-medium">
                   <SelectValue placeholder={t("afibHistory.filter.placeholder")} />
                 </SelectTrigger>
