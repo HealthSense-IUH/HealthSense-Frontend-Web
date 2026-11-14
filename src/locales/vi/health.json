@@ -86,6 +86,17 @@
     "file": "File: {{name}}",
     "aiConclusion": "Kết luận AI:",
     "afibProbability": "Khả năng bị rung nhĩ",
+    "temporal": {
+      "title": "Phân tích theo cửa sổ 30 giây",
+      "alertFive": "Có cảnh báo: 5 cửa sổ liên tiếp có xác suất ≥ 80% và các mô hình đồng thuận (giây {{time}})",
+      "alertTwo": "Có cảnh báo: 2 cửa sổ liên tiếp có xác suất ≥ 90% và các mô hình đồng thuận (giây {{time}})",
+      "noAlert": "Không có cảnh báo: chưa đủ cửa sổ liên tiếp đạt ngưỡng",
+      "unavailable": "Mô hình đang dùng không hỗ trợ quy tắc cảnh báo theo thời gian",
+      "accepted": "Cửa sổ đạt chất lượng tín hiệu: {{accepted}}/{{total}}",
+      "window": "{{start}}–{{end}} giây",
+      "rejected": "Tín hiệu nhiễu",
+      "note": "Xác suất của từng cửa sổ chỉ để tham khảo, không thay thế chẩn đoán của bác sĩ."
+    },
     "avgHeartRate": "Nhịp tim TB",
     "lfHfRatio": "Tỷ lệ LF/HF",
     "hrvTitle": "Các chỉ số Biến thiên Nhịp tim (HRV)",

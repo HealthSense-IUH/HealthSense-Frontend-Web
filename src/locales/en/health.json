@@ -86,6 +86,17 @@
     "file": "File: {{name}}",
     "aiConclusion": "AI conclusion:",
     "afibProbability": "Atrial fibrillation probability",
+    "temporal": {
+      "title": "30-second window analysis",
+      "alertFive": "Alert: 5 consecutive windows with probability ≥ 80% and agreeing models (at {{time}} s)",
+      "alertTwo": "Alert: 2 consecutive windows with probability ≥ 90% and agreeing models (at {{time}} s)",
+      "noAlert": "No alert: not enough consecutive windows met the thresholds",
+      "unavailable": "The active model does not support the temporal alert rule",
+      "accepted": "Windows with acceptable signal quality: {{accepted}}/{{total}}",
+      "window": "{{start}}–{{end}} s",
+      "rejected": "Noisy signal",
+      "note": "Window probabilities are for reference only and do not replace a physician's diagnosis."
+    },
     "avgHeartRate": "Avg. heart rate",
     "lfHfRatio": "LF/HF ratio",
     "hrvTitle": "Heart Rate Variability (HRV) metrics",

@@ -28,6 +28,33 @@ export function HealthRecordDetailModal({ record, isOpen, onClose }: HealthRecor
   const { t } = useTranslation("health")
   const { toast } = useToast()
   const [downloading, setDownloading] = useState(false)
+  const [detailRecord, setDetailRecord] = useState<MemberHealthRecord | null>(record)
+
+  useEffect(() => {
+    setDetailRecord(record)
+    if (!isOpen || !record?.id || record.status !== "COMPLETED") {
+      return
+    }
+    const hasFullVisuals = Array.isArray(record.hrvFeatures?.chartData) && record.hrvFeatures.chartData.length > 0
+    if (hasFullVisuals) {
+      return
+    }
+    let cancelled = false
+    healthRecordApi
+      .getRecordById(record.id)
+      .then((res) => {
+        if (!cancelled && res?.data) {
+          setDetailRecord(res.data)
+        }
+      })
+      .catch(() => {
+        // Fallback giữ nguyên record hiện có
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [isOpen, record])
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -42,10 +69,11 @@ export function HealthRecordDetailModal({ record, isOpen, onClose }: HealthRecor
     }
   }, [isOpen, onClose])
 
-  if (!isOpen || !record) return null
+  const activeRecord = detailRecord || record
+  if (!isOpen || !activeRecord) return null
 
-  const meta = getPredictionMeta(record.predictionLabel, record.status)
-  const features = record.hrvFeatures || {}
+  const meta = getPredictionMeta(activeRecord.predictionLabel, activeRecord.status)
+  const features = activeRecord.hrvFeatures || {}
 
   return (
     <div 
@@ -64,9 +92,9 @@ export function HealthRecordDetailModal({ record, isOpen, onClose }: HealthRecor
             </h3>
             <p className="text-xs text-muted-foreground flex items-center gap-1.5">
               <Clock className="w-3.5 h-3.5" />
-              <span>{t("recordDetail.measuredAt", { date: formatRecordDate(record.createdAt) })}</span>
+              <span>{t("recordDetail.measuredAt", { date: formatRecordDate(activeRecord.createdAt) })}</span>
               <span>•</span>
-              <span>{t("recordDetail.file", { name: record.fileName })}</span>
+              <span>{t("recordDetail.file", { name: activeRecord.fileName })}</span>
             </p>
           </div>
 
@@ -93,16 +121,70 @@ export function HealthRecordDetailModal({ record, isOpen, onClose }: HealthRecor
             </p>
           </div>
 
-          {record.confidence !== undefined && record.confidence !== null && (
+          {activeRecord.confidence !== undefined && activeRecord.confidence !== null && (
             <div className="shrink-0 sm:text-right pt-2 sm:pt-0 border-t sm:border-t-0 border-border">
               <span className="text-xs text-muted-foreground block">{t("recordDetail.afibProbability")}</span>
-              <span className="text-lg font-bold text-foreground">{(record.confidence * 100).toFixed(1)}%</span>
+              <span className="text-lg font-bold text-foreground">{(activeRecord.confidence * 100).toFixed(1)}%</span>
             </div>
           )}
         </div>
 
         {/* Waveform + Poincaré + SQI */}
         <MeasurementVisuals features={features} />
+
+        {/* Kết quả theo cửa sổ 30 s và quy tắc cảnh báo theo thời gian (đồng bộ với Mobile) */}
+        {features.windowAnalysis && Array.isArray(features.windowAnalysis.windows) && features.windowAnalysis.windows.length > 0 && (
+          <div className="rounded-2xl bg-slate-50 border border-border p-4 space-y-2">
+            <h4 className="text-xs font-semibold text-foreground uppercase tracking-wider">
+              {t("recordDetail.temporal.title")}
+            </h4>
+            <p className={`text-xs font-semibold leading-5 ${features.windowAnalysis.alert ? "text-rose-600" : "text-foreground"}`}>
+              {!features.windowAnalysis.temporalRuleAvailable
+                ? t("recordDetail.temporal.unavailable")
+                : features.windowAnalysis.alert && features.windowAnalysis.alertBranch === "two_window_high_confidence"
+                  ? t("recordDetail.temporal.alertTwo", {
+                      time: typeof features.windowAnalysis.alertTimeS === "number" ? Math.round(features.windowAnalysis.alertTimeS) : "--",
+                    })
+                  : features.windowAnalysis.alert
+                    ? t("recordDetail.temporal.alertFive", {
+                        time: typeof features.windowAnalysis.alertTimeS === "number" ? Math.round(features.windowAnalysis.alertTimeS) : "--",
+                      })
+                    : t("recordDetail.temporal.noAlert")}
+            </p>
+            <p className="text-xs text-muted-foreground">
+              {t("recordDetail.temporal.accepted", {
+                accepted: features.windowAnalysis.acceptedWindows,
+                total: features.windowAnalysis.windows.length,
+              })}
+            </p>
+            <div className="flex flex-wrap gap-1.5 pt-1">
+              {features.windowAnalysis.windows.map((w) => {
+                const style =
+                  !w.accepted || typeof w.pMeta !== "number"
+                    ? "bg-white border-border"
+                    : w.pMeta >= 0.8
+                      ? "bg-rose-50 border-rose-200"
+                      : "bg-emerald-50 border-emerald-200"
+                return (
+                  <div key={w.index} className={`rounded-xl border px-2.5 py-1.5 text-xs ${style}`}>
+                    <div className="text-[11px] text-muted-foreground">
+                      {t("recordDetail.temporal.window", {
+                        start: Math.round(w.startS),
+                        end: Math.round(w.endS),
+                      })}
+                    </div>
+                    <div className="font-semibold text-foreground mt-0.5">
+                      {w.accepted && typeof w.pMeta === "number"
+                        ? `${(w.pMeta * 100).toFixed(0)}%`
+                        : t("recordDetail.temporal.rejected")}
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+            <p className="text-[11px] text-muted-foreground pt-1">{t("recordDetail.temporal.note")}</p>
+          </div>
+        )}
 
         {/* 4 Core Physiological Metrics */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -248,7 +330,7 @@ export function HealthRecordDetailModal({ record, isOpen, onClose }: HealthRecor
         <div className="flex items-center justify-between pt-3 border-t border-border text-xs text-muted-foreground">
           <span className="flex items-center gap-1.5">
             <FileText className="w-3.5 h-3.5" />
-            <span>{t("recordDetail.fileSize", { size: formatHrvNumber(record.fileSize ? record.fileSize / 1024 : 0, 1) })}</span>
+            <span>{t("recordDetail.fileSize", { size: formatHrvNumber(activeRecord.fileSize ? activeRecord.fileSize / 1024 : 0, 1) })}</span>
           </span>
           <div className="flex items-center gap-2">
             <Button
@@ -259,15 +341,15 @@ export function HealthRecordDetailModal({ record, isOpen, onClose }: HealthRecor
               onClick={async () => {
                 try {
                   setDownloading(true)
-                  const res = await healthRecordApi.getDownloadUrl(record.id)
-                  const downloadUrl = res.data?.uploadUrl
+                  const res = await healthRecordApi.getDownloadUrl(activeRecord.id)
+                  const downloadUrl = res.data?.downloadUrl || res.data?.uploadUrl
                   if (!downloadUrl) {
                     toast({ variant: "destructive", title: t("common:toast.error"), description: t("recordDetail.downloadUrlNotFound") })
                     return
                   }
                   const link = document.createElement("a")
                   link.href = downloadUrl
-                  link.download = record.fileName || `health-record-${record.id}.csv`
+                  link.download = activeRecord.fileName || `health-record-${activeRecord.id}.csv`
                   link.target = "_blank"
                   link.rel = "noopener noreferrer"
                   document.body.appendChild(link)

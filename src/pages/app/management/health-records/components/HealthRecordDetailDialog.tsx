@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 import {
   Dialog,
@@ -9,6 +10,7 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { MeasurementVisuals } from "@/pages/app/general/afib-history/components/MeasurementVisuals"
+import { adminHealthRecordApi } from "@/services/health-record.service"
 import type { HRVFeatures, HealthRecord } from "@/types/health-record"
 import { formatRecordDate } from "@/lib/formatters"
 
@@ -20,7 +22,35 @@ interface HealthRecordDetailDialogProps {
 
 export function HealthRecordDetailDialog({ record, open, onOpenChange }: HealthRecordDetailDialogProps) {
   const { t } = useTranslation("management")
-  if (!record) return null
+  const [detailRecord, setDetailRecord] = useState<HealthRecord | null>(record)
+
+  useEffect(() => {
+    setDetailRecord(record)
+    if (!open || !record?.id || record.status !== "COMPLETED") {
+      return
+    }
+    const featuresObj = record.hrvFeatures as HRVFeatures | null | undefined
+    if (Array.isArray(featuresObj?.chartData) && featuresObj.chartData.length > 0) {
+      return
+    }
+    let cancelled = false
+    adminHealthRecordApi
+      .getHealthRecordById(String(record.id))
+      .then((res) => {
+        if (!cancelled && res?.data) {
+          setDetailRecord(res.data)
+        }
+      })
+      .catch(() => {
+        // Fallback giữ record hiện có
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [open, record])
+
+  const activeRecord = detailRecord || record
+  if (!activeRecord) return null
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -28,7 +58,7 @@ export function HealthRecordDetailDialog({ record, open, onOpenChange }: HealthR
         <DialogHeader>
           <DialogTitle>{t("healthRecords.detail.title")}</DialogTitle>
           <DialogDescription>
-            {t("healthRecords.detail.recordId", { id: record.id })}
+            {t("healthRecords.detail.recordId", { id: activeRecord.id })}
           </DialogDescription>
         </DialogHeader>
 
@@ -36,47 +66,47 @@ export function HealthRecordDetailDialog({ record, open, onOpenChange }: HealthR
           <div className="grid grid-cols-2 gap-4 text-sm mb-6">
             <div>
               <span className="font-semibold text-slate-500">{t("healthRecords.detail.memberId")}</span>
-              <p>{record.userId}</p>
+              <p>{activeRecord.userId}</p>
             </div>
             <div>
               <span className="font-semibold text-slate-500">{t("healthRecords.detail.fileName")}</span>
-              <p>{record.fileName || '-'}</p>
+              <p>{activeRecord.fileName || '-'}</p>
             </div>
             <div>
               <span className="font-semibold text-slate-500">{t("healthRecords.detail.status")}</span>
               <p>
-                <Badge variant="outline">{record.status}</Badge>
+                <Badge variant="outline">{activeRecord.status}</Badge>
               </p>
             </div>
             <div>
               <span className="font-semibold text-slate-500">{t("healthRecords.detail.prediction")}</span>
               <p>
-                {record.predictionLabel ? (
-                  <Badge variant="outline">{record.predictionLabel}</Badge>
+                {activeRecord.predictionLabel ? (
+                  <Badge variant="outline">{activeRecord.predictionLabel}</Badge>
                 ) : '-'}
               </p>
             </div>
             <div>
               <span className="font-semibold text-slate-500">{t("healthRecords.detail.confidence")}</span>
-              <p>{record.confidence ? `${(record.confidence * 100).toFixed(2)}%` : '-'}</p>
+              <p>{activeRecord.confidence ? `${(activeRecord.confidence * 100).toFixed(2)}%` : '-'}</p>
             </div>
             <div>
               <span className="font-semibold text-slate-500">{t("healthRecords.detail.date")}</span>
-              <p>{formatRecordDate(record.createdAt)}</p>
+              <p>{formatRecordDate(activeRecord.createdAt)}</p>
             </div>
           </div>
 
-          {record.hrvFeatures && (
+          {activeRecord.hrvFeatures && (
             <div className="mb-6">
-              <MeasurementVisuals features={record.hrvFeatures as HRVFeatures} />
+              <MeasurementVisuals features={activeRecord.hrvFeatures as HRVFeatures} />
             </div>
           )}
 
           <div>
             <h3 className="font-semibold mb-2">{t("healthRecords.detail.hrvFeatures")}</h3>
-            {record.hrvFeatures && Object.keys(record.hrvFeatures).length > 0 ? (
+            {activeRecord.hrvFeatures && Object.keys(activeRecord.hrvFeatures).length > 0 ? (
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                {Object.entries(record.hrvFeatures)
+                {Object.entries(activeRecord.hrvFeatures)
                   // Bỏ các mảng dữ liệu đồ thị (chartData, nnIntervals) — đã vẽ ở trên
                   .filter(([, value]) =>
                     typeof value === "number" || typeof value === "string" || typeof value === "boolean"

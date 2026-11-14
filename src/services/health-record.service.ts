@@ -17,14 +17,26 @@ export const healthRecordApi = {
    * Get paginated list of health records for current authenticated user
    * GET /api/health-records/my-records?page=1&size=10
    */
-  getMyRecords(params?: { page?: number; size?: number }) {
+  getMyRecords(params?: {
+    page?: number
+    size?: number
+    keyword?: string
+    filter?: string
+  }) {
     const page = params?.page ?? 1
     const size = params?.size ?? 10
+    const queryParams: Record<string, string | number> = { page, size }
+    if (params?.keyword && params.keyword.trim()) {
+      queryParams.keyword = params.keyword.trim()
+    }
+    if (params?.filter && params.filter !== "all") {
+      queryParams.filter = params.filter
+    }
     return axiosClient.get<
       ApiResponse<PageResponse<MemberHealthRecord>>,
       ApiResponse<PageResponse<MemberHealthRecord>>
     >("/api/health-records/my-records", {
-      params: { page, size },
+      params: queryParams,
     })
   },
 
