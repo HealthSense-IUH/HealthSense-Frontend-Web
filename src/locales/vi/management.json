@@ -65,7 +65,7 @@
     "dispatchHeader": {
       "missingProfile": {
         "title": "Tài khoản chưa được thiết lập hồ sơ trực:",
-        "description": "Vui lòng liên hệ Người quản lý hoặc Điều phối viên để thiết lập hồ sơ chuyên khoa và kích hoạt nhận bệnh trước khi bật chế độ trực.",
+        "description": "Vui lòng liên hệ Người quản lý hoặc Quản trị viên để thiết lập hồ sơ chuyên khoa và kích hoạt nhận bệnh trước khi bật chế độ trực.",
         "retry": "Thử lại"
       },
       "title": "Trạng thái Trực điều phối",
@@ -138,10 +138,10 @@
       },
       "noProfile": {
         "title": "Chưa có hồ sơ tiếp nhận tư vấn (Care Profile)",
-        "description": "Tài khoản Bác sĩ chưa được Quản trị viên khởi tạo hồ sơ điều phối ban đầu trên hệ thống. Vui lòng liên hệ Người quản lý hoặc Điều phối viên để thiết lập Chuyên khoa trước khi lưu lịch trực."
+        "description": "Tài khoản Bác sĩ chưa được Quản trị viên khởi tạo hồ sơ điều phối ban đầu trên hệ thống. Vui lòng liên hệ Người quản lý hoặc Quản trị viên để thiết lập Chuyên khoa trước khi lưu lịch trực."
       },
       "managedProfile": {
-        "title": "Cấu hình hồ sơ chuyên môn do Điều phối viên / Quản trị viên quản lý:",
+        "title": "Cấu hình hồ sơ chuyên môn do Quản trị viên / Quản trị viên quản lý:",
         "readOnly": "Chỉ xem",
         "specialty": "Chuyên khoa:",
         "oneOnOne": "Nhận tư vấn 1-1:",
@@ -488,7 +488,7 @@
       }
     },
     "recommend": {
-      "title": "Đề xuất Hoàn tiền (Điều phối viên)",
+      "title": "Đề xuất Hoàn tiền (Quản trị viên)",
       "description": "Đề xuất mức hoàn trả cho giao dịch thanh toán #{{id}}. Quyết định và thực hiện sẽ do Quản trị viên phê duyệt.",
       "originalPaidAmount": "Số tiền gốc đã thanh toán:",
       "levelLabel": "Mức độ đề xuất hoàn trả",
@@ -522,9 +522,9 @@
     },
     "decide": {
       "title": "Quyết định Phê duyệt Hoàn tiền (Quản trị viên)",
-      "description": "Xem xét đề xuất từ điều phối viên và ra quyết định chính thức cho giao dịch hoàn #{{id}}.",
+      "description": "Xem xét đề xuất từ quản trị viên và ra quyết định chính thức cho giao dịch hoàn #{{id}}.",
       "originalAmount": "Số tiền gốc:",
-      "coordinatorRecommendation": "Đề xuất của Điều phối:",
+      "administratorRecommendation": "Đề xuất của Điều phối:",
       "recommendationFull": "Hoàn 100%",
       "recommendationPartial": "Hoàn {{amount}} VND",
       "recommendationNone": "Không hoàn",
@@ -597,7 +597,7 @@
       "paymentHistoryBadge": "Lịch sử: PAID (Bảo lưu)",
       "originalAmount": "Số tiền gốc",
       "approvedAmount": "Số tiền phê duyệt",
-      "coordinatorRecommendation": "Đề xuất Điều phối:",
+      "administratorRecommendation": "Đề xuất Điều phối:",
       "noRecommendation": "Chưa có",
       "recommendationReason": "Lý do đề xuất:",
       "decisionReason": "Lý do quyết định (Admin):",
@@ -815,7 +815,6 @@
       "roleLabel": {
         "member": "Bệnh nhân",
         "doctor": "Bác sĩ",
-        "careCoordinator": "Điều phối viên",
         "admin": "Quản trị viên bệnh viện"
       },
       "unauthorized": {

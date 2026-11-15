@@ -65,7 +65,7 @@
     "dispatchHeader": {
       "missingProfile": {
         "title": "Your account does not have an on-duty profile yet:",
-        "description": "Please contact a Manager or Coordinator to set up your specialty profile and enable patient intake before going on duty.",
+        "description": "Please contact a Manager or Administrator to set up your specialty profile and enable patient intake before going on duty.",
         "retry": "Retry"
       },
       "title": "On-duty dispatch status",
@@ -138,10 +138,10 @@
       },
       "noProfile": {
         "title": "No care profile yet",
-        "description": "An administrator has not yet created an initial dispatch profile for this doctor account. Please contact a Manager or Coordinator to set up your specialty before saving your schedule."
+        "description": "An administrator has not yet created an initial dispatch profile for this doctor account. Please contact a Manager or Administrator to set up your specialty before saving your schedule."
       },
       "managedProfile": {
-        "title": "Professional profile settings managed by Coordinators / Administrators:",
+        "title": "Professional profile settings managed by Administrators / Administrators:",
         "readOnly": "Read-only",
         "specialty": "Specialty:",
         "oneOnOne": "1-on-1 consultations:",
@@ -488,7 +488,7 @@
       }
     },
     "recommend": {
-      "title": "Refund Recommendation (Care Coordinator)",
+      "title": "Refund Recommendation (Administrator)",
       "description": "Recommend a refund amount for payment #{{id}}. The decision and execution will be approved by an Administrator.",
       "originalPaidAmount": "Original amount paid:",
       "levelLabel": "Recommended refund level",
@@ -522,9 +522,9 @@
     },
     "decide": {
       "title": "Refund Approval Decision (Administrator)",
-      "description": "Review the coordinator's recommendation and make the official decision for refund #{{id}}.",
+      "description": "Review the administrator's recommendation and make the official decision for refund #{{id}}.",
       "originalAmount": "Original amount:",
-      "coordinatorRecommendation": "Coordinator recommendation:",
+      "administratorRecommendation": "Administrator recommendation:",
       "recommendationFull": "Refund 100%",
       "recommendationPartial": "Refund {{amount}} VND",
       "recommendationNone": "No refund",
@@ -597,7 +597,7 @@
       "paymentHistoryBadge": "History: PAID (Preserved)",
       "originalAmount": "Original amount",
       "approvedAmount": "Approved amount",
-      "coordinatorRecommendation": "Coordinator recommendation:",
+      "administratorRecommendation": "Administrator recommendation:",
       "noRecommendation": "None yet",
       "recommendationReason": "Recommendation reason:",
       "decisionReason": "Decision reason (Admin):",
@@ -815,7 +815,6 @@
       "roleLabel": {
         "member": "Patient",
         "doctor": "Doctor",
-        "careCoordinator": "Care coordinator",
         "admin": "Hospital administrator"
       },
       "unauthorized": {

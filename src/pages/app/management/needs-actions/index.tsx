@@ -38,7 +38,7 @@ export default function NeedsActionsPage() {
   const { toast } = useToast()
   const [searchParams] = useSearchParams()
   const userSession = useAuthStore((state) => state.userSession)
-  const role = userSession?.role || "CARE_COORDINATOR"
+  const role = userSession?.role || "ADMIN"
 
   const [loading, setLoading] = useState(true)
   const [items, setItems] = useState<NeedsActionResponse[]>([])

@@ -425,7 +425,7 @@
       "cancelledDescription": "The renewal request or payment was cancelled. The current care session period is unchanged.",
       "failedTitle": "Renewal payment failed",
       "failedDescription": "An error occurred while processing the transaction. Please try again later.",
-      "reviewDescription": "The renewal payment was recorded but needs manual review by a coordinator. The session period will be updated once verification is complete."
+      "reviewDescription": "The renewal payment was recorded but needs manual review by an administrator. The session period will be updated once verification is complete."
     },
     "initial": {
       "paidTitle": "Payment successful!",

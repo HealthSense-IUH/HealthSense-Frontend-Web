@@ -124,14 +124,12 @@
   "roles": {
     "SUPER_ADMIN": "Super admin",
     "ADMIN": "Administrator",
-    "CARE_COORDINATOR": "Care coordinator",
     "DOCTOR": "Doctor",
     "MEMBER": "Member"
   },
   "rolesShort": {
     "SUPER_ADMIN": "S-Admin",
     "ADMIN": "Admin",
-    "CARE_COORDINATOR": "Coordinator",
     "DOCTOR": "Doctor",
     "MEMBER": "Member"
   },

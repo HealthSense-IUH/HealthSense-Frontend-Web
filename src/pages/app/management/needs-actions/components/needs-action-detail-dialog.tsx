@@ -44,7 +44,6 @@ export function NeedsActionDetailDialog({
   const { toast } = useToast()
   const userSession = useAuthStore((state) => state.userSession)
   const role = userSession?.role || "MEMBER"
-  const isCoordinator = role === "CARE_COORDINATOR"
   const isAdminOrSuperAdmin = role === "ADMIN" || role === "SUPER_ADMIN"
 
   const [loadingAction, setLoadingAction] = useState(false)
@@ -292,8 +291,8 @@ export function NeedsActionDetailDialog({
                 </Button>
               )}
 
-              {/* Direct Domain Action: Coordinator Refund Recommendation */}
-              {item.type === "REFUND_REVIEW_REQUIRED" && isCoordinator && item.status !== "RESOLVED" && (
+              {/* Direct Domain Action: Administrator Refund Recommendation */}
+              {item.type === "REFUND_REVIEW_REQUIRED" && isAdminOrSuperAdmin && item.status !== "RESOLVED" && (
                 <Button
                   size="sm"
                   onClick={() => setRecommendRefundOpen(true)}
@@ -376,7 +375,7 @@ export function NeedsActionDetailDialog({
         </DialogContent>
       </Dialog>
 
-      {/* Coordinator Refund Recommendation Dialog */}
+      {/* Administrator Refund Recommendation Dialog */}
       <RecommendRefundDialog
         paymentId={item.referenceId || null}
         open={recommendRefundOpen}

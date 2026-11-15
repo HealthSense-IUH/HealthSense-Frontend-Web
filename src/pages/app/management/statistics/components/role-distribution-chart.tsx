@@ -10,7 +10,6 @@ interface RoleDistributionChartProps {
 const ROLE_COLORS: Record<string, string> = {
   [USER_ROLES.SUPER_ADMIN]: "#6366f1",
   [USER_ROLES.ADMIN]: "#3b82f6",
-  [USER_ROLES.CARE_COORDINATOR]: "#06b6d4",
   [USER_ROLES.DOCTOR]: "#10b981",
   [USER_ROLES.MEMBER]: "#8b5cf6",
 }
@@ -18,14 +17,10 @@ const ROLE_COLORS: Record<string, string> = {
 export function RoleDistributionChart({ data }: RoleDistributionChartProps) {
   const { t } = useTranslation("management")
 
-  // Exclude CARE_COORDINATOR as requested
-  const filteredData = data.filter(
-    (item) => item.key !== USER_ROLES.CARE_COORDINATOR
-  )
-  const totalUsers = filteredData.reduce((sum, item) => sum + item.count, 0)
+  const totalUsers = data.reduce((sum, item) => sum + item.count, 0)
 
   // Map roles strictly by KEY
-  const chartData = filteredData.map((item) => {
+  const chartData = data.map((item) => {
     const label = roleLabel(item.key) || item.key
     const color = ROLE_COLORS[item.key] || "#94a3b8"
     // Safe percentage handling: 0 if totalUsers === 0 to avoid NaN

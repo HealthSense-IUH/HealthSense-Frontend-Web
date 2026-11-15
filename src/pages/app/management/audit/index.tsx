@@ -24,7 +24,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { useToast } from "@/hooks/use-toast"
 import { useAuthStore } from "@/stores/auth-store"
 import { businessAuditApi } from "@/services"
-import { COORDINATOR_PERMITTED_DOMAINS, ADMIN_ALL_DOMAINS } from "@/constants"
+import { ADMIN_ALL_DOMAINS } from "@/constants"
 import type {
   BusinessAuditEventResponse,
   BusinessAuditTargetDomain as BusinessDomainType,
@@ -35,12 +35,8 @@ import i18n, { currentIntlLocale } from "@/lib/i18n"
 export default function BusinessAuditPage() {
   const { t } = useTranslation("management")
   const { toast } = useToast()
-  const userSession = useAuthStore((state) => state.userSession)
-  const role = userSession?.role || "CARE_COORDINATOR"
-  const isCoordinator = role === "CARE_COORDINATOR"
-
-  // Permitted domain types based on actor role
-  const availableDomains = isCoordinator ? COORDINATOR_PERMITTED_DOMAINS : ADMIN_ALL_DOMAINS
+  const role = useAuthStore((state) => state.userSession?.role) || "ADMIN"
+  const availableDomains = ADMIN_ALL_DOMAINS
 
   const [loading, setLoading] = useState(true)
   const [events, setEvents] = useState<BusinessAuditEventResponse[]>([])

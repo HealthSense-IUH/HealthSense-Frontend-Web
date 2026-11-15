@@ -124,14 +124,12 @@
   "roles": {
     "SUPER_ADMIN": "Quản trị cấp cao",
     "ADMIN": "Quản trị viên",
-    "CARE_COORDINATOR": "Điều phối chăm sóc",
     "DOCTOR": "Bác sĩ",
     "MEMBER": "Hội viên"
   },
   "rolesShort": {
     "SUPER_ADMIN": "QT cấp cao",
     "ADMIN": "Quản trị",
-    "CARE_COORDINATOR": "Điều phối",
     "DOCTOR": "Bác sĩ",
     "MEMBER": "Hội viên"
   },

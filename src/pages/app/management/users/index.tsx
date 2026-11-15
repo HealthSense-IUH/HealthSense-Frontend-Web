@@ -273,7 +273,6 @@ export default function UserManagementPage() {
     switch (selectedRole) {
       case USER_ROLES.MEMBER: return t("users.page.roleLabel.member")
       case USER_ROLES.DOCTOR: return t("users.page.roleLabel.doctor")
-      case USER_ROLES.CARE_COORDINATOR: return t("users.page.roleLabel.careCoordinator")
       case USER_ROLES.ADMIN: return t("users.page.roleLabel.admin")
       default: return String(selectedRole)
     }

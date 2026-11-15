@@ -39,21 +39,6 @@ export const CARE_SERVICE_CODE_LABELS: Record<string, string> = {
 
 
 /**
- * Domain types permissible for CARE_COORDINATOR
- * HealthRecord, Package, and Account domains are strictly forbidden for Coordinators.
- */
-export const COORDINATOR_PERMITTED_DOMAINS: BusinessDomainType[] = [
-  "REQUEST",
-  "RESERVATION",
-  "AGREEMENT",
-  "PAYMENT",
-  "SESSION",
-  "RENEWAL",
-  "REFUND",
-  "FINAL_SUMMARY",
-]
-
-/**
  * All domain types permissible for ADMIN and SUPER_ADMIN
  */
 export const ADMIN_ALL_DOMAINS: BusinessDomainType[] = [

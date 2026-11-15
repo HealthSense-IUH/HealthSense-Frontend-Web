@@ -104,7 +104,7 @@ function checkOutsideSupportHours(session: ConsultationSessionItem | null, isMem
 export function useConsultationsLogic() {
   const { effectiveRole } = useAppShell()
   const userSession = useAuthStore((state) => state.userSession)
-  const isAdmin = effectiveRole === USER_ROLES.ADMIN || effectiveRole === USER_ROLES.SUPER_ADMIN || effectiveRole === USER_ROLES.CARE_COORDINATOR
+  const isAdmin = effectiveRole === USER_ROLES.ADMIN || effectiveRole === USER_ROLES.SUPER_ADMIN
   const isDoctor = effectiveRole === USER_ROLES.DOCTOR
   const isMember = effectiveRole === USER_ROLES.MEMBER
   const { toast } = useToast()

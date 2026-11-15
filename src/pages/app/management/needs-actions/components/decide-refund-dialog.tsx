@@ -123,7 +123,7 @@ export function DecideRefundDialog({
                 </span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-slate-500 font-medium">{t("needsActions.decide.coordinatorRecommendation")}</span>
+                <span className="text-slate-500 font-medium">{t("needsActions.decide.adminRecommendation")}</span>
                 <span className="font-bold text-primary-600">
                   {refund.recommendation === "FULL"
                     ? t("needsActions.decide.recommendationFull")

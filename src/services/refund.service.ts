@@ -9,9 +9,9 @@ import type {
 
 export const refundApi = {
   /**
-   * Submit coordinator refund recommendation for a paid payment
+   * Submit administrator refund recommendation for a paid payment
    * POST /api/admin/consultation-refunds/payments/{paymentId}/recommendation
-   * Role: CARE_COORDINATOR only
+   * Role: ADMIN, SUPER_ADMIN
    */
   recommendRefund(paymentId: number | string, payload: RecommendRefundRequest) {
     return axiosClient.post<
@@ -62,7 +62,7 @@ export const refundApi = {
   /**
    * View refund detail
    * GET /api/admin/consultation-refunds/{refundId}
-   * Role: CARE_COORDINATOR, ADMIN, SUPER_ADMIN
+   * Role: ADMIN, SUPER_ADMIN
    */
   getRefundDetail(refundId: number | string) {
     return axiosClient.get<

@@ -322,7 +322,7 @@
       "invalidSessionTitle": "Phiên không hợp lệ",
       "invalidSessionDescription": "Chỉ có thể yêu cầu gia hạn khi phiên tư vấn đang hoạt động (ACTIVE).",
       "requestSuccessTitle": "Gửi yêu cầu gia hạn thành công",
-      "requestSuccessDescription": "Yêu cầu gia hạn của bạn đã được gửi đến Điều phối viên chăm sóc.",
+      "requestSuccessDescription": "Yêu cầu gia hạn của bạn đã được gửi đến Quản trị viên.",
       "requestErrorTitle": "Lỗi yêu cầu gia hạn",
       "requestErrorDescription": "Không thể gửi yêu cầu gia hạn vào lúc này.",
       "cancelSuccessTitle": "Hủy yêu cầu gia hạn thành công",
@@ -912,7 +912,7 @@
     },
     "moreInfoDialog": {
       "title": "Bổ sung thông tin cho yêu cầu #{{id}}",
-      "description": "Vui lòng cung cấp thêm thông tin theo yêu cầu của điều phối viên.",
+      "description": "Vui lòng cung cấp thêm thông tin theo yêu cầu của quản trị viên.",
       "noteLabel": "Nội dung giải trình / Thông tin bổ sung *",
       "notePlaceholder": "Nhập thông tin chi tiết bổ sung tại đây...",
       "attachLabel": "Đính kèm thêm hồ sơ đo đạc (Tùy chọn - {{selected}} đã chọn)",
@@ -1134,7 +1134,7 @@
   },
   "adminActionDialog": {
     "terminationReasons": {
-      "administrativeClosure": "Đóng phiên hành chính / Điều phối viên kết thúc",
+      "administrativeClosure": "Đóng phiên hành chính / Quản trị viên kết thúc",
       "memberRequested": "Hội viên yêu cầu kết thúc sớm",
       "doctorUnavailable": "Bác sĩ không thể tiếp tục sắp xếp hỗ trợ",
       "memberUnavailable": "Hội viên bận / không thể tiếp tục theo dõi",
@@ -1186,12 +1186,12 @@
       "missingInfoTitle": "Thiếu thông tin",
       "missingInfoDescription": "Vui lòng chọn lý do và nhập giải trình chi tiết yêu cầu kết thúc.",
       "successTitle": "Đã gửi yêu cầu kết thúc phiên",
-      "successDescription": "Yêu cầu của bạn đã được chuyển tới Điều phối viên chăm sóc (Care Coordinator) để rà soát vận hành.",
+      "successDescription": "Yêu cầu của bạn đã được chuyển tới Quản trị viên để rà soát vận hành.",
       "errorTitle": "Lỗi gửi yêu cầu",
       "errorDescription": "Không thể gửi yêu cầu kết thúc phiên lúc này."
     },
     "title": "Yêu Cầu Kết Thúc Phiên Tư Vấn",
-    "description": "Gửi yêu cầu kết thúc phiên chăm sóc đang hoạt động trước thời hạn. Điều phối viên sẽ rà soát nguyên nhân và hỗ trợ các thủ tục liên quan.",
+    "description": "Gửi yêu cầu kết thúc phiên chăm sóc đang hoạt động trước thời hạn. Quản trị viên sẽ rà soát nguyên nhân và hỗ trợ các thủ tục liên quan.",
     "reasonLabel": "Lý do kết thúc",
     "reasonPlaceholder": "Chọn lý do kết thúc...",
     "detailsLabel": "Giải trình chi tiết",
@@ -1259,7 +1259,7 @@
     "description": "Quản lý điều kiện tiếp nhận và lịch làm việc hàng tuần cho tư vấn 1-1.",
     "loading": "Đang tải hồ sơ...",
     "acceptsOneOnOneCare": "Tiếp nhận tư vấn 1-1",
-    "acceptsOneOnOneCareHint": "Bật để cho phép điều phối viên chỉ định yêu cầu tư vấn",
+    "acceptsOneOnOneCareHint": "Bật để cho phép quản trị viên chỉ định yêu cầu tư vấn",
     "specialtyLabel": "Chuyên khoa",
     "specialties": {
       "generalPractice": "Đa khoa",

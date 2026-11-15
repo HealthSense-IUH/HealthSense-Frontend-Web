@@ -425,7 +425,7 @@
       "cancelledDescription": "Yêu cầu gia hạn hoặc giao dịch thanh toán đã bị hủy. Thời hạn phiên chăm sóc hiện tại không đổi.",
       "failedTitle": "Thanh toán gia hạn thất bại",
       "failedDescription": "Đã xảy ra lỗi trong quá trình xử lý giao dịch. Vui lòng thử lại sau.",
-      "reviewDescription": "Giao dịch thanh toán gia hạn đã được ghi nhận nhưng cần điều phối viên kiểm tra thủ công. Thời hạn phiên sẽ được cập nhật sau khi hoàn tất xác thực."
+      "reviewDescription": "Giao dịch thanh toán gia hạn đã được ghi nhận nhưng cần quản trị viên kiểm tra thủ công. Thời hạn phiên sẽ được cập nhật sau khi hoàn tất xác thực."
     },
     "initial": {
       "paidTitle": "Thanh toán thành công!",

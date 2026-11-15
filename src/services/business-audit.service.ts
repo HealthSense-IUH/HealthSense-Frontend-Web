@@ -9,7 +9,7 @@ export const businessAuditApi = {
   /**
    * Query append-only business audit events
    * GET /api/admin/business-audit-events?domainType=&domainId=&eventType=&page=&size=
-   * Role: CARE_COORDINATOR (scoped domains), ADMIN, SUPER_ADMIN (broad domains)
+   * Role: ADMIN, SUPER_ADMIN
    */
   queryAuditEvents(params: BusinessAuditFilterParams = {}) {
     const page = params.page ?? 1

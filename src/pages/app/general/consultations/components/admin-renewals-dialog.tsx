@@ -254,7 +254,7 @@ export function AdminRenewalsDialog({
                           </div>
                         )}
 
-                        {/* Coordinator Action Buttons */}
+                        {/* Administrator Action Buttons */}
                         <div className="flex flex-wrap gap-2 pt-1 border-t">
                           {r.status === "REQUESTED" && (
                             <Button

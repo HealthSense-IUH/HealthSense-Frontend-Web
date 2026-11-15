@@ -788,7 +788,7 @@ export interface RequestSessionTerminationRequest {
 export interface ConsultationMoreInfoCycleResponse {
   id: number | string
   requestedItemsCategory?: string | null
-  coordinatorMessage?: string | null
+  reviewerMessage?: string | null
   requestedBy?: number | string | null
   requestedAt?: string | null
   memberResponse?: string | null

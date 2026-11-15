@@ -37,8 +37,8 @@ export function MemberFinalSummaryDialog({ sessionId, open, onOpenChange, isAdmi
   const { t } = useTranslation("consultation")
   const { effectiveRole } = useAppShell()
   const isStaff = isAdminView !== undefined
-    ? (isAdminView && (effectiveRole === USER_ROLES.ADMIN || effectiveRole === USER_ROLES.SUPER_ADMIN || effectiveRole === USER_ROLES.CARE_COORDINATOR))
-    : (effectiveRole === USER_ROLES.ADMIN || effectiveRole === USER_ROLES.SUPER_ADMIN || effectiveRole === USER_ROLES.CARE_COORDINATOR)
+    ? (isAdminView && (effectiveRole === USER_ROLES.ADMIN || effectiveRole === USER_ROLES.SUPER_ADMIN))
+    : (effectiveRole === USER_ROLES.ADMIN || effectiveRole === USER_ROLES.SUPER_ADMIN)
   const isDoctor = effectiveRole === USER_ROLES.DOCTOR
 
   const [summary, setSummary] = useState<ConsultationFinalSummaryResponse | null>(null)

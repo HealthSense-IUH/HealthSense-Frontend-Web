@@ -197,7 +197,7 @@ export function RefundDetailDialog({
                 {/* Recommendation & Decision summary */}
                 <div className="rounded-2xl border border-slate-100 divide-y divide-slate-100 overflow-hidden">
                   <div className="p-3.5 flex items-center justify-between">
-                    <span className="text-slate-500 font-medium">{t("needsActions.refundDetail.coordinatorRecommendation")}</span>
+                    <span className="text-slate-500 font-medium">{t("needsActions.refundDetail.adminRecommendation")}</span>
                     <span className="font-bold text-slate-800">
                       {refund.recommendation || t("needsActions.refundDetail.noRecommendation")}
                       {refund.recommendedAmount ? ` (${refund.recommendedAmount.toLocaleString(currentIntlLocale())} VND)` : ""}

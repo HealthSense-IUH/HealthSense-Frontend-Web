@@ -322,7 +322,7 @@
       "invalidSessionTitle": "Invalid session",
       "invalidSessionDescription": "A renewal can only be requested while the consultation session is active (ACTIVE).",
       "requestSuccessTitle": "Renewal request sent",
-      "requestSuccessDescription": "Your renewal request has been sent to the Care Coordinator.",
+      "requestSuccessDescription": "Your renewal request has been sent to the Administrator.",
       "requestErrorTitle": "Renewal request failed",
       "requestErrorDescription": "Unable to send the renewal request at this time.",
       "cancelSuccessTitle": "Renewal request cancelled",
@@ -912,7 +912,7 @@
     },
     "moreInfoDialog": {
       "title": "Additional information for request #{{id}}",
-      "description": "Please provide the additional information requested by the care coordinator.",
+      "description": "Please provide the additional information requested by the administrator.",
       "noteLabel": "Explanation / Additional information *",
       "notePlaceholder": "Enter the additional details here...",
       "attachLabel": "Attach more measurement records (Optional - {{selected}} selected)",
@@ -1134,7 +1134,7 @@
   },
   "adminActionDialog": {
     "terminationReasons": {
-      "administrativeClosure": "Administrative closure / Ended by coordinator",
+      "administrativeClosure": "Administrative closure / Ended by administrator",
       "memberRequested": "Member requested early termination",
       "doctorUnavailable": "Doctor is unable to continue providing support",
       "memberUnavailable": "Member is busy / unable to continue follow-up",
@@ -1186,12 +1186,12 @@
       "missingInfoTitle": "Missing information",
       "missingInfoDescription": "Please select a reason and provide a detailed explanation for the termination request.",
       "successTitle": "Session termination request sent",
-      "successDescription": "Your request has been forwarded to the Care Coordinator for operational review.",
+      "successDescription": "Your request has been forwarded to the Administrator for operational review.",
       "errorTitle": "Failed to send request",
       "errorDescription": "Unable to send the session termination request right now."
     },
     "title": "Request Consultation Session Termination",
-    "description": "Submit a request to end an active care session early. The coordinator will review the reason and assist with any related procedures.",
+    "description": "Submit a request to end an active care session early. The administrator will review the reason and assist with any related procedures.",
     "reasonLabel": "Termination reason",
     "reasonPlaceholder": "Select a termination reason...",
     "detailsLabel": "Detailed explanation",
@@ -1259,7 +1259,7 @@
     "description": "Manage acceptance settings and the weekly working schedule for 1-on-1 consultations.",
     "loading": "Loading profile...",
     "acceptsOneOnOneCare": "Accept 1-on-1 consultations",
-    "acceptsOneOnOneCareHint": "Enable to allow coordinators to assign consultation requests",
+    "acceptsOneOnOneCareHint": "Enable to allow administrators to assign consultation requests",
     "specialtyLabel": "Specialty",
     "specialties": {
       "generalPractice": "General practice",

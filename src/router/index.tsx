@@ -68,7 +68,7 @@ const wrap = (node: React.ReactNode) => <LazyElement>{node}</LazyElement>
  * /app                 Yêu cầu đăng nhập (ProtectedRoute + MemberLayout)
  *   /app/general/*     Phân hệ NGƯỜI DÙNG — mọi role đăng nhập đều vào được
  *   /app/management/*  Phân hệ QUẢN TRỊ — gác quyền 1 lần ở cổng này
- *                      (SUPER_ADMIN / ADMIN / CARE_COORDINATOR / DOCTOR),
+ *                      (SUPER_ADMIN / ADMIN / DOCTOR),
  *                      từng trang con siết thêm nếu cần
  * Cuối file: các redirect từ đường dẫn cũ (bookmark, link PayOS...) về đường mới.
  */
