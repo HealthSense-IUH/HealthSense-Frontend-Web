@@ -1,7 +1,8 @@
 import { useSearchParams } from "react-router-dom"
 import { Trans, useTranslation } from "react-i18next"
-import { Camera, ClipboardList, Heart, Info, Search } from "lucide-react"
+import { Camera, ClipboardList, Info, Search } from "lucide-react"
 
+import { HsNutritionBowlIcon } from "@/components/icons/health-icons"
 import { Page, PageBody, PageFooter, PageHeader } from "@/components/layout/page"
 import { LifestyleStripBanner } from "@/components/illustrations/lifestyle"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -31,7 +32,7 @@ export default function NutritionHomePage() {
   return (
     <Page>
       <PageHeader
-        icon={<Heart className="w-5 h-5" />}
+        icon={<HsNutritionBowlIcon className="w-5 h-5" />}
         title={t("home.title")}
         description={t("home.description")}
       />

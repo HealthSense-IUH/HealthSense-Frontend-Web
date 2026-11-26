@@ -1,20 +1,20 @@
 import { useTranslation } from "react-i18next"
-import { Activity, BellRing, Stethoscope } from "lucide-react"
 
 import { CaraMascot } from "@/components/assistant/cara-mascot"
+import { HsBellHeartIcon, HsDoctorStethoscopeIcon, HsHeartPulseIcon } from "@/components/icons/health-icons"
 import { EcgLine } from "@/components/illustrations"
 import { LIFESTYLE_ART } from "@/components/illustrations/lifestyle"
 
 /**
- * Bảng giới thiệu bên trái trang đăng nhập (chỉ hiện từ màn hình lg): nền navy, minh hoạ vòng đeo, ba điểm mạnh
- * và mascot Cara. Nội dung lấy từ auth:showcase.*
+ * Bảng giới thiệu bên trái trang đăng nhập (chỉ hiện từ màn hình lg): nền navy, ảnh gia đình, ba điểm mạnh
+ * với icon HealthSense riêng và mascot Cara. Nội dung lấy từ auth:showcase.*
  */
 export function AuthShowcase() {
   const { t } = useTranslation("auth")
   const points = [
-    { icon: Activity, key: "monitor" },
-    { icon: BellRing, key: "alert" },
-    { icon: Stethoscope, key: "doctor" },
+    { icon: HsHeartPulseIcon, key: "monitor" },
+    { icon: HsBellHeartIcon, key: "alert" },
+    { icon: HsDoctorStethoscopeIcon, key: "doctor" },
   ] as const
 
   return (

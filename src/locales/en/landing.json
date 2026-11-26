@@ -149,6 +149,21 @@
         "tag": "Grandparents & Kids",
         "title": "Backyard laughter across generations",
         "description": "Grandparents stay confident pushing swings and reading stories to grandchildren with round-the-clock heart protection."
+      },
+      "cycling": {
+        "tag": "Family cycling",
+        "title": "Weekend rides by the sunny lake",
+        "description": "Parents and kids pedaling together with colorful helmets — building strong hearts and joyful weekend memories."
+      },
+      "gardening": {
+        "tag": "Backyard garden",
+        "title": "Growing fresh food with grandparents",
+        "description": "Watering plants and harvesting crisp vegetables together turns gentle daily movement into family joy."
+      },
+      "baby": {
+        "tag": "Growing with love",
+        "title": "Strong hearts for every tiny giggle",
+        "description": "Every smile from your little one inspires proactive heart care so parents always have energy for what matters most."
       }
     }
   },

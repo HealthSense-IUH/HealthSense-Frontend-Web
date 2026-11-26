@@ -17,6 +17,10 @@ export const LIFESTYLE_ART = {
   familySleepPeace: "/illustrations/family-sleep-peace.jpg",
   communityRun: "/illustrations/community-run.jpg",
   doctorTeamCare: "/illustrations/doctor-team-care.jpg",
+  familyCycling: "/illustrations/family-cycling.jpg",
+  familyGardening: "/illustrations/family-gardening.jpg",
+  babyParentsLove: "/illustrations/baby-parents-love.jpg",
+  friendsParkTea: "/illustrations/friends-park-tea.jpg",
 } as const
 
 export type LifestyleArtKey = keyof typeof LIFESTYLE_ART

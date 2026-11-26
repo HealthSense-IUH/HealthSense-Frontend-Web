@@ -149,6 +149,21 @@
         "tag": "Ông bà & Cháu nhỏ",
         "title": "Tiếng cười rộn rã trong khu vườn nhà",
         "description": "Ông bà khỏe mạnh, an tâm vui đùa đẩy xích đu và đọc truyện cùng cháu nhỏ nhờ nhịp tim luôn được bảo vệ 24/7."
+      },
+      "cycling": {
+        "tag": "Đạp xe cuối tuần",
+        "title": "Cả nhà cùng lăn bánh bên hồ xanh",
+        "description": "Bố mẹ và hai bé đội mũ bảo hiểm đạp xe rèn luyện sức bền tim mạch, gắn kết yêu thương trong nắng sớm."
+      },
+      "gardening": {
+        "tag": "Vườn rau gia đình",
+        "title": "Ông bà và cháu cùng chăm vườn xanh",
+        "description": "Tưới cây, thu hoạch cà chua và cà rốt sạch ngay sân nhà — vận động nhẹ nhàng mỗi ngày giúp tim thêm khỏe."
+      },
+      "baby": {
+        "tag": "Mầm non yêu thương",
+        "title": "Trái tim khỏe để trọn vẹn bên con",
+        "description": "Mỗi nụ cười của em bé là động lực để bố mẹ chủ động chăm sóc sức khỏe tim mạch từ những thói quen nhỏ nhất."
       }
     }
   },

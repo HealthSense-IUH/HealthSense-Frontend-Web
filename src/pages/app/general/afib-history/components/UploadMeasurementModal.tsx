@@ -3,6 +3,7 @@ import { createPortal } from "react-dom"
 import { useTranslation } from "react-i18next"
 import { UploadCloud, FileText, Loader2, X, AlertCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { LIFESTYLE_ART } from "@/components/illustrations/lifestyle"
 import { useToast } from "@/hooks/use-toast"
 import { healthRecordApi } from "@/services"
 
@@ -156,8 +157,13 @@ export function UploadMeasurementModal({ isOpen, onClose, onSuccess }: UploadMea
               </div>
             ) : (
               <div className="flex flex-col items-center gap-3 text-slate-400">
-                <div className="p-4 rounded-full bg-primary-50 text-primary-600">
-                  <UploadCloud className="w-8 h-8" />
+                <div className="w-28 overflow-hidden rounded-2xl border border-primary-100 bg-white p-1 shadow-xs">
+                  <img
+                    src={LIFESTYLE_ART.familyCycling}
+                    alt=""
+                    aria-hidden="true"
+                    className="aspect-[4/3] w-full rounded-xl object-cover"
+                  />
                 </div>
                 <div>
                   <p className="text-sm font-bold text-slate-800">

@@ -1,10 +1,10 @@
 import { useTranslation } from "react-i18next"
-import { HeartHandshake } from "lucide-react"
 
+import { HsFamilyHeartIcon } from "@/components/icons/health-icons"
 import { LIFESTYLE_ART, type LifestyleArtKey } from "@/components/illustrations/lifestyle"
 
 const MOMENTS: ReadonlyArray<{
-  key: "family" | "kids" | "friends" | "seniors" | "meal" | "doctor" | "picnic" | "yoga" | "grandparents"
+  key: "family" | "kids" | "friends" | "seniors" | "meal" | "doctor" | "picnic" | "yoga" | "grandparents" | "cycling" | "gardening" | "baby"
   art: LifestyleArtKey
   pillTone: string
   barTone: string
@@ -16,10 +16,22 @@ const MOMENTS: ReadonlyArray<{
     barTone: "from-primary-600 to-cyan-500",
   },
   {
+    key: "baby",
+    art: "babyParentsLove",
+    pillTone: "border-danger-200 bg-danger-50 text-danger-700",
+    barTone: "from-danger-500 to-warning-400",
+  },
+  {
     key: "kids",
     art: "kidsActive",
     pillTone: "border-warning-200 bg-warning-50 text-warning-700",
     barTone: "from-warning-500 to-danger-400",
+  },
+  {
+    key: "cycling",
+    art: "familyCycling",
+    pillTone: "border-cyan-200 bg-cyan-50 text-cyan-700",
+    barTone: "from-cyan-600 to-primary-500",
   },
   {
     key: "friends",
@@ -32,6 +44,12 @@ const MOMENTS: ReadonlyArray<{
     art: "grandparentsGrandkids",
     pillTone: "border-warning-200 bg-warning-50 text-warning-700",
     barTone: "from-warning-500 to-success-500",
+  },
+  {
+    key: "gardening",
+    art: "familyGardening",
+    pillTone: "border-success-200 bg-success-50 text-success-700",
+    barTone: "from-success-600 to-warning-400",
   },
   {
     key: "picnic",
@@ -65,7 +83,7 @@ const MOMENTS: ReadonlyArray<{
   },
 ]
 
-/** Bộ tranh minh hoạ cuộc sống khoẻ mạnh cùng gia đình, trẻ nhỏ, bạn bè và ông bà trên Landing Page. */
+/** Bộ 12 tranh minh hoạ cuộc sống khoẻ mạnh cùng gia đình, trẻ nhỏ, bạn bè và ông bà trên Landing Page. */
 export function HealthyLifeSection() {
   const { t } = useTranslation("landing")
 
@@ -74,7 +92,7 @@ export function HealthyLifeSection() {
       <div className="mx-auto w-full max-w-7xl">
         <div className="mx-auto max-w-2xl text-center">
           <span className="inline-flex items-center gap-2 rounded-full border border-danger-200 bg-danger-50 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-danger-700">
-            <HeartHandshake className="h-3.5 w-3.5" />
+            <HsFamilyHeartIcon className="h-4 w-4" />
             {t("lifestyle.eyebrow")}
           </span>
           <h2 className="mt-4 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">

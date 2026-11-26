@@ -1,19 +1,19 @@
-import {
-  Activity,
-  BarChart3,
-  Coins,
-  FileText,
-  HeartPulse,
-  LayoutDashboard,
-  MessagesSquare,
-  Stethoscope,
-  User,
-  Users,
-  SlidersHorizontal,
-  UtensilsCrossed,
-  type LucideIcon,
-} from "lucide-react"
+import type { ComponentType } from "react"
 
+import {
+  HsChartBarsIcon,
+  HsCommunityUsersIcon,
+  HsConsultationChatIcon,
+  HsCreditWalletIcon,
+  HsDashboardIcon,
+  HsDoctorStethoscopeIcon,
+  HsHeartPulseIcon,
+  HsNutritionBowlIcon,
+  HsNutritionRulesIcon,
+  HsProfileFamilyIcon,
+  HsReportDocIcon,
+  HsScreeningCheckIcon,
+} from "@/components/icons/health-icons"
 import { USER_ROLES } from "@/constants"
 import type { UserRole } from "@/types/auth"
 
@@ -29,7 +29,7 @@ export interface NavigationItem {
   titleKey?: string
   shortTitleKey?: string
   href: string
-  icon: LucideIcon
+  icon: ComponentType<{ className?: string }>
   allowedRoles: UserRole[]
   badge?: string | number
   exact?: boolean
@@ -53,31 +53,31 @@ export const allNavigationGroups: NavigationGroup[] = [
       {
         id: "statistics",
         href: "/app/management/statistics",
-        icon: BarChart3,
+        icon: HsChartBarsIcon,
         allowedRoles: [USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN],
       },
       {
         id: "user-management",
         href: "/app/management/users",
-        icon: Users,
+        icon: HsCommunityUsersIcon,
         allowedRoles: [USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN],
       },
       {
         id: "admin-credit-operations",
         href: "/app/management/credit-operations",
-        icon: Coins,
+        icon: HsCreditWalletIcon,
         allowedRoles: [USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN],
       },
       {
         id: "health-records-management",
         href: "/app/management/health-records",
-        icon: Activity,
+        icon: HsScreeningCheckIcon,
         allowedRoles: [USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN],
       },
       {
         id: "nutrition-rules",
         href: "/app/management/nutrition-rules",
-        icon: SlidersHorizontal,
+        icon: HsNutritionRulesIcon,
         allowedRoles: [USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN],
       },
     ],
@@ -90,13 +90,13 @@ export const allNavigationGroups: NavigationGroup[] = [
       {
         id: "doctor-consultations",
         href: "/app/management/doctor/consultations",
-        icon: Stethoscope,
+        icon: HsDoctorStethoscopeIcon,
         allowedRoles: [USER_ROLES.DOCTOR],
       },
       {
         id: "doctor-statistics",
         href: "/app/doctor/statistics",
-        icon: BarChart3,
+        icon: HsChartBarsIcon,
         allowedRoles: [USER_ROLES.DOCTOR],
       },
     ],
@@ -109,20 +109,20 @@ export const allNavigationGroups: NavigationGroup[] = [
       {
         id: "dashboard",
         href: "/app/general/dashboard",
-        icon: LayoutDashboard,
+        icon: HsDashboardIcon,
         allowedRoles: [USER_ROLES.MEMBER],
         exact: true,
       },
       {
         id: "member-statistics",
         href: "/app/general/statistics",
-        icon: BarChart3,
+        icon: HsChartBarsIcon,
         allowedRoles: [USER_ROLES.MEMBER],
       },
       {
         id: "reports",
         href: "/app/general/reports",
-        icon: FileText,
+        icon: HsReportDocIcon,
         allowedRoles: [USER_ROLES.MEMBER],
       },
     ],
@@ -135,13 +135,13 @@ export const allNavigationGroups: NavigationGroup[] = [
       {
         id: "afib-history",
         href: "/app/general/afib-history",
-        icon: HeartPulse,
+        icon: HsHeartPulseIcon,
         allowedRoles: [USER_ROLES.MEMBER],
       },
       {
         id: "consultations",
         href: "/app/general/consultations",
-        icon: MessagesSquare,
+        icon: HsConsultationChatIcon,
         allowedRoles: [
           USER_ROLES.SUPER_ADMIN,
           USER_ROLES.ADMIN,
@@ -151,7 +151,7 @@ export const allNavigationGroups: NavigationGroup[] = [
       {
         id: "nutrition",
         href: "/app/general/nutrition",
-        icon: UtensilsCrossed,
+        icon: HsNutritionBowlIcon,
         allowedRoles: [
           USER_ROLES.SUPER_ADMIN,
           USER_ROLES.ADMIN,
@@ -169,7 +169,7 @@ export const allNavigationGroups: NavigationGroup[] = [
       {
         id: "profile",
         href: "/app/general/profile",
-        icon: User,
+        icon: HsProfileFamilyIcon,
         allowedRoles: [
           USER_ROLES.SUPER_ADMIN,
           USER_ROLES.ADMIN,

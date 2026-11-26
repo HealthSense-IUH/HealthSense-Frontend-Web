@@ -1,9 +1,9 @@
 import { useMemo } from "react"
 import { Link } from "react-router-dom"
 import { useTranslation } from "react-i18next"
-import { HeartHandshake, HeartPulse, MessagesSquare } from "lucide-react"
 
 import { CaraMascot } from "@/components/assistant/cara-mascot"
+import { HsConsultationChatIcon, HsFamilyHeartIcon, HsHeartPulseIcon } from "@/components/icons/health-icons"
 import { EcgLine } from "@/components/illustrations"
 import { LIFESTYLE_ART } from "@/components/illustrations/lifestyle"
 import { useAuthStore } from "@/stores/auth-store"
@@ -52,7 +52,7 @@ export function MemberGreetingBanner() {
       <div className="relative z-10 flex flex-col justify-between gap-5 md:flex-row md:items-center">
         <div className="min-w-0 space-y-2.5">
           <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-3 py-0.5 text-[11px] font-bold tracking-wide text-cyan-200 backdrop-blur-sm">
-            <HeartHandshake className="h-3.5 w-3.5 text-danger-300" />
+            <HsFamilyHeartIcon className="h-4 w-4 text-danger-300" />
             {t("common:lifestyle.dashboardTitle")}
           </span>
           <h2 className="flex flex-wrap items-baseline gap-x-2 text-xl font-extrabold tracking-tight text-white sm:text-2xl">
@@ -65,14 +65,14 @@ export function MemberGreetingBanner() {
               to="/app/general/afib-history"
               className="inline-flex h-9 items-center gap-2 rounded-lg bg-white px-4 text-xs font-bold text-primary-700 shadow-md shadow-black/15 transition-all hover:bg-cyan-50 hover:-translate-y-0.5"
             >
-              <HeartPulse className="h-4 w-4 text-danger-500" />
+              <HsHeartPulseIcon className="h-4 w-4 text-danger-500" />
               {t("greeting.cta.history")}
             </Link>
             <Link
               to="/app/general/consultations"
               className="inline-flex h-9 items-center gap-2 rounded-lg border border-white/25 bg-white/10 px-4 text-xs font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/20"
             >
-              <MessagesSquare className="h-4 w-4 text-cyan-200" />
+              <HsConsultationChatIcon className="h-4 w-4 text-cyan-200" />
               {t("greeting.cta.consult")}
             </Link>
           </div>

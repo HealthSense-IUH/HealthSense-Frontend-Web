@@ -1,21 +1,21 @@
 import { useTranslation } from "react-i18next"
-import { BellRing, Stethoscope, Watch } from "lucide-react"
 
+import { HsBellHeartIcon, HsDoctorStethoscopeIcon, HsWatchBandIcon } from "@/components/icons/health-icons"
 import { LIFESTYLE_ART, type LifestyleArtKey } from "@/components/illustrations/lifestyle"
 
-/** Cách hoạt động: ba bước đơn giản kèm tranh minh hoạ đời thường. */
+/** Cách hoạt động: ba bước đơn giản kèm tranh minh hoạ đời thường và icon riêng. */
 export function HowItWorksSection() {
   const { t } = useTranslation("landing")
   const steps: ReadonlyArray<{
     key: "wear" | "watch" | "care"
-    icon: typeof Watch
+    icon: typeof HsWatchBandIcon
     gradient: string
     shadow: string
     art: LifestyleArtKey
   }> = [
-    { key: "wear", icon: Watch, gradient: "from-primary-600 to-cyan-500", shadow: "shadow-primary-500/25", art: "seniorsMorning" },
-    { key: "watch", icon: BellRing, gradient: "from-danger-500 to-warning-500", shadow: "shadow-danger-500/25", art: "familySleepPeace" },
-    { key: "care", icon: Stethoscope, gradient: "from-success-600 to-cyan-500", shadow: "shadow-success-500/25", art: "doctorTeamCare" },
+    { key: "wear", icon: HsWatchBandIcon, gradient: "from-primary-600 to-cyan-500", shadow: "shadow-primary-500/25", art: "seniorsMorning" },
+    { key: "watch", icon: HsBellHeartIcon, gradient: "from-danger-500 to-warning-500", shadow: "shadow-danger-500/25", art: "familySleepPeace" },
+    { key: "care", icon: HsDoctorStethoscopeIcon, gradient: "from-success-600 to-cyan-500", shadow: "shadow-success-500/25", art: "doctorTeamCare" },
   ]
 
   return (

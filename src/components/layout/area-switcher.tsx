@@ -1,7 +1,7 @@
 import { Link, useLocation } from "react-router-dom"
-import { LayoutGrid, ShieldCheck } from "lucide-react"
 import { useTranslation } from "react-i18next"
 
+import { HsDashboardIcon, HsShieldCareIcon } from "@/components/icons/health-icons"
 import { getDefaultGeneralRouteForRole, getDefaultRouteForRole, hasManagementArea } from "@/constants"
 import { cn } from "@/lib/utils"
 import { useAppShell } from "./app-shell-context"
@@ -20,8 +20,8 @@ export function SidebarAreaToggle() {
 
   const inManagement = isManagementPath(location.pathname)
   const target = inManagement
-    ? { key: "general", icon: LayoutGrid, to: getDefaultGeneralRouteForRole(effectiveRole) }
-    : { key: "management", icon: ShieldCheck, to: getDefaultRouteForRole(effectiveRole) }
+    ? { key: "general", icon: HsDashboardIcon, to: getDefaultGeneralRouteForRole(effectiveRole) }
+    : { key: "management", icon: HsShieldCareIcon, to: getDefaultRouteForRole(effectiveRole) }
   const Icon = target.icon
 
   return (

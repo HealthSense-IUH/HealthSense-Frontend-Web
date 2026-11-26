@@ -1,16 +1,21 @@
 import { useTranslation } from "react-i18next"
-import { Activity, HeartHandshake, ShieldCheck, Zap } from "lucide-react"
 
+import {
+  HsBellHeartIcon,
+  HsFamilyHeartIcon,
+  HsHeartPulseIcon,
+  HsShieldCareIcon,
+} from "@/components/icons/health-icons"
 import { LIFESTYLE_ART } from "@/components/illustrations/lifestyle"
 
-/** Về HealthSense: hai đoạn ngắn, bốn giá trị C.A.R.E dưới dạng thẻ nhỏ, minh hoạ gia đình 3 thế hệ bên phải. */
+/** Về HealthSense: hai đoạn ngắn, bốn giá trị C.A.R.E với bộ icon riêng & bộ tranh gia đình bên phải. */
 export function AboutSection() {
   const { t } = useTranslation("landing")
   const values = [
-    { key: "continuous", icon: Activity, tone: "bg-primary-50 text-primary-600" },
-    { key: "accuracy", icon: ShieldCheck, tone: "bg-success-50 text-success-600" },
-    { key: "realtime", icon: Zap, tone: "bg-warning-50 text-warning-600" },
-    { key: "expertCare", icon: HeartHandshake, tone: "bg-danger-50 text-danger-500" },
+    { key: "continuous", icon: HsHeartPulseIcon, tone: "bg-primary-50 text-primary-600 ring-1 ring-primary-200/70" },
+    { key: "accuracy", icon: HsShieldCareIcon, tone: "bg-success-50 text-success-600 ring-1 ring-success-200/70" },
+    { key: "realtime", icon: HsBellHeartIcon, tone: "bg-warning-50 text-warning-600 ring-1 ring-warning-200/70" },
+    { key: "expertCare", icon: HsFamilyHeartIcon, tone: "bg-danger-50 text-danger-500 ring-1 ring-danger-200/70" },
   ] as const
 
   return (
@@ -49,6 +54,14 @@ export function AboutSection() {
               src={LIFESTYLE_ART.familyPark}
               alt={t("lifestyle.cards.family.title")}
               className="aspect-[4/3] w-full rounded-[1.4rem] object-cover"
+            />
+          </div>
+          <div className="hidden sm:block absolute -bottom-6 -left-6 w-44 -rotate-3 overflow-hidden rounded-2xl border-2 border-white bg-white p-1.5 shadow-xl ring-1 ring-slate-200/80">
+            <img
+              src={LIFESTYLE_ART.babyParentsLove}
+              alt={t("lifestyle.cards.baby.title")}
+              loading="lazy"
+              className="aspect-[4/3] w-full rounded-xl object-cover"
             />
           </div>
         </div>

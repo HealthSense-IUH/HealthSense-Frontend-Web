@@ -2,13 +2,15 @@ import { useState, useEffect, useCallback } from "react"
 import { useNavigate } from "react-router-dom"
 import { useTranslation } from "react-i18next"
 import {
-  Activity,
-  HeartPulse,
-  TrendingUp,
-  Sliders,
   ChevronRight,
   Eye,
 } from "lucide-react"
+import {
+  HsAfibRadarIcon,
+  HsHeartPulseIcon,
+  HsHrvWaveIcon,
+  HsScreeningCheckIcon,
+} from "@/components/icons/health-icons"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { healthRecordApi } from "@/services"
@@ -88,8 +90,8 @@ export function MemberHealthDashboard() {
           <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-danger-500 to-danger-400" aria-hidden="true" />
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <span className="text-xs font-bold uppercase tracking-wide text-slate-500">{t("memberDashboard.latestMeasurement")}</span>
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-danger-50 text-danger-600 ring-1 ring-danger-200/80">
-              <HeartPulse className="h-4 w-4" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-danger-50 text-danger-600 ring-1 ring-danger-200/80">
+              <HsHeartPulseIcon className="h-5 w-5" />
             </div>
           </CardHeader>
           <CardContent className="space-y-1">
@@ -112,8 +114,8 @@ export function MemberHealthDashboard() {
           <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-primary-600 to-cyan-500" aria-hidden="true" />
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <span className="text-xs font-bold uppercase tracking-wide text-slate-500">{t("memberDashboard.afibProbability")}</span>
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary-50 text-primary-600 ring-1 ring-primary-200/80">
-              <TrendingUp className="h-4 w-4" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-50 text-primary-600 ring-1 ring-primary-200/80">
+              <HsAfibRadarIcon className="h-5 w-5" />
             </div>
           </CardHeader>
           <CardContent className="space-y-1.5">
@@ -137,8 +139,8 @@ export function MemberHealthDashboard() {
           <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-cyan-600 to-cyan-400" aria-hidden="true" />
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <span className="text-xs font-bold uppercase tracking-wide text-slate-500">{t("memberDashboard.hrvRmssd")}</span>
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-cyan-50 text-cyan-700 ring-1 ring-cyan-200/80">
-              <Sliders className="h-4 w-4" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-cyan-50 text-cyan-700 ring-1 ring-cyan-200/80">
+              <HsHrvWaveIcon className="h-5 w-5" />
             </div>
           </CardHeader>
           <CardContent className="space-y-1">
@@ -157,8 +159,8 @@ export function MemberHealthDashboard() {
           <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-success-600 to-success-400" aria-hidden="true" />
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <span className="text-xs font-bold uppercase tracking-wide text-slate-500">{t("memberDashboard.totalScreenings")}</span>
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-success-50 text-success-700 ring-1 ring-success-200/80">
-              <Activity className="h-4 w-4" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-success-50 text-success-700 ring-1 ring-success-200/80">
+              <HsScreeningCheckIcon className="h-5 w-5" />
             </div>
           </CardHeader>
           <CardContent className="space-y-1">

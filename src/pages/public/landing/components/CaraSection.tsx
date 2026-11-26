@@ -1,9 +1,10 @@
 import { useTranslation } from "react-i18next"
-import { MessageCircleHeart } from "lucide-react"
 
 import { CaraMascot } from "@/components/assistant/cara-mascot"
+import { HsConsultationChatIcon } from "@/components/icons/health-icons"
+import { LIFESTYLE_ART } from "@/components/illustrations/lifestyle"
 
-/** Giới thiệu trợ lý Cara: mascot lớn, ba câu hỏi mẫu, lời nhắc trợ lý luôn có trong app. */
+/** Giới thiệu trợ lý Cara: mascot lớn, ảnh bạn bè trò chuyện ấm áp và ba câu hỏi mẫu. */
 export function CaraSection() {
   const { t } = useTranslation("landing")
   const samples = ["latest", "consult", "navigate"] as const
@@ -18,7 +19,7 @@ export function CaraSection() {
         <div className="relative z-10 grid items-center gap-10 md:grid-cols-12">
           <div className="order-2 md:order-1 md:col-span-7">
             <span className="inline-flex items-center gap-2 rounded-full border border-primary-200 bg-primary-50 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-primary-700">
-              <MessageCircleHeart className="h-3.5 w-3.5 text-primary-600" />
+              <HsConsultationChatIcon className="h-4 w-4 text-primary-600" />
               {t("cara.eyebrow")}
             </span>
             <h2 className="mt-4 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">{t("cara.title")}</h2>
@@ -38,12 +39,16 @@ export function CaraSection() {
             <p className="mt-5 text-xs font-medium text-slate-500">{t("cara.note")}</p>
           </div>
 
-          <div className="order-1 flex justify-center md:order-2 md:col-span-5">
-            <div className="relative">
-              <span className="absolute inset-0 -m-6 rounded-full bg-gradient-to-tr from-primary-200/50 via-cyan-200/40 to-transparent blur-xl" aria-hidden="true" />
-              <span className="absolute inset-0 -m-4 rounded-full border border-primary-200/70 bg-white/75 shadow-inner" aria-hidden="true" />
-              <div className="relative">
-                <CaraMascot size={184} />
+          <div className="order-1 flex flex-col items-center gap-4 md:order-2 md:col-span-5">
+            <div className="relative w-full max-w-xs overflow-hidden rounded-3xl border border-primary-100 bg-white p-2.5 shadow-lg">
+              <img
+                src={LIFESTYLE_ART.friendsParkTea}
+                alt={t("cara.title")}
+                loading="lazy"
+                className="aspect-[4/3] w-full rounded-2xl object-cover"
+              />
+              <div className="absolute -bottom-3 -right-3 flex h-24 w-24 items-center justify-center rounded-full border-4 border-white bg-primary-50 shadow-lg">
+                <CaraMascot size={74} />
               </div>
             </div>
           </div>

@@ -2,13 +2,13 @@ import { useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { useLocation, useNavigate } from "react-router-dom"
 import {
-  BarChart3,
   Users,
   MessagesSquare,
   Activity,
   Coins,
 } from "lucide-react"
 
+import { HsChartBarsIcon } from "@/components/icons/health-icons"
 import { Page, PageBody, PageHeader } from "@/components/layout/page"
 import { LifestyleStripBanner } from "@/components/illustrations/lifestyle"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -39,7 +39,7 @@ export default function AdminStatisticsPage() {
   return (
     <Page>
       <PageHeader
-        icon={<BarChart3 className="w-5 h-5 text-primary-600" />}
+        icon={<HsChartBarsIcon className="w-5 h-5" />}
         title={t("statistics.page.title")}
         description={t("statistics.page.description")}
       />

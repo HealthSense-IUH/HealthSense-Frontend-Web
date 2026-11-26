@@ -1,5 +1,10 @@
 import { useTranslation } from "react-i18next"
-import { Activity, FileText, Users, AlertTriangle } from "lucide-react"
+import {
+  HsAfibRadarIcon,
+  HsBellHeartIcon,
+  HsCommunityUsersIcon,
+  HsReportDocIcon,
+} from "@/components/icons/health-icons"
 import type { HealthRecordStatisticsSummary } from "@/types/statistics"
 
 interface HealthRecordSummaryCardsProps {
@@ -21,7 +26,7 @@ export function HealthRecordSummaryCards({
       title: t("statistics.healthRecords.summary.totalRecords"),
       value: summary.totalRecords.toLocaleString("vi-VN"),
       description: t("statistics.healthRecords.summary.totalRecordsDesc"),
-      icon: Activity,
+      icon: HsAfibRadarIcon,
       iconColor: "text-primary-600 bg-primary-50 ring-1 ring-primary-200/80",
       topBar: "from-primary-600 to-cyan-500",
       accentBorder: "border-slate-200/90 hover:border-primary-200",
@@ -34,7 +39,7 @@ export function HealthRecordSummaryCards({
         from: startDateStr,
         to: endDateStr,
       }),
-      icon: FileText,
+      icon: HsReportDocIcon,
       iconColor: "text-cyan-700 bg-cyan-50 ring-1 ring-cyan-200/80",
       topBar: "from-cyan-600 to-cyan-400",
       accentBorder: "border-slate-200/90 hover:border-cyan-200",
@@ -46,7 +51,7 @@ export function HealthRecordSummaryCards({
       description: t(
         "statistics.healthRecords.summary.uniqueUsersInPeriodDesc"
       ),
-      icon: Users,
+      icon: HsCommunityUsersIcon,
       iconColor: "text-success-700 bg-success-50 ring-1 ring-success-200/80",
       topBar: "from-success-600 to-success-400",
       accentBorder: "border-slate-200/90 hover:border-success-200",
@@ -60,7 +65,7 @@ export function HealthRecordSummaryCards({
       description: t(
         "statistics.healthRecords.summary.afDetectedOrSuspectedInPeriodDesc"
       ),
-      icon: AlertTriangle,
+      icon: HsBellHeartIcon,
       iconColor: summary.afDetectedOrSuspectedInPeriod > 0 ? "text-danger-600 bg-danger-50 ring-1 ring-danger-200/80" : "text-slate-600 bg-slate-100 ring-1 ring-slate-200/80",
       topBar: summary.afDetectedOrSuspectedInPeriod > 0 ? "from-danger-600 to-danger-400" : "from-slate-400 to-slate-300",
       accentBorder: summary.afDetectedOrSuspectedInPeriod > 0 ? "border-danger-200 hover:border-danger-300" : "border-slate-200/90",

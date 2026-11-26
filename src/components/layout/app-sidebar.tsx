@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom"
-import { ShieldCheck, Stethoscope } from "lucide-react"
 import { useTranslation } from "react-i18next"
+
+import { HsDoctorStethoscopeIcon, HsShieldCareIcon } from "@/components/icons/health-icons"
 
 import { SidebarAreaToggle } from "./area-switcher"
 import { useAppShell } from "./app-shell-context"
@@ -29,7 +30,7 @@ export function AppSidebar() {
         >
           {isStaff ? (
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 to-cyan-500 text-white shadow-md shadow-primary-500/30 ring-1 ring-white/20 group-hover:scale-105 transition-transform">
-              {isDoctor ? <Stethoscope className="h-5 w-5" /> : <ShieldCheck className="h-5 w-5" />}
+              {isDoctor ? <HsDoctorStethoscopeIcon className="h-5 w-5" /> : <HsShieldCareIcon className="h-5 w-5" />}
             </div>
           ) : (
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/95 p-1 shadow-md shadow-black/25 ring-1 ring-white/25 group-hover:scale-105 transition-transform">
