@@ -283,7 +283,7 @@ export default function LandingPage() {
               {/* Interactive Screen Container */}
               <div className="w-full aspect-[16/9] rounded-[1.4rem] sm:rounded-[1.7rem] overflow-hidden bg-slate-950 relative shadow-inner">
                 <video
-                  src="/video/promo.mp4"
+                  src="/video/promo.mp4?v=2"
                   autoPlay
                   loop
                   muted
