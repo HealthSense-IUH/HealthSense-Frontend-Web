@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next"
 import { ExternalLink, Info, RefreshCw, RotateCcw, Save, SlidersHorizontal } from "lucide-react"
 
 import { Page, PageBody, PageFooter, PageHeader } from "@/components/layout/page"
+import { LifestyleStripBanner } from "@/components/illustrations/lifestyle"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -154,6 +155,14 @@ export default function AdminNutritionRulesPage() {
       />
 
       <PageBody>
+        <LifestyleStripBanner
+          art="familyMeal"
+          tone="success"
+          eyebrow={t("common:lifestyle.banners.adminNutrition.eyebrow")}
+          title={t("common:lifestyle.banners.adminNutrition.title")}
+          description={t("common:lifestyle.banners.adminNutrition.description")}
+        />
+
         {loading ? (
           <Skeleton className="h-80 rounded-2xl" />
         ) : errorMsg ? (

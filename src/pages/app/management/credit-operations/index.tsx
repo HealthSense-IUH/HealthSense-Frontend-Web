@@ -11,6 +11,7 @@ import { MemberWalletDirectoryTab } from "./components/member-wallet-directory-t
 import { TokenPaymentsTab } from "./components/token-payments-tab"
 
 import { Page, PageBody, PageHeader } from "@/components/layout/page"
+import { LifestyleStripBanner } from "@/components/illustrations/lifestyle"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 export default function AdminCreditOperationsPage() {
@@ -33,6 +34,14 @@ export default function AdminCreditOperationsPage() {
       />
 
       <PageBody>
+        <LifestyleStripBanner
+          art="friendsYoga"
+          tone="warning"
+          eyebrow={t("common:lifestyle.banners.adminCredits.eyebrow")}
+          title={t("common:lifestyle.banners.adminCredits.title")}
+          description={t("common:lifestyle.banners.adminCredits.description")}
+        />
+
         {/* Main Tabs */}
         <Tabs
           value={activeTab}

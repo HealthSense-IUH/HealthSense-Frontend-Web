@@ -6,6 +6,7 @@ import { ShieldAlert, Sparkles, CheckCircle2, AlertCircle, Plus } from "lucide-r
 import { useDebounce } from "@/hooks/use-debounce"
 import { useAppShell } from "@/components/layout/app-shell-context"
 import { Page, PageBody, PageHeader } from "@/components/layout/page"
+import { LifestyleStripBanner } from "@/components/illustrations/lifestyle"
 import { Button } from "@/components/ui/button"
 import { USER_ROLES } from "@/constants"
 import type { UserRole } from "@/types/auth"
@@ -296,6 +297,14 @@ export default function UserManagementPage() {
       />
 
       <PageBody>
+        <LifestyleStripBanner
+          art="communityRun"
+          tone="primary"
+          eyebrow={t("common:lifestyle.banners.adminUsers.eyebrow")}
+          title={t("common:lifestyle.banners.adminUsers.title")}
+          description={t("common:lifestyle.banners.adminUsers.description")}
+        />
+
         {/* Role Switcher Tabs (Fulfilling required API role parameter) */}
         <UserRoleTabs selectedRole={selectedRole} onSelectRole={handleSelectRole} loading={loading} effectiveRole={effectiveRole} />
 

@@ -4,7 +4,7 @@ import { HeartHandshake } from "lucide-react"
 import { LIFESTYLE_ART, type LifestyleArtKey } from "@/components/illustrations/lifestyle"
 
 const MOMENTS: ReadonlyArray<{
-  key: "family" | "kids" | "friends" | "seniors" | "meal" | "doctor"
+  key: "family" | "kids" | "friends" | "seniors" | "meal" | "doctor" | "picnic" | "yoga" | "grandparents"
   art: LifestyleArtKey
   pillTone: string
   barTone: string
@@ -26,6 +26,24 @@ const MOMENTS: ReadonlyArray<{
     art: "friendsJogging",
     pillTone: "border-cyan-200 bg-cyan-50 text-cyan-700",
     barTone: "from-cyan-600 to-primary-500",
+  },
+  {
+    key: "grandparents",
+    art: "grandparentsGrandkids",
+    pillTone: "border-warning-200 bg-warning-50 text-warning-700",
+    barTone: "from-warning-500 to-success-500",
+  },
+  {
+    key: "picnic",
+    art: "familyPicnic",
+    pillTone: "border-success-200 bg-success-50 text-success-700",
+    barTone: "from-success-600 to-cyan-500",
+  },
+  {
+    key: "yoga",
+    art: "friendsYoga",
+    pillTone: "border-cyan-200 bg-cyan-50 text-cyan-700",
+    barTone: "from-cyan-500 to-success-500",
   },
   {
     key: "seniors",

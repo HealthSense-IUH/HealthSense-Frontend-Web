@@ -9,6 +9,7 @@ import {
 } from "lucide-react"
 
 import { Page, PageBody, PageHeader } from "@/components/layout/page"
+import { LifestyleStripBanner } from "@/components/illustrations/lifestyle"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 import { MemberConsultationStatisticsTab } from "./components/consultations/member-consultation-statistics-tab"
@@ -41,6 +42,14 @@ export default function MemberStatisticsPage() {
       />
 
       <PageBody>
+        <LifestyleStripBanner
+          art="familyPicnic"
+          tone="success"
+          eyebrow={t("common:lifestyle.banners.memberStats.eyebrow")}
+          title={t("common:lifestyle.banners.memberStats.title")}
+          description={t("common:lifestyle.banners.memberStats.description")}
+        />
+
         <div className="space-y-6">
           {/* Main Navigation Tabs */}
           <Tabs

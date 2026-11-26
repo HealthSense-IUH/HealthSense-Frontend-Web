@@ -19,6 +19,7 @@ import { CtaSection } from "./components/CtaSection"
 import { LandingFooter } from "./components/LandingFooter"
 import { useAuthStore } from "@/stores/auth-store"
 import { BrandSlogan } from "@/components/custom/BrandSlogan"
+import { LIFESTYLE_ART } from "@/components/illustrations/lifestyle"
 import { UserMenu } from "@/components/layout/user-menu"
 import { LanguageSwitcher } from "@/components/layout/language-switcher"
 import { getDefaultRouteForRole } from "@/constants"
@@ -242,6 +243,24 @@ export default function LandingPage() {
                   {t(`hero.chips.${key}`)}
                 </span>
               ))}
+            </div>
+
+            {/* Bộ ảnh nhỏ gợi cảm giác gia đình, trẻ em, bạn bè sống khỏe ngay từ màn hình đầu */}
+            <div className="mt-5 flex items-center gap-3">
+              <div className="flex -space-x-2.5">
+                {[LIFESTYLE_ART.familyPark, LIFESTYLE_ART.kidsActive, LIFESTYLE_ART.friendsJogging, LIFESTYLE_ART.seniorsMorning].map((src) => (
+                  <img
+                    key={src}
+                    src={src}
+                    alt=""
+                    aria-hidden="true"
+                    className="h-10 w-10 rounded-full border-2 border-white bg-white object-cover shadow-sm ring-1 ring-primary-200/60"
+                  />
+                ))}
+              </div>
+              <p className="text-xs font-semibold text-slate-600 leading-snug">
+                {t("lifestyle.eyebrow")}
+              </p>
             </div>
 
           </div>

@@ -27,7 +27,7 @@ export function MemberGreetingBanner() {
         ? { main: LIFESTYLE_ART.familyPark, side: LIFESTYLE_ART.seniorsMorning }
         : slot === "afternoon"
           ? { main: LIFESTYLE_ART.kidsActive, side: LIFESTYLE_ART.friendsJogging }
-          : { main: LIFESTYLE_ART.familyMeal, side: LIFESTYLE_ART.familyPark }
+          : { main: LIFESTYLE_ART.familySleepPeace, side: LIFESTYLE_ART.familyMeal }
     return {
       text: t(`greeting.${slot}.text`),
       subtext: t(`greeting.${slot}.subtext`),

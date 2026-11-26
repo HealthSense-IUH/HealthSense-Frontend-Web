@@ -102,8 +102,8 @@ export default function CareHistoryPage() {
 
       <PageBody>
         <LifestyleStripBanner
-          art="familyPark"
-          tone="primary"
+          art="grandparentsGrandkids"
+          tone="warning"
           eyebrow={t("common:lifestyle.banners.careHistory.eyebrow")}
           title={t("common:lifestyle.banners.careHistory.title")}
           description={t("common:lifestyle.banners.careHistory.description")}

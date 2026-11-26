@@ -51,12 +51,21 @@ export function AuthShowcase() {
       </div>
 
       <div className="relative z-10 mt-8 flex items-end justify-between gap-4">
-        <div className="w-60 overflow-hidden rounded-2xl border border-white/20 bg-white p-2 shadow-xl xl:w-72">
-          <img
-            src={LIFESTYLE_ART.familyPark}
-            alt="HealthSense family"
-            className="aspect-[4/3] w-full rounded-xl object-cover"
-          />
+        <div className="flex items-center">
+          <div className="w-48 -rotate-2 overflow-hidden rounded-2xl border-2 border-white bg-white p-1.5 shadow-xl xl:w-56">
+            <img
+              src={LIFESTYLE_ART.familyPark}
+              alt="HealthSense family"
+              className="aspect-[4/3] w-full rounded-xl object-cover"
+            />
+          </div>
+          <div className="-ml-8 mt-6 hidden w-36 rotate-3 overflow-hidden rounded-2xl border-2 border-white/90 bg-white p-1 shadow-xl xl:block">
+            <img
+              src={LIFESTYLE_ART.grandparentsGrandkids}
+              alt="HealthSense grandparents and grandchildren"
+              className="aspect-[4/3] w-full rounded-xl object-cover"
+            />
+          </div>
         </div>
         <div className="flex items-center gap-3 rounded-2xl border border-white/15 bg-white/10 px-4 py-3 backdrop-blur-sm">
           <CaraMascot size={44} />

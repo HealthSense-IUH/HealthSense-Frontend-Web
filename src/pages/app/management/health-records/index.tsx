@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next"
 import { Plus } from "lucide-react"
 
 import { Page, PageBody, PageFooter, PageHeader } from "@/components/layout/page"
+import { LifestyleStripBanner } from "@/components/illustrations/lifestyle"
 import { Button } from "@/components/ui/button"
 import { HealthRecordsTable } from "@/pages/app/management/health-records/components/HealthRecordsTable"
 import { HealthRecordsFilters } from "@/pages/app/management/health-records/components/HealthRecordsFilters"
@@ -74,6 +75,14 @@ export default function AdminHealthRecordsPage() {
       />
 
       <PageBody>
+        <LifestyleStripBanner
+          art="grandparentsGrandkids"
+          tone="danger"
+          eyebrow={t("common:lifestyle.banners.adminRecords.eyebrow")}
+          title={t("common:lifestyle.banners.adminRecords.title")}
+          description={t("common:lifestyle.banners.adminRecords.description")}
+        />
+
         <SystemStatisticsChart />
 
         <HealthRecordsFilters onFilterChange={handleFilterChange} />

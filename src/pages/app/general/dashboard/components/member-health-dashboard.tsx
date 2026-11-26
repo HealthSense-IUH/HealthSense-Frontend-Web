@@ -306,7 +306,7 @@ export function MemberHealthDashboard() {
             {t("common:lifestyle.dashboardSubtitle")}
           </p>
         </div>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
           <LifestyleNavCard
             art="friendsJogging"
             tone="cyan"
@@ -333,6 +333,15 @@ export function MemberHealthDashboard() {
             description={t("common:lifestyle.cards.care.description")}
             cta={t("common:lifestyle.cards.care.cta")}
             to="/app/general/consultations"
+          />
+          <LifestyleNavCard
+            art="friendsYoga"
+            tone="warning"
+            badge={t("common:lifestyle.cards.balance.badge")}
+            title={t("common:lifestyle.cards.balance.title")}
+            description={t("common:lifestyle.cards.balance.description")}
+            cta={t("common:lifestyle.cards.balance.cta")}
+            to="/app/general/statistics/health"
           />
         </div>
       </section>

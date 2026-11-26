@@ -5,6 +5,7 @@ import i18n from "@/lib/i18n"
 import { ShieldAlert, Stethoscope } from "lucide-react"
 
 import { Page, PageBody, PageHeader } from "@/components/layout/page"
+import { LifestyleStripBanner } from "@/components/illustrations/lifestyle"
 import { Button } from "@/components/ui/button"
 import { useToast } from "@/hooks/use-toast"
 import { USER_ROLES } from "@/constants"
@@ -356,6 +357,14 @@ export default function DoctorSessionsPage() {
       />
 
       <PageBody>
+        <LifestyleStripBanner
+          art="doctorFamilyCare"
+          tone="cyan"
+          eyebrow={t("common:lifestyle.banners.doctorSessions.eyebrow")}
+          title={t("common:lifestyle.banners.doctorSessions.title")}
+          description={t("common:lifestyle.banners.doctorSessions.description")}
+        />
+
         {/* 1. Doctor Dispatch Status Card */}
         <DoctorDispatchHeader
           dispatchStatus={dispatchStatus}

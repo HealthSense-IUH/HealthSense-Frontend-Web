@@ -3,8 +3,9 @@ import { useTranslation } from "react-i18next"
 import { ArrowUpRight } from "lucide-react"
 
 import { EcgLine } from "@/components/illustrations"
+import { LIFESTYLE_ART } from "@/components/illustrations/lifestyle"
 
-/** Lời mời cuối trang: nền gradient thương hiệu, một câu, một nút. */
+/** Lời mời cuối trang: nền gradient thương hiệu, hai khung ảnh gia đình hai bên, một câu, một nút. */
 export function CtaSection({ signedIn, dashboardTo }: { signedIn: boolean; dashboardTo: string }) {
   const { t } = useTranslation("landing")
   return (
@@ -17,16 +18,38 @@ export function CtaSection({ signedIn, dashboardTo }: { signedIn: boolean; dashb
         <div className="pointer-events-none absolute inset-x-0 bottom-3 text-cyan-300/30" aria-hidden="true">
           <EcgLine className="h-14" animated />
         </div>
-        <div className="relative z-10 mx-auto max-w-2xl">
-          <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl">{t("cta.title")}</h2>
-          <p className="mt-3 text-base leading-relaxed text-slate-200/90">{t("cta.subtitle")}</p>
-          <Link
-            to={signedIn ? dashboardTo : "/register"}
-            className="mt-7 inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-bold text-primary-700 shadow-lg shadow-black/20 transition-all hover:bg-cyan-50 hover:-translate-y-0.5"
-          >
-            {signedIn ? t("cta.buttonSignedIn") : t("cta.button")}
-            <ArrowUpRight className="h-4 w-4" />
-          </Link>
+        <div className="relative z-10 grid items-center gap-8 lg:grid-cols-[190px_1fr_190px]">
+          <div className="hidden -rotate-3 overflow-hidden rounded-2xl border-2 border-white/80 bg-white p-1.5 shadow-xl lg:block">
+            <img
+              src={LIFESTYLE_ART.familyPicnic}
+              alt=""
+              aria-hidden="true"
+              loading="lazy"
+              className="aspect-[4/3] w-full rounded-xl object-cover"
+            />
+          </div>
+
+          <div className="mx-auto max-w-2xl">
+            <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl">{t("cta.title")}</h2>
+            <p className="mt-3 text-base leading-relaxed text-slate-200/90">{t("cta.subtitle")}</p>
+            <Link
+              to={signedIn ? dashboardTo : "/register"}
+              className="mt-7 inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-bold text-primary-700 shadow-lg shadow-black/20 transition-all hover:bg-cyan-50 hover:-translate-y-0.5"
+            >
+              {signedIn ? t("cta.buttonSignedIn") : t("cta.button")}
+              <ArrowUpRight className="h-4 w-4" />
+            </Link>
+          </div>
+
+          <div className="hidden rotate-3 overflow-hidden rounded-2xl border-2 border-white/80 bg-white p-1.5 shadow-xl lg:block">
+            <img
+              src={LIFESTYLE_ART.grandparentsGrandkids}
+              alt=""
+              aria-hidden="true"
+              loading="lazy"
+              className="aspect-[4/3] w-full rounded-xl object-cover"
+            />
+          </div>
         </div>
       </div>
     </section>

@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom"
 import { BarChart3, MessagesSquare, Users } from "lucide-react"
 
 import { Page, PageBody, PageHeader } from "@/components/layout/page"
+import { LifestyleStripBanner } from "@/components/illustrations/lifestyle"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 import { DoctorConsultationStatisticsTab } from "./components/doctor-consultation-statistics-tab"
@@ -34,6 +35,14 @@ export default function DoctorStatisticsPage() {
       />
 
       <PageBody>
+        <LifestyleStripBanner
+          art="doctorTeamCare"
+          tone="primary"
+          eyebrow={t("common:lifestyle.banners.doctorStats.eyebrow")}
+          title={t("common:lifestyle.banners.doctorStats.title")}
+          description={t("common:lifestyle.banners.doctorStats.description")}
+        />
+
         <div className="space-y-6">
           {/* Main Navigation Tabs */}
           <Tabs

@@ -10,6 +10,7 @@ import {
 } from "lucide-react"
 
 import { Page, PageBody, PageHeader } from "@/components/layout/page"
+import { LifestyleStripBanner } from "@/components/illustrations/lifestyle"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 import { UserStatisticsTab } from "./components/users/user-statistics-tab"
@@ -44,6 +45,14 @@ export default function AdminStatisticsPage() {
       />
 
       <PageBody>
+        <LifestyleStripBanner
+          art="communityRun"
+          tone="cyan"
+          eyebrow={t("common:lifestyle.banners.adminStats.eyebrow")}
+          title={t("common:lifestyle.banners.adminStats.title")}
+          description={t("common:lifestyle.banners.adminStats.description")}
+        />
+
         <div className="space-y-6">
           {/* Main Navigation Tabs */}
           <Tabs

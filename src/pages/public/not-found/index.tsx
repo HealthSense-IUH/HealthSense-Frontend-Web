@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next"
 import { ArrowLeft, Home } from "lucide-react"
 
 import { CaraMascot } from "@/components/assistant/cara-mascot"
-import { NoResultsIllustration } from "@/components/illustrations"
+import { LIFESTYLE_ART } from "@/components/illustrations/lifestyle"
 import { Button } from "@/components/ui/button"
 import { useDocumentTitle } from "@/hooks/use-document-title"
 import { getDefaultRouteForRole } from "@/constants"
@@ -49,8 +49,8 @@ export default function NotFoundPage() {
           </div>
         </div>
 
-        <div className="order-1 mx-auto w-64 motion-safe:animate-float sm:w-80 md:order-2">
-          <NoResultsIllustration title="404" />
+        <div className="order-1 mx-auto w-72 overflow-hidden rounded-3xl border border-slate-200 bg-white p-3 shadow-xl sm:w-96 md:order-2">
+          <img src={LIFESTYLE_ART.familyPicnic} alt="404" className="aspect-[4/3] w-full rounded-2xl object-cover" />
         </div>
       </div>
     </div>
