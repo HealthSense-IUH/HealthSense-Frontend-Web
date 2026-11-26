@@ -134,6 +134,21 @@
         "tag": "Bác sĩ đồng hành",
         "title": "Chuyên gia tim mạch luôn bên cạnh",
         "description": "Kết nối nhanh chóng với bác sĩ tim mạch, chia sẻ trực tiếp kết quả đo và nhận lời khuyên rõ ràng cho cả gia đình."
+      },
+      "picnic": {
+        "tag": "Dã ngoại cuối tuần",
+        "title": "Hạnh phúc trọn vẹn bên gia đình nhỏ",
+        "description": "Cuối tuần thảnh thơi cùng bố mẹ, con nhỏ và thú cưng tận hưởng thiên nhiên, trái cây tươi và bầu không khí trong lành."
+      },
+      "yoga": {
+        "tag": "Thư giãn & Cân bằng",
+        "title": "Tập thở và yoga cùng hội bạn",
+        "description": "Giải tỏa căng thẳng, ổn định nhịp tim tự nhiên và cải thiện chỉ số HRV qua những buổi tập nhẹ nhàng mỗi sáng."
+      },
+      "grandparents": {
+        "tag": "Ông bà & Cháu nhỏ",
+        "title": "Tiếng cười rộn rã trong khu vườn nhà",
+        "description": "Ông bà khỏe mạnh, an tâm vui đùa đẩy xích đu và đọc truyện cùng cháu nhỏ nhờ nhịp tim luôn được bảo vệ 24/7."
       }
     }
   },

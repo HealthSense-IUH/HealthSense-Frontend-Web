@@ -166,6 +166,12 @@
         "title": "An tâm cùng chuyên gia",
         "description": "Đặt lịch tư vấn, chia sẻ chỉ số nhịp tim và nhận hướng dẫn chăm sóc từ bác sĩ tim mạch.",
         "cta": "Vào tư vấn sức khỏe"
+      },
+      "balance": {
+        "badge": "Cân bằng & Thống kê",
+        "title": "Hiểu rõ nhịp sống của bạn",
+        "description": "Theo dõi xu hướng nhịp tim, giấc ngủ và hiệu quả chăm sóc sức khỏe qua từng tuần.",
+        "cta": "Xem thống kê của tôi"
       }
     },
     "banners": {
@@ -185,7 +191,7 @@
         "description": "Chia sẻ kết quả đo trực tiếp trong phiên tư vấn để bác sĩ nắm rõ tình trạng và đưa ra lời khuyên sát thực tế nhất."
       },
       "careHistory": {
-        "eyebrow": "Hành trình sống khỏe",
+        "eyebrow": "Ông bà & Gia đình khỏe mạnh",
         "title": "Lưu giữ trọn vẹn từng chặng đường chăm sóc sức khỏe",
         "description": "Xem lại lịch sử tư vấn, khuyến nghị của bác sĩ và những bước tiến tích cực của trái tim bạn theo thời gian."
       },
@@ -198,6 +204,46 @@
         "eyebrow": "Vì bạn và gia đình",
         "title": "Hồ sơ đầy đủ giúp AI và bác sĩ chăm sóc bạn chính xác hơn",
         "description": "Cập nhật thông tin cá nhân và chỉ số cơ bản để nhận tư vấn tim mạch, dinh dưỡng phù hợp nhất cho cuộc sống khỏe mạnh."
+      },
+      "memberStats": {
+        "eyebrow": "Cuối tuần trọn vẹn bên gia đình",
+        "title": "Toàn cảnh hành trình chăm sóc tim mạch của riêng bạn",
+        "description": "Nắm bắt nhịp đo, số phiên tư vấn và xu hướng an toàn tim mạch để mỗi ngày cùng người thân thêm trọn vẹn."
+      },
+      "doctorStats": {
+        "eyebrow": "Đội ngũ bác sĩ tim mạch",
+        "title": "Đồng hành chuyên môn vì hàng nghìn trái tim khỏe mạnh",
+        "description": "Theo dõi hiệu quả tư vấn, hồ sơ bệnh nhân và những cảnh báo rung nhĩ đã được hỗ trợ kịp thời."
+      },
+      "doctorSessions": {
+        "eyebrow": "Phiên chăm sóc tận tâm",
+        "title": "Kết nối gần gũi giữa bác sĩ và từng gia đình",
+        "description": "Quản lý lịch trực, tiếp nhận phiên tư vấn mới và xem nhanh dữ liệu đo nhịp tim AI của bệnh nhân."
+      },
+      "adminStats": {
+        "eyebrow": "Cộng đồng sống khỏe HealthSense",
+        "title": "Lan tỏa thói quen tầm soát tim mạch chủ động mỗi ngày",
+        "description": "Bức tranh tổng quan về hội viên, lượt tầm soát AI, phiên tư vấn bác sĩ và tăng trưởng toàn hệ thống."
+      },
+      "adminUsers": {
+        "eyebrow": "Cộng đồng đa thế hệ",
+        "title": "Quản lý tài khoản hội viên, bác sĩ và đội ngũ vận hành",
+        "description": "Xây dựng mạng lưới chăm sóc tim mạch an toàn, tin cậy cho mọi lứa tuổi từ bạn trẻ đến người lớn tuổi."
+      },
+      "adminRecords": {
+        "eyebrow": "Bảo vệ ông bà & người thân",
+        "title": "Giám sát chất lượng tầm soát nhịp tim AI toàn hệ thống",
+        "description": "Tra cứu bản ghi đo PPG, phân loại NORMAL / UNCERTAIN / AFIB và theo dõi cảnh báo cần ưu tiên hỗ trợ."
+      },
+      "adminNutrition": {
+        "eyebrow": "Chuẩn hóa dinh dưỡng gia đình",
+        "title": "Thiết lập ngưỡng dinh dưỡng khoa học cho trái tim khỏe",
+        "description": "Quản lý bộ quy tắc natri, kali, đường, chất béo bão hòa giúp bác sĩ kê thực đơn chuẩn xác cho bệnh nhân."
+      },
+      "adminCredits": {
+        "eyebrow": "Cân bằng & Minh bạch",
+        "title": "Quản lý gói lượt tư vấn và ví sức khỏe hội viên",
+        "description": "Theo dõi gói dịch vụ, giao dịch và số dư lượt tư vấn minh bạch để mọi gia đình luôn kết nối bác sĩ dễ dàng."
       }
     }
   }

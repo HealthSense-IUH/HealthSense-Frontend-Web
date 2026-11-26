@@ -166,6 +166,12 @@
         "title": "Peace of mind with doctors",
         "description": "Book a consultation, share your readings, and get personalized guidance from cardiologists.",
         "cta": "Open consultations"
+      },
+      "balance": {
+        "badge": "Balance & Trends",
+        "title": "Understand your daily rhythm",
+        "description": "Review your weekly heart trends, screening history, and wellness milestones at a glance.",
+        "cta": "View my statistics"
       }
     },
     "banners": {
@@ -185,7 +191,7 @@
         "description": "Share your heart measurements directly inside a session so your doctor can offer clear, tailored recommendations."
       },
       "careHistory": {
-        "eyebrow": "Your wellness journey",
+        "eyebrow": "Healthy across generations",
         "title": "Every step of your heart care journey in one place",
         "description": "Revisit past consultations, physician summaries, and the steady progress of your daily heart health."
       },
@@ -198,6 +204,46 @@
         "eyebrow": "For you and your family",
         "title": "A complete profile helps AI and doctors care more accurately",
         "description": "Keep your health profile up to date for personalized heart screening and family nutrition guidance."
+      },
+      "memberStats": {
+        "eyebrow": "Joyful family weekends",
+        "title": "Your complete personal heart-wellness overview",
+        "description": "Track screening consistency, consultation history, and rhythm insights so every day with family feels secure."
+      },
+      "doctorStats": {
+        "eyebrow": "Cardiology care team",
+        "title": "Clinical excellence supporting thousands of healthy hearts",
+        "description": "Monitor consultation impact, patient follow-ups, and timely atrial fibrillation alerts across your practice."
+      },
+      "doctorSessions": {
+        "eyebrow": "Compassionate care",
+        "title": "Bringing cardiologists closer to every family",
+        "description": "Manage live availability, accept incoming consultations, and review AI heart screening metrics in real time."
+      },
+      "adminStats": {
+        "eyebrow": "HealthSense wellness community",
+        "title": "Empowering proactive heart screening every single day",
+        "description": "Platform-wide overview of active members, AI PPG screenings, doctor sessions, and community growth."
+      },
+      "adminUsers": {
+        "eyebrow": "Multi-generational community",
+        "title": "Manage members, cardiologists, and care teams",
+        "description": "Maintain a trusted, welcoming heart-health network serving young adults, families, and seniors alike."
+      },
+      "adminRecords": {
+        "eyebrow": "Protecting loved ones",
+        "title": "System-wide AI heart screening quality & alerts",
+        "description": "Inspect PPG recordings, review NORMAL / UNCERTAIN / AFIB classifications, and prioritize high-risk follow-ups."
+      },
+      "adminNutrition": {
+        "eyebrow": "Heart-smart standards",
+        "title": "Configure evidence-based family nutrition thresholds",
+        "description": "Fine-tune sodium, potassium, sugar, and fat rules that guide physicians when crafting cardiac meal plans."
+      },
+      "adminCredits": {
+        "eyebrow": "Balanced & transparent",
+        "title": "Manage consultation packages and member wellness wallets",
+        "description": "Keep credit plans, orders, and balances seamless so every family can connect with a cardiologist effortlessly."
       }
     }
   }

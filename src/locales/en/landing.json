@@ -134,6 +134,21 @@
         "tag": "Doctor by your side",
         "title": "Cardiologists one tap away",
         "description": "Connect smoothly with heart specialists, share measurements in one tap, and get clear advice for the whole family."
+      },
+      "picnic": {
+        "tag": "Weekend picnic",
+        "title": "Unforgettable weekends together",
+        "description": "Relax on sunny park lawns with your partner, child, and playful puppy — fresh fruit, laughter, and calm heartbeats."
+      },
+      "yoga": {
+        "tag": "Mindful balance",
+        "title": "Morning yoga with friends",
+        "description": "Ease daily stress, nurture steady heart rhythm, and boost natural HRV through calm outdoor stretching together."
+      },
+      "grandparents": {
+        "tag": "Grandparents & Kids",
+        "title": "Backyard laughter across generations",
+        "description": "Grandparents stay confident pushing swings and reading stories to grandchildren with round-the-clock heart protection."
       }
     }
   },
