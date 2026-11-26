@@ -11,6 +11,7 @@ import {
 } from "lucide-react"
 
 import { Page, PageBody, PageFooter, PageHeader } from "@/components/layout/page"
+import { LifestyleStripBanner } from "@/components/illustrations/lifestyle"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -136,6 +137,14 @@ export default function AfibHistoryPage() {
       />
 
       <PageBody>
+        <LifestyleStripBanner
+          art="seniorsMorning"
+          tone="primary"
+          eyebrow={t("common:lifestyle.banners.afibHistory.eyebrow")}
+          title={t("common:lifestyle.banners.afibHistory.title")}
+          description={t("common:lifestyle.banners.afibHistory.description")}
+        />
+
         {/* Filters, View Mode Toggle & Badge Legend */}
         <div className="space-y-3">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">

@@ -13,6 +13,7 @@ import { useTranslation } from "react-i18next"
 import { AboutSection } from "./components/AboutSection"
 import { BenefitsSection } from "./components/BenefitsSection"
 import { HowItWorksSection } from "./components/HowItWorksSection"
+import { HealthyLifeSection } from "./components/HealthyLifeSection"
 import { CaraSection } from "./components/CaraSection"
 import { CtaSection } from "./components/CtaSection"
 import { LandingFooter } from "./components/LandingFooter"
@@ -310,6 +311,9 @@ export default function LandingPage() {
       <div id="how" className="scroll-mt-20 sm:scroll-mt-24">
         <HowItWorksSection />
       </div>
+
+      {/* 03b. Cuộc sống khỏe mạnh cùng gia đình, trẻ nhỏ, bạn bè */}
+      <HealthyLifeSection />
 
       {/* 04. Trợ lý Cara */}
       <div id="cara" className="scroll-mt-20 sm:scroll-mt-24">

@@ -4,6 +4,7 @@ import { useNavigate, useSearchParams } from "react-router-dom"
 import { useTranslation } from "react-i18next"
 
 import { Page, PageBody, PageHeader } from "@/components/layout/page"
+import { LifestyleStripBanner } from "@/components/illustrations/lifestyle"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
@@ -112,6 +113,16 @@ export default function ConsultationsPage() {
       />
 
       <PageBody className="gap-4">
+        {logic.isMember && (
+          <LifestyleStripBanner
+            art="doctorFamilyCare"
+            tone="cyan"
+            eyebrow={t("common:lifestyle.banners.consultations.eyebrow")}
+            title={t("common:lifestyle.banners.consultations.title")}
+            description={t("common:lifestyle.banners.consultations.description")}
+          />
+        )}
+
         {logic.alert && (
           <div
             className={cn(

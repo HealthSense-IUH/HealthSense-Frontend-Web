@@ -100,6 +100,43 @@
     },
     "note": "Available in the corner of every page in the app."
   },
+  "lifestyle": {
+    "eyebrow": "Healthy life every day",
+    "title": "Cherish every moment with the people you love",
+    "subtitle": "Health technology matters most when grandparents feel safe, parents stay energized, kids play freely, and friends stay active together.",
+    "cards": {
+      "family": {
+        "tag": "Multi-gen family",
+        "title": "Peace of mind on every walk",
+        "description": "Grandparents, parents, and children enjoy sunny mornings together while HealthSense quietly watches over every heartbeat."
+      },
+      "kids": {
+        "tag": "Kids & Parents",
+        "title": "Full energy for every playtime",
+        "description": "Caring for your heart today keeps you strong and ready to run, fly kites, and laugh alongside your children every day."
+      },
+      "friends": {
+        "tag": "Active friends",
+        "title": "Move freely with your crew",
+        "description": "Jog, cycle, and stay active with friends while your wrist wearable tracks heart rate and HRV in real time."
+      },
+      "seniors": {
+        "tag": "Healthy aging",
+        "title": "Serene mornings for seniors",
+        "description": "Early detection of silent atrial fibrillation helps older adults stay active and enjoy morning routines with confidence."
+      },
+      "meal": {
+        "tag": "Family meals",
+        "title": "Heart-friendly food for everyone",
+        "description": "Browse thousands of foods and heart-smart meal tips so every family dinner is delicious, balanced, and reassuring."
+      },
+      "doctor": {
+        "tag": "Doctor by your side",
+        "title": "Cardiologists one tap away",
+        "description": "Connect smoothly with heart specialists, share measurements in one tap, and get clear advice for the whole family."
+      }
+    }
+  },
   "cta": {
     "title": "Start listening to your heart",
     "subtitle": "Create a free account, connect your band and let HealthSense walk with you from today.",

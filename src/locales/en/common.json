@@ -144,5 +144,61 @@
     "home": "Go home",
     "back": "Go back",
     "caraQuip": "Cara looked everywhere and could not find this page. Try again from home!"
+  },
+  "lifestyle": {
+    "dashboardTitle": "Healthy living every day",
+    "dashboardSubtitle": "Care for your heart through joyful daily habits — stay active with friends, enjoy family meals, and check in with specialists.",
+    "cards": {
+      "active": {
+        "badge": "Active & Screened",
+        "title": "Stay energetic with friends",
+        "description": "Review your heart rhythm screenings and upload a fresh measurement after walks or workouts.",
+        "cta": "Open measurements"
+      },
+      "nutrition": {
+        "badge": "Family meals",
+        "title": "Heart-friendly nutrition",
+        "description": "Explore wholesome ingredients and heart-smart guidance tailored for everyday family cooking.",
+        "cta": "Explore nutrition"
+      },
+      "care": {
+        "badge": "Expert care",
+        "title": "Peace of mind with doctors",
+        "description": "Book a consultation, share your readings, and get personalized guidance from cardiologists.",
+        "cta": "Open consultations"
+      }
+    },
+    "banners": {
+      "nutrition": {
+        "eyebrow": "Heart-smart family meals",
+        "title": "Every wholesome meal is a gift to your family's heart",
+        "description": "Search over 5,900 foods to build low-sodium, fiber-rich, heart-friendly dishes for parents and kids alike."
+      },
+      "afibHistory": {
+        "eyebrow": "Peaceful mornings",
+        "title": "Regular rhythm checks for calmer days with loved ones",
+        "description": "Each recording is analyzed by AI for PPG pulse waveforms, HRV metrics, and AFib screening so you can track long-term trends."
+      },
+      "consultations": {
+        "eyebrow": "Family care with specialists",
+        "title": "Cardiologists listening and walking beside your family",
+        "description": "Share your heart measurements directly inside a session so your doctor can offer clear, tailored recommendations."
+      },
+      "careHistory": {
+        "eyebrow": "Your wellness journey",
+        "title": "Every step of your heart care journey in one place",
+        "description": "Revisit past consultations, physician summaries, and the steady progress of your daily heart health."
+      },
+      "reports": {
+        "eyebrow": "Active with friends",
+        "title": "Understand your rhythm to move with confidence",
+        "description": "Daily heart rate, SpO2, and HRV trends help you balance work, workouts, and recovery effortlessly."
+      },
+      "profile": {
+        "eyebrow": "For you and your family",
+        "title": "A complete profile helps AI and doctors care more accurately",
+        "description": "Keep your health profile up to date for personalized heart screening and family nutrition guidance."
+      }
+    }
   }
 }

@@ -100,6 +100,43 @@
     },
     "note": "Có sẵn ở góc màn hình trong mọi trang của ứng dụng."
   },
+  "lifestyle": {
+    "eyebrow": "Nhịp sống khỏe mỗi ngày",
+    "title": "Trọn vẹn từng khoảnh khắc bên người thân yêu",
+    "subtitle": "Công nghệ y tế chỉ thật sự có ý nghĩa khi giúp ông bà an tâm, bố mẹ khỏe mạnh, trẻ nhỏ vui đùa và bạn bè tận hưởng từng ngày trọn vẹn.",
+    "cards": {
+      "family": {
+        "tag": "Gia đình 3 thế hệ",
+        "title": "Bình an trên từng bước dạo bộ",
+        "description": "Ông bà, bố mẹ và các bé cùng tận hưởng buổi sáng trong lành mà vẫn luôn có HealthSense âm thầm bảo vệ nhịp tim."
+      },
+      "kids": {
+        "tag": "Trẻ nhỏ & Bố mẹ",
+        "title": "Trọn vẹn niềm vui bên con trẻ",
+        "description": "Chăm sóc trái tim khỏe mạnh hôm nay để luôn đủ năng lượng chạy nhảy, thả diều và lớn lên cùng con mỗi ngày."
+      },
+      "friends": {
+        "tag": "Bạn bè năng động",
+        "title": "Hết mình cùng đam mê vận động",
+        "description": "Chạy bộ, đạp xe cùng hội bạn thân với thông số nhịp tim và biến thiên HRV được theo dõi liên tục trên cổ tay."
+      },
+      "seniors": {
+        "tag": "Người lớn tuổi",
+        "title": "Sống vui, sống khỏe mỗi sáng",
+        "description": "Phát hiện sớm dấu hiệu rung nhĩ thầm lặng giúp ông bà yên tâm tập dưỡng sinh và tận hưởng tuổi vàng."
+      },
+      "meal": {
+        "tag": "Bữa ăn gia đình",
+        "title": "Dinh dưỡng lành mạnh cho cả nhà",
+        "description": "Tra cứu hàng nghìn thực phẩm và thực đơn thân thiện với tim mạch để mỗi bữa cơm gia đình thêm ngon và an tâm."
+      },
+      "doctor": {
+        "tag": "Bác sĩ đồng hành",
+        "title": "Chuyên gia tim mạch luôn bên cạnh",
+        "description": "Kết nối nhanh chóng với bác sĩ tim mạch, chia sẻ trực tiếp kết quả đo và nhận lời khuyên rõ ràng cho cả gia đình."
+      }
+    }
+  },
   "cta": {
     "title": "Bắt đầu lắng nghe trái tim bạn",
     "subtitle": "Tạo tài khoản miễn phí, kết nối vòng đeo và để HealthSense đồng hành từ hôm nay.",

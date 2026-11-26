@@ -3,6 +3,7 @@ import { Trans, useTranslation } from "react-i18next"
 import { Camera, ClipboardList, Heart, Info, Search } from "lucide-react"
 
 import { Page, PageBody, PageFooter, PageHeader } from "@/components/layout/page"
+import { LifestyleStripBanner } from "@/components/illustrations/lifestyle"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ComingSoonTab } from "./components/ComingSoonTab"
 import { DietPrescriptionTab } from "./components/DietPrescriptionTab"
@@ -36,6 +37,14 @@ export default function NutritionHomePage() {
       />
 
       <PageBody>
+        <LifestyleStripBanner
+          art="familyMeal"
+          tone="success"
+          eyebrow={t("common:lifestyle.banners.nutrition.eyebrow")}
+          title={t("common:lifestyle.banners.nutrition.title")}
+          description={t("common:lifestyle.banners.nutrition.description")}
+        />
+
         <Tabs
           value={activeTab}
           onValueChange={(val) => setSearchParams(val === "foods" ? {} : { tab: val })}

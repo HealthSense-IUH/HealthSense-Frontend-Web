@@ -15,6 +15,7 @@ import { healthRecordApi } from "@/services"
 import { HealthRecordDetailModal } from "@/pages/app/general/afib-history/components/HealthRecordDetailModal"
 import { HealthHeatmapCalendar } from "./health-heatmap-calendar"
 import { MemberGreetingBanner } from "./member-greeting-banner"
+import { LifestyleNavCard } from "@/components/illustrations/lifestyle"
 import { EmptyState } from "@/components/custom/EmptyState"
 import { AnimatedNumber } from "@/components/custom/AnimatedNumber"
 import { 
@@ -294,6 +295,47 @@ export function MemberHealthDashboard() {
           </Card>
         </div>
       </div>
+
+      {/* Nhịp sống khỏe mỗi ngày: thẻ minh hoạ vận động cùng bạn bè, bữa ăn gia đình & bác sĩ đồng hành */}
+      <section className="space-y-3">
+        <div>
+          <h2 className="text-base font-extrabold tracking-tight text-slate-900">
+            {t("common:lifestyle.dashboardTitle")}
+          </h2>
+          <p className="mt-0.5 text-xs text-muted-foreground">
+            {t("common:lifestyle.dashboardSubtitle")}
+          </p>
+        </div>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          <LifestyleNavCard
+            art="friendsJogging"
+            tone="cyan"
+            badge={t("common:lifestyle.cards.active.badge")}
+            title={t("common:lifestyle.cards.active.title")}
+            description={t("common:lifestyle.cards.active.description")}
+            cta={t("common:lifestyle.cards.active.cta")}
+            to="/app/general/afib-history"
+          />
+          <LifestyleNavCard
+            art="familyMeal"
+            tone="success"
+            badge={t("common:lifestyle.cards.nutrition.badge")}
+            title={t("common:lifestyle.cards.nutrition.title")}
+            description={t("common:lifestyle.cards.nutrition.description")}
+            cta={t("common:lifestyle.cards.nutrition.cta")}
+            to="/app/general/nutrition"
+          />
+          <LifestyleNavCard
+            art="doctorFamilyCare"
+            tone="primary"
+            badge={t("common:lifestyle.cards.care.badge")}
+            title={t("common:lifestyle.cards.care.title")}
+            description={t("common:lifestyle.cards.care.description")}
+            cta={t("common:lifestyle.cards.care.cta")}
+            to="/app/general/consultations"
+          />
+        </div>
+      </section>
 
       {/* Modals */}
       <HealthRecordDetailModal

@@ -1,9 +1,9 @@
 import { useTranslation } from "react-i18next"
 import { Activity, HeartHandshake, ShieldCheck, Zap } from "lucide-react"
 
-import { HeartPulseIllustration } from "@/components/illustrations"
+import { LIFESTYLE_ART } from "@/components/illustrations/lifestyle"
 
-/** Về HealthSense: hai đoạn ngắn, bốn giá trị C.A.R.E dưới dạng thẻ nhỏ, minh hoạ trái tim bên phải. */
+/** Về HealthSense: hai đoạn ngắn, bốn giá trị C.A.R.E dưới dạng thẻ nhỏ, minh hoạ gia đình 3 thế hệ bên phải. */
 export function AboutSection() {
   const { t } = useTranslation("landing")
   const values = [
@@ -16,7 +16,7 @@ export function AboutSection() {
   return (
     <section className="relative w-full px-4 py-20 sm:px-8 sm:py-24 lg:px-14">
       <div className="mx-auto grid w-full max-w-7xl items-center gap-12 lg:grid-cols-12">
-        <div className="lg:col-span-7">
+        <div className="lg:col-span-6">
           <span className="inline-flex items-center gap-2 rounded-full border border-primary-200 bg-primary-50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-primary-700">
             {t("about.eyebrow")}
           </span>
@@ -39,8 +39,18 @@ export function AboutSection() {
           </div>
         </div>
 
-        <div className="mx-auto w-72 motion-safe:animate-float sm:w-80 lg:col-span-5 lg:w-full">
-          <HeartPulseIllustration />
+        <div className="relative mx-auto w-full max-w-xl lg:col-span-6">
+          <div
+            className="pointer-events-none absolute -inset-3 rounded-[2rem] bg-gradient-to-tr from-primary-500/15 via-cyan-400/12 to-success-400/15 blur-2xl"
+            aria-hidden="true"
+          />
+          <div className="relative overflow-hidden rounded-[2rem] border border-slate-200/90 bg-white p-3 shadow-xl">
+            <img
+              src={LIFESTYLE_ART.familyPark}
+              alt={t("lifestyle.cards.family.title")}
+              className="aspect-[4/3] w-full rounded-[1.4rem] object-cover"
+            />
+          </div>
         </div>
       </div>
     </section>

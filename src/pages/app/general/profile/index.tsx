@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next"
 import i18n from "@/lib/i18n"
 import { useAuthStore } from "@/stores/auth-store"
 import { Page, PageBody, PageHeader } from "@/components/layout/page"
+import { LifestyleStripBanner } from "@/components/illustrations/lifestyle"
 import { Button } from "@/components/ui/button"
 
 import { profileApi, consultationApi } from "@/services"
@@ -147,6 +148,14 @@ export default function ProfilePage() {
       />
 
       <PageBody>
+        <LifestyleStripBanner
+          art="kidsActive"
+          tone="warning"
+          eyebrow={t("common:lifestyle.banners.profile.eyebrow")}
+          title={t("common:lifestyle.banners.profile.title")}
+          description={t("common:lifestyle.banners.profile.description")}
+        />
+
         {/* Loading Skeleton */}
         {loading && !user && (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 animate-pulse">

@@ -144,5 +144,61 @@
     "home": "Về trang chủ",
     "back": "Quay lại",
     "caraQuip": "Cara đã tìm khắp nơi mà không thấy trang này. Thử lại từ trang chủ nhé!"
+  },
+  "lifestyle": {
+    "dashboardTitle": "Nhịp sống khỏe mỗi ngày",
+    "dashboardSubtitle": "Chăm sóc trái tim từ thói quen nhỏ — vận động cùng bạn bè, ăn ngon cùng gia đình và trò chuyện cùng bác sĩ.",
+    "cards": {
+      "active": {
+        "badge": "Vận động & Sàng lọc",
+        "title": "Khỏe khoắn cùng bạn bè",
+        "description": "Xem lại lịch sử đo nhịp tim và tải lên bản ghi mới sau mỗi buổi tập luyện hay đi dạo.",
+        "cta": "Mở lịch sử đo"
+      },
+      "nutrition": {
+        "badge": "Bữa ăn gia đình",
+        "title": "Thực đơn tốt cho trái tim",
+        "description": "Khám phá thực phẩm lành mạnh và gợi ý dinh dưỡng thân thiện tim mạch cho cả nhà.",
+        "cta": "Khám phá dinh dưỡng"
+      },
+      "care": {
+        "badge": "Bác sĩ đồng hành",
+        "title": "An tâm cùng chuyên gia",
+        "description": "Đặt lịch tư vấn, chia sẻ chỉ số nhịp tim và nhận hướng dẫn chăm sóc từ bác sĩ tim mạch.",
+        "cta": "Vào tư vấn sức khỏe"
+      }
+    },
+    "banners": {
+      "nutrition": {
+        "eyebrow": "Bữa ăn gia đình khỏe tim",
+        "title": "Mỗi bữa cơm lành mạnh là một món quà cho trái tim cả nhà",
+        "description": "Tra cứu dinh dưỡng hơn 5.900 thực phẩm, chọn nguyên liệu ít natri, giàu chất xơ và omega-3 để bố mẹ và các bé cùng khỏe."
+      },
+      "afibHistory": {
+        "eyebrow": "An tâm mỗi buổi sáng",
+        "title": "Theo dõi nhịp tim đều đặn — vững vàng bên người thân",
+        "description": "Mỗi lần đo 30 giây đều được AI phân tích sóng mạch PPG, chỉ số HRV và lưu lại để bạn dễ dàng theo dõi lâu dài."
+      },
+      "consultations": {
+        "eyebrow": "Chăm sóc gia đình cùng chuyên gia",
+        "title": "Bác sĩ tim mạch luôn lắng nghe và đồng hành cùng bạn",
+        "description": "Chia sẻ kết quả đo trực tiếp trong phiên tư vấn để bác sĩ nắm rõ tình trạng và đưa ra lời khuyên sát thực tế nhất."
+      },
+      "careHistory": {
+        "eyebrow": "Hành trình sống khỏe",
+        "title": "Lưu giữ trọn vẹn từng chặng đường chăm sóc sức khỏe",
+        "description": "Xem lại lịch sử tư vấn, khuyến nghị của bác sĩ và những bước tiến tích cực của trái tim bạn theo thời gian."
+      },
+      "reports": {
+        "eyebrow": "Năng động cùng bạn bè",
+        "title": "Hiểu nhịp tim mỗi ngày để vận động tự tin hơn",
+        "description": "Tổng hợp xu hướng nhịp tim, SpO2 và HRV theo ngày giúp bạn cân bằng giữa làm việc, tập luyện và nghỉ ngơi."
+      },
+      "profile": {
+        "eyebrow": "Vì bạn và gia đình",
+        "title": "Hồ sơ đầy đủ giúp AI và bác sĩ chăm sóc bạn chính xác hơn",
+        "description": "Cập nhật thông tin cá nhân và chỉ số cơ bản để nhận tư vấn tim mạch, dinh dưỡng phù hợp nhất cho cuộc sống khỏe mạnh."
+      }
+    }
   }
 }

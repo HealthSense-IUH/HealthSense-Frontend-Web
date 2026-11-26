@@ -12,6 +12,7 @@ import {
 } from "recharts"
 
 import { Page, PageBody, PageHeader } from "@/components/layout/page"
+import { LifestyleStripBanner } from "@/components/illustrations/lifestyle"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { healthRecordApi } from "@/services"
@@ -139,6 +140,14 @@ export default function ReportsPage() {
       />
 
       <PageBody>
+        <LifestyleStripBanner
+          art="friendsJogging"
+          tone="cyan"
+          eyebrow={t("common:lifestyle.banners.reports.eyebrow")}
+          title={t("common:lifestyle.banners.reports.title")}
+          description={t("common:lifestyle.banners.reports.description")}
+        />
+
         {loadFailed && (
           <div className="rounded-2xl border border-danger-200 bg-danger-50 p-4 text-sm text-danger-700">
             {t("reports.loadError")}

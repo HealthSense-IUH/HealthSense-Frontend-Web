@@ -11,6 +11,7 @@ import {
 } from "lucide-react"
 
 import { Page, PageBody, PageFooter, PageHeader } from "@/components/layout/page"
+import { LifestyleStripBanner } from "@/components/illustrations/lifestyle"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -100,6 +101,14 @@ export default function CareHistoryPage() {
       />
 
       <PageBody>
+        <LifestyleStripBanner
+          art="familyPark"
+          tone="primary"
+          eyebrow={t("common:lifestyle.banners.careHistory.eyebrow")}
+          title={t("common:lifestyle.banners.careHistory.title")}
+          description={t("common:lifestyle.banners.careHistory.description")}
+        />
+
         {/* Episodes List */}
         {loading ? (
           <div className="grid gap-4">

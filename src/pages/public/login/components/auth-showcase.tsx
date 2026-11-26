@@ -2,7 +2,8 @@ import { useTranslation } from "react-i18next"
 import { Activity, BellRing, Stethoscope } from "lucide-react"
 
 import { CaraMascot } from "@/components/assistant/cara-mascot"
-import { EcgLine, WearableIllustration } from "@/components/illustrations"
+import { EcgLine } from "@/components/illustrations"
+import { LIFESTYLE_ART } from "@/components/illustrations/lifestyle"
 
 /**
  * Bảng giới thiệu bên trái trang đăng nhập (chỉ hiện từ màn hình lg): nền navy, minh hoạ vòng đeo, ba điểm mạnh
@@ -49,9 +50,13 @@ export function AuthShowcase() {
         </ul>
       </div>
 
-      <div className="relative z-10 mt-8 flex items-end justify-between gap-6">
-        <div className="w-56 motion-safe:animate-float xl:w-64">
-          <WearableIllustration title="HealthSense wearable" />
+      <div className="relative z-10 mt-8 flex items-end justify-between gap-4">
+        <div className="w-60 overflow-hidden rounded-2xl border border-white/20 bg-white p-2 shadow-xl xl:w-72">
+          <img
+            src={LIFESTYLE_ART.familyPark}
+            alt="HealthSense family"
+            className="aspect-[4/3] w-full rounded-xl object-cover"
+          />
         </div>
         <div className="flex items-center gap-3 rounded-2xl border border-white/15 bg-white/10 px-4 py-3 backdrop-blur-sm">
           <CaraMascot size={44} />
