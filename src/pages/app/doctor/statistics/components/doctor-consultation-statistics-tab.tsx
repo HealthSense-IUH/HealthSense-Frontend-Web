@@ -87,16 +87,16 @@ export function DoctorConsultationStatisticsTab() {
 
       {/* Error state */}
       {error && !isLoading && (
-        <div className="rounded-2xl border border-red-200 bg-red-50/50 p-6 text-center space-y-3">
-          <AlertCircle className="w-8 h-8 text-red-500 mx-auto" />
-          <p className="text-sm font-medium text-red-800">
+        <div className="rounded-2xl border border-danger-200 bg-danger-50/50 p-6 text-center space-y-3">
+          <AlertCircle className="w-8 h-8 text-danger-500 mx-auto" />
+          <p className="text-sm font-medium text-danger-800">
             {t("doctorStatistics.error.loadFailed")}
           </p>
           <Button
             variant="outline"
             size="sm"
             onClick={() => refetch()}
-            className="rounded-xl border-red-200 text-red-700 hover:bg-red-100/50"
+            className="rounded-xl border-danger-200 text-danger-700 hover:bg-danger-100/50"
           >
             <RotateCw className="w-3.5 h-3.5 mr-1.5" />
             {t("doctorStatistics.filter.refresh")}
@@ -131,7 +131,7 @@ export function DoctorConsultationStatisticsTab() {
                 <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
                   {t("doctorStatistics.consultations.summary.totalConsultations")}
                 </span>
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary-50 text-primary-600">
                   <Layers className="h-4.5 w-4.5" />
                 </div>
               </div>
@@ -163,7 +163,7 @@ export function DoctorConsultationStatisticsTab() {
                     </Tooltip>
                   </TooltipProvider>
                 </div>
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-sky-50 text-sky-600">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-cyan-50 text-cyan-600">
                   <CalendarClock className="h-4.5 w-4.5" />
                 </div>
               </div>
@@ -186,7 +186,7 @@ export function DoctorConsultationStatisticsTab() {
                 <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
                   {t("doctorStatistics.consultations.summary.scheduledInPeriod")}
                 </span>
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-50 text-amber-600">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-warning-50 text-warning-600">
                   <Clock className="h-4.5 w-4.5" />
                 </div>
               </div>
@@ -206,7 +206,7 @@ export function DoctorConsultationStatisticsTab() {
                 <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
                   {t("doctorStatistics.consultations.summary.activeInPeriod")}
                 </span>
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary-50 text-primary-600">
                   <PlayCircle className="h-4.5 w-4.5" />
                 </div>
               </div>
@@ -226,12 +226,12 @@ export function DoctorConsultationStatisticsTab() {
                 <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
                   {t("doctorStatistics.consultations.summary.completedInPeriod")}
                 </span>
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-success-50 text-success-600">
                   <CheckCircle2 className="h-4.5 w-4.5" />
                 </div>
               </div>
               <div className="mt-3">
-                <span className="text-2xl font-bold tracking-tight text-emerald-600">
+                <span className="text-2xl font-bold tracking-tight text-success-600">
                   {summary.completedInPeriod.toLocaleString()}
                 </span>
               </div>
@@ -246,12 +246,12 @@ export function DoctorConsultationStatisticsTab() {
                 <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
                   {t("doctorStatistics.consultations.summary.cancelledInPeriod")}
                 </span>
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-rose-50 text-rose-600">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-danger-50 text-danger-600">
                   <XCircle className="h-4.5 w-4.5" />
                 </div>
               </div>
               <div className="mt-3">
-                <span className="text-2xl font-bold tracking-tight text-rose-600">
+                <span className="text-2xl font-bold tracking-tight text-danger-600">
                   {summary.cancelledInPeriod.toLocaleString()}
                 </span>
               </div>
@@ -266,12 +266,12 @@ export function DoctorConsultationStatisticsTab() {
                 <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
                   {t("doctorStatistics.consultations.summary.completionRate")}
                 </span>
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-teal-50 text-teal-600">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-cyan-50 text-cyan-600">
                   <Percent className="h-4.5 w-4.5" />
                 </div>
               </div>
               <div className="mt-3">
-                <span className="text-2xl font-bold tracking-tight text-teal-700">
+                <span className="text-2xl font-bold tracking-tight text-cyan-700">
                   {summary.completionRate.toFixed(1)}%
                 </span>
               </div>
@@ -286,12 +286,12 @@ export function DoctorConsultationStatisticsTab() {
                 <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
                   {t("doctorStatistics.consultations.summary.cancellationRate")}
                 </span>
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-orange-50 text-orange-600">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-warning-50 text-warning-600">
                   <Percent className="h-4.5 w-4.5" />
                 </div>
               </div>
               <div className="mt-3">
-                <span className="text-2xl font-bold tracking-tight text-orange-700">
+                <span className="text-2xl font-bold tracking-tight text-warning-700">
                   {summary.cancellationRate.toFixed(1)}%
                 </span>
               </div>

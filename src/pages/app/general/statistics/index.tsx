@@ -53,7 +53,7 @@ export default function MemberStatisticsPage() {
                 value="consultations"
                 className="rounded-xl py-2.5 text-xs font-semibold data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-xs gap-1.5"
               >
-                <MessagesSquare className="w-4 h-4 text-sky-600" />
+                <MessagesSquare className="w-4 h-4 text-cyan-600" />
                 <span>{t("memberStatistics.tabs.consultations")}</span>
               </TabsTrigger>
 
@@ -61,7 +61,7 @@ export default function MemberStatisticsPage() {
                 value="payments"
                 className="rounded-xl py-2.5 text-xs font-semibold data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-xs gap-1.5"
               >
-                <Coins className="w-4 h-4 text-amber-600" />
+                <Coins className="w-4 h-4 text-warning-600" />
                 <span className="truncate">{t("memberStatistics.tabs.payments")}</span>
               </TabsTrigger>
 
@@ -69,7 +69,7 @@ export default function MemberStatisticsPage() {
                 value="health"
                 className="rounded-xl py-2.5 text-xs font-semibold data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-xs gap-1.5"
               >
-                <Activity className="w-4 h-4 text-emerald-600" />
+                <Activity className="w-4 h-4 text-success-600" />
                 <span className="truncate">{t("memberStatistics.tabs.health")}</span>
               </TabsTrigger>
             </TabsList>

@@ -198,8 +198,8 @@ export function ChangePasswordDialog({ open, onOpenChange }: ChangePasswordDialo
         </DialogHeader>
 
         {/* Security Notice */}
-        <div className="p-3 rounded-xl bg-amber-50/80 border border-amber-200/70 text-amber-900 text-xs font-medium flex items-start gap-2.5">
-          <AlertCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+        <div className="p-3 rounded-xl bg-warning-50/80 border border-warning-200/70 text-warning-900 text-xs font-medium flex items-start gap-2.5">
+          <AlertCircle className="w-4 h-4 text-warning-600 shrink-0 mt-0.5" />
           <span className="leading-relaxed">{t("changePassword.securityNotice")}</span>
         </div>
 

@@ -17,16 +17,16 @@ export function AuthShowcase() {
   ] as const
 
   return (
-    <aside className="relative hidden overflow-hidden rounded-[2rem] bg-gradient-to-br from-[#0b132b] via-[#12284f] to-primary-700 p-10 text-white shadow-2xl shadow-primary-900/30 lg:flex lg:min-h-[640px] lg:flex-col lg:justify-between">
+    <aside className="relative hidden overflow-hidden rounded-[2rem] bg-flagship-navy p-10 text-white shadow-[0_24px_64px_-16px_rgba(11,22,44,0.5)] ring-1 ring-white/15 lg:flex lg:min-h-[640px] lg:flex-col lg:justify-between">
       {/* lưới chấm + quầng sáng */}
       <div
-        className="pointer-events-none absolute inset-0 opacity-[0.12]"
+        className="pointer-events-none absolute inset-0 opacity-[0.10]"
         style={{ backgroundImage: "radial-gradient(#ffffff 1px, transparent 1px)", backgroundSize: "22px 22px" }}
         aria-hidden="true"
       />
-      <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-primary-400/30 blur-3xl" aria-hidden="true" />
-      <div className="pointer-events-none absolute -bottom-24 -left-16 h-64 w-64 rounded-full bg-success-400/20 blur-3xl" aria-hidden="true" />
-      <div className="pointer-events-none absolute inset-x-0 bottom-24 text-white/20" aria-hidden="true">
+      <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-cyan-400/25 blur-3xl" aria-hidden="true" />
+      <div className="pointer-events-none absolute -bottom-24 -left-16 h-64 w-64 rounded-full bg-primary-400/25 blur-3xl" aria-hidden="true" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-24 text-cyan-300/30" aria-hidden="true">
         <EcgLine className="h-14" animated />
       </div>
 

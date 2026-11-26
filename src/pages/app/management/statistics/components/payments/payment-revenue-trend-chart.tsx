@@ -100,7 +100,7 @@ export function PaymentRevenueTrendChart({
             <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
               {t("statistics.payments.revenueTrend.totalLabel")}
             </span>
-            <div className="text-lg font-bold text-emerald-600">
+            <div className="text-lg font-bold text-success-600">
               {formatVnd(totalInPeriod)}
             </div>
           </div>
@@ -151,7 +151,7 @@ export function PaymentRevenueTrendChart({
                       <div className="font-semibold text-slate-800">
                         {item.formattedLabel}
                       </div>
-                      <div className="flex items-center justify-between gap-4 text-purple-600 font-medium">
+                      <div className="flex items-center justify-between gap-4 text-primary-600 font-medium">
                         <span>{t("statistics.payments.revenueTrend.creditPurchaseLabel")}:</span>
                         <span className="font-semibold text-slate-900">{formatVnd(item.creditPurchaseVnd)}</span>
                       </div>

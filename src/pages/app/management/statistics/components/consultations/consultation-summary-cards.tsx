@@ -50,8 +50,8 @@ export function ConsultationSummaryCards({
         }
       ),
       icon: Calendar,
-      iconColor: "text-sky-600 bg-sky-50",
-      accentBorder: "border-sky-100",
+      iconColor: "text-cyan-600 bg-cyan-50",
+      accentBorder: "border-cyan-100",
       tooltip: null,
     },
     {
@@ -60,8 +60,8 @@ export function ConsultationSummaryCards({
       value: summary.completedInPeriod.toLocaleString("vi-VN"),
       description: t("statistics.consultations.summary.completedInPeriodDesc"),
       icon: CheckCircle2,
-      iconColor: "text-emerald-600 bg-emerald-50",
-      accentBorder: "border-emerald-100",
+      iconColor: "text-success-600 bg-success-50",
+      accentBorder: "border-success-100",
       tooltip: t("statistics.consultations.summary.cohortTooltip"),
     },
     {
@@ -70,8 +70,8 @@ export function ConsultationSummaryCards({
       value: summary.cancelledInPeriod.toLocaleString("vi-VN"),
       description: t("statistics.consultations.summary.cancelledInPeriodDesc"),
       icon: XCircle,
-      iconColor: "text-rose-600 bg-rose-50",
-      accentBorder: "border-rose-100",
+      iconColor: "text-danger-600 bg-danger-50",
+      accentBorder: "border-danger-100",
       tooltip: t("statistics.consultations.summary.cohortTooltip"),
     },
   ]

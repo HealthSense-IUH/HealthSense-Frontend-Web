@@ -66,7 +66,7 @@ export function PaymentStatusDistributionChart({
             <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
               {t("statistics.payments.statusDistribution.creditPurchaseTitle")}
             </h4>
-            <span className="text-xs font-bold text-purple-600">
+            <span className="text-xs font-bold text-primary-600">
               {totalCredit.toLocaleString("vi-VN")}
             </span>
           </div>

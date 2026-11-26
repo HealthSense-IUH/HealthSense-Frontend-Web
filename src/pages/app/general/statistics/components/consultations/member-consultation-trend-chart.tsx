@@ -65,9 +65,9 @@ export function MemberConsultationTrendChart({
           </p>
         </div>
         <div className="flex items-center gap-2 self-start sm:self-auto">
-          <span className="rounded-xl bg-sky-50 text-sky-700 font-semibold px-3 py-1.5 text-xs border border-sky-100">
+          <span className="rounded-xl bg-cyan-50 text-cyan-700 font-semibold px-3 py-1.5 text-xs border border-cyan-100">
             {t("memberStatistics.consultations.trend.countLabel")}:{" "}
-            <strong className="font-bold text-sky-800">
+            <strong className="font-bold text-cyan-800">
               {totalInPeriod.toLocaleString("vi-VN")}
             </strong>
           </span>

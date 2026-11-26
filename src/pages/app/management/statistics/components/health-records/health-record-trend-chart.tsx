@@ -65,9 +65,9 @@ export function HealthRecordTrendChart({
           </p>
         </div>
         <div className="flex items-center gap-2 self-start sm:self-auto">
-          <span className="rounded-xl bg-emerald-50 text-emerald-700 font-semibold px-3 py-1.5 text-xs border border-emerald-100">
+          <span className="rounded-xl bg-success-50 text-success-700 font-semibold px-3 py-1.5 text-xs border border-success-100">
             {t("statistics.healthRecords.trend.countLabel")}:{" "}
-            <strong className="font-bold text-emerald-800">
+            <strong className="font-bold text-success-800">
               {totalInPeriod.toLocaleString("vi-VN")}
             </strong>
           </span>

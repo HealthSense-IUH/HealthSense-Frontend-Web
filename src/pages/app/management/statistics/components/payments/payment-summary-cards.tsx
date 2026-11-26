@@ -30,8 +30,8 @@ export function PaymentSummaryCards({
       description: t("statistics.payments.summary.totalRevenueDesc"),
       tooltip: t("statistics.payments.summary.totalRevenueTooltip"),
       icon: Coins,
-      iconColor: "text-amber-600 bg-amber-50",
-      accentBorder: "border-amber-100",
+      iconColor: "text-warning-600 bg-warning-50",
+      accentBorder: "border-warning-100",
     },
     {
       id: "revenueInPeriod",
@@ -43,8 +43,8 @@ export function PaymentSummaryCards({
       }),
       tooltip: t("statistics.payments.summary.revenueInPeriodTooltip"),
       icon: TrendingUp,
-      iconColor: "text-emerald-600 bg-emerald-50",
-      accentBorder: "border-emerald-100",
+      iconColor: "text-success-600 bg-success-50",
+      accentBorder: "border-success-100",
     },
     {
       id: "totalTransactions",
@@ -53,8 +53,8 @@ export function PaymentSummaryCards({
       description: t("statistics.payments.summary.totalTransactionsDesc"),
       tooltip: t("statistics.payments.summary.totalTransactionsTooltip"),
       icon: Receipt,
-      iconColor: "text-sky-600 bg-sky-50",
-      accentBorder: "border-sky-100",
+      iconColor: "text-cyan-600 bg-cyan-50",
+      accentBorder: "border-cyan-100",
     },
     {
       id: "averagePaidValue",
@@ -63,8 +63,8 @@ export function PaymentSummaryCards({
       description: t("statistics.payments.summary.averagePaidValueDesc"),
       tooltip: t("statistics.payments.summary.averagePaidValueTooltip"),
       icon: Scale,
-      iconColor: "text-purple-600 bg-purple-50",
-      accentBorder: "border-purple-100",
+      iconColor: "text-primary-600 bg-primary-50",
+      accentBorder: "border-primary-100",
     },
   ]
 

@@ -74,24 +74,42 @@ export function HealthRecordDetailModal({ record, isOpen, onClose }: HealthRecor
 
   const meta = getPredictionMeta(activeRecord.predictionLabel, activeRecord.status)
   const features = activeRecord.hrvFeatures || {}
+  const diagnosisCardTone =
+    activeRecord.predictionLabel === "AFIB"
+      ? "bg-danger-50/75 border-danger-200"
+      : activeRecord.predictionLabel === "NORMAL"
+        ? "bg-success-50/75 border-success-200"
+        : activeRecord.predictionLabel === "UNCERTAIN"
+          ? "bg-warning-50/75 border-warning-200"
+          : "bg-slate-50 border-border"
+  const confidenceTone =
+    activeRecord.predictionLabel === "AFIB"
+      ? "text-danger-700"
+      : activeRecord.predictionLabel === "NORMAL"
+        ? "text-success-700"
+        : activeRecord.predictionLabel === "UNCERTAIN"
+          ? "text-warning-700"
+          : "text-foreground"
 
   return (
     <div 
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-4 animate-in fade-in duration-200 cursor-pointer"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-[#0b162c]/60 backdrop-blur-xs p-4 animate-in fade-in duration-200 cursor-pointer"
       onClick={onClose}
     >
       <div 
-        className="relative max-w-4xl w-full bg-white rounded-2xl p-6 sm:p-6 flex flex-col gap-6 shadow-xl border border-border max-h-[90vh] overflow-y-auto cursor-default"
+        className="relative max-w-4xl w-full bg-white rounded-2xl overflow-hidden shadow-2xl border border-slate-200 max-h-[90vh] flex flex-col cursor-default"
         onClick={(e) => e.stopPropagation()}
       >
+        <div className="h-1.5 w-full shrink-0 bg-gradient-brand" aria-hidden="true" />
+        <div className="p-6 flex flex-col gap-6 overflow-y-auto">
         {/* Header */}
         <div className="flex items-start justify-between border-b border-border pb-4">
           <div className="space-y-1">
-            <h3 className="text-xl font-bold tracking-tight text-foreground">
+            <h3 className="text-xl font-extrabold tracking-tight text-slate-900">
               {t("recordDetail.title")}
             </h3>
             <p className="text-xs text-muted-foreground flex items-center gap-1.5">
-              <Clock className="w-3.5 h-3.5" />
+              <Clock className="w-3.5 h-3.5 text-primary-600" />
               <span>{t("recordDetail.measuredAt", { date: formatRecordDate(activeRecord.createdAt) })}</span>
               <span>•</span>
               <span>{t("recordDetail.file", { name: activeRecord.fileName })}</span>
@@ -108,23 +126,23 @@ export function HealthRecordDetailModal({ record, isOpen, onClose }: HealthRecor
         </div>
 
         {/* Diagnosis Assessment */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-2xl bg-slate-50 border border-border">
-          <div className="space-y-1">
+        <div className={`flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-2xl border shadow-2xs ${diagnosisCardTone}`}>
+          <div className="space-y-1.5">
             <div className="flex items-center gap-2">
-              <span className="text-xs text-muted-foreground font-medium">{t("recordDetail.aiConclusion")}</span>
-              <span className={`inline-flex items-center justify-center w-32 py-1 rounded-full text-xs font-bold border shadow-xs ${meta.badgeClass}`}>
+              <span className="text-xs text-slate-600 font-semibold">{t("recordDetail.aiConclusion")}</span>
+              <span className={`inline-flex items-center justify-center min-w-32 px-3 py-1 rounded-full text-xs font-bold border shadow-2xs ${meta.badgeClass}`}>
                 {meta.label}
               </span>
             </div>
-            <p className="text-xs text-muted-foreground leading-relaxed">
+            <p className="text-xs text-slate-700 leading-relaxed">
               {meta.advice}
             </p>
           </div>
 
           {activeRecord.confidence !== undefined && activeRecord.confidence !== null && (
-            <div className="shrink-0 sm:text-right pt-2 sm:pt-0 border-t sm:border-t-0 border-border">
-              <span className="text-xs text-muted-foreground block">{t("recordDetail.afibProbability")}</span>
-              <span className="text-lg font-bold text-foreground">{(activeRecord.confidence * 100).toFixed(1)}%</span>
+            <div className="shrink-0 sm:text-right pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-200/80">
+              <span className="text-[11px] font-semibold uppercase tracking-wide text-slate-500 block">{t("recordDetail.afibProbability")}</span>
+              <span className={`text-2xl font-extrabold tabular-nums ${confidenceTone}`}>{(activeRecord.confidence * 100).toFixed(1)}%</span>
             </div>
           )}
         </div>
@@ -138,7 +156,7 @@ export function HealthRecordDetailModal({ record, isOpen, onClose }: HealthRecor
             <h4 className="text-xs font-semibold text-foreground uppercase tracking-wider">
               {t("recordDetail.temporal.title")}
             </h4>
-            <p className={`text-xs font-semibold leading-5 ${features.windowAnalysis.alert ? "text-rose-600" : "text-foreground"}`}>
+            <p className={`text-xs font-semibold leading-5 ${features.windowAnalysis.alert ? "text-danger-600" : "text-foreground"}`}>
               {!features.windowAnalysis.temporalRuleAvailable
                 ? t("recordDetail.temporal.unavailable")
                 : features.windowAnalysis.alert && features.windowAnalysis.alertBranch === "two_window_high_confidence"
@@ -163,8 +181,8 @@ export function HealthRecordDetailModal({ record, isOpen, onClose }: HealthRecor
                   !w.accepted || typeof w.pMeta !== "number"
                     ? "bg-white border-border"
                     : w.pMeta >= 0.8
-                      ? "bg-rose-50 border-rose-200"
-                      : "bg-emerald-50 border-emerald-200"
+                      ? "bg-danger-50 border-danger-200"
+                      : "bg-success-50 border-success-200"
                 return (
                   <div key={w.index} className={`rounded-xl border px-2.5 py-1.5 text-xs ${style}`}>
                     <div className="text-[11px] text-muted-foreground">
@@ -188,36 +206,40 @@ export function HealthRecordDetailModal({ record, isOpen, onClose }: HealthRecor
 
         {/* 4 Core Physiological Metrics */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div className="p-3.5 rounded-2xl bg-slate-50 border border-border">
-            <span className="text-xs text-muted-foreground font-medium block">{t("recordDetail.avgHeartRate")}</span>
-            <div className="text-xl font-bold text-foreground mt-1">
+          <div className="relative overflow-hidden p-3.5 rounded-2xl bg-white border border-slate-200/90 shadow-2xs">
+            <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-danger-500 to-danger-400" aria-hidden="true" />
+            <span className="text-[11px] uppercase tracking-wide text-slate-500 font-bold block">{t("recordDetail.avgHeartRate")}</span>
+            <div className="text-2xl font-extrabold text-slate-900 mt-1 tabular-nums">
               {features.HR_mean ? formatHrvNumber(features.HR_mean, 0) : "--"}{" "}
-              <span className="text-xs font-normal text-muted-foreground">BPM</span>
+              <span className="text-xs font-semibold text-danger-600">BPM</span>
             </div>
             <span className="text-[11px] text-muted-foreground block mt-0.5">60 - 100 BPM</span>
           </div>
 
-          <div className="p-3.5 rounded-2xl bg-slate-50 border border-border">
-            <span className="text-xs text-muted-foreground font-medium block">SDNN</span>
-            <div className="text-xl font-bold text-foreground mt-1">
+          <div className="relative overflow-hidden p-3.5 rounded-2xl bg-white border border-slate-200/90 shadow-2xs">
+            <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-primary-600 to-cyan-500" aria-hidden="true" />
+            <span className="text-[11px] uppercase tracking-wide text-slate-500 font-bold block">SDNN</span>
+            <div className="text-2xl font-extrabold text-slate-900 mt-1 tabular-nums">
               {features.SDNN ? formatHrvNumber(features.SDNN, 1) : "--"}{" "}
-              <span className="text-xs font-normal text-muted-foreground">ms</span>
+              <span className="text-xs font-semibold text-primary-600">ms</span>
             </div>
             <span className="text-[11px] text-muted-foreground block mt-0.5">30 - 100 ms</span>
           </div>
 
-          <div className="p-3.5 rounded-2xl bg-slate-50 border border-border">
-            <span className="text-xs text-muted-foreground font-medium block">RMSSD</span>
-            <div className="text-xl font-bold text-foreground mt-1">
+          <div className="relative overflow-hidden p-3.5 rounded-2xl bg-white border border-slate-200/90 shadow-2xs">
+            <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-cyan-600 to-cyan-400" aria-hidden="true" />
+            <span className="text-[11px] uppercase tracking-wide text-slate-500 font-bold block">RMSSD</span>
+            <div className="text-2xl font-extrabold text-slate-900 mt-1 tabular-nums">
               {features.RMSSD ? formatHrvNumber(features.RMSSD, 1) : "--"}{" "}
-              <span className="text-xs font-normal text-muted-foreground">ms</span>
+              <span className="text-xs font-semibold text-cyan-700">ms</span>
             </div>
             <span className="text-[11px] text-muted-foreground block mt-0.5">20 - 50 ms</span>
           </div>
 
-          <div className="p-3.5 rounded-2xl bg-slate-50 border border-border">
-            <span className="text-xs text-muted-foreground font-medium block">{t("recordDetail.lfHfRatio")}</span>
-            <div className="text-xl font-bold text-foreground mt-1">
+          <div className="relative overflow-hidden p-3.5 rounded-2xl bg-white border border-slate-200/90 shadow-2xs">
+            <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-success-600 to-success-400" aria-hidden="true" />
+            <span className="text-[11px] uppercase tracking-wide text-slate-500 font-bold block">{t("recordDetail.lfHfRatio")}</span>
+            <div className="text-2xl font-extrabold text-slate-900 mt-1 tabular-nums">
               {features.LF_HF_Ratio ? formatHrvNumber(features.LF_HF_Ratio, 2) : "--"}
             </div>
             <span className="text-[11px] text-muted-foreground block mt-0.5">0.5 - 2.0</span>
@@ -376,11 +398,12 @@ export function HealthRecordDetailModal({ record, isOpen, onClose }: HealthRecor
             <Button
               type="button"
               onClick={onClose}
-              className="h-9 px-5 rounded-xl bg-primary text-primary-foreground font-semibold text-xs cursor-pointer shadow-xs"
+              className="h-9 px-5 rounded-xl bg-gradient-brand hover:opacity-95 text-white font-semibold text-xs cursor-pointer shadow-sm shadow-primary-600/25"
             >
               {t("common:actions.close")}
             </Button>
           </div>
+        </div>
         </div>
       </div>
     </div>

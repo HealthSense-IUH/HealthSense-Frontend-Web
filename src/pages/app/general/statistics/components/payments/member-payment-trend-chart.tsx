@@ -68,9 +68,9 @@ export function MemberPaymentTrendChart({
           </p>
         </div>
         <div className="flex items-center gap-2 self-start sm:self-auto">
-          <span className="rounded-xl bg-amber-50 text-amber-700 font-semibold px-3 py-1.5 text-xs border border-amber-100">
+          <span className="rounded-xl bg-warning-50 text-warning-700 font-semibold px-3 py-1.5 text-xs border border-warning-100">
             {t("memberStatistics.payments.trend.paidVndLabel")}:{" "}
-            <strong className="font-bold text-amber-800">
+            <strong className="font-bold text-warning-800">
               {totalPaidInPeriod.toLocaleString("vi-VN")} ₫
             </strong>
           </span>

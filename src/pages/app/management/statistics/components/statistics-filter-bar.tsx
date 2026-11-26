@@ -177,8 +177,8 @@ export function StatisticsFilterBar({
 
       {/* Validation warning */}
       {validationError && (
-        <div className="flex items-center gap-2 rounded-xl bg-amber-50 border border-amber-200 px-3 py-2 text-xs text-amber-800">
-          <AlertCircle className="w-4 h-4 shrink-0 text-amber-600" />
+        <div className="flex items-center gap-2 rounded-xl bg-warning-50 border border-warning-200 px-3 py-2 text-xs text-warning-800">
+          <AlertCircle className="w-4 h-4 shrink-0 text-warning-600" />
           <span>{validationError}</span>
         </div>
       )}

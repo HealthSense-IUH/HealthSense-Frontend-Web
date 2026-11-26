@@ -112,8 +112,8 @@ export const creditsApi = {
   getOrders(params?: GetOrdersParams) {
     const page = params?.page ?? 1
     const size = params?.size ?? 10
-    const queryParams: Record<string, any> = { page, size }
-    if (params?.status && params.status !== ("ALL" as any)) queryParams.status = params.status
+    const queryParams: Record<string, string | number> = { page, size }
+    if (params?.status && String(params.status) !== "ALL") queryParams.status = params.status
     if (params?.from?.trim()) queryParams.from = params.from.trim()
     if (params?.to?.trim()) queryParams.to = params.to.trim()
     return axiosClient.get<
@@ -189,11 +189,11 @@ export const creditsApi = {
   adminGetMembers(params?: AdminMemberCreditsFilterParams) {
     const page = params?.page ?? 1
     const size = params?.size ?? 20
-    const queryParams: Record<string, any> = { page, size }
+    const queryParams: Record<string, string | number> = { page, size }
     if (params?.keyword?.trim()) {
       queryParams.keyword = params.keyword.trim()
     }
-    if (params?.status && params.status !== ("ALL" as any)) {
+    if (params?.status && String(params.status) !== "ALL") {
       queryParams.status = params.status
     }
     return axiosClient.get<
@@ -262,10 +262,10 @@ export const creditsApi = {
   adminGetOrders(params?: AdminCreditOrdersFilterParams) {
     const page = params?.page ?? 1
     const size = params?.size ?? 20
-    const queryParams: Record<string, any> = { page, size }
+    const queryParams: Record<string, string | number> = { page, size }
     if (params?.memberId?.trim()) queryParams.memberId = params.memberId.trim()
-    if (params?.status && params.status !== ("ALL" as any)) queryParams.status = params.status
-    if (params?.provider && params.provider !== ("ALL" as any)) queryParams.provider = params.provider
+    if (params?.status && String(params.status) !== "ALL") queryParams.status = params.status
+    if (params?.provider && String(params.provider) !== "ALL") queryParams.provider = params.provider
     if (params?.from?.trim()) queryParams.from = params.from.trim()
     if (params?.to?.trim()) queryParams.to = params.to.trim()
 

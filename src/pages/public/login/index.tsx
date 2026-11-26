@@ -184,14 +184,11 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background text-slate-900 font-sans flex flex-col justify-between relative overflow-hidden selection:bg-primary-500/20">
+    <div className="min-h-screen app-canvas text-slate-900 font-sans flex flex-col justify-between relative overflow-hidden selection:bg-primary-500/20">
       
-      {/* Background Grid Pattern */}
-      <div className="absolute inset-0 bg-[radial-gradient(#0284c7_1px,transparent_1px)] [background-size:28px_28px] opacity-[0.035] pointer-events-none" />
-
       {/* Dynamic Ambient Glows */}
-      <div className="absolute -top-32 -left-32 w-[550px] h-[550px] rounded-full bg-gradient-to-br from-primary-400/20 via-primary-300/15 to-transparent blur-[140px] pointer-events-none" />
-      <div className="absolute -bottom-32 -right-32 w-[550px] h-[550px] rounded-full bg-gradient-to-tl from-danger-500/15 via-danger-400/10 to-transparent blur-[140px] pointer-events-none" />
+      <div className="absolute -top-32 -left-32 w-[520px] h-[520px] rounded-full bg-gradient-to-br from-primary-500/18 via-cyan-400/12 to-transparent blur-[130px] pointer-events-none" />
+      <div className="absolute -bottom-32 -right-32 w-[500px] h-[500px] rounded-full bg-gradient-to-tl from-cyan-400/14 via-primary-400/10 to-transparent blur-[130px] pointer-events-none" />
 
       {/* Top Header Bar */}
       <header className="relative top-0 left-0 right-0 p-4 sm:p-6 z-20 flex items-center justify-between max-w-7xl mx-auto w-full">
@@ -346,7 +343,7 @@ export default function LoginPage() {
               <Button 
                 type="submit" 
                 disabled={isSubmitting}
-                className="w-full rounded-xl h-11 mt-2 text-sm font-bold bg-gradient-to-r from-primary-600 via-primary-500 to-primary-500 hover:from-primary-700 hover:to-primary-600 text-white shadow-md shadow-primary-600/25 hover:shadow-lg hover:shadow-primary-600/35 hover:-translate-y-0.5 active:translate-y-0 transition duration-200 cursor-pointer font-heading"
+                className="w-full rounded-xl h-11 mt-2 text-sm font-bold bg-gradient-brand hover:opacity-95 text-white shadow-md shadow-primary-600/25 hover:shadow-lg hover:shadow-primary-600/35 hover:-translate-y-0.5 active:translate-y-0 transition duration-200 cursor-pointer font-heading"
               >
                 {isSubmitting ? (
                   <div className="flex items-center justify-center gap-2">
@@ -465,7 +462,7 @@ export default function LoginPage() {
               <Button 
                 type="submit" 
                 disabled={isSubmitting}
-                className="w-full rounded-xl h-11 mt-2 text-sm font-bold bg-gradient-to-r from-primary-600 via-primary-500 to-primary-500 hover:from-primary-700 hover:to-primary-600 text-white shadow-md shadow-primary-600/25 hover:shadow-lg hover:shadow-primary-600/35 hover:-translate-y-0.5 active:translate-y-0 transition duration-200 cursor-pointer font-heading"
+                className="w-full rounded-xl h-11 mt-2 text-sm font-bold bg-gradient-brand hover:opacity-95 text-white shadow-md shadow-primary-600/25 hover:shadow-lg hover:shadow-primary-600/35 hover:-translate-y-0.5 active:translate-y-0 transition duration-200 cursor-pointer font-heading"
               >
                 {isSubmitting ? (
                   <div className="flex items-center justify-center gap-2">

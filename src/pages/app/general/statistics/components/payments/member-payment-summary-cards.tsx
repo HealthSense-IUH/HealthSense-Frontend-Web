@@ -39,8 +39,8 @@ export function MemberPaymentSummaryCards({
         amount: `${summary.totalPaidVnd.toLocaleString("vi-VN")} ₫`,
       }),
       icon: Coins,
-      iconColor: "text-amber-600 bg-amber-50",
-      accentBorder: "border-amber-100",
+      iconColor: "text-warning-600 bg-warning-50",
+      accentBorder: "border-warning-100",
       tooltip: t("memberStatistics.payments.summary.paidAtTooltip"),
     },
     {
@@ -63,8 +63,8 @@ export function MemberPaymentSummaryCards({
         count: summary.totalSuccessfulOrders.toLocaleString("vi-VN"),
       }),
       icon: CheckCircle2,
-      iconColor: "text-emerald-600 bg-emerald-50",
-      accentBorder: "border-emerald-100",
+      iconColor: "text-success-600 bg-success-50",
+      accentBorder: "border-success-100",
       tooltip: t("memberStatistics.payments.summary.paidAtTooltip"),
     },
     {
@@ -76,8 +76,8 @@ export function MemberPaymentSummaryCards({
         reserved: wallet.reserved.toLocaleString("vi-VN"),
       }),
       icon: Wallet,
-      iconColor: "text-sky-600 bg-sky-50",
-      accentBorder: "border-sky-100",
+      iconColor: "text-cyan-600 bg-cyan-50",
+      accentBorder: "border-cyan-100",
       tooltip: null,
     },
   ]

@@ -95,7 +95,7 @@ export function PaymentTransactionTrendChart({
             <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
               {t("statistics.payments.transactionTrend.countLabel")}
             </span>
-            <div className="text-lg font-bold text-sky-600">
+            <div className="text-lg font-bold text-cyan-600">
               {totalInPeriod.toLocaleString("vi-VN")}
             </div>
           </div>
@@ -148,8 +148,8 @@ export function PaymentTransactionTrendChart({
                       <div className="font-semibold text-slate-800">
                         {item.formattedLabel}
                       </div>
-                      <div className="flex items-center gap-2 text-sky-600 font-medium">
-                        <span className="w-2 h-2 rounded-full bg-sky-600" />
+                      <div className="flex items-center gap-2 text-cyan-600 font-medium">
+                        <span className="w-2 h-2 rounded-full bg-cyan-600" />
                         <span>
                           {t("statistics.payments.transactionTrend.countLabel")}:{" "}
                           <strong className="text-slate-900">{item.count}</strong>

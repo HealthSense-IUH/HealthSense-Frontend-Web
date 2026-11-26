@@ -151,25 +151,25 @@ export function DoctorPatientDetailDialog({
     switch (status) {
       case "COMPLETED":
         return (
-          <Badge className="bg-emerald-50 text-emerald-700 border-emerald-200 text-[11px] font-semibold">
+          <Badge className="bg-success-50 text-success-700 border-success-200 text-[11px] font-semibold">
             {t("doctorStatistics.consultations.summary.completedInPeriod")}
           </Badge>
         )
       case "ACTIVE":
         return (
-          <Badge className="bg-blue-50 text-blue-700 border-blue-200 text-[11px] font-semibold">
+          <Badge className="bg-primary-50 text-primary-700 border-primary-200 text-[11px] font-semibold">
             {t("doctorStatistics.consultations.summary.activeInPeriod")}
           </Badge>
         )
       case "SCHEDULED":
         return (
-          <Badge className="bg-amber-50 text-amber-700 border-amber-200 text-[11px] font-semibold">
+          <Badge className="bg-warning-50 text-warning-700 border-warning-200 text-[11px] font-semibold">
             {t("doctorStatistics.consultations.summary.scheduledInPeriod")}
           </Badge>
         )
       case "CANCELLED":
         return (
-          <Badge className="bg-rose-50 text-rose-700 border-rose-200 text-[11px] font-semibold">
+          <Badge className="bg-danger-50 text-danger-700 border-danger-200 text-[11px] font-semibold">
             {t("doctorStatistics.consultations.summary.cancelledInPeriod")}
           </Badge>
         )
@@ -186,7 +186,7 @@ export function DoctorPatientDetailDialog({
     switch (label) {
       case "NORMAL":
         return (
-          <Badge className="bg-emerald-50 text-emerald-700 border-emerald-200 text-[11px]">
+          <Badge className="bg-success-50 text-success-700 border-success-200 text-[11px]">
             {t("doctorStatistics.detail.healthRecordsTab.predictionLabel")}:{" "}
             {t("memberStatistics.health.results.NORMAL")}
             {confText}
@@ -194,14 +194,14 @@ export function DoctorPatientDetailDialog({
         )
       case "AFIB":
         return (
-          <Badge className="bg-rose-50 text-rose-700 border-rose-200 text-[11px]">
+          <Badge className="bg-danger-50 text-danger-700 border-danger-200 text-[11px]">
             {t("memberStatistics.health.results.AFIB")}
             {confText}
           </Badge>
         )
       case "AFIB_SUSPECTED":
         return (
-          <Badge className="bg-amber-50 text-amber-700 border-amber-200 text-[11px]">
+          <Badge className="bg-warning-50 text-warning-700 border-warning-200 text-[11px]">
             {t("memberStatistics.health.results.AFIB_SUSPECTED")}
             {confText}
           </Badge>
@@ -330,21 +330,21 @@ export function DoctorPatientDetailDialog({
                 value="consultations"
                 className="rounded-lg py-2 text-xs font-semibold data-[state=active]:bg-white data-[state=active]:text-slate-900 gap-1.5"
               >
-                <MessagesSquare className="w-3.5 h-3.5 text-sky-600" />
+                <MessagesSquare className="w-3.5 h-3.5 text-cyan-600" />
                 <span>{t("doctorStatistics.detail.tabs.consultations")}</span>
               </TabsTrigger>
               <TabsTrigger
                 value="medicalHistory"
                 className="rounded-lg py-2 text-xs font-semibold data-[state=active]:bg-white data-[state=active]:text-slate-900 gap-1.5"
               >
-                <FileText className="w-3.5 h-3.5 text-indigo-600" />
+                <FileText className="w-3.5 h-3.5 text-primary-600" />
                 <span>{t("doctorStatistics.detail.tabs.medicalHistory")}</span>
               </TabsTrigger>
               <TabsTrigger
                 value="healthRecords"
                 className="rounded-lg py-2 text-xs font-semibold data-[state=active]:bg-white data-[state=active]:text-slate-900 gap-1.5"
               >
-                <Activity className="w-3.5 h-3.5 text-emerald-600" />
+                <Activity className="w-3.5 h-3.5 text-success-600" />
                 <span>{t("doctorStatistics.detail.tabs.healthRecords")}</span>
               </TabsTrigger>
             </TabsList>
@@ -591,8 +591,8 @@ export function DoctorPatientDetailDialog({
             {activeSubTab === "healthRecords" && (
               <div className="space-y-4">
                 {/* Clinical Disclaimer */}
-                <div className="rounded-xl bg-amber-50/70 border border-amber-200 p-3 text-[11px] text-amber-800 flex items-start gap-2">
-                  <Sparkles className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                <div className="rounded-xl bg-warning-50/70 border border-warning-200 p-3 text-[11px] text-warning-800 flex items-start gap-2">
+                  <Sparkles className="w-4 h-4 text-warning-600 shrink-0 mt-0.5" />
                   <span>{t("doctorStatistics.detail.healthRecordsTab.disclaimer")}</span>
                 </div>
 

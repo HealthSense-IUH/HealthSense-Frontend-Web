@@ -46,7 +46,7 @@ export default function DoctorStatisticsPage() {
                 value="consultations"
                 className="rounded-xl py-2.5 text-xs font-semibold data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-xs gap-1.5"
               >
-                <MessagesSquare className="w-4 h-4 text-sky-600" />
+                <MessagesSquare className="w-4 h-4 text-cyan-600" />
                 <span>{t("doctorStatistics.tabs.consultations")}</span>
               </TabsTrigger>
 
@@ -54,7 +54,7 @@ export default function DoctorStatisticsPage() {
                 value="patients"
                 className="rounded-xl py-2.5 text-xs font-semibold data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-xs gap-1.5"
               >
-                <Users className="w-4 h-4 text-indigo-600" />
+                <Users className="w-4 h-4 text-primary-600" />
                 <span>{t("doctorStatistics.tabs.patients")}</span>
               </TabsTrigger>
             </TabsList>

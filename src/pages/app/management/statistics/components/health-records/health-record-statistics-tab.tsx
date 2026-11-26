@@ -95,16 +95,16 @@ export function HealthRecordStatisticsTab() {
 
       {/* Error Alert */}
       {error && (
-        <div className="rounded-2xl border border-red-200 bg-red-50 p-4 text-xs text-red-800 flex items-center justify-between">
+        <div className="rounded-2xl border border-danger-200 bg-danger-50 p-4 text-xs text-danger-800 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
+            <AlertCircle className="w-4 h-4 text-danger-600 shrink-0" />
             <span>{errorMessage}</span>
           </div>
           <Button
             variant="outline"
             size="sm"
             onClick={() => refetch()}
-            className="h-7 text-xs border-red-200 text-red-700 hover:bg-red-100"
+            className="h-7 text-xs border-danger-200 text-danger-700 hover:bg-danger-100"
           >
             {t("statistics.error.retry")}
           </Button>

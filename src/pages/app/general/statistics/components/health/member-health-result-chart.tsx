@@ -123,7 +123,7 @@ export function MemberHealthResultChart({
 
       {/* Medical disclaimer note */}
       <div className="mt-4 flex items-start gap-2 rounded-xl bg-slate-50 p-2.5 text-[11px] text-slate-500 border border-slate-100">
-        <AlertTriangle className="w-3.5 h-3.5 text-amber-500 shrink-0 mt-0.5" />
+        <AlertTriangle className="w-3.5 h-3.5 text-warning-500 shrink-0 mt-0.5" />
         <span>{t("memberStatistics.health.resultDistribution.disclaimer")}</span>
       </div>
     </div>

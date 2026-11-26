@@ -34,8 +34,8 @@ export function UserSummaryCards({
         to: endDateStr,
       }),
       icon: UserPlus,
-      iconColor: "text-emerald-600 bg-emerald-50",
-      accentBorder: "border-emerald-100",
+      iconColor: "text-success-600 bg-success-50",
+      accentBorder: "border-success-100",
     },
     {
       id: "activeAccounts",
@@ -43,8 +43,8 @@ export function UserSummaryCards({
       value: summary.activeAccounts.toLocaleString("vi-VN"),
       description: t("statistics.summary.activeAccountsDesc"),
       icon: UserCheck,
-      iconColor: "text-sky-600 bg-sky-50",
-      accentBorder: "border-sky-100",
+      iconColor: "text-cyan-600 bg-cyan-50",
+      accentBorder: "border-cyan-100",
     },
     {
       id: "totalDoctors",
@@ -52,8 +52,8 @@ export function UserSummaryCards({
       value: summary.totalDoctors.toLocaleString("vi-VN"),
       description: t("statistics.summary.totalDoctorsDesc"),
       icon: Stethoscope,
-      iconColor: "text-amber-600 bg-amber-50",
-      accentBorder: "border-amber-100",
+      iconColor: "text-warning-600 bg-warning-50",
+      accentBorder: "border-warning-100",
     },
   ]
 

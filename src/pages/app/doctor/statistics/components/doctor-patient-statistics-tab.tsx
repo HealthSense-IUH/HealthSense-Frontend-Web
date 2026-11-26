@@ -151,25 +151,25 @@ export function DoctorPatientStatisticsTab() {
     switch (status) {
       case "COMPLETED":
         return (
-          <Badge className="bg-emerald-50 text-emerald-700 border-emerald-200 text-[10px] font-semibold">
+          <Badge className="bg-success-50 text-success-700 border-success-200 text-[10px] font-semibold">
             {t("doctorStatistics.consultations.summary.completedInPeriod")}
           </Badge>
         )
       case "ACTIVE":
         return (
-          <Badge className="bg-blue-50 text-blue-700 border-blue-200 text-[10px] font-semibold">
+          <Badge className="bg-primary-50 text-primary-700 border-primary-200 text-[10px] font-semibold">
             {t("doctorStatistics.consultations.summary.activeInPeriod")}
           </Badge>
         )
       case "SCHEDULED":
         return (
-          <Badge className="bg-amber-50 text-amber-700 border-amber-200 text-[10px] font-semibold">
+          <Badge className="bg-warning-50 text-warning-700 border-warning-200 text-[10px] font-semibold">
             {t("doctorStatistics.consultations.summary.scheduledInPeriod")}
           </Badge>
         )
       case "CANCELLED":
         return (
-          <Badge className="bg-rose-50 text-rose-700 border-rose-200 text-[10px] font-semibold">
+          <Badge className="bg-danger-50 text-danger-700 border-danger-200 text-[10px] font-semibold">
             {t("doctorStatistics.consultations.summary.cancelledInPeriod")}
           </Badge>
         )
@@ -193,8 +193,8 @@ export function DoctorPatientStatisticsTab() {
 
       {/* Overview Error */}
       {overviewError && !isOverviewLoading && (
-        <div className="rounded-2xl border border-red-200 bg-red-50/50 p-4 text-center text-xs text-red-800 flex items-center justify-center gap-2">
-          <AlertCircle className="w-4 h-4 text-red-500" />
+        <div className="rounded-2xl border border-danger-200 bg-danger-50/50 p-4 text-center text-xs text-danger-800 flex items-center justify-center gap-2">
+          <AlertCircle className="w-4 h-4 text-danger-500" />
           <span>{t("doctorStatistics.error.loadFailed")}</span>
         </div>
       )}
@@ -224,7 +224,7 @@ export function DoctorPatientStatisticsTab() {
               <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
                 {t("doctorStatistics.patients.summary.totalPatients")}
               </span>
-              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600">
+              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-primary-50 text-primary-600">
                 <Users className="h-4 w-4" />
               </div>
             </div>
@@ -256,7 +256,7 @@ export function DoctorPatientStatisticsTab() {
                   </Tooltip>
                 </TooltipProvider>
               </div>
-              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-sky-50 text-sky-600">
+              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-cyan-50 text-cyan-600">
                 <Users className="h-4 w-4" />
               </div>
             </div>
@@ -279,12 +279,12 @@ export function DoctorPatientStatisticsTab() {
               <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
                 {t("doctorStatistics.patients.summary.newPatientsInPeriod")}
               </span>
-              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
+              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-success-50 text-success-600">
                 <UserPlus className="h-4 w-4" />
               </div>
             </div>
             <div className="mt-3">
-              <span className="text-2xl font-bold tracking-tight text-emerald-600">
+              <span className="text-2xl font-bold tracking-tight text-success-600">
                 {summary.newPatientsInPeriod.toLocaleString()}
               </span>
             </div>
@@ -299,12 +299,12 @@ export function DoctorPatientStatisticsTab() {
               <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
                 {t("doctorStatistics.patients.summary.returningPatientsInPeriod")}
               </span>
-              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-teal-50 text-teal-600">
+              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-cyan-50 text-cyan-600">
                 <UserCheck className="h-4 w-4" />
               </div>
             </div>
             <div className="mt-3">
-              <span className="text-2xl font-bold tracking-tight text-teal-700">
+              <span className="text-2xl font-bold tracking-tight text-cyan-700">
                 {summary.returningPatientsInPeriod.toLocaleString()}
               </span>
             </div>
@@ -319,12 +319,12 @@ export function DoctorPatientStatisticsTab() {
               <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
                 {t("doctorStatistics.patients.summary.averageConsultations")}
               </span>
-              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-purple-50 text-purple-600">
+              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-primary-50 text-primary-600">
                 <Calculator className="h-4 w-4" />
               </div>
             </div>
             <div className="mt-3">
-              <span className="text-2xl font-bold tracking-tight text-purple-700">
+              <span className="text-2xl font-bold tracking-tight text-primary-700">
                 {summary.averageConsultationsPerPatientInPeriod.toFixed(2)}
               </span>
             </div>
@@ -363,7 +363,7 @@ export function DoctorPatientStatisticsTab() {
 
         {/* List Error */}
         {listError && !isListLoading && (
-          <div className="p-6 text-center text-xs text-red-700 space-y-2">
+          <div className="p-6 text-center text-xs text-danger-700 space-y-2">
             <p>{t("doctorStatistics.error.loadFailed")}</p>
             <Button
               variant="outline"
@@ -465,7 +465,7 @@ export function DoctorPatientStatisticsTab() {
                       </td>
 
                       {/* Completed sessions */}
-                      <td className="py-3 px-4 text-center font-semibold text-emerald-600">
+                      <td className="py-3 px-4 text-center font-semibold text-success-600">
                         {patient.completedConsultations}
                       </td>
 
