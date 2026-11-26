@@ -25,43 +25,37 @@ export function MemberGreetingBanner() {
   }, [t])
 
   return (
-    <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-primary-700 via-primary-600 to-primary-500 p-6 text-white shadow-card sm:p-7">
-      <div
-        className="pointer-events-none absolute inset-0 opacity-[0.14]"
-        style={{ backgroundImage: "radial-gradient(#ffffff 1px, transparent 1px)", backgroundSize: "20px 20px" }}
-        aria-hidden="true"
-      />
-      <div className="pointer-events-none absolute -right-16 -top-20 h-56 w-56 rounded-full bg-white/15 blur-3xl" aria-hidden="true" />
-      <div className="pointer-events-none absolute inset-x-0 bottom-2 text-white/25" aria-hidden="true">
-        <EcgLine className="h-12" animated />
+    <div className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 shadow-card sm:p-7">
+      <div className="pointer-events-none absolute inset-x-0 bottom-1 text-primary-200/60" aria-hidden="true">
+        <EcgLine className="h-10" animated />
       </div>
 
       <div className="relative z-10 flex items-center justify-between gap-6">
-        <div className="min-w-0 space-y-3">
-          <h2 className="flex flex-wrap items-baseline gap-x-2 text-xl font-extrabold tracking-tight sm:text-2xl">
+        <div className="min-w-0 space-y-2.5">
+          <h2 className="flex flex-wrap items-baseline gap-x-2 text-xl font-extrabold tracking-tight text-slate-900 sm:text-2xl">
             <span>{greeting.text},</span>
-            <span className="text-primary-100">{displayName}</span>
+            <span className="text-primary-700">{displayName}</span>
           </h2>
-          <p className="max-w-xl text-sm leading-relaxed text-primary-50/90">{greeting.subtext}</p>
-          <div className="flex flex-wrap gap-2 pt-1">
+          <p className="max-w-xl text-sm leading-relaxed text-slate-600">{greeting.subtext}</p>
+          <div className="flex flex-wrap gap-2.5 pt-1.5">
             <Link
               to="/app/general/afib-history"
-              className="inline-flex h-9 items-center gap-2 rounded-xl bg-white px-3.5 text-xs font-bold text-primary-700 shadow-sm transition-colors hover:bg-primary-50"
+              className="inline-flex h-9 items-center gap-2 rounded-lg bg-primary-700 px-3.5 text-xs font-semibold text-white transition-colors hover:bg-primary-800"
             >
               <HeartPulse className="h-4 w-4" />
               {t("greeting.cta.history")}
             </Link>
             <Link
               to="/app/general/consultations"
-              className="inline-flex h-9 items-center gap-2 rounded-xl border border-white/30 bg-white/10 px-3.5 text-xs font-bold text-white backdrop-blur-sm transition-colors hover:bg-white/20"
+              className="inline-flex h-9 items-center gap-2 rounded-lg border border-slate-200 bg-white px-3.5 text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-50 hover:text-slate-900"
             >
-              <MessagesSquare className="h-4 w-4" />
+              <MessagesSquare className="h-4 w-4 text-slate-500" />
               {t("greeting.cta.consult")}
             </Link>
           </div>
         </div>
-        <div className="hidden shrink-0 motion-safe:animate-float sm:block">
-          <CaraMascot size={104} />
+        <div className="hidden shrink-0 sm:block">
+          <CaraMascot size={88} />
         </div>
       </div>
     </div>

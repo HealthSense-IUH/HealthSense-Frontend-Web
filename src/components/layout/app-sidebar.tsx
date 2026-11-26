@@ -28,7 +28,7 @@ export function AppSidebar() {
           title={`${t("brand.name")} - ${roleLabel(effectiveRole)}`}
         >
           {isStaff ? (
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 to-primary-700 text-white shadow-lg shadow-primary-900/40 ring-1 ring-white/10 group-hover:from-primary-400 group-hover:to-primary-600 transition-colors">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary-50 text-primary-700 border border-primary-100 group-hover:bg-primary-100 transition-colors">
               {isDoctor ? <Stethoscope className="h-5 w-5" /> : <ShieldCheck className="h-5 w-5" />}
             </div>
           ) : (
@@ -38,7 +38,7 @@ export function AppSidebar() {
               className="h-10 w-10 object-contain rounded-xl shrink-0"
             />
           )}
-          <span className="text-[8.5px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-full mt-1.5 bg-white/10 text-slate-200">
+          <span className="text-[8.5px] font-mono font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full mt-1.5 bg-slate-100 text-slate-600 border border-slate-200/80">
             {roleBadgeLabel}
           </span>
         </Link>

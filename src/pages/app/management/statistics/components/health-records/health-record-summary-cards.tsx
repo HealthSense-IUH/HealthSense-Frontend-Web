@@ -22,8 +22,8 @@ export function HealthRecordSummaryCards({
       value: summary.totalRecords.toLocaleString("vi-VN"),
       description: t("statistics.healthRecords.summary.totalRecordsDesc"),
       icon: Activity,
-      iconColor: "text-primary-600 bg-primary-50",
-      accentBorder: "border-primary-100",
+      iconColor: "text-slate-600 bg-slate-100",
+      accentBorder: "border-slate-200",
     },
     {
       id: "recordsInPeriod",
@@ -34,8 +34,8 @@ export function HealthRecordSummaryCards({
         to: endDateStr,
       }),
       icon: FileText,
-      iconColor: "text-sky-600 bg-sky-50",
-      accentBorder: "border-sky-100",
+      iconColor: "text-slate-600 bg-slate-100",
+      accentBorder: "border-slate-200",
     },
     {
       id: "uniqueUsersInPeriod",
@@ -45,8 +45,8 @@ export function HealthRecordSummaryCards({
         "statistics.healthRecords.summary.uniqueUsersInPeriodDesc"
       ),
       icon: Users,
-      iconColor: "text-indigo-600 bg-indigo-50",
-      accentBorder: "border-indigo-100",
+      iconColor: "text-slate-600 bg-slate-100",
+      accentBorder: "border-slate-200",
     },
     {
       id: "afDetectedOrSuspectedInPeriod",
@@ -58,8 +58,8 @@ export function HealthRecordSummaryCards({
         "statistics.healthRecords.summary.afDetectedOrSuspectedInPeriodDesc"
       ),
       icon: AlertTriangle,
-      iconColor: "text-rose-600 bg-rose-50",
-      accentBorder: "border-rose-100",
+      iconColor: summary.afDetectedOrSuspectedInPeriod > 0 ? "text-danger-600 bg-danger-50" : "text-slate-600 bg-slate-100",
+      accentBorder: summary.afDetectedOrSuspectedInPeriod > 0 ? "border-danger-200" : "border-slate-200",
     },
   ]
 

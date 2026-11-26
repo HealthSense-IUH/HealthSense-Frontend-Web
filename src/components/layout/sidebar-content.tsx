@@ -58,17 +58,17 @@ export function SidebarContent() {
                       to={targetHref}
                       className={`group relative flex flex-col items-center justify-center w-full py-2.5 px-1 rounded-xl transition-colors ${
                         active
-                          ? "bg-gradient-to-b from-primary-500/35 to-primary-600/15 text-white ring-1 ring-primary-400/40 shadow-inner shadow-primary-900/30"
-                          : "text-slate-400 hover:bg-white/5 hover:text-white"
+                          ? "bg-primary-50 text-primary-700 ring-1 ring-primary-200/70"
+                          : "text-slate-500 hover:bg-slate-100 hover:text-slate-900"
                       }`}
                     >
                       {active && (
-                        <span className="absolute left-0 top-1/2 h-6 w-1 -translate-y-1/2 rounded-r-full bg-primary-400" aria-hidden="true" />
+                        <span className="absolute left-0 top-1/2 h-5 w-1 -translate-y-1/2 rounded-r-full bg-primary-600" aria-hidden="true" />
                       )}
                       <div className="relative">
                         <Icon
                           className={`h-5 w-5 shrink-0 transition-colors ${
-                            active ? "text-primary-300" : "text-slate-400 group-hover:text-slate-200"
+                            active ? "text-primary-700" : "text-slate-500 group-hover:text-slate-800"
                           }`}
                         />
                         {item.badge && (
@@ -77,7 +77,7 @@ export function SidebarContent() {
                       </div>
                       <span
                         className={`text-[10px] text-center leading-tight mt-1 max-w-[76px] truncate tracking-tight ${
-                          active ? "font-bold text-white" : "font-semibold text-slate-400 group-hover:text-white"
+                          active ? "font-bold text-primary-800" : "font-medium text-slate-600 group-hover:text-slate-900"
                         }`}
                       >
                         {itemShortLabel(item)}

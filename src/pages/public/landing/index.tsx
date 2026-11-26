@@ -85,22 +85,12 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-background text-slate-900 font-sans overflow-x-hidden flex flex-col relative selection:bg-primary-500/20">
 
-      {/* Modern Background Grid Pattern */}
-      <div
-        className="absolute inset-0 bg-[radial-gradient(#0284c7_1px,transparent_1px)] [background-size:28px_28px] opacity-[0.035] pointer-events-none"
-      />
-
-      {/* Dynamic Ambient Glowing Blobs */}
-      <div className="absolute -top-24 -right-24 w-[550px] h-[550px] rounded-full bg-gradient-to-br from-primary-400/20 via-primary-300/15 to-transparent blur-[130px] pointer-events-none" />
-      <div className="absolute top-[35%] -left-32 w-[500px] h-[500px] rounded-full bg-gradient-to-tr from-primary-400/10 via-primary-300/10 to-transparent blur-[130px] pointer-events-none" />
-      <div className="absolute top-[60%] right-10 w-[450px] h-[450px] rounded-full bg-gradient-to-bl from-primary-400/10 via-success-300/10 to-transparent blur-[120px] pointer-events-none" />
-
-      {/* Fixed Glassmorphism Navigation Header */}
+      {/* Fixed Minimal Navigation Header */}
       <header className={`fixed top-0 left-0 right-0 w-full px-4 sm:px-6 lg:px-8 z-50 transition-all duration-300 ${isScrolled ? "pt-2.5 pb-2" : "pt-4 sm:pt-5 pb-2"
         }`}>
         <nav className={`relative w-full px-4 sm:px-6 xl:px-7 py-2.5 sm:py-3 flex items-center justify-between max-w-7xl mx-auto rounded-2xl sm:rounded-full border transition-all duration-300 ${isScrolled
-          ? "bg-white/95 backdrop-blur-xl border-slate-200/90 shadow-[0_10px_35px_rgba(0,0,0,0.08)]"
-          : "bg-white/85 backdrop-blur-xl border-slate-200/80 shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
+          ? "bg-white/95 backdrop-blur-md border-slate-200 shadow-sm"
+          : "bg-white/90 backdrop-blur-md border-slate-200/80 shadow-xs"
           }`}>
 
           {/* Logo & Tag */}
@@ -151,7 +141,7 @@ export default function LandingPage() {
               <>
                 <button
                   onClick={() => navigate(getDefaultRouteForRole(userSession.role))}
-                  className="hidden sm:flex bg-gradient-to-r from-primary-600 to-primary-600 hover:from-primary-700 hover:to-primary-700 text-white transition-all px-4 sm:px-5 py-2 rounded-full shadow-md shadow-primary-900/20 font-bold items-center gap-1.5 hover:-translate-y-0.5 cursor-pointer font-heading whitespace-nowrap shrink-0"
+                  className="hidden sm:flex bg-primary-700 hover:bg-primary-800 text-white transition-colors px-4 sm:px-5 py-2 rounded-full font-semibold items-center gap-1.5 cursor-pointer font-heading whitespace-nowrap shrink-0"
                 >
                   <span>{t("nav.dashboard")}</span>
                   <ArrowRight className="w-4 h-4" />
@@ -162,13 +152,13 @@ export default function LandingPage() {
               <>
                 <Link
                   to="/login"
-                  className="text-slate-700 hover:text-primary-700 hover:bg-slate-100/80 font-bold px-3 sm:px-4 py-2 rounded-full transition-all cursor-pointer font-heading whitespace-nowrap shrink-0"
+                  className="text-slate-700 hover:text-primary-700 hover:bg-slate-100 font-semibold px-3 sm:px-4 py-2 rounded-full transition-colors cursor-pointer font-heading whitespace-nowrap shrink-0"
                 >
                   {t("nav.login")}
                 </Link>
                 <Link
                   to="/register"
-                  className="bg-gradient-to-r from-primary-600 to-primary-600 hover:from-primary-700 hover:to-primary-700 text-white transition-all px-4 sm:px-5 py-2 rounded-full shadow-md shadow-primary-900/20 font-bold flex items-center gap-1 hover:-translate-y-0.5 cursor-pointer font-heading whitespace-nowrap shrink-0"
+                  className="bg-primary-700 hover:bg-primary-800 text-white transition-colors px-4 sm:px-5 py-2 rounded-full font-semibold flex items-center gap-1 cursor-pointer font-heading whitespace-nowrap shrink-0"
                 >
                   <span className="whitespace-nowrap">{t("nav.tryIt")}</span>
                   <ArrowUpRight className="w-4 h-4 shrink-0" />
@@ -187,9 +177,9 @@ export default function LandingPage() {
           <div className="col-span-1 lg:col-span-5 flex flex-col justify-center order-2 lg:order-1 z-20">
 
             {/* Main Headline - Crystal Clear & Impactful */}
-            <h1 className="text-4xl sm:text-5xl lg:text-[54px] font-black leading-[1.12] mb-5 tracking-tight text-slate-900 font-heading uppercase">
+            <h1 className="text-4xl sm:text-5xl lg:text-[54px] font-extrabold leading-[1.12] mb-5 tracking-tight text-slate-900 font-heading uppercase">
               {t("hero.titleLine1")} <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 via-primary-600 to-primary-600">
+              <span className="text-primary-700">
                 {t("hero.titleLine2")}
               </span>
             </h1>
@@ -200,11 +190,11 @@ export default function LandingPage() {
             </p>
 
             {/* CTAs */}
-            <div className="flex flex-wrap items-center gap-4 mb-10">
+            <div className="flex flex-wrap items-center gap-3.5 mb-10">
               {userSession ? (
                 <button
                   onClick={() => navigate('/app/general/dashboard')}
-                  className="bg-gradient-to-r from-primary-600 via-primary-600 to-primary-600 hover:from-primary-700 hover:to-primary-700 text-white font-extrabold px-7 py-3.5 rounded-full shadow-lg shadow-primary-900/25 hover:shadow-primary-900/35 hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center gap-2.5 cursor-pointer text-sm sm:text-base font-heading"
+                  className="bg-primary-700 hover:bg-primary-800 text-white font-bold px-7 py-3.5 rounded-full shadow-xs transition-colors flex items-center gap-2.5 cursor-pointer text-sm sm:text-base font-heading"
                 >
                   <span>{t("hero.ctaDashboard")}</span>
                   <ArrowUpRight className="w-5 h-5" />
@@ -212,7 +202,7 @@ export default function LandingPage() {
               ) : (
                 <Link
                   to="/login"
-                  className="bg-gradient-to-r from-primary-600 via-primary-600 to-primary-600 hover:from-primary-700 hover:to-primary-700 text-white font-extrabold px-7 py-3.5 rounded-full shadow-lg shadow-primary-900/25 hover:shadow-primary-900/35 hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center gap-2.5 cursor-pointer text-sm sm:text-base font-heading"
+                  className="bg-primary-700 hover:bg-primary-800 text-white font-bold px-7 py-3.5 rounded-full shadow-xs transition-colors flex items-center gap-2.5 cursor-pointer text-sm sm:text-base font-heading"
                 >
                   <span>{t("hero.ctaJoin")}</span>
                   <ArrowUpRight className="w-5 h-5" />
@@ -221,21 +211,21 @@ export default function LandingPage() {
 
               <button
                 onClick={() => scrollToSection("about")}
-                className="px-5 py-3.5 rounded-full font-bold text-slate-700 bg-white hover:bg-slate-50 border border-slate-200/80 shadow-2xs hover:shadow-xs transition-all flex items-center gap-2 text-sm sm:text-base cursor-pointer font-heading"
+                className="px-5 py-3.5 rounded-full font-semibold text-slate-700 bg-white hover:bg-slate-50 border border-slate-200 transition-colors flex items-center gap-2 text-sm sm:text-base cursor-pointer font-heading"
               >
-                <Play className="w-4 h-4 text-primary-600 fill-primary-600" />
+                <Play className="w-4 h-4 text-primary-700 fill-primary-700" />
                 <span>{t("hero.ctaHowItWorks")}</span>
               </button>
             </div>
 
             {/* Ba điểm mạnh, nói bằng lời thường */}
-            <div className="flex flex-wrap gap-2.5 pt-6 border-t border-slate-200/80">
+            <div className="flex flex-wrap gap-2.5 pt-6 border-t border-slate-200">
               {(["monitor", "alert", "doctor"] as const).map((key) => (
                 <span
                   key={key}
-                  className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-card px-3.5 py-1.5 text-xs font-semibold text-slate-700 shadow-xs"
+                  className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3.5 py-1.5 text-xs font-semibold text-slate-700"
                 >
-                  <span className="h-1.5 w-1.5 rounded-full bg-primary-500" />
+                  <span className="h-1.5 w-1.5 rounded-full bg-primary-600" />
                   {t(`hero.chips.${key}`)}
                 </span>
               ))}
@@ -246,12 +236,8 @@ export default function LandingPage() {
           {/* Right Hero (Clean, Focused Product Video Mockup Showcase) */}
           <div className="col-span-1 lg:col-span-7 relative flex flex-col items-center justify-center order-1 lg:order-2 w-full max-w-[800px] mx-auto">
 
-            {/* Ambient Background Glows */}
-            <div className="absolute top-1/4 right-1/4 w-80 h-80 bg-primary-400/20 rounded-full blur-[100px] -z-10 pointer-events-none" />
-            <div className="absolute bottom-1/4 left-1/4 w-80 h-80 bg-primary-400/15 rounded-full blur-[100px] -z-10 pointer-events-none" />
-
             {/* Dark Modern Device Mockup */}
-            <div className="relative w-full bg-slate-900 rounded-[2.2rem] sm:rounded-[2.6rem] shadow-[0_30px_80px_-15px_rgba(15,23,42,0.35)] p-3.5 sm:p-4.5 overflow-hidden border-[6px] sm:border-8 border-slate-800 ring-1 ring-black/20 hover:-translate-y-1 transition-all duration-300">
+            <div className="relative w-full bg-slate-900 rounded-[2rem] sm:rounded-[2.25rem] shadow-[0_24px_60px_-20px_rgba(15,23,42,0.28)] p-3 sm:p-4 overflow-hidden border-[6px] sm:border-8 border-slate-800 ring-1 ring-black/15">
 
               {/* Device Camera Notch / Bar */}
               <div className="absolute top-2.5 left-1/2 -translate-x-1/2 w-16 h-1.5 bg-slate-800 rounded-full z-30" />

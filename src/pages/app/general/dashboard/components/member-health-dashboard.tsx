@@ -80,20 +80,20 @@ export function MemberHealthDashboard() {
       {/* Top Greeting Banner */}
       <MemberGreetingBanner />
 
-      {/* 4 Overview Stat Cards */}
+      {/* 4 Overview Stat Cards — Clinical Cool Minimal (neutral icons, tabular numbers, semantic color reserved for status) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Latest Heart Rate */}
-        <Card className="group rounded-2xl border border-border/70 bg-card shadow-card transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary-900/5">
+        <Card className="rounded-2xl border border-slate-200 bg-card shadow-card transition-colors hover:border-slate-300">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <span className="text-xs font-semibold text-muted-foreground">{t("memberDashboard.latestMeasurement")}</span>
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-danger-400 to-danger-600 text-white shadow-md shadow-danger-500/30">
-              <HeartPulse className="h-4.5 w-4.5" />
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200/80 bg-slate-50 text-slate-600">
+              <HeartPulse className="h-4 w-4" />
             </div>
           </CardHeader>
           <CardContent className="space-y-1">
-            <div className="text-3xl font-extrabold tracking-tight text-foreground">
+            <div className="text-3xl font-extrabold tracking-tight text-foreground tabular-nums">
               {latestHr ? `${latestHr} ` : "-- "}
-              <span className="text-xs font-normal text-muted-foreground">BPM</span>
+              <span className="text-xs font-medium text-muted-foreground">BPM</span>
             </div>
             {latestRecord ? (
               <span className="text-xs text-muted-foreground block truncate">
@@ -106,21 +106,21 @@ export function MemberHealthDashboard() {
         </Card>
 
         {/* Latest AFib Risk Assessment */}
-        <Card className="group rounded-2xl border border-border/70 bg-card shadow-card transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary-900/5">
+        <Card className="rounded-2xl border border-slate-200 bg-card shadow-card transition-colors hover:border-slate-300">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <span className="text-xs font-semibold text-muted-foreground">{t("memberDashboard.afibProbability")}</span>
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary-400 to-primary-600 text-white shadow-md shadow-primary-500/30">
-              <TrendingUp className="h-4.5 w-4.5" />
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200/80 bg-slate-50 text-slate-600">
+              <TrendingUp className="h-4 w-4" />
             </div>
           </CardHeader>
           <CardContent className="space-y-1.5">
-            <div className="text-3xl font-extrabold tracking-tight text-foreground">
+            <div className="text-3xl font-extrabold tracking-tight text-foreground tabular-nums">
               {latestRecord?.confidence !== null && latestRecord?.confidence !== undefined
                 ? `${(latestRecord.confidence * 100).toFixed(1)}%`
                 : "--"}
             </div>
             {latestMeta ? (
-              <span className={`inline-flex items-center justify-center w-32 py-1 rounded-full text-xs font-bold border shadow-2xs ${latestMeta.badgeClass}`}>
+              <span className={`inline-flex items-center justify-center px-3 py-0.5 rounded-full text-xs font-semibold border ${latestMeta.badgeClass}`}>
                 {latestMeta.badgeText}
               </span>
             ) : (
@@ -130,35 +130,35 @@ export function MemberHealthDashboard() {
         </Card>
 
         {/* HRV Metrics (RMSSD & SDNN) */}
-        <Card className="group rounded-2xl border border-border/70 bg-card shadow-card transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary-900/5">
+        <Card className="rounded-2xl border border-slate-200 bg-card shadow-card transition-colors hover:border-slate-300">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <span className="text-xs font-semibold text-muted-foreground">{t("memberDashboard.hrvRmssd")}</span>
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-warning-300 to-warning-500 text-white shadow-md shadow-warning-500/30">
-              <Sliders className="h-4.5 w-4.5" />
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200/80 bg-slate-50 text-slate-600">
+              <Sliders className="h-4 w-4" />
             </div>
           </CardHeader>
           <CardContent className="space-y-1">
-            <div className="text-3xl font-extrabold tracking-tight text-foreground">
+            <div className="text-3xl font-extrabold tracking-tight text-foreground tabular-nums">
               {latestRmssd ? `${formatHrvNumber(latestRmssd, 1)} ` : "-- "}
-              <span className="text-xs font-normal text-muted-foreground">ms</span>
+              <span className="text-xs font-medium text-muted-foreground">ms</span>
             </div>
-            <span className="text-xs text-muted-foreground block">
+            <span className="text-xs text-muted-foreground block tabular-nums">
               SDNN: {latestSdnn ? `${formatHrvNumber(latestSdnn, 1)} ms` : "--"}
             </span>
           </CardContent>
         </Card>
 
         {/* Total Screenings Summary */}
-        <Card className="group rounded-2xl border border-border/70 bg-card shadow-card transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary-900/5">
+        <Card className="rounded-2xl border border-slate-200 bg-card shadow-card transition-colors hover:border-slate-300">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <span className="text-xs font-semibold text-muted-foreground">{t("memberDashboard.totalScreenings")}</span>
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-success-400 to-success-600 text-white shadow-md shadow-success-500/30">
-              <Activity className="h-4.5 w-4.5" />
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200/80 bg-slate-50 text-slate-600">
+              <Activity className="h-4 w-4" />
             </div>
           </CardHeader>
           <CardContent className="space-y-1">
-            <div className="text-3xl font-extrabold tracking-tight text-foreground">
-              <AnimatedNumber value={totalScreenings} /> <span className="text-xs font-normal text-muted-foreground">{t("memberDashboard.timesUnit")}</span>
+            <div className="text-3xl font-extrabold tracking-tight text-foreground tabular-nums">
+              <AnimatedNumber value={totalScreenings} /> <span className="text-xs font-medium text-muted-foreground">{t("memberDashboard.timesUnit")}</span>
             </div>
             <span className="text-xs text-muted-foreground block truncate">
               {t("memberDashboard.screeningsBreakdown", { normal: totalNormal, warning: totalAfib + totalSuspected })}

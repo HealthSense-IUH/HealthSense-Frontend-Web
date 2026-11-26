@@ -31,10 +31,10 @@ export function SidebarAreaToggle() {
         title={`${t("areaSwitch.label")}: ${t(`areaSwitch.${target.key}`)}`}
         className={cn(
           "group flex w-full flex-col items-center justify-center rounded-xl px-1 py-2.5 transition-colors",
-          "text-slate-400 hover:bg-white/5 hover:text-white"
+          "text-slate-500 hover:bg-slate-100 hover:text-slate-900"
         )}
       >
-        <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/5 ring-1 ring-white/10 transition-colors group-hover:bg-primary-500/20 group-hover:ring-primary-400/40">
+        <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 border border-slate-200/80 transition-colors group-hover:bg-primary-50 group-hover:border-primary-200 group-hover:text-primary-700">
           <Icon className="h-4 w-4" />
         </span>
         <span className="mt-1 max-w-[76px] truncate text-center text-[10px] font-semibold leading-tight tracking-tight">
