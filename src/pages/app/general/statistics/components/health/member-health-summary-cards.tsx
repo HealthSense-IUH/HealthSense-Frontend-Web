@@ -52,8 +52,9 @@ export function MemberHealthSummaryCards({
       value: summary.totalRecords.toLocaleString("vi-VN"),
       description: t("memberStatistics.health.summary.totalRecordsDesc"),
       icon: Activity,
-      iconColor: "text-slate-600 bg-slate-100",
-      accentBorder: "border-slate-200",
+      iconColor: "text-primary-600 bg-primary-50 ring-1 ring-primary-200/80",
+      topBar: "from-primary-600 to-cyan-500",
+      accentBorder: "border-slate-200/90 hover:border-primary-200",
       tooltip: null,
     },
     {
@@ -65,8 +66,9 @@ export function MemberHealthSummaryCards({
         to: endDateStr,
       }),
       icon: Calendar,
-      iconColor: "text-slate-600 bg-slate-100",
-      accentBorder: "border-slate-200",
+      iconColor: "text-cyan-700 bg-cyan-50 ring-1 ring-cyan-200/80",
+      topBar: "from-cyan-600 to-cyan-400",
+      accentBorder: "border-slate-200/90 hover:border-cyan-200",
       tooltip: null,
     },
     {
@@ -80,8 +82,9 @@ export function MemberHealthSummaryCards({
             })
           : t("memberStatistics.health.summary.completedInPeriodDesc"),
       icon: CheckCircle2,
-      iconColor: "text-slate-600 bg-slate-100",
-      accentBorder: "border-slate-200",
+      iconColor: "text-success-700 bg-success-50 ring-1 ring-success-200/80",
+      topBar: "from-success-600 to-success-400",
+      accentBorder: "border-slate-200/90 hover:border-success-200",
       tooltip: t("memberStatistics.health.summary.cohortTooltip"),
     },
     {
@@ -94,8 +97,9 @@ export function MemberHealthSummaryCards({
           })
         : t("memberStatistics.health.summary.noRecordsYet"),
       icon: HeartPulse,
-      iconColor: summary.afDetectedOrSuspectedInPeriod > 0 ? "text-danger-600 bg-danger-50" : "text-slate-600 bg-slate-100",
-      accentBorder: summary.afDetectedOrSuspectedInPeriod > 0 ? "border-danger-200" : "border-slate-200",
+      iconColor: summary.afDetectedOrSuspectedInPeriod > 0 ? "text-danger-600 bg-danger-50 ring-1 ring-danger-200/80" : "text-slate-600 bg-slate-100 ring-1 ring-slate-200/80",
+      topBar: summary.afDetectedOrSuspectedInPeriod > 0 ? "from-danger-600 to-danger-400" : "from-slate-400 to-slate-300",
+      accentBorder: summary.afDetectedOrSuspectedInPeriod > 0 ? "border-danger-200 hover:border-danger-300" : "border-slate-200/90",
       tooltip: t("memberStatistics.health.summary.cohortTooltip"),
     },
   ]
@@ -108,8 +112,9 @@ export function MemberHealthSummaryCards({
           return (
             <div
               key={card.id}
-              className={`rounded-2xl border ${card.accentBorder} bg-white p-5 shadow-xs flex flex-col justify-between transition hover:shadow-sm`}
+              className={`relative overflow-hidden rounded-2xl border ${card.accentBorder} bg-white p-5 shadow-card flex flex-col justify-between transition-all hover:-translate-y-0.5`}
             >
+              <div className={`absolute inset-x-0 top-0 h-1 bg-gradient-to-r ${card.topBar}`} aria-hidden="true" />
               <div className="flex items-center justify-between gap-1">
                 <div className="flex items-center gap-1.5 min-w-0">
                   <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 truncate">

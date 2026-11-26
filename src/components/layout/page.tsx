@@ -181,7 +181,7 @@ export function PageHeader({
           {icon && (
             <div
               className={cn(
-                "flex shrink-0 items-center justify-center rounded-xl border border-primary-100 bg-primary-50 text-primary-700 [&_svg]:text-primary-700",
+                "flex shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary-600 via-primary-500 to-cyan-500 text-white shadow-md shadow-primary-500/25 ring-1 ring-white/25 [&_svg]:text-white",
                 compact ? "h-10 w-10" : "h-11 w-11"
               )}
             >

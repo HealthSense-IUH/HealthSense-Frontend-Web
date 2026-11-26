@@ -19,7 +19,7 @@ export function AppSidebar() {
   const roleBadgeLabel = t(`rolesShort.${effectiveRole}`, { defaultValue: effectiveRole })
 
   return (
-    <aside className="fixed left-0 top-0 z-40 flex h-screen w-[92px] flex-col select-none border-r border-shell-border bg-shell text-shell-foreground">
+    <aside className="fixed left-0 top-0 z-40 flex h-screen w-[92px] flex-col select-none border-r border-shell-border bg-gradient-to-b from-[#091326] via-[#0c1c3b] to-[#081326] text-shell-foreground shadow-[4px_0_24px_-8px_rgba(9,19,38,0.45)]">
       {/* Logo + vai trò */}
       <div className="flex flex-col items-center justify-center py-3.5 border-b border-shell-border">
         <Link
@@ -28,17 +28,19 @@ export function AppSidebar() {
           title={`${t("brand.name")} - ${roleLabel(effectiveRole)}`}
         >
           {isStaff ? (
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary-50 text-primary-700 border border-primary-100 group-hover:bg-primary-100 transition-colors">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 to-cyan-500 text-white shadow-md shadow-primary-500/30 ring-1 ring-white/20 group-hover:scale-105 transition-transform">
               {isDoctor ? <Stethoscope className="h-5 w-5" /> : <ShieldCheck className="h-5 w-5" />}
             </div>
           ) : (
-            <img
-              src="/logo.png"
-              alt={t("brand.name")}
-              className="h-10 w-10 object-contain rounded-xl shrink-0"
-            />
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/95 p-1 shadow-md shadow-black/25 ring-1 ring-white/25 group-hover:scale-105 transition-transform">
+              <img
+                src="/logo.png"
+                alt={t("brand.name")}
+                className="h-full w-full object-contain rounded-lg"
+              />
+            </div>
           )}
-          <span className="text-[8.5px] font-mono font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full mt-1.5 bg-slate-100 text-slate-600 border border-slate-200/80">
+          <span className="text-[8.5px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-full mt-1.5 bg-cyan-400/15 text-cyan-200 border border-cyan-400/30">
             {roleBadgeLabel}
           </span>
         </Link>

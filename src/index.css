@@ -3,29 +3,28 @@
 @plugin "tailwindcss-animate";
 
 /*
- * MỘT theme (sáng — Clinical Cool Minimal) và MỘT bảng màu cho toàn bộ HealthSense:
- *   primary  — xanh y tế trầm (Clinical Blue)        success — bình thường / hoàn tất
- *   warning  — cần chú ý / nghi ngờ                  danger  — cảnh báo AFib / lỗi
- *   slate    — trung tính chiếm 90% giao diện        white, black
- * Quy tắc 90 / 8 / 2: 90% trung tính, 8% màu thương hiệu trầm, 2% màu ngữ nghĩa lâm sàng.
- * Khung ứng dụng (sidebar + topbar) dùng nền sáng tối giản: bg-shell, text-shell-foreground.
+ * MỘT theme (Precision Cardio Flagship — Sắc nét, tương phản cao trên máy chiếu) cho toàn bộ HealthSense:
+ *   primary  — xanh sapphire y tế rực rỡ (Medical Sapphire)   cyan    — xanh nhịp sinh học (Bio-Cyan accent)
+ *   success  — nhịp xoang bình thường (Emerald)               warning — cần chú ý / nghi ngờ (Amber)
+ *   danger   — cảnh báo AFib / nhịp tim (Cardio Crimson)      slate   — trung tính sáng sắc nét
+ * Khung điều hướng (sidebar) dùng nền Midnight Sapphire tối sâu (bg-shell) tạo tương phản nổi bật với vùng làm việc sáng.
  */
 :root {
-  --background: #f8fafc;
+  --background: #f3f6fc;
   --foreground: var(--color-slate-900);
   --card: var(--color-white);
   --card-foreground: var(--color-slate-900);
   --popover: var(--color-white);
   --popover-foreground: var(--color-slate-900);
 
-  --primary: var(--color-primary-700);
+  --primary: var(--color-primary-600);
   --primary-foreground: var(--color-white);
   --secondary: var(--color-slate-100);
   --secondary-foreground: var(--color-slate-900);
   --muted: var(--color-slate-100);
   --muted-foreground: var(--color-slate-500);
-  --accent: var(--color-slate-100);
-  --accent-foreground: var(--color-slate-900);
+  --accent: var(--color-primary-50);
+  --accent-foreground: var(--color-primary-800);
   --success: var(--color-success-600);
   --success-foreground: var(--color-white);
   --warning: var(--color-warning-500);
@@ -34,13 +33,13 @@
   --destructive-foreground: var(--color-white);
   --border: var(--color-slate-200);
   --input: var(--color-slate-200);
-  --ring: var(--color-primary-600);
+  --ring: var(--color-primary-500);
   --radius: 0.75rem;
 
-  /* Khung ứng dụng: Light Clinical Minimal (sidebar + topbar sáng, viền mảnh) */
-  --shell: var(--color-white);
-  --shell-foreground: var(--color-slate-600);
-  --shell-border: var(--color-slate-200);
+  /* Khung ứng dụng: Midnight Sapphire sâu, nổi bật trên máy chiếu */
+  --shell: #0b162c;
+  --shell-foreground: var(--color-slate-200);
+  --shell-border: rgb(148 163 184 / 0.16);
 }
 
 @theme {
@@ -48,57 +47,70 @@
   --color-white: #fff;
   --color-black: #000;
 
-  /* Thương hiệu: Xanh y tế trầm dịu (hạ độ chói để dùng lâu không mỏi mắt) */
-  --color-primary-50: oklch(97.5% 0.01 238);
-  --color-primary-100: oklch(94.6% 0.022 238);
-  --color-primary-200: oklch(89.2% 0.045 238);
-  --color-primary-300: oklch(80.5% 0.082 239);
-  --color-primary-400: oklch(70.5% 0.115 240);
-  --color-primary-500: oklch(61.5% 0.128 242);
-  --color-primary-600: oklch(52.5% 0.122 243);
-  --color-primary-700: oklch(45.5% 0.108 243);
-  --color-primary-800: oklch(39.5% 0.09 243);
-  --color-primary-900: oklch(34.5% 0.072 243);
-  --color-primary-950: oklch(25.5% 0.052 244);
+  /* Thương hiệu: Xanh Sapphire Y Tế sắc nét, hiện đại, nổi bật trên màn chiếu */
+  --color-primary-50: oklch(97.0% 0.016 250);
+  --color-primary-100: oklch(93.2% 0.036 251);
+  --color-primary-200: oklch(87.2% 0.072 252);
+  --color-primary-300: oklch(78.2% 0.125 253);
+  --color-primary-400: oklch(68.8% 0.172 254);
+  --color-primary-500: oklch(60.5% 0.205 255);
+  --color-primary-600: oklch(52.8% 0.218 257);
+  --color-primary-700: oklch(45.6% 0.196 258);
+  --color-primary-800: oklch(38.8% 0.158 259);
+  --color-primary-900: oklch(33.2% 0.120 260);
+  --color-primary-950: oklch(23.5% 0.082 262);
 
-  /* Thành công, nhịp xoang bình thường (xanh lá y tế dịu) */
-  --color-success-50: oklch(97.6% 0.015 165);
-  --color-success-100: oklch(94.6% 0.038 164);
-  --color-success-200: oklch(89.6% 0.07 164);
-  --color-success-300: oklch(82.5% 0.108 165);
-  --color-success-400: oklch(73.5% 0.135 164);
-  --color-success-500: oklch(64.5% 0.132 163);
-  --color-success-600: oklch(55.5% 0.115 163);
-  --color-success-700: oklch(47.5% 0.095 165);
-  --color-success-800: oklch(40.5% 0.078 166);
-  --color-success-900: oklch(35.5% 0.064 168);
-  --color-success-950: oklch(24.5% 0.044 171);
+  /* Điểm nhấn công nghệ sinh học: Bio-Cyan (kết hợp với Sapphire cho gradient thương hiệu & HRV) */
+  --color-cyan-50: oklch(97.8% 0.018 205);
+  --color-cyan-100: oklch(94.6% 0.044 205);
+  --color-cyan-200: oklch(89.5% 0.086 207);
+  --color-cyan-300: oklch(82.5% 0.128 210);
+  --color-cyan-400: oklch(75.5% 0.152 213);
+  --color-cyan-500: oklch(67.5% 0.154 215);
+  --color-cyan-600: oklch(58.5% 0.142 218);
+  --color-cyan-700: oklch(50.2% 0.120 220);
+  --color-cyan-800: oklch(42.8% 0.096 222);
+  --color-cyan-900: oklch(36.5% 0.076 224);
+  --color-cyan-950: oklch(25.5% 0.056 226);
 
-  /* Cảnh báo, nghi ngờ cần chú ý (hổ phách trầm, không chói gắt) */
-  --color-warning-50: oklch(98.2% 0.016 88);
-  --color-warning-100: oklch(95.4% 0.044 86);
-  --color-warning-200: oklch(91.2% 0.088 84);
-  --color-warning-300: oklch(85.5% 0.125 80);
-  --color-warning-400: oklch(79.2% 0.145 74);
-  --color-warning-500: oklch(72.5% 0.145 66);
-  --color-warning-600: oklch(62.5% 0.138 58);
-  --color-warning-700: oklch(52.5% 0.125 50);
-  --color-warning-800: oklch(44.5% 0.105 47);
-  --color-warning-900: oklch(39.0% 0.086 46);
-  --color-warning-950: oklch(26.5% 0.06 46);
+  /* Thành công, nhịp xoang bình thường (Emerald trong trẻo) */
+  --color-success-50: oklch(97.6% 0.020 163);
+  --color-success-100: oklch(94.2% 0.048 162);
+  --color-success-200: oklch(88.8% 0.090 162);
+  --color-success-300: oklch(81.5% 0.138 162);
+  --color-success-400: oklch(73.2% 0.168 161);
+  --color-success-500: oklch(64.8% 0.165 161);
+  --color-success-600: oklch(55.8% 0.146 162);
+  --color-success-700: oklch(47.2% 0.120 163);
+  --color-success-800: oklch(40.2% 0.096 164);
+  --color-success-900: oklch(34.8% 0.078 166);
+  --color-success-950: oklch(24.0% 0.052 169);
 
-  /* Lỗi, nguy hiểm, cảnh báo rung nhĩ (đỏ lâm sàng rõ ràng nhưng không neon) */
-  --color-danger-50: oklch(97.2% 0.012 20);
-  --color-danger-100: oklch(93.8% 0.028 20);
-  --color-danger-200: oklch(88.6% 0.056 21);
-  --color-danger-300: oklch(80.6% 0.098 22);
-  --color-danger-400: oklch(70.0% 0.155 24);
-  --color-danger-500: oklch(62.0% 0.19 26);
-  --color-danger-600: oklch(55.5% 0.195 27);
-  --color-danger-700: oklch(48.5% 0.172 27);
-  --color-danger-800: oklch(42.5% 0.145 27);
-  --color-danger-900: oklch(37.5% 0.118 26);
-  --color-danger-950: oklch(24.5% 0.078 26);
+  /* Cảnh báo, nghi ngờ cần chú ý (Amber rạng rỡ, dễ phân biệt) */
+  --color-warning-50: oklch(98.4% 0.022 90);
+  --color-warning-100: oklch(95.6% 0.056 88);
+  --color-warning-200: oklch(91.2% 0.112 85);
+  --color-warning-300: oklch(85.5% 0.156 80);
+  --color-warning-400: oklch(79.5% 0.178 73);
+  --color-warning-500: oklch(73.0% 0.178 64);
+  --color-warning-600: oklch(63.2% 0.168 55);
+  --color-warning-700: oklch(53.0% 0.148 48);
+  --color-warning-800: oklch(44.8% 0.122 45);
+  --color-warning-900: oklch(39.0% 0.098 44);
+  --color-warning-950: oklch(26.5% 0.068 44);
+
+  /* Lỗi, nguy hiểm, cảnh báo rung nhĩ & chỉ số tim mạch (Cardio Crimson sắc nét) */
+  --color-danger-50: oklch(97.2% 0.016 14);
+  --color-danger-100: oklch(93.6% 0.038 15);
+  --color-danger-200: oklch(88.2% 0.074 16);
+  --color-danger-300: oklch(79.8% 0.128 18);
+  --color-danger-400: oklch(69.5% 0.188 20);
+  --color-danger-500: oklch(61.8% 0.225 22);
+  --color-danger-600: oklch(54.8% 0.228 23);
+  --color-danger-700: oklch(47.8% 0.198 23);
+  --color-danger-800: oklch(41.8% 0.165 23);
+  --color-danger-900: oklch(36.8% 0.134 22);
+  --color-danger-950: oklch(24.0% 0.088 22);
 
   /* Trung tính: chữ, nền, viền */
   --color-slate-50: oklch(98.4% 0.003 247.858);
@@ -185,19 +197,37 @@
   }
 }
 
-/* Bóng thẻ tinh gọn: sắc nét, ít loang màu */
+/* Bóng thẻ có chiều sâu sắc nét, nổi bật rõ ràng trên màn chiếu */
 @utility shadow-card {
-  box-shadow: 0 1px 2px rgb(15 23 42 / 0.04), 0 4px 12px -4px rgb(15 23 42 / 0.06);
+  box-shadow:
+    0 1px 2px rgb(15 23 42 / 0.05),
+    0 8px 24px -8px rgb(15 35 80 / 0.10);
 }
 
-/* Nền khu vực ứng dụng: trơn sạch, thoáng mắt (bỏ quầng sáng & lưới chấm rối) */
+/* Nền khu vực ứng dụng: sáng sạch kết hợp vệt ánh sáng Sapphire-Cyan rất nhẹ phía trên */
 @utility app-canvas {
   background-color: var(--background);
+  background-image:
+    radial-gradient(ellipse 70% 42% at 88% 0%, oklch(60.5% 0.205 255 / 0.08), transparent 68%),
+    radial-gradient(ellipse 50% 35% at 12% 0%, oklch(67.5% 0.154 215 / 0.06), transparent 65%);
 }
 
-/* Chữ nhấn thương hiệu đơn sắc, rõ nét */
+/* Chữ nhấn thương hiệu chuyển sắc Sapphire → Bio-Cyan nổi bật */
 @utility text-gradient-brand {
-  color: var(--color-primary-700);
+  background-image: linear-gradient(110deg, var(--color-primary-700) 0%, var(--color-primary-500) 52%, var(--color-cyan-500) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Nền thương hiệu chủ đạo (CTA, badge nổi bật) */
+@utility bg-gradient-brand {
+  background-image: linear-gradient(120deg, var(--color-primary-700) 0%, var(--color-primary-600) 50%, var(--color-cyan-500) 100%);
+}
+
+/* Nền Flagship Midnight Sapphire (Banner chào, CTA, Sidebar) */
+@utility bg-flagship-navy {
+  background-image: linear-gradient(125deg, #09152e 0%, #0f3673 54%, #0891b2 100%);
 }
 
 @layer components {

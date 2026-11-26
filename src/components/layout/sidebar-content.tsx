@@ -56,28 +56,28 @@ export function SidebarContent() {
                   const linkElement = (
                     <Link
                       to={targetHref}
-                      className={`group relative flex flex-col items-center justify-center w-full py-2.5 px-1 rounded-xl transition-colors ${
+                      className={`group relative flex flex-col items-center justify-center w-full py-2.5 px-1 rounded-xl transition-all duration-150 ${
                         active
-                          ? "bg-primary-50 text-primary-700 ring-1 ring-primary-200/70"
-                          : "text-slate-500 hover:bg-slate-100 hover:text-slate-900"
+                          ? "bg-gradient-to-br from-primary-500 to-cyan-500 text-white shadow-md shadow-primary-500/35 ring-1 ring-white/25"
+                          : "text-slate-300/80 hover:bg-white/10 hover:text-white"
                       }`}
                     >
                       {active && (
-                        <span className="absolute left-0 top-1/2 h-5 w-1 -translate-y-1/2 rounded-r-full bg-primary-600" aria-hidden="true" />
+                        <span className="absolute -left-2 top-1/2 h-6 w-1 -translate-y-1/2 rounded-r-full bg-cyan-300 shadow-[0_0_10px_rgba(34,211,238,0.85)]" aria-hidden="true" />
                       )}
                       <div className="relative">
                         <Icon
                           className={`h-5 w-5 shrink-0 transition-colors ${
-                            active ? "text-primary-700" : "text-slate-500 group-hover:text-slate-800"
+                            active ? "text-white" : "text-slate-300/85 group-hover:text-white"
                           }`}
                         />
                         {item.badge && (
-                          <span className="absolute -top-1 -right-1.5 h-2 w-2 rounded-full bg-danger-500 ring-2 ring-shell" />
+                          <span className="absolute -top-1 -right-1.5 h-2 w-2 rounded-full bg-danger-400 ring-2 ring-[#0b162c]" />
                         )}
                       </div>
                       <span
                         className={`text-[10px] text-center leading-tight mt-1 max-w-[76px] truncate tracking-tight ${
-                          active ? "font-bold text-primary-800" : "font-medium text-slate-600 group-hover:text-slate-900"
+                          active ? "font-bold text-white" : "font-medium text-slate-300/90 group-hover:text-white"
                         }`}
                       >
                         {itemShortLabel(item)}

@@ -83,7 +83,13 @@ export default function LandingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background text-slate-900 font-sans overflow-x-hidden flex flex-col relative selection:bg-primary-500/20">
+    <div className="min-h-screen app-canvas text-slate-900 font-sans overflow-x-hidden flex flex-col relative selection:bg-primary-500/20">
+
+      {/* Subtle Sapphire-Cyan Hero Spotlight (không rối, tạo chiều sâu sân khấu trên máy chiếu) */}
+      <div
+        className="pointer-events-none absolute inset-x-0 top-0 h-[620px] bg-[radial-gradient(ellipse_68%_50%_at_72%_18%,rgba(14,165,233,0.14),transparent_65%),radial-gradient(ellipse_55%_45%_at_18%_12%,rgba(29,78,216,0.10),transparent_62%)]"
+        aria-hidden="true"
+      />
 
       {/* Fixed Minimal Navigation Header */}
       <header className={`fixed top-0 left-0 right-0 w-full px-4 sm:px-6 lg:px-8 z-50 transition duration-300 ${isScrolled ? "pt-2.5 pb-2" : "pt-4 sm:pt-5 pb-2"
@@ -141,7 +147,7 @@ export default function LandingPage() {
               <>
                 <button
                   onClick={() => navigate(getDefaultRouteForRole(userSession.role))}
-                  className="hidden sm:flex bg-primary-700 hover:bg-primary-800 text-white transition-colors px-4 sm:px-5 py-2 rounded-full font-semibold items-center gap-1.5 cursor-pointer font-heading whitespace-nowrap shrink-0"
+                  className="hidden sm:flex bg-gradient-brand hover:opacity-95 text-white shadow-md shadow-primary-600/25 transition-all px-4 sm:px-5 py-2 rounded-full font-semibold items-center gap-1.5 cursor-pointer font-heading whitespace-nowrap shrink-0"
                 >
                   <span>{t("nav.dashboard")}</span>
                   <ArrowRight className="w-4 h-4" />
@@ -152,13 +158,13 @@ export default function LandingPage() {
               <>
                 <Link
                   to="/login"
-                  className="text-slate-700 hover:text-primary-700 hover:bg-slate-100 font-semibold px-3 sm:px-4 py-2 rounded-full transition-colors cursor-pointer font-heading whitespace-nowrap shrink-0"
+                  className="text-slate-700 hover:text-primary-700 hover:bg-primary-50/70 font-semibold px-3 sm:px-4 py-2 rounded-full transition-colors cursor-pointer font-heading whitespace-nowrap shrink-0"
                 >
                   {t("nav.login")}
                 </Link>
                 <Link
                   to="/register"
-                  className="bg-primary-700 hover:bg-primary-800 text-white transition-colors px-4 sm:px-5 py-2 rounded-full font-semibold flex items-center gap-1 cursor-pointer font-heading whitespace-nowrap shrink-0"
+                  className="bg-gradient-brand hover:opacity-95 text-white shadow-md shadow-primary-600/25 transition-all px-4 sm:px-5 py-2 rounded-full font-semibold flex items-center gap-1 cursor-pointer font-heading whitespace-nowrap shrink-0"
                 >
                   <span className="whitespace-nowrap">{t("nav.tryIt")}</span>
                   <ArrowUpRight className="w-4 h-4 shrink-0" />
@@ -179,7 +185,7 @@ export default function LandingPage() {
             {/* Main Headline - Crystal Clear & Impactful */}
             <h1 className="text-4xl sm:text-5xl lg:text-[54px] font-extrabold leading-[1.12] mb-5 tracking-tight text-slate-900 font-heading uppercase">
               {t("hero.titleLine1")} <br />
-              <span className="text-primary-700">
+              <span className="text-gradient-brand">
                 {t("hero.titleLine2")}
               </span>
             </h1>
@@ -194,7 +200,7 @@ export default function LandingPage() {
               {userSession ? (
                 <button
                   onClick={() => navigate('/app/general/dashboard')}
-                  className="bg-primary-700 hover:bg-primary-800 text-white font-bold px-7 py-3.5 rounded-full shadow-xs transition-colors flex items-center gap-2.5 cursor-pointer text-sm sm:text-base font-heading"
+                  className="bg-gradient-brand hover:opacity-95 text-white font-bold px-7 py-3.5 rounded-full shadow-lg shadow-primary-600/30 hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center gap-2.5 cursor-pointer text-sm sm:text-base font-heading"
                 >
                   <span>{t("hero.ctaDashboard")}</span>
                   <ArrowUpRight className="w-5 h-5" />
@@ -202,7 +208,7 @@ export default function LandingPage() {
               ) : (
                 <Link
                   to="/login"
-                  className="bg-primary-700 hover:bg-primary-800 text-white font-bold px-7 py-3.5 rounded-full shadow-xs transition-colors flex items-center gap-2.5 cursor-pointer text-sm sm:text-base font-heading"
+                  className="bg-gradient-brand hover:opacity-95 text-white font-bold px-7 py-3.5 rounded-full shadow-lg shadow-primary-600/30 hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center gap-2.5 cursor-pointer text-sm sm:text-base font-heading"
                 >
                   <span>{t("hero.ctaJoin")}</span>
                   <ArrowUpRight className="w-5 h-5" />
@@ -211,21 +217,27 @@ export default function LandingPage() {
 
               <button
                 onClick={() => scrollToSection("about")}
-                className="px-5 py-3.5 rounded-full font-semibold text-slate-700 bg-white hover:bg-slate-50 border border-slate-200 transition-colors flex items-center gap-2 text-sm sm:text-base cursor-pointer font-heading"
+                className="px-5 py-3.5 rounded-full font-semibold text-slate-800 bg-white hover:bg-primary-50/70 border border-slate-200 hover:border-primary-200 shadow-xs transition-all flex items-center gap-2 text-sm sm:text-base cursor-pointer font-heading"
               >
-                <Play className="w-4 h-4 text-primary-700 fill-primary-700" />
+                <Play className="w-4 h-4 text-primary-600 fill-primary-600" />
                 <span>{t("hero.ctaHowItWorks")}</span>
               </button>
             </div>
 
             {/* Ba điểm mạnh, nói bằng lời thường */}
-            <div className="flex flex-wrap gap-2.5 pt-6 border-t border-slate-200">
-              {(["monitor", "alert", "doctor"] as const).map((key) => (
+            <div className="flex flex-wrap gap-2.5 pt-6 border-t border-slate-200/90">
+              {(
+                [
+                  { key: "monitor", dot: "bg-primary-500" },
+                  { key: "alert", dot: "bg-danger-500" },
+                  { key: "doctor", dot: "bg-success-500" },
+                ] as const
+              ).map(({ key, dot }) => (
                 <span
                   key={key}
-                  className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3.5 py-1.5 text-xs font-semibold text-slate-700"
+                  className="inline-flex items-center gap-2 rounded-full border border-slate-200/90 bg-white/95 px-3.5 py-1.5 text-xs font-semibold text-slate-700 shadow-2xs"
                 >
-                  <span className="h-1.5 w-1.5 rounded-full bg-primary-600" />
+                  <span className={`h-2 w-2 rounded-full ${dot}`} />
                   {t(`hero.chips.${key}`)}
                 </span>
               ))}
@@ -236,8 +248,14 @@ export default function LandingPage() {
           {/* Right Hero (Clean, Focused Product Video Mockup Showcase) */}
           <div className="col-span-1 lg:col-span-7 relative flex flex-col items-center justify-center order-1 lg:order-2 w-full max-w-[800px] mx-auto">
 
+            {/* Subtle Sapphire-Cyan Aura behind Mockup */}
+            <div
+              className="pointer-events-none absolute -inset-3 rounded-[2.6rem] bg-gradient-to-tr from-primary-600/20 via-cyan-400/15 to-success-400/15 blur-2xl"
+              aria-hidden="true"
+            />
+
             {/* Dark Modern Device Mockup */}
-            <div className="relative w-full bg-slate-900 rounded-[2rem] sm:rounded-[2.25rem] shadow-[0_24px_60px_-20px_rgba(15,23,42,0.28)] p-3 sm:p-4 overflow-hidden border-[6px] sm:border-8 border-slate-800 ring-1 ring-black/15">
+            <div className="relative w-full bg-[#0b162c] rounded-[2rem] sm:rounded-[2.25rem] shadow-[0_28px_70px_-18px_rgba(15,40,100,0.38)] p-3 sm:p-4 overflow-hidden border-[6px] sm:border-8 border-slate-800/95 ring-1 ring-primary-400/30">
 
               {/* Device Camera Notch / Bar */}
               <div className="absolute top-2.5 left-1/2 -translate-x-1/2 w-16 h-1.5 bg-slate-800 rounded-full z-30" />
