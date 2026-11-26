@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, type ChangeEvent, type FormEvent } from "react"
+import { createPortal } from "react-dom"
 import { useTranslation } from "react-i18next"
 import { UploadCloud, FileText, Loader2, X, AlertCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -81,15 +82,17 @@ export function UploadMeasurementModal({ isOpen, onClose, onSuccess }: UploadMea
     }
   }
 
-  return (
+  return createPortal(
     <div 
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 animate-in fade-in duration-200 cursor-pointer"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-[#0b162c]/55 backdrop-blur-xs p-4 animate-in fade-in duration-200 cursor-pointer"
       onClick={() => !isUploading && onClose()}
     >
       <div 
-        className="relative max-w-lg w-full bg-white rounded-2xl p-6 sm:p-6 flex flex-col gap-6 shadow-2xl border border-slate-100 cursor-default"
+        className="relative max-w-lg w-full bg-white rounded-2xl overflow-hidden shadow-2xl border border-slate-200 cursor-default"
         onClick={(e) => e.stopPropagation()}
       >
+        <div className="h-1.5 w-full bg-gradient-brand" aria-hidden="true" />
+        <div className="p-6 flex flex-col gap-6">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-100 pb-4">
           <div className="flex items-center gap-3">
@@ -198,7 +201,9 @@ export function UploadMeasurementModal({ isOpen, onClose, onSuccess }: UploadMea
             </Button>
           </div>
         </form>
+        </div>
       </div>
-    </div>
+    </div>,
+    document.body
   )
 }

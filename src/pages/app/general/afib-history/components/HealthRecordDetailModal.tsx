@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { createPortal } from "react-dom"
 import { useTranslation } from "react-i18next"
 import {
   Clock,
@@ -91,9 +92,9 @@ export function HealthRecordDetailModal({ record, isOpen, onClose }: HealthRecor
           ? "text-warning-700"
           : "text-foreground"
 
-  return (
+  return createPortal(
     <div 
-      className="fixed inset-0 z-50 flex items-center justify-center bg-[#0b162c]/60 backdrop-blur-xs p-4 animate-in fade-in duration-200 cursor-pointer"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-[#0b162c]/55 backdrop-blur-xs p-4 animate-in fade-in duration-200 cursor-pointer"
       onClick={onClose}
     >
       <div 
@@ -406,6 +407,7 @@ export function HealthRecordDetailModal({ record, isOpen, onClose }: HealthRecor
         </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   )
 }

@@ -1,4 +1,5 @@
 import { useState, useRef, type ChangeEvent, type FormEvent } from "react"
+import { createPortal } from "react-dom"
 import { 
   Camera, 
   Loader2, 
@@ -1073,9 +1074,15 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
       </div>
 
       {/* Lightbox / Preview Modal for CCCD */}
-      {previewImage && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-xs p-4 animate-in fade-in duration-200">
-          <div className="relative max-w-3xl w-full bg-slate-900 rounded-2xl p-6 flex flex-col items-center gap-4 text-white shadow-2xl">
+      {previewImage && createPortal(
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-[#0b162c]/70 backdrop-blur-xs p-4 animate-in fade-in duration-200 cursor-pointer"
+          onClick={() => setPreviewImage(null)}
+        >
+          <div
+            className="relative max-w-3xl w-full bg-slate-900 rounded-2xl p-6 flex flex-col items-center gap-4 text-white shadow-2xl cursor-default"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="w-full flex items-center justify-between border-b border-slate-800 pb-3">
               <h4 className="text-sm font-extrabold flex items-center gap-2">
                 <CreditCard className="w-4 h-4 text-primary-400" />
@@ -1141,7 +1148,8 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
               </Button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   )
