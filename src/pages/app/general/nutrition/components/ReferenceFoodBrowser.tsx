@@ -220,7 +220,7 @@ export function ReferenceFoodBrowser({ fixedGroup, layout = "list" }: ReferenceF
             <Link
               key={food.id}
               {...detailLink("ref", food.id)}
-              className="group flex flex-col rounded-2xl border border-border bg-card p-5 shadow-xs transition-all hover:border-primary-300 hover:shadow-md"
+              className="group flex flex-col rounded-2xl border border-border bg-card p-5 shadow-xs transition hover:border-primary-300 hover:shadow-md"
             >
               <div className="flex items-start justify-between gap-2">
                 <h3 className="font-semibold text-sm text-foreground group-hover:text-primary transition-colors line-clamp-2">

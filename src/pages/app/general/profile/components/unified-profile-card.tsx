@@ -358,7 +358,7 @@ function UnifiedProfileCardContent({ user, onSave, onAvatarUpdate, loading = fal
                 type="button"
                 disabled={uploadingAvatar}
                 onClick={() => avatarInputRef.current?.click()}
-                className="absolute inset-0 flex flex-col items-center justify-center rounded-full bg-black/50 text-white opacity-0 group-hover:opacity-100 transition-all cursor-pointer disabled:opacity-100 disabled:cursor-wait"
+                className="absolute inset-0 flex flex-col items-center justify-center rounded-full bg-black/50 text-white opacity-0 group-hover:opacity-100 transition cursor-pointer disabled:opacity-100 disabled:cursor-wait"
                 title={t("card.changeAvatar")}
               >
                 {uploadingAvatar ? (

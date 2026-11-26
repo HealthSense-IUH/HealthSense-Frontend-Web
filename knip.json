@@ -15,6 +15,7 @@
   "ignoreDependencies": [
     "tailwindcss",
     "tailwindcss-animate",
+    "@base-ui/react",
     "@radix-ui/react-accordion",
     "@radix-ui/react-alert-dialog",
     "@radix-ui/react-checkbox",

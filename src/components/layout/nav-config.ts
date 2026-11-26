@@ -181,10 +181,6 @@ export const allNavigationGroups: NavigationGroup[] = [
   },
 ]
 
-// Giữ lại alias để tương thích ngược nếu có file khác import
-export const generalNavigationGroups = allNavigationGroups
-export const managementNavigationGroups = allNavigationGroups
-
 /**
  * Xác định pathname có thuộc phân hệ Quản trị (Management) hay không.
  */

@@ -59,7 +59,7 @@ export function PaymentFilterBar({
 }: PaymentFilterBarProps) {
   const { t } = useTranslation("credits")
   const [showCustomInputs, setShowCustomInputs] = useState(preset === "custom")
-  const [customFromInput, setCustomFromInput] = useState(isoToLocalDateString(from))
+  const [customFromInput, setCustomFromInput] = useState(() => isoToLocalDateString(from))
   const [customToInput, setCustomToInput] = useState(() => {
     // Because 'to' in backend is exclusive (start of next day), the displayed date should be 'to - 1 day'
     if (!to) return ""

@@ -15,7 +15,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import {
   formatDateTime,
-  formatVndPrice,
+  formatVnd,
   getCreditOrderStatusConfig,
 } from "@/constants/credits"
 import type { AdminCreditOrderSummary } from "@/types/credits"
@@ -186,7 +186,7 @@ export function PaymentOrdersTable({
 
                       {/* Amount VND */}
                       <TableCell className="text-right font-mono font-bold text-xs whitespace-nowrap">
-                        {formatVndPrice(ord.amountVnd)}
+                        {formatVnd(ord.amountVnd)}
                       </TableCell>
 
                       {/* Status */}

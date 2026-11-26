@@ -123,9 +123,6 @@ export interface FoodGroup {
   guidanceFoodCount: number
 }
 
-// Aliases for compatibility
-export type FoodCategory = FoodGroup
-
 // ---------------------------------------------------------------------------
 // Tra cứu toàn bộ cơ sở dữ liệu tham chiếu: số liệu, kèm đánh giá (advice) khi hội viên có đơn ăn uống.
 // Mọi giá trị tính trên 100 g phần ăn được. Hai nguồn:

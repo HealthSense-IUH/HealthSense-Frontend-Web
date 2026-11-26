@@ -60,6 +60,7 @@ export function DoctorCandidatesDialog({
 
   // Handle Enter to search
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.nativeEvent.isComposing || e.keyCode === 229) return
     if (e.key === 'Enter') {
       fetchCandidates()
     }

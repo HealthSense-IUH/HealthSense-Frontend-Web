@@ -60,7 +60,7 @@ export function UserRoleTabs({ selectedRole, onSelectRole, loading, effectiveRol
             type="button"
             disabled={loading}
             onClick={() => onSelectRole(tab.role)}
-            className={`flex items-start gap-3.5 p-4 rounded-2xl border text-left transition-all duration-200 ${
+            className={`flex items-start gap-3.5 p-4 rounded-2xl border text-left transition duration-200 ${
               isSelected
                 ? tab.activeColor + " ring-1 ring-black/5 font-bold"
                 : "border-slate-200/80 bg-white text-slate-700 hover:bg-slate-50 hover:border-slate-300 shadow-3xs"

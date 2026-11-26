@@ -35,17 +35,28 @@ export function formatRecordDate(isoString?: string | number | null): string {
   }
 }
 
+const vndFormatterCache = new Map<string, Intl.NumberFormat>()
+
+function getVndFormatter(locale: string): Intl.NumberFormat {
+  let formatter = vndFormatterCache.get(locale)
+  if (!formatter) {
+    formatter = new Intl.NumberFormat(locale, {
+      style: "currency",
+      currency: "VND",
+      maximumFractionDigits: 0,
+    })
+    vndFormatterCache.set(locale, formatter)
+  }
+  return formatter
+}
+
 /**
  * Format currency in VND with current locale
  */
 export function formatVND(amount?: number | null, fallback = "—"): string {
   if (amount === undefined || amount === null || isNaN(amount)) return fallback
   try {
-    return new Intl.NumberFormat(currentIntlLocale(), {
-      style: "currency",
-      currency: "VND",
-      maximumFractionDigits: 0,
-    }).format(amount)
+    return getVndFormatter(currentIntlLocale()).format(amount)
   } catch {
     return `${amount.toLocaleString()} ₫`
   }

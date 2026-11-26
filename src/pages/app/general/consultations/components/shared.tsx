@@ -2,15 +2,26 @@ import { Badge } from "@/components/ui/badge"
 import { TableCell, TableRow } from "@/components/ui/table"
 import i18n, { currentIntlLocale } from "@/lib/i18n"
 
+const dateFormatters = new Map<string, Intl.DateTimeFormat>()
+
+function getMediumDateFormatter(locale: string): Intl.DateTimeFormat {
+  let formatter = dateFormatters.get(locale)
+  if (!formatter) {
+    formatter = new Intl.DateTimeFormat(locale, {
+      dateStyle: "medium",
+      timeStyle: "short",
+    })
+    dateFormatters.set(locale, formatter)
+  }
+  return formatter
+}
+
 export function formatDate(value?: string | null) {
   if (!value) {
     return "-"
   }
 
-  return new Intl.DateTimeFormat(currentIntlLocale(), {
-    dateStyle: "medium",
-    timeStyle: "short",
-  }).format(new Date(value))
+  return getMediumDateFormatter(currentIntlLocale()).format(new Date(value))
 }
 
 /** Tên trạng thái phiên / yêu cầu theo ngôn ngữ đang chọn ("ACTIVE" -> "Đang hoạt động"); trạng thái lạ giữ nguyên mã. */
@@ -188,15 +199,5 @@ export function canFinalizeFinalSummary(session?: {
     session.status === "COMPLETED" ||
     (session.status === "CANCELLED" && session.meaningfulCareOccurred === true)
   )
-}
-
-export function canShowDoctorFinalSummary(
-  session?: {
-    status?: string | null
-    meaningfulCareOccurred?: boolean | null
-  } | null,
-  isDoctor = true
-): boolean {
-  return isDoctor && canEditFinalSummaryDraft(session)
 }
 

@@ -106,7 +106,7 @@ export const ChatComposer = memo(function ChatComposer({
 
   return (
     <div className="border-t border-border bg-background px-3 py-2.5 sm:px-6">
-      <form onSubmit={handleSubmit} className="flex w-full flex-col gap-2 bg-background transition-all duration-200">
+      <form onSubmit={handleSubmit} className="flex w-full flex-col gap-2 bg-background transition duration-200">
         <div className="flex items-center gap-2">
           {/* Decorative Paperclip Button */}
           <Button 
@@ -137,7 +137,7 @@ export const ChatComposer = memo(function ChatComposer({
             size="icon" 
             variant="ghost"
             className={cn(
-              "h-10 w-10 rounded-full transition-all flex-shrink-0",
+              "h-10 w-10 rounded-full transition flex-shrink-0",
               hasContent 
                 ? "text-primary hover:bg-primary/10" 
                 : "text-muted-foreground hover:bg-muted"

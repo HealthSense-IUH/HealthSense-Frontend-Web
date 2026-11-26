@@ -68,7 +68,7 @@ export function MemberPaymentKpiCards({
       {/* 4 KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
         {/* Card 1: Tổng tiền thanh toán */}
-        <Card className="border border-border/80 shadow-xs hover:shadow-sm transition-all bg-card/80 backdrop-blur-xs">
+        <Card className="border border-border/80 shadow-xs hover:shadow-sm transition bg-card/80 backdrop-blur-xs">
           <CardContent className="p-4 space-y-2">
             <div className="flex items-center justify-between">
               <span className="text-xs font-medium text-muted-foreground">{t("memberKpi.totalPaid")}</span>
@@ -88,7 +88,7 @@ export function MemberPaymentKpiCards({
         </Card>
 
         {/* Card 2: Tổng token đã mua */}
-        <Card className="border border-border/80 shadow-xs hover:shadow-sm transition-all bg-card/80 backdrop-blur-xs">
+        <Card className="border border-border/80 shadow-xs hover:shadow-sm transition bg-card/80 backdrop-blur-xs">
           <CardContent className="p-4 space-y-2">
             <div className="flex items-center justify-between">
               <span className="text-xs font-medium text-muted-foreground">{t("memberKpi.totalPurchased")}</span>
@@ -108,7 +108,7 @@ export function MemberPaymentKpiCards({
         </Card>
 
         {/* Card 3: Số lần mua thành công */}
-        <Card className="border border-border/80 shadow-xs hover:shadow-sm transition-all bg-card/80 backdrop-blur-xs">
+        <Card className="border border-border/80 shadow-xs hover:shadow-sm transition bg-card/80 backdrop-blur-xs">
           <CardContent className="p-4 space-y-2">
             <div className="flex items-center justify-between">
               <span className="text-xs font-medium text-muted-foreground">{t("memberKpi.successfulOrders")}</span>
@@ -129,7 +129,7 @@ export function MemberPaymentKpiCards({
         </Card>
 
         {/* Card 4: Token khả dụng (Wallet snapshot) */}
-        <Card className="border border-border/80 shadow-xs hover:shadow-sm transition-all bg-card/80 backdrop-blur-xs">
+        <Card className="border border-border/80 shadow-xs hover:shadow-sm transition bg-card/80 backdrop-blur-xs">
           <CardContent className="p-4 space-y-2">
             <div className="flex items-center justify-between">
               <span className="text-xs font-medium text-muted-foreground">{t("memberKpi.availableNow")}</span>

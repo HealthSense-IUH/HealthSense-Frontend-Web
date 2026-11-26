@@ -238,6 +238,7 @@ export function ChangePasswordDialog({ open, onOpenChange }: ChangePasswordDialo
               />
               <button
                 type="button"
+                aria-label={t("changePassword.currentPasswordLabel")}
                 onClick={() => setShowCurrentPassword(!showCurrentPassword)}
                 className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors p-1 cursor-pointer"
               >
@@ -276,6 +277,7 @@ export function ChangePasswordDialog({ open, onOpenChange }: ChangePasswordDialo
               />
               <button
                 type="button"
+                aria-label={t("changePassword.newPasswordLabel")}
                 onClick={() => setShowNewPassword(!showNewPassword)}
                 className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors p-1 cursor-pointer"
               >
@@ -313,6 +315,7 @@ export function ChangePasswordDialog({ open, onOpenChange }: ChangePasswordDialo
               />
               <button
                 type="button"
+                aria-label={t("changePassword.confirmPasswordLabel")}
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                 className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors p-1 cursor-pointer"
               >
@@ -383,7 +386,7 @@ export function ChangePasswordDialog({ open, onOpenChange }: ChangePasswordDialo
             <Button
               type="submit"
               disabled={!canSubmit}
-              className="rounded-xl h-10 px-5 text-xs font-bold bg-primary hover:bg-primary/90 text-primary-foreground shadow-md shadow-primary/20 transition-all cursor-pointer flex items-center gap-2"
+              className="rounded-xl h-10 px-5 text-xs font-bold bg-primary hover:bg-primary/90 text-primary-foreground shadow-md shadow-primary/20 transition cursor-pointer flex items-center gap-2"
             >
               {isSubmitting ? (
                 <>

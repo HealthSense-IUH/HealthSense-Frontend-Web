@@ -54,7 +54,7 @@ export function UserTableHeader({
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
             placeholder={t("users.tableHeader.searchPlaceholder")}
-            className="pl-9 h-10 bg-white border-slate-200/80 rounded-xl text-xs font-medium shadow-3xs focus:border-primary-500 transition-all"
+            className="pl-9 h-10 bg-white border-slate-200/80 rounded-xl text-xs font-medium shadow-3xs focus:border-primary-500 transition"
           />
         </div>
 

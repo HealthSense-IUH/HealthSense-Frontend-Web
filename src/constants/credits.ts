@@ -189,19 +189,45 @@ export const CREDIT_ERROR_CODE_MESSAGES: Record<number, string> = {
   get 9999() { return i18n.t("credits:errorCode.c9999") },
 }
 
+const vndFormatters = new Map<string, Intl.NumberFormat>()
+const dateTimeFormatters = new Map<string, Intl.DateTimeFormat>()
+
+function getVndFormatter(locale: string): Intl.NumberFormat {
+  let fmt = vndFormatters.get(locale)
+  if (!fmt) {
+    fmt = new Intl.NumberFormat(locale, {
+      style: "currency",
+      currency: "VND",
+      maximumFractionDigits: 0,
+    })
+    vndFormatters.set(locale, fmt)
+  }
+  return fmt
+}
+
+function getDateTimeFormatter(locale: string): Intl.DateTimeFormat {
+  let fmt = dateTimeFormatters.get(locale)
+  if (!fmt) {
+    fmt = new Intl.DateTimeFormat(locale, {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    })
+    dateTimeFormatters.set(locale, fmt)
+  }
+  return fmt
+}
+
 /**
  * Format số tiền VND chuẩn mà không chia 100
  */
 export function formatVnd(amount: number): string {
   if (typeof amount !== "number" || isNaN(amount)) return "0 ₫"
-  return new Intl.NumberFormat(currentIntlLocale(), {
-    style: "currency",
-    currency: "VND",
-    maximumFractionDigits: 0,
-  }).format(amount)
+  return getVndFormatter(currentIntlLocale()).format(amount)
 }
-
-export const formatVndPrice = formatVnd
 
 /**
  * Tạo Idempotency-Key chuẩn cho credit operations
@@ -426,14 +452,7 @@ export function getPaymentDateRangePreset(preset: PaymentDatePreset): { from?: s
 export function formatDateTime(isoString?: string | null): string {
   if (!isoString) return "—"
   try {
-    return new Intl.DateTimeFormat(currentIntlLocale(), {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-    }).format(new Date(isoString))
+    return getDateTimeFormatter(currentIntlLocale()).format(new Date(isoString))
   } catch {
     return isoString
   }

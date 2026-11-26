@@ -52,7 +52,7 @@ export function UserMenu({ role, showAppLink = false }: UserMenuProps) {
         <PopoverTrigger asChild>
           <button
             type="button"
-            className="flex items-center gap-2.5 pl-1.5 pr-3 py-1 rounded-full border border-slate-200/90 bg-white/90 shadow-2xs hover:bg-slate-50 transition-all cursor-pointer"
+            className="flex items-center gap-2.5 pl-1.5 pr-3 py-1 rounded-full border border-slate-200/90 bg-white/90 shadow-2xs hover:bg-slate-50 transition cursor-pointer"
           >
             <AvatarPlaceholder src={userSession.avatarUrl} name={displayName} size="sm" />
             <div className="hidden sm:flex flex-col text-left text-xs max-w-[130px]">

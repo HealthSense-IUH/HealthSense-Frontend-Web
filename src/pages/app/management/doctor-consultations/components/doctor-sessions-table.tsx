@@ -247,7 +247,7 @@ export function DoctorSessionsTable({
               placeholder={t("doctorConsultations.sessionsTable.searchPlaceholder")}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-9 h-9 text-xs rounded-xl bg-slate-50/70 border-slate-200 focus:bg-white transition-all"
+              className="pl-9 h-9 text-xs rounded-xl bg-slate-50/70 border-slate-200 focus:bg-white transition"
             />
           </div>
 

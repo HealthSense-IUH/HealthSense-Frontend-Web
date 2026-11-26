@@ -86,9 +86,9 @@ export default function LandingPage() {
     <div className="min-h-screen bg-background text-slate-900 font-sans overflow-x-hidden flex flex-col relative selection:bg-primary-500/20">
 
       {/* Fixed Minimal Navigation Header */}
-      <header className={`fixed top-0 left-0 right-0 w-full px-4 sm:px-6 lg:px-8 z-50 transition-all duration-300 ${isScrolled ? "pt-2.5 pb-2" : "pt-4 sm:pt-5 pb-2"
+      <header className={`fixed top-0 left-0 right-0 w-full px-4 sm:px-6 lg:px-8 z-50 transition duration-300 ${isScrolled ? "pt-2.5 pb-2" : "pt-4 sm:pt-5 pb-2"
         }`}>
-        <nav className={`relative w-full px-4 sm:px-6 xl:px-7 py-2.5 sm:py-3 flex items-center justify-between max-w-7xl mx-auto rounded-2xl sm:rounded-full border transition-all duration-300 ${isScrolled
+        <nav className={`relative w-full px-4 sm:px-6 xl:px-7 py-2.5 sm:py-3 flex items-center justify-between max-w-7xl mx-auto rounded-2xl sm:rounded-full border transition duration-300 ${isScrolled
           ? "bg-white/95 backdrop-blur-md border-slate-200 shadow-sm"
           : "bg-white/90 backdrop-blur-md border-slate-200/80 shadow-xs"
           }`}>
@@ -118,7 +118,7 @@ export default function LandingPage() {
                     e.preventDefault()
                     scrollToSection(item.id)
                   }}
-                  className={`px-3 xl:px-4 py-1.5 xl:py-2 rounded-full transition-all relative cursor-pointer whitespace-nowrap shrink-0 ${isActive
+                  className={`px-3 xl:px-4 py-1.5 xl:py-2 rounded-full transition relative cursor-pointer whitespace-nowrap shrink-0 ${isActive
                     ? "text-primary-700 bg-primary-50/90 font-bold shadow-2xs"
                     : "hover:text-primary-600 hover:bg-slate-100/60"
                     }`}
@@ -266,12 +266,12 @@ export default function LandingPage() {
         <div className="w-full flex justify-center mt-12 sm:mt-16">
           <button
             onClick={() => scrollToSection("about")}
-            className="group flex flex-col items-center gap-2 text-slate-400 hover:text-primary-600 transition-all cursor-pointer"
+            className="group flex flex-col items-center gap-2 text-slate-400 hover:text-primary-600 transition cursor-pointer"
           >
             <span className="text-[11px] font-bold tracking-wider uppercase font-heading text-slate-500 group-hover:text-primary-600 transition-colors">
               {t("hero.scrollExplore")}
             </span>
-            <div className="w-9 h-9 rounded-full bg-white border border-slate-200/80 shadow-xs flex items-center justify-center group-hover:border-primary-300 group-hover:bg-primary-50 group-hover:scale-105 transition-all animate-bounce">
+            <div className="w-9 h-9 rounded-full bg-white border border-slate-200/80 shadow-xs flex items-center justify-center group-hover:border-primary-300 group-hover:bg-primary-50 group-hover:scale-105 transition animate-bounce">
               <ChevronDown className="w-4 h-4 text-slate-600 group-hover:text-primary-600" />
             </div>
           </button>
@@ -314,7 +314,7 @@ export default function LandingPage() {
             transition={{ duration: 0.2 }}
             onClick={scrollToTop}
             aria-label={t("scrollToTop")}
-            className="fixed bottom-6 right-6 z-50 w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-white/95 hover:bg-white text-slate-700 hover:text-primary-600 border border-slate-200/90 shadow-lg shadow-primary-950/10 backdrop-blur-md flex items-center justify-center cursor-pointer transition-all hover:scale-110 hover:shadow-xl active:scale-95 group"
+            className="fixed bottom-6 right-6 z-50 w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-white/95 hover:bg-white text-slate-700 hover:text-primary-600 border border-slate-200/90 shadow-lg shadow-primary-950/10 backdrop-blur-md flex items-center justify-center cursor-pointer transition hover:scale-110 hover:shadow-xl active:scale-95 group"
           >
             <ArrowUp className="w-5 h-5 transition-transform group-hover:-translate-y-0.5" />
           </motion.button>

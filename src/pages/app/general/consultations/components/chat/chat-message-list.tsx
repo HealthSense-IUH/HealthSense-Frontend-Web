@@ -94,7 +94,7 @@ export const ChatMessageList = memo(function ChatMessageList({
         <button
           onClick={() => scrollToBottom()}
           className={cn(
-            "absolute bottom-4 right-6 flex h-8 w-8 items-center justify-center rounded-full bg-background border border-border shadow-md text-foreground transition-all hover:bg-muted z-10 animate-in fade-in slide-in-from-bottom-2 duration-200"
+            "absolute bottom-4 right-6 flex h-8 w-8 items-center justify-center rounded-full bg-background border border-border shadow-md text-foreground transition hover:bg-muted z-10 animate-in fade-in slide-in-from-bottom-2 duration-200"
           )}
           aria-label={t("chat.messageList.scrollToBottom")}
         >

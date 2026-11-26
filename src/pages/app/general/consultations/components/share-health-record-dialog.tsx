@@ -155,7 +155,7 @@ export function ShareHealthRecordDialog({
                     <div
                       key={record.id}
                       onClick={() => isSessionActive && setSelectedRecordId(record.id)}
-                      className={`flex items-center justify-between p-3 rounded-xl border cursor-pointer transition-all select-none ${
+                      className={`flex items-center justify-between p-3 rounded-xl border cursor-pointer transition select-none ${
                         isSelected
                           ? "bg-primary/10 border-primary shadow-2xs"
                           : isSessionActive

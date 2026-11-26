@@ -118,7 +118,7 @@ export function DoctorContinuityTab({ sessionId }: DoctorContinuityTabProps) {
           const isExpanded = !!expandedIds[String(item.sessionId)]
 
           return (
-            <Card key={item.sessionId} className="border-border shadow-2xs overflow-hidden transition-all">
+            <Card key={item.sessionId} className="border-border shadow-2xs overflow-hidden transition">
               <CardHeader 
                 className="p-4 bg-muted/20 hover:bg-muted/40 cursor-pointer transition-colors select-none"
                 onClick={() => toggleExpand(item.sessionId)}

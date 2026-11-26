@@ -30,7 +30,7 @@ export function DemoRoleSwitcher() {
         <Button
           variant="outline"
           size="sm"
-          className={`h-8 gap-2 px-2.5 font-semibold text-xs border rounded-lg shadow-2xs transition-all hover:opacity-90 ${currentConfig.color}`}
+          className={`h-8 gap-2 px-2.5 font-semibold text-xs border rounded-lg shadow-2xs transition hover:opacity-90 ${currentConfig.color}`}
           title="DEV ONLY: Demo Role Switcher"
         >
           <ShieldAlert className="h-3.5 w-3.5 shrink-0 animate-pulse text-warning-500" />

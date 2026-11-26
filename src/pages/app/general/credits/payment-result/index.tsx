@@ -125,9 +125,7 @@ export default function CreditPaymentResultPage() {
           setErrorText(parsed.userMessage || i18n.t("credits:paymentResult.loadError"))
         }
       } finally {
-        if (!isBackgroundPoll) {
-          setLoading(false)
-        }
+        setLoading(false)
       }
     },
     [activeOrderId, userId, toast]

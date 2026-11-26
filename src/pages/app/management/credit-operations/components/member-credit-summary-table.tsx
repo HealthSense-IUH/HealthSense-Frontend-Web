@@ -21,7 +21,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { useToast } from "@/hooks/use-toast"
 import { parseApiError } from "@/lib/errorHandler"
 import { creditsApi } from "@/services/credits.service"
-import { formatCreditQuantity, formatVndPrice } from "@/constants/credits"
+import { formatCreditQuantity, formatVnd } from "@/constants/credits"
 import type { AdminMemberCreditSummary, MemberAccountStatus } from "@/types/credits"
 import { MemberTransactionsDialog } from "./member-transactions-dialog"
 import { Trans, useTranslation } from "react-i18next"
@@ -328,7 +328,7 @@ export function MemberCreditSummaryTable({
 
                       {/* Lifetime Total Paid VND */}
                       <TableCell className="text-right font-mono font-bold text-xs whitespace-nowrap text-success-600">
-                        {formatVndPrice(member.totalPaidVnd || 0)}
+                        {formatVnd(member.totalPaidVnd || 0)}
                       </TableCell>
 
                       {/* Lifetime Total Purchased Credits */}

@@ -189,7 +189,7 @@ export default function TermsAndConditionsPage() {
             <button
               type="button"
               onClick={() => setViewStyle("interactive")}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${viewStyle === "interactive"
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${viewStyle === "interactive"
                   ? "bg-white text-primary-700 shadow-xs border border-slate-200/80"
                   : "text-slate-600 hover:text-slate-900"
                 }`}
@@ -202,7 +202,7 @@ export default function TermsAndConditionsPage() {
             <button
               type="button"
               onClick={() => setViewStyle("document")}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${viewStyle === "document"
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${viewStyle === "document"
                   ? "bg-white text-primary-700 shadow-xs border border-slate-200/80"
                   : "text-slate-600 hover:text-slate-900"
                 }`}

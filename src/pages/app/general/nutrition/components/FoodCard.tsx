@@ -29,7 +29,7 @@ export function FoodCard({
   return (
     <div
       className={cn(
-        "group relative flex flex-col justify-between rounded-2xl border border-slate-200/80 bg-white p-4 shadow-xs transition-all hover:border-primary/40 hover:shadow-md overflow-hidden",
+        "group relative flex flex-col justify-between rounded-2xl border border-slate-200/80 bg-white p-4 shadow-xs transition hover:border-primary/40 hover:shadow-md overflow-hidden",
         className
       )}
     >

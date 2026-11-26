@@ -77,7 +77,7 @@ export function PaymentKpiCards({
       {/* KPI Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Card 1: Doanh thu */}
-        <Card className="rounded-2xl border shadow-xs bg-card transition-all hover:shadow-sm">
+        <Card className="rounded-2xl border shadow-xs bg-card transition hover:shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
             <CardDescription className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
               {t("admin.kpi.totalCollected")}
@@ -101,7 +101,7 @@ export function PaymentKpiCards({
         </Card>
 
         {/* Card 2: Tổng token */}
-        <Card className="rounded-2xl border shadow-xs bg-card transition-all hover:shadow-sm">
+        <Card className="rounded-2xl border shadow-xs bg-card transition hover:shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
             <CardDescription className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
               {t("admin.kpi.totalSold")}
@@ -125,7 +125,7 @@ export function PaymentKpiCards({
         </Card>
 
         {/* Card 3: Số đơn thành công */}
-        <Card className="rounded-2xl border shadow-xs bg-card transition-all hover:shadow-sm">
+        <Card className="rounded-2xl border shadow-xs bg-card transition hover:shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
             <CardDescription className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
               {t("admin.kpi.successfulOrders")}
@@ -149,7 +149,7 @@ export function PaymentKpiCards({
         </Card>
 
         {/* Card 4: Số member thanh toán */}
-        <Card className="rounded-2xl border shadow-xs bg-card transition-all hover:shadow-sm">
+        <Card className="rounded-2xl border shadow-xs bg-card transition hover:shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
             <CardDescription className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
               {isMemberFiltered ? t("admin.kpi.payingMember") : t("admin.kpi.payingMembers")}

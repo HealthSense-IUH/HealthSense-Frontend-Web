@@ -80,7 +80,7 @@ export function DoctorStatisticsFilterBar({
                 key={item.id}
                 type="button"
                 onClick={() => handleSelectPreset(item.id)}
-                className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${
+                className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition ${
                   preset === item.id
                     ? "bg-white text-slate-900 shadow-xs"
                     : "text-slate-600 hover:text-slate-900"
@@ -101,6 +101,7 @@ export function DoctorStatisticsFilterBar({
                 </span>
                 <input
                   type="date"
+                  aria-label={t("doctorStatistics.filter.from")}
                   value={tempStart}
                   onChange={(e) => {
                     setTempStart(e.target.value)
@@ -119,6 +120,7 @@ export function DoctorStatisticsFilterBar({
                 </span>
                 <input
                   type="date"
+                  aria-label={t("doctorStatistics.filter.to")}
                   value={tempEnd}
                   onChange={(e) => {
                     setTempEnd(e.target.value)

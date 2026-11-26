@@ -14,7 +14,7 @@
     "i18n:check": "node scripts/i18n-coverage.mjs"
   },
   "dependencies": {
-    "@base-ui/react": "^1.7.0",
+    "@base-ui/react": "^1.9.0",
     "@radix-ui/react-accordion": "^1.2.16",
     "@radix-ui/react-alert-dialog": "^1.1.19",
     "@radix-ui/react-avatar": "^1.2.2",

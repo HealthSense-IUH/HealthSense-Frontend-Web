@@ -89,7 +89,7 @@ export function StatisticsFilterBar({
               key={opt.value}
               type="button"
               onClick={() => handleSelectPreset(opt.value)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition ${
                 preset === opt.value
                   ? "bg-primary-600 text-white shadow-xs"
                   : "bg-slate-100/80 text-slate-600 hover:bg-slate-200/80 hover:text-slate-900"
@@ -112,7 +112,7 @@ export function StatisticsFilterBar({
                 key={opt.value}
                 type="button"
                 onClick={() => onGroupByChange(opt.value)}
-                className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-all ${
+                className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition ${
                   groupBy === opt.value
                     ? "bg-white text-slate-900 shadow-xs"
                     : "text-slate-600 hover:text-slate-900"
@@ -149,6 +149,7 @@ export function StatisticsFilterBar({
             <span>{t("statistics.filter.from")}:</span>
             <input
               type="date"
+              aria-label={t("statistics.filter.from")}
               value={tempStart}
               onChange={(e) => {
                 setTempStart(e.target.value)
@@ -162,6 +163,7 @@ export function StatisticsFilterBar({
             <span>{t("statistics.filter.to")}:</span>
             <input
               type="date"
+              aria-label={t("statistics.filter.to")}
               value={tempEnd}
               onChange={(e) => {
                 setTempEnd(e.target.value)

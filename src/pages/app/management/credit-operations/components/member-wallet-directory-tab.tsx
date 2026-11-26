@@ -109,7 +109,7 @@ export function MemberWalletDirectoryTab() {
           description: parsed.userMessage || i18n.t("credits:admin.memberSummary.errors.load"),
         })
       } finally {
-        if (!silent) setLoadingMembers(false)
+        setLoadingMembers(false)
       }
     },
     [debouncedKeyword, statusFilter, page, pageSize, toast]
@@ -574,7 +574,7 @@ export function MemberWalletDirectoryTab() {
                             variant="outline"
                             size="sm"
                             onClick={() => handleOpenWalletDetail(member)}
-                            className="h-8 px-2.5 text-xs gap-1.5 rounded-lg hover:bg-primary hover:text-primary-foreground transition-all shadow-3xs"
+                            className="h-8 px-2.5 text-xs gap-1.5 rounded-lg hover:bg-primary hover:text-primary-foreground transition shadow-3xs"
                           >
                             <Wallet className="w-3.5 h-3.5" />
                             {t("admin.wallet.directory.viewWallet")}
@@ -681,7 +681,7 @@ export function MemberWalletDirectoryTab() {
                 {isAdjustInlineOpen && (
                   <form
                     onSubmit={handleAdjustSubmit}
-                    className="p-4 rounded-xl border border-primary/30 bg-primary/5 space-y-3.5 transition-all"
+                    className="p-4 rounded-xl border border-primary/30 bg-primary/5 space-y-3.5 transition"
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2 text-primary font-bold text-sm">

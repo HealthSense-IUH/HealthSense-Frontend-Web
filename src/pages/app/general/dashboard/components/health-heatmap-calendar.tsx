@@ -156,8 +156,9 @@ export function HealthHeatmapCalendar({ onSelectRecord, className = "" }: Health
           <div className="flex items-center gap-1.5 p-1 bg-slate-50 border border-border rounded-xl">
             <button
               type="button"
+              aria-label="Previous month"
               onClick={prevMonth}
-              className="p-1 rounded-lg hover:bg-white text-muted-foreground hover:text-foreground transition-all cursor-pointer"
+              className="p-1 rounded-lg hover:bg-white text-muted-foreground hover:text-foreground transition cursor-pointer"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
@@ -166,8 +167,9 @@ export function HealthHeatmapCalendar({ onSelectRecord, className = "" }: Health
             </span>
             <button
               type="button"
+              aria-label="Next month"
               onClick={nextMonth}
-              className="p-1 rounded-lg hover:bg-white text-muted-foreground hover:text-foreground transition-all cursor-pointer"
+              className="p-1 rounded-lg hover:bg-white text-muted-foreground hover:text-foreground transition cursor-pointer"
             >
               <ChevronRight className="w-4 h-4" />
             </button>
@@ -244,7 +246,7 @@ export function HealthHeatmapCalendar({ onSelectRecord, className = "" }: Health
                   onClick={() => handleDayClick(day)}
                   disabled={!day.hasData}
                   title={`${day.dateStr}${day.hasData ? t("heatmap.dayTooltipSuffix") : ""}`}
-                  className={`h-11 rounded-xl flex flex-col items-center justify-center transition-all relative font-semibold text-xs ${
+                  className={`h-11 rounded-xl flex flex-col items-center justify-center transition relative font-semibold text-xs ${
                     day.hasData
                       ? isSelected
                         ? "bg-success-600 text-white ring-2 ring-success-500 ring-offset-2 shadow-md cursor-pointer scale-105"

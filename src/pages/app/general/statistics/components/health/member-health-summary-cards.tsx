@@ -108,7 +108,7 @@ export function MemberHealthSummaryCards({
           return (
             <div
               key={card.id}
-              className={`rounded-2xl border ${card.accentBorder} bg-white p-5 shadow-xs flex flex-col justify-between transition-all hover:shadow-sm`}
+              className={`rounded-2xl border ${card.accentBorder} bg-white p-5 shadow-xs flex flex-col justify-between transition hover:shadow-sm`}
             >
               <div className="flex items-center justify-between gap-1">
                 <div className="flex items-center gap-1.5 min-w-0">

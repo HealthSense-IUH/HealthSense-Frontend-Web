@@ -58,17 +58,18 @@ function calculateAge(dateOfBirthStr?: string | null): number | null {
   return age >= 0 ? age : null
 }
 
+const viDateTimeFormatter = new Intl.DateTimeFormat("vi-VN", {
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+  hour: "2-digit",
+  minute: "2-digit",
+})
+
 function formatDate(isoString?: string | null): string {
   if (!isoString) return "-"
   try {
-    const d = new Date(isoString)
-    return new Intl.DateTimeFormat("vi-VN", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-    }).format(d)
+    return viDateTimeFormatter.format(new Date(isoString))
   } catch {
     return isoString
   }

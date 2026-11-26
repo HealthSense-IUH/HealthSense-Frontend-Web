@@ -100,7 +100,7 @@ export function PackagesGrid({
       {packages.map((pkg) => (
         <Card
           key={pkg.id}
-          className="flex flex-col justify-between border-border hover:border-primary/50 transition-all hover:shadow-md overflow-hidden relative group"
+          className="flex flex-col justify-between border-border hover:border-primary/50 transition hover:shadow-md overflow-hidden relative group"
         >
           <div className="p-6 space-y-4 flex-1">
             <div className="flex items-start justify-between gap-2">

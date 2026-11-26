@@ -76,7 +76,7 @@ export function PaymentSummaryCards({
           return (
             <div
               key={card.id}
-              className={`relative overflow-hidden rounded-2xl border bg-white p-5 shadow-xs transition-all hover:shadow-md ${card.accentBorder}`}
+              className={`relative overflow-hidden rounded-2xl border bg-white p-5 shadow-xs transition hover:shadow-md ${card.accentBorder}`}
             >
               <div className="flex items-center justify-between gap-2">
                 <div className="flex items-center gap-1.5 min-w-0">

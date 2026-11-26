@@ -340,8 +340,9 @@ export default function ConsultationsPage() {
           </DialogHeader>
           <div className="flex flex-col gap-4 py-2">
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-foreground">{t("page.moreInfoDialog.noteLabel")}</label>
+              <label htmlFor="more-info-note" className="text-xs font-semibold text-foreground">{t("page.moreInfoDialog.noteLabel")}</label>
               <Textarea
+                id="more-info-note"
                 placeholder={t("page.moreInfoDialog.notePlaceholder")}
                 value={logic.moreInfoNote}
                 onChange={(e) => logic.setMoreInfoNote(e.target.value)}
@@ -350,35 +351,31 @@ export default function ConsultationsPage() {
               />
             </div>
 
-            {logic.healthRecords.length > 0 && (
+            {logic.healthRecords.length > 0 && (() => {
+              const selectedSet = new Set(logic.moreInfoSelectedRecordIds)
+              const toggleRecord = (idStr: string) => {
+                logic.setMoreInfoSelectedRecordIds((prev) => {
+                  const next = new Set(prev)
+                  if (next.has(idStr)) next.delete(idStr)
+                  else next.add(idStr)
+                  return Array.from(next)
+                })
+              }
+              return (
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-foreground">
+                <p className="text-xs font-semibold text-foreground">
                   {t("page.moreInfoDialog.attachLabel", { selected: logic.moreInfoSelectedRecordIds.length })}
-                </label>
+                </p>
                 <div className="max-h-36 overflow-y-auto border rounded-xl p-2 space-y-1 bg-muted/10">
                   {logic.healthRecords.map((record) => {
                     const idStr = String(record.id)
-                    const checked = logic.moreInfoSelectedRecordIds.includes(idStr)
+                    const checked = selectedSet.has(idStr)
                     return (
-                      <div
+                      <button
+                        type="button"
                         key={record.id}
-                        role="button"
-                        tabIndex={0}
-                        onClick={(e) => {
-                          e.preventDefault()
-                          logic.setMoreInfoSelectedRecordIds((prev) =>
-                            prev.includes(idStr) ? prev.filter((id) => id !== idStr) : [...prev, idStr]
-                          )
-                        }}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter" || e.key === " ") {
-                            e.preventDefault()
-                            logic.setMoreInfoSelectedRecordIds((prev) =>
-                              prev.includes(idStr) ? prev.filter((id) => id !== idStr) : [...prev, idStr]
-                            )
-                          }
-                        }}
-                        className="flex items-center gap-2.5 p-2 rounded-lg hover:bg-muted/40 cursor-pointer text-xs select-none border border-transparent hover:border-border transition-all"
+                        onClick={() => toggleRecord(idStr)}
+                        className="flex w-full items-center gap-2.5 p-2 rounded-lg hover:bg-muted/40 cursor-pointer text-xs text-left select-none border border-transparent hover:border-border transition"
                       >
                         <Checkbox checked={checked} tabIndex={-1} className="data-[state=checked]:bg-primary pointer-events-none" />
                         <span className="font-medium">#{record.id} {record.originalFileName ? `- ${record.originalFileName}` : ""}</span>
@@ -387,12 +384,13 @@ export default function ConsultationsPage() {
                             [{record.predictionLabel}]
                           </span>
                         )}
-                      </div>
+                      </button>
                     )
                   })}
                 </div>
               </div>
-            )}
+              )
+            })()}
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => logic.setIsMoreInfoDialogOpen(false)}>

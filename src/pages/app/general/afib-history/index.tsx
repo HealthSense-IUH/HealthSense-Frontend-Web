@@ -178,7 +178,7 @@ export default function AfibHistoryPage() {
                 type="button"
                 onClick={() => setViewMode("table")}
                 title={t("afibHistory.view.tableTitle")}
-                className={`p-1.5 rounded-lg transition-all cursor-pointer flex items-center gap-1.5 text-xs font-semibold px-3 ${
+                className={`p-1.5 rounded-lg transition cursor-pointer flex items-center gap-1.5 text-xs font-semibold px-3 ${
                   viewMode === "table"
                     ? "bg-slate-100 text-primary shadow-2xs font-bold"
                     : "text-muted-foreground hover:text-foreground"
@@ -191,7 +191,7 @@ export default function AfibHistoryPage() {
                 type="button"
                 onClick={() => setViewMode("card")}
                 title={t("afibHistory.view.cardTitle")}
-                className={`p-1.5 rounded-lg transition-all cursor-pointer flex items-center gap-1.5 text-xs font-semibold px-3 ${
+                className={`p-1.5 rounded-lg transition cursor-pointer flex items-center gap-1.5 text-xs font-semibold px-3 ${
                   viewMode === "card"
                     ? "bg-slate-100 text-primary shadow-2xs font-bold"
                     : "text-muted-foreground hover:text-foreground"
@@ -380,7 +380,7 @@ export default function AfibHistoryPage() {
                   <Card
                     key={record.id}
                     onClick={() => handleOpenDetail(record)}
-                    className="rounded-2xl border border-border shadow-xs bg-white overflow-hidden hover:shadow-md transition-all cursor-pointer group"
+                    className="rounded-2xl border border-border shadow-xs bg-white overflow-hidden hover:shadow-md transition cursor-pointer group"
                   >
                     <div className={`h-1.5 w-full ${meta.topBarClass}`} />
                     <CardHeader className="pb-3 pt-4 px-5">

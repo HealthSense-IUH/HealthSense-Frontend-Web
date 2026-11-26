@@ -151,8 +151,8 @@ export function useConsultationsLogic() {
   const [targetRequest, setTargetRequest] = useState<ConsultationRequestItem | null>(null)
   const [targetSession, setTargetSession] = useState<ConsultationSessionItem | null>(null)
   const [doctorId, setDoctorId] = useState("")
-  const [endsAt, setEndsAt] = useState(localDateTimeIn(30))
-  const [supportEndsAt, setSupportEndsAt] = useState(localDateTimeIn(33))
+  const [endsAt, setEndsAt] = useState(() => localDateTimeIn(30))
+  const [supportEndsAt, setSupportEndsAt] = useState(() => localDateTimeIn(33))
   const [reason, setReason] = useState("")
   const [terminationReason, setTerminationReason] = useState<CareTerminationReason | null>("ADMINISTRATIVE_CLOSURE")
   const [meaningfulCareOccurred, setMeaningfulCareOccurred] = useState<boolean>(true)
@@ -433,9 +433,7 @@ export function useConsultationsLogic() {
       setRequests([])
       setSessions([])
     } finally {
-      if (!silent) {
-        setLoading(false)
-      }
+      setLoading(false)
     }
   }, [isAdmin, isMember, isDoctor, adminFilters, fetchDoctorCareProfile, t])
 

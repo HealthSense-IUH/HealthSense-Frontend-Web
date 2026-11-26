@@ -53,6 +53,7 @@ export function FoodSearchBar({
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.nativeEvent.isComposing || e.keyCode === 229) return
     if (e.key === "Enter" && results.length > 0) {
       e.preventDefault()
       handleSelect(results[0])
@@ -130,7 +131,7 @@ export function FoodSearchBar({
                         </p>
                       )}
                     </div>
-                    <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-0.5 transition-all shrink-0" />
+                    <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-0.5 transition shrink-0" />
                   </button>
                 )
               })}

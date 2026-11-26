@@ -39,15 +39,16 @@ import { useDoctorPatientsList } from "../hooks/use-doctor-patients-list"
 import { DoctorStatisticsFilterBar } from "./doctor-statistics-filter-bar"
 import { DoctorPatientDetailDialog } from "./doctor-patient-detail-dialog"
 
+const viDateFormatter = new Intl.DateTimeFormat("vi-VN", {
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+})
+
 function formatDate(isoString?: string | null): string {
   if (!isoString) return "-"
   try {
-    const d = new Date(isoString)
-    return new Intl.DateTimeFormat("vi-VN", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-    }).format(d)
+    return viDateFormatter.format(new Date(isoString))
   } catch {
     return isoString
   }

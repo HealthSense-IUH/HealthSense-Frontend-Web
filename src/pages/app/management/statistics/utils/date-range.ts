@@ -7,18 +7,19 @@ export interface CalendarDateParts {
   day: number // 1-31
 }
 
+const hoChiMinhDateFormatter = new Intl.DateTimeFormat("en-US", {
+  timeZone: DASHBOARD_TIMEZONE,
+  year: "numeric",
+  month: "numeric",
+  day: "numeric",
+})
+
 /**
  * Lấy các thành phần ngày { year, month, day } hiện tại theo múi giờ Asia/Ho_Chi_Minh
  * sử dụng Intl.DateTimeFormat.
  */
 export function getTodayInHoChiMinh(referenceDate: Date = new Date()): CalendarDateParts {
-  const formatter = new Intl.DateTimeFormat("en-US", {
-    timeZone: DASHBOARD_TIMEZONE,
-    year: "numeric",
-    month: "numeric",
-    day: "numeric",
-  })
-  const parts = formatter.formatToParts(referenceDate)
+  const parts = hoChiMinhDateFormatter.formatToParts(referenceDate)
   let year = 0
   let month = 0
   let day = 0

@@ -110,7 +110,7 @@ export function ResetPasswordForm({
               const loginUrl = email ? `/login?email=${encodeURIComponent(email)}` : "/login"
               navigate(loginUrl, { replace: true, state: { email } })
             }}
-            className="w-full rounded-xl h-11 font-bold text-sm bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all duration-200 cursor-pointer flex items-center justify-center gap-2"
+            className="w-full rounded-xl h-11 font-bold text-sm bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition duration-200 cursor-pointer flex items-center justify-center gap-2"
           >
             <LogIn className="w-4 h-4" />
             <span>{t("forgotPassword.reset.backToLogin")}</span>
@@ -156,10 +156,11 @@ export function ResetPasswordForm({
               onChange={(e) => setNewPassword(e.target.value)}
               required
               placeholder="••••••••"
-              className="w-full pl-10 pr-11 rounded-xl h-11 bg-white border border-slate-200 text-slate-900 placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-primary transition-all text-sm shadow-2xs hover:border-slate-300"
+              className="w-full pl-10 pr-11 rounded-xl h-11 bg-white border border-slate-200 text-slate-900 placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-primary transition text-sm shadow-2xs hover:border-slate-300"
             />
             <button
               type="button"
+              aria-label={t("forgotPassword.reset.newPasswordLabel")}
               onClick={() => setShowNewPassword(!showNewPassword)}
               className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors p-1 cursor-pointer"
             >
@@ -183,10 +184,11 @@ export function ResetPasswordForm({
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
               placeholder="••••••••"
-              className="w-full pl-10 pr-11 rounded-xl h-11 bg-white border border-slate-200 text-slate-900 placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-primary transition-all text-sm shadow-2xs hover:border-slate-300"
+              className="w-full pl-10 pr-11 rounded-xl h-11 bg-white border border-slate-200 text-slate-900 placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-primary transition text-sm shadow-2xs hover:border-slate-300"
             />
             <button
               type="button"
+              aria-label={t("forgotPassword.reset.confirmPasswordLabel")}
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
               className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors p-1 cursor-pointer"
             >
@@ -215,7 +217,7 @@ export function ResetPasswordForm({
         <Button
           type="submit"
           disabled={isSubmitting || !hasMinLength || !hasLettersAndNumbers || !isMatching}
-          className="w-full rounded-xl h-11 mt-2 text-sm font-bold bg-primary hover:bg-primary/90 text-primary-foreground shadow-md shadow-primary/20 hover:shadow-lg hover:shadow-primary/30 transition-all duration-200 cursor-pointer flex items-center justify-center gap-2"
+          className="w-full rounded-xl h-11 mt-2 text-sm font-bold bg-primary hover:bg-primary/90 text-primary-foreground shadow-md shadow-primary/20 hover:shadow-lg hover:shadow-primary/30 transition duration-200 cursor-pointer flex items-center justify-center gap-2"
         >
           {isSubmitting ? (
             <>

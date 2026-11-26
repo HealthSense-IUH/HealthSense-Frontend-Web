@@ -169,7 +169,7 @@ export function PaginationControl({
                 variant={isActive ? "default" : "outline"}
                 disabled={isLoading}
                 onClick={() => onPageChange(p)}
-                className={`h-8 w-8 p-0 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                className={`h-8 w-8 p-0 rounded-xl text-xs font-bold transition cursor-pointer ${
                   isActive
                     ? "bg-primary text-primary-foreground border border-primary shadow-xs pointer-events-none"
                     : "bg-white border border-border shadow-2xs hover:bg-slate-50 text-foreground"

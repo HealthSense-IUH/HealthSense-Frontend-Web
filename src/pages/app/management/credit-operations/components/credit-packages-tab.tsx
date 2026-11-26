@@ -27,7 +27,7 @@ import {
 import { useToast } from "@/hooks/use-toast"
 import { parseApiError } from "@/lib/errorHandler"
 import { creditsApi } from "@/services/credits.service"
-import { CREDIT_PACKAGE_STATUS_CONFIG, formatVndPrice } from "@/constants/credits"
+import { CREDIT_PACKAGE_STATUS_CONFIG, formatVnd } from "@/constants/credits"
 import type {
   AdminCreditPackage,
   CreateAdminCreditPackageRequest,
@@ -91,7 +91,7 @@ export function CreditPackagesTab() {
         description: parsed.userMessage || i18n.t("credits:data.errors.packages"),
       })
     } finally {
-      if (!silent) setLoading(false)
+      setLoading(false)
     }
   }, [toast])
 
@@ -391,7 +391,7 @@ export function CreditPackagesTab() {
                           </span>
                         </TableCell>
                         <TableCell className="text-right font-mono font-semibold text-sm">
-                          {formatVndPrice(pkg.priceVnd)}
+                          {formatVnd(pkg.priceVnd)}
                         </TableCell>
                         <TableCell className="text-center">
                           <Badge

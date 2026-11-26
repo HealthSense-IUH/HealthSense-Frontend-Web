@@ -12,13 +12,12 @@ export function SystemStatisticsChart() {
   const [data, setData] = useState<SystemHealthStat[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Mặc định lấy 30 ngày qua
-  const defaultTo = new Date();
-  const defaultFrom = new Date();
-  defaultFrom.setDate(defaultFrom.getDate() - 30);
-
-  const [fromDate, setFromDate] = useState<string>(defaultFrom.toISOString().split('T')[0]);
-  const [toDate, setToDate] = useState<string>(defaultTo.toISOString().split('T')[0]);
+  const [fromDate, setFromDate] = useState<string>(() => {
+    const d = new Date();
+    d.setDate(d.getDate() - 30);
+    return d.toISOString().split('T')[0];
+  });
+  const [toDate, setToDate] = useState<string>(() => new Date().toISOString().split('T')[0]);
 
   useEffect(() => {
     setLoading(true);

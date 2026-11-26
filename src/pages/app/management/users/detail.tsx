@@ -176,7 +176,7 @@ export default function MemberDetailPage() {
         {/* Status Feedback Alert */}
         {statusAlert && (
           <div
-            className={`p-4 rounded-2xl border text-xs font-bold flex items-center justify-between transition-all ${
+            className={`p-4 rounded-2xl border text-xs font-bold flex items-center justify-between transition ${
               statusAlert.type === "success"
                 ? "bg-success-50 border-success-200 text-success-900 shadow-3xs shadow-success-500/10"
                 : "bg-danger-50 border-danger-200 text-danger-900 shadow-3xs shadow-danger-500/10"
@@ -205,7 +205,7 @@ export default function MemberDetailPage() {
           <TabsList className="bg-slate-100/90 p-1.5 rounded-2xl border border-slate-200/80 h-auto flex flex-wrap gap-1.5">
             <TabsTrigger
               value="personal"
-              className="rounded-xl px-4 py-2.5 font-extrabold text-xs flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:text-primary-700 data-[state=active]:shadow-xs transition-all cursor-pointer"
+              className="rounded-xl px-4 py-2.5 font-extrabold text-xs flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:text-primary-700 data-[state=active]:shadow-xs transition cursor-pointer"
             >
               <User className="w-4 h-4" />
               <span>{t("userDetail.page.tabs.personal")}</span>
@@ -213,7 +213,7 @@ export default function MemberDetailPage() {
 
             <TabsTrigger
               value="records"
-              className="rounded-xl px-4 py-2.5 font-extrabold text-xs flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:text-primary-700 data-[state=active]:shadow-xs transition-all cursor-pointer"
+              className="rounded-xl px-4 py-2.5 font-extrabold text-xs flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:text-primary-700 data-[state=active]:shadow-xs transition cursor-pointer"
             >
               <Activity className="w-4 h-4" />
               <span>{t("userDetail.page.tabs.records")}</span>
@@ -226,7 +226,7 @@ export default function MemberDetailPage() {
 
             <TabsTrigger
               value="consultations"
-              className="rounded-xl px-4 py-2.5 font-extrabold text-xs flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:text-primary-700 data-[state=active]:shadow-xs transition-all cursor-pointer"
+              className="rounded-xl px-4 py-2.5 font-extrabold text-xs flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:text-primary-700 data-[state=active]:shadow-xs transition cursor-pointer"
             >
               <MessagesSquare className="w-4 h-4" />
               <span>{t("userDetail.page.tabs.consultations")}</span>

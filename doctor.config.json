@@ -7,7 +7,6 @@
     ]
   },
   "rules": {
-    "react-doctor/require-reduced-motion": "off",
     "deslop/unused-dependency": "off"
   }
 }

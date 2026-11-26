@@ -211,7 +211,7 @@ export default function LoginPage() {
           <LanguageSwitcher />
           <Link
             to="/"
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold text-slate-600 hover:text-slate-900 bg-white/80 hover:bg-white border border-slate-200 shadow-2xs transition-all cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold text-slate-600 hover:text-slate-900 bg-white/80 hover:bg-white border border-slate-200 shadow-2xs transition cursor-pointer"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             <span>{t("header.backHome")}</span>
@@ -225,7 +225,7 @@ export default function LoginPage() {
         <div className="flex w-full max-w-md flex-col items-center justify-self-center lg:justify-self-end">
         
         {/* Auth Card */}
-        <div className="w-full bg-white rounded-3xl p-7 sm:p-9 shadow-[0_20px_60px_-15px_rgba(15,23,42,0.08)] border border-slate-200/80 relative transition-all duration-300">
+        <div className="w-full bg-white rounded-3xl p-7 sm:p-9 shadow-[0_20px_60px_-15px_rgba(15,23,42,0.08)] border border-slate-200/80 relative transition duration-300">
           
           {/* Mode Switcher Tabs */}
           <div className="flex bg-slate-100/90 p-1.5 rounded-2xl border border-slate-200/80 mb-6">
@@ -233,7 +233,7 @@ export default function LoginPage() {
               type="button"
               onClick={() => handleSwitchMode("login")}
               className={cn(
-                "flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer",
+                "flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition cursor-pointer",
                 mode === "login"
                   ? "bg-white text-slate-900 shadow-xs"
                   : "text-slate-500 hover:text-slate-800"
@@ -247,7 +247,7 @@ export default function LoginPage() {
               type="button"
               onClick={() => handleSwitchMode("register")}
               className={cn(
-                "flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer",
+                "flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition cursor-pointer",
                 mode === "register"
                   ? "bg-white text-slate-900 shadow-xs"
                   : "text-slate-500 hover:text-slate-800"
@@ -302,7 +302,7 @@ export default function LoginPage() {
                     onChange={(event) => setLoginEmail(event.target.value)}
                     required
                     placeholder={t("login.emailPlaceholder")}
-                    className="w-full pl-10 rounded-xl h-11 bg-slate-50/70 border border-slate-200 text-slate-900 placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:border-transparent transition-all text-xs sm:text-sm font-medium shadow-2xs hover:border-slate-300"
+                    className="w-full pl-10 rounded-xl h-11 bg-slate-50/70 border border-slate-200 text-slate-900 placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:border-transparent transition text-xs sm:text-sm font-medium shadow-2xs hover:border-slate-300"
                   />
                 </div>
               </div>
@@ -314,7 +314,7 @@ export default function LoginPage() {
                   </Label>
                   <Link
                     to="/forgot-password"
-                    className="text-xs font-bold text-primary-600 hover:text-primary-700 hover:underline transition-all cursor-pointer font-sans"
+                    className="text-xs font-bold text-primary-600 hover:text-primary-700 hover:underline transition cursor-pointer font-sans"
                   >
                     {t("login.forgotPassword")}
                   </Link>
@@ -329,7 +329,7 @@ export default function LoginPage() {
                     onChange={(event) => setLoginPassword(event.target.value)}
                     required
                     placeholder="••••••••"
-                    className="w-full pl-10 pr-10 rounded-xl h-11 bg-slate-50/70 border border-slate-200 text-slate-900 placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:border-transparent transition-all text-xs sm:text-sm font-medium shadow-2xs hover:border-slate-300"
+                    className="w-full pl-10 pr-10 rounded-xl h-11 bg-slate-50/70 border border-slate-200 text-slate-900 placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:border-transparent transition text-xs sm:text-sm font-medium shadow-2xs hover:border-slate-300"
                   />
                   <button
                     type="button"
@@ -346,7 +346,7 @@ export default function LoginPage() {
               <Button 
                 type="submit" 
                 disabled={isSubmitting}
-                className="w-full rounded-xl h-11 mt-2 text-sm font-bold bg-gradient-to-r from-primary-600 via-primary-500 to-primary-500 hover:from-primary-700 hover:to-primary-600 text-white shadow-md shadow-primary-600/25 hover:shadow-lg hover:shadow-primary-600/35 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer font-heading"
+                className="w-full rounded-xl h-11 mt-2 text-sm font-bold bg-gradient-to-r from-primary-600 via-primary-500 to-primary-500 hover:from-primary-700 hover:to-primary-600 text-white shadow-md shadow-primary-600/25 hover:shadow-lg hover:shadow-primary-600/35 hover:-translate-y-0.5 active:translate-y-0 transition duration-200 cursor-pointer font-heading"
               >
                 {isSubmitting ? (
                   <div className="flex items-center justify-center gap-2">
@@ -380,7 +380,7 @@ export default function LoginPage() {
                     onChange={(event) => setRegisterFullName(event.target.value)}
                     required
                     placeholder={t("register.fullNamePlaceholder")}
-                    className="w-full pl-10 rounded-xl h-11 bg-slate-50/70 border border-slate-200 text-slate-900 placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:border-transparent transition-all text-xs sm:text-sm font-medium shadow-2xs hover:border-slate-300"
+                    className="w-full pl-10 rounded-xl h-11 bg-slate-50/70 border border-slate-200 text-slate-900 placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:border-transparent transition text-xs sm:text-sm font-medium shadow-2xs hover:border-slate-300"
                   />
                 </div>
               </div>
@@ -399,7 +399,7 @@ export default function LoginPage() {
                     onChange={(event) => setRegisterEmail(event.target.value)}
                     required
                     placeholder={t("register.emailPlaceholder")}
-                    className="w-full pl-10 rounded-xl h-11 bg-slate-50/70 border border-slate-200 text-slate-900 placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:border-transparent transition-all text-xs sm:text-sm font-medium shadow-2xs hover:border-slate-300"
+                    className="w-full pl-10 rounded-xl h-11 bg-slate-50/70 border border-slate-200 text-slate-900 placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:border-transparent transition text-xs sm:text-sm font-medium shadow-2xs hover:border-slate-300"
                   />
                 </div>
               </div>
@@ -419,7 +419,7 @@ export default function LoginPage() {
                     required
                     placeholder={t("register.passwordPlaceholder")}
                     minLength={8}
-                    className="w-full pl-10 pr-10 rounded-xl h-11 bg-slate-50/70 border border-slate-200 text-slate-900 placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:border-transparent transition-all text-xs sm:text-sm font-medium shadow-2xs hover:border-slate-300"
+                    className="w-full pl-10 pr-10 rounded-xl h-11 bg-slate-50/70 border border-slate-200 text-slate-900 placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:border-transparent transition text-xs sm:text-sm font-medium shadow-2xs hover:border-slate-300"
                   />
                   <button
                     type="button"
@@ -448,7 +448,7 @@ export default function LoginPage() {
                     required
                     placeholder={t("register.confirmPasswordPlaceholder")}
                     minLength={8}
-                    className="w-full pl-10 pr-10 rounded-xl h-11 bg-slate-50/70 border border-slate-200 text-slate-900 placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:border-transparent transition-all text-xs sm:text-sm font-medium shadow-2xs hover:border-slate-300"
+                    className="w-full pl-10 pr-10 rounded-xl h-11 bg-slate-50/70 border border-slate-200 text-slate-900 placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:border-transparent transition text-xs sm:text-sm font-medium shadow-2xs hover:border-slate-300"
                   />
                   <button
                     type="button"
@@ -465,7 +465,7 @@ export default function LoginPage() {
               <Button 
                 type="submit" 
                 disabled={isSubmitting}
-                className="w-full rounded-xl h-11 mt-2 text-sm font-bold bg-gradient-to-r from-primary-600 via-primary-500 to-primary-500 hover:from-primary-700 hover:to-primary-600 text-white shadow-md shadow-primary-600/25 hover:shadow-lg hover:shadow-primary-600/35 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer font-heading"
+                className="w-full rounded-xl h-11 mt-2 text-sm font-bold bg-gradient-to-r from-primary-600 via-primary-500 to-primary-500 hover:from-primary-700 hover:to-primary-600 text-white shadow-md shadow-primary-600/25 hover:shadow-lg hover:shadow-primary-600/35 hover:-translate-y-0.5 active:translate-y-0 transition duration-200 cursor-pointer font-heading"
               >
                 {isSubmitting ? (
                   <div className="flex items-center justify-center gap-2">

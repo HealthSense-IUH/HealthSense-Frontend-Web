@@ -160,7 +160,7 @@ export function CategoryView({ categoryId }: { categoryId: string }) {
                       key={fn}
                       type="button"
                       onClick={() => selectType(fn)}
-                      className="group flex flex-col justify-between rounded-2xl border border-success-200 bg-white p-5 text-left shadow-xs transition-all hover:border-success-400 hover:shadow-md cursor-pointer"
+                      className="group flex flex-col justify-between rounded-2xl border border-success-200 bg-white p-5 text-left shadow-xs transition hover:border-success-400 hover:shadow-md cursor-pointer"
                     >
                       <div className="w-full space-y-1">
                         <div className="flex items-start justify-between gap-2">
@@ -219,7 +219,7 @@ export function CategoryView({ categoryId }: { categoryId: string }) {
               type="button"
               onClick={() => setGuidanceFilter("ALL")}
               className={cn(
-                "px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-medium transition-all shrink-0 cursor-pointer flex items-center gap-1.5",
+                "px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-medium transition shrink-0 cursor-pointer flex items-center gap-1.5",
                 guidanceFilter === "ALL"
                   ? "bg-slate-900 text-white shadow-xs"
                   : "bg-white border border-slate-200 text-muted-foreground hover:text-foreground"
@@ -235,7 +235,7 @@ export function CategoryView({ categoryId }: { categoryId: string }) {
                 type="button"
                 onClick={() => setGuidanceFilter("PRIORITIZE")}
                 className={cn(
-                  "px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-medium transition-all shrink-0 cursor-pointer flex items-center gap-1.5",
+                  "px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-medium transition shrink-0 cursor-pointer flex items-center gap-1.5",
                   guidanceFilter === "PRIORITIZE"
                     ? "bg-success-600 text-white shadow-xs"
                     : "bg-success-50/70 border border-success-200 text-success-800 hover:bg-success-100"
@@ -252,7 +252,7 @@ export function CategoryView({ categoryId }: { categoryId: string }) {
                 type="button"
                 onClick={() => setGuidanceFilter("CAUTION")}
                 className={cn(
-                  "px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-medium transition-all shrink-0 cursor-pointer flex items-center gap-1.5",
+                  "px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-medium transition shrink-0 cursor-pointer flex items-center gap-1.5",
                   guidanceFilter === "CAUTION"
                     ? "bg-warning-500 text-white shadow-xs"
                     : "bg-warning-50/70 border border-warning-200 text-warning-800 hover:bg-warning-100"
@@ -269,7 +269,7 @@ export function CategoryView({ categoryId }: { categoryId: string }) {
                 type="button"
                 onClick={() => setGuidanceFilter("LIMIT")}
                 className={cn(
-                  "px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-medium transition-all shrink-0 cursor-pointer flex items-center gap-1.5",
+                  "px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-medium transition shrink-0 cursor-pointer flex items-center gap-1.5",
                   guidanceFilter === "LIMIT"
                     ? "bg-danger-600 text-white shadow-xs"
                     : "bg-danger-50/70 border border-danger-200 text-danger-800 hover:bg-danger-100"

@@ -30,6 +30,7 @@ export function HealthRecordsFilters({ onFilterChange }: HealthRecordsFiltersPro
   }
   
   const handleKeywordKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.nativeEvent.isComposing || e.keyCode === 229) return
     if (e.key === 'Enter') {
       applyFilters(keyword, status, predictionLabel)
     }

@@ -21,7 +21,7 @@ function FoodGroupCard({ group }: { group: FoodGroup }) {
   return (
     <Link
       to={nutritionUrl({ category: group.slug || group.id })}
-      className="group flex flex-col rounded-2xl border border-border bg-card p-5 shadow-xs transition-all hover:border-primary-300 hover:shadow-md"
+      className="group flex flex-col rounded-2xl border border-border bg-card p-5 shadow-xs transition hover:border-primary-300 hover:shadow-md"
     >
       <div className="flex items-start justify-between gap-2">
         <div className="p-2.5 rounded-xl bg-slate-100 group-hover:bg-primary-50 transition-colors">

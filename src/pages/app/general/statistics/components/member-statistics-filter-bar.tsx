@@ -91,7 +91,7 @@ export function MemberStatisticsFilterBar({
                 key={item.id}
                 type="button"
                 onClick={() => handleSelectPreset(item.id)}
-                className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${
+                className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition ${
                   preset === item.id
                     ? "bg-white text-slate-900 shadow-xs"
                     : "text-slate-600 hover:text-slate-900"
@@ -112,6 +112,7 @@ export function MemberStatisticsFilterBar({
                 </span>
                 <input
                   type="date"
+                  aria-label={t("memberStatistics.filter.from")}
                   value={tempStart}
                   onChange={(e) => {
                     setTempStart(e.target.value)
@@ -130,6 +131,7 @@ export function MemberStatisticsFilterBar({
                 </span>
                 <input
                   type="date"
+                  aria-label={t("memberStatistics.filter.to")}
                   value={tempEnd}
                   onChange={(e) => {
                     setTempEnd(e.target.value)
@@ -155,7 +157,7 @@ export function MemberStatisticsFilterBar({
                   key={opt.value}
                   type="button"
                   onClick={() => onGroupByChange(opt.value)}
-                  className={`rounded-lg px-2.5 py-1 text-xs font-semibold transition-all ${
+                  className={`rounded-lg px-2.5 py-1 text-xs font-semibold transition ${
                     groupBy === opt.value
                       ? "bg-white text-slate-900 shadow-xs"
                       : "text-slate-600 hover:text-slate-900"

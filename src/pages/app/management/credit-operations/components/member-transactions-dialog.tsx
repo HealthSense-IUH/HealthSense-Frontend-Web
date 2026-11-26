@@ -40,7 +40,7 @@ import { creditsApi } from "@/services/credits.service"
 import {
   formatCreditQuantity,
   formatDateTime,
-  formatVndPrice,
+  formatVnd,
   getCreditOrderStatusConfig,
 } from "@/constants/credits"
 import type {
@@ -315,7 +315,7 @@ export function MemberTransactionsDialog({
 
                           {/* Amount */}
                           <TableCell className="text-right font-mono font-bold text-xs text-success-600 whitespace-nowrap">
-                            {formatVndPrice(ord.amountVnd)}
+                            {formatVnd(ord.amountVnd)}
                           </TableCell>
 
                           {/* Status */}

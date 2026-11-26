@@ -302,7 +302,7 @@ export default function UserManagementPage() {
         {/* Status Alert feedback box */}
         {statusAlert && (
           <div
-            className={`p-4 rounded-2xl border text-xs font-bold flex items-center justify-between transition-all ${
+            className={`p-4 rounded-2xl border text-xs font-bold flex items-center justify-between transition ${
               statusAlert.type === "success"
                 ? "bg-success-50 border-success-200 text-success-900 shadow-3xs shadow-success-500/10"
                 : "bg-danger-50 border-danger-200 text-danger-900 shadow-3xs shadow-danger-500/10"

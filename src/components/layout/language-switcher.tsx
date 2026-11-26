@@ -33,7 +33,7 @@ export function LanguageSwitcher({ variant = "inline", className }: LanguageSwit
       aria-label={label}
       title={label}
       className={cn(
-        "flex items-center gap-2 border bg-white/95 text-slate-700 transition-all cursor-pointer hover:text-slate-900",
+        "flex items-center gap-2 border bg-white/95 text-slate-700 transition cursor-pointer hover:text-slate-900",
         variant === "floating"
           ? "fixed bottom-6 left-6 z-50 rounded-2xl border-slate-200/90 px-3 py-2.5 shadow-lg shadow-primary-950/10 backdrop-blur-md hover:scale-105 hover:shadow-xl active:scale-95"
           : "rounded-full border-slate-200/90 px-2.5 py-1.5 shadow-2xs hover:bg-slate-50",

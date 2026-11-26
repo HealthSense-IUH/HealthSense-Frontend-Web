@@ -20,7 +20,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import {
   formatDateTime,
-  formatVndPrice,
+  formatVnd,
   getCreditOrderStatusConfig,
   getCreditPaymentProviderConfig,
   getCreditPaymentStatusConfig,
@@ -150,7 +150,7 @@ export function PaymentOrderDetailDialog({
                   <div>
                     <span className="text-muted-foreground block text-[11px]">{t("admin.orderDetail.amount")}</span>
                     <span className="font-mono font-bold text-success-600 text-sm">
-                      {formatVndPrice(order.amountVnd)}
+                      {formatVnd(order.amountVnd)}
                     </span>
                   </div>
 

@@ -170,7 +170,7 @@ export function VerifyOtpForm({ email, onSuccess, onBack }: VerifyOtpFormProps) 
               onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
               required
               placeholder="123456"
-              className="w-full text-center tracking-[0.3em] font-mono font-bold text-lg rounded-xl h-12 bg-white border border-slate-200 text-slate-900 placeholder:text-slate-300 focus-visible:ring-2 focus-visible:ring-primary transition-all shadow-2xs hover:border-slate-300"
+              className="w-full text-center tracking-[0.3em] font-mono font-bold text-lg rounded-xl h-12 bg-white border border-slate-200 text-slate-900 placeholder:text-slate-300 focus-visible:ring-2 focus-visible:ring-primary transition shadow-2xs hover:border-slate-300"
             />
           </div>
         </div>
@@ -178,7 +178,7 @@ export function VerifyOtpForm({ email, onSuccess, onBack }: VerifyOtpFormProps) 
         <Button
           type="submit"
           disabled={isSubmitting || otp.length < 6 || isExpired}
-          className="w-full rounded-xl h-11 mt-1 text-sm font-bold bg-primary hover:bg-primary/90 text-primary-foreground shadow-md shadow-primary/20 hover:shadow-lg hover:shadow-primary/30 transition-all duration-200 cursor-pointer flex items-center justify-center gap-2"
+          className="w-full rounded-xl h-11 mt-1 text-sm font-bold bg-primary hover:bg-primary/90 text-primary-foreground shadow-md shadow-primary/20 hover:shadow-lg hover:shadow-primary/30 transition duration-200 cursor-pointer flex items-center justify-center gap-2"
         >
           {isSubmitting ? (
             <>
