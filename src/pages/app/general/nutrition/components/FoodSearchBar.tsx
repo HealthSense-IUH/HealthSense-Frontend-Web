@@ -3,6 +3,7 @@ import { Search, X, ChevronRight, Loader2 } from "lucide-react"
 import { Trans, useTranslation } from "react-i18next"
 import { Input } from "@/components/ui/input"
 import { useDebounce } from "@/hooks/use-debounce"
+import { FoodImage } from "./FoodImage"
 import { GuidanceBadge } from "./GuidanceBadge"
 import { useNutritionSearch } from "../hooks/use-nutrition"
 import { useNutritionNav } from "../nutrition-nav"
@@ -113,6 +114,11 @@ export function FoodSearchBar({
                     onClick={() => handleSelect(food)}
                     className="w-full text-left p-2.5 rounded-xl hover:bg-slate-100/80 transition-colors flex items-center justify-between gap-3 group"
                   >
+                    <FoodImage
+                      src={food.imageUrl}
+                      alt={title}
+                      className="h-10 w-10 shrink-0 rounded-xl border border-slate-100"
+                    />
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
                         <span className="font-medium text-sm text-slate-900 group-hover:text-primary transition-colors truncate">

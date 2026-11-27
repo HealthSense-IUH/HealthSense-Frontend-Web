@@ -10,6 +10,7 @@ import { useNutritionNav, useRetainedId } from "../nutrition-nav"
 import { REFERENCE_SOURCES } from "../sources"
 import { DetailDialog, DetailDialogSkeleton } from "./DetailDialog"
 import { DietAdviceNote } from "./DietAdvice"
+import { FoodImage } from "./FoodImage"
 import type { ReferenceFoodPortion } from "@/types/nutrition"
 
 const PER_100_GRAMS = "per-100g"
@@ -89,6 +90,11 @@ export function ReferenceFoodDialog() {
         </>
       }
     >
+      <FoodImage
+        src={food.imageUrl}
+        alt={food.displayName}
+        className="h-44 sm:h-52 w-full rounded-2xl border border-slate-200/80"
+      />
       <DietAdviceNote advice={food.advice} />
       {food.wastePct != null && food.wastePct > 0 && (
         <p className="text-xs text-slate-600">

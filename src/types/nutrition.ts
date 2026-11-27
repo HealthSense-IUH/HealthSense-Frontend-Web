@@ -136,13 +136,9 @@ export interface ReferenceFoodSummary {
   id: string
   source: ReferenceFoodSource
   sourceFoodCode: string
-  /**
-   * Tên hiển thị. USDA: tên gốc tiếng Anh. Việt Nam: tên tiếng Việt.
-   */
+  /** Tên hiển thị theo ngôn ngữ hiện tại (tiếng Việt khi locale là vi, tiếng Anh khi locale là en). */
   displayName: string
-  /**
-   * Tên tiếng Việt. USDA: tên dịch. Việt Nam: trùng displayName.
-   */
+  /** Tên tiếng Việt bổ sung (chỉ hiện khi xem bản tiếng Anh cho món Việt Nam). */
   localName?: string
   /** Nhóm chung */
   group: FoodGroupId
@@ -153,6 +149,8 @@ export interface ReferenceFoodSummary {
   fatTotalG?: number
   /** Màu theo đơn ăn uống; chỉ có khi người xem là hội viên */
   advice?: DietAdvice
+  /** Ảnh minh họa món ăn (kế thừa ảnh nhóm nếu món không có ảnh riêng) */
+  imageUrl?: string
 }
 
 export interface ReferenceFoodPortion {
@@ -165,18 +163,14 @@ export interface ReferenceFoodPortion {
 export interface ReferenceFood {
   id: string
   sourceFoodCode: string
-  /**
-   * Tên hiển thị. USDA: tên gốc tiếng Anh. Việt Nam: tên tiếng Việt.
-   */
+  /** Tên hiển thị theo ngôn ngữ hiện tại (tiếng Việt khi locale là vi, tiếng Anh khi locale là en). */
   displayName: string
-  /**
-   * Tên tiếng Việt. USDA: tên dịch. Việt Nam: trùng displayName.
-   */
+  /** Tên tiếng Việt bổ sung (chỉ hiện khi xem bản tiếng Anh cho món Việt Nam). */
   localName?: string
   /** Nhóm chung */
   group: FoodGroupId
   groupName: string
-  /** Phân loại gốc của nguồn (USDA: nhóm WWEIA tiếng Anh; Việt Nam: nhóm của sách) */
+  /** Phân loại chi tiết của nguồn (đã Việt hóa khi xem tiếng Việt) */
   sourceCategory?: string
   source: ReferenceFoodSource
   sourceVersion: string
@@ -186,6 +180,8 @@ export interface ReferenceFood {
   portions: ReferenceFoodPortion[]
   /** Màu và lý do theo đơn ăn uống; chỉ có khi người xem là hội viên */
   advice?: DietAdvice
+  /** Ảnh minh họa món ăn (kế thừa ảnh nhóm nếu món không có ảnh riêng) */
+  imageUrl?: string
 }
 
 export interface ReferenceFoodSearchParams {

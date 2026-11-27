@@ -15,6 +15,7 @@ import { useTranslation } from "react-i18next"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { DetailDialog, DetailDialogSkeleton } from "./DetailDialog"
+import { FoodImage } from "./FoodImage"
 import { GuidanceBadge } from "./GuidanceBadge"
 import { useNutritionFood } from "../hooks/use-nutrition"
 import { useNutritionNav, useRetainedId } from "../nutrition-nav"
@@ -116,6 +117,12 @@ export function GuidanceFoodDialog() {
       }
       footer={t("foodDetail.footer")}
     >
+      <FoodImage
+        src={food.imageUrl}
+        alt={food.foodNameSpecific}
+        className="h-48 sm:h-56 w-full rounded-2xl border border-slate-200/80"
+      />
+
       {/* Basic Info Card: mô tả + tóm tắt khuyến nghị */}
       {(food.description || food.guidanceTitle || food.guidanceReason) && (
       <div className="rounded-2xl border border-slate-200/80 bg-white p-6 sm:p-6 shadow-xs space-y-4">

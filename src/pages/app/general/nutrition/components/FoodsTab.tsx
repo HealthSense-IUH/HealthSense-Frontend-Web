@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { currentIntlLocale } from "@/lib/i18n"
 import { FoodSearchBar } from "./FoodSearchBar"
+import { FoodImage } from "./FoodImage"
 import { FoodGroupIcon } from "../group-icons"
 import { useNutritionGroups } from "../hooks/use-nutrition"
 import { nutritionUrl, useNutritionNav } from "../nutrition-nav"
@@ -21,31 +22,49 @@ function FoodGroupCard({ group }: { group: FoodGroup }) {
   return (
     <Link
       to={nutritionUrl({ category: group.slug || group.id })}
-      className="group flex flex-col rounded-2xl border border-border bg-card p-5 shadow-xs transition hover:border-primary-300 hover:shadow-md"
+      className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-xs transition hover:border-primary-300 hover:shadow-md"
     >
-      <div className="flex items-start justify-between gap-2">
-        <div className="p-2.5 rounded-xl bg-slate-100 group-hover:bg-primary-50 transition-colors">
-          <FoodGroupIcon icon={group.icon} />
+      <FoodImage
+        src={group.imageUrl}
+        alt={group.name}
+        className="h-32 w-full"
+        imgClassName="group-hover:scale-105"
+        fallback={
+          <div className="flex items-start justify-between gap-2 px-5 pt-5">
+            <div className="p-2.5 rounded-xl bg-slate-100 group-hover:bg-primary-50 transition-colors">
+              <FoodGroupIcon icon={group.icon} />
+            </div>
+            <span className="text-[11px] font-medium text-muted-foreground bg-slate-50 px-2 py-0.5 rounded-full border border-slate-100 whitespace-nowrap">
+              {t("foods.groupFoodCount", { count: foodCount, value: foodCount.toLocaleString(currentIntlLocale()) })}
+            </span>
+          </div>
+        }
+      >
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-black/15" />
+        <div className="absolute left-3 top-3 rounded-xl bg-white/90 p-2 shadow-xs backdrop-blur-xs">
+          <FoodGroupIcon icon={group.icon} className="h-4 w-4" />
         </div>
-        <span className="text-[11px] font-medium text-muted-foreground bg-slate-50 px-2 py-0.5 rounded-full border border-slate-100 whitespace-nowrap">
+        <span className="absolute right-3 top-3 rounded-full bg-white/90 px-2.5 py-0.5 text-[11px] font-semibold text-slate-800 shadow-xs backdrop-blur-xs whitespace-nowrap">
           {t("foods.groupFoodCount", { count: foodCount, value: foodCount.toLocaleString(currentIntlLocale()) })}
         </span>
-      </div>
+      </FoodImage>
 
-      <h3 className="mt-4 text-base font-semibold text-foreground group-hover:text-primary transition-colors">
-        {group.name}
-      </h3>
-      <p className="mt-1 text-xs text-muted-foreground leading-relaxed line-clamp-2">
-        {group.description ||
-          (guidanceCount > 0
-            ? t("foods.groupGuidanceDescription", { count: guidanceCount })
-            : t("foods.groupDefaultDescription"))}
-      </p>
+      <div className="flex flex-1 flex-col p-5 pt-4">
+        <h3 className="text-base font-semibold text-foreground group-hover:text-primary transition-colors">
+          {group.name}
+        </h3>
+        <p className="mt-1 text-xs text-muted-foreground leading-relaxed line-clamp-2">
+          {group.description ||
+            (guidanceCount > 0
+              ? t("foods.groupGuidanceDescription", { count: guidanceCount })
+              : t("foods.groupDefaultDescription"))}
+        </p>
 
-      <div className="mt-auto pt-4">
-        <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-medium text-primary">
-          <span>{guidanceCount > 0 ? t("foods.exploreWithGuidance", { count: guidanceCount }) : t("foods.explore")}</span>
-          <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+        <div className="mt-auto pt-4">
+          <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-medium text-primary">
+            <span>{guidanceCount > 0 ? t("foods.exploreWithGuidance", { count: guidanceCount }) : t("foods.explore")}</span>
+            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+          </div>
         </div>
       </div>
     </Link>

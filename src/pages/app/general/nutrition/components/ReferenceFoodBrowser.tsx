@@ -15,6 +15,7 @@ import { useNutritionGroups, useReferenceFoods } from "../hooks/use-nutrition"
 import { useDetailLink } from "../nutrition-nav"
 import { REFERENCE_SOURCES } from "../sources"
 import { DietAdviceBadge } from "./DietAdvice"
+import { FoodImage } from "./FoodImage"
 
 const PAGE_SIZE = 20
 const ALL_GROUPS = "__all__"
@@ -220,32 +221,46 @@ export function ReferenceFoodBrowser({ fixedGroup, layout = "list" }: ReferenceF
             <Link
               key={food.id}
               {...detailLink("ref", food.id)}
-              className="group flex flex-col rounded-2xl border border-border bg-card p-5 shadow-xs transition hover:border-primary-300 hover:shadow-md"
+              className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-xs transition hover:border-primary-300 hover:shadow-md"
             >
-              <div className="flex items-start justify-between gap-2">
-                <h3 className="font-semibold text-sm text-foreground group-hover:text-primary transition-colors line-clamp-2">
-                  {food.displayName}
-                </h3>
-                <span className="shrink-0 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-slate-100 text-slate-600">
+              <FoodImage
+                src={food.imageUrl}
+                alt={food.displayName}
+                className="h-28 w-full"
+                imgClassName="group-hover:scale-105"
+              >
+                <span className="absolute right-2.5 top-2.5 rounded-full bg-white/90 px-2 py-0.5 text-[10px] font-semibold text-slate-700 shadow-xs backdrop-blur-xs">
                   {REFERENCE_SOURCES[food.source].short}
                 </span>
-              </div>
-              {food.localName && food.localName !== food.displayName && (
-                <p className="mt-0.5 text-[11px] text-muted-foreground truncate">{food.localName}</p>
-              )}
-              <DietAdviceBadge advice={food.advice} className="mt-2 self-start" />
-              <div className="mt-auto pt-4">
-                <dl className="pt-3 grid grid-cols-4 gap-2 border-t border-slate-100">
-                  {SUMMARY_COLUMNS.map((col) => (
-                    <div key={col.key} className="min-w-0">
-                      <dt className="text-[10px] text-muted-foreground truncate">{columnLabel(col.key)}</dt>
-                      <dd className="text-xs font-semibold text-slate-700">
-                        {formatNutrientAmount(food[col.key])}
-                        <span className="ml-0.5 font-normal text-muted-foreground">{col.unit}</span>
-                      </dd>
-                    </div>
-                  ))}
-                </dl>
+              </FoodImage>
+              <div className="flex flex-1 flex-col p-4">
+                <div className="flex items-start justify-between gap-2">
+                  <h3 className="font-semibold text-sm text-foreground group-hover:text-primary transition-colors line-clamp-2">
+                    {food.displayName}
+                  </h3>
+                  {!food.imageUrl && (
+                    <span className="shrink-0 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-slate-100 text-slate-600">
+                      {REFERENCE_SOURCES[food.source].short}
+                    </span>
+                  )}
+                </div>
+                {food.localName && food.localName !== food.displayName && (
+                  <p className="mt-0.5 text-[11px] text-muted-foreground truncate">{food.localName}</p>
+                )}
+                <DietAdviceBadge advice={food.advice} className="mt-2 self-start" />
+                <div className="mt-auto pt-3">
+                  <dl className="pt-3 grid grid-cols-4 gap-2 border-t border-slate-100">
+                    {SUMMARY_COLUMNS.map((col) => (
+                      <div key={col.key} className="min-w-0">
+                        <dt className="text-[10px] text-muted-foreground truncate">{columnLabel(col.key)}</dt>
+                        <dd className="text-xs font-semibold text-slate-700">
+                          {formatNutrientAmount(food[col.key])}
+                          <span className="ml-0.5 font-normal text-muted-foreground">{col.unit}</span>
+                        </dd>
+                      </div>
+                    ))}
+                  </dl>
+                </div>
               </div>
             </Link>
           ))}
@@ -267,24 +282,31 @@ export function ReferenceFoodBrowser({ fixedGroup, layout = "list" }: ReferenceF
                   {...detailLink("ref", food.id)}
                   className="group grid grid-cols-2 md:grid-cols-[1fr_repeat(4,6.5rem)] gap-x-3 gap-y-2 items-center rounded-2xl border border-slate-200/80 bg-white px-4 py-3 shadow-2xs hover:border-primary/50"
                 >
-                  <div className="col-span-2 md:col-span-1 min-w-0">
-                    <div className="flex items-center gap-2 min-w-0">
-                      <p className="font-medium text-sm text-slate-900 group-hover:text-primary truncate">
-                        {food.displayName}
+                  <div className="col-span-2 md:col-span-1 flex items-center gap-3 min-w-0">
+                    <FoodImage
+                      src={food.imageUrl}
+                      alt={food.displayName}
+                      className="h-11 w-11 shrink-0 rounded-xl border border-slate-100"
+                    />
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <p className="font-medium text-sm text-slate-900 group-hover:text-primary truncate">
+                          {food.displayName}
+                        </p>
+                        <span className="shrink-0 px-1.5 py-0.5 rounded-md text-[10px] font-semibold bg-slate-100 text-slate-600">
+                          {REFERENCE_SOURCES[food.source].short}
+                        </span>
+                        <DietAdviceBadge advice={food.advice} />
+                      </div>
+                      <p className="text-[11px] text-muted-foreground truncate">
+                        {[
+                          food.localName && food.localName !== food.displayName ? food.localName : null,
+                          fixedGroup ? null : food.groupName,
+                        ]
+                          .filter(Boolean)
+                          .join(" · ")}
                       </p>
-                      <span className="shrink-0 px-1.5 py-0.5 rounded-md text-[10px] font-semibold bg-slate-100 text-slate-600">
-                        {REFERENCE_SOURCES[food.source].short}
-                      </span>
-                      <DietAdviceBadge advice={food.advice} />
                     </div>
-                    <p className="text-[11px] text-muted-foreground truncate">
-                      {[
-                        food.localName && food.localName !== food.displayName ? food.localName : null,
-                        fixedGroup ? null : food.groupName,
-                      ]
-                        .filter(Boolean)
-                        .join(" · ")}
-                    </p>
                   </div>
                   {SUMMARY_COLUMNS.map((col) => (
                     <p key={col.key} className="text-xs md:text-sm md:text-right text-slate-700">
