@@ -237,5 +237,59 @@
   },
   "detail": {
     "loading": "Loading..."
+  },
+  "scanMeal": {
+    "title": "AI Meal Nutrition Estimator",
+    "subtitle": "Upload a photo of your meal or describe what you ate — AI estimates calories, macros, sodium, potassium, and heart-health notes.",
+    "previewAlt": "Selected meal photo",
+    "removePhoto": "Remove photo",
+    "uploadPrompt": "Choose a meal photo or take a picture",
+    "uploadHint": "Supports JPEG, PNG, WEBP (up to 5 MB) — optional if you enter a text description",
+    "descriptionLabel": "Meal description / portion note",
+    "descriptionPlaceholder": "e.g. 1 bowl of beef pho (less broth), 1 ripe banana...",
+    "analyzeButton": "Analyze meal with AI",
+    "analyzing": "Analyzing with AI...",
+    "emptyTitle": "Ready to analyze your meal",
+    "emptyDescription": "Upload a dish photo or describe your meal on the left to estimate calories, sodium, potassium, and cardiovascular guidance.",
+    "itemsBreakdown": "Estimated item breakdown",
+    "matchedFoods": "Matched foods in our reference database",
+    "confidence": {
+      "HIGH": "High confidence",
+      "MEDIUM": "Medium confidence",
+      "LOW": "Rough estimate"
+    },
+    "examples": {
+      "pho": "1 bowl of beef pho, 1 glass of iced tea",
+      "salmonRice": "150g pan-seared salmon, 1 bowl brown rice, steamed greens",
+      "banhMi": "1 Vietnamese pork banh mi, 1 iced milk coffee"
+    },
+    "errors": {
+      "invalidType": "Unsupported image format. Please choose JPEG, PNG, or WEBP.",
+      "tooLarge": "Image exceeds 5 MB. Please select a smaller image.",
+      "emptyInput": "Please choose a meal photo or enter a meal description.",
+      "failed": "Unable to estimate this meal right now. Please try again later."
+    }
+  },
+  "foodLog": {
+    "title": "Today's Food Log",
+    "subtitleCount": "{{count}} items logged today",
+    "emptySubtitle": "No items logged yet — tap “Log for today” on any food to track calories & sodium.",
+    "showItems": "Show {{count}}",
+    "hideItems": "Hide",
+    "clearAll": "Clear all",
+    "removeItem": "Remove item",
+    "caloriesLabel": "Calories",
+    "sodiumLabel": "Sodium (AHA Limit)",
+    "sodiumCautionHint": "Over 75% of the 2,000 mg daily sodium limit — keep later meals lighter on salt.",
+    "sodiumDangerHint": "Exceeded the 2,000 mg AHA daily sodium limit! Avoid extra salt or salty sauces today.",
+    "protein": "Protein",
+    "carbs": "Carbs",
+    "fat": "Fat",
+    "potassium": "Potassium",
+    "addButton": "Log for today",
+    "addWithGrams": "Log {{grams}} g",
+    "loggedButton": "Logged today",
+    "addedTitle": "Added to today's food log",
+    "addedDescription": "{{name}} (+{{kcal}} kcal)"
   }
 }

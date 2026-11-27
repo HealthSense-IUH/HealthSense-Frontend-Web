@@ -6,11 +6,11 @@ import { HsNutritionBowlIcon } from "@/components/icons/health-icons"
 import { Page, PageBody, PageFooter, PageHeader } from "@/components/layout/page"
 import { LifestyleStripBanner } from "@/components/illustrations/lifestyle"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { ComingSoonTab } from "./components/ComingSoonTab"
 import { DietPrescriptionTab } from "./components/DietPrescriptionTab"
 import { FoodsTab } from "./components/FoodsTab"
 import { GuidanceFoodDialog } from "./components/GuidanceFoodDialog"
 import { ReferenceFoodDialog } from "./components/ReferenceFoodDialog"
+import { ScanMealTab } from "./components/ScanMealTab"
 
 const NUTRITION_TABS = ["foods", "diet", "scan"] as const
 type NutritionTab = (typeof NUTRITION_TABS)[number]
@@ -18,11 +18,6 @@ type NutritionTab = (typeof NUTRITION_TABS)[number]
 /** Trang dinh dưỡng (route duy nhất): tab qua ?tab, nhóm qua ?category, chi tiết món mở popup qua ?food / ?ref. */
 export default function NutritionHomePage() {
   const { t } = useTranslation("nutrition")
-  const comingSoonBadge = (
-    <span className="ml-1 px-1.5 py-0.5 rounded-full text-[10px] bg-warning-100 text-warning-700 font-semibold">
-      {t("common.comingSoon")}
-    </span>
-  )
   const [searchParams, setSearchParams] = useSearchParams()
   const tabParam = searchParams.get("tab")
   const activeTab: NutritionTab = NUTRITION_TABS.includes(tabParam as NutritionTab)
@@ -64,7 +59,6 @@ export default function NutritionHomePage() {
               <TabsTrigger value="scan" className="rounded-lg text-xs sm:text-sm font-semibold gap-1.5 px-3">
                 <Camera className="w-3.5 h-3.5" />
                 <span>{t("home.tabs.scan")}</span>
-                {comingSoonBadge}
               </TabsTrigger>
             </TabsList>
           </div>
@@ -78,13 +72,7 @@ export default function NutritionHomePage() {
           </TabsContent>
 
           <TabsContent value="scan">
-            <ComingSoonTab
-              icon={Camera}
-              title={t("home.scan.title")}
-              description={t("home.scan.description")}
-              highlights={[t("home.scan.highlights.recognize"), t("home.scan.highlights.portion"), t("home.scan.highlights.calculate")]}
-              note={t("home.scan.note")}
-            />
+            <ScanMealTab />
           </TabsContent>
         </Tabs>
       </PageBody>

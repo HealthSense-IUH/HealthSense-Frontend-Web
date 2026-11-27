@@ -1,12 +1,15 @@
 import { useState } from "react"
-import { Database, Scale } from "lucide-react"
+import { Database, Plus, Scale } from "lucide-react"
 import { Trans, useTranslation } from "react-i18next"
 
+import { Button } from "@/components/ui/button"
+import { useToast } from "@/hooks/use-toast"
 import i18n from "@/lib/i18n"
 import { cn } from "@/lib/utils"
 import { formatNutrientAmount } from "../format"
 import { useReferenceFood } from "../hooks/use-nutrition"
 import { useNutritionNav, useRetainedId } from "../nutrition-nav"
+import { extractNutrientsForLog, useFoodLogStore } from "../food-log-store"
 import { REFERENCE_SOURCES } from "../sources"
 import { DetailDialog, DetailDialogSkeleton } from "./DetailDialog"
 import { DietAdviceNote } from "./DietAdvice"
@@ -23,6 +26,8 @@ function portionLabel(portion: ReferenceFoodPortion) {
 /** Popup chi tiết một thực phẩm tham chiếu (mở bằng ?ref=<id>); số liệu tính lại theo khẩu phần người dùng chọn. */
 export function ReferenceFoodDialog() {
   const { t } = useTranslation("nutrition")
+  const { toast } = useToast()
+  const addEntry = useFoodLogStore((s) => s.addEntry)
   const nav = useNutritionNav()
   const open = nav.refId != null
   const foodId = useRetainedId(nav.refId)
@@ -109,9 +114,35 @@ export function ReferenceFoodDialog() {
 
       <div className="rounded-2xl border border-slate-200/80 bg-white shadow-xs overflow-hidden">
         <div className="bg-slate-50/60 border-b border-slate-100 p-6 space-y-3">
-          <div className="flex items-center gap-2">
-            <Scale className="w-4 h-4 text-primary" />
-            <h2 className="text-lg font-bold">{t("databaseFood.nutritionTitle")}</h2>
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <div className="flex items-center gap-2">
+              <Scale className="w-4 h-4 text-primary" />
+              <h2 className="text-lg font-bold">{t("databaseFood.nutritionTitle")}</h2>
+            </div>
+            <Button
+              type="button"
+              size="sm"
+              onClick={() => {
+                const vals = extractNutrientsForLog(food.nutrients, factor)
+                addEntry({
+                  name: food.displayName,
+                  grams,
+                  ...vals,
+                  source: "reference",
+                })
+                toast({
+                  title: t("foodLog.addedTitle"),
+                  description: t("foodLog.addedDescription", {
+                    name: food.displayName,
+                    kcal: Math.round(vals.energyKcal),
+                  }),
+                })
+              }}
+              className="h-8 px-3 rounded-lg text-xs font-semibold cursor-pointer"
+            >
+              <Plus className="w-3.5 h-3.5 mr-1" />
+              {t("foodLog.addWithGrams", { grams: formatNutrientAmount(grams) })}
+            </Button>
           </div>
           <div className="flex flex-wrap gap-2">
             {[{ value: PER_100_GRAMS, label: "100 g" }, ...food.portions.map((p, i) => ({

@@ -6,6 +6,7 @@ import type {
   DietThreshold,
   Food,
   FoodGroup,
+  MealEstimate,
   ReferenceFood,
   ReferenceFoodSearchParams,
   ReferenceFoodSummary,
@@ -130,6 +131,29 @@ export const nutritionApi = {
     return axiosClient.put<ApiResponse<DietPrescription>, ApiResponse<DietPrescription>>(
       `/api/doctor/consultation-sessions/${encodeURIComponent(sessionId)}/diet-prescription`,
       body
+    )
+  },
+
+  /**
+   * AI ước tính calo & dinh dưỡng tim mạch từ ảnh món ăn và/hoặc mô tả
+   * POST /api/nutrition/estimate-meal
+   */
+  estimateMeal(input: { image?: File | null; description?: string }) {
+    if (input.image) {
+      const formData = new FormData()
+      formData.append("image", input.image)
+      if (input.description?.trim()) {
+        formData.append("description", input.description.trim())
+      }
+      return axiosClient.post<ApiResponse<MealEstimate>, ApiResponse<MealEstimate>>(
+        "/api/nutrition/estimate-meal",
+        formData,
+        { headers: { "Content-Type": "multipart/form-data" } }
+      )
+    }
+    return axiosClient.post<ApiResponse<MealEstimate>, ApiResponse<MealEstimate>>(
+      "/api/nutrition/estimate-meal",
+      { description: input.description?.trim() ?? "" }
     )
   },
 }

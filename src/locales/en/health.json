@@ -120,7 +120,20 @@
     "downloadUrlNotFound": "Download link for the file was not found.",
     "downloadUrlFailed": "Unable to get the file download link.",
     "downloading": "Downloading...",
-    "downloadCsv": "Download original CSV"
+    "downloadCsv": "Download original CSV",
+    "printReport": {
+      "button": "Print / Export PDF",
+      "printNow": "Print / Save as PDF",
+      "documentTitle": "AFib Screening Report #{{id}} - HealthSense",
+      "subtitle": "Cardiovascular Rhythm & HRV Screening Report (AI PPG)",
+      "recordId": "Record ID",
+      "measuredAtLabel": "Measured at",
+      "fileLabel": "Source file",
+      "printedAtLabel": "Generated at",
+      "popupBlocked": "Your browser blocked the print popup. Please allow pop-ups to print or save as PDF.",
+      "disclaimerTitle": "Clinical disclaimer",
+      "disclaimerBody": "This report is generated from PPG signal analysis and HealthSense AI screening models for informational and screening support only. It does not replace a standard clinical ECG or diagnosis by a licensed cardiologist."
+    }
   },
   "measurementVisuals": {
     "sqi": {

@@ -8,6 +8,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { currentIntlLocale } from "@/lib/i18n"
 import { FoodSearchBar } from "./FoodSearchBar"
 import { FoodImage } from "./FoodImage"
+import { DailyFoodLogCard } from "./DailyFoodLogCard"
 import { FoodGroupIcon } from "../group-icons"
 import { useNutritionGroups } from "../hooks/use-nutrition"
 import { nutritionUrl, useNutritionNav } from "../nutrition-nav"
@@ -103,6 +104,8 @@ export function FoodsTab() {
   return (
     <div className="space-y-6">
       <FoodSearchBar />
+
+      <DailyFoodLogCard />
 
       <PageSection
         title={t("foods.sectionTitle")}

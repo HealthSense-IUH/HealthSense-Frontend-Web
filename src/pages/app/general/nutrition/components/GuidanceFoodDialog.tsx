@@ -6,6 +6,7 @@ import {
   FileText,
   Heart,
   Pill,
+  Plus,
   Scale,
   Sparkles,
   Zap,
@@ -14,11 +15,13 @@ import { useTranslation } from "react-i18next"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { useToast } from "@/hooks/use-toast"
 import { DetailDialog, DetailDialogSkeleton } from "./DetailDialog"
 import { FoodImage } from "./FoodImage"
 import { GuidanceBadge } from "./GuidanceBadge"
 import { useNutritionFood } from "../hooks/use-nutrition"
 import { useNutritionNav, useRetainedId } from "../nutrition-nav"
+import { extractNutrientsForLog, useFoodLogStore } from "../food-log-store"
 import type { EvidenceSourceType, NutrientValue } from "@/types/nutrition"
 import { cn } from "@/lib/utils"
 
@@ -36,6 +39,8 @@ const KEY_NUTRIENT_CODES = [
 /** Popup chi tiết một món có khuyến nghị tim mạch (mở bằng ?food=<id> trên trang dinh dưỡng). */
 export function GuidanceFoodDialog() {
   const { t } = useTranslation("nutrition")
+  const { toast } = useToast()
+  const addEntry = useFoodLogStore((s) => s.addEntry)
   const nav = useNutritionNav()
   const open = nav.foodId != null
   const foodId = useRetainedId(nav.foodId)
@@ -158,9 +163,35 @@ export function GuidanceFoodDialog() {
                 {t("foodDetail.nutritionSubtitle")}
               </p>
             </div>
-            <span className="text-xs font-medium text-slate-500 bg-white px-2.5 py-1 rounded-lg border border-slate-200">
-              {t("foodDetail.per100g")}
-            </span>
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-medium text-slate-500 bg-white px-2.5 py-1 rounded-lg border border-slate-200">
+                {t("foodDetail.per100g")}
+              </span>
+              <Button
+                type="button"
+                size="sm"
+                onClick={() => {
+                  const vals = extractNutrientsForLog(food.nutrients, 1)
+                  addEntry({
+                    name: food.foodNameSpecific,
+                    grams: 100,
+                    ...vals,
+                    source: "guidance",
+                  })
+                  toast({
+                    title: t("foodLog.addedTitle"),
+                    description: t("foodLog.addedDescription", {
+                      name: food.foodNameSpecific,
+                      kcal: Math.round(vals.energyKcal),
+                    }),
+                  })
+                }}
+                className="h-8 px-3 rounded-lg text-xs font-semibold cursor-pointer"
+              >
+                <Plus className="w-3.5 h-3.5 mr-1" />
+                {t("foodLog.addButton")}
+              </Button>
+            </div>
           </div>
         </CardHeader>
         <CardContent className="p-6 space-y-6">

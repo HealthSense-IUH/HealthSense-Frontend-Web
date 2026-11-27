@@ -237,5 +237,59 @@
   },
   "detail": {
     "loading": "Đang tải..."
+  },
+  "scanMeal": {
+    "title": "Ước tính dinh dưỡng bằng AI",
+    "subtitle": "Tải ảnh bữa ăn hoặc mô tả các món bạn vừa ăn — AI sẽ ước tính calo, đạm, tinh bột, chất béo, natri, kali và cảnh báo tim mạch.",
+    "previewAlt": "Ảnh bữa ăn đã chọn",
+    "removePhoto": "Xóa ảnh",
+    "uploadPrompt": "Chọn ảnh bữa ăn hoặc chụp từ camera",
+    "uploadHint": "Hỗ trợ JPEG, PNG, WEBP (tối đa 5 MB) — có thể bỏ qua nếu chỉ nhập mô tả",
+    "descriptionLabel": "Mô tả bữa ăn / ghi chú khẩu phần",
+    "descriptionPlaceholder": "Ví dụ: 1 tô phở bò tái (ít nước dùng), 1 quả chuối chín...",
+    "analyzeButton": "Phân tích bữa ăn bằng AI",
+    "analyzing": "AI đang phân tích...",
+    "emptyTitle": "Sẵn sàng phân tích bữa ăn của bạn",
+    "emptyDescription": "Tải lên ảnh đĩa thức ăn hoặc gõ tên món ăn ở bên trái để xem nhanh lượng calo, natri (muối), kali và gợi ý an toàn cho tim mạch.",
+    "itemsBreakdown": "Chi tiết từng món ước tính",
+    "matchedFoods": "Món tương đương trong bảng thành phần thực phẩm",
+    "confidence": {
+      "HIGH": "Độ tin cậy cao",
+      "MEDIUM": "Độ tin cậy trung bình",
+      "LOW": "Ước tính tham khảo"
+    },
+    "examples": {
+      "pho": "1 tô phở bò tái, 1 ly trà đá",
+      "salmonRice": "150g cá hồi áp chảo, 1 chén cơm gạo lứt, rau luộc",
+      "banhMi": "1 ổ bánh mì thịt chả, 1 ly cà phê sữa đá"
+    },
+    "errors": {
+      "invalidType": "Định dạng ảnh không hỗ trợ. Vui lòng chọn JPEG, PNG hoặc WEBP.",
+      "tooLarge": "Ảnh vượt quá 5 MB. Vui lòng chọn ảnh nhẹ hơn.",
+      "emptyInput": "Vui lòng chọn ảnh món ăn hoặc nhập mô tả bữa ăn.",
+      "failed": "Không thể ước tính bữa ăn lúc này. Vui lòng thử lại sau."
+    }
+  },
+  "foodLog": {
+    "title": "Nhật ký ăn uống hôm nay",
+    "subtitleCount": "Đã ghi nhận {{count}} món hôm nay",
+    "emptySubtitle": "Chưa có món nào hôm nay — bấm “Ghi bữa ăn” ở bất kỳ món nào để theo dõi calo & muối.",
+    "showItems": "Xem {{count}} món",
+    "hideItems": "Thu gọn",
+    "clearAll": "Xóa hết",
+    "removeItem": "Xóa món này",
+    "caloriesLabel": "Năng lượng",
+    "sodiumLabel": "Natri (Giới hạn AHA)",
+    "sodiumCautionHint": "Đã vượt 75% giới hạn 2.000 mg natri/ngày — nên ăn nhạt hơn ở các bữa sau.",
+    "sodiumDangerHint": "Đã vượt giới hạn 2.000 mg natri/ngày của AHA! Nên tránh thêm muối/nước chấm hôm nay.",
+    "protein": "Đạm",
+    "carbs": "Tinh bột",
+    "fat": "Chất béo",
+    "potassium": "Kali",
+    "addButton": "Ghi vào hôm nay",
+    "addWithGrams": "Ghi {{grams}} g",
+    "loggedButton": "Đã ghi hôm nay",
+    "addedTitle": "Đã ghi vào nhật ký hôm nay",
+    "addedDescription": "{{name}} (+{{kcal}} kcal)"
   }
 }

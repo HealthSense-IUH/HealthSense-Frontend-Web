@@ -7,6 +7,7 @@ import {
   X,
   Download,
   Loader2,
+  Printer,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useToast } from "@/hooks/use-toast"
@@ -18,6 +19,7 @@ import {
 import { healthRecordApi } from "@/services"
 import type { MemberHealthRecord } from "@/types/health-record"
 import { MeasurementVisuals } from "./MeasurementVisuals"
+import { printAfibReport } from "../utils/print-afib-report"
 
 interface HealthRecordDetailModalProps {
   record: MemberHealthRecord | null
@@ -355,7 +357,25 @@ export function HealthRecordDetailModal({ record, isOpen, onClose }: HealthRecor
             <FileText className="w-3.5 h-3.5" />
             <span>{t("recordDetail.fileSize", { size: formatHrvNumber(activeRecord.fileSize ? activeRecord.fileSize / 1024 : 0, 1) })}</span>
           </span>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                const opened = printAfibReport(activeRecord, t)
+                if (!opened) {
+                  toast({
+                    variant: "destructive",
+                    title: t("common:toast.error"),
+                    description: t("recordDetail.printReport.popupBlocked"),
+                  })
+                }
+              }}
+              className="h-9 px-3 rounded-xl border-primary-200 bg-primary-50/50 text-primary-700 hover:bg-primary-100/70 font-medium text-xs cursor-pointer"
+            >
+              <Printer className="w-3.5 h-3.5 mr-1.5" /> {t("recordDetail.printReport.button")}
+            </Button>
             <Button
               type="button"
               variant="outline"

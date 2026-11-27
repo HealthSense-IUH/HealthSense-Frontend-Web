@@ -311,3 +311,47 @@ export interface UpdateDietPrescriptionRequest extends DietPrescriptionFlags {
   /** Ngưỡng riêng cho hội viên; quy tắc/mức không gửi thì dùng mặc định */
   thresholds?: DietThreshold[]
 }
+
+export interface MealEstimateItem {
+  name: string
+  estimatedGrams: number
+  energyKcal: number
+  proteinG: number
+  carbohydrateG: number
+  fatTotalG: number
+  sodiumMg: number
+  potassiumMg: number
+}
+
+export interface MealEstimate {
+  mealName: string
+  confidence: 'HIGH' | 'MEDIUM' | 'LOW'
+  totalGrams: number
+  energyKcal: number
+  proteinG: number
+  carbohydrateG: number
+  fatTotalG: number
+  fatSaturatedG: number
+  sugarsG: number
+  sodiumMg: number
+  potassiumMg: number
+  cardiacLevel: 'GOOD' | 'OK' | 'CAUTION' | 'LIMIT'
+  cardiacNote: string
+  items: MealEstimateItem[]
+  matchedFoods: ReferenceFoodSummary[]
+}
+
+export interface FoodLogEntry {
+  id: string
+  name: string
+  grams: number
+  energyKcal: number
+  proteinG: number
+  carbohydrateG: number
+  fatTotalG: number
+  sodiumMg: number
+  potassiumMg: number
+  sugarsG: number
+  source: 'guidance' | 'reference' | 'scan'
+  loggedAt: number
+}

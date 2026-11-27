@@ -120,7 +120,20 @@
     "downloadUrlNotFound": "Không tìm thấy đường dẫn tải file.",
     "downloadUrlFailed": "Không thể lấy đường dẫn tải tệp.",
     "downloading": "Đang tải...",
-    "downloadCsv": "Tải CSV gốc"
+    "downloadCsv": "Tải CSV gốc",
+    "printReport": {
+      "button": "In / Xuất PDF",
+      "printNow": "In / Lưu PDF",
+      "documentTitle": "Báo cáo Tầm soát Rung nhĩ #{{id}} - HealthSense",
+      "subtitle": "Báo cáo Tầm soát Nhịp tim & Biến thiên HRV (AI PPG)",
+      "recordId": "Mã bản ghi",
+      "measuredAtLabel": "Thời gian đo",
+      "fileLabel": "Tệp nguồn",
+      "printedAtLabel": "Ngày xuất",
+      "popupBlocked": "Trình duyệt đang chặn cửa sổ bật lên. Vui lòng cho phép pop-up để in hoặc lưu PDF.",
+      "disclaimerTitle": "Lưu ý y khoa",
+      "disclaimerBody": "Báo cáo này được tạo tự động từ tín hiệu PPG và mô hình AI hỗ trợ tầm soát HealthSense, chỉ mang tính chất tham khảo và không thay thế chẩn đoán lâm sàng hoặc điện tâm đồ (ECG) chuẩn của bác sĩ chuyên khoa tim mạch."
+    }
   },
   "measurementVisuals": {
     "sqi": {
