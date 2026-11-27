@@ -15,6 +15,7 @@ import { PageBreadcrumb, PageSection } from "@/components/layout/page"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { FoodCard } from "./FoodCard"
+import { FoodImage } from "./FoodImage"
 import { ReferenceFoodBrowser } from "./ReferenceFoodBrowser"
 import { FoodGroupIcon } from "../group-icons"
 import { useNutritionGroup, useNutritionGroupFoods, useNutritionGroups } from "../hooks/use-nutrition"
@@ -154,34 +155,43 @@ export function CategoryView({ categoryId }: { categoryId: string }) {
                   const variants = foods.filter((f) => f.foodName === fn)
                   const count = variants.length
                   const sampleVariants = variants.map((v) => v.foodNameSpecific).slice(0, 3).join(", ")
+                  const thumb = variants.find((v) => v.imageUrl)?.imageUrl
 
                   return (
                     <button
                       key={fn}
                       type="button"
                       onClick={() => selectType(fn)}
-                      className="group flex flex-col justify-between rounded-2xl border border-success-200 bg-white p-5 text-left shadow-xs transition hover:border-success-400 hover:shadow-md cursor-pointer"
+                      className="group flex flex-col justify-between overflow-hidden rounded-2xl border border-success-200 bg-white text-left shadow-xs transition hover:border-success-400 hover:shadow-md cursor-pointer"
                     >
-                      <div className="w-full space-y-1">
-                        <div className="flex items-start justify-between gap-2">
-                          <h4 className="font-semibold text-foreground group-hover:text-success-700 transition-colors text-base">
-                            {fn}
-                          </h4>
-                          <span className="shrink-0 text-[11px] font-medium text-success-700 bg-success-50 px-2 py-0.5 rounded-full border border-success-200">
-                            {t("category.itemCount", { count })}
-                          </span>
+                      <FoodImage
+                        src={thumb}
+                        alt={fn}
+                        className="h-28 w-full"
+                        imgClassName="group-hover:scale-105"
+                      />
+                      <div className="flex flex-1 flex-col justify-between w-full p-4">
+                        <div className="w-full space-y-1">
+                          <div className="flex items-start justify-between gap-2">
+                            <h4 className="font-semibold text-foreground group-hover:text-success-700 transition-colors text-base">
+                              {fn}
+                            </h4>
+                            <span className="shrink-0 text-[11px] font-medium text-success-700 bg-success-50 px-2 py-0.5 rounded-full border border-success-200">
+                              {t("category.itemCount", { count })}
+                            </span>
+                          </div>
+                          {sampleVariants && (
+                            <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
+                              {t("category.includes", { items: sampleVariants })}
+                              {count > 3 ? "..." : ""}
+                            </p>
+                          )}
                         </div>
-                        {sampleVariants && (
-                          <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
-                            {t("category.includes", { items: sampleVariants })}
-                            {count > 3 ? "..." : ""}
-                          </p>
-                        )}
-                      </div>
 
-                      <div className="pt-3 mt-4 w-full border-t border-success-100 flex items-center justify-between text-xs text-success-700 font-medium">
-                        <span>{t("category.viewOptions")}</span>
-                        <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                        <div className="pt-3 mt-4 w-full border-t border-success-100 flex items-center justify-between text-xs text-success-700 font-medium">
+                          <span>{t("category.viewOptions")}</span>
+                          <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                        </div>
                       </div>
                     </button>
                   )

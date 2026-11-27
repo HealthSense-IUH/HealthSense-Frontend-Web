@@ -127,7 +127,7 @@ export interface FoodGroup {
 // Tra cứu toàn bộ cơ sở dữ liệu tham chiếu: số liệu, kèm đánh giá (advice) khi hội viên có đơn ăn uống.
 // Mọi giá trị tính trên 100 g phần ăn được. Hai nguồn:
 //   VN_FCT     - Bảng thành phần thực phẩm Việt Nam, Viện Dinh dưỡng 2007 (526 thực phẩm)
-//   USDA_FNDDS - USDA FNDDS 2021-2023 (5.431 thực phẩm, món ăn)
+//   USDA_FNDDS - USDA FNDDS 2021-2023 chọn lọc sạch (103 thực phẩm, tổng 629 thực phẩm)
 // ---------------------------------------------------------------------------
 
 export type ReferenceFoodSource = 'VN_FCT' | 'USDA_FNDDS'
