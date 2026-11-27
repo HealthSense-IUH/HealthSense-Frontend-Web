@@ -2,120 +2,59 @@
 
 ## Tiếng Việt
 
-**HealthSense Frontend Web** là giao diện người dùng (web application) cho hệ thống theo dõi sức khỏe HealthSense, được phát triển bằng React + TypeScript.
+**HealthSense Frontend Web** là ứng dụng Web của hệ sinh thái theo dõi sức khỏe tim mạch và tầm soát rung nhĩ (AFib) HealthSense, phục vụ đầy đủ 4 vai trò (**Người dùng / Member**, **Bác sĩ / Doctor**, **Quản trị viên / Admin**, **Quản trị viên cấp cao / Super Admin**), được xây dựng bằng **React 19**, **TypeScript**, **Vite 8** và **Tailwind CSS 4**.
 
 ### Chức năng chính
-- Hiển thị dữ liệu nhịp tim (BPM) và nồng độ oxy trong máu (SpO2) theo thời gian thực.
-- Trực quan hóa các chỉ số biến thiên nhịp tim (HRV) bằng biểu đồ.
-- Hiển thị kết quả dự đoán trạng thái sức khỏe từ AI Service.
-- Giao diện responsive, hỗ trợ cả desktop và mobile.
+- **Tổng quan sức khỏe & Tầm soát AFib:** Tải file PPG `.csv` trực tiếp lên hệ thống, theo dõi lịch heatmap theo ngày, xem chi tiết sóng mạch PPG, đồ thị Poincaré, chỉ số SQI, phân tích 5 cửa sổ 30 giây (Global Rule V2), bảng 8 chỉ số HRV và **In / Xuất báo cáo tầm soát AFib 1 trang chuẩn A4 (PDF)**.
+- **Thống kê & Xu hướng:** Biểu đồ xu hướng nhịp tim 14 ngày, phân bố kết luận AI, khung giờ đo, thống kê lượt tư vấn và thanh toán cho Member, Doctor và Admin.
+- **Tư vấn bác sĩ trực tuyến:** Đăng ký vào hàng đợi tư vấn, xác nhận điều phối bác sĩ, nhắn tin thời gian thực qua WebSocket/STOMP, chia sẻ hồ sơ sức khỏe có kiểm soát, lập và tra cứu tổng kết y khoa.
+- **Ví lượt tư vấn & Thanh toán PayOS:** Xem số dư, lịch sử sổ cái giao dịch và mua gói lượt trực tuyến qua PayOS.
+- **Ăn uống & Dinh dưỡng tim mạch:** Tra cứu 629 thực phẩm (Việt Nam + USDA) kèm hình ảnh và đánh giá màu theo đơn ăn uống cá nhân hóa của bác sĩ; **AI Ước tính calo & natri** từ ảnh món ăn hoặc mô tả văn bản; **Nhật ký ăn uống hôm nay** theo dõi giới hạn 2.000 mg Natri của AHA.
+- **Trợ lý AI Cara:** Hội thoại streaming SSE có Tool Calling theo quyền, hỗ trợ đa ngôn ngữ **Tiếng Việt / Tiếng Anh (i18next)**.
 
 ### Công nghệ
 - **Framework:** React 19 + TypeScript
 - **Build Tool:** Vite 8
-- **Styling:** Tailwind CSS 4
-- **State Management:** Zustand
-- **Data Fetching:** TanStack Query (React Query)
-- **HTTP Client:** Axios
-- **Animation:** Framer Motion
-- **Routing:** React Router DOM 7
-- **Icons:** Lucide React, React Icons
-- **Linting:** ESLint + Prettier
+- **Styling & UI:** Tailwind CSS 4, Radix UI / shadcn/ui, Recharts
+- **State & Data:** Zustand, TanStack Query (React Query), Axios
+- **Realtime & i18n:** STOMP over WebSocket, i18next (`vi` / `en`)
+- **Routing & Quality:** React Router DOM 7, ESLint
 
-### Cấu trúc dự án
-- `src/App.tsx`: Root component của ứng dụng.
-- `src/app/`: Provider cấp ứng dụng.
-- `src/router/`: Khai báo route React Router.
-- `src/pages/public-routes-page/`: Page public như landing, login, register.
-- `src/pages/app-routes-page/`: Page yêu cầu đăng nhập như dashboard, management.
-- `src/pages/commons/`: Route guard và helper dùng chung cho route.
-- `src/features/`: State/domain logic như auth store.
-- `src/services/`: API module theo domain.
-- `src/types/`: DTO/type theo domain.
-- `src/types/base/`: Kiểu response dùng chung như `ApiResponse<T>`, `PageResponse<T>`.
-- `src/components/ui/`: Component shadcn/ui.
-- `src/components/layout/`: Layout dùng chung.
-
-### Auth API
-- Backend mặc định: `http://localhost:8080` (`VITE_API_BASE_URL` để override).
-- Web frontend dùng `POST /api/auth/login`, `POST /api/auth/refresh`, `POST /api/auth/logout`, `POST /api/auth/register`, `GET /api/auth/me`.
-- Axios đã bật `withCredentials` và tự refresh access token một lần khi private API trả `401`.
+### Cấu trúc dự án chính
+- `src/app/`: Provider cấp ứng dụng và cấu hình i18n/QueryClient.
+- `src/router/`: Định nghĩa tuyến đường theo vai trò (public, member, doctor, admin).
+- `src/pages/public/`: Trang giới thiệu, đăng nhập, đăng ký, quên mật khẩu.
+- `src/pages/app/general/`: Dashboard, lịch sử đo AFib & xuất PDF, dinh dưỡng & ước tính calo AI, tư vấn, trợ lý Cara, ví lượt.
+- `src/pages/app/doctor/`: Hàng đợi tiếp nhận, không gian tư vấn, kê đơn dinh dưỡng và thống kê bệnh nhân.
+- `src/pages/app/management/`: Quản trị người dùng, hồ sơ sức khỏe, quy tắc dinh dưỡng, gói lượt và đơn thanh toán.
+- `src/services/`, `src/stores/`, `src/types/`, `src/locales/{vi,en}/`: API client, Zustand stores, TypeScript types và tài nguyên song ngữ.
 
 ### Cài đặt và Sử dụng
-1. Cài đặt thư viện:
-   ```bash
-   npm install
-   ```
-2. Chạy server phát triển:
-   ```bash
-   npm run dev
-   ```
-3. Build production:
-   ```bash
-   npm run build
-   ```
-4. Xem trước bản build:
-   ```bash
-   npm run preview
-   ```
+```bash
+npm install
+npm run dev      # Chạy server phát triển (mặc định gọi http://localhost:8080, ghi đè qua VITE_API_BASE_URL)
+npm run build    # Kiểm tra TypeScript (tsc -b) & build production
+npm run lint     # Kiểm tra ESLint
+```
 
 ---
 
 ## English
 
-**HealthSense Frontend Web** is the user interface (web application) for the HealthSense health monitoring system, built with React + TypeScript.
+**HealthSense Frontend Web** is the web application for the HealthSense cardiovascular monitoring and atrial fibrillation (AFib) screening platform, serving **Members**, **Doctors**, **Admins**, and **Super Admins**. Built with **React 19**, **TypeScript**, **Vite 8**, and **Tailwind CSS 4**.
 
 ### Key Features
-- Displays real-time heart rate (BPM) and blood oxygen saturation (SpO2) data.
-- Visualizes Heart Rate Variability (HRV) metrics through interactive charts.
-- Shows health status predictions from the AI Service.
-- Responsive design supporting both desktop and mobile devices.
+- **Health Dashboard & AFib Screening:** Direct PPG `.csv` upload, daily measurement heatmap, PPG waveform & Poincaré plots, SQI quality badge, 5-window Global Rule V2 analysis, 8-metric HRV table, and **1-page A4 Medical Report Print / PDF Export**.
+- **Analytics & Trends:** 14-day heart rate trends, AI screening distribution, consultation & payment analytics across Member, Doctor, and Admin views.
+- **Real-Time Teleconsultation:** Queue registration, doctor dispatch confirmation, WebSocket/STOMP chat, authorized health-record sharing, and finalized medical summaries.
+- **Credit Wallet & PayOS Payments:** Balance tracking, ledger history, and PayOS checkout.
+- **Cardiovascular Nutrition:** 629 curated reference foods (VN_FCT + USDA) with personalized doctor diet-prescription scoring, **AI Meal Photo & Text Calorie Estimator**, and **Today's Food Log** tracking the 2,000 mg AHA daily sodium limit.
+- **Cara AI Assistant:** Role-scoped SSE streaming assistant with full **Vietnamese / English** localization.
 
-### Tech Stack
-- **Framework:** React 19 + TypeScript
-- **Build Tool:** Vite 8
-- **Styling:** Tailwind CSS 4
-- **State Management:** Zustand
-- **Data Fetching:** TanStack Query (React Query)
-- **HTTP Client:** Axios
-- **Animation:** Framer Motion
-- **Routing:** React Router DOM 7
-- **Icons:** Lucide React, React Icons
-- **Linting:** ESLint + Prettier
-
-### Project Structure
-- `src/App.tsx`: Root application component.
-- `src/app/`: App-level providers.
-- `src/router/`: React Router route declarations.
-- `src/pages/public-routes-page/`: Public pages such as landing, login, and register.
-- `src/pages/app-routes-page/`: Authenticated pages such as dashboard and management.
-- `src/pages/commons/`: Route guards and route-level shared helpers.
-- `src/features/`: State/domain logic such as the auth store.
-- `src/services/`: API modules grouped by domain.
-- `src/types/`: DTOs and types grouped by domain.
-- `src/types/base/`: Shared response contracts such as `ApiResponse<T>` and `PageResponse<T>`.
-- `src/components/ui/`: shadcn/ui components.
-- `src/components/layout/`: Shared layouts.
-
-### Auth API
-- Default backend: `http://localhost:8080`; override with `VITE_API_BASE_URL`.
-- Web frontend uses `POST /api/auth/login`, `POST /api/auth/refresh`, `POST /api/auth/logout`, `POST /api/auth/register`, and `GET /api/auth/me`.
-- Axios uses `withCredentials` and refreshes the access token once when a private API returns `401`.
-
-### Installation and Usage
-1. Install dependencies:
-   ```bash
-   npm install
-   ```
-2. Start development server:
-   ```bash
-   npm run dev
-   ```
-3. Build for production:
-   ```bash
-   npm run build
-   ```
-4. Preview production build:
-   ```bash
-   npm run preview
-   ```
+### Setup & Scripts
+```bash
+npm install
+npm run dev
+npm run build
+npm run lint
+```
