@@ -117,7 +117,7 @@ export function DoctorSessionDetailDialog({ sessionId, open, onOpenChange, onSes
           )}
         </div>
       )
-    } catch (e) {
+    } catch {
       return <p className="text-sm text-slate-500 italic">{t("sessionDetailDialog.noSupportSchedule")}</p>
     }
   }

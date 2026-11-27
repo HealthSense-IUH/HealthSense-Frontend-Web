@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import {
   AlertCircle,
   Coins,
@@ -60,9 +60,14 @@ export function OrderDetailDialog({
   const userId = userSession?.userId ? String(userSession.userId) : ""
 
   const [detail, setDetail] = useState<CreditOrderDetail | null>(null)
+  const [loadedAt, setLoadedAt] = useState(0)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [isCancelling, setIsCancelling] = useState(false)
+  const onWalletUpdatedRef = useRef(onWalletUpdated)
+  useEffect(() => {
+    onWalletUpdatedRef.current = onWalletUpdated
+  }, [onWalletUpdated])
 
   const handleCancel = async () => {
     if (!orderId || isCancelling) return
@@ -140,8 +145,9 @@ export function OrderDetailDialog({
         const res = await creditsApi.getOrderById(orderId)
         if (isMounted) {
           setDetail(res.data)
-          if (res.data?.wallet && onWalletUpdated) {
-            onWalletUpdated(res.data.wallet)
+          setLoadedAt(Date.now())
+          if (res.data?.wallet && onWalletUpdatedRef.current) {
+            onWalletUpdatedRef.current(res.data.wallet)
           }
         }
       } catch (err) {
@@ -165,7 +171,7 @@ export function OrderDetailDialog({
     return () => {
       isMounted = false
     }
-  }, [open, orderId, onWalletUpdated])
+  }, [open, orderId])
 
   const orderStatusCfg = detail?.order?.status
     ? getCreditOrderStatusConfig(detail.order.status)
@@ -178,7 +184,7 @@ export function OrderDetailDialog({
     : null
 
   const isExpired = detail?.payment?.expiresAt
-    ? new Date(detail.payment.expiresAt).getTime() <= Date.now()
+    ? new Date(detail.payment.expiresAt).getTime() <= loadedAt
     : false
 
   const canResumePayment =

@@ -43,13 +43,14 @@ export function SessionContinuationBanner({
   const [continuation, setContinuation] = useState<ContinuationDecisionResponse | null>(null)
   const [actionLoading, setActionLoading] = useState(false)
 
-  // Local ticker every second for countdowns
+  // Local ticker every second for countdowns (chỉ chạy khi phiên queue còn ACTIVE)
   useEffect(() => {
+    if (!isQueueV1 || !isActive) return
     const timer = setInterval(() => {
       setCurrentTime(Date.now())
     }, 1000)
     return () => clearInterval(timer)
-  }, [])
+  }, [isQueueV1, isActive])
 
   // Absolute timestamps from backend
   const endsAtMs = session.endsAt ? new Date(session.endsAt).getTime() : 0

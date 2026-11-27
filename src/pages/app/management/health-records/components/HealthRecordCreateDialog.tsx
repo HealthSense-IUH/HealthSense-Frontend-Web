@@ -74,7 +74,7 @@ export function HealthRecordCreateDialog({ open, onOpenChange, onSuccess }: Heal
     if (hrvFeaturesJson) {
       try {
         JSON.parse(hrvFeaturesJson)
-      } catch (e) {
+      } catch {
         setError(t("healthRecords.create.errors.invalidJson"))
         return
       }
